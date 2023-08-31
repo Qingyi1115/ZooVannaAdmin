@@ -5,7 +5,7 @@ import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App font-inter">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
