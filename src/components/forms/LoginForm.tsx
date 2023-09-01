@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import useLogin from "../../hooks/useLogin";
 
 function LoginForm() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const { login, error } = useLogin();
+
   // ValidityState properties: https://developer.mozilla.org/en-US/docs/Web/API/ValidityState
   function validateEmail(props: ValidityState) {
     if (props != undefined) {
-      console.log(props);
       if (props.valueMissing) {
         return (
           <div className="text-red-600 font-medium">
@@ -36,9 +40,12 @@ function LoginForm() {
     return null;
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("testt");
+    // console.log("Inside handleSubmit");
+    // console.log(email);
+    // console.log(password);
+    await login(email, password);
   }
 
   return (
@@ -52,6 +59,8 @@ function LoginForm() {
             type="email"
             required
             placeholder="Type your e-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full h-14 bg-[#FFF9F2] placeholder-zoovanna-brown/70 border rounded-md border-zoovanna-brown/50 px-4 text-zoovanna-brown"
           />
           {/* <Form.Message name="email" match={"valueMissing"}>
@@ -68,6 +77,8 @@ function LoginForm() {
             type="password"
             required
             placeholder="Type your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full h-14 bg-[#FFF9F2] placeholder-zoovanna-brown/70 border rounded-md border-zoovanna-brown/50 px-4 text-zoovanna-brown"
           />
           {/* <Form.Message name="password" match={"valueMissing"}>
@@ -81,6 +92,9 @@ function LoginForm() {
             Log In
           </button>
         </Form.Submit>
+        {error && (
+          <div className="m-2 border-red-400 bg-red-100 p-2">{error}</div>
+        )}
       </Form.Root>
     </div>
   );
