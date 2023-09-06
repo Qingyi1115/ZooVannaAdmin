@@ -1,20 +1,20 @@
 import React from "react";
-import LoginForm from "../components/forms/LoginForm";
+import LoginForm from "../components/LoginPage/LoginForm";
 
 function LoginPage() {
   return (
     <div className="flex h-screen">
-      <aside className="bg-zoovanna-green w-1/2 flex flex-col justify-center">
+      <aside className="flex w-1/2 flex-col justify-center bg-zoovanna-green">
         <img
           src="/logos/nocircle-cream.png"
           alt="Zoovanna Logo"
-          className="h-1/6 w-min fixed top-8 left-8"
+          className="fixed left-8 top-8 h-1/6 w-min"
         />
-        <span className="text-zoovanna-cream text-5xl leading-tight font-medium font-dmSans self-center">
+        <span className="self-center font-dmSans text-5xl font-medium leading-tight text-zoovanna-cream">
           Welcome to <br /> Zoovanna Admin Portal
         </span>
       </aside>
-      <main className="bg-zoovanna-cream w-1/2 flex justify-center items-center">
+      <main className="flex w-1/2 items-center justify-center bg-zoovanna-cream">
         <LoginForm />
       </main>
     </div>

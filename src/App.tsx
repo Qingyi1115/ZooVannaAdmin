@@ -1,13 +1,22 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { useAuthContext } from "./hooks/useAuthContext";
-import React from "react";
+import React, { useState } from "react";
 
-import Home from "./pages/Home";
+import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import MainLayout from "./components/MainLayout";
 
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
+
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
   return (
     <div className="App font-inter">
@@ -15,7 +24,18 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={user ? <Home /> : <Navigate to="/login" />}
+            element={
+              user ? (
+                <MainLayout
+                  sidebarOpen={sidebarOpen}
+                  setSidebarOpen={setSidebarOpen}
+                >
+                  <HomePage />
+                </MainLayout>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
           <Route
             path="/login"

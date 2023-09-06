@@ -12,13 +12,13 @@ function LoginForm() {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="text-red-600 font-medium">
+          <div className="font-medium text-red-600">
             * Please enter an e-mail
           </div>
         );
       } else if (props.typeMismatch) {
         return (
-          <div className="text-red-600 font-medium">
+          <div className="font-medium text-red-600">
             * Invalid e-mail format
           </div>
         );
@@ -31,7 +31,7 @@ function LoginForm() {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="text-red-600 font-medium">
+          <div className="font-medium text-red-600">
             * Please enter a password
           </div>
         );
@@ -49,9 +49,9 @@ function LoginForm() {
   }
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="flex w-full justify-center">
       <Form.Root className="w-3/5" onSubmit={handleSubmit}>
-        <Form.Field name="email" className="flex flex-col gap-1 mb-10">
+        <Form.Field name="email" className="mb-10 flex flex-col gap-1">
           <Form.Label className="text-sm font-medium text-zoovanna-brown">
             E-mail
           </Form.Label>
@@ -61,7 +61,7 @@ function LoginForm() {
             placeholder="Type your e-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full h-14 bg-[#FFF9F2] placeholder-zoovanna-brown/70 border rounded-md border-zoovanna-brown/50 px-4 text-zoovanna-brown"
+            className="h-14 w-full rounded-md border border-zoovanna-brown/50 bg-[#FFF9F2] px-4 text-zoovanna-brown placeholder-zoovanna-brown/70"
           />
           {/* <Form.Message name="email" match={"valueMissing"}>
             Please enter an email
@@ -69,7 +69,7 @@ function LoginForm() {
           <Form.ValidityState>{validateEmail}</Form.ValidityState>
         </Form.Field>
 
-        <Form.Field name="password" className="flex flex-col gap-1 mb-10">
+        <Form.Field name="password" className="mb-10 flex flex-col gap-1">
           <Form.Label className="text-sm font-medium text-zoovanna-brown">
             Password
           </Form.Label>
@@ -79,7 +79,7 @@ function LoginForm() {
             placeholder="Type your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full h-14 bg-[#FFF9F2] placeholder-zoovanna-brown/70 border rounded-md border-zoovanna-brown/50 px-4 text-zoovanna-brown"
+            className="h-14 w-full rounded-md border border-zoovanna-brown/50 bg-[#FFF9F2] px-4 text-zoovanna-brown placeholder-zoovanna-brown/70"
           />
           {/* <Form.Message name="password" match={"valueMissing"}>
             Please enter a password
@@ -88,7 +88,7 @@ function LoginForm() {
         </Form.Field>
 
         <Form.Submit asChild>
-          <button className="border w-full rounded-full bg-zoovanna-brown h-12 text-zoovanna-cream">
+          <button className="h-12 w-full rounded-full border bg-zoovanna-brown text-zoovanna-cream">
             Log In
           </button>
         </Form.Submit>
