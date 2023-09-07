@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useLogout from "../hooks/useLogout";
 
 interface PropsType {
   sidebarOpen: boolean;
@@ -7,7 +8,11 @@ interface PropsType {
 
 function Header(props: PropsType) {
   const { sidebarOpen, setSidebarOpen } = props;
-  const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const { logout } = useLogout();
+
+  function handleLogout() {
+    logout();
+  }
 
   return (
     <header className="sticky top-0 z-30 border-b border-zoovanna-beige bg-zoovanna-light-cream">
@@ -25,7 +30,7 @@ function Header(props: PropsType) {
                 setSidebarOpen(!sidebarOpen);
               }}
             >
-              <span className="sr-only">Open sidebarHELLLOOO</span>
+              <span className="sr-only">Open sidebar</span>
               <svg
                 className="h-6 w-6 fill-zoovanna-brown"
                 viewBox="0 0 24 24"
@@ -40,8 +45,11 @@ function Header(props: PropsType) {
 
           {/* Header: Right side */}
           <div className="flex items-center space-x-3">
-            <button className="rounded border border-zoovanna-brown px-2">
-              test
+            <button
+              onClick={handleLogout}
+              className="rounded border border-zoovanna-brown px-2"
+            >
+              Logout
             </button>
           </div>
         </div>
