@@ -80,10 +80,10 @@ function Sidebar(props: PropsType) {
             <Accordion.Item className="w-full overflow-hidden" value="item-2">
               <AccordionTrigger>Species Management</AccordionTrigger>
               <AccordionContentBox>
-                <Link to="/">
+                <Link to="/viewallspecies">
                   <SidebarButton>View All Species</SidebarButton>
                 </Link>
-                <Link to="/">
+                <Link to="/createspecies">
                   <SidebarButton>Create New Species</SidebarButton>
                 </Link>
               </AccordionContentBox>
