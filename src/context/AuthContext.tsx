@@ -55,7 +55,7 @@ type AuthContextProps = {
 // AuthContextProps is for TypeScript to verify the type
 function AuthContextProvider({ children }: AuthContextProps): JSX.Element {
   const [state, dispatch] = useReducer(authReducer, {
-    user: null,
+    user: JSON.parse(localStorage.getItem("user") || "null"),
   });
 
   useEffect(() => {
@@ -63,6 +63,8 @@ function AuthContextProvider({ children }: AuthContextProps): JSX.Element {
 
     if (user) {
       dispatch({ type: "LOGIN", payload: user });
+    } else {
+      dispatch({ type: "LOGOUT" });
     }
   }, []);
 
