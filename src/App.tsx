@@ -14,6 +14,8 @@ import MainLayout from "./components/MainLayout";
 import ViewAllSpeciesPage from "./pages/speciesManagement/ViewAllSpeciesPage";
 import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage";
 
+import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -21,39 +23,42 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
   return (
-    <div className="App bg-zoovanna-cream font-inter">
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/login"
-            element={!user ? <LoginPage /> : <Navigate to={"/"} />}
-          />
-        </Routes>
-        <MainLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
+    <PrimeReactProvider>
+      <div className="App bg-zoovanna-cream font-inter">
+        <BrowserRouter>
           <Routes>
-            <Route>
+            <Route
+              path="/login"
+              element={!user ? <LoginPage /> : <Navigate to={"/"} />}
+            />
+          </Routes>
+          <MainLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
+            <Routes>
+              <Route>
+                {/* Species Management */}
+                <Route
+                  path="/viewallspecies"
+                  element={
+                    user ? <ViewAllSpeciesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/createspecies"
+                  element={
+                    user ? <CreateNewSpeciesPage /> : <Navigate to="/login" />
+                  }
+                />
+              </Route>
+              {/* Home page */}
               <Route
                 path="/"
                 element={user ? <HomePage /> : <Navigate to="/login" />}
               />
-              {/* Species Management */}
-              <Route
-                path="/viewallspecies"
-                element={
-                  user ? <ViewAllSpeciesPage /> : <Navigate to="/login" />
-                }
-              />
-              <Route
-                path="/createspecies"
-                element={
-                  user ? <CreateNewSpeciesPage /> : <Navigate to="/login" />
-                }
-              />
-            </Route>
-          </Routes>
-        </MainLayout>
-      </BrowserRouter>
-    </div>
+            </Routes>
+          </MainLayout>
+        </BrowserRouter>
+      </div>
+    </PrimeReactProvider>
   );
 }
 

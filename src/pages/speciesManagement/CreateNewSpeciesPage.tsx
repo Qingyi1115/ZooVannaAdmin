@@ -1,7 +1,13 @@
 import React from "react";
+import CreateNewSpeciesForm from "../../components/SpeciesManagement/CreateNewSpeciesPage/CreateNewSpeciesForm";
 
 function CreateNewSpeciesPage() {
-  return <div>CreateNewSpeciesPage</div>;
+  return (
+    <div className="p-4">
+      <span>Create A New Species</span>
+      <CreateNewSpeciesForm />
+    </div>
+  );
 }
 
 export default CreateNewSpeciesPage;
