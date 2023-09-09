@@ -24,7 +24,7 @@ function App() {
 
   return (
     <PrimeReactProvider>
-      <div className="App bg-zoovanna-cream font-inter">
+      <div className="App bg-zoovanna-cream-200 font-inter">
         <BrowserRouter>
           <Routes>
             <Route

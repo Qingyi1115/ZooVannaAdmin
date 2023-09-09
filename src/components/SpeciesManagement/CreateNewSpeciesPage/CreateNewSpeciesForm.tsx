@@ -14,27 +14,7 @@ import { BiomeEnum } from "../../../enums/BiomeEnum";
 
 function CreateNewSpeciesForm() {
   const api = useApi();
-  /*
-    -speciesId: Long
--speciesCode: String // how to generate code??? Has to be unique also, but not the system ID
--commonName: String
--scientificName: String
--aliasName: String
--conservationStatus: radio
--domain: String //select
--kingdom: String	// select
--phylum: String
--class: String
--order: String
--family: String
--genus:	String
--nativeContinent: String //select
--nativeBiome: List<BiomeEnum> // select multiple
--educationalDescription: String // text area
--groupSexualDynamic: GroupSexualDynamicEnum // select??
--isBigHabitatSpecies: Boolean // radio
 
-*/
   //   const [speciesCode, setSpeciesCode] = useState<string>("");
   const [commonName, setCommonName] = useState<string>("");
   const [scientificName, setScientificName] = useState<string>("");
@@ -52,18 +32,18 @@ function CreateNewSpeciesForm() {
   const [groupSexualDynamic, setGroupSexualDynamic] = useState<string>("");
   const [habitatOrExhibit, setHabitatOrExhibit] = useState<string>("");
 
-  function validatePassword(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-red-600">
-            * Please enter a password
-          </div>
-        );
-      }
-    }
-    return null;
-  }
+  //   function validatePassword(props: ValidityState) {
+  //     if (props != undefined) {
+  //       if (props.valueMissing) {
+  //         return (
+  //           <div className="font-medium text-red-600">
+  //             * Please enter a password
+  //           </div>
+  //         );
+  //       }
+  //     }
+  //     return null;
+  //   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -78,9 +58,13 @@ function CreateNewSpeciesForm() {
 
   return (
     <Form.Root
-      className="flex w-full flex-col gap-6 bg-white p-4 text-zoovanna-brown"
+      className="flex w-full flex-col gap-6 rounded-lg bg-white p-4 text-zoovanna-brown"
       onSubmit={handleSubmit}
     >
+      <span className="self-center text-3xl font-bold">
+        Create a New Species
+      </span>
+      <hr className="bg-zoovanna-beige" />
       <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
         {/* Common Name */}
         <FormFieldText
@@ -142,7 +126,7 @@ function CreateNewSpeciesForm() {
             ].map(([value, id]) => (
               <div key={id} className="flex items-center">
                 <RadioGroup.Item
-                  className="h-4 w-4 cursor-default rounded-full bg-zoovanna-cream-light shadow-[0_0_5px] shadow-zoovanna-brown outline-none hover:bg-zoovanna-cream focus:shadow-[0_0_0_2px] focus:shadow-zoovanna-brown"
+                  className="h-4 w-4 cursor-default rounded-full bg-zoovanna-cream-200 shadow-[0_0_5px] shadow-zoovanna-brown outline-none hover:bg-zoovanna-cream-300 focus:shadow-[0_0_0_2px] focus:shadow-zoovanna-brown"
                   value={value}
                   id={id}
                 >
@@ -311,7 +295,7 @@ function CreateNewSpeciesForm() {
           <RadioGroup.Root
             className="flex flex-row gap-12"
             onValueChange={setHabitatOrExhibit}
-            aria-label="Conservation status"
+            aria-label="Habitat or Exhibit Species"
           >
             {[
               ["Exhibit", "exhibit"],
@@ -319,7 +303,7 @@ function CreateNewSpeciesForm() {
             ].map(([value, id]) => (
               <div key={id} className="flex items-center">
                 <RadioGroup.Item
-                  className="h-4 w-4 cursor-default rounded-full bg-zoovanna-cream-light shadow-[0_0_5px] shadow-zoovanna-brown outline-none hover:bg-zoovanna-cream focus:shadow-[0_0_0_2px] focus:shadow-zoovanna-brown"
+                  className="h-4 w-4 cursor-default rounded-full bg-zoovanna-cream-200 shadow-[0_0_5px] shadow-zoovanna-brown outline-none hover:bg-zoovanna-cream-300 focus:shadow-[0_0_0_2px] focus:shadow-zoovanna-brown"
                   value={value}
                   id={id}
                 >
@@ -335,7 +319,7 @@ function CreateNewSpeciesForm() {
       </div>
 
       <Form.Submit asChild>
-        <button className="h-12 w-full rounded-full border bg-zoovanna-brown text-zoovanna-cream">
+        <button className="h-12 w-5/6 self-center rounded-full border bg-zoovanna-brown text-zoovanna-cream-200">
           Create Species
         </button>
       </Form.Submit>

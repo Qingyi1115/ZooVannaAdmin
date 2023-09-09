@@ -3,8 +3,8 @@ import CreateNewSpeciesForm from "../../components/SpeciesManagement/CreateNewSp
 
 function CreateNewSpeciesPage() {
   return (
-    <div className="p-4">
-      <span>Create A New Species</span>
+    <div className="p-6">
+      {/* <span>Create A New Species</span> */}
       <CreateNewSpeciesForm />
     </div>
   );

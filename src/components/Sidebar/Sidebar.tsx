@@ -18,7 +18,7 @@ interface Props {
 // other mini components
 const AccordionTrigger = ({ children }: Props) => (
   <Accordion.Header className="w-gull mt-4 flex h-full items-center rounded px-2 py-1 transition-all hover:bg-zoovanna-green-dark">
-    <Accordion.Trigger className="group flex w-full items-center justify-between text-left text-sm font-bold text-zoovanna-cream lg:text-base">
+    <Accordion.Trigger className="group flex w-full items-center justify-between text-left text-sm font-bold text-zoovanna-cream-300 lg:text-base">
       {children}
       {/* <TriangleDownIcon className="transition-all duration-100 group-data-[state=open]:rotate-180" /> */}
       <HiChevronDown
@@ -36,7 +36,7 @@ const AccordionContentBox = ({ children }: Props) => (
 );
 
 const SidebarButton = ({ children }: Props) => (
-  <div className="text-sm text-zoovanna-cream hover:font-medium lg:text-base">
+  <div className="text-sm text-zoovanna-cream-300 hover:font-medium lg:text-base">
     {children}
   </div>
 );

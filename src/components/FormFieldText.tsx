@@ -37,7 +37,7 @@ function FormFieldText(props: PropsType) {
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="h-10 rounded-md border border-zoovanna-beige/50 bg-zoovanna-cream-light p-1 text-sm placeholder:italic placeholder:text-zoovanna-brown/50"
+        className="h-10 rounded-md border border-zoovanna-beige/50 bg-zoovanna-cream-100 p-1 text-sm shadow-[0_2px_10px] shadow-black/10 placeholder:italic placeholder:text-zoovanna-brown/50 hover:bg-zoovanna-cream-200"
       />
       <Form.ValidityState>{validateFunction}</Form.ValidityState>
     </Form.Field>

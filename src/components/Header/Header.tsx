@@ -10,7 +10,7 @@ function Header(props: PropsType) {
   const { sidebarOpen, setSidebarOpen } = props;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-zoovanna-beige bg-zoovanna-cream-light">
+    <header className="sticky top-0 z-30 border-b border-zoovanna-beige bg-zoovanna-cream-100">
       <div className="px-4">
         <div className="-mb-px flex h-16 items-center justify-between">
           {/* Header: Left side */}
