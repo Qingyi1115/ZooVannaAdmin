@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import * as Form from "@radix-ui/react-form";
-import * as Select from "@radix-ui/react-select";
+import * as RadioGroup from "@radix-ui/react-radio-group";
+import * as Checkbox from "@radix-ui/react-checkbox";
+
+import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
 import useApi from "../../../hooks/useApi";
+import FormFieldText from "../../FormFieldText";
+import FormFieldSelect from "../../FormFieldSelect";
+import { ContinentEnum } from "../../../enums/ContinentEnum";
+import { HiCheck } from "react-icons/hi";
+import { BiomeEnum } from "../../../enums/BiomeEnum";
 
 function CreateNewSpeciesForm() {
   const api = useApi();
@@ -12,19 +20,19 @@ function CreateNewSpeciesForm() {
 -commonName: String
 -scientificName: String
 -aliasName: String
--conservationStatus: ENUM
--domain: String
--kingdom: String	
+-conservationStatus: radio
+-domain: String //select
+-kingdom: String	// select
 -phylum: String
 -class: String
 -order: String
 -family: String
 -genus:	String
--nativeContinent: String
--nativeBiome: List<BiomeEnum>
--educationalDescription: String
--groupSexualDynamic: GroupSexualDynamicEnum
--isBigHabitatSpecies: Boolean
+-nativeContinent: String //select
+-nativeBiome: List<BiomeEnum> // select multiple
+-educationalDescription: String // text area
+-groupSexualDynamic: GroupSexualDynamicEnum // select??
+-isBigHabitatSpecies: Boolean // radio
 
 */
   //   const [speciesCode, setSpeciesCode] = useState<string>("");
@@ -39,58 +47,292 @@ function CreateNewSpeciesForm() {
   const [order, setOrder] = useState<string>("");
   const [family, setFamily] = useState<string>("");
   const [genus, setGenus] = useState<string>("");
+  const [nativeContinent, setNativeContinent] = useState<string>("");
+  const [selectedBiomes, setSelectedBiomes] = useState<string[]>([]);
+  const [groupSexualDynamic, setGroupSexualDynamic] = useState<string>("");
+  const [habitatOrExhibit, setHabitatOrExhibit] = useState<string>("");
 
-  function handleSubmit() {}
+  function validatePassword(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-red-600">
+            * Please enter a password
+          </div>
+        );
+      }
+    }
+    return null;
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    // remember to validate again, esp the select ones (domain, kingdom) that values aren't "")
+    console.log("inside handleSUbmit");
+    console.log("conservation status:" + conservationStatus);
+    console.log("domain:" + domain);
+    console.log("kingdom:" + kingdom);
+    console.log("selected biomes:");
+    console.log(selectedBiomes);
+  }
 
   return (
     <Form.Root
-      className="bg-zoovanna-cream-light p-4 text-zoovanna-brown"
+      className="flex w-full flex-col gap-6 bg-white p-4 text-zoovanna-brown"
       onSubmit={handleSubmit}
     >
-      <Form.Field name="email" className="mb-10 flex flex-col gap-1">
-        <Form.Label className="font-medium">Common Name</Form.Label>
-        <Form.Control
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+        {/* Common Name */}
+        <FormFieldText
           type="text"
-          required
-          placeholder="E.g., Lion, Zebra,..."
+          formFieldName="commonName"
+          label="Common Name"
+          required={true}
+          placeholder="e.g., African Lion, Sumatran Tiger,..."
           value={commonName}
-          onChange={(e) => setCommonName(e.target.value)}
-          //   className="h-14 w-full rounded-md border border-zoovanna-brown/50 bg-[#FFF9F2] px-4 text-zoovanna-brown placeholder-zoovanna-brown/70"
-          className="rounded-md border border-zoovanna-beige/50 bg-zoovanna-cream-light p-1 text-sm placeholder:italic"
+          setValue={setCommonName}
+          validateFunction={() => null}
         />
-        {/* <Form.ValidityState>{validateEmail}</Form.ValidityState> */}
+        {/* Scientific Name */}
+        <FormFieldText
+          type="text"
+          formFieldName="scientificName"
+          label="Scientific Name (Binomial/Trinomial Name)"
+          required={true}
+          placeholder="e.g., Homo sapiens, Panthera leo leo..."
+          value={scientificName}
+          setValue={setScientificName}
+          validateFunction={() => null}
+        />
+      </div>
+
+      {/* Alias Name */}
+      <FormFieldText
+        type="text"
+        formFieldName="aliasName"
+        label="Alias Name"
+        required={true}
+        placeholder="e.g., Great Capybara, Sunda Island Tiger,..."
+        value={aliasName}
+        setValue={setAliasName}
+        validateFunction={() => null}
+      />
+
+      <div className="flex w-5/6 flex-col gap-6 lg:w-1/3 lg:flex-row lg:gap-24">
+        {/* Conservation Status */}
+        <Form.Field
+          name="conservationStatus"
+          className="flex flex-col gap-1 lg:w-full"
+        >
+          <Form.Label className="font-medium">Conservation Status</Form.Label>
+          <RadioGroup.Root
+            className="flex flex-col gap-3"
+            onValueChange={setConservationStatus}
+            aria-label="Conservation status"
+          >
+            {[
+              ["Data Deficient", "r1"],
+              ["Domesticated", "r2"],
+              ["Least Concern", "r3"],
+              ["Near Threatened", "r4"],
+              ["Vulnerable", "r5"],
+              ["Endangered", "r6"],
+              ["Critically Endangered", "r7"],
+              ["Extinct In Wild", "r8"],
+            ].map(([value, id]) => (
+              <div key={id} className="flex items-center">
+                <RadioGroup.Item
+                  className="h-4 w-4 cursor-default rounded-full bg-zoovanna-cream-light shadow-[0_0_5px] shadow-zoovanna-brown outline-none hover:bg-zoovanna-cream focus:shadow-[0_0_0_2px] focus:shadow-zoovanna-brown"
+                  value={value}
+                  id={id}
+                >
+                  <RadioGroup.Indicator className="relative flex h-full w-full items-center justify-center after:block after:h-2 after:w-2 after:rounded-[50%] after:bg-zoovanna-beige after:content-['']" />
+                </RadioGroup.Item>
+                <label className="pl-2 text-base leading-none" htmlFor={id}>
+                  {value}
+                </label>
+              </div>
+            ))}
+          </RadioGroup.Root>
+        </Form.Field>
+      </div>
+
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+        {/* Domain */}
+        <FormFieldSelect
+          formFieldName="domain"
+          label="Species Domain"
+          placeholder="Select a domain..."
+          valueLabelPair={[
+            ["Archaea", "Archaea"],
+            ["Bacteria", "Bacteria"],
+            ["Eukarya", "Eukarya"],
+          ]}
+          setValue={setDomain}
+        />
+
+        {/* Kingdom */}
+        <FormFieldSelect
+          formFieldName="kingdom"
+          label="Species Kingdom"
+          placeholder="Select a kingdom..."
+          valueLabelPair={[
+            ["Animalia", "Animalia"],
+            ["Archaea", "Archaea"],
+            ["Bacteria", "Bacteria"],
+            ["Chromista", "Chromista"],
+            ["Fungi", "Fungi"],
+            ["Plantae", "Plantae"],
+            ["Protozoa", "Protozoa"],
+          ]}
+          setValue={setKingdom}
+        />
+      </div>
+
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+        {/* Species Phylum */}
+        <FormFieldText
+          type="text"
+          formFieldName="phylum"
+          label="Phylum"
+          required={true}
+          placeholder="e.g., Chordata, Entoprocta,..."
+          value={phylum}
+          setValue={setPhylum}
+          validateFunction={() => null}
+        />
+        {/* Species Class */}
+        <FormFieldText
+          type="text"
+          formFieldName="speciesClass"
+          label="Class"
+          required={true}
+          placeholder="e.g., Mammalia, Reptilia..."
+          value={speciesClass}
+          setValue={setSpeciesClass}
+          validateFunction={() => null}
+        />
+      </div>
+
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+        {/* Species Order */}
+        <FormFieldText
+          type="text"
+          formFieldName="order"
+          label="Order"
+          required={true}
+          placeholder="e.g., Rodentia, Carnivora..."
+          value={order}
+          setValue={setOrder}
+          validateFunction={() => null}
+        />
+        {/* Species Family */}
+        <FormFieldText
+          type="text"
+          formFieldName="family"
+          label="Family"
+          required={true}
+          placeholder="e.g., Caviidae, Felidae..."
+          value={family}
+          setValue={setFamily}
+          validateFunction={() => null}
+        />
+      </div>
+
+      {/* Species Genus */}
+      <FormFieldText
+        type="text"
+        formFieldName="genus"
+        label="Genus"
+        required={true}
+        placeholder="e.g., Homo, Panthera..."
+        value={genus}
+        setValue={setGenus}
+        validateFunction={() => null}
+      />
+
+      {/* Native Continent */}
+      <FormFieldSelect
+        formFieldName="nativeContinent"
+        label="Native Continent"
+        placeholder="Select a continent..."
+        valueLabelPair={Object.values(ContinentEnum).map((continent) => [
+          continent,
+          continent,
+        ])}
+        setValue={setNativeContinent}
+      />
+
+      {/* Biomes */}
+      <Form.Field name="biomes" className="flex flex-col gap-1 lg:w-full">
+        <Form.Label className="font-medium">Biome</Form.Label>
+        <MultiSelect
+          value={selectedBiomes}
+          onChange={(e: MultiSelectChangeEvent) => setSelectedBiomes(e.value)}
+          options={Object.values(BiomeEnum).map((biome) => ({
+            biome: biome,
+          }))}
+          optionLabel="biome"
+          placeholder="Select native biomes"
+          className="p-multiselect-token:tailwind-multiselect-chip w-full"
+          display="chip"
+        />
       </Form.Field>
 
-      <Select.Root>
-        <Select.Trigger
-          className="text-violet11 hover:bg-mauve3 data-[placeholder]:text-violet9 inline-flex h-[35px] items-center justify-center gap-[5px] rounded bg-white px-[15px] text-[13px] leading-none shadow-[0_2px_10px] shadow-black/10 outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
-          aria-label="Species Domain"
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+        {/* Group Sexual Dynamic */}
+        <FormFieldSelect
+          formFieldName="groupSexualDynamic"
+          label="Group Sexual Dynamic"
+          placeholder="Select a dynamic..."
+          valueLabelPair={[
+            ["Monogamous", "Monogamous (1 male & 1 female exclusively mate)"],
+            [
+              "Promiscuous",
+              "Promiscuous (both males and females mate with multiple partners)",
+            ],
+            ["Polygynous", "Polygynous (one male mate with multiple females)"],
+            [
+              "Polyandrous",
+              "Polyandrous (one female mate with multiple males)",
+            ],
+          ]}
+          setValue={setGroupSexualDynamic}
+        />
+
+        {/* Conservation Status */}
+        <Form.Field
+          name="conservationStatus"
+          className="flex flex-col gap-1 lg:w-1/3"
         >
-          <Select.Value placeholder="Select a domain…" />
-          <Select.Icon className="text-violet11">
-            {/* <ChevronDownIcon /> */}
-          </Select.Icon>
-        </Select.Trigger>
-        <Select.Portal>
-          <Select.Content className="overflow-hidden rounded-md bg-white shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
-            <Select.ScrollUpButton className="text-violet11 flex h-[25px] cursor-default items-center justify-center bg-white">
-              {/* <ChevronUpIcon /> */}
-            </Select.ScrollUpButton>
-            <Select.Viewport className="p-[5px]">
-              <Select.Group>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
-              </Select.Group>
-            </Select.Viewport>
-            <Select.ScrollDownButton className="text-violet11 flex h-[25px] cursor-default items-center justify-center bg-white">
-              {/* <ChevronDownIcon /> */}
-            </Select.ScrollDownButton>
-          </Select.Content>
-        </Select.Portal>
-      </Select.Root>
+          <Form.Label className="font-medium">
+            Habitat or Exhibit Species?
+          </Form.Label>
+          <RadioGroup.Root
+            className="flex flex-row gap-12"
+            onValueChange={setHabitatOrExhibit}
+            aria-label="Conservation status"
+          >
+            {[
+              ["Exhibit", "exhibit"],
+              ["Habitat", "habitat"],
+            ].map(([value, id]) => (
+              <div key={id} className="flex items-center">
+                <RadioGroup.Item
+                  className="h-4 w-4 cursor-default rounded-full bg-zoovanna-cream-light shadow-[0_0_5px] shadow-zoovanna-brown outline-none hover:bg-zoovanna-cream focus:shadow-[0_0_0_2px] focus:shadow-zoovanna-brown"
+                  value={value}
+                  id={id}
+                >
+                  <RadioGroup.Indicator className="relative flex h-full w-full items-center justify-center after:block after:h-2 after:w-2 after:rounded-[50%] after:bg-zoovanna-beige after:content-['']" />
+                </RadioGroup.Item>
+                <label className="pl-2 text-base leading-none" htmlFor={id}>
+                  {value}
+                </label>
+              </div>
+            ))}
+          </RadioGroup.Root>
+        </Form.Field>
+      </div>
 
       <Form.Submit asChild>
         <button className="h-12 w-full rounded-full border bg-zoovanna-brown text-zoovanna-cream">
@@ -103,28 +345,5 @@ function CreateNewSpeciesForm() {
     </Form.Root>
   );
 }
-
-interface SelectItemProps {
-  children: React.ReactNode;
-  className?: string;
-  forwardedRef: React.Ref<HTMLDivElement>; // Assuming it's a div, adjust the type if needed
-}
-
-const SelectItem = React.forwardRef(
-  ({ children, className, ...props }: any, forwardedRef) => {
-    return (
-      <Select.Item
-        className="text-violet11 data-[disabled]:text-mauve8 data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 relative flex h-[25px] select-none items-center rounded-[3px] pl-[25px] pr-[35px] text-[13px] leading-none data-[disabled]:pointer-events-none data-[highlighted]:outline-none"
-        {...props}
-        ref={forwardedRef}
-      >
-        <Select.ItemText>{children}</Select.ItemText>
-        <Select.ItemIndicator className="absolute left-0 inline-flex w-[25px] items-center justify-center">
-          {/* <CheckIcon /> */}
-        </Select.ItemIndicator>
-      </Select.Item>
-    );
-  }
-);
 
 export default CreateNewSpeciesForm;
