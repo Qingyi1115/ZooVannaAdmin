@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef, useRef } from "react";
 import * as Form from "@radix-ui/react-form";
 import * as Select from "@radix-ui/react-select";
 
@@ -8,17 +8,20 @@ interface PropsType {
   formFieldName: string;
   placeholder: string;
   label: string;
+  required: boolean;
   valueLabelPair: [string, string][];
-  setValue: (value: React.SetStateAction<string>) => void;
+  value: string | undefined;
+  setValue: (value: React.SetStateAction<string | undefined>) => void;
+  validateFunction: (props: ValidityState) => JSX.Element | null;
 }
 
-interface SelectItemProps {
-  children: React.ReactNode;
-  className?: string;
-  forwardedRef: React.Ref<HTMLDivElement>; // Assuming it's a div, adjust the type if needed
-}
+// interface SelectItemProps {
+//   children: React.ReactNode;
+//   className?: string;
+//   forwardedRef: React.Ref<HTMLDivElement>; // Assuming it's a div, adjust the type if needed
+// }
 
-const SelectItem = React.forwardRef(
+const SelectItem = forwardRef(
   ({ children, className, ...props }: any, forwardedRef) => {
     return (
       <Select.Item
@@ -39,17 +42,47 @@ function FormFieldSelect(props: PropsType) {
   const {
     formFieldName,
     label,
-    // required,
+    required,
     placeholder,
-    // value,
+    value,
     valueLabelPair,
     setValue,
+    validateFunction,
   } = props;
+
+  const ref = useRef();
+
+  function onOpenChange() {
+    const element = document.getElementById(label + "id");
+    if (element) {
+      const isDataInvalid = element.getAttribute("data-invalid");
+      if (isDataInvalid == "true") {
+        element.setAttribute("data-valid", "true");
+        element.removeAttribute("data-invalid");
+      }
+    }
+  }
+
   return (
-    <Form.Field name={formFieldName} className="flex w-full flex-col gap-1">
+    <Form.Field
+      name={formFieldName}
+      id={label + "id"}
+      className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+    >
       <Form.Label className="font-medium">{label}</Form.Label>
-      {/* for Edit forms, need to include value={domain} */}
-      <Select.Root onValueChange={setValue}>
+      {/* for Edit forms, need to include value={value} */}
+      <Form.Control
+        className="hidden"
+        type="text"
+        value={value}
+        required={required}
+        onChange={() => null}
+      ></Form.Control>
+      <Select.Root
+        onValueChange={setValue}
+        value={value}
+        onOpenChange={onOpenChange}
+      >
         <Select.Trigger
           className="inline-flex items-center justify-center gap-4 rounded-lg border-[1.5px] border-stroke bg-transparent px-2 py-4 text-base leading-none shadow-[0_2px_10px] shadow-black/10 outline-none transition-all hover:bg-whiten focus:shadow-[0_0_0_2px] focus:shadow-body data-[placeholder]:text-graydark"
           aria-label="Species Domain"
@@ -79,6 +112,7 @@ function FormFieldSelect(props: PropsType) {
           </Select.Content>
         </Select.Portal>
       </Select.Root>
+      <Form.ValidityState>{validateFunction}</Form.ValidityState>
     </Form.Field>
   );
 }

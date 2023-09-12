@@ -28,7 +28,7 @@ function FormFieldText(props: PropsType) {
   return (
     <Form.Field
       name={formFieldName}
-      className="flex w-full flex-col gap-1 data-[invalid]:text-zoovanna-red"
+      className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
     >
       <Form.Label className="font-medium">{label}</Form.Label>
       <Form.Control

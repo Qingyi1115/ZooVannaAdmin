@@ -5,9 +5,10 @@ import * as RadioGroup from "@radix-ui/react-radio-group";
 interface PropsType {
   formFieldName: string;
   label: string;
+  required: boolean;
   valueIdPair: [string, string][];
-  value: string;
-  setValue: (value: React.SetStateAction<string>) => void;
+  value: string | undefined;
+  setValue: (value: React.SetStateAction<string | undefined>) => void;
   validateFunction: (props: ValidityState) => JSX.Element | null;
 }
 
@@ -15,21 +16,45 @@ function FormFieldRadioGroup(props: PropsType) {
   const {
     formFieldName,
     label,
+    required,
     valueIdPair,
     value,
     setValue,
     validateFunction,
   } = props;
+
+  function onValueChange(selectedValue: string) {
+    setValue(selectedValue);
+
+    const element = document.getElementById(label + "id");
+    if (element) {
+      const isDataInvalid = element.getAttribute("data-invalid");
+      if (isDataInvalid == "true") {
+        element.setAttribute("data-valid", "true");
+        element.removeAttribute("data-invalid");
+      }
+    }
+  }
+
   return (
     <Form.Field
+      id={label + "id"}
       name={formFieldName}
-      className="flex cursor-pointer flex-col gap-1  lg:w-full"
+      className="flex cursor-pointer flex-col gap-1 data-[invalid]:text-danger lg:w-full"
     >
       <Form.Label className="font-medium">{label}</Form.Label>
-      <RadioGroup.Root
-        className="flex flex-col gap-3"
+      <Form.Control
+        className="hidden"
+        type="text"
         value={value}
-        onValueChange={setValue}
+        required
+        // onChange={onValueChange}
+      />
+      <RadioGroup.Root
+        className="flex flex-col gap-3 text-black"
+        value={value}
+        required={required}
+        onValueChange={onValueChange}
         aria-label={label}
       >
         {valueIdPair.map(([value, id]) => (
@@ -47,6 +72,7 @@ function FormFieldRadioGroup(props: PropsType) {
           </div>
         ))}
       </RadioGroup.Root>
+      <Form.ValidityState>{validateFunction}</Form.ValidityState>
     </Form.Field>
   );
 }
