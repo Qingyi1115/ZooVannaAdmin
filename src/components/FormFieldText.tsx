@@ -28,7 +28,7 @@ function FormFieldText(props: PropsType) {
   return (
     <Form.Field
       name={formFieldName}
-      className="flex flex-col gap-1 data-[invalid]:text-zoovanna-red lg:w-1/3"
+      className="flex w-full flex-col gap-1 data-[invalid]:text-zoovanna-red"
     >
       <Form.Label className="font-medium">{label}</Form.Label>
       <Form.Control
@@ -37,7 +37,7 @@ function FormFieldText(props: PropsType) {
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="h-10 rounded-md border border-zoovanna-beige/50 bg-zoovanna-cream-100 p-1 text-sm shadow-[0_2px_10px] shadow-black/10 placeholder:italic placeholder:text-zoovanna-brown/50 hover:bg-zoovanna-cream-200"
+        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
       />
       <Form.ValidityState>{validateFunction}</Form.ValidityState>
     </Form.Field>

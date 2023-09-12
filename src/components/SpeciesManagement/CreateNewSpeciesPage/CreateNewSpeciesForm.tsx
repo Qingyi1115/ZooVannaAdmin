@@ -11,6 +11,7 @@ import FormFieldSelect from "../../FormFieldSelect";
 import { ContinentEnum } from "../../../enums/ContinentEnum";
 import { HiCheck } from "react-icons/hi";
 import { BiomeEnum } from "../../../enums/BiomeEnum";
+import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 
 function CreateNewSpeciesForm() {
   const api = useApi();
@@ -31,7 +32,10 @@ function CreateNewSpeciesForm() {
   const [selectedBiomes, setSelectedBiomes] = useState<string[]>([]);
   const [groupSexualDynamic, setGroupSexualDynamic] = useState<string>("");
   const [habitatOrExhibit, setHabitatOrExhibit] = useState<string>("");
+  const [generalDietPreference, setGeneralDietPreference] =
+    useState<string>("");
 
+  const [formError, setFormError] = useState<string | null>(null);
   //   function validatePassword(props: ValidityState) {
   //     if (props != undefined) {
   //       if (props.valueMissing) {
@@ -58,14 +62,14 @@ function CreateNewSpeciesForm() {
 
   return (
     <Form.Root
-      className="flex w-full flex-col gap-6 rounded-lg bg-white p-4 text-zoovanna-brown"
+      className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
       onSubmit={handleSubmit}
     >
-      <span className="self-center text-3xl font-bold">
+      <span className="self-center text-title-xl font-bold">
         Create a New Species
       </span>
-      <hr className="bg-zoovanna-beige" />
-      <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+      <hr className="bg-stroke opacity-20" />
+      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Common Name */}
         <FormFieldText
           type="text"
@@ -102,46 +106,28 @@ function CreateNewSpeciesForm() {
         validateFunction={() => null}
       />
 
-      <div className="flex w-5/6 flex-col gap-6 lg:w-1/3 lg:flex-row lg:gap-24">
+      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Conservation Status */}
-        <Form.Field
-          name="conservationStatus"
-          className="flex flex-col gap-1 lg:w-full"
-        >
-          <Form.Label className="font-medium">Conservation Status</Form.Label>
-          <RadioGroup.Root
-            className="flex flex-col gap-3"
-            onValueChange={setConservationStatus}
-            aria-label="Conservation status"
-          >
-            {[
-              ["Data Deficient", "r1"],
-              ["Domesticated", "r2"],
-              ["Least Concern", "r3"],
-              ["Near Threatened", "r4"],
-              ["Vulnerable", "r5"],
-              ["Endangered", "r6"],
-              ["Critically Endangered", "r7"],
-              ["Extinct In Wild", "r8"],
-            ].map(([value, id]) => (
-              <div key={id} className="flex items-center">
-                <RadioGroup.Item
-                  className="h-4 w-4 cursor-default rounded-full bg-zoovanna-cream-200 shadow-[0_0_5px] shadow-zoovanna-brown outline-none hover:bg-zoovanna-cream-300 focus:shadow-[0_0_0_2px] focus:shadow-zoovanna-brown"
-                  value={value}
-                  id={id}
-                >
-                  <RadioGroup.Indicator className="relative flex h-full w-full items-center justify-center after:block after:h-2 after:w-2 after:rounded-[50%] after:bg-zoovanna-beige after:content-['']" />
-                </RadioGroup.Item>
-                <label className="pl-2 text-base leading-none" htmlFor={id}>
-                  {value}
-                </label>
-              </div>
-            ))}
-          </RadioGroup.Root>
-        </Form.Field>
+        <FormFieldRadioGroup
+          formFieldName="conservationStatus"
+          label="Conservation Status"
+          valueIdPair={[
+            ["Data Deficient", "r1"],
+            ["Domesticated", "r2"],
+            ["Least Concern", "r3"],
+            ["Near Threatened", "r4"],
+            ["Vulnerable", "r5"],
+            ["Endangered", "r6"],
+            ["Critically Endangered", "r7"],
+            ["Extinct In Wild", "r8"],
+          ]}
+          value={conservationStatus}
+          setValue={setConservationStatus}
+          validateFunction={() => null}
+        />
       </div>
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Domain */}
         <FormFieldSelect
           formFieldName="domain"
@@ -173,7 +159,7 @@ function CreateNewSpeciesForm() {
         />
       </div>
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Species Phylum */}
         <FormFieldText
           type="text"
@@ -198,7 +184,7 @@ function CreateNewSpeciesForm() {
         />
       </div>
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Species Order */}
         <FormFieldText
           type="text"
@@ -284,42 +270,42 @@ function CreateNewSpeciesForm() {
           setValue={setGroupSexualDynamic}
         />
 
-        {/* Conservation Status */}
-        <Form.Field
-          name="conservationStatus"
-          className="flex flex-col gap-1 lg:w-1/3"
-        >
-          <Form.Label className="font-medium">
-            Habitat or Exhibit Species?
-          </Form.Label>
-          <RadioGroup.Root
-            className="flex flex-row gap-12"
-            onValueChange={setHabitatOrExhibit}
-            aria-label="Habitat or Exhibit Species"
-          >
-            {[
-              ["Exhibit", "exhibit"],
-              ["Habitat", "habitat"],
-            ].map(([value, id]) => (
-              <div key={id} className="flex items-center">
-                <RadioGroup.Item
-                  className="h-4 w-4 cursor-default rounded-full bg-zoovanna-cream-200 shadow-[0_0_5px] shadow-zoovanna-brown outline-none hover:bg-zoovanna-cream-300 focus:shadow-[0_0_0_2px] focus:shadow-zoovanna-brown"
-                  value={value}
-                  id={id}
-                >
-                  <RadioGroup.Indicator className="relative flex h-full w-full items-center justify-center after:block after:h-2 after:w-2 after:rounded-[50%] after:bg-zoovanna-beige after:content-['']" />
-                </RadioGroup.Item>
-                <label className="pl-2 text-base leading-none" htmlFor={id}>
-                  {value}
-                </label>
-              </div>
-            ))}
-          </RadioGroup.Root>
-        </Form.Field>
+        {/* Group Sexual Dynamic */}
+        <FormFieldSelect
+          formFieldName="generalDietPreference"
+          label="General Diet Preference"
+          placeholder="Select a diet preference..."
+          valueLabelPair={[
+            ["Monogamous", "Monogamous (1 male & 1 female exclusively mate)"],
+            [
+              "Promiscuous",
+              "Promiscuous (both males and females mate with multiple partners)",
+            ],
+            ["Polygynous", "Polygynous (one male mate with multiple females)"],
+            [
+              "Polyandrous",
+              "Polyandrous (one female mate with multiple males)",
+            ],
+          ]}
+          setValue={setGeneralDietPreference}
+        />
       </div>
 
+      {/* Habitat or Exhibit */}
+      <FormFieldRadioGroup
+        formFieldName="habitatOrExhibit"
+        label="Habitat or Exhibit Species?"
+        valueIdPair={[
+          ["Exhibit", "exhibit"],
+          ["Habitat", "habitat"],
+        ]}
+        value={habitatOrExhibit}
+        setValue={setHabitatOrExhibit}
+        validateFunction={() => null}
+      />
+
       <Form.Submit asChild>
-        <button className="h-12 w-5/6 self-center rounded-full border bg-zoovanna-brown text-zoovanna-cream-200">
+        <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
           Create Species
         </button>
       </Form.Submit>

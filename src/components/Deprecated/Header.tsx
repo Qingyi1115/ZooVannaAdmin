@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "../Header/LogoutButton";
 
 interface PropsType {
   sidebarOpen: boolean;

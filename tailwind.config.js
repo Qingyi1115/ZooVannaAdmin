@@ -21,26 +21,26 @@ export default {
         current: "currentColor",
         transparent: "transparent",
         white: "#FFFFFF",
-        black: "#1C2434",
+        black: "#24341c", // changed
         "black-2": "#010101",
-        body: "#64748B",
-        bodydark: "#AEB7C0",
-        bodydark1: "#DEE4EE",
-        bodydark2: "#8A99AF",
-        primary: "#3C50E0",
-        secondary: "#80CAEE",
-        stroke: "#E2E8F0",
-        gray: "#EFF4FB",
-        graydark: "#333A48",
-        "gray-2": "#F7F9FC",
+        body: "#748b64", // changed
+        bodydark: "#b7c0ae", // changed
+        bodydark1: "#e4eede", // changed
+        bodydark2: "#99af8a", // changed
+        primary: "#2fb31c", // changed
+        secondary: "#80CAEE", // changed
+        stroke: "#e8f0e2", // changed
+        gray: "#f4fbef", // changed
+        graydark: "#3a4833", // changed
+        "gray-2": "#f9fcf7", // changed
         "gray-3": "#FAFAFA",
-        whiten: "#F1F5F9",
-        whiter: "#F5F7FD",
-        boxdark: "#24303F",
-        "boxdark-2": "#1A222C",
-        strokedark: "#2E3A47",
-        "form-strokedark": "#3d4d60",
-        "form-input": "#1d2a39",
+        whiten: "#f5f9f1", // changed
+        whiter: "#f7fdf5", // changed
+        boxdark: "#303f24", // changed
+        "boxdark-2": "#222c1a", // changed
+        strokedark: "#3a472e", // changed
+        "form-strokedark": "#4d603d", // changed
+        "form-input": "#2a391d", // changed
         "meta-1": "#DC3545",
         "meta-2": "#EFF2F7",
         "meta-3": "#10B981",

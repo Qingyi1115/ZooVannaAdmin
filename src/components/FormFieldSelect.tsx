@@ -22,7 +22,7 @@ const SelectItem = React.forwardRef(
   ({ children, className, ...props }: any, forwardedRef) => {
     return (
       <Select.Item
-        className="relative flex select-none items-center rounded-lg py-1.5 pl-6 pr-4 text-sm leading-none text-zoovanna-brown data-[disabled]:pointer-events-none data-[highlighted]:bg-zoovanna-beige data-[disabled]:text-zoovanna-beige data-[highlighted]:text-zoovanna-cream-300 data-[highlighted]:outline-none"
+        className="relative flex select-none items-center rounded-lg py-1.5 pl-6 pr-4 text-sm leading-none text-black data-[disabled]:pointer-events-none data-[highlighted]:bg-body data-[disabled]:text-white data-[highlighted]:text-whiten data-[highlighted]:outline-none"
         {...props}
         ref={forwardedRef}
       >
@@ -46,12 +46,12 @@ function FormFieldSelect(props: PropsType) {
     setValue,
   } = props;
   return (
-    <Form.Field name={formFieldName} className="flex flex-col gap-1 lg:w-1/3">
+    <Form.Field name={formFieldName} className="flex w-full flex-col gap-1">
       <Form.Label className="font-medium">{label}</Form.Label>
       {/* for Edit forms, need to include value={domain} */}
       <Select.Root onValueChange={setValue}>
         <Select.Trigger
-          className="inline-flex h-10 items-center justify-center gap-[5px] rounded border border-zoovanna-beige/50 bg-zoovanna-cream-100 px-2 text-sm leading-none shadow-[0_2px_10px] shadow-black/10 outline-none hover:bg-zoovanna-cream-300 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-zoovanna-brown/50"
+          className="inline-flex items-center justify-center gap-4 rounded-lg border-[1.5px] border-stroke bg-transparent px-2 py-4 text-base leading-none shadow-[0_2px_10px] shadow-black/10 outline-none transition-all hover:bg-whiten focus:shadow-[0_0_0_2px] focus:shadow-body data-[placeholder]:text-graydark"
           aria-label="Species Domain"
         >
           <Select.Value placeholder={placeholder} />
@@ -60,8 +60,8 @@ function FormFieldSelect(props: PropsType) {
           </Select.Icon>
         </Select.Trigger>
         <Select.Portal>
-          <Select.Content className="overflow-hidden rounded-md bg-zoovanna-cream-100 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
-            <Select.ScrollUpButton className="flex h-[25px] cursor-default items-center justify-center bg-white">
+          <Select.Content className="overflow-hidden rounded-md bg-whiter shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
+            <Select.ScrollUpButton className="flex h-[25px] cursor-default items-center justify-center bg-whiter">
               <HiChevronUp />
             </Select.ScrollUpButton>
             <Select.Viewport className="p-2">
@@ -73,7 +73,7 @@ function FormFieldSelect(props: PropsType) {
                 ))}
               </Select.Group>
             </Select.Viewport>
-            <Select.ScrollDownButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-zoovanna-beige">
+            <Select.ScrollDownButton className="flex h-[25px] cursor-default items-center justify-center bg-whiter">
               <HiChevronDown />
             </Select.ScrollDownButton>
           </Select.Content>

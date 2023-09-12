@@ -65,9 +65,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/">
-          {/* <img src={Logo} alt="Logo" /> */}
           <img
-            src="/logos/cream-ZOOVANNA.png"
+            src="/logos/white-ZOOVANNA.png"
             alt="Zoovanna Logo"
             className="m-auto w-11/12"
           />
@@ -81,7 +80,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           className="block lg:hidden"
         >
           <svg
-            className="fill-current"
+            className="fill-whiten"
             width="20"
             height="18"
             viewBox="0 0 20 18"
@@ -107,7 +106,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
-              {/* <!-- Menu Item Dashboard --> */}
+              {/* <!-- Menu Item Species Management --> */}
               <SidebarLinkGroup
                 activeCondition={
                   pathname === "/" || pathname.includes("dashboard")
@@ -118,10 +117,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <NavLink
                         to="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          (pathname === "/" ||
-                            pathname.includes("dashboard")) &&
-                          "bg-graydark dark:bg-meta-4"
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${
+                          (pathname === "/species" ||
+                            pathname.includes("species")) &&
+                          "bg-graydark"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -155,7 +154,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             fill=""
                           />
                         </svg>
-                        Dashboard
+                        Species
                         <svg
                           className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
                             open && "rotate-180"
@@ -183,13 +182,24 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to="/"
+                              to="/species/viewallspecies"
                               className={({ isActive }) =>
                                 "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
                                 (isActive && "!text-white")
                               }
                             >
-                              eCommerce
+                              View All Species
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/species/createspecies"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              Create New Species
                             </NavLink>
                           </li>
                         </ul>
