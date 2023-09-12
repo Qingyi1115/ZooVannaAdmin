@@ -24,7 +24,7 @@ function App() {
 
   return (
     <PrimeReactProvider>
-      <div className="App bg-zoovanna-cream-200 font-inter">
+      <div className="App bg-whiter font-inter">
         <BrowserRouter>
           <Routes>
             <Route
@@ -37,13 +37,13 @@ function App() {
               <Route>
                 {/* Species Management */}
                 <Route
-                  path="/viewallspecies"
+                  path="/species/viewallspecies"
                   element={
                     user ? <ViewAllSpeciesPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
-                  path="/createspecies"
+                  path="/species/createspecies"
                   element={
                     user ? <CreateNewSpeciesPage /> : <Navigate to="/login" />
                   }
