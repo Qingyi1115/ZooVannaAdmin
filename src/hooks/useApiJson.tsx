@@ -28,7 +28,7 @@ import { useAuthContext } from "./useAuthContext";
     api.del("https://jsonplaceholder.typicode.com/posts/1");
   }, []);
 */
-function useApi<TData = any>() {
+function useApiJson<TData = any>() {
   const [result, setResult] = useState<TData | null>(null);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -95,4 +95,4 @@ function useApi<TData = any>() {
   };
 }
 
-export default useApi;
+export default useApiJson;

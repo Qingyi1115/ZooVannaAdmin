@@ -5,8 +5,8 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
-import useApi from "../../../hooks/useApi";
-import FormFieldText from "../../FormFieldText";
+import useApiFormData from "../../../hooks/useApiFormData";
+import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
 import { ContinentEnum } from "../../../enums/ContinentEnum";
 import { HiCheck } from "react-icons/hi";
@@ -14,7 +14,7 @@ import { BiomeEnum } from "../../../enums/BiomeEnum";
 import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 
 function CreateNewSpeciesForm() {
-  const api = useApi();
+  const apiFormData = useApiFormData();
 
   //   const [speciesCode, setSpeciesCode] = useState<string>("");
   const [commonName, setCommonName] = useState<string>("");
@@ -45,10 +45,25 @@ function CreateNewSpeciesForm() {
   const [generalDietPreference, setGeneralDietPreference] = useState<
     string | undefined
   >(undefined);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
 
   // field validations
+  function validateImage(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please upload an image
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
   function validateCommonName(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
@@ -268,29 +283,108 @@ function CreateNewSpeciesForm() {
     }
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+    setImageFile(file);
+  }
+
+  function clearForm() {
+    setCommonName("");
+    setScientificName("");
+    setAliasName("");
+    setConservationStatus(undefined);
+    setDomain(undefined);
+    setKingdom(undefined);
+    setPhylum("");
+    setSpeciesClass("");
+    setOrder("");
+    setFamily("");
+    setGenus("");
+    setNativeContinent(undefined);
+    setSelectedBiomes(undefined);
+    setGroupSexualDynamic(undefined);
+    setHabitatOrExhibit(undefined);
+    setGeneralDietPreference(undefined);
+    setImageFile(null);
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
     // remember to validate again, esp the select ones (domain, kingdom) that values aren't "")
-    console.log("inside handleSUbmit");
-    console.log("conservation status:" + conservationStatus);
-    console.log("domain:" + domain);
-    console.log("kingdom:" + kingdom);
-    console.log("selected biomes:");
-    console.log(selectedBiomes);
+    // console.log("inside handleSUbmit");
+    // console.log("conservation status:" + conservationStatus);
+    // console.log("domain:" + domain);
+    // console.log("kingdom:" + kingdom);
+    // console.log("selected biomes:");
+    // console.log(selectedBiomes);
+
+    const formData = new FormData();
+    formData.append("commonName", commonName);
+    formData.append("scientificName", scientificName);
+    formData.append("aliasName", aliasName);
+    formData.append("conservationStatus", conservationStatus || "");
+    formData.append("domain", domain || "");
+    formData.append("kingdom", kingdom || "");
+    formData.append("phylum", phylum);
+    formData.append("speciesClass", speciesClass);
+    formData.append("order", order);
+    formData.append("family", family);
+    formData.append("genus", genus);
+    formData.append("nativeContinent", nativeContinent || "");
+    formData.append("selectedBiomes", selectedBiomes?.toString() || "");
+    formData.append("groupSexualDynamic", groupSexualDynamic || "");
+    formData.append("habitatOrExhibit", habitatOrExhibit || "");
+    formData.append("generalDietPreference", generalDietPreference || "");
+    formData.append("file", imageFile || "");
+    await apiFormData.post(
+      "http://localhost:3000/api/species/createnewspecies",
+      formData
+    );
+    console.log(apiFormData.result);
+    // .then((response) => {
+    //   // Handle response: show a success message or redirect
+    //   console.log("response submit create species");
+    //   console.log(response);
+
+    //   // Clear form fields / perform other actions upon successful ceration
+    //   if (response != undefined) {
+    //     clearForm();
+    //   }
+    // })
+    // .catch((apiError) => {
+    //   setFormError(apiError);
+    // });
   }
 
   return (
     <Form.Root
       className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
       onSubmit={handleSubmit}
+      encType="multipart/form-data"
     >
       <span className="self-center text-title-xl font-bold">
         Create a New Species
       </span>
       <hr className="bg-stroke opacity-20" />
+      {/* Species Picture */}
+      <Form.Field
+        name="speciesImage"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">Species Image</Form.Label>
+        <Form.Control
+          type="file"
+          required
+          accept=".png, .jpg, .jpeg, .webp"
+          onChange={handleFileChange}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        />
+        <Form.ValidityState>{validateImage}</Form.ValidityState>
+      </Form.Field>
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Common Name */}
-        <FormFieldText
+        <FormFieldInput
           type="text"
           formFieldName="commonName"
           label="Common Name"
@@ -301,7 +395,7 @@ function CreateNewSpeciesForm() {
           validateFunction={validateCommonName}
         />
         {/* Scientific Name */}
-        <FormFieldText
+        <FormFieldInput
           type="text"
           formFieldName="scientificName"
           label="Scientific Name (Binomial/Trinomial Name)"
@@ -314,7 +408,7 @@ function CreateNewSpeciesForm() {
       </div>
 
       {/* Alias Name */}
-      <FormFieldText
+      <FormFieldInput
         type="text"
         formFieldName="aliasName"
         label="Alias Name"
@@ -387,7 +481,7 @@ function CreateNewSpeciesForm() {
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Species Phylum */}
-        <FormFieldText
+        <FormFieldInput
           type="text"
           formFieldName="phylum"
           label="Phylum"
@@ -398,7 +492,7 @@ function CreateNewSpeciesForm() {
           validateFunction={validatePhylum}
         />
         {/* Species Class */}
-        <FormFieldText
+        <FormFieldInput
           type="text"
           formFieldName="speciesClass"
           label="Class"
@@ -412,7 +506,7 @@ function CreateNewSpeciesForm() {
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Species Order */}
-        <FormFieldText
+        <FormFieldInput
           type="text"
           formFieldName="order"
           label="Order"
@@ -423,7 +517,7 @@ function CreateNewSpeciesForm() {
           validateFunction={validateOrder}
         />
         {/* Species Family */}
-        <FormFieldText
+        <FormFieldInput
           type="text"
           formFieldName="family"
           label="Family"
@@ -436,7 +530,7 @@ function CreateNewSpeciesForm() {
       </div>
 
       {/* Species Genus */}
-      <FormFieldText
+      <FormFieldInput
         type="text"
         formFieldName="genus"
         label="Genus"
@@ -559,9 +653,9 @@ function CreateNewSpeciesForm() {
           Create Species
         </button>
       </Form.Submit>
-      {/* {error && (
-        <div className="m-2 border-red-400 bg-red-100 p-2">{error}</div>
-      )} */}
+      {formError && (
+        <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+      )}
     </Form.Root>
   );
 }

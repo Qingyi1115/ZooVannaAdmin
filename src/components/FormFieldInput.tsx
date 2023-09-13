@@ -13,7 +13,7 @@ interface PropsType {
   validateFunction: (props: ValidityState) => JSX.Element | null;
 }
 
-function FormFieldText(props: PropsType) {
+function FormFieldInput(props: PropsType) {
   const {
     type,
     formFieldName,
@@ -44,4 +44,4 @@ function FormFieldText(props: PropsType) {
   );
 }
 
-export default FormFieldText;
+export default FormFieldInput;
