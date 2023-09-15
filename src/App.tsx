@@ -15,6 +15,7 @@ import ViewAllSpeciesPage from "./pages/speciesManagement/ViewAllSpeciesPage";
 import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage";
 
 import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import CreateNewSpeciesPage2 from "./pages/speciesManagement/CreateNewSpeciesPage2";
 
 function App() {
   const { state } = useAuthContext();
@@ -46,6 +47,12 @@ function App() {
                   path="/species/createspecies"
                   element={
                     user ? <CreateNewSpeciesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/species/createspecies2"
+                  element={
+                    user ? <CreateNewSpeciesPage2 /> : <Navigate to="/login" />
                   }
                 />
               </Route>
