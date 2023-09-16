@@ -8,13 +8,14 @@ import {
 import { useAuthContext } from "./hooks/useAuthContext";
 import React, { useState } from "react";
 
+import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import MainLayout from "./components/MainLayout";
 import ViewAllSpeciesPage from "./pages/speciesManagement/ViewAllSpeciesPage";
 import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage";
-
-import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/CreateNewFacilityPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -35,6 +36,11 @@ function App() {
           <MainLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
             <Routes>
               <Route>
+                {/* Home page */}
+                <Route
+                  path="/"
+                  element={user ? <HomePage /> : <Navigate to="/login" />}
+                />
                 {/* Species Management */}
                 <Route
                   path="/species/viewallspecies"
@@ -48,12 +54,14 @@ function App() {
                     user ? <CreateNewSpeciesPage /> : <Navigate to="/login" />
                   }
                 />
+                {/* Asset and Facility Management */}
+                <Route
+                  path="/assetfacility/createfacility"
+                  element={
+                    user ? <CreateNewFacilityPage /> : <Navigate to="/login" />
+                  }
+                />
               </Route>
-              {/* Home page */}
-              <Route
-                path="/"
-                element={user ? <HomePage /> : <Navigate to="/login" />}
-              />
             </Routes>
           </MainLayout>
         </BrowserRouter>
