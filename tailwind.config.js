@@ -35,6 +35,28 @@ module.exports = {
         dmSans: ["DM Sans"],
       },
       colors: {
+        // shadcn
+        border: "#3a472e",
+        input: "#3a472e",
+        ring: "#748b64",
+        background: "#f7fdf5",
+        foreground: "#24341c",
+        primary: "#2fb31c", // below there's another primary too
+        "primary-foreground": "#f7fdf5",
+        secondary: "#caee80",
+        "secondary-foreground": "#FFFFFF",
+        destructive: "#D34053",
+        "destructive-foreground": "#FFFFFF",
+        muted: "#dbe1d7",
+        "muted-foreground": "#3a4833",
+        accent: "#748b64",
+        "accent-foreground": "#f7fdf5",
+        popover: "#FFFFFF",
+        "popover-foreground": "#24341c",
+        card: "#FFFFFF",
+        "card-foreground": "#24341c",
+        // end shadcn
+        //
         "zoovanna-green-light": "F5F9E4",
         "zoovanna-green": "#84985A",
         "zoovanna-green-dark": "#617E42",

@@ -4,7 +4,7 @@ interface Species {
   commonName: string;
   scientificName: string;
   aliasName: string;
-  //   conservationStatus: ConservationStatus;
+  conservationStatus: string;
   domain: string;
   kingdom: string;
   phylum: string;
@@ -12,11 +12,13 @@ interface Species {
   order: string;
   family: string;
   genus: string;
-  //   nativeContinent: Continent;
+  nativeContinent: string;
   nativeBiome: string;
   educationalDescription: string;
-  //   groupSexualDynamic: GroupSexualDynamic;
-  isBigHabitatSpecies: Boolean;
+  groupSexualDynamic: string;
+  habitatOrExhibit: string;
   imageUrl: string;
   generalDietPreference: string;
 }
+
+export default Species;
