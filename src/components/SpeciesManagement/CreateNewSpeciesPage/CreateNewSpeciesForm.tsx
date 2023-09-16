@@ -336,6 +336,7 @@ function CreateNewSpeciesForm() {
     formData.append("groupSexualDynamic", groupSexualDynamic || "");
     formData.append("habitatOrExhibit", habitatOrExhibit || "");
     formData.append("generalDietPreference", generalDietPreference || "");
+    formData.append("educationalDescription", "educationalDescription");
     formData.append("file", imageFile || "");
     await apiFormData.post(
       "http://localhost:3000/api/species/createnewspecies",
