@@ -45,6 +45,8 @@ function CreateNewSpeciesForm() {
   const [generalDietPreference, setGeneralDietPreference] = useState<
     string | undefined
   >(undefined);
+  const [educationalDescription, setEducationalDescription] =
+    useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
@@ -268,6 +270,21 @@ function CreateNewSpeciesForm() {
     return null;
   }
 
+  function validateEducationalDescription(props: ValidityState) {
+    // console.log(props);
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please write a short educational description
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
   // end field validations
 
   function onBiomeSelectChange(e: MultiSelectChangeEvent) {
@@ -336,7 +353,7 @@ function CreateNewSpeciesForm() {
     formData.append("groupSexualDynamic", groupSexualDynamic || "");
     formData.append("habitatOrExhibit", habitatOrExhibit || "");
     formData.append("generalDietPreference", generalDietPreference || "");
-    formData.append("educationalDescription", "educationalDescription");
+    formData.append("educationalDescription", educationalDescription || "");
     formData.append("file", imageFile || "");
     await apiFormData.post(
       "http://localhost:3000/api/species/createnewspecies",
@@ -618,16 +635,13 @@ function CreateNewSpeciesForm() {
           required={true}
           placeholder="Select a diet preference..."
           valueLabelPair={[
-            ["Monogamous", "Monogamous (1 male & 1 female exclusively mate)"],
-            [
-              "Promiscuous",
-              "Promiscuous (both males and females mate with multiple partners)",
-            ],
-            ["Polygynous", "Polygynous (one male mate with multiple females)"],
-            [
-              "Polyandrous",
-              "Polyandrous (one female mate with multiple males)",
-            ],
+            ["Carnivore", "Carnivore"],
+            ["Herbivore", "Herbivore"],
+            ["Omnivore", "Omnivore"],
+            ["Frugivore", "Frugivore"],
+            ["Folivore", "Folivore"],
+            ["Insectivore", "Insectivore"],
+            ["Piscivore", "Piscivore"],
           ]}
           value={generalDietPreference}
           setValue={setGeneralDietPreference}
@@ -648,6 +662,27 @@ function CreateNewSpeciesForm() {
         setValue={setHabitatOrExhibit}
         validateFunction={validateHabitatOrExhibit}
       />
+
+      <Form.Field
+        name="educationalDescription"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">Educational Description</Form.Label>
+        <Form.Control
+          asChild
+          value={educationalDescription}
+          onChange={(e) => setEducationalDescription(e.target.value)}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        >
+          <textarea
+            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+            required
+          />
+        </Form.Control>
+        <Form.ValidityState>
+          {validateEducationalDescription}
+        </Form.ValidityState>
+      </Form.Field>
 
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
