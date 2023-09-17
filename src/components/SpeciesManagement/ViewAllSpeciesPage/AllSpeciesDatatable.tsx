@@ -5,7 +5,6 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 // import { ProductService } from './service/ProductService';
 import { Toast } from "primereact/toast";
-import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
 import { Rating } from "primereact/rating";
 import { Toolbar } from "primereact/toolbar";
@@ -20,6 +19,9 @@ import Species from "../../../models/Species";
 import useApiJson from "../../../hooks/useApiJson";
 import { ColumnGroup } from "primereact/columngroup";
 import { Row } from "primereact/row";
+import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+
+import { Button } from "@/components/ui/button";
 
 function AllSpeciesDatatable() {
   const apiJson = useApiJson();
@@ -60,25 +62,9 @@ function AllSpeciesDatatable() {
   }, []);
 
   useEffect(() => {
-    // const speciesData = apiJson.result as Species[];
     const speciesData = apiJson.result as Species[];
     setSpeciesList(speciesData);
   }, [apiJson.loading]);
-
-  //   useEffect(() => {
-  //     const fetchSpecies = async () => {
-  //       try {
-  //         await apiJson.get("http://localhost:3000/api/species/getallspecies");
-  //         setSpeciesList(apiJson.result);
-  //         console.log(speciesList);
-  //       } catch (error) {
-  //         // Handle errors here
-  //         console.error(error);
-  //       }
-  //     };
-
-  //     fetchSpecies();
-  //   }, []);
 
   //
   const exportCSV = () => {
@@ -86,14 +72,7 @@ function AllSpeciesDatatable() {
   };
 
   const rightToolbarTemplate = () => {
-    return (
-      <Button
-        label="Export"
-        icon="pi pi-upload"
-        className="p-button-help"
-        onClick={exportCSV}
-      />
-    );
+    return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
   const imageBodyTemplate = (rowData: Species) => {
@@ -107,23 +86,6 @@ function AllSpeciesDatatable() {
     );
   };
 
-  //   const priceBodyTemplate = (rowData: Product) => {
-  //     return formatCurrency(rowData.price);
-  //   };
-
-  //   const ratingBodyTemplate = (rowData: Product) => {
-  //     return <Rating value={rowData.rating} readOnly cancel={false} />;
-  //   };
-
-  //   const statusBodyTemplate = (rowData: Product) => {
-  //     return (
-  //       <Tag
-  //         value={rowData.inventoryStatus}
-  //         severity={getSeverity(rowData)}
-  //       ></Tag>
-  //     );
-  //   };
-
   const navigateEditProduct = (species: Species) => {};
 
   const confirmDeleteSpecies = (species: Species) => {
@@ -135,75 +97,55 @@ function AllSpeciesDatatable() {
     setDeleteSpeciesDialog(false);
   };
 
-  //   const deleteSpecies = () => {
-  //     let _species = speciesList.filter(
-  //       (val) => val.speciesId !== selectedSpecies?.speciesId
-  //     );
+  // delete species stuff
+  const deleteSpecies = () => {
+    let _species = speciesList.filter(
+      (val) => val.speciesId !== selectedSpecies?.speciesId
+    );
 
-  //     setSpeciesList(_species);
-  //     setDeleteSpeciesDialog(false);
-  //     setSelectedSpecies(emptySpecies);
-  //     toast.current?.show({
-  //       severity: "success",
-  //       summary: "Successful",
-  //       detail: "Species Deleted",
-  //       life: 3000,
-  //     });
-  //   };
+    setSpeciesList(_species);
+    setDeleteSpeciesDialog(false);
+    setSelectedSpecies(emptySpecies);
+    toast.current?.show({
+      severity: "success",
+      summary: "Successful",
+      detail: "Species Deleted",
+      life: 3000,
+    });
+  };
 
   const deleteSpeciesDialogFooter = (
     <React.Fragment>
-      <Button
-        label="No"
-        icon="pi pi-times"
-        outlined
-        onClick={hideDeleteSpeciesDialog}
-      />
-      <Button
-        label="Yes"
-        icon="pi pi-check"
-        severity="danger"
-        // onClick={deleteSpecies}
-      />
+      <Button onClick={hideDeleteSpeciesDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button variant={"destructive"} onClick={deleteSpecies}>
+        <HiCheck />
+        Yes
+      </Button>
     </React.Fragment>
   );
+  // end delete species stuff
 
   const actionBodyTemplate = (rowData: Species) => {
     return (
       <React.Fragment>
+        <Button className="mr-2" onClick={() => navigateEditProduct(rowData)}>
+          <HiPencil />
+          <span>Edit</span>
+        </Button>
         <Button
-          icon="pi pi-pencil"
-          rounded
-          outlined
+          variant={"destructive"}
           className="mr-2"
-          onClick={() => navigateEditProduct(rowData)}
-        />
-        <Button
-          icon="pi pi-trash"
-          rounded
-          outlined
-          severity="danger"
           onClick={() => confirmDeleteSpecies(rowData)}
-        />
+        >
+          <HiTrash />
+          <span>Delete</span>
+        </Button>
       </React.Fragment>
     );
   };
-
-  //   const getSeverity = (product: Product) => {
-  //     switch (product.inventoryStatus) {
-  //       case "INSTOCK":
-  //         return "success";
-
-  //       case "LOWSTOCK":
-  //         return "warning";
-
-  //       case "OUTOFSTOCK":
-  //         return "danger";
-
-  //       default:
-  //         return null;
-  //     }
-  //   };
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -244,7 +186,7 @@ function AllSpeciesDatatable() {
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} species"
             globalFilter={globalFilter}
             header={header}
           >
@@ -344,7 +286,7 @@ function AllSpeciesDatatable() {
               field="groupSexualDynamic"
               header="Group Sexual Dynamic"
               sortable
-              style={{ minWidth: "10rem" }}
+              style={{ minWidth: "16rem" }}
             ></Column>
             <Column
               field="habitatOrExhibit"
@@ -354,8 +296,9 @@ function AllSpeciesDatatable() {
             ></Column>
             <Column
               body={actionBodyTemplate}
+              header="Actions"
               exportable={false}
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "18rem" }}
             ></Column>
           </DataTable>
         </div>
