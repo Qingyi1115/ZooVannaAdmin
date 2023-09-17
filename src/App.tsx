@@ -16,6 +16,8 @@ import MainLayout from "./components/MainLayout";
 import ViewAllSpeciesPage from "./pages/speciesManagement/ViewAllSpeciesPage";
 import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage";
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/CreateNewFacilityPage";
+import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -54,6 +56,12 @@ function App() {
                     user ? <CreateNewSpeciesPage /> : <Navigate to="/login" />
                   }
                 />
+                <Route
+                  path="/species/editspecies/:speciesId"
+                  element={
+                    user ? <EditSpeciesPage /> : <Navigate to="/login" />
+                  }
+                />
                 {/* Asset and Facility Management */}
                 <Route
                   path="/assetfacility/createfacility"
@@ -62,6 +70,7 @@ function App() {
                   }
                 />
               </Route>
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </MainLayout>
         </BrowserRouter>
