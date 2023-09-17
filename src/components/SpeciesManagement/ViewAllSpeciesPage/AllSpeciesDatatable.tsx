@@ -18,6 +18,8 @@ import { Tag } from "primereact/tag";
 
 import Species from "../../../models/Species";
 import useApiJson from "../../../hooks/useApiJson";
+import { ColumnGroup } from "primereact/columngroup";
+import { Row } from "primereact/row";
 
 function AllSpeciesDatatable() {
   const apiJson = useApiJson();
@@ -37,7 +39,7 @@ function AllSpeciesDatatable() {
     family: "",
     genus: "",
     nativeContinent: "",
-    nativeBiome: "",
+    nativeBiomes: "",
     educationalDescription: "",
     groupSexualDynamic: "",
     habitatOrExhibit: "habitat",
@@ -54,17 +56,36 @@ function AllSpeciesDatatable() {
   const dt = useRef<DataTable<Species[]>>(null);
 
   useEffect(() => {
-    apiJson
-      .get("http://localhost:3000/api/species/getallspecies")
-      .then(() => setSpeciesList(apiJson.result));
+    apiJson.get("http://localhost:3000/api/species/getallspecies");
   }, []);
+
+  useEffect(() => {
+    // const speciesData = apiJson.result as Species[];
+    const speciesData = apiJson.result as Species[];
+    setSpeciesList(speciesData);
+  }, [apiJson.loading]);
+
+  //   useEffect(() => {
+  //     const fetchSpecies = async () => {
+  //       try {
+  //         await apiJson.get("http://localhost:3000/api/species/getallspecies");
+  //         setSpeciesList(apiJson.result);
+  //         console.log(speciesList);
+  //       } catch (error) {
+  //         // Handle errors here
+  //         console.error(error);
+  //       }
+  //     };
+
+  //     fetchSpecies();
+  //   }, []);
 
   //
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
 
-  const  rightToolbarTemplate = () => {
+  const rightToolbarTemplate = () => {
     return (
       <Button
         label="Export"
@@ -114,21 +135,21 @@ function AllSpeciesDatatable() {
     setDeleteSpeciesDialog(false);
   };
 
-  const deleteSpecies = () => {
-    let _species = speciesList.filter(
-      (val) => val.speciesId !== selectedSpecies?.speciesId
-    );
+  //   const deleteSpecies = () => {
+  //     let _species = speciesList.filter(
+  //       (val) => val.speciesId !== selectedSpecies?.speciesId
+  //     );
 
-    setSpeciesList(_species);
-    setDeleteSpeciesDialog(false);
-    setSelectedSpecies(emptySpecies);
-    toast.current?.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "Species Deleted",
-      life: 3000,
-    });
-  };
+  //     setSpeciesList(_species);
+  //     setDeleteSpeciesDialog(false);
+  //     setSelectedSpecies(emptySpecies);
+  //     toast.current?.show({
+  //       severity: "success",
+  //       summary: "Successful",
+  //       detail: "Species Deleted",
+  //       life: 3000,
+  //     });
+  //   };
 
   const deleteSpeciesDialogFooter = (
     <React.Fragment>
@@ -142,7 +163,7 @@ function AllSpeciesDatatable() {
         label="Yes"
         icon="pi pi-check"
         severity="danger"
-        onClick={deleteSpecies}
+        // onClick={deleteSpecies}
       />
     </React.Fragment>
   );
@@ -217,60 +238,120 @@ function AllSpeciesDatatable() {
                 setSelectedSpecies(e.value);
               }
             }}
-            dataKey="id"
+            dataKey="speciesId"
             paginator
             rows={10}
+            selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
             globalFilter={globalFilter}
             header={header}
           >
-            <Column selectionMode="multiple" exportable={false}></Column>
             <Column
-              field="code"
+              field="speciesCode"
               header="Code"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="name"
-              header="Name"
+              field="imageUrl"
+              header="Image"
+              body={imageBodyTemplate}
+            ></Column>
+            <Column
+              field="commonName"
+              header="Common Name"
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
             <Column
-              field="image"
-              header="Image"
-              body={imageBodyTemplate}
-            ></Column>
-            {/* <Column
-              field="price"
-              header="Price"
-              body={priceBodyTemplate}
-              sortable
-              style={{ minWidth: "8rem" }}
-            ></Column>
-            <Column
-              field="category"
-              header="Category"
+              field="generalDietPreference"
+              header="General Diet Preference"
               sortable
               style={{ minWidth: "10rem" }}
             ></Column>
             <Column
-              field="rating"
-              header="Reviews"
-              body={ratingBodyTemplate}
+              field="conservationStatus"
+              header="Conservation Status"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "16rem" }}
             ></Column>
             <Column
-              field="inventoryStatus"
-              header="Status"
-              body={statusBodyTemplate}
+              field="aliasName"
+              header="Alias Name"
               sortable
-              style={{ minWidth: "12rem" }}
-            ></Column> */}
+              style={{ minWidth: "16rem" }}
+            ></Column>
+
+            <Column
+              field="scientificName"
+              header="Scientific Name"
+              sortable
+              style={{ minWidth: "16rem" }}
+            ></Column>
+            <Column
+              field="domain"
+              header="Domain"
+              sortable
+              style={{ minWidth: "10rem" }}
+            ></Column>
+            <Column
+              field="kingdom"
+              header="Kingdom"
+              sortable
+              style={{ minWidth: "10rem" }}
+            ></Column>
+            <Column
+              field="phylum"
+              header="Phylum"
+              sortable
+              style={{ minWidth: "10rem" }}
+            ></Column>
+            <Column
+              field="speciesClass"
+              header="Class"
+              style={{ minWidth: "10rem" }}
+            ></Column>
+            <Column
+              field="order"
+              header="Order"
+              style={{ minWidth: "10rem" }}
+            ></Column>
+            <Column
+              field="family"
+              header="Family"
+              style={{ minWidth: "10rem" }}
+            ></Column>
+            <Column
+              field="genus"
+              header="Genus"
+              style={{ minWidth: "10rem" }}
+            ></Column>
+            <Column
+              field="nativeContinent"
+              header="Native Continent"
+              sortable
+              style={{ minWidth: "10rem" }}
+            ></Column>
+            <Column
+              field="nativeBiomes"
+              header="Native Biomes"
+              sortable
+              style={{ minWidth: "16rem" }}
+            ></Column>
+            <Column
+              field="groupSexualDynamic"
+              header="Group Sexual Dynamic"
+              sortable
+              style={{ minWidth: "10rem" }}
+            ></Column>
+            <Column
+              field="habitatOrExhibit"
+              header="Habitat or Exhibit"
+              sortable
+              style={{ minWidth: "10rem" }}
+            ></Column>
             <Column
               body={actionBodyTemplate}
               exportable={false}

@@ -13,12 +13,15 @@ interface Species {
   family: string;
   genus: string;
   nativeContinent: string;
-  nativeBiome: string;
+  nativeBiomes: string;
   educationalDescription: string;
   groupSexualDynamic: string;
   habitatOrExhibit: string;
   imageUrl: string;
   generalDietPreference: string;
+
+  createdAt?: string;
+  updateTimestamp?: string;
 }
 
 export default Species;
