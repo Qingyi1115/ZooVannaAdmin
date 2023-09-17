@@ -132,7 +132,7 @@ function AllSpeciesDatatable() {
   const actionBodyTemplate = (species: Species) => {
     return (
       <React.Fragment>
-        <NavLink to={`/species/editspecies/${species.speciesId}`}>
+        <NavLink to={`/species/editspecies/${species.speciesCode}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>

@@ -30,7 +30,7 @@ function EditSpeciesPage() {
     generalDietPreference: "",
   };
 
-  const { speciesId } = useParams<{ speciesId: string }>();
+  const { speciesCode } = useParams<{ speciesCode: string }>();
   const [curSpecies, setCurSpecies] = useState<Species>(emptySpecies);
 
   useEffect(() => {

@@ -52,7 +52,7 @@ function LoginForm() {
     <div className="flex w-full justify-center">
       <Form.Root className="w-3/5" onSubmit={handleSubmit}>
         <Form.Field name="email" className="mb-10 flex flex-col gap-1">
-          <Form.Label className="text-sm font-medium text-zoovanna-brown">
+          <Form.Label className="text-base font-medium text-black">
             E-mail
           </Form.Label>
           <Form.Control
@@ -61,7 +61,7 @@ function LoginForm() {
             placeholder="Type your e-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-14 w-full rounded-md border border-zoovanna-brown/50 bg-[#FFF9F2] px-4 text-zoovanna-brown placeholder-zoovanna-brown/70"
+            className="h-14 w-full rounded-md border border-zoovanna-brown/50 bg-whiten px-4 text-black placeholder-black/70"
           />
           {/* <Form.Message name="email" match={"valueMissing"}>
             Please enter an email
@@ -70,7 +70,7 @@ function LoginForm() {
         </Form.Field>
 
         <Form.Field name="password" className="mb-10 flex flex-col gap-1">
-          <Form.Label className="text-sm font-medium text-zoovanna-brown">
+          <Form.Label className="text-base font-medium text-black">
             Password
           </Form.Label>
           <Form.Control
@@ -79,7 +79,7 @@ function LoginForm() {
             placeholder="Type your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="h-14 w-full rounded-md border border-zoovanna-brown/50 bg-[#FFF9F2] px-4 text-zoovanna-brown placeholder-zoovanna-brown/70"
+            className="h-14 w-full rounded-md border border-zoovanna-brown/50 bg-whiten px-4 text-black placeholder-black/70"
           />
           {/* <Form.Message name="password" match={"valueMissing"}>
             Please enter a password
@@ -88,7 +88,7 @@ function LoginForm() {
         </Form.Field>
 
         <Form.Submit asChild>
-          <button className="h-12 w-full rounded-full border bg-zoovanna-brown text-zoovanna-cream-300">
+          <button className="h-12 w-full rounded-full border bg-black text-whiter">
             Log In
           </button>
         </Form.Submit>

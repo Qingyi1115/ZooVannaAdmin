@@ -57,7 +57,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/species/editspecies/:speciesId"
+                  path="/species/editspecies/:speciesCode"
                   element={
                     user ? <EditSpeciesPage /> : <Navigate to="/login" />
                   }
