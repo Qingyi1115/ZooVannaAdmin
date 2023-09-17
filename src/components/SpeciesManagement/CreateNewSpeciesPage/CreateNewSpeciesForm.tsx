@@ -349,7 +349,7 @@ function CreateNewSpeciesForm() {
     formData.append("family", family);
     formData.append("genus", genus);
     formData.append("nativeContinent", nativeContinent || "");
-    formData.append("selectedBiomes", selectedBiomes?.toString() || "");
+    formData.append("nativeBiomes", selectedBiomes?.toString() || "");
     formData.append("groupSexualDynamic", groupSexualDynamic || "");
     formData.append("habitatOrExhibit", habitatOrExhibit || "");
     formData.append("generalDietPreference", generalDietPreference || "");
