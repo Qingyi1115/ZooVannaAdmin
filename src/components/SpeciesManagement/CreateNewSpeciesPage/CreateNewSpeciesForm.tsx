@@ -33,7 +33,7 @@ function CreateNewSpeciesForm() {
   const [nativeContinent, setNativeContinent] = useState<string | undefined>(
     undefined
   );
-  const [selectedBiomes, setSelectedBiomes] = useState<string[] | undefined>(
+  const [selectedBiomes, setSelectedBiomes] = useState<string | undefined>(
     undefined
   );
   const [groupSexualDynamic, setGroupSexualDynamic] = useState<
@@ -45,6 +45,8 @@ function CreateNewSpeciesForm() {
   const [generalDietPreference, setGeneralDietPreference] = useState<
     string | undefined
   >(undefined);
+  const [educationalDescription, setEducationalDescription] =
+    useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
@@ -268,6 +270,21 @@ function CreateNewSpeciesForm() {
     return null;
   }
 
+  function validateEducationalDescription(props: ValidityState) {
+    // console.log(props);
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please write a short educational description
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
   // end field validations
 
   function onBiomeSelectChange(e: MultiSelectChangeEvent) {
@@ -316,8 +333,8 @@ function CreateNewSpeciesForm() {
     // console.log("conservation status:" + conservationStatus);
     // console.log("domain:" + domain);
     // console.log("kingdom:" + kingdom);
-    // console.log("selected biomes:");
-    // console.log(selectedBiomes);
+    console.log("selected biomes:");
+    console.log(selectedBiomes);
 
     const formData = new FormData();
     formData.append("commonName", commonName);
@@ -336,7 +353,7 @@ function CreateNewSpeciesForm() {
     formData.append("groupSexualDynamic", groupSexualDynamic || "");
     formData.append("habitatOrExhibit", habitatOrExhibit || "");
     formData.append("generalDietPreference", generalDietPreference || "");
-    formData.append("educationalDescription", "educationalDescription");
+    formData.append("educationalDescription", educationalDescription || "");
     formData.append("file", imageFile || "");
     await apiFormData.post(
       "http://localhost:3000/api/species/createnewspecies",
@@ -426,15 +443,15 @@ function CreateNewSpeciesForm() {
           formFieldName="conservationStatus"
           label="Conservation Status"
           required={true}
-          valueIdPair={[
-            ["Data Deficient", "r1"],
-            ["Domesticated", "r2"],
-            ["Least Concern", "r3"],
-            ["Near Threatened", "r4"],
-            ["Vulnerable", "r5"],
-            ["Endangered", "r6"],
-            ["Critically Endangered", "r7"],
-            ["Extinct In Wild", "r8"],
+          valueIdLabelTriplet={[
+            ["DATA_DEFICIENT", "r1", "Data Deficient"],
+            ["DOMESTICATED", "r2", "Domesticated"],
+            ["LEAST_CONCERN", "r3", "Least Concern"],
+            ["NEAR_THREATENED", "r4", "Near Threatened"],
+            ["VULNERABLE", "r5", "Vulnerable"],
+            ["ENDANGERED", "r6", "Endangered"],
+            ["CRITICALLY_ENDANGERED", "r7", "Critically Endangered"],
+            ["EXTINCT_IN_WILD", "r8", "Extinct In Wild"],
           ]}
           value={conservationStatus}
           setValue={setConservationStatus}
@@ -548,10 +565,18 @@ function CreateNewSpeciesForm() {
         label="Native Continent"
         required={true}
         placeholder="Select a continent..."
-        valueLabelPair={Object.values(ContinentEnum).map((continent) => [
-          continent,
-          continent,
-        ])}
+        // valueLabelPair={Object.values(ContinentEnum).map((continent) => [
+        //   continent,
+        //   continent,
+        // ])}
+        valueLabelPair={[
+          ["AFRICA", "Africa"],
+          ["ASIA", "Asia"],
+          ["EUROPE", "Europe"],
+          ["NORTH_AMERICA", "North America"],
+          ["OCEANIA", "Oceania"],
+          ["SOUTH_OR_CENTRAL_AMERICA", "South or Central America"],
+        ]}
         value={nativeContinent}
         setValue={setNativeContinent}
         validateFunction={validateNativeContinent}
@@ -575,10 +600,17 @@ function CreateNewSpeciesForm() {
           value={selectedBiomes}
           // onChange={(e: MultiSelectChangeEvent) => setSelectedBiomes(e.value)}
           onChange={onBiomeSelectChange}
-          options={Object.values(BiomeEnum).map((biome) => ({
-            biome: biome,
-          }))}
-          optionLabel="biome"
+          // options={Object.values(BiomeEnum).map((biome) => biome.toString())}
+          options={[
+            "Aquatic",
+            "Desert",
+            "Grassland",
+            "Taiga",
+            "Temperate",
+            "Tropical",
+            "Tundra",
+          ].map((biome) => biome)}
+          // optionLabel="biome"
           placeholder="Select native biomes"
           className="p-multiselect-token:tailwind-multiselect-chip w-full"
           display="chip"
@@ -595,14 +627,14 @@ function CreateNewSpeciesForm() {
           required={true}
           placeholder="Select a dynamic..."
           valueLabelPair={[
-            ["Monogamous", "Monogamous (1 male & 1 female exclusively mate)"],
+            ["MONOGAMOUS", "Monogamous (1 male & 1 female exclusively mate)"],
             [
-              "Promiscuous",
+              "PROMISCUOUS",
               "Promiscuous (both males and females mate with multiple partners)",
             ],
-            ["Polygynous", "Polygynous (one male mate with multiple females)"],
+            ["POLYGYNOUS", "Polygynous (one male mate with multiple females)"],
             [
-              "Polyandrous",
+              "POLYANDROUS",
               "Polyandrous (one female mate with multiple males)",
             ],
           ]}
@@ -618,16 +650,13 @@ function CreateNewSpeciesForm() {
           required={true}
           placeholder="Select a diet preference..."
           valueLabelPair={[
-            ["Monogamous", "Monogamous (1 male & 1 female exclusively mate)"],
-            [
-              "Promiscuous",
-              "Promiscuous (both males and females mate with multiple partners)",
-            ],
-            ["Polygynous", "Polygynous (one male mate with multiple females)"],
-            [
-              "Polyandrous",
-              "Polyandrous (one female mate with multiple males)",
-            ],
+            ["Carnivore", "Carnivore"],
+            ["Herbivore", "Herbivore"],
+            ["Omnivore", "Omnivore"],
+            ["Frugivore", "Frugivore"],
+            ["Folivore", "Folivore"],
+            ["Insectivore", "Insectivore"],
+            ["Piscivore", "Piscivore"],
           ]}
           value={generalDietPreference}
           setValue={setGeneralDietPreference}
@@ -640,14 +669,35 @@ function CreateNewSpeciesForm() {
         formFieldName="habitatOrExhibit"
         label="Habitat or Exhibit Species?"
         required={true}
-        valueIdPair={[
-          ["Exhibit", "exhibit"],
-          ["Habitat", "habitat"],
+        valueIdLabelTriplet={[
+          ["Exhibit", "exhibit", "Exhibit"],
+          ["Habitat", "habitat", "Habitat"],
         ]}
         value={habitatOrExhibit}
         setValue={setHabitatOrExhibit}
         validateFunction={validateHabitatOrExhibit}
       />
+
+      <Form.Field
+        name="educationalDescription"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">Educational Description</Form.Label>
+        <Form.Control
+          asChild
+          value={educationalDescription}
+          onChange={(e) => setEducationalDescription(e.target.value)}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        >
+          <textarea
+            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+            required
+          />
+        </Form.Control>
+        <Form.ValidityState>
+          {validateEducationalDescription}
+        </Form.ValidityState>
+      </Form.Field>
 
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">

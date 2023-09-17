@@ -22,6 +22,7 @@ import { Row } from "primereact/row";
 import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
+import { NavLink } from "react-router-dom";
 
 function AllSpeciesDatatable() {
   const apiJson = useApiJson();
@@ -128,17 +129,19 @@ function AllSpeciesDatatable() {
   );
   // end delete species stuff
 
-  const actionBodyTemplate = (rowData: Species) => {
+  const actionBodyTemplate = (species: Species) => {
     return (
       <React.Fragment>
-        <Button className="mr-2" onClick={() => navigateEditProduct(rowData)}>
-          <HiPencil />
-          <span>Edit</span>
-        </Button>
+        <NavLink to={`/species/editspecies/${species.speciesCode}`}>
+          <Button className="mr-2">
+            <HiPencil />
+            <span>Edit</span>
+          </Button>
+        </NavLink>
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteSpecies(rowData)}
+          onClick={() => confirmDeleteSpecies(species)}
         >
           <HiTrash />
           <span>Delete</span>
