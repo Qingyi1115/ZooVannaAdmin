@@ -443,15 +443,15 @@ function CreateNewSpeciesForm() {
           formFieldName="conservationStatus"
           label="Conservation Status"
           required={true}
-          valueIdPair={[
-            ["Data Deficient", "r1"],
-            ["Domesticated", "r2"],
-            ["Least Concern", "r3"],
-            ["Near Threatened", "r4"],
-            ["Vulnerable", "r5"],
-            ["Endangered", "r6"],
-            ["Critically Endangered", "r7"],
-            ["Extinct In Wild", "r8"],
+          valueIdLabelTriplet={[
+            ["DATA_DEFICIENT", "r1", "Data Deficient"],
+            ["DOMESTICATED", "r2", "Domesticated"],
+            ["LEAST_CONCERN", "r3", "Least Concern"],
+            ["NEAR_THREATENED", "r4", "Near Threatened"],
+            ["VULNERABLE", "r5", "Vulnerable"],
+            ["ENDANGERED", "r6", "Endangered"],
+            ["CRITICALLY_ENDANGERED", "r7", "Critically Endangered"],
+            ["EXTINCT_IN_WILD", "r8", "Extinct In Wild"],
           ]}
           value={conservationStatus}
           setValue={setConservationStatus}
@@ -565,10 +565,18 @@ function CreateNewSpeciesForm() {
         label="Native Continent"
         required={true}
         placeholder="Select a continent..."
-        valueLabelPair={Object.values(ContinentEnum).map((continent) => [
-          continent,
-          continent,
-        ])}
+        // valueLabelPair={Object.values(ContinentEnum).map((continent) => [
+        //   continent,
+        //   continent,
+        // ])}
+        valueLabelPair={[
+          ["AFRICA", "Africa"],
+          ["ASIA", "Asia"],
+          ["EUROPE", "Europe"],
+          ["NORTH_AMERICA", "North America"],
+          ["OCEANIA", "Oceania"],
+          ["SOUTH_OR_CENTRAL_AMERICA", "South or Central America"],
+        ]}
         value={nativeContinent}
         setValue={setNativeContinent}
         validateFunction={validateNativeContinent}
@@ -612,14 +620,14 @@ function CreateNewSpeciesForm() {
           required={true}
           placeholder="Select a dynamic..."
           valueLabelPair={[
-            ["Monogamous", "Monogamous (1 male & 1 female exclusively mate)"],
+            ["MONOGAMOUS", "Monogamous (1 male & 1 female exclusively mate)"],
             [
-              "Promiscuous",
+              "PROMISCUOUS",
               "Promiscuous (both males and females mate with multiple partners)",
             ],
-            ["Polygynous", "Polygynous (one male mate with multiple females)"],
+            ["POLYGYNOUS", "Polygynous (one male mate with multiple females)"],
             [
-              "Polyandrous",
+              "POLYANDROUS",
               "Polyandrous (one female mate with multiple males)",
             ],
           ]}
@@ -654,9 +662,9 @@ function CreateNewSpeciesForm() {
         formFieldName="habitatOrExhibit"
         label="Habitat or Exhibit Species?"
         required={true}
-        valueIdPair={[
-          ["Exhibit", "exhibit"],
-          ["Habitat", "habitat"],
+        valueIdLabelTriplet={[
+          ["Exhibit", "exhibit", "Exhibit"],
+          ["Habitat", "habitat", "Habitat"],
         ]}
         value={habitatOrExhibit}
         setValue={setHabitatOrExhibit}

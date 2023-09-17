@@ -34,17 +34,19 @@ function EditSpeciesPage() {
   const [curSpecies, setCurSpecies] = useState<Species>(emptySpecies);
 
   useEffect(() => {
-    apiJson.get("");
+    apiJson.get(`http://localhost:3000/api/species/getspecies/${speciesCode}`);
   }, []);
 
   useEffect(() => {
     const species = apiJson.result as Species;
-    setCurSpecies(emptySpecies);
+    setCurSpecies(species);
   }, [apiJson.loading]);
 
   return (
     <div className="p-10">
-      <EditSpeciesForm curSpecies={curSpecies} />
+      {curSpecies && curSpecies.speciesId != -1 && (
+        <EditSpeciesForm curSpecies={curSpecies} />
+      )}
     </div>
   );
 }

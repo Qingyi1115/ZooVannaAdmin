@@ -58,6 +58,9 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
   const [generalDietPreference, setGeneralDietPreference] = useState<
     string | undefined
   >(curSpecies.generalDietPreference);
+  const [educationalDescription, setEducationalDescription] = useState<string>(
+    curSpecies.educationalDescription
+  );
   const [imageUrl, setImageUrl] = useState<string | null>(curSpecies.imageUrl);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -282,6 +285,21 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
     return null;
   }
 
+  function validateEducationalDescription(props: ValidityState) {
+    // console.log(props);
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please write a short educational description
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
   // end field validations
 
   function onBiomeSelectChange(e: MultiSelectChangeEvent) {
@@ -328,305 +346,331 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
   }
 
   return (
-    <Form.Root
-      className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
-      onSubmit={handleSubmit}
-      encType="multipart/form-data"
-    >
-      <span className="self-center text-title-xl font-bold">
-        Edit Species: {curSpecies.commonName}
-      </span>
-      <hr className="bg-stroke opacity-20" />
-      {/* Species Picture */}
-      <Form.Field
-        name="speciesImage"
-        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-      >
-        <Form.Label className="font-medium">Species Image</Form.Label>
-        <Form.Control
-          type="file"
-          required
-          accept=".png, .jpg, .jpeg, .webp"
-          onChange={handleFileChange}
-          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
-        />
-        <Form.ValidityState>{validateImage}</Form.ValidityState>
-      </Form.Field>
-      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Common Name */}
-        <FormFieldInput
-          type="text"
-          formFieldName="commonName"
-          label="Common Name"
-          required={true}
-          placeholder="e.g., African Lion, Sumatran Tiger,..."
-          value={commonName}
-          setValue={setCommonName}
-          validateFunction={validateCommonName}
-        />
-        {/* Scientific Name */}
-        <FormFieldInput
-          type="text"
-          formFieldName="scientificName"
-          label="Scientific Name (Binomial/Trinomial Name)"
-          required={true}
-          placeholder="e.g., Homo sapiens, Panthera leo leo..."
-          value={scientificName}
-          setValue={setScientificName}
-          validateFunction={validateScientificName}
-        />
-      </div>
+    <div>
+      {curSpecies && (
+        <Form.Root
+          className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
+          <span className="self-center text-title-xl font-bold">
+            Edit Species: {curSpecies.commonName}
+          </span>
+          <hr className="bg-stroke opacity-20" />
+          {/* Species Picture */}
+          <Form.Field
+            name="speciesImage"
+            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          >
+            <Form.Label className="font-medium">Species Image</Form.Label>
+            <Form.Control
+              type="file"
+              required
+              accept=".png, .jpg, .jpeg, .webp"
+              onChange={handleFileChange}
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+            />
+            <Form.ValidityState>{validateImage}</Form.ValidityState>
+          </Form.Field>
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+            {/* Common Name */}
+            <FormFieldInput
+              type="text"
+              formFieldName="commonName"
+              label="Common Name"
+              required={true}
+              placeholder="e.g., African Lion, Sumatran Tiger,..."
+              value={commonName}
+              setValue={setCommonName}
+              validateFunction={validateCommonName}
+            />
+            {/* Scientific Name */}
+            <FormFieldInput
+              type="text"
+              formFieldName="scientificName"
+              label="Scientific Name (Binomial/Trinomial Name)"
+              required={true}
+              placeholder="e.g., Homo sapiens, Panthera leo leo..."
+              value={scientificName}
+              setValue={setScientificName}
+              validateFunction={validateScientificName}
+            />
+          </div>
+          {/* Alias Name */}
+          <FormFieldInput
+            type="text"
+            formFieldName="aliasName"
+            label="Alias Name"
+            required={false}
+            placeholder="e.g., Great Capybara, Sunda Island Tiger,..."
+            value={aliasName}
+            setValue={setAliasName}
+            validateFunction={() => null}
+          />
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+            {/* Conservation Status */}
+            <FormFieldRadioGroup
+              formFieldName="conservationStatus"
+              label="Conservation Status"
+              required={true}
+              valueIdLabelTriplet={[
+                ["DATA_DEFICIENT", "r1", "Data Deficient"],
+                ["DOMESTICATED", "r2", "Domesticated"],
+                ["LEAST_CONCERN", "r3", "Least Concern"],
+                ["NEAR_THREATENED", "r4", "Near Threatened"],
+                ["VULNERABLE", "r5", "Vulnerable"],
+                ["ENDANGERED", "r6", "Endangered"],
+                ["CRITICALLY_ENDANGERED", "r7", "Critically Endangered"],
+                ["EXTINCT_IN_WILD", "r8", "Extinct In Wild"],
+              ]}
+              value={conservationStatus}
+              setValue={setConservationStatus}
+              validateFunction={validateConservationStatus}
+            />
+          </div>
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+            {/* Domain */}
+            <FormFieldSelect
+              formFieldName="domain"
+              label="Species Domain"
+              required={true}
+              placeholder="Select a domain..."
+              valueLabelPair={[
+                ["Archaea", "Archaea"],
+                ["Bacteria", "Bacteria"],
+                ["Eukarya", "Eukarya"],
+              ]}
+              value={domain}
+              setValue={setDomain}
+              validateFunction={validateDomain}
+            />
+            {/* Kingdom */}
+            <FormFieldSelect
+              formFieldName="kingdom"
+              label="Species Kingdom"
+              required={true}
+              placeholder="Select a kingdom..."
+              valueLabelPair={[
+                ["Animalia", "Animalia"],
+                ["Archaea", "Archaea"],
+                ["Bacteria", "Bacteria"],
+                ["Chromista", "Chromista"],
+                ["Fungi", "Fungi"],
+                ["Plantae", "Plantae"],
+                ["Protozoa", "Protozoa"],
+              ]}
+              value={kingdom}
+              setValue={setKingdom}
+              validateFunction={validateKingdom}
+            />
+          </div>
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+            {/* Species Phylum */}
+            <FormFieldInput
+              type="text"
+              formFieldName="phylum"
+              label="Phylum"
+              required={true}
+              placeholder="e.g., Chordata, Entoprocta,..."
+              value={phylum}
+              setValue={setPhylum}
+              validateFunction={validatePhylum}
+            />
+            {/* Species Class */}
+            <FormFieldInput
+              type="text"
+              formFieldName="speciesClass"
+              label="Class"
+              required={true}
+              placeholder="e.g., Mammalia, Reptilia..."
+              value={speciesClass}
+              setValue={setSpeciesClass}
+              validateFunction={validateSpeciesClass}
+            />
+          </div>
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+            {/* Species Order */}
+            <FormFieldInput
+              type="text"
+              formFieldName="order"
+              label="Order"
+              required={true}
+              placeholder="e.g., Rodentia, Carnivora..."
+              value={order}
+              setValue={setOrder}
+              validateFunction={validateOrder}
+            />
+            {/* Species Family */}
+            <FormFieldInput
+              type="text"
+              formFieldName="family"
+              label="Family"
+              required={true}
+              placeholder="e.g., Caviidae, Felidae..."
+              value={family}
+              setValue={setFamily}
+              validateFunction={validateFamily}
+            />
+          </div>
+          {/* Species Genus */}
+          <FormFieldInput
+            type="text"
+            formFieldName="genus"
+            label="Genus"
+            required={true}
+            placeholder="e.g., Homo, Panthera..."
+            value={genus}
+            setValue={setGenus}
+            validateFunction={validateGenus}
+          />
+          {/* Native Continent */}
+          <FormFieldSelect
+            formFieldName="nativeContinent"
+            label="Native Continent"
+            required={true}
+            placeholder="Select a continent..."
+            // valueLabelPair={Object.values(ContinentEnum).map((continent) => [
+            //   continent,
+            //   continent,
+            // ])}
+            valueLabelPair={[
+              ["AFRICA", "Africa"],
+              ["ASIA", "Asia"],
+              ["EUROPE", "Europe"],
+              ["NORTH_AMERICA", "North America"],
+              ["OCEANIA", "Oceania"],
+              ["SOUTH_OR_CENTRAL_AMERICA", "South or Central America"],
+            ]}
+            value={nativeContinent}
+            setValue={setNativeContinent}
+            validateFunction={validateNativeContinent}
+          />
+          {/* Biomes */}
+          <Form.Field
+            id="selectMultiBiomeField"
+            name="biomes"
+            className="flex flex-col gap-1 data-[invalid]:text-danger lg:w-full"
+          >
+            <Form.Label className="font-medium">Biome</Form.Label>
+            <Form.Control
+              className="hidden"
+              type="text"
+              value={selectedBiomes}
+              required
+              // onChange={onValueChange}
+            />
+            <MultiSelect
+              value={selectedBiomes}
+              // onChange={(e: MultiSelectChangeEvent) => setSelectedBiomes(e.value)}
+              onChange={onBiomeSelectChange}
+              options={Object.values(BiomeEnum).map((biome) => ({
+                biome: biome,
+              }))}
+              optionLabel="biome"
+              placeholder="Select native biomes"
+              className="p-multiselect-token:tailwind-multiselect-chip w-full"
+              display="chip"
+            />
+            {/* <Form.Message /> */}
+            <Form.ValidityState>{validateNativeBiome}</Form.ValidityState>
+          </Form.Field>
+          <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+            {/* Group Sexual Dynamic */}
+            <FormFieldSelect
+              formFieldName="groupSexualDynamic"
+              label="Group Sexual Dynamic"
+              required={true}
+              placeholder="Select a dynamic..."
+              valueLabelPair={[
+                [
+                  "MONOGAMOUS",
+                  "Monogamous (1 male & 1 female exclusively mate)",
+                ],
+                [
+                  "PROMISCUOUS",
+                  "Promiscuous (both males and females mate with multiple partners)",
+                ],
+                [
+                  "POLYGYNOUS",
+                  "Polygynous (one male mate with multiple females)",
+                ],
+                [
+                  "POLYANDROUS",
+                  "Polyandrous (one female mate with multiple males)",
+                ],
+              ]}
+              value={groupSexualDynamic}
+              setValue={setGroupSexualDynamic}
+              validateFunction={validateGroupSexualDynamic}
+            />
+            {/* Group Sexual Dynamic */}
+            <FormFieldSelect
+              formFieldName="generalDietPreference"
+              label="General Diet Preference"
+              required={true}
+              placeholder="Select a diet preference..."
+              valueLabelPair={[
+                ["Carnivore", "Carnivore"],
+                ["Herbivore", "Herbivore"],
+                ["Omnivore", "Omnivore"],
+                ["Frugivore", "Frugivore"],
+                ["Folivore", "Folivore"],
+                ["Insectivore", "Insectivore"],
+                ["Piscivore", "Piscivore"],
+              ]}
+              value={generalDietPreference}
+              setValue={setGeneralDietPreference}
+              validateFunction={validateGeneralDietPreference}
+            />
+          </div>
+          {/* Habitat or Exhibit */}
+          <FormFieldRadioGroup
+            formFieldName="habitatOrExhibit"
+            label="Habitat or Exhibit Species?"
+            required={true}
+            valueIdLabelTriplet={[
+              ["Exhibit", "exhibit", "Exhibit"],
+              ["Habitat", "habitat", "Habitat"],
+            ]}
+            value={habitatOrExhibit}
+            setValue={setHabitatOrExhibit}
+            validateFunction={validateHabitatOrExhibit}
+          />
 
-      {/* Alias Name */}
-      <FormFieldInput
-        type="text"
-        formFieldName="aliasName"
-        label="Alias Name"
-        required={false}
-        placeholder="e.g., Great Capybara, Sunda Island Tiger,..."
-        value={aliasName}
-        setValue={setAliasName}
-        validateFunction={() => null}
-      />
+          <Form.Field
+            name="educationalDescription"
+            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          >
+            <Form.Label className="font-medium">
+              Educational Description
+            </Form.Label>
+            <Form.Control
+              asChild
+              value={educationalDescription}
+              onChange={(e) => setEducationalDescription(e.target.value)}
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+            >
+              <textarea
+                // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+                required
+              />
+            </Form.Control>
+            <Form.ValidityState>
+              {validateEducationalDescription}
+            </Form.ValidityState>
+          </Form.Field>
 
-      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Conservation Status */}
-        <FormFieldRadioGroup
-          formFieldName="conservationStatus"
-          label="Conservation Status"
-          required={true}
-          valueIdPair={[
-            ["Data Deficient", "r1"],
-            ["Domesticated", "r2"],
-            ["Least Concern", "r3"],
-            ["Near Threatened", "r4"],
-            ["Vulnerable", "r5"],
-            ["Endangered", "r6"],
-            ["Critically Endangered", "r7"],
-            ["Extinct In Wild", "r8"],
-          ]}
-          value={conservationStatus}
-          setValue={setConservationStatus}
-          validateFunction={validateConservationStatus}
-        />
-      </div>
-
-      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Domain */}
-        <FormFieldSelect
-          formFieldName="domain"
-          label="Species Domain"
-          required={true}
-          placeholder="Select a domain..."
-          valueLabelPair={[
-            ["Archaea", "Archaea"],
-            ["Bacteria", "Bacteria"],
-            ["Eukarya", "Eukarya"],
-          ]}
-          value={domain}
-          setValue={setDomain}
-          validateFunction={validateDomain}
-        />
-
-        {/* Kingdom */}
-        <FormFieldSelect
-          formFieldName="kingdom"
-          label="Species Kingdom"
-          required={true}
-          placeholder="Select a kingdom..."
-          valueLabelPair={[
-            ["Animalia", "Animalia"],
-            ["Archaea", "Archaea"],
-            ["Bacteria", "Bacteria"],
-            ["Chromista", "Chromista"],
-            ["Fungi", "Fungi"],
-            ["Plantae", "Plantae"],
-            ["Protozoa", "Protozoa"],
-          ]}
-          value={kingdom}
-          setValue={setKingdom}
-          validateFunction={validateKingdom}
-        />
-      </div>
-
-      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Species Phylum */}
-        <FormFieldInput
-          type="text"
-          formFieldName="phylum"
-          label="Phylum"
-          required={true}
-          placeholder="e.g., Chordata, Entoprocta,..."
-          value={phylum}
-          setValue={setPhylum}
-          validateFunction={validatePhylum}
-        />
-        {/* Species Class */}
-        <FormFieldInput
-          type="text"
-          formFieldName="speciesClass"
-          label="Class"
-          required={true}
-          placeholder="e.g., Mammalia, Reptilia..."
-          value={speciesClass}
-          setValue={setSpeciesClass}
-          validateFunction={validateSpeciesClass}
-        />
-      </div>
-
-      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Species Order */}
-        <FormFieldInput
-          type="text"
-          formFieldName="order"
-          label="Order"
-          required={true}
-          placeholder="e.g., Rodentia, Carnivora..."
-          value={order}
-          setValue={setOrder}
-          validateFunction={validateOrder}
-        />
-        {/* Species Family */}
-        <FormFieldInput
-          type="text"
-          formFieldName="family"
-          label="Family"
-          required={true}
-          placeholder="e.g., Caviidae, Felidae..."
-          value={family}
-          setValue={setFamily}
-          validateFunction={validateFamily}
-        />
-      </div>
-
-      {/* Species Genus */}
-      <FormFieldInput
-        type="text"
-        formFieldName="genus"
-        label="Genus"
-        required={true}
-        placeholder="e.g., Homo, Panthera..."
-        value={genus}
-        setValue={setGenus}
-        validateFunction={validateGenus}
-      />
-
-      {/* Native Continent */}
-      <FormFieldSelect
-        formFieldName="nativeContinent"
-        label="Native Continent"
-        required={true}
-        placeholder="Select a continent..."
-        valueLabelPair={Object.values(ContinentEnum).map((continent) => [
-          continent,
-          continent,
-        ])}
-        value={nativeContinent}
-        setValue={setNativeContinent}
-        validateFunction={validateNativeContinent}
-      />
-
-      {/* Biomes */}
-      <Form.Field
-        id="selectMultiBiomeField"
-        name="biomes"
-        className="flex flex-col gap-1 data-[invalid]:text-danger lg:w-full"
-      >
-        <Form.Label className="font-medium">Biome</Form.Label>
-        <Form.Control
-          className="hidden"
-          type="text"
-          value={selectedBiomes}
-          required
-          // onChange={onValueChange}
-        />
-        <MultiSelect
-          value={selectedBiomes}
-          // onChange={(e: MultiSelectChangeEvent) => setSelectedBiomes(e.value)}
-          onChange={onBiomeSelectChange}
-          options={Object.values(BiomeEnum).map((biome) => ({
-            biome: biome,
-          }))}
-          optionLabel="biome"
-          placeholder="Select native biomes"
-          className="p-multiselect-token:tailwind-multiselect-chip w-full"
-          display="chip"
-        />
-        {/* <Form.Message /> */}
-        <Form.ValidityState>{validateNativeBiome}</Form.ValidityState>
-      </Form.Field>
-
-      <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
-        {/* Group Sexual Dynamic */}
-        <FormFieldSelect
-          formFieldName="groupSexualDynamic"
-          label="Group Sexual Dynamic"
-          required={true}
-          placeholder="Select a dynamic..."
-          valueLabelPair={[
-            ["Monogamous", "Monogamous (1 male & 1 female exclusively mate)"],
-            [
-              "Promiscuous",
-              "Promiscuous (both males and females mate with multiple partners)",
-            ],
-            ["Polygynous", "Polygynous (one male mate with multiple females)"],
-            [
-              "Polyandrous",
-              "Polyandrous (one female mate with multiple males)",
-            ],
-          ]}
-          value={groupSexualDynamic}
-          setValue={setGroupSexualDynamic}
-          validateFunction={validateGroupSexualDynamic}
-        />
-
-        {/* Group Sexual Dynamic */}
-        <FormFieldSelect
-          formFieldName="generalDietPreference"
-          label="General Diet Preference"
-          required={true}
-          placeholder="Select a diet preference..."
-          valueLabelPair={[
-            ["Monogamous", "Monogamous (1 male & 1 female exclusively mate)"],
-            [
-              "Promiscuous",
-              "Promiscuous (both males and females mate with multiple partners)",
-            ],
-            ["Polygynous", "Polygynous (one male mate with multiple females)"],
-            [
-              "Polyandrous",
-              "Polyandrous (one female mate with multiple males)",
-            ],
-          ]}
-          value={generalDietPreference}
-          setValue={setGeneralDietPreference}
-          validateFunction={validateGeneralDietPreference}
-        />
-      </div>
-
-      {/* Habitat or Exhibit */}
-      <FormFieldRadioGroup
-        formFieldName="habitatOrExhibit"
-        label="Habitat or Exhibit Species?"
-        required={true}
-        valueIdPair={[
-          ["Exhibit", "exhibit"],
-          ["Habitat", "habitat"],
-        ]}
-        value={habitatOrExhibit}
-        setValue={setHabitatOrExhibit}
-        validateFunction={validateHabitatOrExhibit}
-      />
-
-      <Form.Submit asChild>
-        <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-          Create Species
-        </button>
-      </Form.Submit>
-      {formError && (
-        <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+          <Form.Submit asChild>
+            <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
+              Submit Edit Species
+            </button>
+          </Form.Submit>
+          {formError && (
+            <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+          )}
+        </Form.Root>
       )}
-    </Form.Root>
+    </div>
   );
 }
 
