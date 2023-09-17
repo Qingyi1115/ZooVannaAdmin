@@ -47,7 +47,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
     curSpecies.nativeContinent
   );
   const [selectedBiomes, setSelectedBiomes] = useState<string[] | undefined>(
-    curSpecies.nativeBiomes.split(", ")
+    curSpecies.nativeBiomes.split(",")
   );
   const [groupSexualDynamic, setGroupSexualDynamic] = useState<
     string | undefined
@@ -323,6 +323,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData();
+    formData.append("speciesCode", curSpecies.speciesCode);
     formData.append("commonName", commonName);
     formData.append("scientificName", scientificName);
     formData.append("aliasName", aliasName);
@@ -335,13 +336,16 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
     formData.append("family", family);
     formData.append("genus", genus);
     formData.append("nativeContinent", nativeContinent || "");
-    formData.append("selectedBiomes", selectedBiomes?.toString() || "");
+    formData.append("nativeBiomes", selectedBiomes?.toString() || "");
     formData.append("groupSexualDynamic", groupSexualDynamic || "");
     formData.append("habitatOrExhibit", habitatOrExhibit || "");
     formData.append("generalDietPreference", generalDietPreference || "");
-    formData.append("educationalDescription", "educationalDescription");
+    formData.append("educationalDescription", educationalDescription);
     formData.append("file", imageFile || "");
-    await apiFormData.post("", formData);
+    await apiFormData.put(
+      "http://localhost:3000/api/species/updatespecies",
+      formData
+    );
     console.log(apiFormData.result);
   }
 
@@ -362,9 +366,14 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
             name="speciesImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <Form.Label className="font-medium">Species Image</Form.Label>
+            <span className="font-medium">Current Image</span>
+            <img src={curSpecies.imageUrl} alt="Current species image" />
+            <Form.Label className="font-medium">
+              Change Species Image
+            </Form.Label>
             <Form.Control
               type="file"
+              placeholder="Change image"
               required
               accept=".png, .jpg, .jpeg, .webp"
               onChange={handleFileChange}
@@ -563,10 +572,17 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
               value={selectedBiomes}
               // onChange={(e: MultiSelectChangeEvent) => setSelectedBiomes(e.value)}
               onChange={onBiomeSelectChange}
-              options={Object.values(BiomeEnum).map((biome) => ({
-                biome: biome,
-              }))}
-              optionLabel="biome"
+              // options={Object.values(BiomeEnum).map((biome) => biome.toString())}
+              options={[
+                "Aquatic",
+                "Desert",
+                "Grassland",
+                "Taiga",
+                "Temperate",
+                "Tropical",
+                "Tundra",
+              ].map((biome) => biome)}
+              // optionLabel="biome"
               placeholder="Select native biomes"
               className="p-multiselect-token:tailwind-multiselect-chip w-full"
               display="chip"

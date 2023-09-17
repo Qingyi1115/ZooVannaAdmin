@@ -33,7 +33,7 @@ function CreateNewSpeciesForm() {
   const [nativeContinent, setNativeContinent] = useState<string | undefined>(
     undefined
   );
-  const [selectedBiomes, setSelectedBiomes] = useState<string[] | undefined>(
+  const [selectedBiomes, setSelectedBiomes] = useState<string | undefined>(
     undefined
   );
   const [groupSexualDynamic, setGroupSexualDynamic] = useState<
@@ -333,8 +333,8 @@ function CreateNewSpeciesForm() {
     // console.log("conservation status:" + conservationStatus);
     // console.log("domain:" + domain);
     // console.log("kingdom:" + kingdom);
-    // console.log("selected biomes:");
-    // console.log(selectedBiomes);
+    console.log("selected biomes:");
+    console.log(selectedBiomes);
 
     const formData = new FormData();
     formData.append("commonName", commonName);
@@ -600,10 +600,17 @@ function CreateNewSpeciesForm() {
           value={selectedBiomes}
           // onChange={(e: MultiSelectChangeEvent) => setSelectedBiomes(e.value)}
           onChange={onBiomeSelectChange}
-          options={Object.values(BiomeEnum).map((biome) => ({
-            biome: biome,
-          }))}
-          optionLabel="biome"
+          // options={Object.values(BiomeEnum).map((biome) => biome.toString())}
+          options={[
+            "Aquatic",
+            "Desert",
+            "Grassland",
+            "Taiga",
+            "Temperate",
+            "Tropical",
+            "Tundra",
+          ].map((biome) => biome)}
+          // optionLabel="biome"
           placeholder="Select native biomes"
           className="p-multiselect-token:tailwind-multiselect-chip w-full"
           display="chip"
