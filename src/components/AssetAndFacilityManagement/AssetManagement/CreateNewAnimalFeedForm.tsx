@@ -6,11 +6,11 @@ import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
 import useApiJson from "../../../hooks/useApiJson";
 
-function validateCommonName(props: ValidityState) {
+function validateName(props: ValidityState) {
   if (props != undefined) {
     if (props.valueMissing) {
       return (
-        <div className="font-medium text-danger">* Please enter a ahahha</div>
+        <div className="font-medium text-danger">* Please enter a valid name!</div>
       );
     }
     // add any other cases here
@@ -18,21 +18,13 @@ function validateCommonName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAssetForm() {
+function CreateNewAnimalFeedForm() {
   const apiJson = useApiJson();
 
-  // assetName
-  // assetType
-  // assetType2
-  // AssetDetail
-  const [assetName, setAssetName] = useState<string>(""); // text input
-  const [assetType, setAssetType] = useState<string | undefined>(
+  const [animalFeedName, setAnimalFeedName] = useState<string>(""); // text input
+  const [animalFeedCategory, setAnimalFeedCategory] = useState<string | undefined>(
     undefined
   ); // radio group
-  const [assetType2, setAssetType2] = useState<string | undefined>(
-    undefined
-  ); // drop down select
-  const [assetDetail, setAssetDetail] = useState<string>(""); // text
 
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -40,14 +32,12 @@ function CreateNewAssetForm() {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
-    const newAsset = {
-      assetName,
-      assetType,
-      assetType2,
-      assetDetail,
+    const newAnimalFeed = {
+      animalFeedName,
+      animalFeedCategory
     };
 
-    await apiJson.post("", newAsset);
+    await apiJson.post("", newAnimalFeed);
 
     // handle success case or failurecase using apiJson
   }
@@ -58,76 +48,54 @@ function CreateNewAssetForm() {
       onSubmit={handleSubmit}
     >
       <span className="self-center text-title-xl font-bold">
-        Create a New Asset
+        Create New Animal Feed
       </span>
       <hr className="bg-stroke opacity-20" />
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Common Name */}
+        {/* Animal Feed Name */}
         <FormFieldInput
           type="text"
-          formFieldName="assetName"
-          label="Asset Name"
+          formFieldName="animalFeedName"
+          label="Animal Feed Name"
           required={true}
-          placeholder="e.g., Toilet"
-          value={assetName}
-          setValue={setAssetName}
-          validateFunction={validateCommonName}
-        />
-        {/* Scientific Name */}
-        <FormFieldInput
-          type="text"
-          formFieldName="assetDetail"
-          label="Scientific Name (Binomial/Trinomial Name)"
-          required={true}
-          placeholder="e.g., Homo sapiens, Panthera leo leo..."
-          value={assetDetail}
-          setValue={setAssetDetail}
-          validateFunction={validateCommonName}
+          placeholder="e.g., Carrots"
+          value={animalFeedName}
+          setValue={setAnimalFeedName}
+          validateFunction={validateName}
         />
       </div>
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Conservation Status */}
+        {/* Animal Feed Category */}
         <FormFieldRadioGroup
-          formFieldName="assetType"
-          label="Asset Type"
+          formFieldName="animalFeedCategory"
+          label="Animal Feed Category"
           required={true}
-          valueIdPair={[
-            ["Haha", "ft1"],
-            ["Hoho", "ft2"],
-            ["HEHE", "ft3"],
-            ["Near Threatened", "ft4"],
-            ["Near Threatened", "ft4"],
-            ["Near Threatened", "ft4"],
-            ["Near Threatened", "ft4"],
-            ["Near Threatened", "ft4"],
-            ["Near Threatened", "ft4"],
+          valueIdLabelTriplet={[
+            ["RED_MEAT", "r1", "Red Meat"],
+            ["WHITE_MEAT", "r2", "White Meat"],
+            ["FISH", "r3", "Fish"],
+            ["INSECTS", "r4", "Insects"],
+            ["HAY", "r5", "Hay"],
+            ["VEGETABLES", "r6", "Vegetables"],
+            ["FRUITS", "r7", "Fruits"],
+            ["GRAINS", "r8", "Grains"],
+            ["BROWSE", "r9", "Browse"],
+            ["PELLETS", "r10", "Pellets"],
+            ["NECTAR", "r11", "Nectar"],
+            ["SUPPLEMENTS", "r12", "Supplements"],
+            ["OTHERS", "r13", "Others"]
           ]}
-          value={assetType}
-          setValue={setAssetType}
-          validateFunction={validateCommonName}
+          value={animalFeedCategory}
+          setValue={setAnimalFeedCategory}
+          validateFunction={validateName}
         />
       </div>
 
-      {/* Domain */}
-      <FormFieldSelect
-        formFieldName="domain"
-        label="Asset Domain"
-        required={true}
-        placeholder="Select a domain..."
-        valueLabelPair={[
-          ["Archaea", "sadtguhjansd"],
-          ["Bacteria", "Bacteria"],
-          ["Eukarya", "Eukarya"],
-        ]}
-        value={assetType2}
-        setValue={setAssetType2}
-        validateFunction={validateCommonName}
-      />
 
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-          Create Asset
+          Create Animal Feed
         </button>
       </Form.Submit>
       {formError && (
@@ -137,4 +105,4 @@ function CreateNewAssetForm() {
   );
 }
 
-export default CreateNewAssetForm;
+export default CreateNewAnimalFeedForm;

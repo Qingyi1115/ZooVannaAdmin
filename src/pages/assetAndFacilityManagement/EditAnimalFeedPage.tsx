@@ -3,38 +3,23 @@ import { useParams } from "react-router";
 import EditAnimalFeedForm from "../../components/AssetAndFacilityManagement/AssetManagement/EditAnimalFeedForm";
 import useApiJson from "../../hooks/useApiJson";
 import AnimalFeed from "src/models/AnimalFeed";
+import { AnimalFeedCategory } from "src/enums/Enumerated";
 
 function EditAnimalFeedPage() {
   const apiJson = useApiJson();
 
   let emptyAnimalFeed: AnimalFeed = {
     animalFeedId: -1,
-    animalFeedCode: "",
-    commonName: "",
-    scientificName: "",
-    aliasName: "",
-    conservationStatus: "",
-    domain: "",
-    kingdom: "",
-    phylum: "",
-    animalFeedClass: "",
-    order: "",
-    family: "",
-    genus: "",
-    nativeContinent: "",
-    nativeBiomes: "",
-    educationalDescription: "",
-    groupSexualDynamic: "",
-    habitatOrExhibit: "habitat",
-    imageUrl: "",
-    generalDietPreference: "",
+    animalFeedName: "",
+    animalFeedImageUrl: "",
+    animalFeedCategory: AnimalFeedCategory.OTHERS
   };
 
-  const { animalFeedCode } = useParams<{ animalFeedCode: string }>();
+  const { animalFeedName } = useParams<{ animalFeedName: string }>();
   const [curAnimalFeed, setCurAnimalFeed] = useState<AnimalFeed>(emptyAnimalFeed);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animalFeed/getanimalFeed/${animalFeedCode}`);
+    apiJson.get(`http://localhost:3000/api/animalFeed/getanimalFeed/${animalFeedName}`);
   }, []);
 
   useEffect(() => {

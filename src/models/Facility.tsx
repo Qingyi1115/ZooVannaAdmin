@@ -1,18 +1,10 @@
 interface Facility {
-  employeeId: number;
-  employeeName: string;
-  employeeEmail: string;
-  employeeAddress: string;
-  employeePhoneNumber: string;
-  employeePasswordHash: string;
-  employeeSalt: string;
-  employeeDoorAccessCode: string;
-  employeeEducation: string;
-  hasAdminPrivileges: boolean;
-
-  //   keeper?: Keeper | null;
-  //   planningStaff?: PlanningStaff | null;
-  //   generalStaff?: GeneralStaff | null; */
+  facilityId: number;
+  facilityName: string;
+  xCoordinate: number;
+  yCoordinate: number;
+  facilityDetail: string;
+  facilityDetailJson: any
 }
 
 export default Facility;

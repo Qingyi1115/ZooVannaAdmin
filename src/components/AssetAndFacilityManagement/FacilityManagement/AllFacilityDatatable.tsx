@@ -29,25 +29,11 @@ function AllFacilityDatatable() {
 
   let emptyFacility: Facility = {
     facilityId: -1,
-    facilityCode: "",
-    commonName: "",
-    scientificName: "",
-    aliasName: "",
-    conservationStatus: "",
-    domain: "",
-    kingdom: "",
-    phylum: "",
-    facilityClass: "",
-    order: "",
-    family: "",
-    genus: "",
-    nativeContinent: "",
-    nativeBiomes: "",
-    educationalDescription: "",
-    groupSexualDynamic: "",
-    habitatOrExhibit: "habitat",
-    imageUrl: "",
-    generalDietPreference: "",
+    facilityName: "",
+    facilityDetail: "",
+    facilityDetailJson: "",
+    xCoordinate: 0,
+    yCoordinate: 0
   };
 
   const [facilityList, setFacilityList] = useState<Facility[]>([]);

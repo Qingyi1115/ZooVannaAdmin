@@ -1,70 +1,46 @@
 import React, { useEffect, useState, useRef } from "react";
 
-import { classNames } from "primereact/utils";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 // import { ProductService } from './service/ProductService';
 import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
 import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 
-import Asset from "../../../models/Asset";
+import AnimalFeed from "../../../models/AnimalFeed";
 import useApiJson from "../../../hooks/useApiJson";
-import { ColumnGroup } from "primereact/columngroup";
-import { Row } from "primereact/row";
 import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
+import { AnimalFeedCategory } from "src/enums/Enumerated";
 
-function AllAssetDatatable() {
+function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();
 
-  let emptyAsset: Asset = {
-    assetId: -1,
-    assetCode: "",
-    commonName: "",
-    scientificName: "",
-    aliasName: "",
-    conservationStatus: "",
-    domain: "",
-    kingdom: "",
-    phylum: "",
-    assetClass: "",
-    order: "",
-    family: "",
-    genus: "",
-    nativeContinent: "",
-    nativeBiomes: "",
-    educationalDescription: "",
-    groupSexualDynamic: "",
-    habitatOrExhibit: "habitat",
-    imageUrl: "",
-    generalDietPreference: "",
+  let emptyAnimalFeed: AnimalFeed = {
+    animalFeedId: -1,
+    animalFeedName: "",
+    animalFeedImageUrl: "",
+    animalFeedCategory: AnimalFeedCategory.OTHERS
   };
 
-  const [assetList, setAssetList] = useState<Asset[]>([]);
-  const [selectedAsset, setSelectedAsset] = useState<Asset>(emptyAsset);
-  const [deleteAssetDialog, setDeleteAssetDialog] =
+  const [animalFeedList, setAnimalFeedList] = useState<AnimalFeed[]>([]);
+  const [selectedAnimalFeed, setSelectedAnimalFeed] = useState<AnimalFeed>(emptyAnimalFeed);
+  const [deleteAnimalFeedDialog, setDeleteAnimalFeedDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Asset[]>>(null);
+  const dt = useRef<DataTable<AnimalFeed[]>>(null);
 
   useEffect(() => {
-    apiJson.get("http://localhost:3000/api/asset/getallasset");
+    apiJson.get("http://localhost:3000/api/animalFeed/getallanimalFeed");
   }, []);
 
   useEffect(() => {
-    const assetData = apiJson.result as Asset[];
-    setAssetList(assetData);
+    const animalFeedData = apiJson.result as AnimalFeed[];
+    setAnimalFeedList(animalFeedData);
   }, [apiJson.loading]);
 
   //
@@ -76,63 +52,63 @@ function AllAssetDatatable() {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
-  const imageBodyTemplate = (rowData: Asset) => {
+  const imageBodyTemplate = (rowData: AnimalFeed) => {
     return (
       <img
-        src={rowData.imageUrl}
-        alt={rowData.commonName}
+        src={rowData.animalFeedImageUrl}
+        alt={rowData.animalFeedName}
         className="border-round shadow-2"
         style={{ width: "64px" }}
       />
     );
   };
 
-  const navigateEditProduct = (asset: Asset) => {};
+  const navigateEditProduct = (animalFeed: AnimalFeed) => {};
 
-  const confirmDeleteAsset = (asset: Asset) => {
-    setSelectedAsset(asset);
-    setDeleteAssetDialog(true);
+  const confirmDeleteAnimalFeed = (animalFeed: AnimalFeed) => {
+    setSelectedAnimalFeed(animalFeed);
+    setDeleteAnimalFeedDialog(true);
   };
 
-  const hideDeleteAssetDialog = () => {
-    setDeleteAssetDialog(false);
+  const hideDeleteAnimalFeedDialog = () => {
+    setDeleteAnimalFeedDialog(false);
   };
 
-  // delete asset stuff
-  const deleteAsset = () => {
-    let _asset = assetList.filter(
-      (val) => val.assetId !== selectedAsset?.assetId
+  // delete animalFeed stuff
+  const deleteAnimalFeed = () => {
+    let _animalFeed = animalFeedList.filter(
+      (val) => val.animalFeedId !== selectedAnimalFeed?.animalFeedId
     );
 
-    setAssetList(_asset);
-    setDeleteAssetDialog(false);
-    setSelectedAsset(emptyAsset);
+    setAnimalFeedList(_animalFeed);
+    setDeleteAnimalFeedDialog(false);
+    setSelectedAnimalFeed(emptyAnimalFeed);
     toast.current?.show({
       severity: "success",
       summary: "Successful",
-      detail: "Asset Deleted",
+      detail: "AnimalFeed Deleted",
       life: 3000,
     });
   };
 
-  const deleteAssetDialogFooter = (
+  const deleteAnimalFeedDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteAssetDialog}>
+      <Button onClick={hideDeleteAnimalFeedDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteAsset}>
+      <Button variant={"destructive"} onClick={deleteAnimalFeed}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete asset stuff
+  // end delete animalFeed stuff
 
-  const actionBodyTemplate = (asset: Asset) => {
+  const actionBodyTemplate = (animalFeed: AnimalFeed) => {
     return (
       <React.Fragment>
-        <NavLink to={`/asset/editasset/${asset.assetCode}`}>
+        <NavLink to={`/animalFeed/editanimalFeed/${animalFeed.animalFeedName}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>
@@ -141,7 +117,7 @@ function AllAssetDatatable() {
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteAsset(asset)}
+          onClick={() => confirmDeleteAnimalFeed(animalFeed)}
         >
           <HiTrash />
           <span>Delete</span>
@@ -152,7 +128,7 @@ function AllAssetDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Asset</h4>
+      <h4 className="m-1">Manage AnimalFeed</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -176,126 +152,39 @@ function AllAssetDatatable() {
 
           <DataTable
             ref={dt}
-            value={assetList}
-            selection={selectedAsset}
+            value={animalFeedList}
+            selection={selectedAnimalFeed}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedAsset(e.value);
+                setSelectedAnimalFeed(e.value);
               }
             }}
-            dataKey="assetId"
+            dataKey="animalFeedId"
             paginator
             rows={10}
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} asset"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animalFeed"
             globalFilter={globalFilter}
             header={header}
           >
             <Column
-              field="assetCode"
-              header="Code"
+              field="animalFeedName"
+              header="Name"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="imageUrl"
+              field="animalFeedImageUrl"
               header="Image"
               body={imageBodyTemplate}
             ></Column>
             <Column
-              field="commonName"
-              header="Common Name"
+              field="animalFeedCategory"
+              header="Animal Feed Category"
               sortable
               style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="generalDietPreference"
-              header="General Diet Preference"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="conservationStatus"
-              header="Conservation Status"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="aliasName"
-              header="Alias Name"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-
-            <Column
-              field="scientificName"
-              header="Scientific Name"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="domain"
-              header="Domain"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="kingdom"
-              header="Kingdom"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="phylum"
-              header="Phylum"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="assetClass"
-              header="Class"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="order"
-              header="Order"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="family"
-              header="Family"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="genus"
-              header="Genus"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="nativeContinent"
-              header="Native Continent"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="nativeBiomes"
-              header="Native Biomes"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="groupSexualDynamic"
-              header="Group Sexual Dynamic"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="habitatOrExhibit"
-              header="Habitat or Exhibit"
-              sortable
-              style={{ minWidth: "10rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}
@@ -307,23 +196,23 @@ function AllAssetDatatable() {
         </div>
       </div>
       <Dialog
-        visible={deleteAssetDialog}
+        visible={deleteAnimalFeedDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteAssetDialogFooter}
-        onHide={hideDeleteAssetDialog}
+        footer={deleteAnimalFeedDialogFooter}
+        onHide={hideDeleteAnimalFeedDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedAsset && (
+          {selectedAnimalFeed && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedAsset.commonName}</b>?
+              <b>{selectedAnimalFeed.animalFeedName}</b>?
             </span>
           )}
         </div>
@@ -332,4 +221,4 @@ function AllAssetDatatable() {
   );
 }
 
-export default AllAssetDatatable;
+export default AllAnimalFeedDatatable;

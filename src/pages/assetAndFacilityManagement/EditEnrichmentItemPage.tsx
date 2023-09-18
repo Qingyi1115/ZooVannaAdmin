@@ -2,38 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import EditEnrichmentItemForm from "../../components/AssetAndFacilityManagement/AssetManagement/EditEnrichmentItemForm";
 import useApiJson from "../../hooks/useApiJson";
+import EnrichmentItem from "src/models/EnrichmentItem";
 
 function EditEnrichmentItemPage() {
   const apiJson = useApiJson();
 
   let emptyEnrichmentItem: EnrichmentItem = {
     enrichmentItemId: -1,
-    enrichmentItemCode: "",
-    commonName: "",
-    scientificName: "",
-    aliasName: "",
-    conservationStatus: "",
-    domain: "",
-    kingdom: "",
-    phylum: "",
-    enrichmentItemClass: "",
-    order: "",
-    family: "",
-    genus: "",
-    nativeContinent: "",
-    nativeBiomes: "",
-    educationalDescription: "",
-    groupSexualDynamic: "",
-    habitatOrExhibit: "habitat",
-    imageUrl: "",
-    generalDietPreference: "",
+    enrichmentItemName: "",
+    enrichmentItemImageUrl: ""
   };
 
-  const { enrichmentItemCode } = useParams<{ enrichmentItemCode: string }>();
+  const { enrichmentItemName } = useParams<{ enrichmentItemName: string }>();
   const [curEnrichmentItem, setCurEnrichmentItem] = useState<EnrichmentItem>(emptyEnrichmentItem);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/enrichmentItem/getenrichmentItem/${enrichmentItemCode}`);
+    apiJson.get(`http://localhost:3000/api/enrichmentItem/getenrichmentItem/${enrichmentItemName}`);
   }, []);
 
   useEffect(() => {

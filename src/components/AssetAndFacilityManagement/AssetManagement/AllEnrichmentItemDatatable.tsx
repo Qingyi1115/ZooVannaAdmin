@@ -1,24 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 
-import { classNames } from "primereact/utils";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 // import { ProductService } from './service/ProductService';
 import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
 import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 
 import EnrichmentItem from "../../../models/EnrichmentItem";
 import useApiJson from "../../../hooks/useApiJson";
-import { ColumnGroup } from "primereact/columngroup";
-import { Row } from "primereact/row";
 import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
@@ -29,25 +20,8 @@ function AllEnrichmentItemDatatable() {
 
   let emptyEnrichmentItem: EnrichmentItem = {
     enrichmentItemId: -1,
-    enrichmentItemCode: "",
-    commonName: "",
-    scientificName: "",
-    aliasName: "",
-    conservationStatus: "",
-    domain: "",
-    kingdom: "",
-    phylum: "",
-    enrichmentItemClass: "",
-    order: "",
-    family: "",
-    genus: "",
-    nativeContinent: "",
-    nativeBiomes: "",
-    educationalDescription: "",
-    groupSexualDynamic: "",
-    habitatOrExhibit: "habitat",
-    imageUrl: "",
-    generalDietPreference: "",
+    enrichmentItemName: "",
+    enrichmentItemImageUrl: ""
   };
 
   const [enrichmentItemList, setEnrichmentItemList] = useState<EnrichmentItem[]>([]);
@@ -79,8 +53,8 @@ function AllEnrichmentItemDatatable() {
   const imageBodyTemplate = (rowData: EnrichmentItem) => {
     return (
       <img
-        src={rowData.imageUrl}
-        alt={rowData.commonName}
+        src={rowData.enrichmentItemImageUrl}
+        alt={rowData.enrichmentItemName}
         className="border-round shadow-2"
         style={{ width: "64px" }}
       />
@@ -132,7 +106,7 @@ function AllEnrichmentItemDatatable() {
   const actionBodyTemplate = (enrichmentItem: EnrichmentItem) => {
     return (
       <React.Fragment>
-        <NavLink to={`/enrichmentItem/editenrichmentItem/${enrichmentItem.enrichmentItemCode}`}>
+        <NavLink to={`/enrichmentItem/editenrichmentItem/${enrichmentItem.enrichmentItemName}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>
@@ -194,108 +168,15 @@ function AllEnrichmentItemDatatable() {
             header={header}
           >
             <Column
-              field="enrichmentItemCode"
-              header="Code"
+              field="enrichmentItemName"
+              header="Name"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="imageUrl"
+              field="enrichmentItemImageUrl"
               header="Image"
               body={imageBodyTemplate}
-            ></Column>
-            <Column
-              field="commonName"
-              header="Common Name"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="generalDietPreference"
-              header="General Diet Preference"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="conservationStatus"
-              header="Conservation Status"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="aliasName"
-              header="Alias Name"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-
-            <Column
-              field="scientificName"
-              header="Scientific Name"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="domain"
-              header="Domain"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="kingdom"
-              header="Kingdom"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="phylum"
-              header="Phylum"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="enrichmentItemClass"
-              header="Class"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="order"
-              header="Order"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="family"
-              header="Family"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="genus"
-              header="Genus"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="nativeContinent"
-              header="Native Continent"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="nativeBiomes"
-              header="Native Biomes"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="groupSexualDynamic"
-              header="Group Sexual Dynamic"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="habitatOrExhibit"
-              header="Habitat or Exhibit"
-              sortable
-              style={{ minWidth: "10rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}
@@ -323,7 +204,7 @@ function AllEnrichmentItemDatatable() {
           {selectedEnrichmentItem && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedEnrichmentItem.commonName}</b>?
+              <b>{selectedEnrichmentItem.enrichmentItemName}</b>?
             </span>
           )}
         </div>
