@@ -1,3 +1,5 @@
+import { AnimalFeedCategory } from "src/enums/Enumerated";
+
 interface AnimalFeed {
   animalFeedName: string;
   animalFeedImageUrl: string;

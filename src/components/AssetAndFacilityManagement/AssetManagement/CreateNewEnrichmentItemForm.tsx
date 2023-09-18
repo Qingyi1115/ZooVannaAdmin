@@ -18,21 +18,21 @@ function validateCommonName(props: ValidityState) {
   return null;
 }
 
-function CreateNewFacilityForm() {
+function CreateNewEnrichmentItemForm() {
   const apiJson = useApiJson();
 
-  // facilityName
-  // facilityType
-  // facilityType2
-  // FacilityDetail
-  const [facilityName, setFacilityName] = useState<string>(""); // text input
-  const [facilityType, setFacilityType] = useState<string | undefined>(
+  // enrichmentItemName
+  // enrichmentItemType
+  // enrichmentItemType2
+  // EnrichmentItemDetail
+  const [enrichmentItemName, setEnrichmentItemName] = useState<string>(""); // text input
+  const [enrichmentItemType, setEnrichmentItemType] = useState<string | undefined>(
     undefined
   ); // radio group
-  const [facilityType2, setFacilityType2] = useState<string | undefined>(
+  const [enrichmentItemType2, setEnrichmentItemType2] = useState<string | undefined>(
     undefined
   ); // drop down select
-  const [facilityDetail, setFacilityDetail] = useState<string>(""); // text
+  const [enrichmentItemDetail, setEnrichmentItemDetail] = useState<string>(""); // text
 
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -40,14 +40,14 @@ function CreateNewFacilityForm() {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
-    const newFacility = {
-      facilityName,
-      facilityType,
-      facilityType2,
-      facilityDetail,
+    const newEnrichmentItem = {
+      enrichmentItemName,
+      enrichmentItemType,
+      enrichmentItemType2,
+      enrichmentItemDetail,
     };
 
-    await apiJson.post("", newFacility);
+    await apiJson.post("", newEnrichmentItem);
 
     // handle success case or failurecase using apiJson
   }
@@ -58,30 +58,30 @@ function CreateNewFacilityForm() {
       onSubmit={handleSubmit}
     >
       <span className="self-center text-title-xl font-bold">
-        Create a New Facility
+        Create a New EnrichmentItem
       </span>
       <hr className="bg-stroke opacity-20" />
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Common Name */}
         <FormFieldInput
           type="text"
-          formFieldName="facilityName"
-          label="Facility Name"
+          formFieldName="enrichmentItemName"
+          label="EnrichmentItem Name"
           required={true}
           placeholder="e.g., Toilet"
-          value={facilityName}
-          setValue={setFacilityName}
+          value={enrichmentItemName}
+          setValue={setEnrichmentItemName}
           validateFunction={validateCommonName}
         />
         {/* Scientific Name */}
         <FormFieldInput
           type="text"
-          formFieldName="facilityDetail"
+          formFieldName="enrichmentItemDetail"
           label="Scientific Name (Binomial/Trinomial Name)"
           required={true}
           placeholder="e.g., Homo sapiens, Panthera leo leo..."
-          value={facilityDetail}
-          setValue={setFacilityDetail}
+          value={enrichmentItemDetail}
+          setValue={setEnrichmentItemDetail}
           validateFunction={validateCommonName}
         />
       </div>
@@ -89,8 +89,8 @@ function CreateNewFacilityForm() {
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Conservation Status */}
         <FormFieldRadioGroup
-          formFieldName="facilityType"
-          label="Facility Type"
+          formFieldName="enrichmentItemType"
+          label="EnrichmentItem Type"
           required={true}
           valueIdPair={[
             ["Haha", "ft1"],
@@ -103,8 +103,8 @@ function CreateNewFacilityForm() {
             ["Near Threatened", "ft4"],
             ["Near Threatened", "ft4"],
           ]}
-          value={facilityType}
-          setValue={setFacilityType}
+          value={enrichmentItemType}
+          setValue={setEnrichmentItemType}
           validateFunction={validateCommonName}
         />
       </div>
@@ -112,7 +112,7 @@ function CreateNewFacilityForm() {
       {/* Domain */}
       <FormFieldSelect
         formFieldName="domain"
-        label="Facility Domain"
+        label="EnrichmentItem Domain"
         required={true}
         placeholder="Select a domain..."
         valueLabelPair={[
@@ -120,14 +120,14 @@ function CreateNewFacilityForm() {
           ["Bacteria", "Bacteria"],
           ["Eukarya", "Eukarya"],
         ]}
-        value={facilityType2}
-        setValue={setFacilityType2}
+        value={enrichmentItemType2}
+        setValue={setEnrichmentItemType2}
         validateFunction={validateCommonName}
       />
 
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-          Create Facility
+          Create EnrichmentItem
         </button>
       </Form.Submit>
       {formError && (
@@ -137,4 +137,4 @@ function CreateNewFacilityForm() {
   );
 }
 
-export default CreateNewFacilityForm;
+export default CreateNewEnrichmentItemForm;

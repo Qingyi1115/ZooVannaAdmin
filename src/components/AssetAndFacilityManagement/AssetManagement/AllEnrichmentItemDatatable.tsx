@@ -15,7 +15,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Tag } from "primereact/tag";
 
-import Species from "../../../models/Species";
+import EnrichmentItem from "../../../models/EnrichmentItem";
 import useApiJson from "../../../hooks/useApiJson";
 import { ColumnGroup } from "primereact/columngroup";
 import { Row } from "primereact/row";
@@ -24,12 +24,12 @@ import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 
-function AllSpeciesDatatable() {
+function AllEnrichmentItemDatatable() {
   const apiJson = useApiJson();
 
-  let emptySpecies: Species = {
-    speciesId: -1,
-    speciesCode: "",
+  let emptyEnrichmentItem: EnrichmentItem = {
+    enrichmentItemId: -1,
+    enrichmentItemCode: "",
     commonName: "",
     scientificName: "",
     aliasName: "",
@@ -37,7 +37,7 @@ function AllSpeciesDatatable() {
     domain: "",
     kingdom: "",
     phylum: "",
-    speciesClass: "",
+    enrichmentItemClass: "",
     order: "",
     family: "",
     genus: "",
@@ -50,21 +50,21 @@ function AllSpeciesDatatable() {
     generalDietPreference: "",
   };
 
-  const [speciesList, setSpeciesList] = useState<Species[]>([]);
-  const [selectedSpecies, setSelectedSpecies] = useState<Species>(emptySpecies);
-  const [deleteSpeciesDialog, setDeleteSpeciesDialog] =
+  const [enrichmentItemList, setEnrichmentItemList] = useState<EnrichmentItem[]>([]);
+  const [selectedEnrichmentItem, setSelectedEnrichmentItem] = useState<EnrichmentItem>(emptyEnrichmentItem);
+  const [deleteEnrichmentItemDialog, setDeleteEnrichmentItemDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Species[]>>(null);
+  const dt = useRef<DataTable<EnrichmentItem[]>>(null);
 
   useEffect(() => {
-    apiJson.get("http://localhost:3000/api/species/getallspecies");
+    apiJson.get("http://localhost:3000/api/enrichmentItem/getallenrichmentItem");
   }, []);
 
   useEffect(() => {
-    const speciesData = apiJson.result as Species[];
-    setSpeciesList(speciesData);
+    const enrichmentItemData = apiJson.result as EnrichmentItem[];
+    setEnrichmentItemList(enrichmentItemData);
   }, [apiJson.loading]);
 
   //
@@ -76,7 +76,7 @@ function AllSpeciesDatatable() {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
-  const imageBodyTemplate = (rowData: Species) => {
+  const imageBodyTemplate = (rowData: EnrichmentItem) => {
     return (
       <img
         src={rowData.imageUrl}
@@ -87,52 +87,52 @@ function AllSpeciesDatatable() {
     );
   };
 
-  const navigateEditProduct = (species: Species) => {};
+  const navigateEditProduct = (enrichmentItem: EnrichmentItem) => {};
 
-  const confirmDeleteSpecies = (species: Species) => {
-    setSelectedSpecies(species);
-    setDeleteSpeciesDialog(true);
+  const confirmDeleteEnrichmentItem = (enrichmentItem: EnrichmentItem) => {
+    setSelectedEnrichmentItem(enrichmentItem);
+    setDeleteEnrichmentItemDialog(true);
   };
 
-  const hideDeleteSpeciesDialog = () => {
-    setDeleteSpeciesDialog(false);
+  const hideDeleteEnrichmentItemDialog = () => {
+    setDeleteEnrichmentItemDialog(false);
   };
 
-  // delete species stuff
-  const deleteSpecies = () => {
-    let _species = speciesList.filter(
-      (val) => val.speciesId !== selectedSpecies?.speciesId
+  // delete enrichmentItem stuff
+  const deleteEnrichmentItem = () => {
+    let _enrichmentItem = enrichmentItemList.filter(
+      (val) => val.enrichmentItemId !== selectedEnrichmentItem?.enrichmentItemId
     );
 
-    setSpeciesList(_species);
-    setDeleteSpeciesDialog(false);
-    setSelectedSpecies(emptySpecies);
+    setEnrichmentItemList(_enrichmentItem);
+    setDeleteEnrichmentItemDialog(false);
+    setSelectedEnrichmentItem(emptyEnrichmentItem);
     toast.current?.show({
       severity: "success",
       summary: "Successful",
-      detail: "Species Deleted",
+      detail: "EnrichmentItem Deleted",
       life: 3000,
     });
   };
 
-  const deleteSpeciesDialogFooter = (
+  const deleteEnrichmentItemDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteSpeciesDialog}>
+      <Button onClick={hideDeleteEnrichmentItemDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteSpecies}>
+      <Button variant={"destructive"} onClick={deleteEnrichmentItem}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete species stuff
+  // end delete enrichmentItem stuff
 
-  const actionBodyTemplate = (species: Species) => {
+  const actionBodyTemplate = (enrichmentItem: EnrichmentItem) => {
     return (
       <React.Fragment>
-        <NavLink to={`/species/editspecies/${species.speciesCode}`}>
+        <NavLink to={`/enrichmentItem/editenrichmentItem/${enrichmentItem.enrichmentItemCode}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>
@@ -141,7 +141,7 @@ function AllSpeciesDatatable() {
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteSpecies(species)}
+          onClick={() => confirmDeleteEnrichmentItem(enrichmentItem)}
         >
           <HiTrash />
           <span>Delete</span>
@@ -152,7 +152,7 @@ function AllSpeciesDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Species</h4>
+      <h4 className="m-1">Manage EnrichmentItem</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -176,25 +176,25 @@ function AllSpeciesDatatable() {
 
           <DataTable
             ref={dt}
-            value={speciesList}
-            selection={selectedSpecies}
+            value={enrichmentItemList}
+            selection={selectedEnrichmentItem}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedSpecies(e.value);
+                setSelectedEnrichmentItem(e.value);
               }
             }}
-            dataKey="speciesId"
+            dataKey="enrichmentItemId"
             paginator
             rows={10}
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} species"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} enrichmentItem"
             globalFilter={globalFilter}
             header={header}
           >
             <Column
-              field="speciesCode"
+              field="enrichmentItemCode"
               header="Code"
               sortable
               style={{ minWidth: "12rem" }}
@@ -254,7 +254,7 @@ function AllSpeciesDatatable() {
               style={{ minWidth: "10rem" }}
             ></Column>
             <Column
-              field="speciesClass"
+              field="enrichmentItemClass"
               header="Class"
               style={{ minWidth: "10rem" }}
             ></Column>
@@ -307,23 +307,23 @@ function AllSpeciesDatatable() {
         </div>
       </div>
       <Dialog
-        visible={deleteSpeciesDialog}
+        visible={deleteEnrichmentItemDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteSpeciesDialogFooter}
-        onHide={hideDeleteSpeciesDialog}
+        footer={deleteEnrichmentItemDialogFooter}
+        onHide={hideDeleteEnrichmentItemDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedSpecies && (
+          {selectedEnrichmentItem && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedSpecies.commonName}</b>?
+              <b>{selectedEnrichmentItem.commonName}</b>?
             </span>
           )}
         </div>
@@ -332,4 +332,4 @@ function AllSpeciesDatatable() {
   );
 }
 
-export default AllSpeciesDatatable;
+export default AllEnrichmentItemDatatable;

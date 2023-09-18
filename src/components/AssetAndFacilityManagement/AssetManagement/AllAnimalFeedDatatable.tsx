@@ -15,7 +15,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Tag } from "primereact/tag";
 
-import Facility from "../../../models/Facility";
+import Asset from "../../../models/Asset";
 import useApiJson from "../../../hooks/useApiJson";
 import { ColumnGroup } from "primereact/columngroup";
 import { Row } from "primereact/row";
@@ -24,12 +24,12 @@ import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 
-function AllFacilityDatatable() {
+function AllAssetDatatable() {
   const apiJson = useApiJson();
 
-  let emptyFacility: Facility = {
-    facilityId: -1,
-    facilityCode: "",
+  let emptyAsset: Asset = {
+    assetId: -1,
+    assetCode: "",
     commonName: "",
     scientificName: "",
     aliasName: "",
@@ -37,7 +37,7 @@ function AllFacilityDatatable() {
     domain: "",
     kingdom: "",
     phylum: "",
-    facilityClass: "",
+    assetClass: "",
     order: "",
     family: "",
     genus: "",
@@ -50,21 +50,21 @@ function AllFacilityDatatable() {
     generalDietPreference: "",
   };
 
-  const [facilityList, setFacilityList] = useState<Facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<Facility>(emptyFacility);
-  const [deleteFacilityDialog, setDeleteFacilityDialog] =
+  const [assetList, setAssetList] = useState<Asset[]>([]);
+  const [selectedAsset, setSelectedAsset] = useState<Asset>(emptyAsset);
+  const [deleteAssetDialog, setDeleteAssetDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Facility[]>>(null);
+  const dt = useRef<DataTable<Asset[]>>(null);
 
   useEffect(() => {
-    apiJson.get("http://localhost:3000/api/facility/getallfacility");
+    apiJson.get("http://localhost:3000/api/asset/getallasset");
   }, []);
 
   useEffect(() => {
-    const facilityData = apiJson.result as Facility[];
-    setFacilityList(facilityData);
+    const assetData = apiJson.result as Asset[];
+    setAssetList(assetData);
   }, [apiJson.loading]);
 
   //
@@ -76,7 +76,7 @@ function AllFacilityDatatable() {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
-  const imageBodyTemplate = (rowData: Facility) => {
+  const imageBodyTemplate = (rowData: Asset) => {
     return (
       <img
         src={rowData.imageUrl}
@@ -87,52 +87,52 @@ function AllFacilityDatatable() {
     );
   };
 
-  const navigateEditProduct = (facility: Facility) => {};
+  const navigateEditProduct = (asset: Asset) => {};
 
-  const confirmDeleteFacility = (facility: Facility) => {
-    setSelectedFacility(facility);
-    setDeleteFacilityDialog(true);
+  const confirmDeleteAsset = (asset: Asset) => {
+    setSelectedAsset(asset);
+    setDeleteAssetDialog(true);
   };
 
-  const hideDeleteFacilityDialog = () => {
-    setDeleteFacilityDialog(false);
+  const hideDeleteAssetDialog = () => {
+    setDeleteAssetDialog(false);
   };
 
-  // delete facility stuff
-  const deleteFacility = () => {
-    let _facility = facilityList.filter(
-      (val) => val.facilityId !== selectedFacility?.facilityId
+  // delete asset stuff
+  const deleteAsset = () => {
+    let _asset = assetList.filter(
+      (val) => val.assetId !== selectedAsset?.assetId
     );
 
-    setFacilityList(_facility);
-    setDeleteFacilityDialog(false);
-    setSelectedFacility(emptyFacility);
+    setAssetList(_asset);
+    setDeleteAssetDialog(false);
+    setSelectedAsset(emptyAsset);
     toast.current?.show({
       severity: "success",
       summary: "Successful",
-      detail: "Facility Deleted",
+      detail: "Asset Deleted",
       life: 3000,
     });
   };
 
-  const deleteFacilityDialogFooter = (
+  const deleteAssetDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteFacilityDialog}>
+      <Button onClick={hideDeleteAssetDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteFacility}>
+      <Button variant={"destructive"} onClick={deleteAsset}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete facility stuff
+  // end delete asset stuff
 
-  const actionBodyTemplate = (facility: Facility) => {
+  const actionBodyTemplate = (asset: Asset) => {
     return (
       <React.Fragment>
-        <NavLink to={`/facility/editfacility/${facility.facilityCode}`}>
+        <NavLink to={`/asset/editasset/${asset.assetCode}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>
@@ -141,7 +141,7 @@ function AllFacilityDatatable() {
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteFacility(facility)}
+          onClick={() => confirmDeleteAsset(asset)}
         >
           <HiTrash />
           <span>Delete</span>
@@ -152,7 +152,7 @@ function AllFacilityDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Facility</h4>
+      <h4 className="m-1">Manage Asset</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -176,25 +176,25 @@ function AllFacilityDatatable() {
 
           <DataTable
             ref={dt}
-            value={facilityList}
-            selection={selectedFacility}
+            value={assetList}
+            selection={selectedAsset}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedFacility(e.value);
+                setSelectedAsset(e.value);
               }
             }}
-            dataKey="facilityId"
+            dataKey="assetId"
             paginator
             rows={10}
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facility"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} asset"
             globalFilter={globalFilter}
             header={header}
           >
             <Column
-              field="facilityCode"
+              field="assetCode"
               header="Code"
               sortable
               style={{ minWidth: "12rem" }}
@@ -254,7 +254,7 @@ function AllFacilityDatatable() {
               style={{ minWidth: "10rem" }}
             ></Column>
             <Column
-              field="facilityClass"
+              field="assetClass"
               header="Class"
               style={{ minWidth: "10rem" }}
             ></Column>
@@ -307,23 +307,23 @@ function AllFacilityDatatable() {
         </div>
       </div>
       <Dialog
-        visible={deleteFacilityDialog}
+        visible={deleteAssetDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteFacilityDialogFooter}
-        onHide={hideDeleteFacilityDialog}
+        footer={deleteAssetDialogFooter}
+        onHide={hideDeleteAssetDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedFacility && (
+          {selectedAsset && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedFacility.commonName}</b>?
+              <b>{selectedAsset.commonName}</b>?
             </span>
           )}
         </div>
@@ -332,4 +332,4 @@ function AllFacilityDatatable() {
   );
 }
 
-export default AllFacilityDatatable;
+export default AllAssetDatatable;

@@ -12,56 +12,56 @@ import { ContinentEnum } from "../../../enums/ContinentEnum";
 import { HiCheck } from "react-icons/hi";
 import { BiomeEnum } from "../../../enums/BiomeEnum";
 import FormFieldRadioGroup from "../../FormFieldRadioGroup";
-import Species from "src/models/Species";
+import Asset from "src/models/Asset";
 
-interface EditSpeciesFormProps {
-  curSpecies: Species;
+interface EditAssetFormProps {
+  curAsset: Asset;
 }
 
-function EditSpeciesForm(props: EditSpeciesFormProps) {
+function EditAssetForm(props: EditAssetFormProps) {
   const apiFormData = useApiFormData();
 
-  const { curSpecies } = props;
+  const { curAsset } = props;
 
-  //   const [speciesCode, setSpeciesCode] = useState<string>("");
-  const [commonName, setCommonName] = useState<string>(curSpecies.commonName);
+  //   const [assetCode, setAssetCode] = useState<string>("");
+  const [commonName, setCommonName] = useState<string>(curAsset.commonName);
   const [scientificName, setScientificName] = useState<string>(
-    curSpecies.scientificName
+    curAsset.scientificName
   );
-  const [aliasName, setAliasName] = useState<string>(curSpecies.aliasName);
+  const [aliasName, setAliasName] = useState<string>(curAsset.aliasName);
   const [conservationStatus, setConservationStatus] = useState<
     string | undefined
-  >(curSpecies.conservationStatus); // select from set list
-  const [domain, setDomain] = useState<string | undefined>(curSpecies.domain);
+  >(curAsset.conservationStatus); // select from set list
+  const [domain, setDomain] = useState<string | undefined>(curAsset.domain);
   const [kingdom, setKingdom] = useState<string | undefined>(
-    curSpecies.kingdom
+    curAsset.kingdom
   );
-  const [phylum, setPhylum] = useState<string>(curSpecies.phylum);
-  const [speciesClass, setSpeciesClass] = useState<string>(
-    curSpecies.speciesClass
+  const [phylum, setPhylum] = useState<string>(curAsset.phylum);
+  const [assetClass, setAssetClass] = useState<string>(
+    curAsset.assetClass
   );
-  const [order, setOrder] = useState<string>(curSpecies.order);
-  const [family, setFamily] = useState<string>(curSpecies.family);
-  const [genus, setGenus] = useState<string>(curSpecies.genus);
+  const [order, setOrder] = useState<string>(curAsset.order);
+  const [family, setFamily] = useState<string>(curAsset.family);
+  const [genus, setGenus] = useState<string>(curAsset.genus);
   const [nativeContinent, setNativeContinent] = useState<string | undefined>(
-    curSpecies.nativeContinent
+    curAsset.nativeContinent
   );
   const [selectedBiomes, setSelectedBiomes] = useState<string[] | undefined>(
-    curSpecies.nativeBiomes.split(",")
+    curAsset.nativeBiomes.split(",")
   );
   const [groupSexualDynamic, setGroupSexualDynamic] = useState<
     string | undefined
-  >(curSpecies.groupSexualDynamic);
+  >(curAsset.groupSexualDynamic);
   const [habitatOrExhibit, setHabitatOrExhibit] = useState<string | undefined>(
-    curSpecies.habitatOrExhibit
+    curAsset.habitatOrExhibit
   );
   const [generalDietPreference, setGeneralDietPreference] = useState<
     string | undefined
-  >(curSpecies.generalDietPreference);
+  >(curAsset.generalDietPreference);
   const [educationalDescription, setEducationalDescription] = useState<string>(
-    curSpecies.educationalDescription
+    curAsset.educationalDescription
   );
-  const [imageUrl, setImageUrl] = useState<string | null>(curSpecies.imageUrl);
+  const [imageUrl, setImageUrl] = useState<string | null>(curAsset.imageUrl);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
@@ -166,7 +166,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
     return null;
   }
 
-  function validateSpeciesClass(props: ValidityState) {
+  function validateAssetClass(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
@@ -323,7 +323,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("speciesCode", curSpecies.speciesCode);
+    formData.append("assetCode", curAsset.assetCode);
     formData.append("commonName", commonName);
     formData.append("scientificName", scientificName);
     formData.append("aliasName", aliasName);
@@ -331,7 +331,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
     formData.append("domain", domain || "");
     formData.append("kingdom", kingdom || "");
     formData.append("phylum", phylum);
-    formData.append("speciesClass", speciesClass);
+    formData.append("assetClass", assetClass);
     formData.append("order", order);
     formData.append("family", family);
     formData.append("genus", genus);
@@ -343,7 +343,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
     formData.append("educationalDescription", educationalDescription);
     formData.append("file", imageFile || "");
     await apiFormData.put(
-      "http://localhost:3000/api/species/updatespecies",
+      "http://localhost:3000/api/asset/updateasset",
       formData
     );
     console.log(apiFormData.result);
@@ -351,25 +351,25 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
 
   return (
     <div>
-      {curSpecies && (
+      {curAsset && (
         <Form.Root
           className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
           onSubmit={handleSubmit}
           encType="multipart/form-data"
         >
           <span className="self-center text-title-xl font-bold">
-            Edit Species: {curSpecies.commonName}
+            Edit Asset: {curAsset.commonName}
           </span>
           <hr className="bg-stroke opacity-20" />
-          {/* Species Picture */}
+          {/* Asset Picture */}
           <Form.Field
-            name="speciesImage"
+            name="assetImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <span className="font-medium">Current Image</span>
-            <img src={curSpecies.imageUrl} alt="Current species image" />
+            <img src={curAsset.imageUrl} alt="Current asset image" />
             <Form.Label className="font-medium">
-              Change Species Image
+              Change Asset Image
             </Form.Label>
             <Form.Control
               type="file"
@@ -441,7 +441,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
             {/* Domain */}
             <FormFieldSelect
               formFieldName="domain"
-              label="Species Domain"
+              label="Asset Domain"
               required={true}
               placeholder="Select a domain..."
               valueLabelPair={[
@@ -456,7 +456,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
             {/* Kingdom */}
             <FormFieldSelect
               formFieldName="kingdom"
-              label="Species Kingdom"
+              label="Asset Kingdom"
               required={true}
               placeholder="Select a kingdom..."
               valueLabelPair={[
@@ -474,7 +474,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
             />
           </div>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-            {/* Species Phylum */}
+            {/* Asset Phylum */}
             <FormFieldInput
               type="text"
               formFieldName="phylum"
@@ -485,20 +485,20 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
               setValue={setPhylum}
               validateFunction={validatePhylum}
             />
-            {/* Species Class */}
+            {/* Asset Class */}
             <FormFieldInput
               type="text"
-              formFieldName="speciesClass"
+              formFieldName="assetClass"
               label="Class"
               required={true}
               placeholder="e.g., Mammalia, Reptilia..."
-              value={speciesClass}
-              setValue={setSpeciesClass}
-              validateFunction={validateSpeciesClass}
+              value={assetClass}
+              setValue={setAssetClass}
+              validateFunction={validateAssetClass}
             />
           </div>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-            {/* Species Order */}
+            {/* Asset Order */}
             <FormFieldInput
               type="text"
               formFieldName="order"
@@ -509,7 +509,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
               setValue={setOrder}
               validateFunction={validateOrder}
             />
-            {/* Species Family */}
+            {/* Asset Family */}
             <FormFieldInput
               type="text"
               formFieldName="family"
@@ -521,7 +521,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
               validateFunction={validateFamily}
             />
           </div>
-          {/* Species Genus */}
+          {/* Asset Genus */}
           <FormFieldInput
             type="text"
             formFieldName="genus"
@@ -642,7 +642,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
           {/* Habitat or Exhibit */}
           <FormFieldRadioGroup
             formFieldName="habitatOrExhibit"
-            label="Habitat or Exhibit Species?"
+            label="Habitat or Exhibit Asset?"
             required={true}
             valueIdLabelTriplet={[
               ["Exhibit", "exhibit", "Exhibit"],
@@ -678,7 +678,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
 
           <Form.Submit asChild>
             <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-              Submit Edit Species
+              Submit Edit Asset
             </button>
           </Form.Submit>
           {formError && (
@@ -690,4 +690,4 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
   );
 }
 
-export default EditSpeciesForm;
+export default EditAssetForm;

@@ -12,56 +12,56 @@ import { ContinentEnum } from "../../../enums/ContinentEnum";
 import { HiCheck } from "react-icons/hi";
 import { BiomeEnum } from "../../../enums/BiomeEnum";
 import FormFieldRadioGroup from "../../FormFieldRadioGroup";
-import Facility from "src/models/Facility";
+import EnrichmentItem from "src/models/EnrichmentItem";
 
-interface EditFacilityFormProps {
-  curFacility: Facility;
+interface EditEnrichmentItemFormProps {
+  curEnrichmentItem: EnrichmentItem;
 }
 
-function EditFacilityForm(props: EditFacilityFormProps) {
+function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
   const apiFormData = useApiFormData();
 
-  const { curFacility } = props;
+  const { curEnrichmentItem } = props;
 
-  //   const [facilityCode, setFacilityCode] = useState<string>("");
-  const [commonName, setCommonName] = useState<string>(curFacility.commonName);
+  //   const [enrichmentItemCode, setEnrichmentItemCode] = useState<string>("");
+  const [commonName, setCommonName] = useState<string>(curEnrichmentItem.commonName);
   const [scientificName, setScientificName] = useState<string>(
-    curFacility.scientificName
+    curEnrichmentItem.scientificName
   );
-  const [aliasName, setAliasName] = useState<string>(curFacility.aliasName);
+  const [aliasName, setAliasName] = useState<string>(curEnrichmentItem.aliasName);
   const [conservationStatus, setConservationStatus] = useState<
     string | undefined
-  >(curFacility.conservationStatus); // select from set list
-  const [domain, setDomain] = useState<string | undefined>(curFacility.domain);
+  >(curEnrichmentItem.conservationStatus); // select from set list
+  const [domain, setDomain] = useState<string | undefined>(curEnrichmentItem.domain);
   const [kingdom, setKingdom] = useState<string | undefined>(
-    curFacility.kingdom
+    curEnrichmentItem.kingdom
   );
-  const [phylum, setPhylum] = useState<string>(curFacility.phylum);
-  const [facilityClass, setFacilityClass] = useState<string>(
-    curFacility.facilityClass
+  const [phylum, setPhylum] = useState<string>(curEnrichmentItem.phylum);
+  const [enrichmentItemClass, setEnrichmentItemClass] = useState<string>(
+    curEnrichmentItem.enrichmentItemClass
   );
-  const [order, setOrder] = useState<string>(curFacility.order);
-  const [family, setFamily] = useState<string>(curFacility.family);
-  const [genus, setGenus] = useState<string>(curFacility.genus);
+  const [order, setOrder] = useState<string>(curEnrichmentItem.order);
+  const [family, setFamily] = useState<string>(curEnrichmentItem.family);
+  const [genus, setGenus] = useState<string>(curEnrichmentItem.genus);
   const [nativeContinent, setNativeContinent] = useState<string | undefined>(
-    curFacility.nativeContinent
+    curEnrichmentItem.nativeContinent
   );
   const [selectedBiomes, setSelectedBiomes] = useState<string[] | undefined>(
-    curFacility.nativeBiomes.split(",")
+    curEnrichmentItem.nativeBiomes.split(",")
   );
   const [groupSexualDynamic, setGroupSexualDynamic] = useState<
     string | undefined
-  >(curFacility.groupSexualDynamic);
+  >(curEnrichmentItem.groupSexualDynamic);
   const [habitatOrExhibit, setHabitatOrExhibit] = useState<string | undefined>(
-    curFacility.habitatOrExhibit
+    curEnrichmentItem.habitatOrExhibit
   );
   const [generalDietPreference, setGeneralDietPreference] = useState<
     string | undefined
-  >(curFacility.generalDietPreference);
+  >(curEnrichmentItem.generalDietPreference);
   const [educationalDescription, setEducationalDescription] = useState<string>(
-    curFacility.educationalDescription
+    curEnrichmentItem.educationalDescription
   );
-  const [imageUrl, setImageUrl] = useState<string | null>(curFacility.imageUrl);
+  const [imageUrl, setImageUrl] = useState<string | null>(curEnrichmentItem.imageUrl);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
@@ -166,7 +166,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
     return null;
   }
 
-  function validateFacilityClass(props: ValidityState) {
+  function validateEnrichmentItemClass(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
@@ -323,7 +323,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("facilityCode", curFacility.facilityCode);
+    formData.append("enrichmentItemCode", curEnrichmentItem.enrichmentItemCode);
     formData.append("commonName", commonName);
     formData.append("scientificName", scientificName);
     formData.append("aliasName", aliasName);
@@ -331,7 +331,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
     formData.append("domain", domain || "");
     formData.append("kingdom", kingdom || "");
     formData.append("phylum", phylum);
-    formData.append("facilityClass", facilityClass);
+    formData.append("enrichmentItemClass", enrichmentItemClass);
     formData.append("order", order);
     formData.append("family", family);
     formData.append("genus", genus);
@@ -343,7 +343,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
     formData.append("educationalDescription", educationalDescription);
     formData.append("file", imageFile || "");
     await apiFormData.put(
-      "http://localhost:3000/api/facility/updatefacility",
+      "http://localhost:3000/api/enrichmentItem/updateenrichmentItem",
       formData
     );
     console.log(apiFormData.result);
@@ -351,25 +351,25 @@ function EditFacilityForm(props: EditFacilityFormProps) {
 
   return (
     <div>
-      {curFacility && (
+      {curEnrichmentItem && (
         <Form.Root
           className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
           onSubmit={handleSubmit}
           encType="multipart/form-data"
         >
           <span className="self-center text-title-xl font-bold">
-            Edit Facility: {curFacility.commonName}
+            Edit EnrichmentItem: {curEnrichmentItem.commonName}
           </span>
           <hr className="bg-stroke opacity-20" />
-          {/* Facility Picture */}
+          {/* EnrichmentItem Picture */}
           <Form.Field
-            name="facilityImage"
+            name="enrichmentItemImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <span className="font-medium">Current Image</span>
-            <img src={curFacility.imageUrl} alt="Current facility image" />
+            <img src={curEnrichmentItem.imageUrl} alt="Current enrichmentItem image" />
             <Form.Label className="font-medium">
-              Change Facility Image
+              Change EnrichmentItem Image
             </Form.Label>
             <Form.Control
               type="file"
@@ -441,7 +441,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
             {/* Domain */}
             <FormFieldSelect
               formFieldName="domain"
-              label="Facility Domain"
+              label="EnrichmentItem Domain"
               required={true}
               placeholder="Select a domain..."
               valueLabelPair={[
@@ -456,7 +456,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
             {/* Kingdom */}
             <FormFieldSelect
               formFieldName="kingdom"
-              label="Facility Kingdom"
+              label="EnrichmentItem Kingdom"
               required={true}
               placeholder="Select a kingdom..."
               valueLabelPair={[
@@ -474,7 +474,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
             />
           </div>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-            {/* Facility Phylum */}
+            {/* EnrichmentItem Phylum */}
             <FormFieldInput
               type="text"
               formFieldName="phylum"
@@ -485,20 +485,20 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               setValue={setPhylum}
               validateFunction={validatePhylum}
             />
-            {/* Facility Class */}
+            {/* EnrichmentItem Class */}
             <FormFieldInput
               type="text"
-              formFieldName="facilityClass"
+              formFieldName="enrichmentItemClass"
               label="Class"
               required={true}
               placeholder="e.g., Mammalia, Reptilia..."
-              value={facilityClass}
-              setValue={setFacilityClass}
-              validateFunction={validateFacilityClass}
+              value={enrichmentItemClass}
+              setValue={setEnrichmentItemClass}
+              validateFunction={validateEnrichmentItemClass}
             />
           </div>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-            {/* Facility Order */}
+            {/* EnrichmentItem Order */}
             <FormFieldInput
               type="text"
               formFieldName="order"
@@ -509,7 +509,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               setValue={setOrder}
               validateFunction={validateOrder}
             />
-            {/* Facility Family */}
+            {/* EnrichmentItem Family */}
             <FormFieldInput
               type="text"
               formFieldName="family"
@@ -521,7 +521,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               validateFunction={validateFamily}
             />
           </div>
-          {/* Facility Genus */}
+          {/* EnrichmentItem Genus */}
           <FormFieldInput
             type="text"
             formFieldName="genus"
@@ -642,7 +642,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
           {/* Habitat or Exhibit */}
           <FormFieldRadioGroup
             formFieldName="habitatOrExhibit"
-            label="Habitat or Exhibit Facility?"
+            label="Habitat or Exhibit EnrichmentItem?"
             required={true}
             valueIdLabelTriplet={[
               ["Exhibit", "exhibit", "Exhibit"],
@@ -678,7 +678,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
 
           <Form.Submit asChild>
             <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-              Submit Edit Facility
+              Submit Edit EnrichmentItem
             </button>
           </Form.Submit>
           {formError && (
@@ -690,4 +690,4 @@ function EditFacilityForm(props: EditFacilityFormProps) {
   );
 }
 
-export default EditFacilityForm;
+export default EditEnrichmentItemForm;

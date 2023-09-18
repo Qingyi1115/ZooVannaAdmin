@@ -112,7 +112,7 @@ function CreateNewAssetForm() {
       {/* Domain */}
       <FormFieldSelect
         formFieldName="domain"
-        label="Species Domain"
+        label="Asset Domain"
         required={true}
         placeholder="Select a domain..."
         valueLabelPair={[
@@ -127,7 +127,7 @@ function CreateNewAssetForm() {
 
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-          Create Species
+          Create Asset
         </button>
       </Form.Submit>
       {formError && (
