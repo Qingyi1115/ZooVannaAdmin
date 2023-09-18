@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import EditSpeciesForm from "../../components/SpeciesManagement/EditSpeciesPage/EditSpeciesForm";
+import EditFacilityForm from "../../components/AssetAndFacilityManagement/FacilityManagement/EditFacilityForm";
 import useApiJson from "../../hooks/useApiJson";
-import Species from "../../models/Species";
+import Facility from "../../models/Facility";
 
-function EditSpeciesPage() {
+function EditFacilityPage() {
   const apiJson = useApiJson();
 
-  let emptySpecies: Species = {
-    speciesId: -1,
-    speciesCode: "",
+  let emptyFacility: Facility = {
+    facilityId: -1,
+    facilityCode: "",
     commonName: "",
     scientificName: "",
     aliasName: "",
@@ -17,7 +17,7 @@ function EditSpeciesPage() {
     domain: "",
     kingdom: "",
     phylum: "",
-    speciesClass: "",
+    facilityClass: "",
     order: "",
     family: "",
     genus: "",
@@ -30,25 +30,25 @@ function EditSpeciesPage() {
     generalDietPreference: "",
   };
 
-  const { speciesCode } = useParams<{ speciesCode: string }>();
-  const [curSpecies, setCurSpecies] = useState<Species>(emptySpecies);
+  const { facilityCode } = useParams<{ facilityCode: string }>();
+  const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/species/getspecies/${speciesCode}`);
+    apiJson.get(`http://localhost:3000/api/facility/getfacility/${facilityCode}`);
   }, []);
 
   useEffect(() => {
-    const species = apiJson.result as Species;
-    setCurSpecies(species);
+    const facility = apiJson.result as Facility;
+    setCurFacility(facility);
   }, [apiJson.loading]);
 
   return (
     <div className="p-10">
-      {curSpecies && curSpecies.speciesId != -1 && (
-        <EditSpeciesForm curSpecies={curSpecies} />
+      {curFacility && curFacility.facilityId != -1 && (
+        <EditFacilityForm curFacility={curFacility} />
       )}
     </div>
   );
 }
 
-export default EditSpeciesPage;
+export default EditFacilityPage;

@@ -1,5 +1,5 @@
 import React from "react";
-import CreateNewAssetForm from "../../components/AssetAndAssetManagement/CreateNewAssetPage/CreateNewAssetForm";
+import CreateNewAssetForm from "../../components/AssetAndFacilityManagement/AssetManagement/CreateNewAssetForm";
 
 function CreateNewAssetPage() {
   return (
