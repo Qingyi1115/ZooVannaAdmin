@@ -18,6 +18,7 @@ import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/CreateNewFacilityPage";
 import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import ViewSpeciesDetails from "./pages/speciesManagement/ViewSpeciesDetails";
 
 function App() {
   const { state } = useAuthContext();
@@ -48,6 +49,12 @@ function App() {
                   path="/species/viewallspecies"
                   element={
                     user ? <ViewAllSpeciesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/species/viewspeciesdetails/:speciesCode"
+                  element={
+                    user ? <ViewSpeciesDetails /> : <Navigate to="/login" />
                   }
                 />
                 <Route

@@ -19,7 +19,7 @@ import Species from "../../../models/Species";
 import useApiJson from "../../../hooks/useApiJson";
 import { ColumnGroup } from "primereact/columngroup";
 import { Row } from "primereact/row";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
@@ -82,8 +82,7 @@ function AllSpeciesDatatable() {
       <img
         src={"http://localhost:3000/" + rowData.imageUrl}
         alt={rowData.commonName}
-        className="border-round shadow-2"
-        style={{ width: "64px" }}
+        className="aspect-square w-16 rounded-full border border-white shadow-4"
       />
     );
   };
@@ -133,9 +132,15 @@ function AllSpeciesDatatable() {
   const actionBodyTemplate = (species: Species) => {
     return (
       <React.Fragment>
+        <NavLink to={`/species/viewspeciesdetails/${species.speciesCode}`}>
+          <Button className="mb-1 mr-1">
+            <HiEye className="mr-1" />
+            <span>View Details</span>
+          </Button>
+        </NavLink>
         <NavLink to={`/species/editspecies/${species.speciesCode}`}>
-          <Button className="mr-2">
-            <HiPencil />
+          <Button className="mb-1 mr-1">
+            <HiPencil className="mr-1" />
             <span>Edit</span>
           </Button>
         </NavLink>
@@ -144,7 +149,7 @@ function AllSpeciesDatatable() {
           className="mr-2"
           onClick={() => confirmDeleteSpecies(species)}
         >
-          <HiTrash />
+          <HiTrash className="mr-1" />
           <span>Delete</span>
         </Button>
       </React.Fragment>
@@ -186,7 +191,9 @@ function AllSpeciesDatatable() {
             }}
             dataKey="speciesId"
             paginator
+            // showGridlines
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -195,19 +202,33 @@ function AllSpeciesDatatable() {
             header={header}
           >
             <Column
+              field="imageUrl"
+              header="Image"
+              frozen
+              body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
+            ></Column>
+            <Column
               field="speciesCode"
               header="Code"
               sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="imageUrl"
-              header="Image"
-              body={imageBodyTemplate}
+              style={{ minWidth: "7rem" }}
             ></Column>
             <Column
               field="commonName"
               header="Common Name"
+              sortable
+              style={{ minWidth: "16rem" }}
+            ></Column>
+            <Column
+              field="scientificName"
+              header="Scientific Name"
+              sortable
+              style={{ minWidth: "16rem" }}
+            ></Column>
+            <Column
+              field="conservationStatus"
+              header="Conservation Status"
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
@@ -217,25 +238,15 @@ function AllSpeciesDatatable() {
               sortable
               style={{ minWidth: "10rem" }}
             ></Column>
-            <Column
-              field="conservationStatus"
-              header="Conservation Status"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
+
+            {/* <Column
               field="aliasName"
               header="Alias Name"
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
 
-            <Column
-              field="scientificName"
-              header="Scientific Name"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
+           
             <Column
               field="domain"
               header="Domain"
@@ -291,7 +302,7 @@ function AllSpeciesDatatable() {
               header="Group Sexual Dynamic"
               sortable
               style={{ minWidth: "16rem" }}
-            ></Column>
+            ></Column> */}
             <Column
               field="habitatOrExhibit"
               header="Habitat or Exhibit"
@@ -301,6 +312,8 @@ function AllSpeciesDatatable() {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
               style={{ minWidth: "18rem" }}
             ></Column>
