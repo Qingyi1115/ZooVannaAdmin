@@ -26,6 +26,9 @@ import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/EditAnimalFee
 import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EditEnrichmentItemPage";
 import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/ViewAllAnimalFeedPage";
 import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/ViewAllEnrichmentItemsPage";
+import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
+import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage";
+import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -123,6 +126,25 @@ function App() {
                   path="/assetfacility/viewallenrichmentitems"
                   element={
                     user ? <ViewAllEnrichmentItemsPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* Customer Account Management */}
+                <Route
+                  path="/customer/viewallcustomers"
+                  element={
+                    user ? <ViewAllCustomerPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/customer/createnewcustomer"
+                  element={
+                    user ? <CreateNewCustomerPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/customer/editcustomer"
+                  element={
+                    user ? <EditCustomerPage /> : <Navigate to="/login" />
                   }
                 />
               </Route>
