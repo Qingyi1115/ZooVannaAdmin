@@ -38,7 +38,7 @@ function FormFieldRadioGroup(props: PropsType) {
 
   return (
     <Form.Field
-      id={label + "id"}
+      id={formFieldName + "id"}
       name={formFieldName}
       className="flex cursor-pointer flex-col gap-1 data-[invalid]:text-danger lg:w-full"
     >
@@ -52,6 +52,7 @@ function FormFieldRadioGroup(props: PropsType) {
       />
       <RadioGroup.Root
         className="flex flex-col gap-3 text-black"
+        id={formFieldName + "RadioGroupid"}
         value={value}
         required={required}
         onValueChange={onValueChange}

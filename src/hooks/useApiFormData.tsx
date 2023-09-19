@@ -3,7 +3,7 @@ import { useAuthContext } from "./useAuthContext";
 
 function useApiFormData<TData = any>() {
   const [result, setResult] = useState<TData | null>(null);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const { state } = useAuthContext();
@@ -15,6 +15,8 @@ function useApiFormData<TData = any>() {
     data: FormData | null = null
   ) => {
     setLoading(true);
+    setError(null);
+    setResult(null);
     try {
       const options: RequestInit = {
         method,
@@ -27,13 +29,16 @@ function useApiFormData<TData = any>() {
       const response = await fetch(url, options);
 
       if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status}`);
+        const errorObject = await response.json();
+        const errorString = errorObject.error.toString();
+        throw new Error(errorString);
       }
 
       const json = (await response.json()) as TData;
       setResult(json);
     } catch (err: any) {
-      setError(err.message || "Unexpected Error!");
+      console.log("test in err");
+      setError(err || "Unexpected Error!");
     } finally {
       setLoading(false);
     }
