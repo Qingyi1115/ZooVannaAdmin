@@ -44,7 +44,7 @@ function CreateNewEnrichmentItemForm() {
       onSubmit={handleSubmit}
     >
       <span className="self-center text-title-xl font-bold">
-        Create New Animal Feed
+        Create New Enrichment Item
       </span>
       <hr className="bg-stroke opacity-20" />
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -65,7 +65,7 @@ function CreateNewEnrichmentItemForm() {
 
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-          Create Animal Feed
+          Create Enrichment Item
         </button>
       </Form.Submit>
       {formError && (

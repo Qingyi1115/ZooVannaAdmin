@@ -67,24 +67,25 @@ function CreateNewAnimalFeedForm() {
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Animal Feed Category */}
-        <FormFieldRadioGroup
+        <FormFieldSelect
           formFieldName="animalFeedCategory"
           label="Animal Feed Category"
           required={true}
-          valueIdLabelTriplet={[
-            ["RED_MEAT", "r1", "Red Meat"],
-            ["WHITE_MEAT", "r2", "White Meat"],
-            ["FISH", "r3", "Fish"],
-            ["INSECTS", "r4", "Insects"],
-            ["HAY", "r5", "Hay"],
-            ["VEGETABLES", "r6", "Vegetables"],
-            ["FRUITS", "r7", "Fruits"],
-            ["GRAINS", "r8", "Grains"],
-            ["BROWSE", "r9", "Browse"],
-            ["PELLETS", "r10", "Pellets"],
-            ["NECTAR", "r11", "Nectar"],
-            ["SUPPLEMENTS", "r12", "Supplements"],
-            ["OTHERS", "r13", "Others"]
+          placeholder="Select an animal feed category..."
+          valueLabelPair={[
+            ["RED_MEAT", "Red Meat"],
+            ["WHITE_MEAT", "White Meat"],
+            ["FISH", "Fish"],
+            ["INSECTS", "Insects"],
+            ["HAY", "Hay"],
+            ["VEGETABLES", "Vegetables"],
+            ["FRUITS", "Fruits"],
+            ["GRAINS", "Grains"],
+            ["BROWSE", "Browse"],
+            ["PELLETS", "Pellets"],
+            ["NECTAR", "Nectar"],
+            ["SUPPLEMENTS", "Supplements"],
+            ["OTHERS", "Others"]
           ]}
           value={animalFeedCategory}
           setValue={setAnimalFeedCategory}

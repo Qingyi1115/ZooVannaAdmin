@@ -1,56 +1,47 @@
 import React, { useEffect, useState, useRef } from "react";
 
-import { classNames } from "primereact/utils";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 // import { ProductService } from './service/ProductService';
 import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
 import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 
-import Facility from "../../../models/Facility";
+import facility from "../../../models/facility";
 import useApiJson from "../../../hooks/useApiJson";
-import { ColumnGroup } from "primereact/columngroup";
-import { Row } from "primereact/row";
 import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 
-function AllFacilityDatatable() {
+function AllfacilityDatatable() {
   const apiJson = useApiJson();
 
-  let emptyFacility: Facility = {
+  let emptyfacility: facility = {
     facilityId: -1,
     facilityName: "",
-    facilityDetail: "",
-    facilityDetailJson: "",
     xCoordinate: 0,
-    yCoordinate: 0
+    yCoordinate: 0,
+    facilityDetail: "",
+    facilityDetailJson: undefined
   };
 
-  const [facilityList, setFacilityList] = useState<Facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<Facility>(emptyFacility);
-  const [deleteFacilityDialog, setDeleteFacilityDialog] =
+  const [facilityList, setfacilityList] = useState<facility[]>([]);
+  const [selectedfacility, setSelectedfacility] = useState<facility>(emptyfacility);
+  const [deletefacilityDialog, setDeletefacilityDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Facility[]>>(null);
+  const dt = useRef<DataTable<facility[]>>(null);
 
   useEffect(() => {
     apiJson.get("http://localhost:3000/api/facility/getallfacility");
   }, []);
 
   useEffect(() => {
-    const facilityData = apiJson.result as Facility[];
-    setFacilityList(facilityData);
+    const facilityData = apiJson.result as facility[];
+    setfacilityList(facilityData);
   }, [apiJson.loading]);
 
   //
@@ -62,52 +53,41 @@ function AllFacilityDatatable() {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
-  const imageBodyTemplate = (rowData: Facility) => {
-    return (
-      <img
-        src={rowData.imageUrl}
-        alt={rowData.commonName}
-        className="border-round shadow-2"
-        style={{ width: "64px" }}
-      />
-    );
+
+
+  const confirmDeletefacility = (facility: facility) => {
+    setSelectedfacility(facility);
+    setDeletefacilityDialog(true);
   };
 
-  const navigateEditProduct = (facility: Facility) => {};
-
-  const confirmDeleteFacility = (facility: Facility) => {
-    setSelectedFacility(facility);
-    setDeleteFacilityDialog(true);
-  };
-
-  const hideDeleteFacilityDialog = () => {
-    setDeleteFacilityDialog(false);
+  const hideDeletefacilityDialog = () => {
+    setDeletefacilityDialog(false);
   };
 
   // delete facility stuff
-  const deleteFacility = () => {
+  const deletefacility = () => {
     let _facility = facilityList.filter(
-      (val) => val.facilityId !== selectedFacility?.facilityId
+      (val) => val.facilityId !== selectedfacility?.facilityId
     );
 
-    setFacilityList(_facility);
-    setDeleteFacilityDialog(false);
-    setSelectedFacility(emptyFacility);
+    setfacilityList(_facility);
+    setDeletefacilityDialog(false);
+    setSelectedfacility(emptyfacility);
     toast.current?.show({
       severity: "success",
       summary: "Successful",
-      detail: "Facility Deleted",
+      detail: "facility Deleted",
       life: 3000,
     });
   };
 
-  const deleteFacilityDialogFooter = (
+  const deletefacilityDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteFacilityDialog}>
+      <Button onClick={hideDeletefacilityDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteFacility}>
+      <Button variant={"destructive"} onClick={deletefacility}>
         <HiCheck />
         Yes
       </Button>
@@ -115,10 +95,10 @@ function AllFacilityDatatable() {
   );
   // end delete facility stuff
 
-  const actionBodyTemplate = (facility: Facility) => {
+  const actionBodyTemplate = (facility: facility) => {
     return (
       <React.Fragment>
-        <NavLink to={`/facility/editfacility/${facility.facilityCode}`}>
+        <NavLink to={`/facility/editfacility/${facility.facilityName}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>
@@ -127,7 +107,7 @@ function AllFacilityDatatable() {
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteFacility(facility)}
+          onClick={() => confirmDeletefacility(facility)}
         >
           <HiTrash />
           <span>Delete</span>
@@ -138,7 +118,7 @@ function AllFacilityDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Facility</h4>
+      <h4 className="m-1">Manage facility</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -163,10 +143,10 @@ function AllFacilityDatatable() {
           <DataTable
             ref={dt}
             value={facilityList}
-            selection={selectedFacility}
+            selection={selectedfacility}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedFacility(e.value);
+                setSelectedfacility(e.value);
               }
             }}
             dataKey="facilityId"
@@ -180,108 +160,28 @@ function AllFacilityDatatable() {
             header={header}
           >
             <Column
-              field="facilityCode"
-              header="Code"
+              field="facilityName"
+              header="Name"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="imageUrl"
-              header="Image"
-              body={imageBodyTemplate}
-            ></Column>
-            <Column
-              field="commonName"
-              header="Common Name"
+              field="xCoordinate"
+              header="X Coordinate"
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="generalDietPreference"
-              header="General Diet Preference"
+              field="yCoordinate"
+              header="Y Coordinate"
               sortable
-              style={{ minWidth: "10rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="conservationStatus"
-              header="Conservation Status"
+              field="facilityDetail"
+              header="Details"
               sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="aliasName"
-              header="Alias Name"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-
-            <Column
-              field="scientificName"
-              header="Scientific Name"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="domain"
-              header="Domain"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="kingdom"
-              header="Kingdom"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="phylum"
-              header="Phylum"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="facilityClass"
-              header="Class"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="order"
-              header="Order"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="family"
-              header="Family"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="genus"
-              header="Genus"
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="nativeContinent"
-              header="Native Continent"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="nativeBiomes"
-              header="Native Biomes"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="groupSexualDynamic"
-              header="Group Sexual Dynamic"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="habitatOrExhibit"
-              header="Habitat or Exhibit"
-              sortable
-              style={{ minWidth: "10rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}
@@ -293,23 +193,23 @@ function AllFacilityDatatable() {
         </div>
       </div>
       <Dialog
-        visible={deleteFacilityDialog}
+        visible={deletefacilityDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteFacilityDialogFooter}
-        onHide={hideDeleteFacilityDialog}
+        footer={deletefacilityDialogFooter}
+        onHide={hideDeletefacilityDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedFacility && (
+          {selectedfacility && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedFacility.commonName}</b>?
+              <b>{selectedfacility.facilityName}</b>?
             </span>
           )}
         </div>
@@ -318,4 +218,4 @@ function AllFacilityDatatable() {
   );
 }
 
-export default AllFacilityDatatable;
+export default AllfacilityDatatable;

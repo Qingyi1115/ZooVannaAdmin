@@ -126,7 +126,7 @@ function AllEnrichmentItemDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage EnrichmentItem</h4>
+      <h4 className="m-1">Manage Enrichment Items</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
