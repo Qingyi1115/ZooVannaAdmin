@@ -29,6 +29,9 @@ import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/ViewA
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
 import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage";
 import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
+import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
+import EditEmployeePage from "./pages/employeeAccountManagement/EditEmployeePage";
+import ViewAllEmployeePage from "./pages/employeeAccountManagement/ViewAllEmployeePage";
 
 function App() {
   const { state } = useAuthContext();
@@ -145,6 +148,25 @@ function App() {
                   path="/customer/editcustomer"
                   element={
                     user ? <EditCustomerPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* Employee Account Management */}
+                <Route
+                  path="/employee/viewallemployees"
+                  element={
+                    user ? <ViewAllEmployeePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/employee/createnewemployee"
+                  element={
+                    user ? <CreateNewEmployeePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/employee/editemployee"
+                  element={
+                    user ? <EditEmployeePage /> : <Navigate to="/login" />
                   }
                 />
               </Route>
