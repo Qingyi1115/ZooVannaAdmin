@@ -48,6 +48,7 @@ function AllSpeciesDatatable() {
     habitatOrExhibit: "habitat",
     imageUrl: "",
     generalDietPreference: "",
+    lifeExpectancyYears: 0,
   };
 
   const [speciesList, setSpeciesList] = useState<Species[]>([]);

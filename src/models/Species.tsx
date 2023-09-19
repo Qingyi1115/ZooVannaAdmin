@@ -19,6 +19,7 @@ interface Species {
   habitatOrExhibit: string;
   imageUrl: string;
   generalDietPreference: string;
+  lifeExpectancyYears: number;
 
   createdAt?: string;
   updateTimestamp?: string;

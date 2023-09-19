@@ -6,6 +6,8 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
 import useApiFormData from "../../../hooks/useApiFormData";
+import useApiJson from "../../../hooks/useApiJson";
+
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
 import { ContinentEnum } from "../../../enums/ContinentEnum";
@@ -20,10 +22,13 @@ interface EditSpeciesFormProps {
 
 function EditSpeciesForm(props: EditSpeciesFormProps) {
   const apiFormData = useApiFormData();
+  const apiJson = useApiJson();
 
   const { curSpecies } = props;
 
-  //   const [speciesCode, setSpeciesCode] = useState<string>("");
+  const [speciesCode, setSpeciesCode] = useState<string>(
+    curSpecies.speciesCode
+  );
   const [commonName, setCommonName] = useState<string>(curSpecies.commonName);
   const [scientificName, setScientificName] = useState<string>(
     curSpecies.scientificName
@@ -61,25 +66,28 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
   const [educationalDescription, setEducationalDescription] = useState<string>(
     curSpecies.educationalDescription
   );
+  const [lifeExpectancyYears, setLifeExpectancyYears] = useState<number>(
+    curSpecies.lifeExpectancyYears
+  );
   const [imageUrl, setImageUrl] = useState<string | null>(curSpecies.imageUrl);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
 
   // field validations
-  function validateImage(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please upload an image
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
+  // function validateImage(props: ValidityState) {
+  //   if (props != undefined) {
+  //     if (props.valueMissing) {
+  //       return (
+  //         <div className="font-medium text-danger">
+  //           * Please upload an image
+  //         </div>
+  //       );
+  //     }
+  //     // add any other cases here
+  //   }
+  //   return null;
+  // }
 
   function validateCommonName(props: ValidityState) {
     if (props != undefined) {
@@ -285,6 +293,20 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
     return null;
   }
 
+  function validateLifeExpectancyYears(props: ValidityState) {
+    // if (props != undefined) {
+    if (lifeExpectancyYears <= 0) {
+      return (
+        <div className="font-medium text-danger">
+          * Life expectancy must be greater than 0
+        </div>
+      );
+    }
+    // add any other cases here
+    // }
+    return null;
+  }
+
   function validateEducationalDescription(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
@@ -322,30 +344,62 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("speciesCode", curSpecies.speciesCode);
-    formData.append("commonName", commonName);
-    formData.append("scientificName", scientificName);
-    formData.append("aliasName", aliasName);
-    formData.append("conservationStatus", conservationStatus || "");
-    formData.append("domain", domain || "");
-    formData.append("kingdom", kingdom || "");
-    formData.append("phylum", phylum);
-    formData.append("speciesClass", speciesClass);
-    formData.append("order", order);
-    formData.append("family", family);
-    formData.append("genus", genus);
-    formData.append("nativeContinent", nativeContinent || "");
-    formData.append("nativeBiomes", selectedBiomes?.toString() || "");
-    formData.append("groupSexualDynamic", groupSexualDynamic || "");
-    formData.append("habitatOrExhibit", habitatOrExhibit || "");
-    formData.append("generalDietPreference", generalDietPreference || "");
-    formData.append("educationalDescription", educationalDescription);
-    formData.append("file", imageFile || "");
-    await apiFormData.put(
-      "http://localhost:3000/api/species/updatespecies",
-      formData
-    );
+
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("speciesCode", curSpecies.speciesCode);
+      formData.append("commonName", commonName);
+      formData.append("scientificName", scientificName);
+      formData.append("aliasName", aliasName);
+      formData.append("conservationStatus", conservationStatus || "");
+      formData.append("domain", domain || "");
+      formData.append("kingdom", kingdom || "");
+      formData.append("phylum", phylum);
+      formData.append("speciesClass", speciesClass);
+      formData.append("order", order);
+      formData.append("family", family);
+      formData.append("genus", genus);
+      formData.append("nativeContinent", nativeContinent || "");
+      formData.append("nativeBiomes", selectedBiomes?.toString() || "");
+      formData.append("groupSexualDynamic", groupSexualDynamic || "");
+      formData.append("habitatOrExhibit", habitatOrExhibit || "");
+      formData.append("generalDietPreference", generalDietPreference || "");
+      formData.append("educationalDescription", educationalDescription);
+      formData.append("file", imageFile || "");
+      await apiFormData.put(
+        "http://localhost:3000/api/species/updatespecies",
+        formData
+      );
+    } else {
+      // no image
+      const nativeBiomes = selectedBiomes?.toString();
+      const updatedSpecies = {
+        speciesCode,
+        commonName,
+        scientificName,
+        aliasName,
+        conservationStatus,
+        domain,
+        kingdom,
+        phylum,
+        speciesClass,
+        order,
+        family,
+        genus,
+        educationalDescription,
+        nativeContinent,
+        nativeBiomes,
+        groupSexualDynamic,
+        habitatOrExhibit,
+        generalDietPreference,
+        imageUrl,
+      };
+      await apiJson.put(
+        "http://localhost:3000/api/species/updatespecies",
+        updatedSpecies
+      );
+    }
+
     console.log(apiFormData.result);
   }
 
@@ -377,12 +431,12 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
             <Form.Control
               type="file"
               placeholder="Change image"
-              required
+              required={false}
               accept=".png, .jpg, .jpeg, .webp"
               onChange={handleFileChange}
               className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
             />
-            <Form.ValidityState>{validateImage}</Form.ValidityState>
+            {/* <Form.ValidityState>{validateImage}</Form.ValidityState> */}
           </Form.Field>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
             {/* Common Name */}
@@ -656,6 +710,19 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
             validateFunction={validateHabitatOrExhibit}
           />
 
+          {/* Species Life Expectancy in Years */}
+          <FormFieldInput
+            type="number"
+            formFieldName="lifeExpectancyYears"
+            label="Life Expectancy (in Years)"
+            required={true}
+            placeholder="e.g., 8"
+            value={lifeExpectancyYears}
+            setValue={setLifeExpectancyYears}
+            validateFunction={validateLifeExpectancyYears}
+          />
+
+          {/* Species Educational Desc */}
           <Form.Field
             name="educationalDescription"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"

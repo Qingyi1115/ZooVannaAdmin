@@ -28,6 +28,7 @@ function EditSpeciesPage() {
     habitatOrExhibit: "habitat",
     imageUrl: "",
     generalDietPreference: "",
+    lifeExpectancyYears: 0,
   };
 
   const { speciesCode } = useParams<{ speciesCode: string }>();
