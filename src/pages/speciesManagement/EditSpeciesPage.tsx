@@ -33,20 +33,31 @@ function EditSpeciesPage() {
 
   const { speciesCode } = useParams<{ speciesCode: string }>();
   const [curSpecies, setCurSpecies] = useState<Species>(emptySpecies);
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/species/getspecies/${speciesCode}`);
-  }, []);
+    const fetchSpecies = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/species/getspecies/${speciesCode}`
+        );
+        setCurSpecies(responseJson as Species);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
 
-  useEffect(() => {
-    const species = apiJson.result as Species;
-    setCurSpecies(species);
-  }, [apiJson.loading]);
+    fetchSpecies();
+  }, [refreshSeed]);
 
   return (
     <div className="p-10">
       {curSpecies && curSpecies.speciesId != -1 && (
-        <EditSpeciesForm curSpecies={curSpecies} />
+        <EditSpeciesForm
+          curSpecies={curSpecies}
+          refreshSeed={refreshSeed}
+          setRefreshSeed={setRefreshSeed}
+        />
       )}
     </div>
   );

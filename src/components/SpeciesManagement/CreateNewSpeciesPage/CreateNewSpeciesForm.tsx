@@ -396,24 +396,13 @@ function CreateNewSpeciesForm() {
       "lifeExpectancyYears",
       lifeExpectancyYears?.toString() || ""
     );
-    const response = await apiFormData.post(
-      "http://localhost:3000/api/species/createnewspecies",
-      formData
-    );
-  }
 
-  useEffect(() => {
-    if (!apiFormData.loading) {
-      if (apiFormData.error) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while creating a new species: \n" +
-            apiFormData.error,
-        });
-      } else if (apiFormData.result) {
+    const createSpecies = async () => {
+      try {
+        const response = await apiFormData.post(
+          "http://localhost:3000/api/species/createnewspecies",
+          formData
+        );
         // success
         console.log("succes?");
         toastShadcn({
@@ -422,9 +411,19 @@ function CreateNewSpeciesForm() {
 
         // clearForm();
         setNewSpeciesCreated(true);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while creating a new species: \n" +
+            error.message,
+        });
       }
-    }
-  }, [apiFormData.loading]);
+    };
+    createSpecies();
+  }
 
   return (
     <div>

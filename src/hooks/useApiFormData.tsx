@@ -34,22 +34,22 @@ function useApiFormData<TData = any>() {
         throw new Error(errorString);
       }
 
-      const json = (await response.json()) as TData;
-      setResult(json);
+      // const json = (await response.json()) as TData;
+      return await response.json();
     } catch (err: any) {
-      console.log("test in err");
-      setError(err || "Unexpected Error!");
+      setError(err.message || "Unexpected Error!");
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
   const post = async (url: string, data: FormData) => {
-    await request(url, "POST", data);
+    return await request(url, "POST", data);
   };
 
   const put = async (url: string, data: FormData) => {
-    await request(url, "PUT", data);
+    return await request(url, "PUT", data);
   };
 
   return {

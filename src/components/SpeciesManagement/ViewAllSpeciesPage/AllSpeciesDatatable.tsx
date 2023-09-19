@@ -3,8 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { classNames } from "primereact/utils";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-// import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
+// import { Toast } from "primereact/toast";
 import { FileUpload } from "primereact/fileupload";
 import { Rating } from "primereact/rating";
 import { Toolbar } from "primereact/toolbar";
@@ -23,6 +22,7 @@ import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 function AllSpeciesDatatable() {
   const apiJson = useApiJson();
@@ -56,17 +56,24 @@ function AllSpeciesDatatable() {
   const [deleteSpeciesDialog, setDeleteSpeciesDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const toast = useRef<Toast>(null);
+
   const dt = useRef<DataTable<Species[]>>(null);
 
-  useEffect(() => {
-    apiJson.get("http://localhost:3000/api/species/getallspecies");
-  }, []);
+  const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    const speciesData = apiJson.result as Species[];
-    setSpeciesList(speciesData);
-  }, [apiJson.loading]);
+    const fetchSpecies = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/species/getallspecies"
+        );
+        setSpeciesList(responseJson as Species[]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchSpecies();
+  }, []);
 
   //
   const exportCSV = () => {
@@ -99,20 +106,40 @@ function AllSpeciesDatatable() {
   };
 
   // delete species stuff
-  const deleteSpecies = () => {
+  const deleteSpecies = async () => {
     let _species = speciesList.filter(
       (val) => val.speciesId !== selectedSpecies?.speciesId
     );
 
-    setSpeciesList(_species);
-    setDeleteSpeciesDialog(false);
-    setSelectedSpecies(emptySpecies);
-    toast.current?.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "Species Deleted",
-      life: 3000,
-    });
+    const selectedSpeciesCommonName = selectedSpecies.commonName;
+
+    const deleteSpecies = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/species/deletespecies/" +
+            selectedSpecies.speciesCode
+        );
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully deleted species: " + selectedSpeciesCommonName,
+        });
+        setSpeciesList(_species);
+        setDeleteSpeciesDialog(false);
+        setSelectedSpecies(emptySpecies);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting species: \n" + apiJson.error,
+        });
+      }
+    };
+    deleteSpecies();
   };
 
   const deleteSpeciesDialogFooter = (
@@ -176,7 +203,6 @@ function AllSpeciesDatatable() {
   return (
     <div>
       <div>
-        <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
           <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
 
