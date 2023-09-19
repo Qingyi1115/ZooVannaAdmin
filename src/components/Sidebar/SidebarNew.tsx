@@ -466,7 +466,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             fill=""
                           />
                         </svg>
-                        Asset & Facility
+                        Assets & Facilities
                         <svg
                           className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
                             open && "rotate-180"
@@ -516,13 +516,81 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <NavLink
-                              to="/assetfacility/viewallassets"
+                              to="/assetfacility/editfacility"
                               className={({ isActive }) =>
                                 "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
                                 (isActive && "!text-white")
                               }
                             >
-                              View All Assets
+                              Edit Facility
+                            </NavLink>
+                          </li>
+                          <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
+                          <li>
+                            <NavLink
+                              to="/assetfacility/viewallanimalfeed"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              View All Animal Feed
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/assetfacility/createanimalfeed"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              Create New Animal Feed
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/assetfacility/editanimalfeed"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              Edit Animal Feed
+                            </NavLink>
+                          </li>
+                          <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
+                          <li>
+                            <NavLink
+                              to="/assetfacility/viewallenrichmentitems"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              View All Enrichment Items
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/assetfacility/createenrichmentitem"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              Create New Enrichment Item
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/assetfacility/editenrichmentitem"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              Edit Enrichment Item
                             </NavLink>
                           </li>
                         </ul>
