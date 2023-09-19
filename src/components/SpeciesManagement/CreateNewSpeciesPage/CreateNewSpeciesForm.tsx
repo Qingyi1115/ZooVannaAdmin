@@ -47,6 +47,7 @@ function CreateNewSpeciesForm() {
   >(undefined);
   const [educationalDescription, setEducationalDescription] =
     useState<string>("");
+  const [lifeExpectancyYears, setLifeExpectancyYears] = useState<number>(0);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
@@ -270,6 +271,20 @@ function CreateNewSpeciesForm() {
     return null;
   }
 
+  function validateLifeExpectancyYears(props: ValidityState) {
+    // if (props != undefined) {
+    if (lifeExpectancyYears <= 0) {
+      return (
+        <div className="font-medium text-danger">
+          * Life expectancy must be greater than 0
+        </div>
+      );
+    }
+    // add any other cases here
+    // }
+    return null;
+  }
+
   function validateEducationalDescription(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
@@ -355,6 +370,10 @@ function CreateNewSpeciesForm() {
     formData.append("generalDietPreference", generalDietPreference || "");
     formData.append("educationalDescription", educationalDescription || "");
     formData.append("file", imageFile || "");
+    formData.append(
+      "lifeExpectancyYears",
+      lifeExpectancyYears?.toString() || ""
+    );
     await apiFormData.post(
       "http://localhost:3000/api/species/createnewspecies",
       formData
@@ -678,6 +697,19 @@ function CreateNewSpeciesForm() {
         validateFunction={validateHabitatOrExhibit}
       />
 
+      {/* Species Life Expectancy in Years */}
+      <FormFieldInput
+        type="number"
+        formFieldName="lifeExpectancyYears"
+        label="Life Expectancy (in Years)"
+        required={true}
+        placeholder="e.g., 8"
+        value={lifeExpectancyYears}
+        setValue={setLifeExpectancyYears}
+        validateFunction={validateLifeExpectancyYears}
+      />
+
+      {/* Species Educational Desc */}
       <Form.Field
         name="educationalDescription"
         className="flex w-full flex-col gap-1 data-[invalid]:text-danger"

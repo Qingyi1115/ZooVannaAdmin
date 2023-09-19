@@ -79,7 +79,7 @@ function AllSpeciesDatatable() {
   const imageBodyTemplate = (rowData: Species) => {
     return (
       <img
-        src={rowData.imageUrl}
+        src={"http://localhost:3000/" + rowData.imageUrl}
         alt={rowData.commonName}
         className="border-round shadow-2"
         style={{ width: "64px" }}

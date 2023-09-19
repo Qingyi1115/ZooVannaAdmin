@@ -367,7 +367,10 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <span className="font-medium">Current Image</span>
-            <img src={curSpecies.imageUrl} alt="Current species image" />
+            <img
+              src={"http://localhost:3000/" + curSpecies.imageUrl}
+              alt="Current species image"
+            />
             <Form.Label className="font-medium">
               Change Species Image
             </Form.Label>
