@@ -3,7 +3,8 @@ import { useParams } from "react-router";
 import EditAnimalFeedForm from "../../components/AssetAndFacilityManagement/AssetManagement/EditAnimalFeedForm";
 import useApiJson from "../../hooks/useApiJson";
 import AnimalFeed from "src/models/AnimalFeed";
-import { AnimalFeedCategory } from "src/enums/Enumerated";
+import { AnimalFeedCategory } from "src/enums/AnimalFeedCategory";
+
 
 function EditAnimalFeedPage() {
   const apiJson = useApiJson();

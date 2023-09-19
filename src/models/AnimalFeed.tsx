@@ -1,4 +1,4 @@
-import { AnimalFeedCategory } from "src/enums/Enumerated";
+import { AnimalFeedCategory } from "src/enums/AnimalFeedCategory";
 
 interface AnimalFeed {
   animalFeedId: number;

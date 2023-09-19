@@ -14,7 +14,7 @@ import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
-import { AnimalFeedCategory } from "src/enums/Enumerated";
+import { AnimalFeedCategory } from "../../../enums/AnimalFeedCategory";
 
 function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();
