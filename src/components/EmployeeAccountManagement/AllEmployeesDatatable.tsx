@@ -15,18 +15,19 @@ function AllEmployeesDatatable() {
     const apiJson = useApiJson();
 
     let employee: Employee = {
-        employeeId: -1,
-        employeeName: "",
-        employeeEmail: "",
-        employeeAddress: "",
-        employeePhoneNumber: "",
-        employeePasswordHash: "",
-        employeeSalt: "",
-        employeeDoorAccessCode: "",
-        employeeEducation: "",
-        employeeDateOfResignation: new Date(),
-        employeeBirthDate: new Date(),
-        isAccountManager: false,
+      employeeId: -1,
+      employeeName: "",
+      employeeEmail: "",
+      employeeAddress: "",
+      employeePhoneNumber: "",
+      employeePasswordhash: "",
+      employeeSalt: "",
+      employeeDoorAccessCode: "",
+      employeeEducation: "",
+      employeeBirthDate: new Date(),
+      isAccountManager: false,
+      dateOfResignation: new Date(),
+      employeeProfileUrl: ""
     };
 
     const toast = useRef<Toast>(null);
@@ -36,16 +37,23 @@ function AllEmployeesDatatable() {
     const dt = useRef<DataTable<Employee[]>>(null);
     const [globalFilter, setGlobalFilter] = useState<string>("");
     const request = {includes: []};
-
+    
     useEffect(() => {
-      apiJson.post("http://localhost:3000/api/employee/getAllEmployees", request);
+      const fetchEmployees = async () => {
+        try {
+          const responseJson = await apiJson.get(
+            "http://localhost:3000/api/employee/getAllEmployees"
+          );
+          setEmployeeList(responseJson as Employee[])
+          console.log("Here " + responseJson);
+          const help = responseJson as Employee[];
+          console.log(help);
+        } catch (error: any) {
+          console.log(error);
+        }
+      };
+      fetchEmployees();
     }, []);
-
-    useEffect(() => {
-      const employeeData = apiJson.result as Employee[];
-      setEmployeeList(employeeData);
-      console.log("employee data in");
-    }, [apiJson.loading]);
 
     const header = (
         <div className="flex flex-wrap items-center justify-between gap-2">

@@ -4,13 +4,14 @@ interface Employee {
   employeeEmail: string;
   employeeAddress: string;
   employeePhoneNumber: string;
-  employeePasswordHash: string;
+  employeePasswordhash: string;
   employeeSalt: string;
   employeeDoorAccessCode: string;
   employeeEducation: string;
-  isAccountManager: boolean;
   employeeBirthDate: Date;
-  employeeDateOfResignation: Date | null;
+  isAccountManager: boolean;
+  dateOfResignation: Date | null;
+  employeeProfileUrl: string | null;
 
   //   keeper?: Keeper | null;
   //   planningStaff?: PlanningStaff | null;

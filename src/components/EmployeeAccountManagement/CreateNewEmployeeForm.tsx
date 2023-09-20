@@ -346,8 +346,8 @@ function CreateNewEmployeeForm() {
           required={true}
           placeholder="Select a general staff type."
           valueLabelPair={[
-            ["OPERATIONS", "Operations"],
-            ["MAINTENANCE", "Maintenance"],
+            ["ZOO_OPERATIONS", "Operations"],
+            ["ZOO_MAINTENANCE", "Maintenance"],
           ]}
           value={roleType}
           setValue={setRoleType}
