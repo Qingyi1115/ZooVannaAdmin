@@ -6,11 +6,11 @@ import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
 import useApiJson from "../../../hooks/useApiJson";
 
-function validateCommonName(props: ValidityState) {
+function validateFacilityName(props: ValidityState) {
   if (props != undefined) {
     if (props.valueMissing) {
       return (
-        <div className="font-medium text-danger">* Please enter a ahahha</div>
+        <div className="font-medium text-danger">* Please enter a value</div>
       );
     }
     // add any other cases here
@@ -21,19 +21,10 @@ function validateCommonName(props: ValidityState) {
 function CreateNewFacilityForm() {
   const apiJson = useApiJson();
 
-  // facilityName
-  // facilityType
-  // facilityType2
-  // FacilityDetail
   const [facilityName, setFacilityName] = useState<string>(""); // text input
-  const [facilityType, setFacilityType] = useState<string | undefined>(
-    undefined
-  ); // radio group
-  const [facilityType2, setFacilityType2] = useState<string | undefined>(
-    undefined
-  ); // drop down select
-  const [facilityDetail, setFacilityDetail] = useState<string>(""); // text
-
+  const [xCoordinate, setXCoordinate] = useState<string>(""); // number
+  const [yCoordinate, setYCoordinate] = useState<string>(""); // number
+  const [facilityDetail, setFacilityDetail] = useState<string>(""); // text input
   const [formError, setFormError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -42,9 +33,9 @@ function CreateNewFacilityForm() {
 
     const newFacility = {
       facilityName,
-      facilityType,
-      facilityType2,
-      facilityDetail,
+      xCoordinate,
+      yCoordinate,
+      facilityDetail
     };
 
     await apiJson.post("", newFacility);
@@ -62,7 +53,7 @@ function CreateNewFacilityForm() {
       </span>
       <hr className="bg-stroke opacity-20" />
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Common Name */}
+        {/* Facility Name */}
         <FormFieldInput
           type="text"
           formFieldName="facilityName"
@@ -71,63 +62,47 @@ function CreateNewFacilityForm() {
           placeholder="e.g., Toilet"
           value={facilityName}
           setValue={setFacilityName}
-          validateFunction={validateCommonName}
+          validateFunction={validateFacilityName}
         />
-        {/* Scientific Name */}
+        {/* X Coordinate */}
         <FormFieldInput
+          type="number"
+          formFieldName="xCoordinate"
+          label="X Coordinate"
+          required={true}
+          placeholder="1-1000"
+          value={xCoordinate}
+          setValue={setXCoordinate}
+          validateFunction={validateFacilityName}
+        />
+        {/* Y Coordinate */}
+        <FormFieldInput
+          type="number"
+          formFieldName="yCoordinate"
+          label="Y Coordinate"
+          required={true}
+          placeholder="1-1000"
+          value={yCoordinate}
+          setValue={setYCoordinate}
+          validateFunction={validateFacilityName}
+        />
+        
+      </div>
+      {/* Facility Details */}
+      <FormFieldInput
           type="text"
           formFieldName="facilityDetail"
-          label="Scientific Name (Binomial/Trinomial Name)"
+          label="Facility Name"
           required={true}
-          placeholder="e.g., Homo sapiens, Panthera leo leo..."
+          placeholder="e.g., Toilet"
           value={facilityDetail}
           setValue={setFacilityDetail}
-          validateFunction={validateCommonName}
+          validateFunction={validateFacilityName}
         />
-      </div>
-
-      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Conservation Status */}
-        <FormFieldRadioGroup
-          formFieldName="facilityType"
-          label="Facility Type"
-          required={true}
-          valueIdPair={[
-            ["Haha", "ft1"],
-            ["Hoho", "ft2"],
-            ["HEHE", "ft3"],
-            ["Near Threatened", "ft4"],
-            ["Near Threatened", "ft4"],
-            ["Near Threatened", "ft4"],
-            ["Near Threatened", "ft4"],
-            ["Near Threatened", "ft4"],
-            ["Near Threatened", "ft4"],
-          ]}
-          value={facilityType}
-          setValue={setFacilityType}
-          validateFunction={validateCommonName}
-        />
-      </div>
-
-      {/* Domain */}
-      <FormFieldSelect
-        formFieldName="domain"
-        label="Species Domain"
-        required={true}
-        placeholder="Select a domain..."
-        valueLabelPair={[
-          ["Archaea", "sadtguhjansd"],
-          ["Bacteria", "Bacteria"],
-          ["Eukarya", "Eukarya"],
-        ]}
-        value={facilityType2}
-        setValue={setFacilityType2}
-        validateFunction={validateCommonName}
-      />
 
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-          Create Species
+          Add Facility
         </button>
       </Form.Submit>
       {formError && (

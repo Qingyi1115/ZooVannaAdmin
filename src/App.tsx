@@ -18,7 +18,19 @@ import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/CreateNewFacilityPage";
 import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
 import NotFoundPage from "./pages/NotFoundPage";
+
 import ViewSpeciesDetails from "./pages/speciesManagement/ViewSpeciesDetails";
+import EditFacilityPage from "./pages/assetAndFacilityManagement/EditFacilityPage";
+import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/ViewAllFacilitiesPage";
+import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/CreateNewAnimalFeedPage";
+import CreateNewEnrichmentItemPage from "./pages/assetAndFacilityManagement/CreateNewEnrichmentItemPage";
+import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/EditAnimalFeedPage";
+import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EditEnrichmentItemPage";
+import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/ViewAllAnimalFeedPage";
+import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/ViewAllEnrichmentItemsPage";
+import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
+import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage";
+import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -74,6 +86,73 @@ function App() {
                   path="/assetfacility/createfacility"
                   element={
                     user ? <CreateNewFacilityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/editfacility"
+                  element={
+                    user ? <EditFacilityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/viewallfacilities"
+                  element={
+                    user ? <ViewAllFacilitiesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/createanimalfeed"
+                  element={
+                    user ? <CreateNewAnimalFeedPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/editanimalfeed/:animalfeedname"
+                  element={
+                    user ? <EditAnimalFeedPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/viewallanimalfeed"
+                  element={
+                    user ? <ViewAllAnimalFeedPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/createenrichmentitem"
+                  element={
+                    user ? <CreateNewEnrichmentItemPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/editenrichmentitem/:enrichmentitemname"
+                  element={
+                    user ? <EditEnrichmentItemPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/viewallenrichmentitems"
+                  element={
+                    user ? <ViewAllEnrichmentItemsPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* Customer Account Management */}
+                <Route
+                  path="/customer/viewallcustomers"
+                  element={
+                    user ? <ViewAllCustomerPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/customer/createnewcustomer"
+                  element={
+                    user ? <CreateNewCustomerPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/customer/editcustomer"
+                  element={
+                    user ? <EditCustomerPage /> : <Navigate to="/login" />
                   }
                 />
               </Route>
