@@ -8,12 +8,12 @@ interface PropsType {
   required: boolean;
   placeholder: string;
   label: string;
-  value: string;
-  setValue: (value: React.SetStateAction<string>) => void;
+  value: string | number;
+  setValue: (value: any) => void; // React.SetStateAction<string> or React.SetStateAction<number>, I'm too tired man
   validateFunction: (props: ValidityState) => JSX.Element | null;
 }
 
-function FormFieldInput(props: PropsType) {
+function FormFieldInput<T>(props: PropsType) {
   const {
     type,
     formFieldName,

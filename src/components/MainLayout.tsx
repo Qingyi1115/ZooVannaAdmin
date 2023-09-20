@@ -5,6 +5,8 @@ import Header from "./Deprecated/Header";
 import HeaderNew from "./Header/HeaderNew";
 import SidebarNew from "./Sidebar/SidebarNew";
 
+import { Toaster } from "@/components/ui/toaster";
+
 interface PropsType {
   children: React.ReactNode;
   sidebarOpen: boolean;
@@ -20,6 +22,7 @@ function MainLayout(props: PropsType) {
         <HeaderNew sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         {props.children}
       </div>
+      <Toaster />
     </div>
   );
 }

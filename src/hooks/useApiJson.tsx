@@ -30,7 +30,7 @@ import { useAuthContext } from "./useAuthContext";
 */
 function useApiJson<TData = any>() {
   const [result, setResult] = useState<TData | null>(null);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const { state } = useAuthContext();
@@ -42,6 +42,8 @@ function useApiJson<TData = any>() {
     body: any = null
   ) => {
     setLoading(true);
+    setError(null);
+    setResult(null);
     try {
       const options: RequestInit = {
         method,
@@ -56,32 +58,35 @@ function useApiJson<TData = any>() {
       const response = await fetch(url, options);
 
       if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status}`);
+        const errorObject = await response.json();
+        const errorString = errorObject.error.toString();
+        throw new Error(errorString);
       }
 
-      const json = await response.json();
-      setResult(json);
+      // const json = await response.json();
+      return await response.json();
     } catch (err: any) {
       setError(err.message || "Unexpected Error!");
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
   const get = async (url: string) => {
-    await request(url);
+    return await request(url);
   };
 
   const post = async (url: string, body: any) => {
-    await request(url, "POST", body);
+    return await request(url, "POST", body);
   };
 
   const put = async (url: string, body: any) => {
-    await request(url, "PUT", body);
+    return await request(url, "PUT", body);
   };
 
   const del = async (url: string) => {
-    await request(url, "DELETE");
+    return await request(url, "DELETE");
   };
 
   return {
