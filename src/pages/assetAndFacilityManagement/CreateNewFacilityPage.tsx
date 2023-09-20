@@ -1,5 +1,5 @@
 import React from "react";
-import CreateNewFacilityForm from "../../components/AssetAndFacilityManagement/CreateNewFacilityPage/CreateNewFacilityForm";
+import CreateNewFacilityForm from "../../components/AssetAndFacilityManagement/FacilityManagement/CreateNewFacilityForm";
 
 function CreateNewFacilityPage() {
   return (
