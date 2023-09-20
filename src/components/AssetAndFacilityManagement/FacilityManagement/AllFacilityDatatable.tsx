@@ -8,7 +8,7 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
-import facility from "../../../models/facility";
+import facility from "src/models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
 import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 

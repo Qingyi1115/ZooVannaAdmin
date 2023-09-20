@@ -27,6 +27,8 @@ import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EditEnric
 import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/ViewAllAnimalFeedPage";
 import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/ViewAllEnrichmentItemsPage";
 
+import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -123,6 +125,13 @@ function App() {
                   path="/assetfacility/viewallenrichmentitems"
                   element={
                     user ? <ViewAllEnrichmentItemsPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/*Employee Account Management */}
+                <Route
+                  path="/employeeaccount/viewemployees"
+                  element={
+                    user? <ViewAllEmployeesPage /> : <Navigate to="/login"/>
                   }
                 />
               </Route>
