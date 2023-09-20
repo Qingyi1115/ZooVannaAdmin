@@ -73,7 +73,7 @@ function useApiJson<TData = any>() {
     }
   };
 
-  const get = async (url: string) => {
+  const get = async (url: string, body: any = null) => {
     return await request(url);
   };
 
@@ -85,7 +85,7 @@ function useApiJson<TData = any>() {
     return await request(url, "PUT", body);
   };
 
-  const del = async (url: string) => {
+  const del = async (url: string, body: any = null) => {
     return await request(url, "DELETE");
   };
 

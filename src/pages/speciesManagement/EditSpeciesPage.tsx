@@ -24,6 +24,7 @@ function EditSpeciesPage() {
     nativeContinent: "",
     nativeBiomes: "",
     educationalDescription: "",
+    educationalFunFact: "",
     groupSexualDynamic: "",
     habitatOrExhibit: "habitat",
     imageUrl: "",
