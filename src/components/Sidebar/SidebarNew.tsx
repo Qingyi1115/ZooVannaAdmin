@@ -498,7 +498,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && "!text-white")
                               }
                             >
-                              Create New Facility
+                              Add Facility
                             </NavLink>
                           </li>
                           <li>
@@ -520,7 +520,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && "!text-white")
                               }
                             >
-                              Create New Animal Feed
+                              Add Animal Feed
                             </NavLink>
                           </li>
                           <li>
@@ -542,7 +542,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && "!text-white")
                               }
                             >
-                              Create New Enrichment Item
+                              Add Enrichment Item
                             </NavLink>
                           </li>                          
                         </ul>
@@ -731,6 +731,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               }
                             >
                               View All Customers
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/customer/createnewcustomer"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              Create New Customer
                             </NavLink>
                           </li>
                         </ul>

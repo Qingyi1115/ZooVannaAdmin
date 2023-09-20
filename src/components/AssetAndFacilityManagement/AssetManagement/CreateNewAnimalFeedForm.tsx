@@ -5,7 +5,10 @@ import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
 import useApiJson from "../../../hooks/useApiJson";
+import { AnimalFeedCategory } from "../../../enums/AnimalFeedCategory";
+import useApiFormData from "../../../hooks/useApiFormData";
 
+// Field validations
 function validateName(props: ValidityState) {
   if (props != undefined) {
     if (props.valueMissing) {
@@ -18,26 +21,60 @@ function validateName(props: ValidityState) {
   return null;
 }
 
+function validateImage(props: ValidityState) {
+  if (props != undefined) {
+    if (props.valueMissing) {
+      return (
+        <div className="font-medium text-danger">
+          * Please upload an image
+        </div>
+      );
+    }
+    // add any other cases here
+  }
+  return null;
+}
+
+// end field validations
+
 function CreateNewAnimalFeedForm() {
-  const apiJson = useApiJson();
+  const apiFormData = useApiFormData();
 
   const [animalFeedName, setAnimalFeedName] = useState<string>(""); // text input
   const [animalFeedCategory, setAnimalFeedCategory] = useState<string | undefined>(
     undefined
   ); // radio group
-
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+
+  function clearForm() {
+    setAnimalFeedName("");
+    setAnimalFeedCategory(undefined);
+    setImageFile(null);
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+    setImageFile(file);
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
+    console.log("Name:");
+    console.log(animalFeedName);
+    console.log("Category:");
+    console.log(animalFeedCategory);
 
-    const newAnimalFeed = {
-      animalFeedName,
-      animalFeedCategory
-    };
-
-    await apiJson.post("", newAnimalFeed);
+    const formData = new FormData();
+    formData.append("animalFeedName", animalFeedName);
+    formData.append("animalFeedCategory", animalFeedCategory?.toString() || "");
+    formData.append("file", imageFile || "");
+    await apiFormData.post(
+      "http://localhost:3000/api/species/createnewanimalfeed",
+      formData
+    );
+    console.log(apiFormData.result);
 
     // handle success case or failurecase using apiJson
   }
@@ -46,11 +83,27 @@ function CreateNewAnimalFeedForm() {
     <Form.Root
       className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
       onSubmit={handleSubmit}
+      encType="multipart/form-data"
     >
       <span className="self-center text-title-xl font-bold">
-        Create New Animal Feed
+        Add Animal Feed
       </span>
       <hr className="bg-stroke opacity-20" />
+      {/* Species Picture */}
+      <Form.Field
+        name="animalFeedImage"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">Animal Feed Image</Form.Label>
+        <Form.Control
+          type="file"
+          required
+          accept=".png, .jpg, .jpeg, .webp"
+          onChange={handleFileChange}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        />
+        <Form.ValidityState>{validateImage}</Form.ValidityState>
+      </Form.Field>
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Animal Feed Name */}
         <FormFieldInput

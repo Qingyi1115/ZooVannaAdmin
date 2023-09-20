@@ -4,8 +4,9 @@ import * as Form from "@radix-ui/react-form";
 import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
-import useApiJson from "../../../hooks/useApiJson";
+import useApiFormData from "../../../hooks/useApiFormData";
 
+// Field validations
 function validateName(props: ValidityState) {
   if (props != undefined) {
     if (props.valueMissing) {
@@ -18,22 +19,46 @@ function validateName(props: ValidityState) {
   return null;
 }
 
+function validateImage(props: ValidityState) {
+  if (props != undefined) {
+    if (props.valueMissing) {
+      return (
+        <div className="font-medium text-danger">
+          * Please upload an image
+        </div>
+      );
+    }
+    // add any other cases here
+  }
+  return null;
+}
+
+// end field validations
+
 function CreateNewEnrichmentItemForm() {
-  const apiJson = useApiJson();
+  const apiFormData = useApiFormData();
 
   const [enrichmentItemName, setEnrichmentItemName] = useState<string>(""); // text input
-
   const [formError, setFormError] = useState<string | null>(null);
+
+  function clearForm() {
+    setEnrichmentItemName("");
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
+    console.log("Name:");
+    console.log(enrichmentItemName);
+    
+    const formData = new FormData();
+    formData.append("animalFeedName", enrichmentItemName);
 
-    const newEnrichmentItem = {
-      enrichmentItemName
-    };
-
-    await apiJson.post("", newEnrichmentItem);
+    await apiFormData.post(
+      "http://localhost:3000/api/species/createnewenrichmentitem",
+      formData
+    );
+    console.log(apiFormData.result);
 
     // handle success case or failurecase using apiJson
   }
@@ -44,7 +69,7 @@ function CreateNewEnrichmentItemForm() {
       onSubmit={handleSubmit}
     >
       <span className="self-center text-title-xl font-bold">
-        Create New Enrichment Item
+        Add Enrichment Item
       </span>
       <hr className="bg-stroke opacity-20" />
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">

@@ -3,8 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { classNames } from "primereact/utils";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-// import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
+// import { Toast } from "primereact/toast";
 import { FileUpload } from "primereact/fileupload";
 import { Rating } from "primereact/rating";
 import { Toolbar } from "primereact/toolbar";
@@ -19,10 +18,11 @@ import Species from "../../../models/Species";
 import useApiJson from "../../../hooks/useApiJson";
 import { ColumnGroup } from "primereact/columngroup";
 import { Row } from "primereact/row";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 function AllSpeciesDatatable() {
   const apiJson = useApiJson();
@@ -48,6 +48,7 @@ function AllSpeciesDatatable() {
     habitatOrExhibit: "habitat",
     imageUrl: "",
     generalDietPreference: "",
+    lifeExpectancyYears: 0,
   };
 
   const [speciesList, setSpeciesList] = useState<Species[]>([]);
@@ -55,17 +56,24 @@ function AllSpeciesDatatable() {
   const [deleteSpeciesDialog, setDeleteSpeciesDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const toast = useRef<Toast>(null);
+
   const dt = useRef<DataTable<Species[]>>(null);
 
-  useEffect(() => {
-    apiJson.get("http://localhost:3000/api/species/getallspecies");
-  }, []);
+  const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    const speciesData = apiJson.result as Species[];
-    setSpeciesList(speciesData);
-  }, [apiJson.loading]);
+    const fetchSpecies = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/species/getallspecies"
+        );
+        setSpeciesList(responseJson as Species[]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchSpecies();
+  }, []);
 
   //
   const exportCSV = () => {
@@ -79,10 +87,9 @@ function AllSpeciesDatatable() {
   const imageBodyTemplate = (rowData: Species) => {
     return (
       <img
-        src={rowData.imageUrl}
+        src={"http://localhost:3000/" + rowData.imageUrl}
         alt={rowData.commonName}
-        className="border-round shadow-2"
-        style={{ width: "64px" }}
+        className="aspect-square w-16 rounded-full border border-white shadow-4"
       />
     );
   };
@@ -99,20 +106,40 @@ function AllSpeciesDatatable() {
   };
 
   // delete species stuff
-  const deleteSpecies = () => {
+  const deleteSpecies = async () => {
     let _species = speciesList.filter(
       (val) => val.speciesId !== selectedSpecies?.speciesId
     );
 
-    setSpeciesList(_species);
-    setDeleteSpeciesDialog(false);
-    setSelectedSpecies(emptySpecies);
-    toast.current?.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "Species Deleted",
-      life: 3000,
-    });
+    const selectedSpeciesCommonName = selectedSpecies.commonName;
+
+    const deleteSpecies = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/species/deletespecies/" +
+            selectedSpecies.speciesCode
+        );
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully deleted species: " + selectedSpeciesCommonName,
+        });
+        setSpeciesList(_species);
+        setDeleteSpeciesDialog(false);
+        setSelectedSpecies(emptySpecies);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting species: \n" + apiJson.error,
+        });
+      }
+    };
+    deleteSpecies();
   };
 
   const deleteSpeciesDialogFooter = (
@@ -132,9 +159,15 @@ function AllSpeciesDatatable() {
   const actionBodyTemplate = (species: Species) => {
     return (
       <React.Fragment>
+        <NavLink to={`/species/viewspeciesdetails/${species.speciesCode}`}>
+          <Button className="mb-1 mr-1">
+            <HiEye className="mr-1" />
+            <span>View Details</span>
+          </Button>
+        </NavLink>
         <NavLink to={`/species/editspecies/${species.speciesCode}`}>
-          <Button className="mr-2">
-            <HiPencil />
+          <Button className="mb-1 mr-1">
+            <HiPencil className="mr-1" />
             <span>Edit</span>
           </Button>
         </NavLink>
@@ -143,7 +176,7 @@ function AllSpeciesDatatable() {
           className="mr-2"
           onClick={() => confirmDeleteSpecies(species)}
         >
-          <HiTrash />
+          <HiTrash className="mr-1" />
           <span>Delete</span>
         </Button>
       </React.Fragment>
@@ -170,7 +203,6 @@ function AllSpeciesDatatable() {
   return (
     <div>
       <div>
-        <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
           <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
 
@@ -185,7 +217,9 @@ function AllSpeciesDatatable() {
             }}
             dataKey="speciesId"
             paginator
+            // showGridlines
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -194,19 +228,33 @@ function AllSpeciesDatatable() {
             header={header}
           >
             <Column
+              field="imageUrl"
+              header="Image"
+              frozen
+              body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
+            ></Column>
+            <Column
               field="speciesCode"
               header="Code"
               sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="imageUrl"
-              header="Image"
-              body={imageBodyTemplate}
+              style={{ minWidth: "7rem" }}
             ></Column>
             <Column
               field="commonName"
               header="Common Name"
+              sortable
+              style={{ minWidth: "16rem" }}
+            ></Column>
+            <Column
+              field="scientificName"
+              header="Scientific Name"
+              sortable
+              style={{ minWidth: "16rem" }}
+            ></Column>
+            <Column
+              field="conservationStatus"
+              header="Conservation Status"
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
@@ -216,25 +264,15 @@ function AllSpeciesDatatable() {
               sortable
               style={{ minWidth: "10rem" }}
             ></Column>
-            <Column
-              field="conservationStatus"
-              header="Conservation Status"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
+
+            {/* <Column
               field="aliasName"
               header="Alias Name"
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
 
-            <Column
-              field="scientificName"
-              header="Scientific Name"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
+           
             <Column
               field="domain"
               header="Domain"
@@ -290,7 +328,7 @@ function AllSpeciesDatatable() {
               header="Group Sexual Dynamic"
               sortable
               style={{ minWidth: "16rem" }}
-            ></Column>
+            ></Column> */}
             <Column
               field="habitatOrExhibit"
               header="Habitat or Exhibit"
@@ -300,6 +338,8 @@ function AllSpeciesDatatable() {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
               style={{ minWidth: "18rem" }}
             ></Column>

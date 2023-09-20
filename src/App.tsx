@@ -18,6 +18,8 @@ import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/CreateNewFacilityPage";
 import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
 import NotFoundPage from "./pages/NotFoundPage";
+
+import ViewSpeciesDetails from "./pages/speciesManagement/ViewSpeciesDetails";
 import EditFacilityPage from "./pages/assetAndFacilityManagement/EditFacilityPage";
 import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/ViewAllFacilitiesPage";
 import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/CreateNewAnimalFeedPage";
@@ -26,6 +28,9 @@ import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/EditAnimalFee
 import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EditEnrichmentItemPage";
 import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/ViewAllAnimalFeedPage";
 import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/ViewAllEnrichmentItemsPage";
+import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
+import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage";
+import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
 
 import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
 
@@ -58,6 +63,12 @@ function App() {
                   path="/species/viewallspecies"
                   element={
                     user ? <ViewAllSpeciesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/species/viewspeciesdetails/:speciesCode"
+                  element={
+                    user ? <ViewSpeciesDetails /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -132,6 +143,26 @@ function App() {
                   path="/employeeaccount/viewemployees"
                   element={
                     user? <ViewAllEmployeesPage /> : <Navigate to="/login"/>
+                  }
+                />
+
+                {/* Customer Account Management */}
+                <Route
+                  path="/customer/viewallcustomers"
+                  element={
+                    user ? <ViewAllCustomerPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/customer/createnewcustomer"
+                  element={
+                    user ? <CreateNewCustomerPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/customer/editcustomer"
+                  element={
+                    user ? <EditCustomerPage /> : <Navigate to="/login" />
                   }
                 />
               </Route>

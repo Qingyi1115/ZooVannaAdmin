@@ -102,7 +102,7 @@ function CreateNewFacilityForm() {
 
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-          Create Facility
+          Add Facility
         </button>
       </Form.Submit>
       {formError && (
