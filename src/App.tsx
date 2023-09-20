@@ -31,6 +31,9 @@ import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/ViewA
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
 import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage";
 import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
+import EditEmployeePage from "./pages/employeeAccountManagement/EditEmployeePage";
+import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
+import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
 
 function App() {
   const { state } = useAuthContext();
@@ -148,6 +151,20 @@ function App() {
                     )
                   }
                 />
+                {/*Employee Account Management */}
+                <Route
+                  path="/employeeAccount/viewEmployees"
+                  element={
+                    user? <ViewAllEmployeesPage /> : <Navigate to="/login"/>
+                  }
+                />
+                <Route
+                  path="/employeeAccount/createNewEmployee"
+                  element={
+                    user? <CreateNewEmployeePage/> : <Navigate to="/login"/>
+                  }
+                />
+
                 {/* Customer Account Management */}
                 <Route
                   path="/customer/viewallcustomers"
@@ -165,6 +182,25 @@ function App() {
                   path="/customer/editcustomer"
                   element={
                     user ? <EditCustomerPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* Employee Account Management */}
+                <Route
+                  path="/employee/viewallemployees"
+                  element={
+                    user ? <ViewAllEmployeesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/employee/createnewemployee"
+                  element={
+                    user ? <CreateNewEmployeePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/employee/editemployee"
+                  element={
+                    user ? <EditEmployeePage /> : <Navigate to="/login" />
                   }
                 />
               </Route>

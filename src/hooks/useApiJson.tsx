@@ -74,19 +74,19 @@ function useApiJson<TData = any>() {
   };
 
   const get = async (url: string, body: any = null) => {
-    return await request(url);
+    return request(url);
   };
 
   const post = async (url: string, body: any) => {
-    return await request(url, "POST", body);
+    return request(url, "POST", body);
   };
 
   const put = async (url: string, body: any) => {
-    return await request(url, "PUT", body);
+    return request(url, "PUT", body);
   };
 
   const del = async (url: string, body: any = null) => {
-    return await request(url, "DELETE");
+    return request(url, "DELETE");
   };
 
   return {
