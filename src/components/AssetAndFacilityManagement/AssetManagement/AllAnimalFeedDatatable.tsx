@@ -35,7 +35,7 @@ function AllAnimalFeedDatatable() {
   const dt = useRef<DataTable<AnimalFeed[]>>(null);
 
   useEffect(() => {
-    apiJson.get("http://localhost:3000/api/animalFeed/getallanimalFeed");
+    apiJson.get("http://localhost:3000/api/animalFeed/getAllAnimalFeed");
   }, []);
 
   useEffect(() => {

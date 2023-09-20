@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
 
 import { MultiSelectChangeEvent } from "primereact/multiselect";
 
 import useApiFormData from "../../../hooks/useApiFormData";
 import FormFieldInput from "../../FormFieldInput";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
-import AnimalFeed from "src/models/AnimalFeed";
+import AnimalFeed from "../../../models/AnimalFeed";
+import useApiJson from "../../../hooks/useApiJson";
+import { useToast } from "@/components/ui/use-toast";
+import FormFieldSelect from "../../../components/FormFieldSelect";
 
 interface EditAnimalFeedFormProps {
   curAnimalFeed: AnimalFeed;
+  refreshSeed: number;
+  setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
   const apiFormData = useApiFormData();
+  const apiJson = useApiJson();
+  const toastShadcn = useToast().toast;
 
-  const { curAnimalFeed } = props;
+  const { curAnimalFeed, refreshSeed, setRefreshSeed } = props;
 
   const [animalFeedName, setAnimalFeedName] = useState<string>(curAnimalFeed.animalFeedName);
   const [animalFeedCategory, setAnimalFeedCategory] = useState<
@@ -27,19 +33,19 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
 
   // field validations
-  function validateImage(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please upload an image
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
+  // function validateImage(props: ValidityState) {
+  //   if (props != undefined) {
+  //     if (props.valueMissing) {
+  //       return (
+  //         <div className="font-medium text-danger">
+  //           * Please upload an image
+  //         </div>
+  //       );
+  //     }
+  //     // add any other cases here
+  //   }
+  //   return null;
+  // }
 
   function validateAnimalFeedName(props: ValidityState) {
     if (props != undefined) {
@@ -71,7 +77,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
     return null;
   }
 
-  // end field valisations
+  // end field validations
 
   function onAnimalFeedCategorySelectChange(e: MultiSelectChangeEvent) {
     setAnimalFeedCategory(e.value);
@@ -93,16 +99,102 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("animalFeedName", animalFeedName);
-    formData.append("animalFeedCategory", animalFeedCategory || "");
-    formData.append("file", imageFile || "");
-    await apiFormData.put(
-      "http://localhost:3000/api/animalFeed/updateanimalFeed",
-      formData
-    );
-    console.log(apiFormData.result);
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("animalFeedName", animalFeedName);
+      formData.append("animalFeedCategory", animalFeedCategory || "");
+      formData.append("file", imageFile || "");
+      try {
+        const responseJson = await apiFormData.put(
+          "http://localhost:3000/api/animalFeed/updateanimalfeed",
+          formData
+        );
+        // success
+        toastShadcn({
+          description: "Successfully edited animal feed",
+        });
+        setRefreshSeed(refreshSeed + 1);
+      } catch (error: any) {
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while editing animal feed details: \n" +
+            error.message,
+        });
+      }
+    } else {
+      // no image
+      const updatedAnimalFeedCategory = animalFeedCategory?.toString();
+      const updatedAnimalFeed = {
+        animalFeedName,
+        updatedAnimalFeedCategory,
+        animalFeedImageUrl
+      };
+
+      try {
+        const responseJson = await apiJson.put(
+          "http://localhost:3000/api/animalfeed/updateanimalfeed",
+          updatedAnimalFeed
+        );
+        // success
+        toastShadcn({
+          description: "Successfully edited animal feed",
+        });
+        setRefreshSeed(refreshSeed + 1);
+      } catch (error: any) {
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while editing animal feed details: \n" +
+            error.message,
+        });
+      }
+    }
   }
+
+  useEffect(() => {
+    if (imageFile) {
+      if (!apiFormData.loading) {
+        if (apiFormData.error) {
+          // got error
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while editing animalFeed details: \n" +
+              apiFormData.error,
+          });
+        } else if (apiFormData.result) {
+          // success
+          console.log("success?");
+          toastShadcn({
+            description: "Successfully edited animal feed:",
+          });
+        }
+      }
+    } else {
+      if (!apiJson.loading) {
+        if (apiJson.error) {
+          // got error
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while editing animalFeed details: \n" +
+              apiJson.error,
+          });
+        } else if (apiJson.result) {
+          // success
+          console.log("succes?");
+          toastShadcn({
+            description: "Successfully edited animal feed:",
+          });
+        }
+      }
+    }
+  }, [apiFormData.loading, apiJson.loading]);
 
   return (
     <div>
@@ -116,25 +208,29 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
             Edit AnimalFeed: {curAnimalFeed.animalFeedName}
           </span>
           <hr className="bg-stroke opacity-20" />
-          {/* AnimalFeed Picture */}
+          {/* Animal Feed Picture */}
           <Form.Field
             name="animalFeedImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <span className="font-medium">Current Image</span>
-            <img src={curAnimalFeed.animalFeedImageUrl} alt="Current animalFeed image" />
+            <img
+              src={"http://localhost:3000/" + curAnimalFeed.animalFeedImageUrl}
+              alt="Current animal feed image"
+              className="my-4 aspect-square w-1/5 rounded-full border shadow-4"
+            />
             <Form.Label className="font-medium">
-              Change AnimalFeed Image
+              Upload A New Image &#40;Do not upload if no changes&#41;
             </Form.Label>
             <Form.Control
               type="file"
               placeholder="Change image"
-              required
+              required={false}
               accept=".png, .jpg, .jpeg, .webp"
               onChange={handleFileChange}
               className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
             />
-            <Form.ValidityState>{validateImage}</Form.ValidityState>
+            {/* <Form.ValidityState>{validateImage}</Form.ValidityState> */}
           </Form.Field>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
             {/* Animal Feed Name */}
@@ -151,24 +247,25 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
 
             <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
               {/* Animal Feed Category */}
-              <FormFieldRadioGroup
+              <FormFieldSelect
                 formFieldName="animalFeedCategory"
                 label="Animal Feed Category"
                 required={true}
-                valueIdLabelTriplet={[
-                  ["RED_MEAT", "r1", "Red Meat"],
-                  ["WHITE_MEAT", "r2", "White Meat"],
-                  ["FISH", "r3", "Fish"],
-                  ["INSECTS", "r4", "Insects"],
-                  ["HAY", "r5", "Hay"],
-                  ["VEGETABLES", "r6", "Vegetables"],
-                  ["FRUITS", "r7", "Fruits"],
-                  ["GRAINS", "r8", "Grains"],
-                  ["BROWSE", "r9", "Browse"],
-                  ["PELLETS", "r10", "Pellets"],
-                  ["NECTAR", "r11", "Nectar"],
-                  ["SUPPLEMENTS", "r12", "Supplements"],
-                  ["OTHERS", "r13", "Others"]
+                placeholder="Select an animal feed category..."
+                valueLabelPair={[
+                  ["RED_MEAT", "Red Meat"],
+                  ["WHITE_MEAT", "White Meat"],
+                  ["FISH", "Fish"],
+                  ["INSECTS", "Insects"],
+                  ["HAY", "Hay"],
+                  ["VEGETABLES", "Vegetables"],
+                  ["FRUITS", "Fruits"],
+                  ["GRAINS", "Grains"],
+                  ["BROWSE", "Browse"],
+                  ["PELLETS", "Pellets"],
+                  ["NECTAR", "Nectar"],
+                  ["SUPPLEMENTS", "Supplements"],
+                  ["OTHERS", "Others"]
                 ]}
                 value={animalFeedCategory}
                 setValue={setAnimalFeedCategory}
