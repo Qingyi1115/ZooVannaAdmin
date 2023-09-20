@@ -44,6 +44,7 @@ function AllSpeciesDatatable() {
     nativeContinent: "",
     nativeBiomes: "",
     educationalDescription: "",
+    educationalFunFact: "",
     groupSexualDynamic: "",
     habitatOrExhibit: "habitat",
     imageUrl: "",
