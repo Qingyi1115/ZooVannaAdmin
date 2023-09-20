@@ -35,12 +35,10 @@ function AllEmployeesDatatable() {
     const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
     const dt = useRef<DataTable<Employee[]>>(null);
     const [globalFilter, setGlobalFilter] = useState<string>("");
-    const request = {
-      "includes": "",
-    }
+    const request = {includes: []};
 
     useEffect(() => {
-      apiJson.get("http://localhost:3000/api/employee/getAllEmployees");
+      apiJson.post("http://localhost:3000/api/employee/getAllEmployees", request);
     }, []);
 
     useEffect(() => {
@@ -107,7 +105,8 @@ function AllEmployeesDatatable() {
                         selectionMode={"single"}
                         rowsPerPageOptions={[5, 10, 25]}
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facility"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employees"
+                        globalFilter={globalFilter}
                         header={header}
                     >
                         <Column

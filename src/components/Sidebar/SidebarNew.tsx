@@ -650,17 +650,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Create New Employee
                             </NavLink>
                           </li>
-                          <li>
-                            <NavLink
-                              to="/employee/createnewemployee"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              Create New Employee
-                            </NavLink>
-                          </li>
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}
