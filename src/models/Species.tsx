@@ -1,3 +1,6 @@
+import SpeciesEnclosureNeed from "./SpeciesEnclosureNeed";
+import SpeciesDietNeed from "./SpeciesDietNeed";
+import PhysiologicalReferenceNorms from "./PhysiologicalReferenceNorms";
 interface Species {
   speciesId: number;
   speciesCode: string;
@@ -15,6 +18,7 @@ interface Species {
   nativeContinent: string;
   nativeBiomes: string;
   educationalDescription: string;
+  educationalFunFact: string;
   groupSexualDynamic: string;
   habitatOrExhibit: string;
   imageUrl: string;
@@ -23,6 +27,10 @@ interface Species {
 
   createdAt?: string;
   updateTimestamp?: string;
+
+  speciesDietNeed?: SpeciesDietNeed;
+  speciesEnclosureNeed?: SpeciesEnclosureNeed;
+  physiologicalReferenceNorms?: PhysiologicalReferenceNorms;
 }
 
 export default Species;

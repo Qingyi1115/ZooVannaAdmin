@@ -19,7 +19,7 @@ import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/CreateNewF
 import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
-import ViewSpeciesDetails from "./pages/speciesManagement/ViewSpeciesDetails";
+import ViewSpeciesDetailsPage from "./pages/speciesManagement/ViewSpeciesDetailsPage";
 import EditFacilityPage from "./pages/assetAndFacilityManagement/EditFacilityPage";
 import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/ViewAllFacilitiesPage";
 import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/CreateNewAnimalFeedPage";
@@ -69,7 +69,7 @@ function App() {
                 <Route
                   path="/species/viewspeciesdetails/:speciesCode"
                   element={
-                    user ? <ViewSpeciesDetails /> : <Navigate to="/login" />
+                    user ? <ViewSpeciesDetailsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -106,7 +106,11 @@ function App() {
                 <Route
                   path="/assetfacility/createanimalfeed"
                   element={
-                    user ? <CreateNewAnimalFeedPage /> : <Navigate to="/login" />
+                    user ? (
+                      <CreateNewAnimalFeedPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
@@ -124,7 +128,11 @@ function App() {
                 <Route
                   path="/assetfacility/createenrichmentitem"
                   element={
-                    user ? <CreateNewEnrichmentItemPage /> : <Navigate to="/login" />
+                    user ? (
+                      <CreateNewEnrichmentItemPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
@@ -136,7 +144,11 @@ function App() {
                 <Route
                   path="/assetfacility/viewallenrichmentitems"
                   element={
-                    user ? <ViewAllEnrichmentItemsPage /> : <Navigate to="/login" />
+                    user ? (
+                      <ViewAllEnrichmentItemsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 {/*Employee Account Management */}

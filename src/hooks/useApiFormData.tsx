@@ -44,7 +44,7 @@ function useApiFormData<TData = any>() {
     }
   };
 
-  const post = async (url: string, data: FormData) => {
+  const post = async (url: string, data: FormData, body: any = null) => {
     return await request(url, "POST", data);
   };
 
