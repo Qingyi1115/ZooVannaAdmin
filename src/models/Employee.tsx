@@ -9,6 +9,8 @@ interface Employee {
   employeeDoorAccessCode: string;
   employeeEducation: string;
   isAccountManager: boolean;
+  employeeBirthDate: Date;
+  employeeDateOfResignation: Date;
 
   //   keeper?: Keeper | null;
   //   planningStaff?: PlanningStaff | null;

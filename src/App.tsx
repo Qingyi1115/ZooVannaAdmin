@@ -33,6 +33,7 @@ import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage
 import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
 
 import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
+import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
 
 function App() {
   const { state } = useAuthContext();
@@ -140,9 +141,15 @@ function App() {
                 />
                 {/*Employee Account Management */}
                 <Route
-                  path="/employeeaccount/viewemployees"
+                  path="/employeeAccount/viewEmployees"
                   element={
                     user? <ViewAllEmployeesPage /> : <Navigate to="/login"/>
+                  }
+                />
+                <Route
+                  path="/employeeAccount/createNewEmployee"
+                  element={
+                    user? <CreateNewEmployeePage/> : <Navigate to="/login"/>
                   }
                 />
 
