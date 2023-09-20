@@ -10,7 +10,7 @@ interface Employee {
   employeeEducation: string;
   isAccountManager: boolean;
   employeeBirthDate: Date;
-  employeeDateOfResignation: Date;
+  employeeDateOfResignation: Date | null;
 
   //   keeper?: Keeper | null;
   //   planningStaff?: PlanningStaff | null;

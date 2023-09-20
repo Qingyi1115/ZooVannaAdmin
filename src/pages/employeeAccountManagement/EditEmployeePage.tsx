@@ -11,22 +11,24 @@ function EditEmployeePage() {
 
   let emptyEmployee: Employee = {
     employeeId: -1,
-    firstName: "",
-    lastName: "",
-    email: "",
-    contactNo: "",
-    birthday: new Date(),
-    address: "",
-    nationality: Country.Singapore,
-    passwordHash: "",
-    salt: ""
+    employeeName: "",
+    employeeEmail: "",
+    employeePhoneNumber: "",
+    employeeAddress: "",
+    employeeBirthDate: new Date(),
+    employeeEducation: "",
+    employeeDateOfResignation: null,
+    employeeDoorAccessCode: "",
+    employeePasswordHash: "",
+    employeeSalt: "",
+    isAccountManager: false,
   };
 
-  const { employeeName } = useParams<{ employeeName: string }>();
+  const { employeeId } = useParams<{ employeeId: string }>();
   const [curEmployee, setCurEmployee] = useState<Employee>(emptyEmployee);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/employee/getemployee/${employeeName}`);
+    apiJson.get(`http://localhost:3000/api/employee/getemployee/${employeeId}`);
   }, []);
 
   useEffect(() => {

@@ -22,8 +22,8 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
   const [employeeEmail, setEmployeeEmail] = useState<string>(curEmployee.employeeEmail); // text input
   const [employeeAddress, setEmployeeAddress] = useState<string>(curEmployee.employeeAddress); // text input
   const [employeePhoneNumber, setEmployeePhoneNumber] = useState<string>(curEmployee.employeePhoneNumber); // text input
-  const [employeeEducation, setEmployeeEducation] = useState<string>(curEmployee.employeeEducation); // text input
-  const [hasAdminPrivileges, setHasAdminPrivileges] = useState<boolean>(curEmployee.hasAdminPrivileges); // text input
+  const [employeeEducation, setEmployeeEducation] = useState<string>(curEmployee.employeeEducation); // text inputt
+  const [isAccountManager, setIsAccountManager] = useState<Boolean>(curEmployee.isAccountManager);
   // const [employeePasswordHash, setEmployeePasswordHash] = useState<string>(""); // text input
   // const [employeeSalt, setEmployeeSalt] = useState<string>(""); // text input
   const [employeeDoorAccessCode, setEmployeeDoorAccessCode] = useState<string>(curEmployee.employeeDoorAccessCode); // text input
@@ -66,15 +66,15 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
     setEmployeePhoneNumber("");
     setEmployeeEducation("");
     setEmployeeDoorAccessCode("");
-    setHasAdminPrivileges(false);
+    setIsAccountManager(false);
     setImageFile(null);
   }
 
 
-  function validateHasAdminPrivileges(props: ValidityState) {
+  function validateIsAccountManager(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
-      if (hasAdminPrivileges == undefined) {
+      if (isAccountManager== undefined) {
         return (
           <div className="font-medium text-danger">
             * Please select admin privileges
@@ -88,8 +88,8 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
 
   // end field valisations
 
-  function onHasAdminPrivilegesSelectChange(e: MultiSelectChangeEvent) {
-    setHasAdminPrivileges(e.value);
+  function onAccountManagerSelectChange(e: MultiSelectChangeEvent) {
+    setIsAccountManager(e.value);
 
     const element = document.getElementById("selectMultiHasAdminPrivilegesField");
     if (element) {
@@ -114,7 +114,7 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
     formData.append("employeeAddress", employeeAddress);
     formData.append("employeePhoneNumber", employeePhoneNumber);
     formData.append("employeeEducation", employeeEducation);
-    formData.append("hasAdminPrivileges", hasAdminPrivileges ? toString() : "");
+    formData.append("isAccountManager", isAccountManager ? toString() : "");
     formData.append("employeeDoorAccessCode", employeeDoorAccessCode);
     formData.append("file", imageFile || "");
     await apiFormData.put(
