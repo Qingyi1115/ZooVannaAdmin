@@ -556,7 +556,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Employee Account --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === "/" || pathname.includes("employeeaccount")
+                  pathname === "/" || pathname.includes("employeeAccount")
                 }
               >
                 {(handleClick, open) => {
@@ -565,7 +565,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/employee" ||
-                          pathname.includes("employeeaccount")) &&
+                          pathname.includes("employeeAccount")) &&
                           "bg-graydark dark:bg-meta-4"
                           }`}
                         onClick={(e) => {
@@ -630,13 +630,24 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to="/employeeaccount/viewemployees"
+                              to="/employeeAccount/viewEmployees"
                               className={({ isActive }) =>
                                 "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
                                 (isActive && "!text-white")
                               }
                             >
                               View All Employees
+                            </NavLink>
+                            </li>
+                            <li>
+                            <NavLink
+                              to="/employeeAccount/createNewEmployee"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              Create New Employee
                             </NavLink>
                           </li>
                         </ul>

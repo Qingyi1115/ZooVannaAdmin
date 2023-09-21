@@ -19,7 +19,7 @@ import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/CreateNewF
 import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
-import ViewSpeciesDetails from "./pages/speciesManagement/ViewSpeciesDetails";
+import ViewSpeciesDetailsPage from "./pages/speciesManagement/ViewSpeciesDetailsPage";
 import EditFacilityPage from "./pages/assetAndFacilityManagement/EditFacilityPage";
 import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/ViewAllFacilitiesPage";
 import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/CreateNewAnimalFeedPage";
@@ -32,7 +32,11 @@ import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCu
 import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage";
 import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
 
+//employee account management page
+import EditEmployeePage from "./pages/employeeAccountManagement/EditEmployeePage";
 import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
+import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
+import ViewEmployeeDetailsPage from "./pages/employeeAccountManagement/ViewEmployeeDetailsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -68,7 +72,7 @@ function App() {
                 <Route
                   path="/species/viewspeciesdetails/:speciesCode"
                   element={
-                    user ? <ViewSpeciesDetails /> : <Navigate to="/login" />
+                    user ? <ViewSpeciesDetailsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -105,7 +109,11 @@ function App() {
                 <Route
                   path="/assetfacility/createanimalfeed"
                   element={
-                    user ? <CreateNewAnimalFeedPage /> : <Navigate to="/login" />
+                    user ? (
+                      <CreateNewAnimalFeedPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
@@ -123,7 +131,11 @@ function App() {
                 <Route
                   path="/assetfacility/createenrichmentitem"
                   element={
-                    user ? <CreateNewEnrichmentItemPage /> : <Navigate to="/login" />
+                    user ? (
+                      <CreateNewEnrichmentItemPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
@@ -135,14 +147,36 @@ function App() {
                 <Route
                   path="/assetfacility/viewallenrichmentitems"
                   element={
-                    user ? <ViewAllEnrichmentItemsPage /> : <Navigate to="/login" />
+                    user ? (
+                      <ViewAllEnrichmentItemsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 {/*Employee Account Management */}
                 <Route
-                  path="/employeeaccount/viewemployees"
+                  path="/employeeAccount/viewEmployees"
                   element={
                     user? <ViewAllEmployeesPage /> : <Navigate to="/login"/>
+                  }
+                />
+                <Route
+                  path="/employeeAccount/createNewEmployee"
+                  element={
+                    user? <CreateNewEmployeePage/> : <Navigate to="/login"/>
+                  }
+                />
+                <Route
+                  path="/employee/viewEmployeeDetails/:employeeId}"
+                  element={
+                    user? <ViewEmployeeDetailsPage/> : <Navigate to="login"/>
+                  }
+                />
+                <Route
+                  path="/employee/editemployee"
+                  element={
+                    user ? <EditEmployeePage /> : <Navigate to="/login" />
                   }
                 />
 
