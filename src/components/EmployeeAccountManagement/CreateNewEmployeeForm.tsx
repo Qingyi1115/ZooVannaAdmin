@@ -119,6 +119,47 @@ function CreateNewEmployeeForm() {
     }
     return null;
   }
+
+  function validateAddress(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">* Please enter a valid address!</div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateEmail(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">* Please enter a valid email!</div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validatePhoneNumber(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">* Please enter a valid phone number!</div>
+        );
+      }
+      else if(props.patternMismatch) {
+        return (
+          <div className="font-medium text-danger">* Please enter 8-digit phone number</div>
+        )
+      }
+      // add any other cases here
+    }
+    return null;
+  }
   
   function validateRole(props: ValidityState) {
     if (props != undefined) {
@@ -207,6 +248,7 @@ function CreateNewEmployeeForm() {
           formFieldName="fullName"
           label="Full Name"
           required={true}
+          pattern={undefined}
           placeholder="e.g. ZooVanna"
           value={fullName}
           setValue={setFullName}
@@ -221,9 +263,10 @@ function CreateNewEmployeeForm() {
         label="Address"
         required={true}
         placeholder="Address"
+        pattern={undefined}
         value={address}
         setValue={setAddress}
-        validateFunction={validateName}
+        validateFunction={validateAddress}
       />
       {/* Email */}
       <FormFieldInput
@@ -232,9 +275,10 @@ function CreateNewEmployeeForm() {
         label="Email"
         required={true}
         placeholder="e.g. zoovanna@gmail.com"
+        pattern={undefined}
         value={email}
         setValue={setEmail}
-        validateFunction={validateName}
+        validateFunction={validateEmail}
       />
       {/* Phone Number */}
       <FormFieldInput
@@ -243,9 +287,10 @@ function CreateNewEmployeeForm() {
         label="Phone Number"
         required={true}
         placeholder="e.g. 9012XXXX"
+        pattern="[0-9]{8}"
         value={phoneNumber}
         setValue={setPhoneNumber}
-        validateFunction={validateName}
+        validateFunction={validatePhoneNumber}
       />
       {/* Education */}
       <FormFieldInput
