@@ -241,6 +241,28 @@ function SpeciesEnclosureRequirements(
                 <TableCell className="w-1/6 font-bold">
                   <div className="flex items-center gap-2">
                     <img
+                      src="../../../../src/assets/terrain/soil.jpg"
+                      className="aspect-square h-6 w-6 rounded-full"
+                    />
+                    <span>Soil</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <TwoThumbSliderWithNumber
+                    value={[
+                      curEnclosureNeeds.soilPercentMin,
+                      curEnclosureNeeds.soilPercentMax,
+                    ]}
+                    min={0}
+                    max={100}
+                    minStepsBetweenThumbs={1}
+                  />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="w-1/6 font-bold">
+                  <div className="flex items-center gap-2">
+                    <img
                       src="../../../../src/assets/terrain/rock.jpg"
                       className="aspect-square h-6 w-6 rounded-full"
                     />
@@ -296,28 +318,6 @@ function SpeciesEnclosureRequirements(
                     value={[
                       curEnclosureNeeds.snowPercentMin,
                       curEnclosureNeeds.snowPercentMax,
-                    ]}
-                    min={0}
-                    max={100}
-                    minStepsBetweenThumbs={1}
-                  />
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="w-1/6 font-bold">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src="../../../../src/assets/terrain/soil.jpg"
-                      className="aspect-square h-6 w-6 rounded-full"
-                    />
-                    <span>Soil</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <TwoThumbSliderWithNumber
-                    value={[
-                      curEnclosureNeeds.soilPercentMin,
-                      curEnclosureNeeds.soilPercentMax,
                     ]}
                     min={0}
                     max={100}

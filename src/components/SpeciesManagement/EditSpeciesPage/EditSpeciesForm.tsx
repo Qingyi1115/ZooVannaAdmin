@@ -18,6 +18,7 @@ import Species from "src/models/Species";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import { NavLink } from "react-router-dom";
 
 interface EditSpeciesFormProps {
   curSpecies: Species;
@@ -495,6 +496,17 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
             onSubmit={handleSubmit}
             encType="multipart/form-data"
           >
+            <NavLink
+              className="mb-8 w-1/3 self-center"
+              to={`/species/viewallspecies`}
+            >
+              <Button
+                type="button"
+                className="h-12 w-full self-center rounded-full px-4 text-lg"
+              >
+                Back to All Species
+              </Button>
+            </NavLink>
             <span className="self-center text-title-xl font-bold">
               Edit Species: {curSpecies.commonName}
             </span>

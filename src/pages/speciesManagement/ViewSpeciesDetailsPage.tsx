@@ -16,6 +16,7 @@ import SpeciesBasicInfoDetails from "../../components/SpeciesManagement/ViewSpec
 import SpeciesEduContentDetails from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEduContentDetails";
 import SpeciesEnclosureRequirements from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEnclosureRequirements";
 import SpeciesDietaryRequirements from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesDietaryRequirements";
+import { NavLink } from "react-router-dom";
 
 function ViewSpeciesDetailsPage() {
   const apiJson = useApiJson();
@@ -69,6 +70,17 @@ function ViewSpeciesDetailsPage() {
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         {curSpecies && curSpecies.speciesId != -1 && (
           <div className="flex flex-col">
+            <NavLink
+              className="mb-8 w-1/3 self-center"
+              to={`/species/viewallspecies`}
+            >
+              <Button
+                type="button"
+                className="h-12 w-full self-center rounded-full px-4 text-lg"
+              >
+                Back to All Species
+              </Button>
+            </NavLink>
             <span className="self-center text-xl font-bold">
               Species Details
             </span>{" "}
