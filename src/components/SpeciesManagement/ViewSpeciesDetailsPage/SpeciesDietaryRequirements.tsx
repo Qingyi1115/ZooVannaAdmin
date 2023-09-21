@@ -49,10 +49,13 @@ function SpeciesDietaryRequirements(props: SpeciesDietaryRequirementsProps) {
         </NavLink>
       </div>
 
-      <DietNeedDatatable
-        dietNeedsList={dietNeedsList}
-        setDietNeedsList={setDietNeedsList}
-      />
+      {curSpecies && (
+        <DietNeedDatatable
+          curSpecies={curSpecies}
+          dietNeedsList={dietNeedsList}
+          setDietNeedsList={setDietNeedsList}
+        />
+      )}
     </div>
   );
 }

@@ -28,10 +28,12 @@ import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import Species from "../../../models/Species";
 
 interface DietNeedDatatableProps {
   dietNeedsList: SpeciesDietNeed[];
   setDietNeedsList: React.Dispatch<React.SetStateAction<SpeciesDietNeed[]>>;
+  curSpecies: Species;
 }
 
 const emptyDietNeeds: SpeciesDietNeed = {
@@ -46,7 +48,7 @@ const emptyDietNeeds: SpeciesDietNeed = {
 };
 
 function DietNeedDatatable(props: DietNeedDatatableProps) {
-  const { dietNeedsList, setDietNeedsList } = props;
+  const { curSpecies, dietNeedsList, setDietNeedsList } = props;
   const [selectedDietNeeds, setSelectedDietNeeds] =
     useState<SpeciesDietNeed>(emptyDietNeeds);
   const [deleteSpeciesDietNeedsDialog, setDeleteSpeciesDietNeedsDialog] =
@@ -127,19 +129,15 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
   const actionBodyTemplate = (speciesDietNeed: SpeciesDietNeed) => {
     return (
       <React.Fragment>
-        {/* <NavLink to={`/species/viewspeciesdetails/${species.speciesCode}`}>
+        <NavLink
+          to={`/species/editdietaryrequirements/${curSpecies.speciesCode}/${speciesDietNeed.speciesDietNeedId}`}
+        >
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
-            <span>View Details</span>
-          </Button>
-        </NavLink>
-        <NavLink to={`/species/editspecies/${species.speciesCode}`}>
-          <Button className="mb-1 mr-1">
-            <HiPencil className="mr-1" />
             <span>Edit</span>
           </Button>
         </NavLink>
-        <Button
+        {/* <Button
           variant={"destructive"}
           className="mr-2"
           onClick={() => confirmDeleteSpecies(species)}
