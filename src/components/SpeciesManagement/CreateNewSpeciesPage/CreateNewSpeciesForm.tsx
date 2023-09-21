@@ -467,6 +467,7 @@ function CreateNewSpeciesForm() {
             label="Common Name"
             required={true}
             placeholder="e.g., African Lion, Sumatran Tiger,..."
+            pattern={undefined}
             value={commonName}
             setValue={setCommonName}
             validateFunction={validateCommonName}
@@ -478,6 +479,7 @@ function CreateNewSpeciesForm() {
             label="Scientific Name (Binomial/Trinomial Name)"
             required={true}
             placeholder="e.g., Homo sapiens, Panthera leo leo..."
+            pattern={undefined}
             value={scientificName}
             setValue={setScientificName}
             validateFunction={validateScientificName}
@@ -490,6 +492,7 @@ function CreateNewSpeciesForm() {
           label="Alias Name"
           required={false}
           placeholder="e.g., Great Capybara, Sunda Island Tiger,..."
+          pattern={undefined}
           value={aliasName}
           setValue={setAliasName}
           validateFunction={() => null}
@@ -559,6 +562,7 @@ function CreateNewSpeciesForm() {
             label="Phylum"
             required={true}
             placeholder="e.g., Chordata, Entoprocta,..."
+            pattern={undefined}
             value={phylum}
             setValue={setPhylum}
             validateFunction={validatePhylum}
@@ -570,6 +574,7 @@ function CreateNewSpeciesForm() {
             label="Class"
             required={true}
             placeholder="e.g., Mammalia, Reptilia..."
+            pattern={undefined}
             value={speciesClass}
             setValue={setSpeciesClass}
             validateFunction={validateSpeciesClass}
@@ -583,6 +588,7 @@ function CreateNewSpeciesForm() {
             label="Order"
             required={true}
             placeholder="e.g., Rodentia, Carnivora..."
+            pattern={undefined}
             value={order}
             setValue={setOrder}
             validateFunction={validateOrder}
@@ -594,6 +600,7 @@ function CreateNewSpeciesForm() {
             label="Family"
             required={true}
             placeholder="e.g., Caviidae, Felidae..."
+            pattern={undefined}
             value={family}
             setValue={setFamily}
             validateFunction={validateFamily}
@@ -606,6 +613,7 @@ function CreateNewSpeciesForm() {
           label="Genus"
           required={true}
           placeholder="e.g., Homo, Panthera..."
+          pattern={undefined}
           value={genus}
           setValue={setGenus}
           validateFunction={validateGenus}
@@ -734,6 +742,7 @@ function CreateNewSpeciesForm() {
           label="Life Expectancy (in Years)"
           required={true}
           placeholder="e.g., 8"
+          pattern={undefined}
           value={lifeExpectancyYears}
           setValue={setLifeExpectancyYears}
           validateFunction={validateLifeExpectancyYears}

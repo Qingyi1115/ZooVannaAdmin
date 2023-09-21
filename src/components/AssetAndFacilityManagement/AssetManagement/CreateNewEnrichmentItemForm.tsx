@@ -80,6 +80,7 @@ function CreateNewEnrichmentItemForm() {
           label="Animal Feed Name"
           required={true}
           placeholder="e.g., Carrots"
+          pattern={undefined}
           value={enrichmentItemName}
           setValue={setEnrichmentItemName}
           validateFunction={validateName}
