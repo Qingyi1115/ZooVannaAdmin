@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import EditEnrichmentItemForm from "../../components/AssetAndFacilityManagement/AssetManagement/EditEnrichmentItemForm";
-import useApiJson from "../../hooks/useApiJson";
-import EnrichmentItem from "src/models/EnrichmentItem";
+import EditEnrichmentItemForm from "../../../components/AssetAndFacilityManagement/AssetManagement/EnrichmentItem/EditEnrichmentItemForm";
+import useApiJson from "../../../hooks/useApiJson";
+import EnrichmentItem from "../../../models/EnrichmentItem";
 
 function EditEnrichmentItemPage() {
   const apiJson = useApiJson();

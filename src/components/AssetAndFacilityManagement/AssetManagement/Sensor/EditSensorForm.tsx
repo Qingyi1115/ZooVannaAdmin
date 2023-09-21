@@ -3,30 +3,30 @@ import * as Form from "@radix-ui/react-form";
 
 import { MultiSelectChangeEvent } from "primereact/multiselect";
 
-import useApiFormData from "../../../hooks/useApiFormData";
-import FormFieldInput from "../../FormFieldInput";
-import Facility from "../../../models/Facility";
-import useApiJson from "../../../hooks/useApiJson";
+import useApiFormData from "../../../../hooks/useApiFormData";
+import FormFieldInput from "../../../FormFieldInput";
+import Sensor from "../../../../models/Sensor";
+import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../../../components/FormFieldSelect";
+import FormFieldSelect from "../../../FormFieldSelect";
 
-interface EditFacilityFormProps {
-  curFacility: Facility;
+interface EditSensorFormProps {
+  curSensor: Sensor;
   refreshSeed: number;
   setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function EditFacilityForm(props: EditFacilityFormProps) {
+function EditSensorForm(props: EditSensorFormProps) {
   const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
-  const { curFacility, refreshSeed, setRefreshSeed } = props;
+  const { curSensor, refreshSeed, setRefreshSeed } = props;
 
-  const [facilityName, setFacilityName] = useState<string>(curFacility.facilityName);
-  const [xCoordinate, setXCoordinate] = useState<number>(curFacility.xCoordinate);
-  const [yCoordinate, setYCoordinate] = useState<number>(curFacility.yCoordinate);
-  const [facilityDetail, setFacilityDetail] = useState<string>(curFacility.facilityDetail);
+  const [sensorName, setSensorName] = useState<string>(curSensor.sensorName);
+  const [sensorType, setSensorType] = useState<
+    string | undefined
+  >(curSensor.sensorType); // select from set list
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
@@ -46,12 +46,12 @@ function EditFacilityForm(props: EditFacilityFormProps) {
   //   return null;
   // }
 
-  function validateFacilityName(props: ValidityState) {
+  function validateSensorName(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
           <div className="font-medium text-danger">
-            * Please enter an facility name
+            * Please enter an sensor name
           </div>
         );
       }
@@ -61,7 +61,35 @@ function EditFacilityForm(props: EditFacilityFormProps) {
   }
 
 
+  function validateSensorType(props: ValidityState) {
+    // console.log(props);
+    if (props != undefined) {
+      if (sensorType == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select an sensor category
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
   // end field validations
+
+  function onSensorTypeSelectChange(e: MultiSelectChangeEvent) {
+    setSensorType(e.value);
+
+    const element = document.getElementById("selectMultiSensorTypeField");
+    if (element) {
+      const isDataInvalid = element.getAttribute("data-invalid");
+      if (isDataInvalid == "true") {
+        element.setAttribute("data-valid", "true");
+        element.removeAttribute("data-invalid");
+      }
+    }
+  }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files && event.target.files[0];
@@ -72,19 +100,17 @@ function EditFacilityForm(props: EditFacilityFormProps) {
     e.preventDefault();
     if (imageFile) {
       const formData = new FormData();
-      formData.append("facilityName", facilityName);
-      formData.append("xCoordinate", xCoordinate);
-      formData.append("yCoordinate", yCoordinate);
-      formData.append("facilityDetail", facilityDetail);
+      formData.append("sensorName", sensorName);
+      formData.append("sensorType", sensorType || "");
       formData.append("file", imageFile || "");
       try {
         const responseJson = await apiFormData.put(
-          "http://localhost:3000/api/assetfacility/updateFacility",
+          "http://localhost:3000/api/assetfacility/updateSensor",
           formData
         );
         // success
         toastShadcn({
-          description: "Successfully edited facility",
+          description: "Successfully edited sensor",
         });
         setRefreshSeed(refreshSeed + 1);
       } catch (error: any) {
@@ -92,27 +118,26 @@ function EditFacilityForm(props: EditFacilityFormProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while editing facility details: \n" +
+            "An error has occurred while editing sensor details: \n" +
             error.message,
         });
       }
     } else {
       // no image
-      const updatedFacility = {
-        facilityName,
-        xCoordinate,
-        yCoordinate,
-        facilityDetail
+      const updatedSensorType = sensorType?.toString();
+      const updatedSensor = {
+        sensorName,
+        updatedSensorType
       };
 
       try {
         const responseJson = await apiJson.put(
-          "http://localhost:3000/api/assetfacility/updateFacility",
-          updatedFacility
+          "http://localhost:3000/api/assetfacility/updateSensor",
+          updatedSensor
         );
         // success
         toastShadcn({
-          description: "Successfully edited facility",
+          description: "Successfully edited sensor",
         });
         setRefreshSeed(refreshSeed + 1);
       } catch (error: any) {
@@ -120,7 +145,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while editing facility details: \n" +
+            "An error has occurred while editing sensor details: \n" +
             error.message,
         });
       }
@@ -136,14 +161,14 @@ function EditFacilityForm(props: EditFacilityFormProps) {
             variant: "destructive",
             title: "Uh oh! Something went wrong.",
             description:
-              "An error has occurred while editing facility details: \n" +
+              "An error has occurred while editing sensor details: \n" +
               apiFormData.error,
           });
         } else if (apiFormData.result) {
           // success
           console.log("success?");
           toastShadcn({
-            description: "Successfully edited facility:",
+            description: "Successfully edited sensor:",
           });
         }
       }
@@ -155,14 +180,14 @@ function EditFacilityForm(props: EditFacilityFormProps) {
             variant: "destructive",
             title: "Uh oh! Something went wrong.",
             description:
-              "An error has occurred while editing facility details: \n" +
+              "An error has occurred while editing sensor details: \n" +
               apiJson.error,
           });
         } else if (apiJson.result) {
           // success
           console.log("succes?");
           toastShadcn({
-            description: "Successfully edited facility:",
+            description: "Successfully edited sensor:",
           });
         }
       }
@@ -171,68 +196,52 @@ function EditFacilityForm(props: EditFacilityFormProps) {
 
   return (
     <div>
-      {curFacility && (
+      {curSensor && (
         <Form.Root
           className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
           onSubmit={handleSubmit}
           encType="multipart/form-data"
         >
           <span className="self-center text-title-xl font-bold">
-            Edit Facility: {curFacility.facilityName}
+            Edit Sensor: {curSensor.sensorName}
           </span>
           <hr className="bg-stroke opacity-20" />
-
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-            {/* Facility Name */}
+            {/* Sensor Name */}
             <FormFieldInput
               type="text"
-              formFieldName="facilityName"
-              label="Facility Name"
+              formFieldName="sensorName"
+              label="Sensor Name"
               required={true}
-              placeholder="e.g., Toilet"
-              value={facilityName}
-              setValue={setFacilityName}
-              validateFunction={validateFacilityName}
-              />
-            {/* X Coordinate */}
-            <FormFieldInput
-              type="number"
-              formFieldName="xCoordinate"
-              label="X Coordinate"
-              required={true}
-              placeholder="1-1000"
-              value={xCoordinate}
-              setValue={setXCoordinate}
-              validateFunction={validateFacilityName}
-              />
-            {/* Y Coordinate */}
-            <FormFieldInput
-              type="number"
-              formFieldName="yCoordinate"
-              label="Y Coordinate"
-              required={true}
-              placeholder="1-1000"
-              value={yCoordinate}
-              setValue={setYCoordinate}
-              validateFunction={validateFacilityName}
-              />
+              placeholder="e.g., Carrots, Beef,..."
+              value={sensorName}
+              setValue={setSensorName}
+              validateFunction={validateSensorName}            />
+
             <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-              {/* Facility Details */}
-              <FormFieldInput
-                type="text"
-                formFieldName="facilityDetail"
-                label="Facility Name"
+              {/* Sensor Category */}
+              <FormFieldSelect
+                formFieldName="sensorType"
+                label="Sensor Category"
                 required={true}
-                placeholder="e.g., Toilet"
-                value={facilityDetail}
-                setValue={setFacilityDetail}
-                validateFunction={validateFacilityName}
-                />
+                placeholder="Select an sensor category..."
+                valueLabelPair={[
+                  ["TEMPERATURE", "TEMPERATURE"],
+                  ["LIGHT", "LIGHT"],
+                  ["HUMIDITY", "HUMIDITY"],
+                  ["SOUND", "SOUND"],
+                  ["MOTION", "MOTION"],
+                  ["CAMERA", "CAMERA"]
+                ]}
+                value={sensorType}
+                setValue={setSensorType}
+                validateFunction={validateSensorType}
+              />
             </div>
 
             <Form.Submit asChild>
               <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-                Submit Edit Facility
+                Submit Edit Sensor
               </button>
             </Form.Submit>
             {formError && (
@@ -245,4 +254,4 @@ function EditFacilityForm(props: EditFacilityFormProps) {
   );
 }
 
-export default EditFacilityForm;
+export default EditSensorForm;

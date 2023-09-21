@@ -15,19 +15,28 @@ import LoginPage from "./pages/LoginPage";
 import MainLayout from "./components/MainLayout";
 import ViewAllSpeciesPage from "./pages/speciesManagement/ViewAllSpeciesPage";
 import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage";
-import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/CreateNewFacilityPage";
 import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 import ViewSpeciesDetailsPage from "./pages/speciesManagement/ViewSpeciesDetailsPage";
-import EditFacilityPage from "./pages/assetAndFacilityManagement/EditFacilityPage";
-import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/ViewAllFacilitiesPage";
-import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/CreateNewAnimalFeedPage";
-import CreateNewEnrichmentItemPage from "./pages/assetAndFacilityManagement/CreateNewEnrichmentItemPage";
-import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/EditAnimalFeedPage";
-import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EditEnrichmentItemPage";
-import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/ViewAllAnimalFeedPage";
-import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/ViewAllEnrichmentItemsPage";
+
+//facility page
+import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
+import EditFacilityPage from "./pages/assetAndFacilityManagement/Facility/EditFacilityPage";
+import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilitiesPage";
+
+//assets
+import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/CreateNewAnimalFeedPage";
+import CreateNewEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/CreateNewEnrichmentItemPage";
+import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/EditAnimalFeedPage";
+import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/EditEnrichmentItemPage";
+import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/ViewAllAnimalFeedPage";
+import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/EnrichmentItem/ViewAllEnrichmentItemsPage";
+import CreateNewSensorPage from "./pages/assetAndFacilityManagement/Sensor/CreateNewSensorPage";
+import EditSensorPage from "./pages/assetAndFacilityManagement/Sensor/EditSensorPage";
+import ViewAllSensorsPage from "./pages/assetAndFacilityManagement/Sensor/ViewAllSensorsPage";
+
+//customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
 import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage";
 import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
@@ -148,30 +157,50 @@ function App() {
                 <Route
                   path="/assetfacility/viewallenrichmentitems"
                   element={
+                    user ?
+                      <ViewAllEnrichmentItemsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/createsensor"
+                  element={
                     user ? (
-                      <ViewAllEnrichmentItemsPage />
+                      <CreateNewSensorPage />
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/assetfacility/editsensor/:sensorName"
+                  element={
+                    user ? <EditSensorPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/viewallsensors"
+                  element={
+                    user ?
+                      <ViewAllSensorsPage /> : <Navigate to="/login" />
                   }
                 />
                 {/*Employee Account Management */}
                 <Route
                   path="/employeeAccount/viewEmployees"
                   element={
-                    user? <ViewAllEmployeesPage /> : <Navigate to="/login"/>
+                    user ? <ViewAllEmployeesPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
                   path="/employeeAccount/createNewEmployee"
                   element={
-                    user? <CreateNewEmployeePage/> : <Navigate to="/login"/>
+                    user ? <CreateNewEmployeePage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
                   path="/employee/viewEmployeeDetails/:employeeId}"
                   element={
-                    user? <ViewEmployeeDetailsPage/> : <Navigate to="login"/>
+                    user ? <ViewEmployeeDetailsPage /> : <Navigate to="login" />
                   }
                 />
                 <Route

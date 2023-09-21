@@ -8,13 +8,13 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
-import AnimalFeed from "../../../models/AnimalFeed";
-import useApiJson from "../../../hooks/useApiJson";
+import AnimalFeed from "../../../../models/AnimalFeed";
+import useApiJson from "../../../../hooks/useApiJson";
 import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
-import { AnimalFeedCategory } from "../../../enums/AnimalFeedCategory";
+import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
 
 function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();

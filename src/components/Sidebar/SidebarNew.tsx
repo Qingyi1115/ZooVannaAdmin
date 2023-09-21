@@ -544,7 +544,29 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             >
                               Add Enrichment Item
                             </NavLink>
-                          </li>                          
+                          </li> 
+                          <li>
+                            <NavLink
+                              to="/assetfacility/viewallsensors"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              View All Sensors
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/assetfacility/createsensor"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              Add Sensor
+                            </NavLink>
+                          </li>                                     
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}

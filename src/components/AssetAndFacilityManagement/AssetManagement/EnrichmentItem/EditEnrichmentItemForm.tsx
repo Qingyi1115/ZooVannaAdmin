@@ -3,11 +3,11 @@ import * as Form from "@radix-ui/react-form";
 
 import { MultiSelectChangeEvent } from "primereact/multiselect";
 
-import useApiFormData from "../../../hooks/useApiFormData";
-import FormFieldInput from "../../FormFieldInput";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
-import EnrichmentItem from "../../../models/EnrichmentItem";
-import useApiJson from "../../../hooks/useApiJson";
+import useApiFormData from "../../../../hooks/useApiFormData";
+import FormFieldInput from "../../../FormFieldInput";
+import FormFieldRadioGroup from "../../../FormFieldRadioGroup";
+import EnrichmentItem from "../../../../models/EnrichmentItem";
+import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 
 interface EditEnrichmentItemFormProps {
@@ -100,7 +100,7 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
 
       try {
         const responseJson = await apiJson.put(
-          "http://localhost:3000/api/animalfeed/updateanimalfeed",
+          "http://localhost:3000/api/assetfacility/updateEnrichmentItem",
           updatedEnrichmentItem
         );
         // success

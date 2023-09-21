@@ -1,5 +1,5 @@
 import React from "react";
-import CreateNewAnimalFeedForm from "../../components/AssetAndFacilityManagement/AssetManagement/CreateNewAnimalFeedForm";
+import CreateNewAnimalFeedForm from "../../../components/AssetAndFacilityManagement/AssetManagement/AnimalFeed/CreateNewAnimalFeedForm";
 
 function CreateNewAnimalFeedPage() {
   return (

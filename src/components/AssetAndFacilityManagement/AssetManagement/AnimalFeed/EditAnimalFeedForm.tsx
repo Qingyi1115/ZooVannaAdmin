@@ -3,12 +3,12 @@ import * as Form from "@radix-ui/react-form";
 
 import { MultiSelectChangeEvent } from "primereact/multiselect";
 
-import useApiFormData from "../../../hooks/useApiFormData";
-import FormFieldInput from "../../FormFieldInput";
-import AnimalFeed from "../../../models/AnimalFeed";
-import useApiJson from "../../../hooks/useApiJson";
+import useApiFormData from "../../../../hooks/useApiFormData";
+import FormFieldInput from "../../../FormFieldInput";
+import AnimalFeed from "../../../../models/AnimalFeed";
+import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../../../components/FormFieldSelect";
+import FormFieldSelect from "../../../FormFieldSelect";
 
 interface EditAnimalFeedFormProps {
   curAnimalFeed: AnimalFeed;
@@ -122,31 +122,34 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
             error.message,
         });
       }
-    } 
-    
-    const updatedAnimalFeedCategory = animalFeedCategory?.toString();
-    const updatedAnimalFeed = {
-      animalFeedName,
-      updatedAnimalFeedCategory
-    };
-    try {
-      const responseJson = await apiJson.put(
-        "http://localhost:3000/api/assetFacility/updateAnimalFeed",
-        updatedAnimalFeed
-      );
-      // success
-      toastShadcn({
-        description: "Successfully edited animal feed",
-      });
-      setRefreshSeed(refreshSeed + 1);
-    } catch (error: any) {
-      toastShadcn({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description:
-          "An error has occurred while editing animal feed details: \n" +
-          error.message,
-      });
+    } else {
+      // no image
+      const updatedAnimalFeedCategory = animalFeedCategory?.toString();
+      const updatedAnimalFeed = {
+        animalFeedName,
+        updatedAnimalFeedCategory,
+        animalFeedImageUrl
+      };
+
+      try {
+        const responseJson = await apiJson.put(
+          "http://localhost:3000/api/assetfacility/updateAnimalFeed",
+          updatedAnimalFeed
+        );
+        // success
+        toastShadcn({
+          description: "Successfully edited animal feed",
+        });
+        setRefreshSeed(refreshSeed + 1);
+      } catch (error: any) {
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while editing animal feed details: \n" +
+            error.message,
+        });
+      }
     }
   }
 

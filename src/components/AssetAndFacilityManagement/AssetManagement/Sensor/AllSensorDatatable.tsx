@@ -8,44 +8,46 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
-import EnrichmentItem from "../../../models/EnrichmentItem";
-import useApiJson from "../../../hooks/useApiJson";
+import Sensor from "../../../../models/Sensor";
+import useApiJson from "../../../../hooks/useApiJson";
 import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
+import { SensorType } from "../../../../enums/SensorType";
 
-function AllEnrichmentItemDatatable() {
+function AllSensorDatatable() {
   const apiJson = useApiJson();
 
-  let emptyEnrichmentItem: EnrichmentItem = {
-    enrichmentItemId: -1,
-    enrichmentItemName: "",
-    enrichmentItemImageUrl: ""
+  let emptySensor: Sensor = {
+    sensorId: -1,
+    sensorName: "",
+    dateOfActivation: new Date(),
+    dateOfLastMaintained: new Date(),
+    sensorType: SensorType.CAMERA
   };
 
-  const [enrichmentItemList, setEnrichmentItemList] = useState<EnrichmentItem[]>([]);
-  const [selectedEnrichmentItem, setSelectedEnrichmentItem] = useState<EnrichmentItem>(emptyEnrichmentItem);
-  const [deleteEnrichmentItemDialog, setDeleteEnrichmentItemDialog] =
+  const [sensorList, setSensorList] = useState<Sensor[]>([]);
+  const [selectedSensor, setSelectedSensor] = useState<Sensor>(emptySensor);
+  const [deleteSensorDialog, setDeleteSensorDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<EnrichmentItem[]>>(null);
+  const dt = useRef<DataTable<Sensor[]>>(null);
 
   useEffect(() => {
-    const fetchEnrichmentItem = async () => {
+    const fetchSensor = async () => {
       try {
         const responseJson = await apiJson.get(
-          "http://localhost:3000/api/assetfacility/getallenrichmentItem"
+          "http://localhost:3000/api/assetfacility/getAllSensors"
         );
-        setEnrichmentItemList(responseJson as EnrichmentItem[]);
+        setSensorList(responseJson as Sensor[]);
       } catch (error: any) {
         console.log(error);
       }
     };
-    fetchEnrichmentItem();
+    fetchSensor();
   }, []);
-
 
   //
   const exportCSV = () => {
@@ -56,63 +58,52 @@ function AllEnrichmentItemDatatable() {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
-  const imageBodyTemplate = (rowData: EnrichmentItem) => {
-    return (
-      <img
-      src={"http://localhost:3000/" + rowData.enrichmentItemImageUrl}
-      alt={rowData.enrichmentItemName}
-        className="border-round shadow-2"
-        style={{ width: "64px" }}
-      />
-    );
+  const navigateEditProduct = (sensor: Sensor) => {};
+
+  const confirmDeleteSensor = (sensor: Sensor) => {
+    setSelectedSensor(sensor);
+    setDeleteSensorDialog(true);
   };
 
-  const navigateEditProduct = (enrichmentItem: EnrichmentItem) => {};
-
-  const confirmDeleteEnrichmentItem = (enrichmentItem: EnrichmentItem) => {
-    setSelectedEnrichmentItem(enrichmentItem);
-    setDeleteEnrichmentItemDialog(true);
+  const hideDeleteSensorDialog = () => {
+    setDeleteSensorDialog(false);
   };
 
-  const hideDeleteEnrichmentItemDialog = () => {
-    setDeleteEnrichmentItemDialog(false);
-  };
-
-  // delete enrichmentItem stuff
-  const deleteEnrichmentItem = () => {
-    let _enrichmentItem = enrichmentItemList.filter(
-      (val) => val.enrichmentItemId !== selectedEnrichmentItem?.enrichmentItemId
+  // delete sensor stuff
+  const deleteSensor = () => {
+    let _sensor = sensorList.filter(
+      (val) => val.sensorId !== selectedSensor?.sensorId
     );
 
-    setEnrichmentItemList(_enrichmentItem);
-    setDeleteEnrichmentItemDialog(false);
-    setSelectedEnrichmentItem(emptyEnrichmentItem);
+    setSensorList(_sensor);
+    setDeleteSensorDialog(false);
+    setSelectedSensor(emptySensor);
     toast.current?.show({
       severity: "success",
       summary: "Successful",
-      detail: "EnrichmentItem Deleted",
+      detail: "Sensor Deleted",
       life: 3000,
     });
   };
 
-  const deleteEnrichmentItemDialogFooter = (
+  const deleteSensorDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteEnrichmentItemDialog}>
+      <Button onClick={hideDeleteSensorDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteEnrichmentItem}>
+      <Button variant={"destructive"} onClick={deleteSensor}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete enrichmentItem stuff
+  // end delete sensor stuff
 
-  const actionBodyTemplate = (enrichmentItem: EnrichmentItem) => {
+  const actionBodyTemplate = (sensor: Sensor) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemName}`}>
+        <NavLink to={`/assetfacility/editanimalfeed/${sensor.sensorName}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>
@@ -121,7 +112,7 @@ function AllEnrichmentItemDatatable() {
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteEnrichmentItem(enrichmentItem)}
+          onClick={() => confirmDeleteSensor(sensor)}
         >
           <HiTrash />
           <span>Delete</span>
@@ -132,7 +123,7 @@ function AllEnrichmentItemDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Enrichment Items</h4>
+      <h4 className="m-1">Manage Sensor</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -156,33 +147,34 @@ function AllEnrichmentItemDatatable() {
 
           <DataTable
             ref={dt}
-            value={enrichmentItemList}
-            selection={selectedEnrichmentItem}
+            value={sensorList}
+            selection={selectedSensor}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedEnrichmentItem(e.value);
+                setSelectedSensor(e.value);
               }
             }}
-            dataKey="enrichmentItemId"
+            dataKey="sensorId"
             paginator
             rows={10}
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} enrichmentItem"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensor"
             globalFilter={globalFilter}
             header={header}
           >
             <Column
-              field="enrichmentItemName"
+              field="sensorName"
               header="Name"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="enrichmentItemImageUrl"
-              header="Image"
-              body={imageBodyTemplate}
+              field="sensorType"
+              header="Sensor Type"
+              sortable
+              style={{ minWidth: "16rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}
@@ -194,23 +186,23 @@ function AllEnrichmentItemDatatable() {
         </div>
       </div>
       <Dialog
-        visible={deleteEnrichmentItemDialog}
+        visible={deleteSensorDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteEnrichmentItemDialogFooter}
-        onHide={hideDeleteEnrichmentItemDialog}
+        footer={deleteSensorDialogFooter}
+        onHide={hideDeleteSensorDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedEnrichmentItem && (
+          {selectedSensor && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedEnrichmentItem.enrichmentItemName}</b>?
+              <b>{selectedSensor.sensorName}</b>?
             </span>
           )}
         </div>
@@ -219,4 +211,4 @@ function AllEnrichmentItemDatatable() {
   );
 }
 
-export default AllEnrichmentItemDatatable;
+export default AllSensorDatatable;

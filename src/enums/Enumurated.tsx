@@ -16,15 +16,6 @@ enum GeneralStaffType {
   ZOO_OPERATIONS = "ZOO_OPERATIONS",
 }
 
-enum SensorType {
-  TEMPERATURE = "TEMPERATURE",
-  LIGHT = "LIGHT",
-  HUMIDITY = "HUMIDITY",
-  SOUND = "SOUND",
-  MOTION = "MOTION",
-  CAMERA = "CAMERA",
-}
-
 enum FacilityType {
   INFORMATION_CENTRE = "INFORMATION_CENTRE",
   ZOO_DIRECTORY = "ZOO_DIRECTORY",
@@ -213,7 +204,6 @@ export {
   KeeperType,
   PlannerType,
   GeneralStaffType,
-  SensorType,
   FacilityType,
   Specialization,
   MedicalSupplyType,

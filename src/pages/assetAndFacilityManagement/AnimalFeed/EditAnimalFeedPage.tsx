@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import EditAnimalFeedForm from "../../components/AssetAndFacilityManagement/AssetManagement/EditAnimalFeedForm";
-import useApiJson from "../../hooks/useApiJson";
+import EditAnimalFeedForm from "../../../components/AssetAndFacilityManagement/AssetManagement/AnimalFeed/EditAnimalFeedForm";
+import useApiJson from "../../../hooks/useApiJson";
 import AnimalFeed from "src/models/AnimalFeed";
-import { AnimalFeedCategory } from "../../enums/AnimalFeedCategory";
+import { AnimalFeedCategory } from "../../../enums/AnimalFeedCategory";
 
 
 function EditAnimalFeedPage() {
