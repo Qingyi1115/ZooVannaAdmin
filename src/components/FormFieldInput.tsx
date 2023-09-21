@@ -41,7 +41,7 @@ function FormFieldInput<T>(props: PropsType) {
         step={0.5}
         pattern={pattern}
         onChange={(e) => setValue(e.target.value)}
-        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
       />
       <Form.ValidityState>{validateFunction}</Form.ValidityState>
     </Form.Field>

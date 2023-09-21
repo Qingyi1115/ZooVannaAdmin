@@ -10,6 +10,8 @@ import {
   PresentationMethod,
 } from "../../../enums/Enumurated";
 import DietNeedDatatable from "./DietNeedDatatable";
+import { NavLink } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface SpeciesDietaryRequirementsProps {
   curSpecies: Species;
@@ -20,6 +22,7 @@ function SpeciesDietaryRequirements(props: SpeciesDietaryRequirementsProps) {
   const apiJson = useApiJson();
 
   const [dietNeedsList, setDietNeedsList] = useState<SpeciesDietNeed[]>([]);
+  const [resetSeed, setResetSeed] = useState<number>(0);
 
   useEffect(() => {
     const fetchSpecies = async () => {
@@ -34,10 +37,18 @@ function SpeciesDietaryRequirements(props: SpeciesDietaryRequirementsProps) {
     };
 
     fetchSpecies();
-  }, []);
+  }, [resetSeed]);
 
   return (
     <div>
+      <div className="my-4 flex justify-center gap-6">
+        <NavLink
+          to={`/species/createdietaryrequirements/${curSpecies.speciesCode}`}
+        >
+          <Button>Create New Dietary Requirements</Button>
+        </NavLink>
+      </div>
+
       <DietNeedDatatable
         dietNeedsList={dietNeedsList}
         setDietNeedsList={setDietNeedsList}
