@@ -37,15 +37,10 @@ function AllfacilityDatatable() {
 
   useEffect(() => {
     apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", {includes:[]}, (reply: any)=>{
-      return reply["facilities"];
-    });
+      setfacilityList(reply["facilities"]);
+    }, );
   }, []);
-
-  useEffect(() => {
-    const facilityData = apiJson.result as facility[];
-    setfacilityList(facilityData);
-  }, [apiJson.loading]);
-
+  
   //
   const exportCSV = () => {
     dt.current?.exportCSV();
