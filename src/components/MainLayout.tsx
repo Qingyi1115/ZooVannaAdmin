@@ -18,7 +18,7 @@ function MainLayout(props: PropsType) {
   return (
     <div className="flex h-screen overflow-hidden">
       <SidebarNew sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+      <div className="no-scrollbar relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
         <HeaderNew sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         {props.children}
       </div>

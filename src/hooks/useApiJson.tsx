@@ -64,8 +64,10 @@ function useApiJson<TData = any>() {
       }
 
       // const json = await response.json();
+      setLoading(false);
       return await response.json();
     } catch (err: any) {
+      setLoading(false);
       setError(err.message || "Unexpected Error!");
       throw err;
     } finally {

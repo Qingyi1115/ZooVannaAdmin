@@ -17,16 +17,16 @@ interface SpeciesEduContentDetailsProps {
 function SpeciesEduContentDetails(props: SpeciesEduContentDetailsProps) {
   const { curSpecies } = props;
   return (
-    <div className="overflow-hidden rounded-lg border border-strokedark/40 lg:mx-20">
+    <div className="overflow-hidden rounded-lg">
       <Table>
-        <TableHeader className=" bg-whiten">
+        {/* <TableHeader className=" bg-whiten">
           <TableRow>
             <TableHead className="w-1/3 font-bold" colSpan={2}>
               Attribute
             </TableHead>
             <TableHead>Value</TableHead>
           </TableRow>
-        </TableHeader>
+        </TableHeader> */}
         <TableBody>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

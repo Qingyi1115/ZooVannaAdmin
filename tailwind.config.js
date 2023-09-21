@@ -77,7 +77,7 @@ module.exports = {
         bodydark1: "#e4eede", // changed
         bodydark2: "#99af8a", // changed
         primary: "#2fb31c", // changed
-        secondary: "#caee80", // changed
+        secondary: "#c3de8f", // changed
         stroke: "#e8f0e2", // changed
         gray: "#f4fbef", // changed
         graydark: "#3a4833", // changed
