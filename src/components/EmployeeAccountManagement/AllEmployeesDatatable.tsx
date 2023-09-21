@@ -45,12 +45,12 @@ function AllEmployeesDatatable() {
       try {
         const responseJson = await apiJson.post(
           "http://localhost:3000/api/employee/getAllEmployees",
-          { includes: "" }
+          { includes: [] }
         );
         setEmployeeList(responseJson.employees as Employee[]);
-        // console.log("Here " + responseJson);
-        // const help = responseJson as Employee[];
-        // console.log(help);
+         console.log("Here " + responseJson);
+         const help = responseJson as Employee[];
+         console.log(help);
       } catch (error: any) {
         console.log(error);
       }
