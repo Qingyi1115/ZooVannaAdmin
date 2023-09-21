@@ -39,8 +39,7 @@ function useApiJson<TData = any>() {
   const request = async (
     url: string,
     method: string = "GET",
-    body: any = null,
-    datHandler:Function
+    body: any = null
   ) => {
     setLoading(true);
     setError(null);
@@ -64,7 +63,7 @@ function useApiJson<TData = any>() {
         throw new Error(errorString);
       }
 
-      const json = datHandler(await response.json());
+      const json = await response.json();
       setResult(json);
       return json;
     } catch (err: any) {

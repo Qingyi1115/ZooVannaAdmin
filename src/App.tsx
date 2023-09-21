@@ -37,11 +37,11 @@ import EditEmployeePage from "./pages/employeeAccountManagement/EditEmployeePage
 import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
 import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
 import ViewEmployeeDetailsPage from "./pages/employeeAccountManagement/ViewEmployeeDetailsPage";
+import ProfilePage from "./pages/employeeCommonInfra/ProfilePage";
 
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
-
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
   return (
@@ -197,6 +197,31 @@ function App() {
                   path="/customer/editcustomer"
                   element={
                     user ? <EditCustomerPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* Employee Account Management */}
+                <Route
+                  path="/employee/viewallemployees"
+                  element={
+                    user ? <ViewAllEmployeesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/employee/createnewemployee"
+                  element={
+                    user ? <CreateNewEmployeePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/employee/editemployee"
+                  element={
+                    user ? <EditEmployeePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    user ? <ProfilePage /> : <Navigate to="/login" />
                   }
                 />
               </Route>

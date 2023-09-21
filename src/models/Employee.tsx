@@ -4,8 +4,6 @@ interface Employee {
   employeeEmail: string;
   employeeAddress: string;
   employeePhoneNumber: string;
-  employeePasswordhash: string;
-  employeeSalt: string;
   employeeDoorAccessCode: string;
   employeeEducation: string;
   employeeBirthDate: Date;

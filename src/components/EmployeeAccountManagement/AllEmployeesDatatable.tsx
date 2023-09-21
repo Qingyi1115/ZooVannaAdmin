@@ -24,8 +24,6 @@ function AllEmployeesDatatable() {
     employeeEmail: "",
     employeeAddress: "",
     employeePhoneNumber: "",
-    employeePasswordhash: "",
-    employeeSalt: "",
     employeeDoorAccessCode: "",
     employeeEducation: "",
     employeeBirthDate: new Date(),

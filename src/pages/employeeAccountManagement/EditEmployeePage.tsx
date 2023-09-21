@@ -17,11 +17,10 @@ function EditEmployeePage() {
     employeeAddress: "",
     employeeBirthDate: new Date(),
     employeeEducation: "",
-    employeeDateOfResignation: null,
+    dateOfResignation: null,
     employeeDoorAccessCode: "",
-    employeePasswordHash: "",
-    employeeSalt: "",
     isAccountManager: false,
+    employeeProfileUrl:""
   };
 
   const { employeeId } = useParams<{ employeeId: string }>();
