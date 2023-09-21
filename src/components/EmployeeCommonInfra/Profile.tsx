@@ -25,9 +25,9 @@ function Profile() {
     employeePhoneNumber: "",
     employeeDoorAccessCode: "",
     employeeEducation: "",
-    employeeBirthDate: new Date(),
+    employeeBirthDate: null,
     isAccountManager: false,
-    dateOfResignation: new Date(),
+    dateOfResignation: null,
     employeeProfileUrl: "",
   };
   
@@ -35,15 +35,14 @@ function Profile() {
   const { user } = state;
 
   const [curEmployee, setCurEmployee] = useState<Employee>(emptyEmployee);
-  const request = { includes: [] };
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const responseJson = await apiJson.post(
-          "http://localhost:3000/api/employee/getEmployee",
-          request
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/employee/getEmployee"
         );
+        setCurEmployee(responseJson["employee"])
       } catch (error: any) {
         console.log(error);
       }
@@ -60,34 +59,11 @@ function Profile() {
     </div>
   );
 
-  {
-    /*const actionBodyTemplate = (employee: Employee) => {
-        return (
-          <React.Fragment>
-            <NavLink to={`/facility/editfacility/${employee.employeeName}`}>
-              <Button className="mr-2">
-                <HiPencil />
-                <span>Edit</span>
-              </Button>
-            </NavLink>
-            <Button
-              variant={"destructive"}
-              className="mr-2"
-              onClick={() => confirmDeletefacility(facility)}
-            >
-              <HiTrash />
-              <span>Delete</span>
-            </Button>
-          </React.Fragment>
-        );
-      };*/
-  }
-
   return (
     <div>
       <div>
         <div>
-          
+          hello
         </div>
       </div>
     </div>

@@ -36,9 +36,7 @@ function AllfacilityDatatable() {
   const dt = useRef<DataTable<facility[]>>(null);
 
   useEffect(() => {
-    apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", {includes:[]}, (reply: any)=>{
-      setfacilityList(reply["facilities"]);
-    }, );
+    apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", {includes:[]});
   }, []);
   
   //

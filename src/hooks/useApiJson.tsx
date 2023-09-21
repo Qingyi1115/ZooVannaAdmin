@@ -74,7 +74,7 @@ function useApiJson<TData = any>() {
     }
   };
 
-  const get = async (url: string, body: any = null) => {
+  const get = async (url: string) => {
     return request(url);
   };
 
