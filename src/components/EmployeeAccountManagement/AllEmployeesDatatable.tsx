@@ -6,8 +6,10 @@ import Employee from "src/models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink } from "react-router-dom";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { Dialog } from "primereact/dialog";
 
 {
   /*const toast = useRef<Toast>(null);*/
@@ -38,25 +40,77 @@ function AllEmployeesDatatable() {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const request = { includes: [] };
+  const [employeeResignationDialog, setEmployeeResignationDialog] = useState<boolean>(false);
+  const toastShadcn = useToast().toast;
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const responseJson = await apiJson.post(
           "http://localhost:3000/api/employee/getAllEmployees",
-          { includes: "" }
+          { includes: ["keeper", "generalStaff", "planningStaff"] }
         );
         setEmployeeList(responseJson.employees as Employee[]);
-        // console.log("Here " + responseJson);
-        // const help = responseJson as Employee[];
-        // console.log(help);
+         //console.log("Here " + responseJson);
+         //const help = responseJson as Employee[];
+         //console.log(help);
       } catch (error: any) {
         console.log(error);
       }
     };
     fetchEmployees();
   }, []);
+
+  const hideEmployeeResignationDialog = () => {
+    setEmployeeResignationDialog(false);
+  }
+
+  const resignEmployee = async () => { 
+    const selectedEmployeeName = selectedEmployee.employeeName;
+    console.log(selectedEmployee);
+
+    const resignEmployee = async() => {
+      try {
+        const responseJson = await apiJson.put(
+          `http://localhost:3000/api/employee/disableEmployee/${selectedEmployee.employeeId}`, selectedEmployee);
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully disabled employee: " + selectedEmployeeName,
+        });
+        setSelectedEmployee(employee);
+        setEmployeeResignationDialog(false);
+        window.location.reload();
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while disabling employee: \n" + apiJson.error,
+        });
+      }
+    }
+    resignEmployee();
+
+  }
+
+  const employeeResignationDialogFooter = (
+    <React.Fragment>
+      <Button onClick={hideEmployeeResignationDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button variant={"destructive"} onClick={resignEmployee}>
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
+
+  
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -75,28 +129,36 @@ function AllEmployeesDatatable() {
     </div>
   );
 
-  {
-    /*const actionBodyTemplate = (employee: Employee) => {
-        return (
-          <React.Fragment>
-            <NavLink to={`/facility/editfacility/${employee.employeeName}`}>
-              <Button className="mr-2">
-                <HiPencil />
-                <span>Edit</span>
-              </Button>
-            </NavLink>
-            <Button
-              variant={"destructive"}
-              className="mr-2"
-              onClick={() => confirmDeletefacility(facility)}
-            >
-              <HiTrash />
-              <span>Delete</span>
-            </Button>
-          </React.Fragment>
-        );
-      };*/
-  }
+  const confirmEmployeeResignation = (employee:Employee) => {
+    setSelectedEmployee(employee);
+    setEmployeeResignationDialog(true);
+  };
+
+  const actionBodyTemplate = (employee: Employee) => {
+    console.log(employee.dateOfResignation);
+    return (
+      <React.Fragment>
+        <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
+          <Button className="mb-1 mr-1">
+            <HiEye className="mr-1" />
+            <span>View Details</span>
+          </Button>
+        </NavLink>
+        {employee.dateOfResignation ?
+        <span>Disabled</span>
+        :
+        <Button
+        variant={"destructive"}
+        className="mr-2"
+        onClick={() => confirmEmployeeResignation(employee)}
+        >
+          <HiTrash className="mr-1" />
+          <span>Disable</span>
+        </Button>
+        } 
+      </React.Fragment>
+    );
+  };
 
   return (
     <div>
@@ -158,14 +220,36 @@ function AllEmployeesDatatable() {
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
-            {/*<Column
+            <Column
                         body={actionBodyTemplate}
                         header="Actions"
                         exportable={false}
                         style={{ minWidth: "18rem" }}
-                    ></Column>*/}
+                    ></Column>
           </DataTable>
         </div>
+        <Dialog
+          visible={employeeResignationDialog}
+          style={{ width: "32rem" }}
+          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+          header="Confirm"
+          modal
+          footer={employeeResignationDialogFooter}
+          onHide={hideEmployeeResignationDialog}
+        >
+          <div className="confirmation-content">
+            <i
+              className="pi pi-exclamation-triangle mr-3"
+              style={{ fontSize: "2rem" }}
+            />
+            {selectedEmployee && (
+              <span>
+                Are you sure you want to disable{" "}
+                <b>{selectedEmployee.employeeName}</b>?
+              </span>
+            )}
+          </div>
+        </Dialog>
       </div>
     </div>
   );
