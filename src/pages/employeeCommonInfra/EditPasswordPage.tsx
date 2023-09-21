@@ -1,14 +1,14 @@
 import React, { useState, } from "react";
 import Employee from "src/models/Employee";
 import { useAuthContext } from "src/hooks/useAuthContext";
-import UpdateProfile from "../../components/EmployeeCommonInfra/UpdateProfile";
+import EditPassword from "../../components/EmployeeCommonInfra/EditPassword";
 
-function UpdateProfilePage() {
+function EditPasswordPage() {
   return (
     <div className="p-10">
-        <UpdateProfile />
+        <EditPassword />
     </div>
   );
 }
 
-export default UpdateProfilePage;
+export default EditPasswordPage;

@@ -47,7 +47,8 @@ import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmplo
 import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
 import ViewEmployeeDetailsPage from "./pages/employeeAccountManagement/ViewEmployeeDetailsPage";
 import ProfilePage from "./pages/employeeCommonInfra/ProfilePage";
-import UpdateProfile from "./components/EmployeeCommonInfra/UpdateProfile";
+import EditPasswordPage from "./pages/employeeCommonInfra/EditPasswordPage";
+import UpdateProfilePage from "./pages/employeeCommonInfra/UpdateProfilePage";
 
 function App() {
   const { state } = useAuthContext();
@@ -257,7 +258,13 @@ function App() {
                 <Route
                   path="/updateProfile"
                   element={
-                    user ? <UpdateProfile /> : <Navigate to="/login" />
+                    user ? <UpdateProfilePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/edit-password"
+                  element={
+                    user ? <EditPasswordPage /> : <Navigate to="/login" />
                   }
                 />
               </Route>

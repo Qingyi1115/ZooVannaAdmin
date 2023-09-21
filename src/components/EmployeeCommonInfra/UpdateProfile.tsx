@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import FormFieldInput from "../FormFieldInput";
 import FormFieldSelect from "../FormFieldSelect";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useNavigate } from 'react-router-dom';
 
 {
   /*const toast = useRef<Toast>(null);*/
@@ -19,6 +20,7 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 
 function UpdateProfile() {
   const apiJson = useApiJson();
+  const navigate = useNavigate();
   
   let emptyEmployee: Employee = {
     employeeId: -1,
@@ -51,7 +53,6 @@ function UpdateProfile() {
         const responseJson = await apiJson.get(
           "http://localhost:3000/api/employee/getEmployee"
         );
-        console.log("responseJson", responseJson["employee"])
         const emp = responseJson["employee"];
         console.log("emp", emp)
         setEmail(emp.employeeEmail)
@@ -74,18 +75,22 @@ function UpdateProfile() {
         const response = await apiJson.put(
           "http://localhost:3000/api/employee/updateEmployeeAccount",
           {
-            employeeAddress: email, 
-            employeeEmail: address, 
+            employeeAddress: address, 
+            employeeEmail: email, 
             employeePhoneNumber: pn,
             employeeEducation : edu
           }
         );
-        // success
-        console.log("succes?");
-        console.log("response", response);
 
+        const json = {
+          email:response["employee"].employeeEmail,
+          token:response["newToken"]
+      }
+        dispatch({ type: "LOGIN", payload: json });
+        navigate("/profile");
         // clearForm();
       } catch (error: any) {
+        console.log("error")
       }
   }
 
