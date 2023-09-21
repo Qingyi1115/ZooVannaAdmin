@@ -164,6 +164,7 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
               label="Employee Name"
               required={true}
               placeholder="Full Name"
+              pattern={undefined}
               value={employeeName}
               setValue={setEmployeeName}
               validateFunction={validateName}
@@ -175,6 +176,7 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
               label="Employee Email"
               required={true}
               placeholder="EmployeeEmail"
+              pattern={undefined}
               value={employeeEmail}
               setValue={setEmployeeEmail}
               validateFunction={validateName}
@@ -186,6 +188,7 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
               label="Employee Address"
               required={true}
               placeholder="EmployeeAddress"
+              pattern={undefined}
               value={employeeAddress}
               setValue={setEmployeeAddress}
               validateFunction={validateName}
@@ -197,6 +200,7 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
               label="Phone Number"
               required={true}
               placeholder="Phone Number"
+              pattern={undefined}
               value={employeePhoneNumber}
               setValue={setEmployeePhoneNumber}
               validateFunction={validateName}
@@ -209,6 +213,7 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
               label="Employee Education"
               required={true}
               placeholder="Employee Education"
+              pattern={undefined}
               value={employeeEducation}
               setValue={setEmployeeEducation}
               validateFunction={validateName}
