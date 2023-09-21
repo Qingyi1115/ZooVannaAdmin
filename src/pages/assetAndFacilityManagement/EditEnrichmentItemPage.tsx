@@ -17,7 +17,7 @@ function EditEnrichmentItemPage() {
   const [curEnrichmentItem, setCurEnrichmentItem] = useState<EnrichmentItem>(emptyEnrichmentItem);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/enrichmentItem/getenrichmentItem/${enrichmentItemName}`);
+    apiJson.get(`http://localhost:3000/api/assetfacility/getEnrichmentItem/${enrichmentItemName}`);
   }, []);
 
   useEffect(() => {
@@ -28,7 +28,9 @@ function EditEnrichmentItemPage() {
   return (
     <div className="p-10">
       {curEnrichmentItem && curEnrichmentItem.enrichmentItemId != -1 && (
-        <EditEnrichmentItemForm curEnrichmentItem={curEnrichmentItem} />
+        <EditEnrichmentItemForm curEnrichmentItem={curEnrichmentItem} refreshSeed={0} setRefreshSeed={function (value: React.SetStateAction<number>): void {
+          throw new Error("Function not implemented.");
+        } } />
       )}
     </div>
   );

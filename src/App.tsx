@@ -96,7 +96,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editfacility"
+                  path="/assetfacility/editfacility/:facilityName"
                   element={
                     user ? <EditFacilityPage /> : <Navigate to="/login" />
                   }
@@ -118,7 +118,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editanimalfeed/:animalfeedname"
+                  path="/assetfacility/editanimalfeed/:animalFeedName"
                   element={
                     user ? <EditAnimalFeedPage /> : <Navigate to="/login" />
                   }
@@ -140,7 +140,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editenrichmentitem/:enrichmentitemname"
+                  path="/assetfacility/editenrichmentitem/:enrichmentItemName"
                   element={
                     user ? <EditEnrichmentItemPage /> : <Navigate to="/login" />
                   }

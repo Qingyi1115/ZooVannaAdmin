@@ -16,11 +16,11 @@ function EditFacilityPage() {
     yCoordinate: 0
   };
 
-  const { facilityCode } = useParams<{ facilityCode: string }>();
+  const { facilityId } = useParams<{ facilityId: string }>();
   const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/facility/getfacility/${facilityCode}`);
+    apiJson.get(`http://localhost:3000/api/assetfacility/getFacility/${facilityId}`);
   }, []);
 
   useEffect(() => {

@@ -33,13 +33,19 @@ function AllEnrichmentItemDatatable() {
   const dt = useRef<DataTable<EnrichmentItem[]>>(null);
 
   useEffect(() => {
-    apiJson.get("http://localhost:3000/api/enrichmentItem/getallenrichmentItem");
+    const fetchEnrichmentItem = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/assetfacility/getallenrichmentItem"
+        );
+        setEnrichmentItemList(responseJson as EnrichmentItem[]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchEnrichmentItem();
   }, []);
 
-  useEffect(() => {
-    const enrichmentItemData = apiJson.result as EnrichmentItem[];
-    setEnrichmentItemList(enrichmentItemData);
-  }, [apiJson.loading]);
 
   //
   const exportCSV = () => {
@@ -53,8 +59,8 @@ function AllEnrichmentItemDatatable() {
   const imageBodyTemplate = (rowData: EnrichmentItem) => {
     return (
       <img
-        src={rowData.enrichmentItemImageUrl}
-        alt={rowData.enrichmentItemName}
+      src={"http://localhost:3000/" + rowData.enrichmentItemImageUrl}
+      alt={rowData.enrichmentItemName}
         className="border-round shadow-2"
         style={{ width: "64px" }}
       />

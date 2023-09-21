@@ -11,7 +11,6 @@ import { useToast } from "@/components/ui/use-toast";
 
 function CreateNewAnimalFeedForm() {
   const apiFormData = useApiFormData();
-  const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
   const [animalFeedName, setAnimalFeedName] = useState<string>(""); // text input
@@ -85,58 +84,31 @@ function CreateNewAnimalFeedForm() {
     console.log(animalFeedName);
     console.log("Category:");
     console.log(animalFeedCategory);
-    if (imageFile) {
+
     const formData = new FormData();
     formData.append("animalFeedName", animalFeedName);
     formData.append("animalFeedCategory", animalFeedCategory?.toString() || "");
     formData.append("file", imageFile || "");
     try {
-        const responseJson = await apiFormData.put(
-          "http://localhost:3000/api/animalFeed/createNewAnimalFeed",
-          formData
-        );
-        // success
-        toastShadcn({
-          description: "Successfully created animal feed",
-        });        
-      } catch (error: any) {
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while creating animal feed details: \n" +
-            error.message,
-        });
-      }
-    } else {
-      // no image
-      const updatedAnimalFeedCategory = animalFeedCategory?.toString();
-      const updatedAnimalFeed = {
-        animalFeedName,
-        updatedAnimalFeedCategory,
-        animalFeedImageUrl
-      };
-
-      try {
-        const responseJson = await apiJson.put(
-          "http://localhost:3000/api/animalfeed/createNewAnimalFeed",
-          updatedAnimalFeed
-        );
-        // success
-        toastShadcn({
-          description: "Successfully created animal feed",
-        });
-      } catch (error: any) {
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while creating animal feed details: \n" +
-            error.message,
-        });
-      }
+      const responseJson = await apiFormData.post(
+        "http://localhost:3000/api/assetfacility/createNewAnimalFeed",
+        formData
+      );
+      // success
+      toastShadcn({
+        description: "Successfully created animal feed",
+      });
+    } catch (error: any) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while creating animal feed details: \n" +
+          error.message,
+      });
     }
-}
+
+  }
 
   return (
     <Form.Root
@@ -148,7 +120,7 @@ function CreateNewAnimalFeedForm() {
         Add Animal Feed
       </span>
       <hr className="bg-stroke opacity-20" />
-      {/* Species Picture */}
+      {/* Animal Feed Picture */}
       <Form.Field
         name="animalFeedImage"
         className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
@@ -174,7 +146,7 @@ function CreateNewAnimalFeedForm() {
           value={animalFeedName}
           setValue={setAnimalFeedName}
           validateFunction={validateName}
-        />
+          pattern={undefined} />
       </div>
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">

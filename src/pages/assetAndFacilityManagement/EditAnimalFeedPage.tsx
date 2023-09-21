@@ -20,7 +20,7 @@ function EditAnimalFeedPage() {
   const [curAnimalFeed, setCurAnimalFeed] = useState<AnimalFeed>(emptyAnimalFeed);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animalFeed/getanimalFeed/${animalFeedName}`);
+    apiJson.get(`http://localhost:3000/api/assetfacility/getAnimalFeed/${animalFeedName}`);
   }, []);
 
   useEffect(() => {
@@ -31,7 +31,9 @@ function EditAnimalFeedPage() {
   return (
     <div className="p-10">
       {curAnimalFeed && curAnimalFeed.animalFeedId != -1 && (
-        <EditAnimalFeedForm curAnimalFeed={curAnimalFeed} />
+        <EditAnimalFeedForm curAnimalFeed={curAnimalFeed} refreshSeed={0} setRefreshSeed={function (value: React.SetStateAction<number>): void {
+          throw new Error("Function not implemented.");
+        } } />
       )}
     </div>
   );

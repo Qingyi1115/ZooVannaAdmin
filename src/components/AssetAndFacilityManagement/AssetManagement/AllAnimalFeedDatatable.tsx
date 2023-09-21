@@ -35,13 +35,18 @@ function AllAnimalFeedDatatable() {
   const dt = useRef<DataTable<AnimalFeed[]>>(null);
 
   useEffect(() => {
-    apiJson.get("http://localhost:3000/api/animalFeed/getAllAnimalFeed");
+    const fetchAnimalFeed = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/assetfacility/getallanimalfeed"
+        );
+        setAnimalFeedList(responseJson as AnimalFeed[]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchAnimalFeed();
   }, []);
-
-  useEffect(() => {
-    const animalFeedData = apiJson.result as AnimalFeed[];
-    setAnimalFeedList(animalFeedData);
-  }, [apiJson.loading]);
 
   //
   const exportCSV = () => {
@@ -55,8 +60,8 @@ function AllAnimalFeedDatatable() {
   const imageBodyTemplate = (rowData: AnimalFeed) => {
     return (
       <img
-        src={rowData.animalFeedImageUrl}
-        alt={rowData.animalFeedName}
+      src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
+      alt={rowData.animalFeedName}
         className="border-round shadow-2"
         style={{ width: "64px" }}
       />

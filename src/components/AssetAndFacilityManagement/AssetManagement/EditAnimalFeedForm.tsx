@@ -106,7 +106,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
       formData.append("file", imageFile || "");
       try {
         const responseJson = await apiFormData.put(
-          "http://localhost:3000/api/animalFeed/updateanimalfeed",
+          "http://localhost:3000/api/assetfacility/updateAnimalFeed",
           formData
         );
         // success
@@ -242,8 +242,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
               placeholder="e.g., Carrots, Beef,..."
               value={animalFeedName}
               setValue={setAnimalFeedName}
-              validateFunction={validateAnimalFeedName}
-            />
+              validateFunction={validateAnimalFeedName} pattern={undefined}            />
 
             <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
               {/* Animal Feed Category */}

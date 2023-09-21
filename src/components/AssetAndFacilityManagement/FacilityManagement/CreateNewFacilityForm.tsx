@@ -5,6 +5,8 @@ import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
 import useApiJson from "../../../hooks/useApiJson";
+import useApiFormData from "src/hooks/useApiFormData";
+import { useToast } from "@/components/ui/use-toast";
 
 function validateFacilityName(props: ValidityState) {
   if (props != undefined) {
@@ -19,26 +21,48 @@ function validateFacilityName(props: ValidityState) {
 }
 
 function CreateNewFacilityForm() {
-  const apiJson = useApiJson();
+  const apiFormData = useApiFormData();
+  const toastShadcn = useToast().toast;
 
   const [facilityName, setFacilityName] = useState<string>(""); // text input
   const [xCoordinate, setXCoordinate] = useState<string>(""); // number
   const [yCoordinate, setYCoordinate] = useState<string>(""); // number
   const [facilityDetail, setFacilityDetail] = useState<string>(""); // text input
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+    setImageFile(file);
+  }
+
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
-    const newFacility = {
-      facilityName,
-      xCoordinate,
-      yCoordinate,
-      facilityDetail
-    };
-
-    await apiJson.post("", newFacility);
+    const formData = new FormData();
+    formData.append("facilityName", facilityName);
+    formData.append("file", imageFile || "");
+    try {
+      const responseJson = await apiFormData.post(
+        "http://localhost:3000/api/assetfacility/createNewFacility",
+        formData
+      );
+      // success
+      toastShadcn({
+        description: "Successfully created facility",
+      });
+    } catch (error: any) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while creating facility details: \n" +
+          error.message,
+      });
+    }
+    console.log(apiFormData.result);
 
     // handle success case or failurecase using apiJson
   }
@@ -62,8 +86,8 @@ function CreateNewFacilityForm() {
           placeholder="e.g., Toilet"
           value={facilityName}
           setValue={setFacilityName}
-          validateFunction={validateFacilityName}
-        />
+          validateFunction={validateFacilityName} 
+          />
         {/* X Coordinate */}
         <FormFieldInput
           type="number"
@@ -73,8 +97,8 @@ function CreateNewFacilityForm() {
           placeholder="1-1000"
           value={xCoordinate}
           setValue={setXCoordinate}
-          validateFunction={validateFacilityName}
-        />
+          validateFunction={validateFacilityName} 
+           />
         {/* Y Coordinate */}
         <FormFieldInput
           type="number"
@@ -84,21 +108,20 @@ function CreateNewFacilityForm() {
           placeholder="1-1000"
           value={yCoordinate}
           setValue={setYCoordinate}
-          validateFunction={validateFacilityName}
-        />
-        
+          validateFunction={validateFacilityName} 
+           />
       </div>
       {/* Facility Details */}
       <FormFieldInput
-          type="text"
-          formFieldName="facilityDetail"
-          label="Facility Name"
-          required={true}
-          placeholder="e.g., Toilet"
-          value={facilityDetail}
-          setValue={setFacilityDetail}
-          validateFunction={validateFacilityName}
-        />
+        type="text"
+        formFieldName="facilityDetail"
+        label="Facility Name"
+        required={true}
+        placeholder="e.g., Toilet"
+        value={facilityDetail}
+        setValue={setFacilityDetail}
+        validateFunction={validateFacilityName} 
+         />
 
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
