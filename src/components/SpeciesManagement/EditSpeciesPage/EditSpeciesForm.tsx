@@ -531,6 +531,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
                 label="Common Name"
                 required={true}
                 placeholder="e.g., African Lion, Sumatran Tiger,..."
+                pattern={undefined}
                 value={commonName}
                 setValue={setCommonName}
                 validateFunction={validateCommonName}
@@ -542,6 +543,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
                 label="Scientific Name (Binomial/Trinomial Name)"
                 required={true}
                 placeholder="e.g., Homo sapiens, Panthera leo leo..."
+                pattern={undefined}
                 value={scientificName}
                 setValue={setScientificName}
                 validateFunction={validateScientificName}
@@ -554,6 +556,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
               label="Alias Name"
               required={false}
               placeholder="e.g., Great Capybara, Sunda Island Tiger,..."
+              pattern={undefined}
               value={aliasName}
               setValue={setAliasName}
               validateFunction={() => null}
@@ -623,6 +626,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
                 label="Phylum"
                 required={true}
                 placeholder="e.g., Chordata, Entoprocta,..."
+                pattern={undefined}
                 value={phylum}
                 setValue={setPhylum}
                 validateFunction={validatePhylum}
@@ -634,6 +638,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
                 label="Class"
                 required={true}
                 placeholder="e.g., Mammalia, Reptilia..."
+                pattern={undefined}
                 value={speciesClass}
                 setValue={setSpeciesClass}
                 validateFunction={validateSpeciesClass}
@@ -647,6 +652,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
                 label="Order"
                 required={true}
                 placeholder="e.g., Rodentia, Carnivora..."
+                pattern={undefined}
                 value={order}
                 setValue={setOrder}
                 validateFunction={validateOrder}
@@ -658,6 +664,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
                 label="Family"
                 required={true}
                 placeholder="e.g., Caviidae, Felidae..."
+                pattern={undefined}
                 value={family}
                 setValue={setFamily}
                 validateFunction={validateFamily}
@@ -670,6 +677,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
               label="Genus"
               required={true}
               placeholder="e.g., Homo, Panthera..."
+              pattern={undefined}
               value={genus}
               setValue={setGenus}
               validateFunction={validateGenus}
@@ -801,6 +809,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
               label="Life Expectancy (in Years)"
               required={true}
               placeholder="e.g., 8"
+              pattern={undefined}
               value={lifeExpectancyYears}
               setValue={setLifeExpectancyYears}
               validateFunction={validateLifeExpectancyYears}

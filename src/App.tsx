@@ -168,13 +168,13 @@ function App() {
                   }
                 />
                 <Route
-                  path="/employee/viewEmployeeDetails/:employeeId}"
+                  path="/employeeAccount/viewEmployeeDetails/:employeeId"
                   element={
                     user? <ViewEmployeeDetailsPage/> : <Navigate to="login"/>
                   }
                 />
                 <Route
-                  path="/employee/editemployee"
+                  path="/employeeAccount/editemployee"
                   element={
                     user ? <EditEmployeePage /> : <Navigate to="/login" />
                   }

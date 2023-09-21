@@ -17,10 +17,11 @@ function EditEmployeePage() {
     employeeAddress: "",
     employeeBirthDate: new Date(),
     employeeEducation: "",
-    employeeDateOfResignation: null,
+    dateOfResignation: null,
     employeeDoorAccessCode: "",
-    employeePasswordHash: "",
+    employeePasswordhash: "",
     employeeSalt: "",
+    employeeProfileUrl:"",
     isAccountManager: false,
   };
 

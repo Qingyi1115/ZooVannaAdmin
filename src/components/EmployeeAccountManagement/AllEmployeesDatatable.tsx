@@ -141,7 +141,7 @@ function AllEmployeesDatatable() {
     console.log(employee.dateOfResignation);
     return (
       <React.Fragment>
-        <NavLink to={`/employee/viewEmployeeDetails/${employee.employeeId}`}>
+        <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
             <span>View Details</span>
