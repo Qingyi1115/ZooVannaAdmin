@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-
+import useApiJson from "../../../hooks/useApiJson";
 import {
   AnimalFeedCategory,
   AnimalGrowthStage,
@@ -49,6 +49,7 @@ const emptyDietNeeds: SpeciesDietNeed = {
 
 function DietNeedDatatable(props: DietNeedDatatableProps) {
   const { curSpecies, dietNeedsList, setDietNeedsList } = props;
+  const apiJson = useApiJson();
   const [selectedDietNeeds, setSelectedDietNeeds] =
     useState<SpeciesDietNeed>(emptyDietNeeds);
   const [deleteSpeciesDietNeedsDialog, setDeleteSpeciesDietNeedsDialog] =
@@ -56,6 +57,8 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
   const [globalFilter, setGlobalFilter] = useState<string>("");
 
   const dt = useRef<DataTable<SpeciesDietNeed[]>>(null);
+
+  const toastShadcn = useToast().toast;
 
   //
   const exportCSV = () => {
@@ -68,63 +71,64 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
 
   const navigateEditProduct = (species: SpeciesDietNeed) => {};
 
-  const confirmDeleteSpeciesDietNeed = (speciesDietNeed: SpeciesDietNeed) => {
+  // Delete stuff
+  const confirmDeleteEnclosureReq = (speciesDietNeed: SpeciesDietNeed) => {
     setSelectedDietNeeds(speciesDietNeed);
     setDeleteSpeciesDietNeedsDialog(true);
   };
 
-  const hideDeleteSpeciesDialog = () => {
+  const hideDeleteDietaryReqDialog = () => {
     setDeleteSpeciesDietNeedsDialog(false);
   };
 
   // delete species stuff
-  const deleteSpecies = async () => {
-    let _species = dietNeedsList.filter(
+  const deleteSpeciesDietaryReq = async () => {
+    let _dietNeedsList = dietNeedsList.filter(
       (val) => val.speciesDietNeedId !== selectedDietNeeds?.speciesDietNeedId
     );
 
-    // const deleteSpecies = async () => {
-    //   try {
-    //     const responseJson = await apiJson.del(
-    //       "http://localhost:3000/api/species/deletespecies/" +
-    //         selectedSpecies.speciesCode
-    //     );
+    const deleteSpeciesDietaryReqApi = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/species/deleteDietNeed/" +
+            selectedDietNeeds?.speciesDietNeedId
+        );
 
-    //     toastShadcn({
-    //       // variant: "destructive",
-    //       title: "Deletion Successful",
-    //       description:
-    //         "Successfully deleted species: " + selectedSpeciesCommonName,
-    //     });
-    //     setSpeciesList(_species);
-    //     setDeleteSpeciesDialog(false);
-    //     setSelectedSpecies(emptySpecies);
-    //   } catch (error: any) {
-    //     // got error
-    //     toastShadcn({
-    //       variant: "destructive",
-    //       title: "Uh oh! Something went wrong.",
-    //       description:
-    //         "An error has occurred while deleting species: \n" + apiJson.error,
-    //     });
-    //   }
-    // };
-    // deleteSpecies();
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description: "Successfully deleted species dietary requirements",
+        });
+        setDietNeedsList(_dietNeedsList);
+        setDeleteSpeciesDietNeedsDialog(false);
+        setSelectedDietNeeds(emptyDietNeeds);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting species dietary requirements: \n" +
+            apiJson.error,
+        });
+      }
+    };
+    deleteSpeciesDietaryReqApi();
   };
 
   const deleteSpeciesDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteSpeciesDialog}>
+      <Button onClick={hideDeleteDietaryReqDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteSpecies}>
+      <Button variant={"destructive"} onClick={deleteSpeciesDietaryReq}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete species stuff
+  // end delete stuff
 
   const actionBodyTemplate = (speciesDietNeed: SpeciesDietNeed) => {
     return (
@@ -137,14 +141,14 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
             <span>Edit</span>
           </Button>
         </NavLink>
-        {/* <Button
+        <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteSpecies(species)}
+          onClick={() => confirmDeleteEnclosureReq(speciesDietNeed)}
         >
           <HiTrash className="mr-1" />
           <span>Delete</span>
-        </Button> */}
+        </Button>
       </React.Fragment>
     );
   };
@@ -240,6 +244,24 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
           style={{ minWidth: "14rem" }}
         ></Column>
       </DataTable>
+      <Dialog
+        visible={deleteSpeciesDietNeedsDialog}
+        style={{ width: "32rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header="Confirm"
+        modal
+        footer={deleteSpeciesDialogFooter}
+        onHide={hideDeleteDietaryReqDialog}
+      >
+        <div className="confirmation-content">
+          <i className="" />
+          {selectedDietNeeds && (
+            <span>
+              Are you sure you want to delete the current dietary requirements?
+            </span>
+          )}
+        </div>
+      </Dialog>
     </div>
   );
 }
