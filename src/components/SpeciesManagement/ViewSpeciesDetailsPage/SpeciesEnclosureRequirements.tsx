@@ -14,11 +14,15 @@ import {
 import { TwoThumbSlider } from "@/components/ui/two-thumb-slider";
 import { Slider } from "@/components/ui/slider";
 
+import { Dialog } from "primereact/dialog";
+
 import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
 import { TwoThumbSliderWithNumber } from "../TwoThumbSliderWithNumber";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { HiCheck, HiX } from "react-icons/hi";
 
 interface SpeciesEnclosureRequirementsProps {
   curSpecies: Species;
@@ -57,6 +61,10 @@ function SpeciesEnclosureRequirements(
   const apiJson = useApiJson();
   const [curEnclosureNeeds, setCurEnclosureNeeds] =
     useState<SpeciesEnclosureNeed | null>(null);
+  const [deleteEnclosureReqDialog, setDeleteEnclosureReqDialog] =
+    useState<boolean>(false);
+
+  const toastShadcn = useToast().toast;
 
   useEffect(() => {
     const fetchSpeciesEnclosureNeeds = async () => {
@@ -73,12 +81,57 @@ function SpeciesEnclosureRequirements(
     fetchSpeciesEnclosureNeeds();
   }, []);
 
-  // function twoThumbSliderTest(value: number[]) {
-  //   // const el = document.getElementById(
-  //   //   "twothumbslidertest"
-  //   // ) as HTMLInputElement;
-  //   console.log(value);
-  // }
+  // Delete stuff
+  const confirmDeleteEnclosureReq = () => {
+    setDeleteEnclosureReqDialog(true);
+  };
+
+  const hideDeleteEnclosureReqDialog = () => {
+    setDeleteEnclosureReqDialog(false);
+  };
+
+  // delete species stuff
+  const deleteSpeciesEnclosureReq = async () => {
+    const deleteSpeciesEnclosureReqApi = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/species/deleteEnclosureNeeds/" +
+            curEnclosureNeeds?.speciesEnclosureNeedId
+        );
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description: "Successfully deleted species enclosure requirements",
+        });
+        setCurEnclosureNeeds(null);
+        setDeleteEnclosureReqDialog(false);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting species: \n" + apiJson.error,
+        });
+      }
+    };
+    deleteSpeciesEnclosureReqApi();
+  };
+
+  const deleteSpeciesDialogFooter = (
+    <React.Fragment>
+      <Button onClick={hideDeleteEnclosureReqDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button variant={"destructive"} onClick={deleteSpeciesEnclosureReq}>
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
+  // end delete stuff
 
   return (
     <div>
@@ -91,7 +144,10 @@ function SpeciesEnclosureRequirements(
               <Button>Edit Enclosure Requirements</Button>
             </NavLink>
 
-            <Button variant={"destructive"}>
+            <Button
+              variant={"destructive"}
+              onClick={() => confirmDeleteEnclosureReq()}
+            >
               Delete Enclosure Requirements
             </Button>
           </div>
@@ -340,6 +396,25 @@ function SpeciesEnclosureRequirements(
           </NavLink>
         </div>
       )}
+      <Dialog
+        visible={deleteEnclosureReqDialog}
+        style={{ width: "32rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header="Confirm"
+        modal
+        footer={deleteSpeciesDialogFooter}
+        onHide={hideDeleteEnclosureReqDialog}
+      >
+        <div className="confirmation-content">
+          <i className="" />
+          {curEnclosureNeeds && (
+            <span>
+              Are you sure you want to delete the current enclosure
+              requirements?
+            </span>
+          )}
+        </div>
+      </Dialog>
     </div>
   );
 }
