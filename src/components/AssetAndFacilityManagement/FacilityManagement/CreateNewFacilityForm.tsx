@@ -5,7 +5,7 @@ import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
 import useApiJson from "../../../hooks/useApiJson";
-import useApiFormData from "src/hooks/useApiFormData";
+import useApiFormData from "../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
 
 function validateFacilityName(props: ValidityState) {
@@ -37,7 +37,7 @@ function CreateNewFacilityForm() {
   }
 
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
@@ -71,6 +71,7 @@ function CreateNewFacilityForm() {
     <Form.Root
       className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
       onSubmit={handleSubmit}
+      encType="multipart/form-data"
     >
       <span className="self-center text-title-xl font-bold">
         Create a New Facility

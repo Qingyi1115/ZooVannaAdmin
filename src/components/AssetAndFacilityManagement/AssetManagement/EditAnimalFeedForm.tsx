@@ -99,14 +99,13 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     if (imageFile) {
       const formData = new FormData();
-      formData.append("animalFeedName", animalFeedName);
-      formData.append("animalFeedCategory", animalFeedCategory || "");
       formData.append("file", imageFile || "");
       try {
         const responseJson = await apiFormData.put(
-          "http://localhost:3000/api/assetfacility/updateAnimalFeed",
+          "http://localhost:3000/api/assetfacility/updateAnimalFeedImage",
           formData
         );
         // success
@@ -123,34 +122,31 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
             error.message,
         });
       }
-    } else {
-      // no image
-      const updatedAnimalFeedCategory = animalFeedCategory?.toString();
-      const updatedAnimalFeed = {
-        animalFeedName,
-        updatedAnimalFeedCategory,
-        animalFeedImageUrl
-      };
-
-      try {
-        const responseJson = await apiJson.put(
-          "http://localhost:3000/api/animalfeed/updateAnimalFeed",
-          updatedAnimalFeed
-        );
-        // success
-        toastShadcn({
-          description: "Successfully edited animal feed",
-        });
-        setRefreshSeed(refreshSeed + 1);
-      } catch (error: any) {
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while editing animal feed details: \n" +
-            error.message,
-        });
-      }
+    } 
+    
+    const updatedAnimalFeedCategory = animalFeedCategory?.toString();
+    const updatedAnimalFeed = {
+      animalFeedName,
+      updatedAnimalFeedCategory
+    };
+    try {
+      const responseJson = await apiJson.put(
+        "http://localhost:3000/api/assetFacility/updateAnimalFeed",
+        updatedAnimalFeed
+      );
+      // success
+      toastShadcn({
+        description: "Successfully edited animal feed",
+      });
+      setRefreshSeed(refreshSeed + 1);
+    } catch (error: any) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while editing animal feed details: \n" +
+          error.message,
+      });
     }
   }
 
