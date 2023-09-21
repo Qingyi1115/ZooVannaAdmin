@@ -201,18 +201,6 @@ function App() {
                     user ? <EditEmployeePage /> : <Navigate to="/login" />
                   }
                 />
-                <Route
-                  path="/employeeAccount/viewEmployeeDetails/:employeeId"
-                  element={
-                    user ? <ViewEmployeeDetailsPage /> : <Navigate to="login" />
-                  }
-                />
-                <Route
-                  path="/employeeAccount/editemployee"
-                  element={
-                    user ? <EditEmployeePage /> : <Navigate to="/login" />
-                  }
-                />
 
                 {/* Customer Account Management */}
                 <Route
