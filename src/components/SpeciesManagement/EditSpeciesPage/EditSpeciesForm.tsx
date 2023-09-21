@@ -70,9 +70,9 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
   const [generalDietPreference, setGeneralDietPreference] = useState<
     string | undefined
   >(curSpecies.generalDietPreference);
-  const [educationalDescription, setEducationalDescription] = useState<string>(
-    curSpecies.educationalDescription
-  );
+  // const [educationalDescription, setEducationalDescription] = useState<string>(
+  //   curSpecies.educationalDescription
+  // );
   const [lifeExpectancyYears, setLifeExpectancyYears] = useState<number>(
     curSpecies.lifeExpectancyYears
   );
@@ -371,7 +371,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
       formData.append("groupSexualDynamic", groupSexualDynamic || "");
       formData.append("habitatOrExhibit", habitatOrExhibit || "");
       formData.append("generalDietPreference", generalDietPreference || "");
-      formData.append("educationalDescription", educationalDescription);
+      // formData.append("educationalDescription", educationalDescription);
       formData.append("file", imageFile || "");
       formData.append(
         "lifeExpectancyYears",
@@ -413,7 +413,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
         order,
         family,
         genus,
-        educationalDescription,
+        // educationalDescription,
         nativeContinent,
         nativeBiomes,
         groupSexualDynamic,
@@ -827,7 +827,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
               validateFunction={validateLifeExpectancyYears}
             />
             {/* Species Educational Desc */}
-            <Form.Field
+            {/* <Form.Field
               name="educationalDescription"
               className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
             >
@@ -848,7 +848,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
               <Form.ValidityState>
                 {validateEducationalDescription}
               </Form.ValidityState>
-            </Form.Field>
+            </Form.Field> */}
             <Form.Submit asChild>
               <Button
                 disabled={apiFormData.loading}
