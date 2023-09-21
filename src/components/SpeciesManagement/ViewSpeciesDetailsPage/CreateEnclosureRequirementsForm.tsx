@@ -14,6 +14,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import Species from "../../../models/Species";
 import { TwoThumbSliderWithNumber } from "../TwoThumbSliderWithNumber";
+import { NavLink } from "react-router-dom";
 
 interface CreateEnclosureRequirementsFormProps {
   curSpecies: Species;
@@ -28,7 +29,9 @@ function CreateEnclosureRequirementsForm(
   const { curSpecies } = props;
 
   // fields
-  const [speciesCode, setSpeciesCode] = useState<string>("");
+  const [speciesCode, setSpeciesCode] = useState<string>(
+    curSpecies.speciesCode
+  );
   const [smallExhibitHeightRequired, setSmallExhibitHeightRequired] =
     useState<number>(-1);
   const [minLandAreaRequired, setMinLandAreaRequired] = useState<number>(0); // must validate > 0
@@ -40,7 +43,7 @@ function CreateEnclosureRequirementsForm(
   const [
     recommendedStandOffBarrierDistMetres,
     setRecommendedStandOffBarrierDistMetres,
-  ] = useState<number>(0);
+  ] = useState<number | undefined>(undefined);
   const [plantationCoveragePercentMin, setPlantationCoveragePercentMin] =
     useState<number>(0); // validate smaller than max, >= 0
   const [plantationCoveragePercentMax, setPlantationCoveragePercentMax] =
@@ -55,8 +58,8 @@ function CreateEnclosureRequirementsForm(
   const [sandPercentMax, setSandPercentMax] = useState<number>(0); // validate greater than min, but if min == 0, max can be 0
   const [snowPercentMin, setSnowPercentMin] = useState<number>(0); // validate smaller than max, >= 0
   const [snowPercentMax, setSnowPercentMax] = useState<number>(0); // validate greater than min, but if min == 0, max can be 0
-  const [soilPercenMin, setSoilPercenMin] = useState<number>(0); // validate smaller than max, >= 0
-  const [soilPercenMax, setSoilPercenMax] = useState<number>(0); // validate greater than min, but if min == 0, max can be 0
+  const [soilPercentMin, setSoilPercentMin] = useState<number>(0); // validate smaller than max, >= 0
+  const [soilPercentMax, setSoilPercentMax] = useState<number>(0); // validate greater than min, but if min == 0, max can be 0
 
   const [newEnclosureRequirementsCreated, setNewEnclosureRequirementsCreated] =
     useState<boolean>(false);
@@ -69,7 +72,7 @@ function CreateEnclosureRequirementsForm(
     if (minLandAreaRequired <= 0) {
       return (
         <div className="font-medium text-danger">
-          * Minimum land area required must be greate than 0
+          * Minimum land area required must be greater than 0
         </div>
       );
     }
@@ -92,19 +95,118 @@ function CreateEnclosureRequirementsForm(
     return null;
   }
 
-  function validatePlantationCoverageRange(props: ValidityState) {
+  function validateTemperatureRange(props: ValidityState) {
     // if (props != undefined) {
-    if (plantationCoveragePercentMin > plantationCoveragePercentMax) {
+    if (acceptableTempMin >= acceptableTempMax) {
       return (
         <div className="font-medium text-danger">
-          * Minimum plantation coverage has to be smaller than maximum
-          plantation coverage
+          * Minimum acceptable temperature must be smaller than the maximum
+        </div>
+      );
+    }
+    if (acceptableTempMin >= acceptableTempMax) {
+      return (
+        <div className="font-medium text-danger">
+          * Minimum acceptable temperature must be smaller than the maximum
         </div>
       );
     }
     // add any other cases here
     // }
     return null;
+  }
+
+  function validateMinHumidity(props: ValidityState) {
+    // if (props != undefined) {
+    if (acceptableHumidityMin >= acceptableHumidityMax) {
+      return (
+        <div className="font-medium text-danger">
+          * Minimum acceptable humidity must be smaller than the maximum
+        </div>
+      );
+    }
+    if (acceptableHumidityMin < 0) {
+      return (
+        <div className="font-medium text-danger">
+          * Minimum humidity must be equal to or greater than 0
+        </div>
+      );
+    }
+    // add any other cases here
+    // }
+    return null;
+  }
+
+  function validateMaxHumidity(props: ValidityState) {
+    // if (props != undefined) {
+    if (acceptableHumidityMin >= acceptableHumidityMax) {
+      return (
+        <div className="font-medium text-danger">
+          * Maximum acceptable humidity must be greater than the minimum
+        </div>
+      );
+    }
+    // add any other cases here
+    // }
+    return null;
+  }
+
+  function validateStandOffBarrierDist(props: ValidityState) {
+    if (props != undefined) {
+      if (recommendedStandOffBarrierDistMetres == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter a recommended stand-off barrier distance
+          </div>
+        );
+      } else if (recommendedStandOffBarrierDistMetres <= 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Stand-off barrier distance must be greater than 0
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  // check if current recommendation ranges will allow a valid distribution
+  interface RecommendationValidationResult {
+    isValid: boolean;
+    isMinTooHigh: boolean;
+    isMaxTooLow: boolean;
+    totalMin: number;
+    totalMax: number;
+  }
+  function areRecommendationRangesValid(): RecommendationValidationResult {
+    const totalMin =
+      longGrassPercentMin +
+      shortGrassPercentMin +
+      rockPercentMin +
+      sandPercentMin +
+      snowPercentMin +
+      soilPercentMin;
+
+    const totalMax =
+      longGrassPercentMax +
+      shortGrassPercentMax +
+      rockPercentMax +
+      sandPercentMax +
+      snowPercentMax +
+      soilPercentMax;
+
+    const isMinTooHigh = totalMin > 100;
+    const isMaxTooLow = totalMax < 100;
+    const isValid = !isMinTooHigh && !isMaxTooLow;
+
+    return {
+      isValid,
+      isMinTooHigh,
+      isMaxTooLow,
+      totalMin,
+      totalMax,
+    };
   }
 
   ///////
@@ -136,16 +238,39 @@ function CreateEnclosureRequirementsForm(
       sandPercentMax,
       snowPercentMin,
       snowPercentMax,
-      soilPercenMin,
-      soilPercenMax,
+      soilPercentMin,
+      soilPercentMax,
     };
+
+    const terrainDistributionValidation: RecommendationValidationResult =
+      areRecommendationRangesValid();
+
+    if (!terrainDistributionValidation.isValid) {
+      if (terrainDistributionValidation.isMinTooHigh) {
+        toastShadcn({
+          variant: "destructive",
+          title: "Invalid Terrain Distribution",
+          description:
+            "Your recommended distribution will not result in any valid actual distributions because total minimums are too high",
+        });
+      } else if (terrainDistributionValidation.isMaxTooLow) {
+        toastShadcn({
+          variant: "destructive",
+          title: "Invalid Terrain Distribution",
+          description:
+            "Your recommended distribution will not result in any valid actual distributions because total maximums are too low",
+        });
+      }
+
+      return;
+    }
 
     // console.log("plantation coverage min: " + plantationCoveragePercentMin);
     // console.log("plantation coverage max: " + plantationCoveragePercentMax);
     console.log("new enclosure req obj:");
     console.log(newEnclosureRequirements);
 
-    const createSpecies = async () => {
+    const createSpeciesEnclosureRequirements = async () => {
       try {
         const response = await apiJson.post(
           "http://localhost:3000/api/species/createEnclosureNeeds",
@@ -154,11 +279,12 @@ function CreateEnclosureRequirementsForm(
         // success
         console.log("succes?");
         toastShadcn({
-          description: "Successfully created enclosure requirements",
+          description:
+            "Successfully created enclosure requirements. Please go back to Species Details page",
         });
 
         // clearForm();
-        // setNewSpeciesCreated(true);
+        setNewEnclosureRequirementsCreated(true);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -170,7 +296,7 @@ function CreateEnclosureRequirementsForm(
         });
       }
     };
-    // createSpecies();
+    createSpeciesEnclosureRequirements();
   }
 
   return (
@@ -237,7 +363,7 @@ function CreateEnclosureRequirementsForm(
             placeholder="e.g., 8"
             value={acceptableTempMin}
             setValue={setAcceptableTempMin}
-            validateFunction={validateMinLandAreaRequired}
+            validateFunction={validateTemperatureRange}
           />
           {/* Min Water Area Required */}
           <FormFieldInput
@@ -248,12 +374,12 @@ function CreateEnclosureRequirementsForm(
             placeholder="e.g., 8"
             value={acceptableTempMax}
             setValue={setAcceptableTempMax}
-            validateFunction={validateMinLandAreaRequired}
+            validateFunction={validateTemperatureRange}
           />
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Min Land Area Required */}
+          {/* Min Acceptable Humidity */}
           <FormFieldInput
             type="number"
             formFieldName="acceptableHumidityMin"
@@ -262,9 +388,9 @@ function CreateEnclosureRequirementsForm(
             placeholder="e.g., 8"
             value={acceptableHumidityMin}
             setValue={setAcceptableHumidityMin}
-            validateFunction={validateMinLandAreaRequired}
+            validateFunction={validateMinHumidity}
           />
-          {/* Min Water Area Required */}
+          {/* Max Acceptable Humidity */}
           <FormFieldInput
             type="number"
             formFieldName="acceptableTempMax"
@@ -273,20 +399,20 @@ function CreateEnclosureRequirementsForm(
             placeholder="e.g., 8"
             value={acceptableHumidityMax}
             setValue={setAcceptableHumidityMax}
-            validateFunction={validateMinLandAreaRequired}
+            validateFunction={validateMaxHumidity}
           />
         </div>
 
         {/* Recommended Stand-off Barrier Distance */}
         <FormFieldInput
-          type="text"
+          type="number"
           formFieldName="recommendedStandOffBarrierDistMetres"
           label={`Recommended Stand-off Barrier Distance (m)`}
-          required={false}
+          required={true}
           placeholder="e.g., 12"
           value={recommendedStandOffBarrierDistMetres}
           setValue={setRecommendedStandOffBarrierDistMetres}
-          validateFunction={() => null}
+          validateFunction={validateStandOffBarrierDist}
         />
 
         {/* Plantation Coverage Range */}
@@ -413,10 +539,10 @@ function CreateEnclosureRequirementsForm(
             <div className="flex h-full items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
-                value={[soilPercenMin, soilPercenMax]}
+                value={[soilPercentMin, soilPercentMax]}
                 onValueChange={(value) => {
-                  setSoilPercenMin(value[0]);
-                  setSoilPercenMax(value[1]);
+                  setSoilPercentMin(value[0]);
+                  setSoilPercentMax(value[1]);
                 }}
                 min={0}
                 max={100}
@@ -540,14 +666,18 @@ function CreateEnclosureRequirementsForm(
               )}
             </Button>
           ) : (
-            <div>
-              <span>Enclosure Requirements creations successful. </span>
-              <Button
-                disabled
-                className="h-12 w-2/3 self-center rounded-full text-lg"
+            <div className="flex w-full flex-col items-center">
+              <span>Enclosure Requirements creation successful. </span>
+              <NavLink
+                to={`/species/viewspeciesdetails/${curSpecies.speciesCode}`}
               >
-                Click to return to Species Details page
-              </Button>
+                <Button
+                  type="button"
+                  className="h-12 w-full self-center rounded-full text-lg"
+                >
+                  Click to return to Species Details page
+                </Button>
+              </NavLink>
             </div>
           )}
         </Form.Submit>
