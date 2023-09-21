@@ -2,7 +2,7 @@ import Species from "./Species";
 
 interface SpeciesEnclosureNeed {
   speciesEnclosureNeedId: number;
-  smallExhibitHeightRequired: number | null; // nullable
+  smallExhibitHeightRequired: number; // -1 if don't have
   minLandAreaRequired: number;
   minWaterAreaRequired: number;
   acceptableTempMin: number;
@@ -22,8 +22,8 @@ interface SpeciesEnclosureNeed {
   sandPercentMax: number;
   snowPercentMin: number;
   snowPercentMax: number;
-  soilPercenMin: number;
-  soilPercenMax: number;
+  soilPercentMin: number;
+  soilPercentMax: number;
 
   species?: Species;
 }

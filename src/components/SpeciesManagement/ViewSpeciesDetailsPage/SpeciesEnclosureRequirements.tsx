@@ -26,7 +26,7 @@ interface SpeciesEnclosureRequirementsProps {
 
 const emptyEnclosureNeeds: SpeciesEnclosureNeed = {
   speciesEnclosureNeedId: 1,
-  smallExhibitHeightRequired: null, // nullable
+  smallExhibitHeightRequired: -1, // nullable
   minLandAreaRequired: 10,
   minWaterAreaRequired: 10,
   acceptableTempMin: 10,
@@ -46,8 +46,8 @@ const emptyEnclosureNeeds: SpeciesEnclosureNeed = {
   sandPercentMax: 0,
   snowPercentMin: 0,
   snowPercentMax: 0,
-  soilPercenMin: 20,
-  soilPercenMax: 40,
+  soilPercentMin: 20,
+  soilPercentMax: 40,
 };
 
 function SpeciesEnclosureRequirements(
@@ -114,7 +114,7 @@ function SpeciesEnclosureRequirements(
                   {emptyEnclosureNeeds.smallExhibitHeightRequired &&
                   emptyEnclosureNeeds.smallExhibitHeightRequired > 0
                     ? curEnclosureNeeds.smallExhibitHeightRequired
-                    : "Not applicable. This species requires a large habitat"}
+                    : "Not applicable. This species requires a large habitat."}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -316,8 +316,8 @@ function SpeciesEnclosureRequirements(
                 <TableCell>
                   <TwoThumbSliderWithNumber
                     value={[
-                      curEnclosureNeeds.soilPercenMin,
-                      curEnclosureNeeds.soilPercenMax,
+                      curEnclosureNeeds.soilPercentMin,
+                      curEnclosureNeeds.soilPercentMax,
                     ]}
                     min={0}
                     max={100}
