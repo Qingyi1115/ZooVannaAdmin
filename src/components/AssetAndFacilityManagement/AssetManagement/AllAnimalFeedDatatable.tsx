@@ -113,7 +113,7 @@ function AllAnimalFeedDatatable() {
   const actionBodyTemplate = (animalFeed: AnimalFeed) => {
     return (
       <React.Fragment>
-        <NavLink to={`/animalFeed/editanimalFeed/${animalFeed.animalFeedName}`}>
+        <NavLink to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>

@@ -122,7 +122,7 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
     formData.append("enrichmentItemName", enrichmentItemName);
     formData.append("file", imageFile || "");
     await apiFormData.put(
-      "http://localhost:3000/api/enrichmentItem/updateenrichmentItem",
+      "http://localhost:3000/api/assetfacility/updateEnrichmentItem",
       formData
     );
     console.log(apiFormData.result);
@@ -137,18 +137,18 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
           encType="multipart/form-data"
         >
           <span className="self-center text-title-xl font-bold">
-            Edit EnrichmentItem: {curEnrichmentItem.enrichmentItemName}
+            Edit Enrichment Item: {curEnrichmentItem.enrichmentItemName}
           </span>
           <hr className="bg-stroke opacity-20" />
-          {/* EnrichmentItem Picture */}
+          {/* Enrichment Item Picture */}
           <Form.Field
             name="enrichmentItemImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <span className="font-medium">Current Image</span>
-            <img src={curEnrichmentItem.enrichmentItemImageUrl} alt="Current enrichmentItem image" />
+            <img src={curEnrichmentItem.enrichmentItemImageUrl} alt="Current enrichment item image" />
             <Form.Label className="font-medium">
-              Change EnrichmentItem Image
+              Change Enrichment Item Image
             </Form.Label>
             <Form.Control
               type="file"
@@ -170,11 +170,11 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
               placeholder="e.g., Puzzle Feeder, Chew Toy,..."
               value={enrichmentItemName}
               setValue={setEnrichmentItemName}
-              validateFunction={validateEnrichmentItemName} pattern={undefined}            />
+              validateFunction={validateEnrichmentItemName}      />
 
             <Form.Submit asChild>
               <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-                Submit Edit EnrichmentItem
+                Edit Enrichment Item
               </button>
             </Form.Submit>
             {formError && (

@@ -112,7 +112,7 @@ function AllEnrichmentItemDatatable() {
   const actionBodyTemplate = (enrichmentItem: EnrichmentItem) => {
     return (
       <React.Fragment>
-        <NavLink to={`/enrichmentItem/editenrichmentItem/${enrichmentItem.enrichmentItemName}`}>
+        <NavLink to={`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemName}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>

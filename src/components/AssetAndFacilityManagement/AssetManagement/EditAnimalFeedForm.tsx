@@ -134,7 +134,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
 
       try {
         const responseJson = await apiJson.put(
-          "http://localhost:3000/api/animalfeed/updateanimalfeed",
+          "http://localhost:3000/api/animalfeed/updateAnimalFeed",
           updatedAnimalFeed
         );
         // success
@@ -205,7 +205,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
           encType="multipart/form-data"
         >
           <span className="self-center text-title-xl font-bold">
-            Edit AnimalFeed: {curAnimalFeed.animalFeedName}
+            Edit Animal Feed: {curAnimalFeed.animalFeedName}
           </span>
           <hr className="bg-stroke opacity-20" />
           {/* Animal Feed Picture */}
@@ -242,7 +242,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
               placeholder="e.g., Carrots, Beef,..."
               value={animalFeedName}
               setValue={setAnimalFeedName}
-              validateFunction={validateAnimalFeedName} pattern={undefined}            />
+              validateFunction={validateAnimalFeedName}            />
 
             <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
               {/* Animal Feed Category */}
