@@ -9,7 +9,6 @@ interface PropsType {
   placeholder: string;
   label: string;
   value: string | number;
-  pattern: string | undefined;
   setValue: (value: any) => void; // React.SetStateAction<string> or React.SetStateAction<number>, I'm too tired man
   validateFunction: (props: ValidityState) => JSX.Element | null;
 }
@@ -22,7 +21,6 @@ function FormFieldInput<T>(props: PropsType) {
     required,
     placeholder,
     value,
-    pattern,
     setValue,
     validateFunction,
   } = props;
@@ -38,7 +36,6 @@ function FormFieldInput<T>(props: PropsType) {
         required={required}
         placeholder={placeholder}
         value={value}
-        pattern={pattern}
         onChange={(e) => setValue(e.target.value)}
         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
       />
