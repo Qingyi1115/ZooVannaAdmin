@@ -71,7 +71,7 @@ function UpdateProfile() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
       try {
-        const response = await apiJson.post(
+        const response = await apiJson.put(
           "http://localhost:3000/api/employee/updateEmployeeAccount",
           {
             employeeAddress: email, 
