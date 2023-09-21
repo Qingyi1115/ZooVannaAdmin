@@ -7,18 +7,26 @@ import FormFieldSelect from "../../../FormFieldSelect";
 import useApiJson from "../../../../hooks/useApiJson";
 import useApiFormData from "../../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
+import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 
 function CreateNewSensorForm() {
-  const apiFormData = useApiFormData();
+  const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
   const [sensorName, setSensorName] = useState<string>(""); // text input
-  const [sensorCategory, setSensorCategory] = useState<string | undefined>(
+  const [dateOfActivation, setDateOfActivation] = useState<string | Date | Date[] | null>(null);
+  const [dateOfLastMaintained, setDateOfLastMaintained] = useState<string | Date | Date[] | null>(null);
+  const [sensorType, setSensorType] = useState<string | undefined>(
     undefined
   ); // radio group
-  const [sensorImageUrl, setImageUrl] = useState<string | null>("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+
+  function clearForm() {
+    setSensorName("");
+    setDateOfActivation(null);
+    setDateOfLastMaintained(null);
+    setSensorType(undefined);
+  }
 
   // Field validations
   function validateName(props: ValidityState) {
@@ -34,7 +42,7 @@ function CreateNewSensorForm() {
   }
 
 
-  function validateSensorCategory(props: ValidityState) {
+  function validateSensorType(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
       if (props.valueMissing) {
@@ -49,49 +57,28 @@ function CreateNewSensorForm() {
     return null;
   }
 
-  function validateImage(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please upload an image
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
 
   // end field validations
-
-  function clearForm() {
-    setSensorName("");
-    setSensorCategory(undefined);
-    setImageFile(null);
-  }
-
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files && event.target.files[0];
-    setImageFile(file);
-  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
     console.log("Name:");
     console.log(sensorName);
-    console.log("Category:");
-    console.log(sensorCategory);
+    console.log("Type:");
+    console.log(sensorType);
 
-    const formData = new FormData();
-    formData.append("sensorName", sensorName);
-    formData.append("sensorCategory", sensorCategory?.toString() || "");
-    formData.append("file", imageFile || "");
+    const newSensor = {
+      sensorName: sensorName,
+      dateOfActivation: dateOfActivation,
+      dateOfLastMaintained: dateOfLastMaintained,
+      sensorType: sensorType
+    }
+    
     try {
-      const responseJson = await apiFormData.post(
-        "http://localhost:3000/api/assetfacility/createNewSensor",
-        formData
+      const responseJson = await apiJson.post(
+        "http://localhost:3000/api/assetfacility/addSensor",
+        newSensor
       );
       // success
       toastShadcn({
@@ -119,21 +106,6 @@ function CreateNewSensorForm() {
         Add Sensor
       </span>
       <hr className="bg-stroke opacity-20" />
-      {/* Sensor Picture */}
-      <Form.Field
-        name="sensorImage"
-        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-      >
-        <Form.Label className="font-medium">Sensor Image</Form.Label>
-        <Form.Control
-          type="file"
-          required
-          accept=".png, .jpg, .jpeg, .webp"
-          onChange={handleFileChange}
-          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
-        />
-        <Form.ValidityState>{validateImage}</Form.ValidityState>
-      </Form.Field>
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Sensor Name */}
         <FormFieldInput
@@ -146,26 +118,41 @@ function CreateNewSensorForm() {
           setValue={setSensorName}
           validateFunction={validateName}
         />
+        {/* Activation Date */}
+      
+        <div>Activation Date</div>
+        <Calendar value={dateOfActivation} onChange={(e: CalendarChangeEvent) => {
+          if (e && e.value !== undefined) {
+            setDateOfActivation(e.value);
+          }
+          }}/>
+      
+        {/* Last Maintained */}
+        <div>Last Maintained</div>
+        <Calendar value={dateOfLastMaintained} onChange={(e: CalendarChangeEvent) => {
+          if (e && e.value !== undefined) {
+            setDateOfLastMaintained(e.value);
+          }
+          }}/>
       </div>
-
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Sensor Category */}
+        {/* Sensor Type */}
         <FormFieldSelect
-          formFieldName="sensorCategory"
-          label="Sensor Category"
+          formFieldName="sensorType"
+          label="Sensor Type"
           required={true}
           placeholder="Select an sensor category..."
           valueLabelPair={[
-            ["TEMPERATURE", "TEMPERATURE"],
-            ["LIGHT", "LIGHT"],
-            ["HUMIDITY", "HUMIDITY"],
-            ["SOUND", "SOUND"],
-            ["MOTION", "MOTION"],
-            ["CAMERA", "CAMERA"]
+            ["TEMPERATURE", "Temperature"],
+            ["LIGHT", "Light"],
+            ["HUMIDITY", "Humidity"],
+            ["SOUND", "Sound"],
+            ["MOTION", "Motion"],
+            ["CAMERA", "Camera"]
           ]}
-          value={sensorCategory}
-          setValue={setSensorCategory}
-          validateFunction={validateSensorCategory}
+          value={sensorType}
+          setValue={setSensorType}
+          validateFunction={validateSensorType}
         />
       </div>
 

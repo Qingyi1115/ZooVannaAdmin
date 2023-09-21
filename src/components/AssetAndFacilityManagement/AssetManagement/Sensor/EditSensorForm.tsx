@@ -226,12 +226,12 @@ function EditSensorForm(props: EditSensorFormProps) {
                 required={true}
                 placeholder="Select an sensor category..."
                 valueLabelPair={[
-                  ["TEMPERATURE", "TEMPERATURE"],
-                  ["LIGHT", "LIGHT"],
-                  ["HUMIDITY", "HUMIDITY"],
-                  ["SOUND", "SOUND"],
-                  ["MOTION", "MOTION"],
-                  ["CAMERA", "CAMERA"]
+                  ["TEMPERATURE", "Temperature"],
+                  ["LIGHT", "Light"],
+                  ["HUMIDITY", "Humidity"],
+                  ["SOUND", "Sound"],
+                  ["MOTION", "Motion"],
+                  ["CAMERA", "Camera"]
                 ]}
                 value={sensorType}
                 setValue={setSensorType}

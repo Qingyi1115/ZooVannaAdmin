@@ -21,7 +21,6 @@ function EditEmployeePage() {
     employeeDoorAccessCode: "",
     employeePasswordhash: "",
     employeeSalt: "",
-    employeeProfileUrl:"",
     isAccountManager: false,
     employeeProfileUrl:""
   };

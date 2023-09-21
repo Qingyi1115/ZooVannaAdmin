@@ -14,11 +14,12 @@ import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 function AllfacilityDatatable() {
   const apiJson = useApiJson();
 
-  let emptyfacility: facility = {
+  let emptyFacility: facility = {
     facilityId: -1,
     facilityName: "",
     xCoordinate: 0,
@@ -27,13 +28,14 @@ function AllfacilityDatatable() {
     facilityDetailJson: undefined
   };
 
-  const [facilityList, setfacilityList] = useState<facility[]>([]);
-  const [selectedfacility, setSelectedfacility] = useState<facility>(emptyfacility);
-  const [deletefacilityDialog, setDeletefacilityDialog] =
+  const [facilityList, setFacilityList] = useState<facility[]>([]);
+  const [selectedFacility, setSelectedFacility] = useState<facility>(emptyFacility);
+  const [deletefacilityDialog, setDeleteFacilityDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<facility[]>>(null);
+  const toastShadcn = useToast().toast;
 
   useEffect(() => {
     apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", {includes:[]});
@@ -51,38 +53,56 @@ function AllfacilityDatatable() {
 
 
   const confirmDeletefacility = (facility: facility) => {
-    setSelectedfacility(facility);
-    setDeletefacilityDialog(true);
+    setSelectedFacility(facility);
+    setDeleteFacilityDialog(true);
   };
 
-  const hideDeletefacilityDialog = () => {
-    setDeletefacilityDialog(false);
+  const hideDeleteFacilityDialog = () => {
+    setDeleteFacilityDialog(false);
   };
 
   // delete facility stuff
-  const deletefacility = () => {
+  const deleteFacility = async () => {
     let _facility = facilityList.filter(
-      (val) => val.facilityId !== selectedfacility?.facilityId
+      (val) => val.facilityId !== selectedFacility?.facilityId
     );
 
-    setfacilityList(_facility);
-    setDeletefacilityDialog(false);
-    setSelectedfacility(emptyfacility);
-    toast.current?.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "facility Deleted",
-      life: 3000,
-    });
+    const deleteFacility = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/assetFacility/deleteFacility/" +
+            selectedFacility.facilityId
+        );
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully deleted facility: " + selectedFacility.facilityName,
+        });
+        setFacilityList(_facility);
+        setDeleteFacilityDialog(false);
+        setSelectedFacility(emptyFacility);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting facility: \n" + apiJson.error,
+        });
+      }
+    };
+    deleteFacility();
   };
 
-  const deletefacilityDialogFooter = (
+  const deleteFacilityDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeletefacilityDialog}>
+      <Button onClick={hideDeleteFacilityDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deletefacility}>
+      <Button variant={"destructive"} onClick={deleteFacility}>
         <HiCheck />
         Yes
       </Button>
@@ -138,10 +158,10 @@ function AllfacilityDatatable() {
           <DataTable
             ref={dt}
             value={facilityList}
-            selection={selectedfacility}
+            selection={selectedFacility}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedfacility(e.value);
+                setSelectedFacility(e.value);
               }
             }}
             dataKey="facilityId"
@@ -193,18 +213,18 @@ function AllfacilityDatatable() {
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deletefacilityDialogFooter}
-        onHide={hideDeletefacilityDialog}
+        footer={deleteFacilityDialogFooter}
+        onHide={hideDeleteFacilityDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedfacility && (
+          {selectedFacility && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedfacility.facilityName}</b>?
+              <b>{selectedFacility.facilityName}</b>?
             </span>
           )}
         </div>

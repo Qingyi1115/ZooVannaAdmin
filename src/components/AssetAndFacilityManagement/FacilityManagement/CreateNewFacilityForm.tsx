@@ -46,7 +46,7 @@ function CreateNewFacilityForm() {
     formData.append("file", imageFile || "");
     try {
       const responseJson = await apiFormData.post(
-        "http://localhost:3000/api/assetfacility/createNewFacility",
+        "http://localhost:3000/api/assetFacility/createFacility",
         formData
       );
       // success

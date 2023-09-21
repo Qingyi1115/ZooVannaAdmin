@@ -15,9 +15,11 @@ import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { Country } from "../../enums/Country";
+import { useToast } from "@/components/ui/use-toast";
 
 function AllCustomerDatatable() {
   const apiJson = useApiJson();
+  const toastShadcn = useToast().toast;
 
   let emptyCustomer: Customer = {
     customerId: -1,
@@ -70,7 +72,7 @@ function AllCustomerDatatable() {
   // };
 
   const navigateEditProduct = (customer: Customer) => {};
-
+  
   const confirmDeleteCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
     setDeleteCustomerDialog(true);
@@ -81,20 +83,40 @@ function AllCustomerDatatable() {
   };
 
   // delete customer stuff
-  const deleteCustomer = () => {
+  const deleteCustomer = async () => {
     let _customer = customerList.filter(
       (val) => val.customerId !== selectedCustomer?.customerId
     );
 
-    setCustomerList(_customer);
-    setDeleteCustomerDialog(false);
-    setSelectedCustomer(emptyCustomer);
-    toast.current?.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "Customer Deleted",
-      life: 3000,
-    });
+    const selectedCustomerName = selectedCustomer.firstName + selectedCustomer.lastName;
+
+    const deleteCustomer = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/customer/deleteCustomer/" +
+            selectedCustomer.email
+        );
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully deleted customer: " + selectedCustomerName,
+        });
+        setCustomerList(_customer);
+        setDeleteCustomerDialog(false);
+        setSelectedCustomer(emptyCustomer);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting customer: \n" + apiJson.error,
+        });
+      }
+    };
+    deleteCustomer();
   };
 
   const deleteCustomerDialogFooter = (

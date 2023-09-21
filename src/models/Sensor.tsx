@@ -1,10 +1,10 @@
 import { SensorType } from "src/enums/SensorType";
 
 interface Sensor {
-sensorId: number,
-dateOfActivation: Date,
-sensorName: string,
-dateOfLastMaintained: Date,
+sensorId: number;
+sensorName: string;
+dateOfActivation: Date | null;
+dateOfLastMaintained: Date | null;
 sensorType: SensorType
 }
 export default Sensor;

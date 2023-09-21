@@ -15,6 +15,7 @@ import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
+import { useToast } from "@/components/ui/use-toast";
 
 function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();
@@ -33,6 +34,8 @@ function AllAnimalFeedDatatable() {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<AnimalFeed[]>>(null);
+  const toastShadcn = useToast().toast;
+
 
   useEffect(() => {
     const fetchAnimalFeed = async () => {
@@ -80,20 +83,38 @@ function AllAnimalFeedDatatable() {
   };
 
   // delete animalFeed stuff
-  const deleteAnimalFeed = () => {
+  const deleteAnimalFeed = async () => {
     let _animalFeed = animalFeedList.filter(
       (val) => val.animalFeedId !== selectedAnimalFeed?.animalFeedId
     );
 
-    setAnimalFeedList(_animalFeed);
-    setDeleteAnimalFeedDialog(false);
-    setSelectedAnimalFeed(emptyAnimalFeed);
-    toast.current?.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "AnimalFeed Deleted",
-      life: 3000,
-    });
+    const deleteAnimalFeed = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/assetFacility/deleteAnimalFeed/" +
+            selectedAnimalFeed.animalFeedName
+        );
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully deleted animal feed: " + selectedAnimalFeed.animalFeedName,
+        });
+        setAnimalFeedList(_animalFeed);
+        setDeleteAnimalFeedDialog(false);
+        setSelectedAnimalFeed(emptyAnimalFeed);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting animalFeed: \n" + apiJson.error,
+        });
+      }
+    };
+    deleteAnimalFeed();
   };
 
   const deleteAnimalFeedDialogFooter = (

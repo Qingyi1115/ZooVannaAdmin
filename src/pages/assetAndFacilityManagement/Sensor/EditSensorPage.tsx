@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import EditSensorForm from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/EditSensorForm";
 import useApiJson from "../../../hooks/useApiJson";
 import Sensor from "../../../models/Sensor";
+import { SensorType } from "../../../enums/SensorType";
 
 function EditSensorPage() {
   const apiJson = useApiJson();
@@ -10,10 +11,9 @@ function EditSensorPage() {
   let emptySensor: Sensor = {
     sensorId: -1,
     sensorName: "",
-    sensorDetail: "",
-    sensorDetailJson: "",
-    xCoordinate: 0,
-    yCoordinate: 0
+    dateOfActivation: new Date(),
+    dateOfLastMaintained: new Date(),
+    sensorType: SensorType.CAMERA
   };
 
   const { sensorId } = useParams<{ sensorId: string }>();
@@ -31,7 +31,9 @@ function EditSensorPage() {
   return (
     <div className="p-10">
       {curSensor && curSensor.sensorId != -1 && (
-        <EditSensorForm curSensor={curSensor} />
+        <EditSensorForm curSensor={curSensor} refreshSeed={0} setRefreshSeed={function (value: React.SetStateAction<number>): void {
+          throw new Error("Function not implemented.");
+        } } />
       )}
     </div>
   );

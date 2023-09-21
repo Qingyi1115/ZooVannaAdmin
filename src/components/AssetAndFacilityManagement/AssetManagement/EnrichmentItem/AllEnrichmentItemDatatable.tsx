@@ -14,6 +14,7 @@ import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 function AllEnrichmentItemDatatable() {
   const apiJson = useApiJson();
@@ -31,6 +32,7 @@ function AllEnrichmentItemDatatable() {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<EnrichmentItem[]>>(null);
+  const toastShadcn = useToast().toast;
 
   useEffect(() => {
     const fetchEnrichmentItem = async () => {
@@ -79,20 +81,38 @@ function AllEnrichmentItemDatatable() {
   };
 
   // delete enrichmentItem stuff
-  const deleteEnrichmentItem = () => {
+  const deleteEnrichmentItem = async () => {
     let _enrichmentItem = enrichmentItemList.filter(
       (val) => val.enrichmentItemId !== selectedEnrichmentItem?.enrichmentItemId
     );
 
-    setEnrichmentItemList(_enrichmentItem);
-    setDeleteEnrichmentItemDialog(false);
-    setSelectedEnrichmentItem(emptyEnrichmentItem);
-    toast.current?.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "EnrichmentItem Deleted",
-      life: 3000,
-    });
+    const deleteEnrichmentItem = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/assetFacility/deleteEnrichmentItem/" +
+            selectedEnrichmentItem.enrichmentItemName
+        );
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully deleted enrichment item: " + selectedEnrichmentItem.enrichmentItemName,
+        });
+        setEnrichmentItemList(_enrichmentItem);
+        setDeleteEnrichmentItemDialog(false);
+        setSelectedEnrichmentItem(emptyEnrichmentItem);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting enrichmentItem: \n" + apiJson.error,
+        });
+      }
+    };
+    deleteEnrichmentItem();
   };
 
   const deleteEnrichmentItemDialogFooter = (
