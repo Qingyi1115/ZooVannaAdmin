@@ -35,6 +35,7 @@ import EditEmployeePage from "./pages/employeeAccountManagement/EditEmployeePage
 import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
 import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
 import CreateNewEnclosureRequirementsPage from "./pages/speciesManagement/CreateNewEnclosureRequirementsPage";
+import EditEnclosureRequirementsPage from "./pages/speciesManagement/EditEnclosureRequirementsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -90,6 +91,16 @@ function App() {
                   element={
                     user ? (
                       <CreateNewEnclosureRequirementsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/species/editenclosurerequirements/:speciesCode"
+                  element={
+                    user ? (
+                      <EditEnclosureRequirementsPage />
                     ) : (
                       <Navigate to="/login" />
                     )
