@@ -16,6 +16,8 @@ import { Slider } from "@/components/ui/slider";
 
 import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
 import { TwoThumbSliderWithNumber } from "../TwoThumbSliderWithNumber";
+import { Button } from "@/components/ui/button";
+import { NavLink } from "react-router-dom";
 
 interface SpeciesEnclosureRequirementsProps {
   curSpecies: Species;
@@ -53,7 +55,7 @@ function SpeciesEnclosureRequirements(
   const { curSpecies } = props;
   const apiJson = useApiJson();
   const [curEnclosureNeeds, setCurEnclosureNeeds] =
-    useState<SpeciesEnclosureNeed>(emptyEnclosureNeeds);
+    useState<SpeciesEnclosureNeed | null>(null);
 
   useEffect(() => {
     const fetchSpecies = async () => {
@@ -79,8 +81,9 @@ function SpeciesEnclosureRequirements(
 
   return (
     <div>
-      <Table>
-        {/* <TableHeader className=" bg-whiten">
+      {curEnclosureNeeds ? (
+        <Table>
+          {/* <TableHeader className=" bg-whiten">
           <TableRow>
             <TableHead className="w-1/3 font-bold" colSpan={2}>
               Attribute
@@ -88,226 +91,240 @@ function SpeciesEnclosureRequirements(
             <TableHead>Value</TableHead>
           </TableRow>
         </TableHeader> */}
-        <TableBody>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Small Exhibit Height &#40;in metres&#41;
-            </TableCell>
-            <TableCell>
-              {emptyEnclosureNeeds.smallExhibitHeightRequired
-                ? curEnclosureNeeds.smallExhibitHeightRequired
-                : "Not applicable. This species requires a large habitat"}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Minimum Required <span className="text-amber-600">Land Area</span>{" "}
-              (m<sup>2</sup>)
-            </TableCell>
-            <TableCell>{curEnclosureNeeds.minLandAreaRequired}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Minimum Required <span className="text-blue-600">Water Area</span>{" "}
-              (m<sup>2</sup>)
-            </TableCell>
-            <TableCell>{curEnclosureNeeds.minLandAreaRequired}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Acceptable Temperature Range (&deg;C)
-            </TableCell>
-            <TableCell>
-              <span className="font-bold">
-                {curEnclosureNeeds.acceptableTempMin}
-              </span>{" "}
-              &deg;C —{" "}
-              <span className="font-bold">
-                {curEnclosureNeeds.acceptableTempMax}
-              </span>{" "}
-              &deg;C
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Acceptable Humidity Range (g.m<sup>-3</sup>)
-            </TableCell>
-            <TableCell>
-              <span className="font-bold">
-                {curEnclosureNeeds.acceptableHumidityMin}
-              </span>{" "}
-              g.m<sup>-3</sup> —{" "}
-              <span className="font-bold">
-                {curEnclosureNeeds.acceptableHumidityMax}
-              </span>{" "}
-              g.m
-              <sup>-3</sup>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Receommended Stand-off Barrier Distance (m)
-            </TableCell>
-            <TableCell>
-              {curEnclosureNeeds.recommendedStandOffBarrierDistMetres}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Recommended Plantation Coverage (%)
-            </TableCell>
-            <TableCell>
-              <TwoThumbSliderWithNumber
-                value={[
-                  curEnclosureNeeds.plantationCoveragePercentMin,
-                  curEnclosureNeeds.plantationCoveragePercentMax,
-                ]}
-                min={0}
-                max={100}
-                minStepsBetweenThumbs={1}
-              />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/5 font-bold" rowSpan={7}>
-              Recommended Terrain Distribution (%)
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/6 font-bold">
-              <div className="flex items-center gap-2">
-                <img
-                  src="../../../../src/assets/terrain/long-grass.jpg"
-                  className="aspect-square h-6 w-6 rounded-full"
+          <TableBody>
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Small Exhibit Height &#40;in metres&#41;
+              </TableCell>
+              <TableCell>
+                {emptyEnclosureNeeds.smallExhibitHeightRequired &&
+                emptyEnclosureNeeds.smallExhibitHeightRequired > 0
+                  ? curEnclosureNeeds.smallExhibitHeightRequired
+                  : "Not applicable. This species requires a large habitat"}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Minimum Required{" "}
+                <span className="text-amber-600">Land Area</span> (m<sup>2</sup>
+                )
+              </TableCell>
+              <TableCell>{curEnclosureNeeds.minLandAreaRequired}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Minimum Required{" "}
+                <span className="text-blue-600">Water Area</span> (m<sup>2</sup>
+                )
+              </TableCell>
+              <TableCell>{curEnclosureNeeds.minLandAreaRequired}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Acceptable Temperature Range (&deg;C)
+              </TableCell>
+              <TableCell>
+                <span className="font-bold">
+                  {curEnclosureNeeds.acceptableTempMin}
+                </span>{" "}
+                &deg;C —{" "}
+                <span className="font-bold">
+                  {curEnclosureNeeds.acceptableTempMax}
+                </span>{" "}
+                &deg;C
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Acceptable Humidity Range (g.m<sup>-3</sup>)
+              </TableCell>
+              <TableCell>
+                <span className="font-bold">
+                  {curEnclosureNeeds.acceptableHumidityMin}
+                </span>{" "}
+                g.m<sup>-3</sup> —{" "}
+                <span className="font-bold">
+                  {curEnclosureNeeds.acceptableHumidityMax}
+                </span>{" "}
+                g.m
+                <sup>-3</sup>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Receommended Stand-off Barrier Distance (m)
+              </TableCell>
+              <TableCell>
+                {curEnclosureNeeds.recommendedStandOffBarrierDistMetres}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Recommended Plantation Coverage (%)
+              </TableCell>
+              <TableCell>
+                <TwoThumbSliderWithNumber
+                  value={[
+                    curEnclosureNeeds.plantationCoveragePercentMin,
+                    curEnclosureNeeds.plantationCoveragePercentMax,
+                  ]}
+                  min={0}
+                  max={100}
+                  minStepsBetweenThumbs={1}
                 />
-                <span>Long Grass</span>
-              </div>
-            </TableCell>
-            <TableCell>
-              <TwoThumbSliderWithNumber
-                value={[
-                  curEnclosureNeeds.longGrassPercentMin,
-                  curEnclosureNeeds.longGrassPercentMax,
-                ]}
-                min={0}
-                max={100}
-                minStepsBetweenThumbs={1}
-              />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/6 font-bold">
-              <div className="flex items-center gap-2">
-                <img
-                  src="../../../../src/assets/terrain/short-grass.jpg"
-                  className="aspect-square h-6 w-6 rounded-full"
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/5 font-bold" rowSpan={7}>
+                Recommended Terrain Distribution (%)
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/6 font-bold">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="../../../../src/assets/terrain/long-grass.jpg"
+                    className="aspect-square h-6 w-6 rounded-full"
+                  />
+                  <span>Long Grass</span>
+                </div>
+              </TableCell>
+              <TableCell>
+                <TwoThumbSliderWithNumber
+                  value={[
+                    curEnclosureNeeds.longGrassPercentMin,
+                    curEnclosureNeeds.longGrassPercentMax,
+                  ]}
+                  min={0}
+                  max={100}
+                  minStepsBetweenThumbs={1}
                 />
-                <span>Short Grass</span>
-              </div>
-            </TableCell>
-            <TableCell>
-              <TwoThumbSliderWithNumber
-                value={[
-                  curEnclosureNeeds.shortGrassPercentMin,
-                  curEnclosureNeeds.shortGrassPercentMax,
-                ]}
-                min={0}
-                max={100}
-                minStepsBetweenThumbs={1}
-              />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/6 font-bold">
-              <div className="flex items-center gap-2">
-                <img
-                  src="../../../../src/assets/terrain/rock.jpg"
-                  className="aspect-square h-6 w-6 rounded-full"
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/6 font-bold">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="../../../../src/assets/terrain/short-grass.jpg"
+                    className="aspect-square h-6 w-6 rounded-full"
+                  />
+                  <span>Short Grass</span>
+                </div>
+              </TableCell>
+              <TableCell>
+                <TwoThumbSliderWithNumber
+                  value={[
+                    curEnclosureNeeds.shortGrassPercentMin,
+                    curEnclosureNeeds.shortGrassPercentMax,
+                  ]}
+                  min={0}
+                  max={100}
+                  minStepsBetweenThumbs={1}
                 />
-                <span>Rock</span>
-              </div>
-            </TableCell>
-            <TableCell>
-              <TwoThumbSliderWithNumber
-                value={[
-                  curEnclosureNeeds.rockPercentMin,
-                  curEnclosureNeeds.rockPercentMax,
-                ]}
-                min={0}
-                max={100}
-                minStepsBetweenThumbs={1}
-              />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/6 font-bold">
-              <div className="flex items-center gap-2">
-                <img
-                  src="../../../../src/assets/terrain/sand.jpg"
-                  className="aspect-square h-6 w-6 rounded-full"
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/6 font-bold">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="../../../../src/assets/terrain/rock.jpg"
+                    className="aspect-square h-6 w-6 rounded-full"
+                  />
+                  <span>Rock</span>
+                </div>
+              </TableCell>
+              <TableCell>
+                <TwoThumbSliderWithNumber
+                  value={[
+                    curEnclosureNeeds.rockPercentMin,
+                    curEnclosureNeeds.rockPercentMax,
+                  ]}
+                  min={0}
+                  max={100}
+                  minStepsBetweenThumbs={1}
                 />
-                <span>Sand</span>
-              </div>
-            </TableCell>
-            <TableCell>
-              <TwoThumbSliderWithNumber
-                value={[
-                  curEnclosureNeeds.sandPercentMin,
-                  curEnclosureNeeds.sandPercentMax,
-                ]}
-                min={0}
-                max={100}
-                minStepsBetweenThumbs={1}
-              />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/6 font-bold">
-              <div className="flex items-center gap-2">
-                <img
-                  src="../../../../src/assets/terrain/snow.jpg"
-                  className="aspect-square h-6 w-6 rounded-full"
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/6 font-bold">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="../../../../src/assets/terrain/sand.jpg"
+                    className="aspect-square h-6 w-6 rounded-full"
+                  />
+                  <span>Sand</span>
+                </div>
+              </TableCell>
+              <TableCell>
+                <TwoThumbSliderWithNumber
+                  value={[
+                    curEnclosureNeeds.sandPercentMin,
+                    curEnclosureNeeds.sandPercentMax,
+                  ]}
+                  min={0}
+                  max={100}
+                  minStepsBetweenThumbs={1}
                 />
-                <span>Snow</span>
-              </div>
-            </TableCell>
-            <TableCell>
-              <TwoThumbSliderWithNumber
-                value={[
-                  curEnclosureNeeds.snowPercentMin,
-                  curEnclosureNeeds.snowPercentMax,
-                ]}
-                min={0}
-                max={100}
-                minStepsBetweenThumbs={1}
-                className="bg-blue-300"
-              />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/6 font-bold">
-              <div className="flex items-center gap-2">
-                <img
-                  src="../../../../src/assets/terrain/soil.jpg"
-                  className="aspect-square h-6 w-6 rounded-full"
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/6 font-bold">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="../../../../src/assets/terrain/snow.jpg"
+                    className="aspect-square h-6 w-6 rounded-full"
+                  />
+                  <span>Snow</span>
+                </div>
+              </TableCell>
+              <TableCell>
+                <TwoThumbSliderWithNumber
+                  value={[
+                    curEnclosureNeeds.snowPercentMin,
+                    curEnclosureNeeds.snowPercentMax,
+                  ]}
+                  min={0}
+                  max={100}
+                  minStepsBetweenThumbs={1}
                 />
-                <span>Soil</span>
-              </div>
-            </TableCell>
-            <TableCell>
-              <TwoThumbSliderWithNumber
-                value={[
-                  curEnclosureNeeds.soilPercenMin,
-                  curEnclosureNeeds.soilPercenMax,
-                ]}
-                min={0}
-                max={100}
-                minStepsBetweenThumbs={1}
-              />
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="w-1/6 font-bold">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="../../../../src/assets/terrain/soil.jpg"
+                    className="aspect-square h-6 w-6 rounded-full"
+                  />
+                  <span>Soil</span>
+                </div>
+              </TableCell>
+              <TableCell>
+                <TwoThumbSliderWithNumber
+                  value={[
+                    curEnclosureNeeds.soilPercenMin,
+                    curEnclosureNeeds.soilPercenMax,
+                  ]}
+                  min={0}
+                  max={100}
+                  minStepsBetweenThumbs={1}
+                />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      ) : (
+        <div className="flex flex-col items-center gap-2">
+          <span>
+            No enclosure requirements information found for current species
+          </span>
+          <NavLink
+            to={`/species/createenclosurerequirements/${curSpecies.speciesCode}`}
+          >
+            <Button className="mb-1 mr-1">Create Enclosure Requirements</Button>
+          </NavLink>
+        </div>
+      )}
     </div>
   );
 }

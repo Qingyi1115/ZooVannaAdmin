@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SpeciesBasicInfoDetails from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesBasicInfoDetails";
 import SpeciesEduContentDetails from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEduContentDetails";
 import SpeciesEnclosureRequirements from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEnclosureRequirements";
+import SpeciesDietaryRequirements from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesDietaryRequirements";
 
 function ViewSpeciesDetailsPage() {
   const apiJson = useApiJson();
@@ -79,7 +80,7 @@ function ViewSpeciesDetailsPage() {
             <img
               src={"http://localhost:3000/" + curSpecies.imageUrl}
               alt="Current species image"
-              className="my-4 aspect-square w-1/5 self-center rounded-full border shadow-4"
+              className="my-4 aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
             />
             <Tabs defaultValue="basicinfo" className="w-full">
               <TabsList className="no-scrollbar w-full justify-around overflow-x-auto text-xs xl:text-base">
@@ -102,7 +103,7 @@ function ViewSpeciesDetailsPage() {
                 <SpeciesEduContentDetails curSpecies={curSpecies} />
               </TabsContent>
               <TabsContent value="dietneed">
-                Change your password here.
+                <SpeciesDietaryRequirements curSpecies={curSpecies} />
               </TabsContent>
               <TabsContent value="enclosureneed">
                 <SpeciesEnclosureRequirements curSpecies={curSpecies} />

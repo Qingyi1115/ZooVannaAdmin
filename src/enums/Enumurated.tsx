@@ -6,9 +6,9 @@ enum KeeperType {
 enum PlannerType {
   CURATOR = "CURATOR",
   SALES = "SALES",
-  MARKETING="MARKETING",
-  OPERATIONS_MANAGER='OPERATIONS_MANAGER',
-  CUSTOMER_OPERATIONS='CUSTOMER_OPERATIONS'
+  MARKETING = "MARKETING",
+  OPERATIONS_MANAGER = "OPERATIONS_MANAGER",
+  CUSTOMER_OPERATIONS = "CUSTOMER_OPERATIONS",
 }
 
 enum GeneralStaffType {
@@ -89,13 +89,31 @@ enum GroupSexualDynamic {
 }
 
 enum PresentationContainer {
-  TEST = "TEST",
+  STAINLESS_STEEL_BOWL = "Stainless Steel Bowls",
+  PLASTIC_DISH = "Plastic Feeding Dishes",
+  SILICONE_DISH = "Silicone Dishes",
+  MESH_BAG = "Mesh Bags",
+  FREEZE_RESISTANT_CONTAINER = "Freeze-Resistant Containers",
+  AUTOMATIC_FEEDER = "Automatic Feeders",
+  HANGING_FEEDERS = "Hanging Feeder",
+  NET = "Net",
 }
 enum PresentationMethod {
-  TEST = "TEST",
+  CHOPPED = "CHOPPED",
+  FROEZEN = "FROEZEN",
+  MASHED = "MASHED",
+  DICED = "DICED",
+  WHOLE = "WHOLE",
+  BLENDED = "BLENDED",
+  PUZZLE = "PUZZLE",
 }
 enum PresentationLocation {
-  TEST = "TEST",
+  SCATTER = "SCATTER",
+  DANGLING = "DANGLING",
+  ROOF = "ROOF",
+  BURIED = "BURIED",
+  IMPALED = "IMPALED",
+  IN_CONTAINER = "IN_CONTAINER",
 }
 enum AnimalGrowthState {
   TEST = "TEST",
@@ -129,13 +147,15 @@ enum AnimalFeedCategory {
   PELLETS = "PELLETS",
   NECTAR = "NECTAR",
   SUPPLEMENTS = "SUPPLEMENTS",
-  OTHERS = "OTHERS"
+  OTHERS = "OTHERS",
 }
 
 enum AnimalGrowthStage {
-  CAPTIVE_BRED = "CAPTIVE_BRED",
-  WILD_CAPTURED = "WILD_CAPTURED",
-  TRANSFERRED_IN = "TRANSFERRED_IN",
+  INFANT = "INFANT",
+  JUVENILE = "JUVENILE",
+  ADOLESCENT = "ADOLESCENT",
+  ADULT = "ADULT",
+  ELDER = "ELDER",
 }
 
 enum AnimalStatusType {
@@ -173,40 +193,40 @@ enum ListingType {
   LOCAL_STUDENT_ONETIME = "LOCAL_STUDENT_ONETIME",
   LOCAL_SENIOR_ONETIME = "LOCAL_SENIOR_ONETIME",
   FOREIGNER_ONETIME = "FOREIGNER_ONETIME",
-  ANNUALPASS = "ANNUALPASS"
+  ANNUALPASS = "ANNUALPASS",
 }
 
 enum ListingStatus {
   ACTIVE = "ACTIVE",
-  DISCONTINUED = "DISCONTINUED"
+  DISCONTINUED = "DISCONTINUED",
 }
 
 enum PaymentStatus {
   SUCCESSFUL = "SUCCESSFUL",
-  FAILED = "FAILED"
+  FAILED = "FAILED",
 }
 
 enum PaymentType {
   VISA = "VISA",
   MASTERCARD = "MASTERCARD",
-  PAYNOW = "PAYNOW"
+  PAYNOW = "PAYNOW",
 }
 
 enum OrderStatus {
   ACTIVE = "ACTIVE",
-  COMPLETED = "COMPLETED"
+  COMPLETED = "COMPLETED",
 }
 
 enum EnclosureStatus {
   ACTIVE = "ACTIVE",
   CLOSED = "CLOSED",
-  CONSTRUCTING = "CONSTRUCTING"
+  CONSTRUCTING = "CONSTRUCTING",
 }
 
-enum HubStatus{
-  PENDING="PENDING",
-  DISCONNECTED="DISCONNECTED",
-  CONNECTED="CONNECTED"
+enum HubStatus {
+  PENDING = "PENDING",
+  DISCONNECTED = "DISCONNECTED",
+  CONNECTED = "CONNECTED",
 }
 
 export {
@@ -238,5 +258,5 @@ export {
   PaymentType,
   OrderStatus,
   EnclosureStatus,
-  HubStatus
+  HubStatus,
 };

@@ -34,6 +34,7 @@ import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustom
 import EditEmployeePage from "./pages/employeeAccountManagement/EditEmployeePage";
 import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
 import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
+import CreateNewEnclosureRequirementsPage from "./pages/speciesManagement/CreateNewEnclosureRequirementsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -82,6 +83,16 @@ function App() {
                   path="/species/editspecies/:speciesCode"
                   element={
                     user ? <EditSpeciesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/species/createenclosurerequirements/:speciesCode"
+                  element={
+                    user ? (
+                      <CreateNewEnclosureRequirementsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 {/* Asset and Facility Management */}
@@ -155,13 +166,13 @@ function App() {
                 <Route
                   path="/employeeAccount/viewEmployees"
                   element={
-                    user? <ViewAllEmployeesPage /> : <Navigate to="/login"/>
+                    user ? <ViewAllEmployeesPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
                   path="/employeeAccount/createNewEmployee"
                   element={
-                    user? <CreateNewEmployeePage/> : <Navigate to="/login"/>
+                    user ? <CreateNewEmployeePage /> : <Navigate to="/login" />
                   }
                 />
 
