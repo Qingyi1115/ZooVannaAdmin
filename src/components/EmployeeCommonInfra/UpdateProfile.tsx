@@ -120,7 +120,6 @@ function UpdateProfile() {
           value={email}
           setValue={setEmail}
           validateFunction={()=>null}
-          pattern=""
         />
       </div>
       
@@ -135,7 +134,6 @@ function UpdateProfile() {
           value={address}
           setValue={setAddress}
           validateFunction={()=>null}
-          pattern=""
         />
       </div>
       
@@ -150,7 +148,6 @@ function UpdateProfile() {
           value={pn}
           setValue={setPn}
           validateFunction={()=>null}
-          pattern=""
         />
       </div>
       
@@ -165,7 +162,6 @@ function UpdateProfile() {
           value={edu}
           setValue={setEdu}
           validateFunction={()=>null}
-          pattern=""
         />
       </div>
 
