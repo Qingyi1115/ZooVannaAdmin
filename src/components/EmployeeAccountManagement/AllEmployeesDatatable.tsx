@@ -63,17 +63,14 @@ function AllEmployeesDatatable() {
     setEmployeeResignationDialog(false);
   }
 
-  const resignEmployee = async () => {
-    let newEmployeeList = employeeList.filter(
-      (val) => val.employeeId !== selectedEmployee?.employeeId
-    );
-    
+  const resignEmployee = async () => { 
     const selectedEmployeeName = selectedEmployee.employeeName;
+    console.log(selectedEmployee);
 
     const resignEmployee = async() => {
       try {
-        const responseJson = await apiJson.del(
-          `http://localhost:3000/api/employee/disableEmployee/${selectedEmployee.employeeId}`);
+        const responseJson = await apiJson.put(
+          `http://localhost:3000/api/employee/disableEmployee/${selectedEmployee.employeeId}`, selectedEmployee);
 
         toastShadcn({
           // variant: "destructive",
@@ -81,9 +78,9 @@ function AllEmployeesDatatable() {
           description:
             "Successfully disabled employee: " + selectedEmployeeName,
         });
-        setEmployeeList(newEmployeeList);
-        setEmployeeResignationDialog(false);
         setSelectedEmployee(employee);
+        setEmployeeResignationDialog(false);
+        window.location.reload();
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -139,14 +136,15 @@ function AllEmployeesDatatable() {
     console.log(employee.dateOfResignation);
     return (
       <React.Fragment>
-        <NavLink to={`/employee/viewEmployeeDetails/${employee.employeeId}`}>
+        <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
             <span>View Details</span>
           </Button>
         </NavLink>
         {employee.dateOfResignation ?
-        <span>Disabled</span>:
+        <span>Disabled</span>
+        :
         <Button
         variant={"destructive"}
         className="mr-2"

@@ -143,6 +143,7 @@ function CreateNewAnimalFeedForm() {
           label="Animal Feed Name"
           required={true}
           placeholder="e.g., Carrots"
+          pattern={undefined}
           value={animalFeedName}
           setValue={setAnimalFeedName}
           validateFunction={validateName}

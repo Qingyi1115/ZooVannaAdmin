@@ -19,6 +19,9 @@ function EditEmployeePage() {
     employeeEducation: "",
     dateOfResignation: null,
     employeeDoorAccessCode: "",
+    employeePasswordhash: "",
+    employeeSalt: "",
+    employeeProfileUrl:"",
     isAccountManager: false,
     employeeProfileUrl:""
   };
