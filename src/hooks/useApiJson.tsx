@@ -39,7 +39,8 @@ function useApiJson<TData = any>() {
   const request = async (
     url: string,
     method: string = "GET",
-    body: any = null
+    body: any = null,
+    datHandler:Function
   ) => {
     setLoading(true);
     setError(null);
@@ -63,8 +64,9 @@ function useApiJson<TData = any>() {
         throw new Error(errorString);
       }
 
-      // const json = await response.json();
-      return await response.json();
+      const json = datHandler(await response.json());
+      setResult(json);
+      return json;
     } catch (err: any) {
       setError(err.message || "Unexpected Error!");
       throw err;
@@ -73,20 +75,20 @@ function useApiJson<TData = any>() {
     }
   };
 
-  const get = async (url: string) => {
-    return await request(url);
+  const get = async (url: string, datHandler:Function=(dat:any)=> {}) => {
+    return await request(url, "GET", {}, datHandler=datHandler);
   };
 
-  const post = async (url: string, body: any) => {
-    return await request(url, "POST", body);
+  const post = async (url: string, body: any, datHandler:Function=(dat:any)=> {}) => {
+    return await request(url, "POST", body, datHandler=datHandler);
   };
 
-  const put = async (url: string, body: any) => {
-    return await request(url, "PUT", body);
+  const put = async (url: string, body: any, datHandler:Function=(dat:any)=> {}) => {
+    return await request(url, "PUT", body, datHandler=datHandler);
   };
 
-  const del = async (url: string) => {
-    return await request(url, "DELETE");
+  const del = async (url: string, datHandler:Function=(dat:any)=> {}) => {
+    return await request(url, "DELETE", {}, datHandler=datHandler);
   };
 
   return {
