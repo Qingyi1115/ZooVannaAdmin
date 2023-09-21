@@ -2,7 +2,7 @@ import Species from "./Species";
 
 interface SpeciesEnclosureNeed {
   speciesEnclosureNeedId: number;
-  smallExhibitHeightRequired: number; // nullable
+  smallExhibitHeightRequired: number | null; // nullable
   minLandAreaRequired: number;
   minWaterAreaRequired: number;
   acceptableTempMin: number;

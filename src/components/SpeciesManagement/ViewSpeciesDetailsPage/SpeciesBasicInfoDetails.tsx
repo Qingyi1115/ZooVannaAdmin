@@ -58,9 +58,11 @@ function SpeciesBasicInfoDetails(props: SpeciesBasicInfoDetailsProps) {
             </TableCell>
             <TableCell>{curSpecies.conservationStatus}</TableCell>
           </TableRow>
-          <TableCell className="w-1/5 font-bold" rowSpan={8}>
-            Taxonomy
-          </TableCell>
+          <TableRow>
+            <TableCell className="w-1/5 font-bold" rowSpan={8}>
+              Taxonomy
+            </TableCell>
+          </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Domain</TableCell>
             <TableCell>{curSpecies.domain}</TableCell>
