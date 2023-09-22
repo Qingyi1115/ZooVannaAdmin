@@ -103,7 +103,12 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
                         Password
                     </TableCell>
                     <TableCell>
-                        <Button type="button" onClick={resetPassword}>Reset Password</Button>
+                        {!curEmployee.dateOfResignation && 
+                        <Button type="button" onClick={resetPassword}>Reset Password</Button> }
+                        {curEmployee.dateOfResignation &&
+                        <Button type="button" disabled variant={"destructive"} onClick={resetPassword}>Reset Password</Button>
+                        }
+                        
                     </TableCell>
                 </TableRow>
 

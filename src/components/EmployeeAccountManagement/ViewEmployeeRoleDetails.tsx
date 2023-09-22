@@ -362,12 +362,18 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                         Account Manager
                     </TableCell>
                     <TableCell className="w-1/6" colSpan={1}>{curEmployee.isAccountManager ? "Yes" : "No"}</TableCell>
-                    <TableCell className="w-1/6" colSpan={2}>{curEmployee.isAccountManager ? 
+                    {!curEmployee.dateOfResignation && <TableCell className="w-1/6" colSpan={2}>{curEmployee.isAccountManager ? 
                         <Button type="button" onClick={disableAccountManager}>Revoke access</Button>
                         : 
                         <Button type="button" onClick={enableAccountManager}>Set As Account Manager</Button>
                         }
-                    </TableCell>
+                    </TableCell>}
+                    {curEmployee.dateOfResignation && <TableCell className="w-1/6" colSpan={2}>{curEmployee.isAccountManager ? 
+                        <Button type="button" disabled variant={"destructive"} onClick={disableAccountManager}>Revoke access</Button>
+                        : 
+                        <Button type="button" disabled variant={"destructive"} onClick={enableAccountManager}>Set As Account Manager</Button>
+                        }
+                    </TableCell>}
                 </TableRow>
                 <TableRow>
                     {curEmployee.keeper && 
@@ -383,11 +389,16 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                 <TableRow>
                     {curEmployee.keeper && <TableCell className="w-1/6 font-bold">Disabled</TableCell>}
                     {curEmployee.keeper && <TableCell >{curEmployee.keeper.isDisabled ? "Yes" : "No"}</TableCell>}
-                    <TableCell className="w-1/3" rowSpan={1} colSpan={1}>
+                    {!curEmployee.dateOfResignation &&<TableCell className="w-1/3" rowSpan={1} colSpan={1}>
                         {!curEmployee.keeper || curEmployee.keeper.isDisabled
                         ? <Button type="button" onClick={() => confirmEnableRole("Keeper")}>Enable</Button>
                         : <Button type="button" onClick={() => confirmDisableRole("Keeper")}>Disable</Button>}
-                    </TableCell>
+                    </TableCell>}
+                    {curEmployee.dateOfResignation && <TableCell className="w-1/3" rowSpan={1} colSpan={1}>
+                        {!curEmployee.keeper || curEmployee.keeper.isDisabled
+                        ? <Button type="button" disabled variant={"destructive"} onClick={() => confirmEnableRole("Keeper")}>Enable</Button>
+                        : <Button type="button" disabled variant ={"destructive"} onClick={() => confirmDisableRole("Keeper")}>Disable</Button>}
+                    </TableCell>}
                 </TableRow>
                 {/*{(!curEmployee.keeper || curEmployee.keeper.isDisabled) && 
                     <TableRow>
