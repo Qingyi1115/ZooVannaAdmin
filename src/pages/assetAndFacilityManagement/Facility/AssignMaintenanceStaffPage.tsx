@@ -1,22 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
-import Facility from "../../../models/Facility";
-import Species from "../../../models/Species";
-
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import GeneralStaff from "../../../models/GeneralStaff";
-import RemoveMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/RemoveMaintenanceStaff";
+import Employee from "src/models/Employee";
+import AssignMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/AssignGeneralStaff";
 
 
 
@@ -24,25 +11,41 @@ function AssignMaintenanceStaffPage() {
 
   const apiJson = useApiJson();
   const { facilityId } = useParams<{ facilityId: string}>();
-  const [assignedStaffs, setAssignedStaffs] = useState<GeneralStaff[]>([]);
-
+  const [assignedStaffIds, setAssignedStaffIds] = useState<number[]>([]);
+  const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
+  const [empList, setEmpList] = useState<Employee[]>([]);
+  
   useEffect(() => {
     try {
-      apiJson.post(
-        `http://localhost:3000/api/assetFacility/getAssignedMaintenanceStaffOfFacility/${facilityId}`,
-        {}
+      apiJson.get(
+        `http://localhost:3000/api/assetFacility/getAssignedMaintenanceStaffOfFacility/${facilityId}`
       ).catch(e=>console.log(e)).then(res=>{
-        setAssignedStaffs(res["maintenanceStaffs"]);
+        setAssignedStaffIds(res["maintenanceStaffs"]);
       });
-
+      apiJson.get(
+        `http://localhost:3000/api/assetFacility/getAllMaintenanceStaff`
+      ).catch(e=>console.log(e)).then(res=>{
+        setAllStaffs(res["maintenanceStaffs"]);
+      });
     } catch (error: any) {
       console.log(error);
     }
   }, []);
 
+  useEffect(() => {
+    const subset = []
+    for (const employee of allStaffs){
+      if (!assignedStaffIds.includes(employee.employeeId)){
+        subset.push(employee);
+      }
+    }
+
+    setEmpList(subset)
+  }, [assignedStaffIds, allStaffs]);
+
   return (
     <div className="my-4 flex justify-start gap-6">
-    {facilityId && <AssignMaintenanceStaff facilityId={Number(facilityId)} assignedStaffs={assignedStaffs}></AssignMaintenanceStaff>}
+    {facilityId && <AssignMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList}></AssignMaintenanceStaff>}
     </div>
   );
 }
