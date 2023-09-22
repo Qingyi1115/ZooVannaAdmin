@@ -138,9 +138,9 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
         <NavLink
           to={`/species/editphysiorefnorm/${curSpecies.speciesCode}/${physioRefNorm.physiologicalRefId}`}
         >
-          <Button className="mb-1 mr-1">
-            <HiEye className="mr-1" />
-            <span>Edit</span>
+          <Button className="mr-2">
+            <HiEye className="mr-auto" />
+            {/* <span>View Details</span> */}
           </Button>
         </NavLink>
         <Button
@@ -148,8 +148,8 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
           className="mr-2"
           onClick={() => confirmDeletePhysioRefNorm(physioRefNorm)}
         >
-          <HiTrash className="mr-1" />
-          <span>Delete</span>
+          <HiTrash className="mx-auto" />
+          {/* <span>Delete</span> */}
         </Button>
       </React.Fragment>
     );
@@ -243,7 +243,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
           frozen
           alignFrozen="right"
           exportable={false}
-          style={{ minWidth: "14rem" }}
+          style={{ minWidth: "9rem" }}
         ></Column>
       </DataTable>
       <Dialog
