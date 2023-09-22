@@ -160,16 +160,15 @@ function SpeciesEnclosureCompatibilities(
     }
     const speciesCode1 = curSpecies.speciesCode;
     const speciesCode2 = selectedSpeciesToDelete.speciesCode;
-    const deleteCompatibilityObj = {
-      speciesCode1,
-      speciesCode2,
-    };
+    // const deleteCompatibilityObj = {
+    //   speciesCode1,
+    //   speciesCode2,
+    // };
 
     const deleteCompatibilityApi = async () => {
       try {
-        const response = await apiJson.post(
-          "http://localhost:3000/api/species/createCompatibility",
-          deleteCompatibilityObj
+        const response = await apiJson.del(
+          `http://localhost:3000/api/species/deleteCompatibility/${speciesCode1}/${speciesCode2}`
         );
         // success
         toastShadcn({
@@ -189,7 +188,7 @@ function SpeciesEnclosureCompatibilities(
         });
       }
     };
-    // createCompatibility();
+    deleteCompatibilityApi();
   }
 
   return (
