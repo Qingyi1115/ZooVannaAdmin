@@ -50,6 +50,7 @@ function ViewSpeciesDetailsPage() {
   };
 
   const { speciesCode } = useParams<{ speciesCode: string }>();
+  const { tab } = useParams<{ tab: string }>();
   const [curSpecies, setCurSpecies] = useState<Species>(emptySpecies);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
@@ -95,7 +96,10 @@ function ViewSpeciesDetailsPage() {
               alt="Current species image"
               className="my-4 aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
             />
-            <Tabs defaultValue="basicinfo" className="w-full">
+            <Tabs
+              defaultValue={tab ? `${tab}` : "basicinfo"}
+              className="w-full"
+            >
               <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
                 <span className="invisible">_____</span>
                 <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>

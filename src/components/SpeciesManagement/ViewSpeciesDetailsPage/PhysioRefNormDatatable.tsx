@@ -31,6 +31,7 @@ import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import Species from "../../../models/Species";
 import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
+import { useNavigate } from "react-router-dom";
 
 interface PhysioRefNormDatatableProps {
   physiologicalRefNormsList: PhysiologicalReferenceNorms[];
@@ -67,7 +68,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
   const dt = useRef<DataTable<PhysiologicalReferenceNorms[]>>(null);
 
   const toastShadcn = useToast().toast;
-
+  const navigate = useNavigate();
   // Delete stuff
   const confirmDeletePhysioRefNorm = (
     physioRefNorm: PhysiologicalReferenceNorms

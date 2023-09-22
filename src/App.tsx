@@ -43,6 +43,7 @@ import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNe
 import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
+import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -76,7 +77,13 @@ function App() {
                   }
                 />
                 <Route
-                  path="/species/viewspeciesdetails/:speciesCode"
+                  path="/species/viewspeciesdetails/:speciesCode/:tab"
+                  element={
+                    user ? <ViewSpeciesDetailsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/species/viewspeciesdetails/:speciesCode/"
                   element={
                     user ? <ViewSpeciesDetailsPage /> : <Navigate to="/login" />
                   }
@@ -151,6 +158,12 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/species/editphysiorefnorm/:speciesCode/:physiologicalRefId"
+                  element={
+                    user ? <EditPhysioRefNormPage /> : <Navigate to="/login" />
                   }
                 />
                 {/* Asset and Facility Management */}

@@ -12,10 +12,13 @@ import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import Species from "../../../models/Species";
 import { TwoThumbSliderWithNumber } from "../TwoThumbSliderWithNumber";
 import { NavLink } from "react-router-dom";
+
 import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
+import SpeciesDietNeed from "../../../models/SpeciesDietNeed";
 import {
   AnimalFeedCategory,
   AnimalGrowthStage,
@@ -23,33 +26,44 @@ import {
   PresentationLocation,
   PresentationMethod,
 } from "../../../enums/Enumurated";
-import { Separator } from "@/components/ui/separator";
-import { LucideSplitSquareHorizontal } from "lucide-react";
+import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
 import { useNavigate } from "react-router-dom";
-interface CreatePhysiologicalRefNormFormProps {
+
+interface EditPhysioRefNormFormProps {
   curSpecies: Species;
+  curPhysioRefNorm: PhysiologicalReferenceNorms;
 }
 
-function CreatePhysiologicalRefNormForm(
-  props: CreatePhysiologicalRefNormFormProps
-) {
+function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
-  const { curSpecies } = props;
+  const { curSpecies, curPhysioRefNorm } = props;
 
   // fields
   const [speciesCode, setSpeciesCode] = useState<string>(
     curSpecies.speciesCode
   );
-  const [sizeMaleCm, setSizeMaleCm] = useState<number>(0);
-  const [sizeFemaleCm, setSizeFemaleCm] = useState<number>(0);
-  const [weightMaleKg, setWeightMaleKg] = useState<number>(0);
-  const [weightFemaleKg, setWeightFemaleKg] = useState<number>(0);
-  const [ageToGrowthAge, setAgeToGrowthAge] = useState<number>(0);
-  const [growthStage, setGrowthStage] = useState<string | undefined>(undefined);
-  const [newPhysioRefNormCreated, setNewPhysioRefNormCreated] =
-    useState<boolean>(false);
+  const physiologicalRefId = curPhysioRefNorm.physiologicalRefId;
+  const [sizeMaleCm, setSizeMaleCm] = useState<number>(
+    curPhysioRefNorm.sizeMaleCm
+  );
+  const [sizeFemaleCm, setSizeFemaleCm] = useState<number>(
+    curPhysioRefNorm.sizeFemaleCm
+  );
+  const [weightMaleKg, setWeightMaleKg] = useState<number>(
+    curPhysioRefNorm.weightMaleKg
+  );
+  const [weightFemaleKg, setWeightFemaleKg] = useState<number>(
+    curPhysioRefNorm.weightFemaleKg
+  );
+  const [ageToGrowthAge, setAgeToGrowthAge] = useState<number>(
+    curPhysioRefNorm.ageToGrowthAge
+  );
+  const [growthStage, setGrowthStage] = useState<string | undefined>(
+    curPhysioRefNorm.growthStage
+  );
+
   // end fields
 
   // validation functions
@@ -142,8 +156,8 @@ function CreatePhysiologicalRefNormForm(
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
-    const newPhysioRefNorm = {
-      speciesCode,
+    const toUpdatePhysioRefNorm = {
+      physiologicalRefId,
       sizeMaleCm,
       sizeFemaleCm,
       weightMaleKg,
@@ -152,18 +166,16 @@ function CreatePhysiologicalRefNormForm(
       growthStage,
     };
 
-    const createNewPhysioRefNormApi = async () => {
+    const updatePhysioRefNormApi = async () => {
       try {
-        const response = await apiJson.post(
-          "http://localhost:3000/api/species/createPhysiologicalReferenceNorms  ",
-          newPhysioRefNorm
+        const response = await apiJson.put(
+          "http://localhost:3000/api/species/updatePhysiologicalReferenceNorms",
+          toUpdatePhysioRefNorm
         );
         // success
         toastShadcn({
-          description:
-            "Successfully created a new physiological reference norm.",
+          description: "Successfully updated physiological reference norm.",
         });
-        setNewPhysioRefNormCreated(true);
         const redirectUrl = `/species/viewspeciesdetails/${curSpecies.speciesCode}/physioref`;
         navigate(redirectUrl);
       } catch (error: any) {
@@ -172,12 +184,12 @@ function CreatePhysiologicalRefNormForm(
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while creating physiological reference norm: \n" +
+            "An error has occurred while updating physiological reference norm: \n" +
             error.message,
         });
       }
     };
-    createNewPhysioRefNormApi();
+    updatePhysioRefNormApi();
   }
 
   return (
@@ -296,41 +308,20 @@ function CreatePhysiologicalRefNormForm(
         </div>
 
         <Form.Submit asChild>
-          {!newPhysioRefNormCreated ? (
-            <Button
-              disabled={apiJson.loading}
-              className="h-12 w-2/3 self-center rounded-full text-lg"
-            >
-              {!apiJson.loading ? (
-                <div>Create Dietary Requirements</div>
-              ) : (
-                <div>Loading</div>
-              )}
-            </Button>
-          ) : (
-            <Button
-              disabled
-              className="h-12 w-2/3 self-center rounded-full text-lg"
-            >
-              Reload the page to create another species dietary requirements
-            </Button>
-          )}
-        </Form.Submit>
-        {newPhysioRefNormCreated && (
           <Button
-            type="button"
-            variant={"outline"}
-            onClick={() => {
-              window.location.reload();
-            }}
-            className="w-1/4 self-center rounded-full text-lg"
+            disabled={apiJson.loading}
+            className="h-12 w-2/3 self-center rounded-full text-lg"
           >
-            Reload Page
+            {!apiJson.loading ? (
+              <div>Edit Physiological Reference Norm</div>
+            ) : (
+              <div>Loading</div>
+            )}
           </Button>
-        )}
+        </Form.Submit>
       </Form.Root>
     </div>
   );
 }
 
-export default CreatePhysiologicalRefNormForm;
+export default EditPhysioRefNormForm;
