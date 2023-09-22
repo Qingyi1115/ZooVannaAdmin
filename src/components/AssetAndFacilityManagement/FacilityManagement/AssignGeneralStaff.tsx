@@ -51,12 +51,12 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
     setEmployeeResignationDialog(false);
   }
 
-  const resignEmployee = async () => { 
+  const assignEmployee = async () => { 
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, {employeeIds:[selectedEmployee.employeeId,]});
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, {employeeIds:[selectedEmployee.employeeId,]});
 
       toastShadcn({
         // variant: "destructive",
@@ -85,7 +85,7 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={resignEmployee}>
+      <Button variant={"destructive"} onClick={assignEmployee}>
         <HiCheck />
         Yes
       </Button>
@@ -224,7 +224,7 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
             />
             {selectedEmployee && (
               <span>
-                Are you sure you want to remove{" "}
+                Are you sure you want to assign employee?{" "}
                 <b>{selectedEmployee.employeeName}</b>?
               </span>
             )}

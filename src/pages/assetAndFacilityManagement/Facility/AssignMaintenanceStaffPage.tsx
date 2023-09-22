@@ -20,7 +20,7 @@ function AssignMaintenanceStaffPage() {
       apiJson.get(
         `http://localhost:3000/api/assetFacility/getAssignedMaintenanceStaffOfFacility/${facilityId}`
       ).catch(e=>console.log(e)).then(res=>{
-        setAssignedStaffIds(res["maintenanceStaffs"]);
+        setAssignedStaffIds(res["maintenanceStaffs"].map((a:Employee)=>a.employeeId));
       });
       apiJson.get(
         `http://localhost:3000/api/assetFacility/getAllMaintenanceStaff`
