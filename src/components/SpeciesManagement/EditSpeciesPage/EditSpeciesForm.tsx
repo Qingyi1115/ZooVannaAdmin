@@ -19,6 +19,7 @@ import Species from "src/models/Species";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
 interface EditSpeciesFormProps {
   curSpecies: Species;
@@ -496,31 +497,38 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
             onSubmit={handleSubmit}
             encType="multipart/form-data"
           >
-            <NavLink
-              className="mb-8 w-1/3 self-center"
-              to={`/species/viewallspecies`}
-            >
-              <Button
-                type="button"
-                className="h-12 w-full self-center rounded-full px-4 text-lg"
-              >
-                Back to All Species
-              </Button>
-            </NavLink>
-            <span className="self-center text-title-xl font-bold">
-              Edit Species: {curSpecies.commonName}
-            </span>
-            <hr className="bg-stroke opacity-20" />
+            <div className="flex flex-col">
+              <div className="mb-4 flex justify-between">
+                <NavLink
+                  className="flex"
+                  to={`/species/viewspeciesdetails/${speciesCode}`}
+                >
+                  <Button variant={"outline"} type="button" className="">
+                    Back
+                  </Button>
+                </NavLink>
+                <span className="self-center text-lg text-graydark">
+                  Edit Species
+                </span>
+                <Button disabled className="invisible">
+                  Back
+                </Button>
+              </div>
+              <Separator />
+              <span className="mt-4 self-center text-title-xl font-bold">
+                {curSpecies.commonName}
+              </span>
+            </div>
             {/* Species Picture */}
             <Form.Field
               name="speciesImage"
               className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
             >
-              <span className="font-medium">Current Image</span>
+              <Form.Label className="font-medium">Current Image</Form.Label>
               <img
                 src={"http://localhost:3000/" + curSpecies.imageUrl}
                 alt="Current species image"
-                className="my-4 aspect-square w-1/5 rounded-full border shadow-4"
+                className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"
               />
               <Form.Label className="font-medium">
                 Upload A New Image &#40;Do not upload if no changes&#41;
