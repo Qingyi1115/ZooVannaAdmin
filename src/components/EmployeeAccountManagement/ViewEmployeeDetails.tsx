@@ -25,52 +25,6 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
     const {curEmployee, refreshSeed, setRefreshSeed} = props;
     console.log(props);
     const toastShadcn = useToast().toast;
-    
-    const disableAccountManager = async() => {
-        try {
-            const responseJson = await apiJson.put(
-              `http://localhost:3000/api/employee/unSetAccountManager/${curEmployee.employeeId}`, curEmployee);
-
-            toastShadcn({
-              // variant: "destructive",
-              title: "Revoke is Successful",
-              description:
-                "Successfully revoke access: " + curEmployee.employeeName,
-            });
-            setRefreshSeed(refreshSeed + 1);
-          } catch (error: any) {
-            // got error
-            toastShadcn({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description:
-                "An error has occurred while revoking access: \n" + apiJson.error,
-            });
-          }
-    }
-
-    const enableAccountManager = async() => {
-        try {
-            const responseJson = await apiJson.put(
-              `http://localhost:3000/api/employee/setAccountManager/${curEmployee.employeeId}`, curEmployee);
-
-            toastShadcn({
-              // variant: "destructive",
-              title: "Access is granted",
-              description:
-                "Successfully granted Account Manager access: " + curEmployee.employeeName,
-            });
-            setRefreshSeed(refreshSeed + 1);
-          } catch (error: any) {
-            // got error
-            toastShadcn({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description:
-                "An error has occurred while granting access: \n" + apiJson.error,
-            });
-          }
-    }
 
 
     return(
@@ -79,10 +33,9 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
             <Table>
             <TableHeader className=" bg-whiten">
                 <TableRow>
-                <TableHead className="w-3/3 font-bold" colSpan={2}>
+                <TableHead className="w-3/3 font-bold" colSpan={1}>
                     Personal Information
                 </TableHead>
-                <TableHead className="w-1/3 font-bold"></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -122,19 +75,6 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
                     Education
                 </TableCell>
                 <TableCell>{curEmployee.employeeEducation}</TableCell>
-                </TableRow>
-                <TableRow>
-                <TableCell className="w-1/3 font-bold" colSpan={2}>
-                    Account Manager
-                </TableCell>
-                <TableCell className="w-1/6" colSpan={3}>{curEmployee.isAccountManager ? "Yes" : "No"}</TableCell>
-                <TableCell>{
-                curEmployee.isAccountManager ? 
-                    <Button type="button" onClick={disableAccountManager}>Revoke access</Button>
-                    : 
-                    <Button type="button" onClick={enableAccountManager}>Set As Account Manager</Button>
-                    }
-                    </TableCell>
                 </TableRow>
 
                 {/*<TableCell className="w-1/5 font-bold" rowSpan={8}>

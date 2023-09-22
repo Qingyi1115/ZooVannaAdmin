@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import ViewEmployeeDetails from "../../components/EmployeeAccountManagement/ViewEmployeeDetails";
+import ViewEmployeeRoleDetails from "../../components/EmployeeAccountManagement/ViewEmployeeRoleDetails"
 import Employee from "src/models/Employee";
+import Keeper from "src/models/Keeper";
+import GeneralStaff from "src/models/GeneralStaff";
+import PlanningStaff from "src/models/PlanningStaff";
+
 import {
     Accordion,
     AccordionContent,
@@ -26,6 +31,9 @@ function ViewEmployeeDetailsPage() {
         isAccountManager: false,
         dateOfResignation: new Date(),
         employeeProfileUrl: "",
+        keeper: null,
+        generalStaff: null,
+        planningStaff: null,
     };
 
     const { employeeId } = useParams<{ employeeId: string}>();
@@ -77,7 +85,7 @@ function ViewEmployeeDetailsPage() {
                   <AccordionItem value="item-2">
                     <AccordionTrigger>Access Role</AccordionTrigger>
                     <AccordionContent>
-                        <ViewEmployeeDetails curEmployee={curEmployee} refreshSeed={refreshSeed} setRefreshSeed={setRefreshSeed}/>
+                        <ViewEmployeeRoleDetails curEmployee={curEmployee} refreshSeed={refreshSeed} setRefreshSeed={setRefreshSeed}/>
                     </AccordionContent>
                   </AccordionItem>
                   {/*<AccordionItem value="item-2">

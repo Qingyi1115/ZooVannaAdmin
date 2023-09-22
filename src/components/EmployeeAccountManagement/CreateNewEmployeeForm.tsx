@@ -194,7 +194,7 @@ function CreateNewEmployeeForm() {
       if (specializationType == undefined) {
         return (
           <div className="font-medium text-danger">
-            * Please select a role type!
+            * Please select a specialization type!
           </div>
         );
       }
@@ -299,6 +299,7 @@ function CreateNewEmployeeForm() {
         label="Education"
         required={true}
         placeholder="e.g. Bachelor's Degree in .."
+        pattern={undefined}
         value={education}
         setValue={setEducation}
         validateFunction={validateEducation}
