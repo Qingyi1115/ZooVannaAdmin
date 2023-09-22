@@ -63,10 +63,6 @@ function CreateNewSensorForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
-    console.log("Name:");
-    console.log(sensorName);
-    console.log("Type:");
-    console.log(sensorType);
 
     const newSensor = {
       sensorName: sensorName,
@@ -74,7 +70,8 @@ function CreateNewSensorForm() {
       dateOfLastMaintained: dateOfLastMaintained,
       sensorType: sensorType
     }
-    
+    console.log(newSensor);
+
     try {
       const responseJson = await apiJson.post(
         "http://localhost:3000/api/assetfacility/addSensor",
@@ -116,8 +113,7 @@ function CreateNewSensorForm() {
           placeholder="e.g., Camera"
           value={sensorName}
           setValue={setSensorName}
-          validateFunction={validateName}
-        />
+          validateFunction={validateName} pattern={undefined}        />
         {/* Activation Date */}
       
         <div>Activation Date</div>

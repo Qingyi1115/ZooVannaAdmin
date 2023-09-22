@@ -241,7 +241,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
               placeholder="e.g., Carrots, Beef,..."
               value={animalFeedName}
               setValue={setAnimalFeedName}
-              validateFunction={validateAnimalFeedName}            />
+              validateFunction={validateAnimalFeedName} pattern={undefined}            />
 
             <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
               {/* Animal Feed Category */}

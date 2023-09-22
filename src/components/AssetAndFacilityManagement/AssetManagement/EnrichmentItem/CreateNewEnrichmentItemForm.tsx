@@ -120,8 +120,7 @@ function CreateNewEnrichmentItemForm() {
           placeholder="e.g., Puzzle"
           value={enrichmentItemName}
           setValue={setEnrichmentItemName}
-          validateFunction={validateName} 
-           />
+          validateFunction={validateName} pattern={undefined}           />
       </div>
 
 

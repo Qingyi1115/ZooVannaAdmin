@@ -16,21 +16,6 @@ enum GeneralStaffType {
   ZOO_OPERATIONS = "ZOO_OPERATIONS",
 }
 
-enum FacilityType {
-  INFORMATION_CENTRE = "INFORMATION_CENTRE",
-  ZOO_DIRECTORY = "ZOO_DIRECTORY",
-  AMPHITHEATRE = "AMPHITHEATRE",
-  GAZEBO = "GAZEBO",
-  AED = "AED",
-  RESTROOM = "RESTROOM",
-  NURSERY = "NURSERY",
-  FIRST_AID = "FIRST_AID",
-  BENCHES = "BENCHES",
-  PLAYGROUND = "PLAYGROUND",
-  TRAMSTOP = "TRAMSTOP",
-  PARKING = "PARKING",
-}
-
 enum Specialization {
   MAMMAL = "MAMMAL",
   BIRD = "BIRD",
@@ -224,7 +209,6 @@ export {
   KeeperType,
   PlannerType,
   GeneralStaffType,
-  FacilityType,
   Specialization,
   MedicalSupplyType,
   ConservationStatus,

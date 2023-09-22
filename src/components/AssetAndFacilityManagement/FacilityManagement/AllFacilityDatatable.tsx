@@ -113,6 +113,12 @@ function AllfacilityDatatable() {
   const actionBodyTemplate = (facility: facility) => {
     return (
       <React.Fragment>
+        <NavLink to={`/species/viewspeciesdetails/${species.speciesCode}`}>
+          <Button className="mb-1 mr-1">
+            <HiEye className="mr-1" />
+            <span>View Details</span>
+          </Button>
+        </NavLink>
         <NavLink to={`/facility/editfacility/${facility.facilityName}`}>
           <Button className="mr-2">
             <HiPencil />
