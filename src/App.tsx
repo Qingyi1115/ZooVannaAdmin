@@ -45,10 +45,14 @@ import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustom
 import EditEmployeePage from "./pages/employeeAccountManagement/EditEmployeePage";
 import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
 import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
+import CreateNewEnclosureRequirementsPage from "./pages/speciesManagement/CreateNewEnclosureRequirementsPage";
+import EditEnclosureRequirementsPage from "./pages/speciesManagement/EditEnclosureRequirementsPage";
 import ViewEmployeeDetailsPage from "./pages/employeeAccountManagement/ViewEmployeeDetailsPage";
 import ProfilePage from "./pages/employeeCommonInfra/ProfilePage";
 import EditPasswordPage from "./pages/employeeCommonInfra/EditPasswordPage";
 import UpdateProfilePage from "./pages/employeeCommonInfra/UpdateProfilePage";
+import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNewDietaryRequirementsPage";
+import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -96,6 +100,46 @@ function App() {
                   path="/species/editspecies/:speciesCode"
                   element={
                     user ? <EditSpeciesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/species/createenclosurerequirements/:speciesCode"
+                  element={
+                    user ? (
+                      <CreateNewEnclosureRequirementsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/species/editenclosurerequirements/:speciesCode"
+                  element={
+                    user ? (
+                      <EditEnclosureRequirementsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/species/createdietaryrequirements/:speciesCode"
+                  element={
+                    user ? (
+                      <CreateNewDietaryRequirementsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/species/editdietaryrequirements/:speciesCode/:speciesDietNeedId"
+                  element={
+                    user ? (
+                      <EditDietaryRequirementsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 {/* Asset and Facility Management */}

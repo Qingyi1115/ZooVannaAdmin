@@ -17,16 +17,16 @@ interface SpeciesBasicInfoDetailsProps {
 function SpeciesBasicInfoDetails(props: SpeciesBasicInfoDetailsProps) {
   const { curSpecies } = props;
   return (
-    <div className="overflow-hidden rounded-lg border border-strokedark/40 lg:mx-20">
+    <div className="overflow-hidden rounded-lg ">
       <Table>
-        <TableHeader className=" bg-whiten">
+        {/* <TableHeader className=" bg-whiten">
           <TableRow>
             <TableHead className="w-1/3 font-bold" colSpan={2}>
               Attribute
             </TableHead>
             <TableHead>Value</TableHead>
           </TableRow>
-        </TableHeader>
+        </TableHeader> */}
         <TableBody>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -58,9 +58,11 @@ function SpeciesBasicInfoDetails(props: SpeciesBasicInfoDetailsProps) {
             </TableCell>
             <TableCell>{curSpecies.conservationStatus}</TableCell>
           </TableRow>
-          <TableCell className="w-1/5 font-bold" rowSpan={8}>
-            Taxonomy
-          </TableCell>
+          <TableRow>
+            <TableCell className="w-1/5 font-bold" rowSpan={8}>
+              Taxonomy
+            </TableCell>
+          </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Domain</TableCell>
             <TableCell>{curSpecies.domain}</TableCell>

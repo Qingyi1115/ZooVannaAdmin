@@ -90,7 +90,7 @@ function AllSpeciesDatatable() {
       <img
         src={"http://localhost:3000/" + rowData.imageUrl}
         alt={rowData.commonName}
-        className="aspect-square w-16 rounded-full border border-white shadow-4"
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
       />
     );
   };
@@ -114,7 +114,7 @@ function AllSpeciesDatatable() {
 
     const selectedSpeciesCommonName = selectedSpecies.commonName;
 
-    const deleteSpecies = async () => {
+    const deleteSpeciesApi = async () => {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deletespecies/" +
@@ -140,7 +140,7 @@ function AllSpeciesDatatable() {
         });
       }
     };
-    deleteSpecies();
+    deleteSpeciesApi();
   };
 
   const deleteSpeciesDialogFooter = (

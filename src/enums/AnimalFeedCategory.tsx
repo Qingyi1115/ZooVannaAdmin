@@ -11,5 +11,5 @@ export enum AnimalFeedCategory {
   PELLETS = "PELLETS",
   NECTAR = "NECTAR",
   SUPPLEMENTS = "SUPPLEMENTS",
-  OTHERS = "OTHERS"
+  OTHERS = "OTHERS",
 }
