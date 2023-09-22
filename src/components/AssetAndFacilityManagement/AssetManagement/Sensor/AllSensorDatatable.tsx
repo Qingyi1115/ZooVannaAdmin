@@ -10,7 +10,7 @@ import { InputText } from "primereact/inputtext";
 
 import Sensor from "../../../../models/Sensor";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
@@ -126,8 +126,7 @@ function AllSensorDatatable() {
       <React.Fragment>
         <NavLink to={`/assetFacility/updateSensor/${sensor.sensorName}`}>
           <Button className="mr-2">
-            <HiPencil />
-            <span>Edit</span>
+            <HiEye className="mr-auto" />
           </Button>
         </NavLink>
         <Button
@@ -135,8 +134,7 @@ function AllSensorDatatable() {
           className="mr-2"
           onClick={() => confirmDeleteSensor(sensor)}
         >
-          <HiTrash />
-          <span>Delete</span>
+          <HiTrash className="mx-auto" />
         </Button>
       </React.Fragment>
     );

@@ -120,13 +120,13 @@ function AllfacilityDatatable() {
         <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}>
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
-            <span>View Details</span>
+           
           </Button>
         </NavLink>
         <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}>
-          <Button className="mr-2">
-            <HiPencil />
-            <span>Edit</span>
+          <Button className="mr-1">
+            <HiPencil className="mr-1"/>
+          
           </Button>
         </NavLink>
         <Button
@@ -134,8 +134,8 @@ function AllfacilityDatatable() {
           className="mr-2"
           onClick={() => confirmDeletefacility(facility)}
         >
-          <HiTrash />
-          <span>Delete</span>
+          <HiTrash className="mx-auto" />
+         
         </Button>
       </React.Fragment>
     );

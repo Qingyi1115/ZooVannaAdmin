@@ -164,7 +164,7 @@ function AllSpeciesDatatable() {
           <NavLink to={`/species/viewspeciesdetails/${species.speciesCode}`}>
             <Button className="mr-2">
               <HiEye className="mr-auto" />
-              {/* <span>View Details</span> */}
+              
             </Button>
           </NavLink>
           <Button
@@ -173,7 +173,7 @@ function AllSpeciesDatatable() {
             onClick={() => confirmDeleteSpecies(species)}
           >
             <HiTrash className="mx-auto" />
-            {/* <span>Delete</span> */}
+           
           </Button>
         </div>
       </React.Fragment>

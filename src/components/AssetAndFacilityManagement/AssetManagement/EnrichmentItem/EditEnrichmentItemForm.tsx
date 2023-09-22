@@ -22,27 +22,12 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
   const toastShadcn = useToast().toast;
 
   const { curEnrichmentItem, refreshSeed, setRefreshSeed } = props;
-
+  const [enrichmentItemId, setEnrichmentItemId] = useState<number>(curEnrichmentItem.enrichmentItemId);
   const [enrichmentItemName, setEnrichmentItemName] = useState<string>(curEnrichmentItem.enrichmentItemName);
   const [enrichmentItemImageUrl, setImageUrl] = useState<string | null>(curEnrichmentItem.enrichmentItemImageUrl);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
-
-  // field validations
-  // function validateImage(props: ValidityState) {
-  //   if (props != undefined) {
-  //     if (props.valueMissing) {
-  //       return (
-  //         <div className="font-medium text-danger">
-  //           * Please upload an image
-  //         </div>
-  //       );
-  //     }
-  //     // add any other cases here
-  //   }
-  //   return null;
-  // }
 
   function validateEnrichmentItemName(props: ValidityState) {
     if (props != undefined) {
@@ -57,8 +42,6 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
     }
     return null;
   }
-
-
   // end field validations
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -70,11 +53,11 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
     e.preventDefault();
     if (imageFile) {
       const formData = new FormData();
-      formData.append("enrichmentItemName", enrichmentItemName);
       formData.append("file", imageFile || "");
+      console.log(formData);
       try {
         const responseJson = await apiFormData.put(
-          "http://localhost:3000/api/assetfacility/updateEnrichmentItem",
+          "http://localhost:3000/api/assetfacility/updateEnrichmentItemImage",
           formData
         );
         // success
@@ -91,13 +74,13 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
             error.message,
         });
       }
-    } else {
+    } 
       // no image
       const updatedEnrichmentItem = {
-        enrichmentItemName,
-        enrichmentItemImageUrl
+        enrichmentItemId,
+        enrichmentItemName
       };
-
+      console.log(updatedEnrichmentItem);
       try {
         const responseJson = await apiJson.put(
           "http://localhost:3000/api/assetfacility/updateEnrichmentItem",
@@ -117,15 +100,6 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
             error.message,
         });
       }
-    }
-    const formData = new FormData();
-    formData.append("enrichmentItemName", enrichmentItemName);
-    formData.append("file", imageFile || "");
-    await apiFormData.put(
-      "http://localhost:3000/api/assetfacility/updateEnrichmentItem",
-      formData
-    );
-    console.log(apiFormData.result);
   }
 
   return (
@@ -146,14 +120,16 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <span className="font-medium">Current Image</span>
-            <img src={curEnrichmentItem.enrichmentItemImageUrl} alt="Current enrichment item image" />
+            <img src={"http://localhost:3000/" + curEnrichmentItem.enrichmentItemImageUrl}
+              alt="Current enrichment item image"
+              className="my-4 aspect-square w-1/5 rounded-full border shadow-4"/>
             <Form.Label className="font-medium">
               Change Enrichment Item Image
             </Form.Label>
             <Form.Control
               type="file"
               placeholder="Change image"
-              required
+              required={false}
               accept=".png, .jpg, .jpeg, .webp"
               onChange={handleFileChange}
               className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
@@ -161,16 +137,16 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
             {/* <Form.ValidityState>{validateImage}</Form.ValidityState> */}
           </Form.Field>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-            {/* Animal Feed Name */}
+            {/* Enrichment Item Name */}
             <FormFieldInput
               type="text"
               formFieldName="enrichmentItemName"
-              label="Animal Feed Name"
+              label="Enrichment Item Name"
               required={true}
               placeholder="e.g., Puzzle Feeder, Chew Toy,..."
               value={enrichmentItemName}
               setValue={setEnrichmentItemName}
-              validateFunction={validateEnrichmentItemName}      />
+              validateFunction={validateEnrichmentItemName} pattern={undefined}      />
 
             <Form.Submit asChild>
               <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">

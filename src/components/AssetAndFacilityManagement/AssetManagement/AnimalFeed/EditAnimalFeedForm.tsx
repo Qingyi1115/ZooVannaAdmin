@@ -122,35 +122,35 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
             error.message,
         });
       }
-    } else {
-      // no image
-      const updatedAnimalFeedCategory = animalFeedCategory?.toString();
-      const updatedAnimalFeed = {
-        animalFeedName,
-        animalFeedCategory
-      };
-      console.log(updatedAnimalFeed);
-
-      try {
-        const responseJson = await apiJson.put(
-          "http://localhost:3000/api/assetFacility/updateAnimalFeed",
-          updatedAnimalFeed
-        );
-        // success
-        toastShadcn({
-          description: "Successfully edited animal feed",
-        });
-        setRefreshSeed(refreshSeed + 1);
-      } catch (error: any) {
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while editing animal feed details: \n" +
-            error.message,
-        });
-      }
     }
+    // no image
+    const updatedAnimalFeedCategory = animalFeedCategory?.toString();
+    const updatedAnimalFeed = {
+      animalFeedName,
+      animalFeedCategory
+    };
+    console.log(updatedAnimalFeed);
+
+    try {
+      const responseJson = await apiJson.put(
+        "http://localhost:3000/api/assetFacility/updateAnimalFeed",
+        updatedAnimalFeed
+      );
+      // success
+      toastShadcn({
+        description: "Successfully edited animal feed",
+      });
+      setRefreshSeed(refreshSeed + 1);
+    } catch (error: any) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while editing animal feed details: \n" +
+          error.message,
+      });
+    }
+
   }
 
   useEffect(() => {
@@ -241,45 +241,45 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
               placeholder="e.g., Carrots, Beef,..."
               value={animalFeedName}
               setValue={setAnimalFeedName}
-              validateFunction={validateAnimalFeedName} pattern={undefined}            />
-
-            <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-              {/* Animal Feed Category */}
-              <FormFieldSelect
-                formFieldName="animalFeedCategory"
-                label="Animal Feed Category"
-                required={true}
-                placeholder="Select an animal feed category..."
-                valueLabelPair={[
-                  ["RED_MEAT", "Red Meat"],
-                  ["WHITE_MEAT", "White Meat"],
-                  ["FISH", "Fish"],
-                  ["INSECTS", "Insects"],
-                  ["HAY", "Hay"],
-                  ["VEGETABLES", "Vegetables"],
-                  ["FRUITS", "Fruits"],
-                  ["GRAINS", "Grains"],
-                  ["BROWSE", "Browse"],
-                  ["PELLETS", "Pellets"],
-                  ["NECTAR", "Nectar"],
-                  ["SUPPLEMENTS", "Supplements"],
-                  ["OTHERS", "Others"]
-                ]}
-                value={animalFeedCategory}
-                setValue={setAnimalFeedCategory}
-                validateFunction={validateAnimalFeedCategory}
-              />
-            </div>
-
-            <Form.Submit asChild>
-              <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-                Submit Edit Animal Feed
-              </button>
-            </Form.Submit>
-            {formError && (
-              <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
-            )}
+              validateFunction={validateAnimalFeedName} pattern={undefined} />
           </div>
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+            {/* Animal Feed Category */}
+            <FormFieldSelect
+              formFieldName="animalFeedCategory"
+              label="Animal Feed Category"
+              required={true}
+              placeholder="Select an animal feed category..."
+              valueLabelPair={[
+                ["RED_MEAT", "Red Meat"],
+                ["WHITE_MEAT", "White Meat"],
+                ["FISH", "Fish"],
+                ["INSECTS", "Insects"],
+                ["HAY", "Hay"],
+                ["VEGETABLES", "Vegetables"],
+                ["FRUITS", "Fruits"],
+                ["GRAINS", "Grains"],
+                ["BROWSE", "Browse"],
+                ["PELLETS", "Pellets"],
+                ["NECTAR", "Nectar"],
+                ["SUPPLEMENTS", "Supplements"],
+                ["OTHERS", "Others"]
+              ]}
+              value={animalFeedCategory}
+              setValue={setAnimalFeedCategory}
+              validateFunction={validateAnimalFeedCategory}
+            />
+          </div>
+
+          <Form.Submit asChild>
+            <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
+              Submit Edit Animal Feed
+            </button>
+          </Form.Submit>
+          {formError && (
+            <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+          )}
+
         </Form.Root>
       )}
     </div>

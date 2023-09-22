@@ -13,12 +13,25 @@ function EditEnrichmentItemPage() {
     enrichmentItemImageUrl: ""
   };
 
+  const [ enrichmentItemId, setEnrichmentItemId ] = useState<number>(0);
   const { enrichmentItemName } = useParams<{ enrichmentItemName: string }>();
   const [curEnrichmentItem, setCurEnrichmentItem] = useState<EnrichmentItem>(emptyEnrichmentItem);
-
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/assetfacility/getEnrichmentItem/${enrichmentItemName}`);
-  }, []);
+    const fetchEnrichmentItem = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/assetfacility/getEnrichmentItem/${enrichmentItemId}`
+        );
+        setCurEnrichmentItem(responseJson as EnrichmentItem);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    fetchEnrichmentItem();
+  }, [refreshSeed]);
 
   useEffect(() => {
     const enrichmentItem = apiJson.result as EnrichmentItem;
@@ -28,9 +41,10 @@ function EditEnrichmentItemPage() {
   return (
     <div className="p-10">
       {curEnrichmentItem && curEnrichmentItem.enrichmentItemId != -1 && (
-        <EditEnrichmentItemForm curEnrichmentItem={curEnrichmentItem} refreshSeed={0} setRefreshSeed={function (value: React.SetStateAction<number>): void {
-          throw new Error("Function not implemented.");
-        } } />
+        <EditEnrichmentItemForm 
+        curEnrichmentItem={curEnrichmentItem} 
+        refreshSeed={refreshSeed} 
+        setRefreshSeed={setRefreshSeed} />
       )}
     </div>
   );

@@ -10,7 +10,7 @@ import { InputText } from "primereact/inputtext";
 
 import AnimalFeed from "../../../../models/AnimalFeed";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
@@ -136,8 +136,7 @@ function AllAnimalFeedDatatable() {
       <React.Fragment>
         <NavLink to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}>
           <Button className="mr-2">
-            <HiPencil />
-            <span>Edit</span>
+            <HiEye className="mr-auto" />
           </Button>
         </NavLink>
         <Button
@@ -145,8 +144,7 @@ function AllAnimalFeedDatatable() {
           className="mr-2"
           onClick={() => confirmDeleteAnimalFeed(animalFeed)}
         >
-          <HiTrash />
-          <span>Delete</span>
+          <HiTrash className="mx-auto" />
         </Button>
       </React.Fragment>
     );

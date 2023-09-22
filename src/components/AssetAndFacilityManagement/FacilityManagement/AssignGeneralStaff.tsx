@@ -121,7 +121,7 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
         <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
-            <span>View Details</span>
+           
           </Button>
         </NavLink>
         {employee.dateOfResignation ?

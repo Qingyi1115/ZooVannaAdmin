@@ -10,7 +10,7 @@ import { InputText } from "primereact/inputtext";
 
 import EnrichmentItem from "../../../../models/EnrichmentItem";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
@@ -132,10 +132,9 @@ function AllEnrichmentItemDatatable() {
   const actionBodyTemplate = (enrichmentItem: EnrichmentItem) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemName}`}>
+        <NavLink to={`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemId}`}>
           <Button className="mr-2">
-            <HiPencil />
-            <span>Edit</span>
+            <HiEye className="mr-auto" />
           </Button>
         </NavLink>
         <Button
@@ -143,8 +142,7 @@ function AllEnrichmentItemDatatable() {
           className="mr-2"
           onClick={() => confirmDeleteEnrichmentItem(enrichmentItem)}
         >
-          <HiTrash />
-          <span>Delete</span>
+          <HiTrash className="mx-auto" />
         </Button>
       </React.Fragment>
     );
@@ -193,6 +191,12 @@ function AllEnrichmentItemDatatable() {
             globalFilter={globalFilter}
             header={header}
           >
+             <Column
+              field="enrichmentItemId"
+              header="ID"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
             <Column
               field="enrichmentItemName"
               header="Name"

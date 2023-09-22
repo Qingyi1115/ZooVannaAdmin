@@ -153,8 +153,7 @@ function Profile() {
       <React.Fragment>
         <NavLink to={"/updateProfile"}>
           <Button className="mr-2">
-            <HiPencil />
-            <span>Edit</span>
+            <HiEye className="mr-auto" />
           </Button>
         </NavLink>
       </React.Fragment>
