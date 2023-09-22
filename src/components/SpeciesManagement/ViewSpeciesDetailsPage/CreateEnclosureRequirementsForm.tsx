@@ -16,6 +16,7 @@ import Species from "../../../models/Species";
 import { TwoThumbSliderWithNumber } from "../TwoThumbSliderWithNumber";
 import { NavLink } from "react-router-dom";
 import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
+import { Separator } from "@/components/ui/separator";
 
 interface CreateEnclosureRequirementsFormProps {
   curSpecies: Species;
@@ -344,14 +345,28 @@ function CreateEnclosureRequirementsForm(
           onSubmit={handleSubmit}
           encType="multipart/form-data"
         >
-          <span className="flex flex-col items-center self-center text-title-xl font-bold">
-            <span className="font-medium">
-              Create Species Enclosure Requirements for{" "}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink
+                className="flex"
+                to={`/species/viewspeciesdetails/${speciesCode}`}
+              >
+                <Button variant={"outline"} type="button" className="">
+                  Back
+                </Button>
+              </NavLink>
+              <span className="self-center text-lg text-graydark">
+                Create Species Enclosure Requirements
+              </span>
+              <Button disabled className="invisible">
+                Back
+              </Button>
+            </div>
+            <Separator />
+            <span className="mt-4 self-center text-title-xl font-bold">
+              {curSpecies.commonName}
             </span>
-            {curSpecies.commonName}
-          </span>
-          <hr className="bg-stroke opacity-20" />
-
+          </div>
           {/* Small Exhibit Height Required */}
           {curSpecies.habitatOrExhibit.toLowerCase() == "exhibit" && (
             <FormFieldInput

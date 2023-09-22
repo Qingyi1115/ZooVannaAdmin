@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import EditFacilityForm from "../../components/AssetAndFacilityManagement/FacilityManagement/EditFacilityForm";
-import useApiJson from "../../hooks/useApiJson";
-import Facility from "../../models/Facility";
+import EditFacilityForm from "../../../components/AssetAndFacilityManagement/FacilityManagement/EditFacilityForm";
+import useApiJson from "../../../hooks/useApiJson";
+import Facility from "../../../models/Facility";
 
 function EditFacilityPage() {
   const apiJson = useApiJson();
@@ -16,22 +16,19 @@ function EditFacilityPage() {
     yCoordinate: 0
   };
 
-  const { facilityCode } = useParams<{ facilityCode: string }>();
+  const { facilityId } = useParams<{ facilityId: string }>();
   const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/facility/getfacility/${facilityCode}`);
+    apiJson.post(`http://localhost:3000/api/assetFacility/getFacility/${facilityId}`, {includes:[]}).then(res=>{
+      setCurFacility(res["facility"]);
+    });
   }, []);
-
-  useEffect(() => {
-    const facility = apiJson.result as Facility;
-    setCurFacility(facility);
-  }, [apiJson.loading]);
 
   return (
     <div className="p-10">
       {curFacility && curFacility.facilityId != -1 && (
-        <EditFacilityForm curFacility={curFacility} />
+        <EditFacilityForm curFacility={curFacility} refreshSeed={0} setRefreshSeed={()=>undefined}/>
       )}
     </div>
   );

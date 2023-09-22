@@ -10,6 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { NavLink } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface SpeciesEduContentDetailsProps {
   curSpecies: Species;
@@ -17,7 +19,12 @@ interface SpeciesEduContentDetailsProps {
 function SpeciesEduContentDetails(props: SpeciesEduContentDetailsProps) {
   const { curSpecies } = props;
   return (
-    <div className="overflow-hidden rounded-lg">
+    <div className="">
+      <div className="my-4 flex justify-start gap-6">
+        <NavLink to={`/species/editeducontent/${curSpecies.speciesCode}`}>
+          <Button>Edit Educational Content</Button>
+        </NavLink>
+      </div>
       <Table>
         {/* <TableHeader className=" bg-whiten">
           <TableRow>

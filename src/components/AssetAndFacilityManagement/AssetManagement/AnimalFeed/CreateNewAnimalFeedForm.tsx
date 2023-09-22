@@ -1,51 +1,70 @@
 import React, { useState } from "react";
 
 import * as Form from "@radix-ui/react-form";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
-import FormFieldInput from "../../FormFieldInput";
-import FormFieldSelect from "../../FormFieldSelect";
-import useApiJson from "../../../hooks/useApiJson";
-import { AnimalFeedCategory } from "../../../enums/AnimalFeedCategory";
-import useApiFormData from "../../../hooks/useApiFormData";
-
-// Field validations
-function validateName(props: ValidityState) {
-  if (props != undefined) {
-    if (props.valueMissing) {
-      return (
-        <div className="font-medium text-danger">* Please enter a valid name!</div>
-      );
-    }
-    // add any other cases here
-  }
-  return null;
-}
-
-function validateImage(props: ValidityState) {
-  if (props != undefined) {
-    if (props.valueMissing) {
-      return (
-        <div className="font-medium text-danger">
-          * Please upload an image
-        </div>
-      );
-    }
-    // add any other cases here
-  }
-  return null;
-}
-
-// end field validations
+import FormFieldRadioGroup from "../../../FormFieldRadioGroup";
+import FormFieldInput from "../../../FormFieldInput";
+import FormFieldSelect from "../../../FormFieldSelect";
+import useApiJson from "../../../../hooks/useApiJson";
+import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
+import useApiFormData from "../../../../hooks/useApiFormData";
+import { useToast } from "@/components/ui/use-toast";
 
 function CreateNewAnimalFeedForm() {
   const apiFormData = useApiFormData();
+  const toastShadcn = useToast().toast;
 
   const [animalFeedName, setAnimalFeedName] = useState<string>(""); // text input
   const [animalFeedCategory, setAnimalFeedCategory] = useState<string | undefined>(
     undefined
   ); // radio group
+  const [animalFeedImageUrl, setImageUrl] = useState<string | null>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+
+  // Field validations
+  function validateName(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">* Please enter a valid name!</div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+
+  function validateAnimalFeedCategory(props: ValidityState) {
+    // console.log(props);
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select an animal feed category
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateImage(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please upload an image
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  // end field validations
 
   function clearForm() {
     setAnimalFeedName("");
@@ -70,13 +89,25 @@ function CreateNewAnimalFeedForm() {
     formData.append("animalFeedName", animalFeedName);
     formData.append("animalFeedCategory", animalFeedCategory?.toString() || "");
     formData.append("file", imageFile || "");
-    await apiFormData.post(
-      "http://localhost:3000/api/species/createnewanimalfeed",
-      formData
-    );
-    console.log(apiFormData.result);
+    try {
+      const responseJson = await apiFormData.post(
+        "http://localhost:3000/api/assetFacility/createNewAnimalFeed",
+        formData
+      );
+      // success
+      toastShadcn({
+        description: "Successfully created animal feed",
+      });
+    } catch (error: any) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while creating animal feed details: \n" +
+          error.message,
+      });
+    }
 
-    // handle success case or failurecase using apiJson
   }
 
   return (
@@ -89,7 +120,7 @@ function CreateNewAnimalFeedForm() {
         Add Animal Feed
       </span>
       <hr className="bg-stroke opacity-20" />
-      {/* Species Picture */}
+      {/* Animal Feed Picture */}
       <Form.Field
         name="animalFeedImage"
         className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
@@ -116,7 +147,7 @@ function CreateNewAnimalFeedForm() {
           value={animalFeedName}
           setValue={setAnimalFeedName}
           validateFunction={validateName}
-        />
+          />
       </div>
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -143,7 +174,7 @@ function CreateNewAnimalFeedForm() {
           ]}
           value={animalFeedCategory}
           setValue={setAnimalFeedCategory}
-          validateFunction={validateName}
+          validateFunction={validateAnimalFeedCategory}
         />
       </div>
 

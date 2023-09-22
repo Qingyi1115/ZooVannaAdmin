@@ -8,11 +8,9 @@ interface Employee {
   employeeEmail: string;
   employeeAddress: string;
   employeePhoneNumber: string;
-  employeePasswordhash: string;
-  employeeSalt: string;
   employeeDoorAccessCode: string;
   employeeEducation: string;
-  employeeBirthDate: Date;
+  employeeBirthDate: Date | null;
   isAccountManager: boolean;
   dateOfResignation: Date | null;
   employeeProfileUrl: string | null;

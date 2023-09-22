@@ -17,6 +17,8 @@ import SpeciesEduContentDetails from "../../components/SpeciesManagement/ViewSpe
 import SpeciesEnclosureRequirements from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEnclosureRequirements";
 import SpeciesDietaryRequirements from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesDietaryRequirements";
 import { NavLink } from "react-router-dom";
+import SpeciesEnclosureCompatibilities from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEnclosureCompatibilities";
+import { Separator } from "@/components/ui/separator";
 
 function ViewSpeciesDetailsPage() {
   const apiJson = useApiJson();
@@ -69,33 +71,32 @@ function ViewSpeciesDetailsPage() {
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         {curSpecies && curSpecies.speciesId != -1 && (
-          <div className="flex flex-col">
-            <NavLink
-              className="mb-8 w-1/3 self-center"
-              to={`/species/viewallspecies`}
-            >
-              <Button
-                type="button"
-                className="h-12 w-full self-center rounded-full px-4 text-lg"
-              >
-                Back to All Species
+          <div className="relative flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink className="flex" to={`/species/viewallspecies`}>
+                <Button variant={"outline"} type="button" className="">
+                  Back
+                </Button>
+              </NavLink>
+              <span className="self-center text-lg text-graydark">
+                Species Details
+              </span>
+              <Button disabled className="invisible">
+                Back
               </Button>
-            </NavLink>
-            <span className="self-center text-xl font-bold">
-              Species Details
-            </span>{" "}
-            <br />
-            <span className="self-center text-title-xl font-bold">
+            </div>
+            <Separator />
+            <span className="mt-4 self-center text-title-xl font-bold">
               {curSpecies.commonName}
             </span>
-            <hr className="opacity-2 my-2 bg-stroke" />
             <img
               src={"http://localhost:3000/" + curSpecies.imageUrl}
               alt="Current species image"
               className="my-4 aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
             />
             <Tabs defaultValue="basicinfo" className="w-full">
-              <TabsList className="no-scrollbar w-full justify-around overflow-x-auto text-xs xl:text-base">
+              <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
+                <span className="invisible">_____</span>
                 <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
                 <TabsTrigger value="educontent">
                   Educational Content
@@ -104,9 +105,10 @@ function ViewSpeciesDetailsPage() {
                 <TabsTrigger value="enclosureneed">
                   Enclosure Requirements
                 </TabsTrigger>
-                <TabsTrigger value="physioref">
-                  Physiological Reference
+                <TabsTrigger value="enclosurecompatibilities">
+                  Enclosure Compatibilities
                 </TabsTrigger>
+                <TabsTrigger value="physioref">Physiological Ref</TabsTrigger>
               </TabsList>
               <TabsContent value="basicinfo">
                 <SpeciesBasicInfoDetails curSpecies={curSpecies} />
@@ -119,6 +121,9 @@ function ViewSpeciesDetailsPage() {
               </TabsContent>
               <TabsContent value="enclosureneed">
                 <SpeciesEnclosureRequirements curSpecies={curSpecies} />
+              </TabsContent>
+              <TabsContent value="enclosurecompatibilities">
+                <SpeciesEnclosureCompatibilities curSpecies={curSpecies} />
               </TabsContent>
               <TabsContent value="physioref">
                 Change your password here.

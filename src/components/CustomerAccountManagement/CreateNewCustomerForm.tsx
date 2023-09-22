@@ -6,6 +6,8 @@ import FormFieldInput from "../FormFieldInput";
 import FormFieldSelect from "../FormFieldSelect";
 import useApiJson from "../../hooks/useApiJson";
 import useApiFormData from "../../hooks/useApiFormData";
+import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import { useToast } from "@/components/ui/use-toast";
 
 // Field validations
 function validateName(props: ValidityState) {
@@ -38,12 +40,13 @@ function validateImage(props: ValidityState) {
 
 function CreateNewCustomerForm() {
   const apiFormData = useApiFormData();
-
+  const toastShadcn = useToast().toast;
+  
   const [firstName, setFirstName] = useState<string>(""); // text input
   const [lastName, setLastName] = useState<string>(""); // text input
   const [email, setEmail] = useState<string>(""); // text input
   const [contactNo, setContactNo] = useState<string>(""); // text input
-  const [birthday, setBirthday] = useState<Date>(new Date()); // date
+  const [birthday, setBirthday] = useState<string | Date | Date[] | null>(null); // date
   const [address, setAddress] = useState<string>(""); // text input
   const [nationality, setNationality] = useState<string | undefined>(
     undefined
@@ -84,10 +87,24 @@ function CreateNewCustomerForm() {
     formData.append("address", address);
     formData.append("nationality", nationality?.toString() || "");
     formData.append("file", imageFile || "");
-    await apiFormData.post(
-      "http://localhost:3000/api/species/createnewcustomer",
-      formData
-    );
+    try {
+      const responseJson = await apiFormData.post(
+        "http://localhost:3000/api/customer/createCustomer",
+        formData
+      );
+      // success
+      toastShadcn({
+        description: "Successfully created customer",
+      });
+    } catch (error: any) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while creating customer details: \n" +
+          error.message,
+      });
+    }
     console.log(apiFormData.result);
 
     // handle success case or failurecase using apiJson
@@ -103,7 +120,7 @@ function CreateNewCustomerForm() {
         Create New Customer
       </span>
       <hr className="bg-stroke opacity-20" />
-      {/* Species Picture */}
+      {/* Customer Picture */}
       <Form.Field
         name="customerImage"
         className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
@@ -131,61 +148,59 @@ function CreateNewCustomerForm() {
           validateFunction={validateName}
         />
       </div>
-{/* Last Name */}
-            <FormFieldInput
-              type="text"
-              formFieldName="lastName"
-              label="Last Name"
-              required={true}
-              placeholder="Last Name"
-              value={lastName}
-              setValue={setLastName}
-              validateFunction={validateName}
-            />
-            {/* Email */}
-            <FormFieldInput
-              type="text"
-              formFieldName="email"
-              label="Email"
-              required={true}
-              placeholder="Email"
-              value={email}
-              setValue={setEmail}
-              validateFunction={validateName}
-            />
-            {/* Contact Number */}
-            <FormFieldInput
-              type="text"
-              formFieldName="lastName"
-              label="Contact Number"
-              required={true}
-              placeholder="Contact Number"
-              value={contactNo}
-              setValue={setContactNo}
-              validateFunction={validateName}
-            />
-            {/* Birthday */}
-            <FormFieldInput
-              type="text"
-              formFieldName="lastName"
-              label="Birthday"
-              required={true}
-              placeholder="Birthday"
-              value={birthday.toString()}
-              setValue={setBirthday.toString}
-              validateFunction={validateName}
-            />
-            {/* Address */}
-            <FormFieldInput
-              type="text"
-              formFieldName="lastName"
-              label="Address"
-              required={true}
-              placeholder="Address"
-              value={address}
-              setValue={setAddress}
-              validateFunction={validateName}
-            />
+      {/* Last Name */}
+      <FormFieldInput
+        type="text"
+        formFieldName="lastName"
+        label="Last Name"
+        required={true}
+        placeholder="Last Name"
+        value={lastName}
+        setValue={setLastName}
+        validateFunction={validateName}
+      />
+      {/* Email */}
+      <FormFieldInput
+        type="text"
+        formFieldName="email"
+        label="Email"
+        required={true}
+        placeholder="Email"
+        value={email}
+        setValue={setEmail}
+        validateFunction={validateName}
+      />
+      {/* Contact Number */}
+      <FormFieldInput
+        type="text"
+        formFieldName="lastName"
+        label="Contact Number"
+        required={true}
+        placeholder="Contact Number"
+        value={contactNo}
+        setValue={setContactNo}
+        validateFunction={validateName}
+      />
+      {/* Birthday */}
+      <div className="card flex justify-content-center">
+        <div>Birthday</div>
+        <Calendar value={birthday} onChange={(e: CalendarChangeEvent) => {
+          if (e && e.value !== undefined) {
+            setBirthday(e.value);
+          }
+          }}/>
+      </div>
+      {/* Address */}
+      <FormFieldInput
+        type="text"
+        formFieldName="lastName"
+        label="Address"
+        required={true}
+        placeholder="Address"
+        value={address}
+        setValue={setAddress}
+        validateFunction={validateName}
+      />
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Nationality */}
         <FormFieldSelect

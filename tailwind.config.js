@@ -41,7 +41,7 @@ module.exports = {
         ring: "#748b64",
         background: "#f7fdf5",
         foreground: "#24341c",
-        primary: "#2fb31c", // below there's another primary too
+        primary: "#84985A", // below there's another primary too
         "primary-foreground": "#f7fdf5",
         secondary: "#caee80",
         "secondary-foreground": "#FFFFFF",
@@ -76,7 +76,7 @@ module.exports = {
         bodydark: "#b7c0ae", // changed
         bodydark1: "#e4eede", // changed
         bodydark2: "#99af8a", // changed
-        primary: "#2fb31c", // changed
+        primary: "#84985A", // changed
         secondary: "#c3de8f", // changed
         stroke: "#e8f0e2", // changed
         gray: "#f4fbef", // changed

@@ -160,26 +160,22 @@ function AllSpeciesDatatable() {
   const actionBodyTemplate = (species: Species) => {
     return (
       <React.Fragment>
-        <NavLink to={`/species/viewspeciesdetails/${species.speciesCode}`}>
-          <Button className="mb-1 mr-1">
-            <HiEye className="mr-1" />
-            <span>View Details</span>
+        <div className="mx-auto">
+          <NavLink to={`/species/viewspeciesdetails/${species.speciesCode}`}>
+            <Button className="mr-2">
+              <HiEye className="mr-auto" />
+              
+            </Button>
+          </NavLink>
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmDeleteSpecies(species)}
+          >
+            <HiTrash className="mx-auto" />
+           
           </Button>
-        </NavLink>
-        <NavLink to={`/species/editspecies/${species.speciesCode}`}>
-          <Button className="mb-1 mr-1">
-            <HiPencil className="mr-1" />
-            <span>Edit</span>
-          </Button>
-        </NavLink>
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteSpecies(species)}
-        >
-          <HiTrash className="mr-1" />
-          <span>Delete</span>
-        </Button>
+        </div>
       </React.Fragment>
     );
   };
@@ -342,7 +338,7 @@ function AllSpeciesDatatable() {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
         </div>

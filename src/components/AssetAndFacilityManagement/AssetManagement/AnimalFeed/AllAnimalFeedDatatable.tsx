@@ -8,13 +8,14 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
-import AnimalFeed from "../../../models/AnimalFeed";
-import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import AnimalFeed from "../../../../models/AnimalFeed";
+import useApiJson from "../../../../hooks/useApiJson";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
-import { AnimalFeedCategory } from "../../../enums/AnimalFeedCategory";
+import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
+import { useToast } from "@/components/ui/use-toast";
 
 function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();
@@ -33,15 +34,22 @@ function AllAnimalFeedDatatable() {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<AnimalFeed[]>>(null);
+  const toastShadcn = useToast().toast;
+
 
   useEffect(() => {
-    apiJson.get("http://localhost:3000/api/animalFeed/getallanimalFeed");
+    const fetchAnimalFeed = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/assetfacility/getallanimalfeed"
+        );
+        setAnimalFeedList(responseJson as AnimalFeed[]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchAnimalFeed();
   }, []);
-
-  useEffect(() => {
-    const animalFeedData = apiJson.result as AnimalFeed[];
-    setAnimalFeedList(animalFeedData);
-  }, [apiJson.loading]);
 
   //
   const exportCSV = () => {
@@ -55,8 +63,8 @@ function AllAnimalFeedDatatable() {
   const imageBodyTemplate = (rowData: AnimalFeed) => {
     return (
       <img
-        src={rowData.animalFeedImageUrl}
-        alt={rowData.animalFeedName}
+      src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
+      alt={rowData.animalFeedName}
         className="border-round shadow-2"
         style={{ width: "64px" }}
       />
@@ -75,20 +83,38 @@ function AllAnimalFeedDatatable() {
   };
 
   // delete animalFeed stuff
-  const deleteAnimalFeed = () => {
+  const deleteAnimalFeed = async () => {
     let _animalFeed = animalFeedList.filter(
       (val) => val.animalFeedId !== selectedAnimalFeed?.animalFeedId
     );
 
-    setAnimalFeedList(_animalFeed);
-    setDeleteAnimalFeedDialog(false);
-    setSelectedAnimalFeed(emptyAnimalFeed);
-    toast.current?.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "AnimalFeed Deleted",
-      life: 3000,
-    });
+    const deleteAnimalFeed = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/assetFacility/deleteAnimalFeed/" +
+            selectedAnimalFeed.animalFeedName
+        );
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully deleted animal feed: " + selectedAnimalFeed.animalFeedName,
+        });
+        setAnimalFeedList(_animalFeed);
+        setDeleteAnimalFeedDialog(false);
+        setSelectedAnimalFeed(emptyAnimalFeed);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting animalFeed: \n" + apiJson.error,
+        });
+      }
+    };
+    deleteAnimalFeed();
   };
 
   const deleteAnimalFeedDialogFooter = (
@@ -108,10 +134,9 @@ function AllAnimalFeedDatatable() {
   const actionBodyTemplate = (animalFeed: AnimalFeed) => {
     return (
       <React.Fragment>
-        <NavLink to={`/animalFeed/editanimalFeed/${animalFeed.animalFeedName}`}>
+        <NavLink to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}>
           <Button className="mr-2">
-            <HiPencil />
-            <span>Edit</span>
+            <HiEye className="mr-auto" />
           </Button>
         </NavLink>
         <Button
@@ -119,8 +144,7 @@ function AllAnimalFeedDatatable() {
           className="mr-2"
           onClick={() => confirmDeleteAnimalFeed(animalFeed)}
         >
-          <HiTrash />
-          <span>Delete</span>
+          <HiTrash className="mx-auto" />
         </Button>
       </React.Fragment>
     );

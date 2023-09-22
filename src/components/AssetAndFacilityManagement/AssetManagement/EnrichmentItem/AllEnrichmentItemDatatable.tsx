@@ -8,12 +8,13 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
-import EnrichmentItem from "../../../models/EnrichmentItem";
-import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import EnrichmentItem from "../../../../models/EnrichmentItem";
+import useApiJson from "../../../../hooks/useApiJson";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 function AllEnrichmentItemDatatable() {
   const apiJson = useApiJson();
@@ -31,15 +32,22 @@ function AllEnrichmentItemDatatable() {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<EnrichmentItem[]>>(null);
+  const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    apiJson.get("http://localhost:3000/api/enrichmentItem/getallenrichmentItem");
+    const fetchEnrichmentItem = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/assetfacility/getallenrichmentItem"
+        );
+        setEnrichmentItemList(responseJson as EnrichmentItem[]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchEnrichmentItem();
   }, []);
 
-  useEffect(() => {
-    const enrichmentItemData = apiJson.result as EnrichmentItem[];
-    setEnrichmentItemList(enrichmentItemData);
-  }, [apiJson.loading]);
 
   //
   const exportCSV = () => {
@@ -53,8 +61,8 @@ function AllEnrichmentItemDatatable() {
   const imageBodyTemplate = (rowData: EnrichmentItem) => {
     return (
       <img
-        src={rowData.enrichmentItemImageUrl}
-        alt={rowData.enrichmentItemName}
+      src={"http://localhost:3000/" + rowData.enrichmentItemImageUrl}
+      alt={rowData.enrichmentItemName}
         className="border-round shadow-2"
         style={{ width: "64px" }}
       />
@@ -73,20 +81,38 @@ function AllEnrichmentItemDatatable() {
   };
 
   // delete enrichmentItem stuff
-  const deleteEnrichmentItem = () => {
+  const deleteEnrichmentItem = async () => {
     let _enrichmentItem = enrichmentItemList.filter(
       (val) => val.enrichmentItemId !== selectedEnrichmentItem?.enrichmentItemId
     );
 
-    setEnrichmentItemList(_enrichmentItem);
-    setDeleteEnrichmentItemDialog(false);
-    setSelectedEnrichmentItem(emptyEnrichmentItem);
-    toast.current?.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "EnrichmentItem Deleted",
-      life: 3000,
-    });
+    const deleteEnrichmentItem = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/assetFacility/deleteEnrichmentItem/" +
+            selectedEnrichmentItem.enrichmentItemName
+        );
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully deleted enrichment item: " + selectedEnrichmentItem.enrichmentItemName,
+        });
+        setEnrichmentItemList(_enrichmentItem);
+        setDeleteEnrichmentItemDialog(false);
+        setSelectedEnrichmentItem(emptyEnrichmentItem);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting enrichmentItem: \n" + apiJson.error,
+        });
+      }
+    };
+    deleteEnrichmentItem();
   };
 
   const deleteEnrichmentItemDialogFooter = (
@@ -106,10 +132,9 @@ function AllEnrichmentItemDatatable() {
   const actionBodyTemplate = (enrichmentItem: EnrichmentItem) => {
     return (
       <React.Fragment>
-        <NavLink to={`/enrichmentItem/editenrichmentItem/${enrichmentItem.enrichmentItemName}`}>
+        <NavLink to={`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemId}`}>
           <Button className="mr-2">
-            <HiPencil />
-            <span>Edit</span>
+            <HiEye className="mr-auto" />
           </Button>
         </NavLink>
         <Button
@@ -117,8 +142,7 @@ function AllEnrichmentItemDatatable() {
           className="mr-2"
           onClick={() => confirmDeleteEnrichmentItem(enrichmentItem)}
         >
-          <HiTrash />
-          <span>Delete</span>
+          <HiTrash className="mx-auto" />
         </Button>
       </React.Fragment>
     );
@@ -167,6 +191,12 @@ function AllEnrichmentItemDatatable() {
             globalFilter={globalFilter}
             header={header}
           >
+             <Column
+              field="enrichmentItemId"
+              header="ID"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
             <Column
               field="enrichmentItemName"
               header="Name"
