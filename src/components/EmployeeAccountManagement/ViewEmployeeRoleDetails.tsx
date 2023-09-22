@@ -361,7 +361,7 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                     <TableCell className="w-1/4 font-bold" colSpan={1}>
                         Account Manager
                     </TableCell>
-                    <TableCell className="w-1/6" colSpan={2}>{curEmployee.isAccountManager ? "Yes" : "No"}</TableCell>
+                    <TableCell className="w-1/6" colSpan={1}>{curEmployee.isAccountManager ? "Yes" : "No"}</TableCell>
                     <TableCell className="w-1/6" colSpan={2}>{curEmployee.isAccountManager ? 
                         <Button type="button" onClick={disableAccountManager}>Revoke access</Button>
                         : 
@@ -370,20 +370,25 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                     </TableCell>
                 </TableRow>
                 <TableRow>
+                    {curEmployee.keeper && 
                     <TableCell className="w-1/4 font-bold" rowSpan={4} colSpan={1}>
                         Keeper Role
                     </TableCell>
+                    }
+                    {!curEmployee.keeper && 
+                    <TableCell className="w-1/4 font-bold" rowSpan={2} colSpan={1}>
+                        Keeper Role
+                    </TableCell>}
                 </TableRow>
-                
-                    <TableRow>
-                        {curEmployee.keeper && <TableCell className="w-1/6 font-bold">Disabled</TableCell>}
-                        {curEmployee.keeper && <TableCell >{curEmployee.keeper.isDisabled ? "Yes" : "No"}</TableCell>}
-                        <TableCell className="w-1/3" rowSpan={1} colSpan={1}>
-                            {!curEmployee.keeper || curEmployee.keeper.isDisabled
-                            ? <Button type="button" onClick={() => confirmEnableRole("Keeper")}>Enable</Button>
-                            : <Button type="button" onClick={() => confirmDisableRole("Keeper")}>Disable</Button>}
-                        </TableCell>
-                    </TableRow>
+                <TableRow>
+                    {curEmployee.keeper && <TableCell className="w-1/6 font-bold">Disabled</TableCell>}
+                    {curEmployee.keeper && <TableCell >{curEmployee.keeper.isDisabled ? "Yes" : "No"}</TableCell>}
+                    <TableCell className="w-1/3" rowSpan={1} colSpan={1}>
+                        {!curEmployee.keeper || curEmployee.keeper.isDisabled
+                        ? <Button type="button" onClick={() => confirmEnableRole("Keeper")}>Enable</Button>
+                        : <Button type="button" onClick={() => confirmDisableRole("Keeper")}>Disable</Button>}
+                    </TableCell>
+                </TableRow>
                 {/*{(!curEmployee.keeper || curEmployee.keeper.isDisabled) && 
                     <TableRow>
                         <TableCell className="w-1/4" colSpan={3}>
@@ -414,20 +419,26 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                     </TableRow>
                 }
                 <TableRow>
-                    <TableCell className="w-1/4 font-bold" rowSpan={4} colSpan={1}>
+                    {curEmployee.generalStaff && 
+                    <TableCell className="w-1/4 font-bold" rowSpan={3} colSpan={1}>
                         General Staff Role
-                    </TableCell>
+                    </TableCell>}
+                    {!curEmployee.generalStaff && 
+                    <TableCell className="w-1/4 font-bold" rowSpan={2} colSpan={1}>
+                        General Staff
+                    </TableCell>}
                 </TableRow>
                 
-                    <TableRow>
-                        {curEmployee.generalStaff && <TableCell className="w-1/6 font-bold">Disabled</TableCell>}
-                        {curEmployee.generalStaff && <TableCell colSpan={1}>{curEmployee.generalStaff.isDisabled ? "Yes" : "No"}</TableCell>}
-                        <TableCell className="w-1/3" rowSpan={1} colSpan={1}>
-                            {!curEmployee.generalStaff || curEmployee.generalStaff.isDisabled
-                            ? <Button type="button" onClick={() => confirmEnableRole("General Staff")}>Enable</Button>
-                            : <Button type="button" onClick={() => confirmDisableRole("General Staff")}>Disable</Button>}
-                        </TableCell>
-                    </TableRow>
+                <TableRow>
+                    {curEmployee.generalStaff && <TableCell className="w-1/6 font-bold">Disabled</TableCell>}
+                    {curEmployee.generalStaff && <TableCell colSpan={1}>{curEmployee.generalStaff.isDisabled ? "Yes" : "No"}</TableCell>}
+                    {!curEmployee.generalStaff && <TableCell></TableCell>}
+                    <TableCell className="w-1/3" rowSpan={1} colSpan={1}>
+                        {!curEmployee.generalStaff || curEmployee.generalStaff.isDisabled
+                        ? <Button type="button" onClick={() => confirmEnableRole("General Staff")}>Enable</Button>
+                        : <Button type="button" onClick={() => confirmDisableRole("General Staff")}>Disable</Button>}
+                    </TableCell>
+                </TableRow>
                 {/*{(!curEmployee.keeper || curEmployee.keeper.isDisabled) && 
                     <TableRow>
                         <TableCell className="w-1/4" colSpan={3}>
@@ -446,7 +457,6 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                         }
                     </TableRow>
                 }
-
                 <TableRow>
                     <TableCell className="w-1/4 font-bold" rowSpan={4} colSpan={1}>
                         Planning Staff Role

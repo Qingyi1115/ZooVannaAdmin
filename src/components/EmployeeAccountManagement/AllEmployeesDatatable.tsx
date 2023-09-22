@@ -145,7 +145,13 @@ function AllEmployeesDatatable() {
           </Button>
         </NavLink>
         {employee.dateOfResignation ?
-        <span>Disabled</span>
+        <Button
+        disabled
+        variant={"destructive"}
+        >
+          <HiTrash className="mr-1" />
+          <span>Disabled</span>
+        </Button>
         :
         <Button
         variant={"destructive"}
