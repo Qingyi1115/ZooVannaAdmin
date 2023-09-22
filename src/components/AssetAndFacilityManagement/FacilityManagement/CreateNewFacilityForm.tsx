@@ -36,6 +36,8 @@ function CreateNewFacilityForm() {
     const [ownerContact, setOwnerContact] = useState<string>(""); // string
   const [isPaid, setIsPaid] = useState<string | undefined>(
     undefined); // dropdown
+    const [isSheltered, setIsSheltered] = useState<string | undefined>(
+      undefined); // dropdown
   const [facilityType, setFacilityType] = useState<string | undefined>(
     undefined); // dropdown
   const [facilityDetailJson, setFacilityDetailJson] = useState<any>(
@@ -66,6 +68,7 @@ function CreateNewFacilityForm() {
       facilityName: facilityName,
       xCoordinate: xCoordinate,
       yCoordinate: yCoordinate,
+      isSheltered: isSheltered,
       facilityDetail: facilityDetail,
       facilityDetailJson: facilityDetailJson
     }
@@ -161,6 +164,20 @@ function CreateNewFacilityForm() {
           ]}
           value={hasAirCon}
           setValue={setHasAirCon}
+          validateFunction={validateFacilityName}
+        />
+        {/* Is Sheltered */}
+        <FormFieldSelect
+          formFieldName="hasAirCon"
+          label="Is sheltered?"
+          required={true}
+          placeholder=""
+          valueLabelPair={[
+            ["true", "Yes"],
+            ["false", "No"]
+          ]}
+          value={isSheltered}
+          setValue={setIsSheltered}
           validateFunction={validateFacilityName}
         />
         </div>
