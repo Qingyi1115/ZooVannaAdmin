@@ -21,8 +21,8 @@ function EditEmployeePage() {
     employeeDoorAccessCode: "",
     employeePasswordhash: "",
     employeeSalt: "",
-    employeeProfileUrl:"",
     isAccountManager: false,
+    employeeProfileUrl:""
   };
 
   const { employeeId } = useParams<{ employeeId: string }>();

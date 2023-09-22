@@ -494,13 +494,24 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
+                              to="/assetfacility/maintenance"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              Maintenance Page
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
                               to="/assetfacility/viewallfacilities"
                               className={({ isActive }) =>
                                 "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
                                 (isActive && "!text-white")
                               }
                             >
-                              View All Facilities
+                              View All Customer Facilities
                             </NavLink>
                           </li>
                           <li>
@@ -511,7 +522,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && "!text-white")
                               }
                             >
-                              Add Facility
+                              Add Customer Facility
                             </NavLink>
                           </li>
                           <li>
@@ -556,6 +567,28 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               }
                             >
                               Add Enrichment Item
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/assetfacility/viewallsensors"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              View All Sensors
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/assetfacility/createsensor"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              Add Sensor
                             </NavLink>
                           </li>
                         </ul>

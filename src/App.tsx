@@ -15,19 +15,28 @@ import LoginPage from "./pages/LoginPage";
 import MainLayout from "./components/MainLayout";
 import ViewAllSpeciesPage from "./pages/speciesManagement/ViewAllSpeciesPage";
 import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage";
-import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/CreateNewFacilityPage";
 import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 import ViewSpeciesDetailsPage from "./pages/speciesManagement/ViewSpeciesDetailsPage";
-import EditFacilityPage from "./pages/assetAndFacilityManagement/EditFacilityPage";
-import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/ViewAllFacilitiesPage";
-import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/CreateNewAnimalFeedPage";
-import CreateNewEnrichmentItemPage from "./pages/assetAndFacilityManagement/CreateNewEnrichmentItemPage";
-import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/EditAnimalFeedPage";
-import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EditEnrichmentItemPage";
-import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/ViewAllAnimalFeedPage";
-import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/ViewAllEnrichmentItemsPage";
+
+//facility page
+import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
+import EditFacilityPage from "./pages/assetAndFacilityManagement/Facility/EditFacilityPage";
+import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilitiesPage";
+
+//assets
+import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/CreateNewAnimalFeedPage";
+import CreateNewEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/CreateNewEnrichmentItemPage";
+import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/EditAnimalFeedPage";
+import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/EditEnrichmentItemPage";
+import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/ViewAllAnimalFeedPage";
+import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/EnrichmentItem/ViewAllEnrichmentItemsPage";
+import CreateNewSensorPage from "./pages/assetAndFacilityManagement/Sensor/CreateNewSensorPage";
+import EditSensorPage from "./pages/assetAndFacilityManagement/Sensor/EditSensorPage";
+import ViewAllSensorsPage from "./pages/assetAndFacilityManagement/Sensor/ViewAllSensorsPage";
+
+//customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
 import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage";
 import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
@@ -39,8 +48,15 @@ import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEm
 import CreateNewEnclosureRequirementsPage from "./pages/speciesManagement/CreateNewEnclosureRequirementsPage";
 import EditEnclosureRequirementsPage from "./pages/speciesManagement/EditEnclosureRequirementsPage";
 import ViewEmployeeDetailsPage from "./pages/employeeAccountManagement/ViewEmployeeDetailsPage";
+import ProfilePage from "./pages/employeeCommonInfra/ProfilePage";
+import EditPasswordPage from "./pages/employeeCommonInfra/EditPasswordPage";
+import UpdateProfilePage from "./pages/employeeCommonInfra/UpdateProfilePage";
 import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNewDietaryRequirementsPage";
 import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
+import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
+import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
+import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facility/RemoveMaintenanceStaffPage";
+import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facility/AssignMaintenanceStaffPage";
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
@@ -48,7 +64,6 @@ import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPa
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
-
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
   return (
@@ -174,9 +189,39 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editfacility"
+                  path="/assetfacility/viewfacilitydetails/:facilityId"
+                  element={
+                    user ? (
+                      <ViewFacilityDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/assetfacility/editfacility/:facilityId"
                   element={
                     user ? <EditFacilityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/editfacility/:facilityId/assignstaff"
+                  element={
+                    user ? (
+                      <AssignMaintenanceStaffPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/assetfacility/editfacility/:facilityId/removestaff"
+                  element={
+                    user ? (
+                      <RemoveMaintenanceStaffPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
@@ -196,7 +241,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editanimalfeed/:animalfeedname"
+                  path="/assetfacility/editanimalfeed/:animalFeedName"
                   element={
                     user ? <EditAnimalFeedPage /> : <Navigate to="/login" />
                   }
@@ -218,7 +263,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editenrichmentitem/:enrichmentitemname"
+                  path="/assetfacility/editenrichmentitem/:enrichmentItemId"
                   element={
                     user ? <EditEnrichmentItemPage /> : <Navigate to="/login" />
                   }
@@ -228,6 +273,32 @@ function App() {
                   element={
                     user ? (
                       <ViewAllEnrichmentItemsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/assetfacility/createsensor"
+                  element={
+                    user ? <CreateNewSensorPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/editsensor/:sensorName"
+                  element={user ? <EditSensorPage /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/assetfacility/viewallsensors"
+                  element={
+                    user ? <ViewAllSensorsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/maintenance"
+                  element={
+                    user ? (
+                      <MaintenanceOperationSuggestionPage />
                     ) : (
                       <Navigate to="/login" />
                     )
@@ -276,6 +347,41 @@ function App() {
                   path="/customer/editcustomer"
                   element={
                     user ? <EditCustomerPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* Employee Account Management */}
+                <Route
+                  path="/employee/viewallemployees"
+                  element={
+                    user ? <ViewAllEmployeesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/employee/createnewemployee"
+                  element={
+                    user ? <CreateNewEmployeePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/employee/editemployee"
+                  element={
+                    user ? <EditEmployeePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={user ? <ProfilePage /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/updateProfile"
+                  element={
+                    user ? <UpdateProfilePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/edit-password"
+                  element={
+                    user ? <EditPasswordPage /> : <Navigate to="/login" />
                   }
                 />
               </Route>

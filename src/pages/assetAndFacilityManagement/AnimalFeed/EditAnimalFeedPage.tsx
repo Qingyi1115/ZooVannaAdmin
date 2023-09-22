@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import EditAnimalFeedForm from "../../components/AssetAndFacilityManagement/AssetManagement/EditAnimalFeedForm";
-import useApiJson from "../../hooks/useApiJson";
+import EditAnimalFeedForm from "../../../components/AssetAndFacilityManagement/AssetManagement/AnimalFeed/EditAnimalFeedForm";
+import useApiJson from "../../../hooks/useApiJson";
 import AnimalFeed from "src/models/AnimalFeed";
-import { AnimalFeedCategory } from "../../enums/AnimalFeedCategory";
+import { AnimalFeedCategory } from "../../../enums/AnimalFeedCategory";
 
 
 function EditAnimalFeedPage() {
@@ -18,10 +18,22 @@ function EditAnimalFeedPage() {
 
   const { animalFeedName } = useParams<{ animalFeedName: string }>();
   const [curAnimalFeed, setCurAnimalFeed] = useState<AnimalFeed>(emptyAnimalFeed);
-
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+ 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animalFeed/getanimalFeed/${animalFeedName}`);
-  }, []);
+    const fetchAnimalFeed = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/assetfacility/getAnimalFeed/${animalFeedName}`
+        );
+        setCurAnimalFeed(responseJson as AnimalFeed);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    fetchAnimalFeed();
+  }, [refreshSeed]);
 
   useEffect(() => {
     const animalFeed = apiJson.result as AnimalFeed;
@@ -31,7 +43,10 @@ function EditAnimalFeedPage() {
   return (
     <div className="p-10">
       {curAnimalFeed && curAnimalFeed.animalFeedId != -1 && (
-        <EditAnimalFeedForm curAnimalFeed={curAnimalFeed} />
+        <EditAnimalFeedForm 
+        curAnimalFeed={curAnimalFeed} 
+        refreshSeed={refreshSeed} 
+        setRefreshSeed={setRefreshSeed} />
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import CreateNewEnrichmentItemForm from "../../components/AssetAndFacilityManagement/AssetManagement/CreateNewEnrichmentItemForm";
+import CreateNewEnrichmentItemForm from "../../../components/AssetAndFacilityManagement/AssetManagement/EnrichmentItem/CreateNewEnrichmentItemForm";
 
 function CreateNewEnrichmentItemPage() {
   return (

@@ -1,8 +1,8 @@
 import { Toast } from "primereact/toast";
 import React, { useEffect, useState, useRef } from "react";
 import { DataTable } from "primereact/datatable";
-import useApiJson from "../../hooks/useApiJson";
-import Employee from "src/models/Employee";
+import useApiJson from "../../../hooks/useApiJson";
+import Employee from "../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink } from "react-router-dom";
@@ -10,13 +10,20 @@ import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
+import GeneralStaff from "../../../models/GeneralStaff";
 
 {
   /*const toast = useRef<Toast>(null);*/
 }
+interface AssignMaintenanceStaffProps {
+    facilityId: number;
+    employeeList: Employee[];
+}
 
-function AllEmployeesDatatable() {
+function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
   const apiJson = useApiJson();
+
+  const { facilityId, employeeList } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -34,64 +41,41 @@ function AllEmployeesDatatable() {
 
   const toast = useRef<Toast>(null);
 
-  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeResignationDialog, setEmployeeResignationDialog] = useState<boolean>(false);
   const toastShadcn = useToast().toast;
 
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const responseJson = await apiJson.post(
-          "http://localhost:3000/api/employee/getAllEmployees",
-          { includes: ["keeper", "generalStaff", "planningStaff"] }
-        );
-        setEmployeeList(responseJson.employees as Employee[]);
-         //console.log("Here " + responseJson);
-         //const help = responseJson as Employee[];
-         //console.log(help);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    fetchEmployees();
-  }, []);
-
   const hideEmployeeResignationDialog = () => {
     setEmployeeResignationDialog(false);
   }
 
-  const resignEmployee = async () => { 
+  const assignEmployee = async () => { 
     const selectedEmployeeName = selectedEmployee.employeeName;
-    console.log(selectedEmployee);
 
-    const resignEmployee = async() => {
-      try {
-        const responseJson = await apiJson.put(
-          `http://localhost:3000/api/employee/disableEmployee/${selectedEmployee.employeeId}`, selectedEmployee);
+    try {
+      const responseJson = await apiJson.put(
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, {employeeIds:[selectedEmployee.employeeId,]});
 
-        toastShadcn({
-          // variant: "destructive",
-          title: "Deletion Successful",
-          description:
-            "Successfully disabled employee: " + selectedEmployeeName,
-        });
-        setSelectedEmployee(employee);
-        setEmployeeResignationDialog(false);
-        window.location.reload();
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while disabling employee: \n" + apiJson.error,
-        });
-      }
+      toastShadcn({
+        // variant: "destructive",
+        title: "Deletion Successful",
+        description:
+          "Successfully disabled employee: " + selectedEmployeeName,
+      });
+      setSelectedEmployee(employee);
+      setEmployeeResignationDialog(false);
+      window.location.reload();
+    } catch (error: any) {
+      // got error
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while removing maintenance staff: \n" + apiJson.error,
+      });
     }
-    resignEmployee();
 
   }
 
@@ -101,14 +85,12 @@ function AllEmployeesDatatable() {
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={resignEmployee}>
+      <Button variant={"destructive"} onClick={assignEmployee}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-
-  
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -139,17 +121,11 @@ function AllEmployeesDatatable() {
         <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
-            <span>View Details</span>
+           
           </Button>
         </NavLink>
         {employee.dateOfResignation ?
-        <Button
-        disabled
-        variant={"destructive"}
-        >
-          <HiTrash className="mr-1" />
-          <span>Disabled</span>
-        </Button>
+        <span>Removed</span>
         :
         <Button
         variant={"destructive"}
@@ -157,7 +133,7 @@ function AllEmployeesDatatable() {
         onClick={() => confirmEmployeeResignation(employee)}
         >
           <HiTrash className="mr-1" />
-          <span>Disable</span>
+          <span>Remove</span>
         </Button>
         } 
       </React.Fragment>
@@ -248,7 +224,7 @@ function AllEmployeesDatatable() {
             />
             {selectedEmployee && (
               <span>
-                Are you sure you want to disable{" "}
+                Are you sure you want to assign employee?{" "}
                 <b>{selectedEmployee.employeeName}</b>?
               </span>
             )}
@@ -259,4 +235,4 @@ function AllEmployeesDatatable() {
   );
 }
 
-export default AllEmployeesDatatable;
+export default AssignMaintenanceStaff;

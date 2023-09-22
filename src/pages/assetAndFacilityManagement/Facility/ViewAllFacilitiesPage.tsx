@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import AllEnrichmentItemDatatable from "../../components/AssetAndFacilityManagement/AssetManagement/AllEnrichmentItemDatatable";
+import AllFacilityDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/AllFacilityDatatable";
 
 interface Product {
   id: string;
@@ -17,15 +17,15 @@ interface Product {
   rating: number;
 }
 
-function ViewAllEnrichmentItemPage() {
+function ViewAllFacilityPage() {
   return (
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
-        <span className="self-center text-title-xl font-bold">All Enrichment Items</span>
-        <AllEnrichmentItemDatatable />
+        <span className="self-center text-title-xl font-bold">All Facilities</span>
+        <AllFacilityDatatable />
       </div>
     </div>
   );
 }
 
-export default ViewAllEnrichmentItemPage;
+export default ViewAllFacilityPage;

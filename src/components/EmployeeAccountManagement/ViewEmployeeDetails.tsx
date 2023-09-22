@@ -25,17 +25,17 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
     const {curEmployee, refreshSeed, setRefreshSeed} = props;
     console.log(props);
     const toastShadcn = useToast().toast;
-    
-    const disableAccountManager = async() => {
+
+    const resetPassword = async() => {
         try {
             const responseJson = await apiJson.put(
-              `http://localhost:3000/api/employee/unSetAccountManager/${curEmployee.employeeId}`, curEmployee);
+              `http://localhost:3000/api/employee/resetPassword/${curEmployee.employeeId}`, curEmployee);
 
             toastShadcn({
               // variant: "destructive",
-              title: "Revoke is Successful",
+              title: "Email for password reset has been sent!",
               description:
-                "Successfully revoke access: " + curEmployee.employeeName,
+                "Successfully send password reset email" + curEmployee.employeeName,
             });
             setRefreshSeed(refreshSeed + 1);
           } catch (error: any) {
@@ -44,34 +44,10 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
               variant: "destructive",
               title: "Uh oh! Something went wrong.",
               description:
-                "An error has occurred while revoking access: \n" + apiJson.error,
+                "An error has occurred while sending email: \n" + apiJson.error,
             });
           }
     }
-
-    const enableAccountManager = async() => {
-        try {
-            const responseJson = await apiJson.put(
-              `http://localhost:3000/api/employee/setAccountManager/${curEmployee.employeeId}`, curEmployee);
-
-            toastShadcn({
-              // variant: "destructive",
-              title: "Access is granted",
-              description:
-                "Successfully granted Account Manager access: " + curEmployee.employeeName,
-            });
-            setRefreshSeed(refreshSeed + 1);
-          } catch (error: any) {
-            // got error
-            toastShadcn({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description:
-                "An error has occurred while granting access: \n" + apiJson.error,
-            });
-          }
-    }
-
 
     return(
         <div>
@@ -79,10 +55,9 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
             <Table>
             <TableHeader className=" bg-whiten">
                 <TableRow>
-                <TableHead className="w-3/3 font-bold" colSpan={2}>
+                <TableHead className="w-3/3 font-bold" colSpan={1}>
                     Personal Information
                 </TableHead>
-                <TableHead className="w-1/3 font-bold"></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -124,16 +99,16 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
                 <TableCell>{curEmployee.employeeEducation}</TableCell>
                 </TableRow>
                 <TableRow>
-                <TableCell className="w-1/3 font-bold" colSpan={2}>
-                    Account Manager
-                </TableCell>
-                <TableCell className="w-1/6" colSpan={3}>{curEmployee.isAccountManager ? "Yes" : "No"}</TableCell>
-                <TableCell>{
-                curEmployee.isAccountManager ? 
-                    <Button type="button" onClick={disableAccountManager}>Revoke access</Button>
-                    : 
-                    <Button type="button" onClick={enableAccountManager}>Set As Account Manager</Button>
-                    }
+                    <TableCell className="w-1/3 font-bold" colSpan={2}>
+                        Password
+                    </TableCell>
+                    <TableCell>
+                        {!curEmployee.dateOfResignation && 
+                        <Button type="button" onClick={resetPassword}>Reset Password</Button> }
+                        {curEmployee.dateOfResignation &&
+                        <Button type="button" disabled variant={"destructive"} onClick={resetPassword}>Reset Password</Button>
+                        }
+                        
                     </TableCell>
                 </TableRow>
 

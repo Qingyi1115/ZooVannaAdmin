@@ -8,43 +8,50 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
-import facility from "src/models/Facility";
-import useApiJson from "../../../hooks/useApiJson";
+import Sensor from "../../../../models/Sensor";
+import useApiJson from "../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
+import { SensorType } from "../../../../enums/SensorType";
 import { useToast } from "@/components/ui/use-toast";
 
-function AllfacilityDatatable() {
+function AllSensorDatatable() {
   const apiJson = useApiJson();
 
-  let emptyFacility: facility = {
-    facilityId: -1,
-    facilityName: "",
-    xCoordinate: 0,
-    yCoordinate: 0,
-    facilityDetail: "",
-    facilityDetailJson: undefined
+  let emptySensor: Sensor = {
+    sensorId: -1,
+    sensorName: "",
+    dateOfActivation: new Date(),
+    dateOfLastMaintained: new Date(),
+    sensorType: SensorType.CAMERA
   };
 
-  const [facilityList, setFacilityList] = useState<facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<facility>(emptyFacility);
-  const [deletefacilityDialog, setDeleteFacilityDialog] =
+  const [sensorList, setSensorList] = useState<Sensor[]>([]);
+  const [selectedSensor, setSelectedSensor] = useState<Sensor>(emptySensor);
+  const [deleteSensorDialog, setDeleteSensorDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<facility[]>>(null);
+  const dt = useRef<DataTable<Sensor[]>>(null);
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", {includes:[]}).catch(e=>{
-      console.log(e);
-    }).then(res=>{
-      setFacilityList(res["facilities"]);
-    })
+    const fetchSensor = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/assetFacility/getAllSensors"
+        );
+        console.log(responseJson["sensors"] );
+        setSensorList(responseJson["sensors"] as Sensor[]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchSensor();
   }, []);
-  
+
   //
   const exportCSV = () => {
     dt.current?.exportCSV();
@@ -54,88 +61,80 @@ function AllfacilityDatatable() {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
+  const navigateEditProduct = (sensor: Sensor) => {};
 
-
-  const confirmDeletefacility = (facility: facility) => {
-    setSelectedFacility(facility);
-    setDeleteFacilityDialog(true);
+  const confirmDeleteSensor = (sensor: Sensor) => {
+    setSelectedSensor(sensor);
+    setDeleteSensorDialog(true);
   };
 
-  const hideDeleteFacilityDialog = () => {
-    setDeleteFacilityDialog(false);
+  const hideDeleteSensorDialog = () => {
+    setDeleteSensorDialog(false);
   };
 
-  // delete facility stuff
-  const deleteFacility = async () => {
-    let _facility = facilityList.filter(
-      (val) => val.facilityId !== selectedFacility?.facilityId
+  // delete sensor stuff
+  const deleteSensor = async () => {
+    let _sensor = sensorList.filter(
+      (val) => val.sensorId !== selectedSensor?.sensorId
     );
 
-    const deleteFacility = async () => {
+    const deleteSensor = async () => {
       try {
-        setDeleteFacilityDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deleteFacility/" +
-            selectedFacility.facilityId
+          "http://localhost:3000/api/assetFacility/deletesensor/" +
+            selectedSensor.sensorId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted facility: " + selectedFacility.facilityName,
+            "Successfully deleted sensor: " + selectedSensor.sensorName,
         });
-        setFacilityList(_facility);
-        setSelectedFacility(emptyFacility);
+        setSensorList(_sensor);
+        setDeleteSensorDialog(false);
+        setSelectedSensor(emptySensor);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting facility: \n" + apiJson.error,
+            "An error has occurred while deleting sensor: \n" + apiJson.error,
         });
       }
     };
-    deleteFacility();
+    deleteSensor();
   };
 
-  const deleteFacilityDialogFooter = (
+  const deleteSensorDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteFacilityDialog}>
+      <Button onClick={hideDeleteSensorDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteFacility}>
+      <Button variant={"destructive"} onClick={deleteSensor}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete facility stuff
+  // end delete sensor stuff
 
-  const actionBodyTemplate = (facility: facility) => {
+  const actionBodyTemplate = (sensor: Sensor) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}>
-          <Button className="mb-1 mr-1">
-            <HiEye className="mr-1" />
-           
-          </Button>
-        </NavLink>
-        <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}>
-          <Button className="mr-1">
-            <HiPencil className="mr-1"/>
-          
+        <NavLink to={`/assetFacility/updateSensor/${sensor.sensorName}`}>
+          <Button className="mr-2">
+            <HiEye className="mr-auto" />
           </Button>
         </NavLink>
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeletefacility(facility)}
+          onClick={() => confirmDeleteSensor(sensor)}
         >
           <HiTrash className="mx-auto" />
-         
         </Button>
       </React.Fragment>
     );
@@ -143,7 +142,7 @@ function AllfacilityDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage facility</h4>
+      <h4 className="m-1">Manage Sensor</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -167,46 +166,46 @@ function AllfacilityDatatable() {
 
           <DataTable
             ref={dt}
-            value={facilityList}
-            selection={selectedFacility}
+            value={sensorList}
+            selection={selectedSensor}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedFacility(e.value);
+                setSelectedSensor(e.value);
               }
             }}
-            dataKey="facilityId"
+            dataKey="sensorId"
             paginator
             rows={10}
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facility"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensor"
             globalFilter={globalFilter}
             header={header}
           >
             <Column
-              field="facilityName"
+              field="sensorName"
               header="Name"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="xCoordinate"
-              header="X Coordinate"
+              field="dateOfActivation"
+              header="Activation Date"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="yCoordinate"
-              header="Y Coordinate"
+              field="dateOfLastMaintained"
+              header="Last Maintained"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="facilityDetail"
-              header="Details"
+              field="sensorType"
+              header="Sensor Type"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "16rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}
@@ -218,23 +217,23 @@ function AllfacilityDatatable() {
         </div>
       </div>
       <Dialog
-        visible={deletefacilityDialog}
+        visible={deleteSensorDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteFacilityDialogFooter}
-        onHide={hideDeleteFacilityDialog}
+        footer={deleteSensorDialogFooter}
+        onHide={hideDeleteSensorDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedFacility && (
+          {selectedSensor && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedFacility.facilityName}</b>?
+              <b>{selectedSensor.sensorName}</b>?
             </span>
           )}
         </div>
@@ -243,4 +242,4 @@ function AllfacilityDatatable() {
   );
 }
 
-export default AllfacilityDatatable;
+export default AllSensorDatatable;

@@ -2,11 +2,44 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import useLogout from "../../hooks/useLogout";
+import Employee from "../../models/Employee";
+import useApiJson from "../../hooks/useApiJson";
 
 // import UserOne from "../images/user/user-01.png";
 
 const DropdownUser = () => {
+  let apiJson = useApiJson();
+  let emptyEmployee: Employee = {
+    employeeId: -1,
+    employeeName: "",
+    employeeEmail: "",
+    employeeAddress: "",
+    employeePhoneNumber: "",
+    employeeDoorAccessCode: "",
+    employeeEducation: "",
+    employeeBirthDate: null,
+    isAccountManager: false,
+    dateOfResignation: null,
+    employeeProfileUrl: "",
+  };
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [curEmployee, setCurEmployee] = useState<Employee>(emptyEmployee);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/employee/getEmployee"
+        );
+        console.log("drop down obj",responseJson["employee"])
+        setCurEmployee(responseJson["employee"])
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchEmployees();
+  }, []);
+  
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
@@ -53,9 +86,9 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+            {curEmployee.employeeName}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">{curEmployee.isAccountManager ? "Admin" : "Employee"}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
@@ -118,7 +151,7 @@ const DropdownUser = () => {
           </li>
           <li>
             <Link
-              to="#"
+              to="/edit-password"
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
             >
               <svg
@@ -134,12 +167,12 @@ const DropdownUser = () => {
                   fill=""
                 />
               </svg>
-              My Contacts
+              Edit Password
             </Link>
           </li>
           <li>
             <Link
-              to="/settings"
+              to="/updateProfile"
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
             >
               <svg
