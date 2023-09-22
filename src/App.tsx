@@ -70,14 +70,12 @@ function App() {
     <PrimeReactProvider>
       <div className="App bg-whiter font-inter">
         <BrowserRouter>
-          <Routes>
-            <Route
-              path="/login"
-              element={!user ? <LoginPage /> : <Navigate to={"/"} />}
-            />
-          </Routes>
           <MainLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
             <Routes>
+              <Route
+                path="/login"
+                element={!user ? <LoginPage /> : <Navigate to={"/"} />}
+              />
               <Route>
                 {/* Home page */}
                 <Route
