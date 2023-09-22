@@ -12,8 +12,9 @@ import { Button } from "@/components/ui/button";
 import FormFieldInput from "../FormFieldInput";
 import FormFieldSelect from "../FormFieldSelect";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
 
 {
   /*const toast = useRef<Toast>(null);*/
@@ -27,44 +28,45 @@ function EditPassword() {
   const [oldpass1, setOldPass1] = useState<string>("");
   const [newpass, setNewPass] = useState<string>("");
   const [newpass2, setNewPass2] = useState<string>("");
-  const [formError, setFormError] = useState<JSX.Element|null>(null);
+  const [formError, setFormError] = useState<JSX.Element | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-      try {
-        if (newpass != newpass2){
-            return setFormError((
-                <div className="font-medium text-danger">
-                    Password does not match!
-                </div>
-            ))
-        }
-        setFormError(null);
-
-        const response = await apiJson.put(
-          "http://localhost:3000/api/employee/updateEmployeePassword",
-          {
-            newPassword: newpass, 
-            oldPassword: oldpass1, 
-          }
+    try {
+      if (newpass != newpass2) {
+        return setFormError(
+          <div className="font-medium text-danger">
+            Password does not match!
+          </div>
         );
-        navigate("/profile");
-        // clearForm();
-      } catch (error: any) {
-        console.log("err", error)
-        return toastShadcn({
-            variant: "destructive",
-            title: "Error",
-            description: error.message,
-          });
       }
-  }
+      setFormError(null);
 
+      const response = await apiJson.put(
+        "http://localhost:3000/api/employee/updateEmployeePassword",
+        {
+          newPassword: newpass,
+          oldPassword: oldpass1,
+        }
+      );
+      toastShadcn({
+        description: "Successfully changed your password",
+      });
+      navigate("/profile");
+      // clearForm();
+    } catch (error: any) {
+      console.log("err", error);
+      return toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error.message,
+      });
+    }
+  }
 
   function validateMatchingPassword(props: ValidityState) {
     return formError;
   }
-
 
   // const header = (
   //   <div className="flex flex-wrap items-center justify-between gap-2">
@@ -81,45 +83,59 @@ function EditPassword() {
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >
-      <span className="self-center text-title-xl font-bold">
-        Edit Password
-      </span>
+      <div className="flex flex-col">
+        <div className="mb-4 flex justify-between">
+          <NavLink className="flex" to={`/profile`}>
+            <Button variant={"outline"} type="button" className="">
+              Back
+            </Button>
+          </NavLink>
+          <span className="self-center text-lg text-graydark"> </span>
+          <Button disabled className="invisible">
+            Back
+          </Button>
+        </div>
+        <Separator />
+        <span className="mt-4 flex flex-col items-center self-center text-title-xl font-bold">
+          Change Password
+        </span>
+      </div>
 
-      <hr className="bg-stroke opacity-20" />
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         <FormFieldInput
           type="password"
           formFieldName="op"
           label="Old Password"
           required={true}
+          pattern={undefined}
           placeholder="old password"
           value={oldpass1}
           setValue={setOldPass1}
-          validateFunction={()=>null}
+          validateFunction={() => null}
         />
       </div>
-      
-      <hr className="bg-stroke opacity-20" />
+
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         <FormFieldInput
           type="password"
           formFieldName="newPassword"
           label="New Password"
           required={true}
+          pattern={undefined}
           placeholder="new password"
           value={newpass}
           setValue={setNewPass}
-          validateFunction={()=>null}
+          validateFunction={() => null}
         />
       </div>
-      
-      <hr className="bg-stroke opacity-20" />
+
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         <FormFieldInput
           type="password"
           formFieldName="newPassword2"
           label="New Password(again)"
           required={true}
+          pattern={undefined}
           placeholder="new password"
           value={newpass2}
           setValue={setNewPass2}
