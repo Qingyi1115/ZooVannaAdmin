@@ -27,6 +27,7 @@ import {
   PresentationMethod,
 } from "../../../enums/Enumurated";
 
+import { useNavigate } from "react-router-dom";
 interface EditDietaryRequirementsFormProps {
   curSpecies: Species;
   curSpeciesDietNeed: SpeciesDietNeed;
@@ -35,7 +36,7 @@ interface EditDietaryRequirementsFormProps {
 function EditDietaryRequirementsForm(props: EditDietaryRequirementsFormProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
-
+  const navigate = useNavigate();
   const { curSpecies, curSpeciesDietNeed } = props;
 
   // fields
@@ -212,6 +213,8 @@ function EditDietaryRequirementsForm(props: EditDietaryRequirementsFormProps) {
           description: "Successfully updated new dietary requirements.",
         });
         // setNewDietaryRequirementCreated(true);
+        const redirectUrl = `/species/viewspeciesdetails/${curSpecies.speciesCode}/dietneed`;
+        navigate(redirectUrl);
       } catch (error: any) {
         // got error
         toastShadcn({

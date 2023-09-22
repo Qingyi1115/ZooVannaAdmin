@@ -25,6 +25,8 @@ import {
 } from "../../../enums/Enumurated";
 import { Separator } from "@/components/ui/separator";
 
+import { useNavigate } from "react-router-dom";
+
 interface CreateDietaryRequirementsFormProps {
   curSpecies: Species;
 }
@@ -34,7 +36,7 @@ function CreateDietaryRequirementsForm(
 ) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
-
+  const navigate = useNavigate();
   const { curSpecies } = props;
 
   // fields
@@ -208,6 +210,8 @@ function CreateDietaryRequirementsForm(
           description: "Successfully created a new dietary requirements.",
         });
         setNewDietaryRequirementCreated(true);
+        const redirectUrl = `/species/viewspeciesdetails/${curSpecies.speciesCode}/dietneed`;
+        navigate(redirectUrl);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -375,38 +379,13 @@ function CreateDietaryRequirementsForm(
         </div>
 
         <Form.Submit asChild>
-          {!newDietaryRequirementCreated ? (
-            <Button
-              disabled={apiJson.loading}
-              className="h-12 w-2/3 self-center rounded-full text-lg"
-            >
-              {!apiJson.loading ? (
-                <div>Create Dietary Requirements</div>
-              ) : (
-                <div>Loading</div>
-              )}
-            </Button>
-          ) : (
-            <Button
-              disabled
-              className="h-12 w-2/3 self-center rounded-full text-lg"
-            >
-              Reload the page to create another species dietary requirements
-            </Button>
-          )}
-        </Form.Submit>
-        {newDietaryRequirementCreated && (
           <Button
-            type="button"
-            variant={"outline"}
-            onClick={() => {
-              window.location.reload();
-            }}
-            className="w-1/4 self-center rounded-full text-lg"
+            disabled={apiJson.loading}
+            className="h-12 w-2/3 self-center rounded-full text-lg"
           >
-            Reload Page
+            {!apiJson.loading ? <div>Submit</div> : <div>Loading</div>}
           </Button>
-        )}
+        </Form.Submit>
       </Form.Root>
     </div>
   );

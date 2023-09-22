@@ -18,7 +18,7 @@ import { NavLink } from "react-router-dom";
 
 import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
 import { Separator } from "@/components/ui/separator";
-
+import { useNavigate } from "react-router-dom";
 interface EditEnclosureRequirementsFormProps {
   curSpecies: Species;
   curEnclosureNeeds: SpeciesEnclosureNeed;
@@ -29,6 +29,7 @@ function EditEnclosureRequirementsForm(
 ) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const { curSpecies, curEnclosureNeeds } = props;
 
@@ -324,6 +325,8 @@ function EditEnclosureRequirementsForm(
         });
 
         // clearForm();
+        const redirectUrl = `/species/viewspeciesdetails/${curSpecies.speciesCode}/enclosureneed`;
+        navigate(redirectUrl);
       } catch (error: any) {
         // got error
         toastShadcn({

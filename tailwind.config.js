@@ -43,7 +43,7 @@ module.exports = {
         foreground: "#24341c",
         primary: "#84985A", // below there's another primary too
         "primary-foreground": "#f7fdf5",
-        secondary: "#caee80",
+        secondary: "#BDE56C",
         "secondary-foreground": "#FFFFFF",
         destructive: "#D34053",
         "destructive-foreground": "#FFFFFF",

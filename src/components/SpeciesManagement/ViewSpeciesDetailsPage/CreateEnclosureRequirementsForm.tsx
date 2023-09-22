@@ -18,6 +18,8 @@ import { NavLink } from "react-router-dom";
 import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
 import { Separator } from "@/components/ui/separator";
 
+import { useNavigate } from "react-router-dom";
+
 interface CreateEnclosureRequirementsFormProps {
   curSpecies: Species;
 }
@@ -27,6 +29,7 @@ function CreateEnclosureRequirementsForm(
 ) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const { curSpecies } = props;
 
@@ -305,6 +308,8 @@ function CreateEnclosureRequirementsForm(
 
         // clearForm();
         setNewEnclosureRequirementsCreated(true);
+        const redirectUrl = `/species/viewspeciesdetails/${curSpecies.speciesCode}/enclosureneed`;
+        navigate(redirectUrl);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -715,32 +720,12 @@ function CreateEnclosureRequirementsForm(
           </Form.Field>
 
           <Form.Submit asChild>
-            {!newEnclosureRequirementsCreated ? (
-              <Button
-                disabled={apiJson.loading}
-                className="h-12 w-2/3 self-center rounded-full text-lg"
-              >
-                {!apiJson.loading ? (
-                  <div>Create Enclosure Requirements</div>
-                ) : (
-                  <div>Loading</div>
-                )}
-              </Button>
-            ) : (
-              <div className="flex w-full flex-col items-center">
-                <span>Enclosure Requirements creation successful. </span>
-                <NavLink
-                  to={`/species/viewspeciesdetails/${curSpecies.speciesCode}`}
-                >
-                  <Button
-                    type="button"
-                    className="h-12 w-full self-center rounded-full text-lg"
-                  >
-                    Click to return to Species Details page
-                  </Button>
-                </NavLink>
-              </div>
-            )}
+            <Button
+              disabled={apiJson.loading}
+              className="h-12 w-2/3 self-center rounded-full text-lg"
+            >
+              {!apiJson.loading ? <div>Submit</div> : <div>Loading</div>}
+            </Button>
           </Form.Submit>
           {/* {formError && (
           <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
