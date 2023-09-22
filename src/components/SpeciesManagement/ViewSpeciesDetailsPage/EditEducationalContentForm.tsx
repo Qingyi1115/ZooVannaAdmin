@@ -91,7 +91,7 @@ function EditEducationalContentForm(props: EditEducationalContentForm) {
           <div className="mb-4 flex justify-between">
             <NavLink
               className="flex"
-              to={`/species/viewspeciesdetails/${curSpecies.speciesCode}`}
+              to={`/species/viewspeciesdetails/${curSpecies.speciesCode}/educontent`}
             >
               <Button variant={"outline"} type="button" className="">
                 Back

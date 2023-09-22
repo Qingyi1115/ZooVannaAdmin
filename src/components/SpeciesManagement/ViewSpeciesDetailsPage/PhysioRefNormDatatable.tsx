@@ -191,7 +191,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
         selectionMode={"single"}
         rowsPerPageOptions={[5, 10, 25]}
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} species"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} physiological reference norms"
         globalFilter={globalFilter}
         header={header}
       >

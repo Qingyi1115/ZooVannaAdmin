@@ -203,7 +203,7 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
           <div className="mb-4 flex justify-between">
             <NavLink
               className="flex"
-              to={`/species/viewspeciesdetails/${speciesCode}`}
+              to={`/species/viewspeciesdetails/${speciesCode}/physioref`}
             >
               <Button variant={"outline"} type="button" className="">
                 Back

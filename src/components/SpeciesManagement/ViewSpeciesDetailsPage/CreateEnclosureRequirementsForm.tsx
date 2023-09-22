@@ -354,7 +354,7 @@ function CreateEnclosureRequirementsForm(
             <div className="mb-4 flex justify-between">
               <NavLink
                 className="flex"
-                to={`/species/viewspeciesdetails/${speciesCode}`}
+                to={`/species/viewspeciesdetails/${speciesCode}/enclosureneed`}
               >
                 <Button variant={"outline"} type="button" className="">
                   Back
