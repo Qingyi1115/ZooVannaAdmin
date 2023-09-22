@@ -340,28 +340,33 @@ function EditEnclosureRequirementsForm(
 
   return (
     <div className="">
-      <NavLink
-        className="mx-auto mb-6 flex justify-center"
-        to={`/species/viewspeciesdetails/${speciesCode}`}
-      >
-        <Button
-          type="button"
-          className="h-12 w-1/3 self-center rounded-full px-4 text-lg"
-        >
-          Back to Species Details
-        </Button>
-      </NavLink>
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg bg-white text-black "
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
-        <span className="flex flex-col items-center self-center text-title-xl font-bold">
-          <span className="font-medium">
-            Create Species Enclosure Requirements for{" "}
+        <div className="flex flex-col">
+          <div className="mb-4 flex justify-between">
+            <NavLink
+              className="flex"
+              to={`/species/viewspeciesdetails/${speciesCode}`}
+            >
+              <Button variant={"outline"} type="button" className="">
+                Back
+              </Button>
+            </NavLink>
+            <span className="self-center text-lg text-graydark">
+              Create Species Enclosure Requirements
+            </span>
+            <Button disabled className="invisible">
+              Back
+            </Button>
+          </div>
+          <Separator />
+          <span className="mt-4 flex flex-col items-center self-center text-title-xl font-bold">
+            {curSpecies.commonName}
           </span>
-          {curSpecies.commonName}
-        </span>
+        </div>
         <Separator className="opacity-20" />
         {/* Small Exhibit Height Required */}
         {curSpecies.habitatOrExhibit.toLowerCase() == "exhibit" && (

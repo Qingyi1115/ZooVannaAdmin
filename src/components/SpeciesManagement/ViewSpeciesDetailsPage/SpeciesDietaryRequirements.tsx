@@ -40,8 +40,8 @@ function SpeciesDietaryRequirements(props: SpeciesDietaryRequirementsProps) {
   }, [resetSeed]);
 
   return (
-    <div>
-      <div className="my-4 flex justify-center gap-6">
+    <div className="">
+      <div className="my-4 flex justify-start gap-6">
         <NavLink
           to={`/species/createdietaryrequirements/${curSpecies.speciesCode}`}
         >

@@ -60,7 +60,7 @@ function SpeciesEnclosureRequirements(
   const { curSpecies } = props;
   const apiJson = useApiJson();
   const [curEnclosureNeeds, setCurEnclosureNeeds] =
-    useState<SpeciesEnclosureNeed | null>(null);
+    useState<SpeciesEnclosureNeed | null>(emptyEnclosureNeeds);
   const [deleteEnclosureReqDialog, setDeleteEnclosureReqDialog] =
     useState<boolean>(false);
 
@@ -135,9 +135,20 @@ function SpeciesEnclosureRequirements(
 
   return (
     <div>
-      {curEnclosureNeeds ? (
-        <div>
-          <div className="my-4 flex justify-center gap-6">
+      {!curEnclosureNeeds ? (
+        <div className="flex flex-col items-center gap-2">
+          <span>
+            No enclosure requirements information found for current species
+          </span>
+          <NavLink
+            to={`/species/createenclosurerequirements/${curSpecies.speciesCode}`}
+          >
+            <Button className="mb-1 mr-1">Create Enclosure Requirements</Button>
+          </NavLink>
+        </div>
+      ) : (
+        <div className="">
+          <div className="my-4 flex justify-start gap-6">
             <NavLink
               to={`/species/editenclosurerequirements/${curSpecies.speciesCode}`}
             >
@@ -151,8 +162,7 @@ function SpeciesEnclosureRequirements(
               Delete Enclosure Requirements
             </Button>
           </div>
-          <Separator />
-          <Table>
+          <Table className="rounded-lg shadow-lg">
             {/* <TableHeader className=" bg-whiten">
             <TableRow>
               <TableHead className="w-1/3 font-bold" colSpan={2}>
@@ -187,7 +197,7 @@ function SpeciesEnclosureRequirements(
                   <span className="text-blue-600">Water Area</span> (m
                   <sup>2</sup>)
                 </TableCell>
-                <TableCell>{curEnclosureNeeds.minLandAreaRequired}</TableCell>
+                <TableCell>{curEnclosureNeeds.minWaterAreaRequired}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -383,17 +393,6 @@ function SpeciesEnclosureRequirements(
               </TableRow>
             </TableBody>
           </Table>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center gap-2">
-          <span>
-            No enclosure requirements information found for current species
-          </span>
-          <NavLink
-            to={`/species/createenclosurerequirements/${curSpecies.speciesCode}`}
-          >
-            <Button className="mb-1 mr-1">Create Enclosure Requirements</Button>
-          </NavLink>
         </div>
       )}
       <Dialog
