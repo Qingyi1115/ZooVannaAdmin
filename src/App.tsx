@@ -216,7 +216,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editenrichmentitem/:enrichmentItemName"
+                  path="/assetfacility/editenrichmentitem/:enrichmentItemId"
                   element={
                     user ? <EditEnrichmentItemPage /> : <Navigate to="/login" />
                   }

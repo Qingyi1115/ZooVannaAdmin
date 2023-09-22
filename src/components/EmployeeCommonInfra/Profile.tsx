@@ -6,7 +6,7 @@ import Employee from "src/models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import * as Form from "@radix-ui/react-form";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { NavLink } from "react-router-dom";

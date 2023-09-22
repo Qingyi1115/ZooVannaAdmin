@@ -13,21 +13,17 @@ function EditEnrichmentItemPage() {
     enrichmentItemImageUrl: ""
   };
 
-  const [ enrichmentItemId, setEnrichmentItemId ] = useState<number>(0);
-  const { enrichmentItemName } = useParams<{ enrichmentItemName: string }>();
+  const { enrichmentItemId } = useParams<{ enrichmentItemId: string }>();
   const [curEnrichmentItem, setCurEnrichmentItem] = useState<EnrichmentItem>(emptyEnrichmentItem);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
   
   useEffect(() => {
     const fetchEnrichmentItem = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          `http://localhost:3000/api/assetfacility/getEnrichmentItem/${enrichmentItemId}`
-        );
-        setCurEnrichmentItem(responseJson as EnrichmentItem);
-      } catch (error: any) {
-        console.log(error);
-      }
+      apiJson.get(
+        `http://localhost:3000/api/assetFacility/getEnrichmentItem/${enrichmentItemId}`
+      ).catch(e=>console.log(e)).then(res=>{
+        setCurEnrichmentItem(res["enrichmentItem"]);
+      });
     };
 
     fetchEnrichmentItem();
