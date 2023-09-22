@@ -22,6 +22,7 @@ function validateFacilityName(props: ValidityState) {
 
 function CreateNewFacilityForm() {
   const apiFormData = useApiFormData();
+  const apiJson =  useApiJson();
   const toastShadcn = useToast().toast;
 
   const [facilityName, setFacilityName] = useState<string>(""); // text input
@@ -36,19 +37,21 @@ function CreateNewFacilityForm() {
     setImageFile(file);
   }
 
-
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
     const formData = new FormData();
     formData.append("facilityName", facilityName);
-    formData.append("file", imageFile || "");
+    // formData.append("file", imageFile || "");
     try {
-      const responseJson = await apiFormData.post(
+      const responseJson = await apiJson.post(
         "http://localhost:3000/api/assetFacility/createFacility",
-        formData
-      );
+        {
+          xCoordinate:xCoordinate,
+          yCoordinate:yCoordinate,
+          facilityName:facilityName, 
+        });
       // success
       toastShadcn({
         description: "Successfully created facility",
@@ -62,7 +65,7 @@ function CreateNewFacilityForm() {
           error.message,
       });
     }
-    console.log(apiFormData.result);
+    // console.log(apiFormData.result);
 
     // handle success case or failurecase using apiJson
   }

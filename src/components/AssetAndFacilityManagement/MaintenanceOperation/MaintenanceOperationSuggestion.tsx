@@ -8,16 +8,14 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
-import Sensor from "../../../../models/Sensor";
-import useApiJson from "../../../../hooks/useApiJson";
+import Sensor from "../../../models/Sensor";
+import useApiJson from "../../../hooks/useApiJson";
 import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
-
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
-import { SensorType } from "../../../../enums/SensorType";
-import { useToast } from "@/components/ui/use-toast";
+import { SensorType } from "../../../enums/SensorType";
 
-function AllSensorDatatable() {
+function MaintenanceOperationSuggestion() {
   const apiJson = useApiJson();
 
   let emptySensor: Sensor = {
@@ -35,16 +33,14 @@ function AllSensorDatatable() {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<Sensor[]>>(null);
-  const toastShadcn = useToast().toast;
 
   useEffect(() => {
     const fetchSensor = async () => {
       try {
         const responseJson = await apiJson.get(
-          "http://localhost:3000/api/assetFacility/getAllSensors"
+          "http://localhost:3000/api/assetfacility/getAllSensors"
         );
-        console.log(responseJson["sensors"] );
-        setSensorList(responseJson["sensors"] as Sensor[]);
+        setSensorList(responseJson as Sensor[]);
       } catch (error: any) {
         console.log(error);
       }
@@ -73,38 +69,20 @@ function AllSensorDatatable() {
   };
 
   // delete sensor stuff
-  const deleteSensor = async () => {
+  const deleteSensor = () => {
     let _sensor = sensorList.filter(
       (val) => val.sensorId !== selectedSensor?.sensorId
     );
 
-    const deleteSensor = async () => {
-      try {
-        const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deletesensor/" +
-            selectedSensor.sensorId
-        );
-
-        toastShadcn({
-          // variant: "destructive",
-          title: "Deletion Successful",
-          description:
-            "Successfully deleted sensor: " + selectedSensor.sensorName,
-        });
-        setSensorList(_sensor);
-        setDeleteSensorDialog(false);
-        setSelectedSensor(emptySensor);
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while deleting sensor: \n" + apiJson.error,
-        });
-      }
-    };
-    deleteSensor();
+    setSensorList(_sensor);
+    setDeleteSensorDialog(false);
+    setSelectedSensor(emptySensor);
+    toast.current?.show({
+      severity: "success",
+      summary: "Successful",
+      detail: "Sensor Deleted",
+      life: 3000,
+    });
   };
 
   const deleteSensorDialogFooter = (
@@ -124,7 +102,7 @@ function AllSensorDatatable() {
   const actionBodyTemplate = (sensor: Sensor) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetFacility/updateSensor/${sensor.sensorName}`}>
+        <NavLink to={`/assetfacility/editanimalfeed/${sensor.sensorName}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>
@@ -192,18 +170,6 @@ function AllSensorDatatable() {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="dateOfActivation"
-              header="Activation Date"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="dateOfLastMaintained"
-              header="Last Maintained"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
               field="sensorType"
               header="Sensor Type"
               sortable
@@ -244,4 +210,4 @@ function AllSensorDatatable() {
   );
 }
 
-export default AllSensorDatatable;
+export default MaintenanceOperationSuggestion;
