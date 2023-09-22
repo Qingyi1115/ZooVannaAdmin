@@ -92,7 +92,7 @@ function CreateEnclosureRequirementsForm(
   ////////
   function validateMinLandAreaRequired(props: ValidityState) {
     // if (props != undefined) {
-    if (minLandAreaRequired <= 0) {
+    if (Number(minLandAreaRequired) <= 0) {
       return (
         <div className="font-medium text-danger">
           * Minimum land area required must be greater than 0
@@ -106,7 +106,7 @@ function CreateEnclosureRequirementsForm(
 
   function validateMinWaterAreaRequired(props: ValidityState) {
     // if (props != undefined) {
-    if (minLandAreaRequired < 0) {
+    if (Number(minLandAreaRequired) < 0) {
       return (
         <div className="font-medium text-danger">
           * Minimum water area required must be equal to or greater than 0
@@ -118,59 +118,59 @@ function CreateEnclosureRequirementsForm(
     return null;
   }
 
-  function validateTemperatureRange(props: ValidityState) {
-    // if (props != undefined) {
-    if (acceptableTempMin >= acceptableTempMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum acceptable temperature must be smaller than the maximum
-        </div>
-      );
+  function validateMinTemperature(props: ValidityState) {
+    if (props != undefined) {
+      if (Number(acceptableTempMin) >= Number(acceptableTempMax)) {
+        return (
+          <div className="font-medium text-danger">
+            * Minimum acceptable temperature must be smaller than the maximum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    if (acceptableTempMin >= acceptableTempMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum acceptable temperature must be smaller than the maximum
-        </div>
-      );
+    return null;
+  }
+
+  function validateMaxTemperature(props: ValidityState) {
+    if (props != undefined) {
+      if (Number(acceptableTempMin) >= Number(acceptableTempMax)) {
+        return (
+          <div className="font-medium text-danger">
+            * Maximum acceptable temperature must be greater than the minimum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    // add any other cases here
-    // }
     return null;
   }
 
   function validateMinHumidity(props: ValidityState) {
-    // if (props != undefined) {
-    if (acceptableHumidityMin >= acceptableHumidityMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum acceptable humidity must be smaller than the maximum
-        </div>
-      );
+    if (props != undefined) {
+      if (Number(acceptableHumidityMax) < Number(acceptableHumidityMin)) {
+        return (
+          <div className="font-medium text-danger">
+            * Minimum acceptable humidity must be smaller than the maximum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    if (acceptableHumidityMin < 0) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum humidity must be equal to or greater than 0
-        </div>
-      );
-    }
-    // add any other cases here
-    // }
     return null;
   }
 
   function validateMaxHumidity(props: ValidityState) {
-    // if (props != undefined) {
-    if (acceptableHumidityMin >= acceptableHumidityMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Maximum acceptable humidity must be greater than the minimum
-        </div>
-      );
+    if (props != undefined) {
+      if (Number(acceptableHumidityMin) >= Number(acceptableHumidityMax)) {
+        return (
+          <div className="font-medium text-danger">
+            * Maximum acceptable humidity must be greater than the minimum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    // add any other cases here
-    // }
     return null;
   }
 
@@ -182,7 +182,7 @@ function CreateEnclosureRequirementsForm(
             * Please enter a recommended stand-off barrier distance
           </div>
         );
-      } else if (recommendedStandOffBarrierDistMetres <= 0) {
+      } else if (Number(recommendedStandOffBarrierDistMetres) <= 0) {
         return (
           <div className="font-medium text-danger">
             * Stand-off barrier distance must be greater than 0
@@ -425,7 +425,7 @@ function CreateEnclosureRequirementsForm(
               pattern={undefined}
               value={acceptableTempMin}
               setValue={setAcceptableTempMin}
-              validateFunction={validateTemperatureRange}
+              validateFunction={validateMinTemperature}
             />
             {/* Min Water Area Required */}
             <FormFieldInput
@@ -437,7 +437,7 @@ function CreateEnclosureRequirementsForm(
               pattern={undefined}
               value={acceptableTempMax}
               setValue={setAcceptableTempMax}
-              validateFunction={validateTemperatureRange}
+              validateFunction={validateMaxTemperature}
             />
           </div>
 
@@ -457,7 +457,7 @@ function CreateEnclosureRequirementsForm(
             {/* Max Acceptable Humidity */}
             <FormFieldInput
               type="number"
-              formFieldName="acceptableTempMax"
+              formFieldName="acceptableHumidityMax"
               label={`Maximum acceptable humidity (g.m⁻³)`}
               required={true}
               placeholder="e.g., 8"
