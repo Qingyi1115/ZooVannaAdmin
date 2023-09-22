@@ -53,6 +53,7 @@ import EditPasswordPage from "./pages/employeeCommonInfra/EditPasswordPage";
 import UpdateProfilePage from "./pages/employeeCommonInfra/UpdateProfilePage";
 import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNewDietaryRequirementsPage";
 import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
+import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -311,6 +312,13 @@ function App() {
                     user ? <EditPasswordPage /> : <Navigate to="/login" />
                   }
                 />
+                <Route
+                  path="/assetfacility/maintenance"
+                  element={
+                    user ? <MaintenanceOperationSuggestionPage /> : <Navigate to="/login" />
+                  }
+                />
+                
               </Route>
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
