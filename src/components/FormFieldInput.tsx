@@ -22,6 +22,7 @@ function FormFieldInput<T>(props: PropsType) {
     required,
     placeholder,
     value,
+    pattern,
     setValue,
     validateFunction,
   } = props;

@@ -129,10 +129,11 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
         animalFeedName,
         updatedAnimalFeedCategory
       };
+      console.log(updatedAnimalFeed);
 
       try {
         const responseJson = await apiJson.put(
-          "http://localhost:3000/api/assetfacility/updateAnimalFeed",
+          "http://localhost:3000/api/assetFacility/updateAnimalFeed",
           updatedAnimalFeed
         );
         // success
@@ -272,7 +273,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
 
             <Form.Submit asChild>
               <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-                Submit Edit AnimalFeed
+                Submit Edit Animal Feed
               </button>
             </Form.Submit>
             {formError && (

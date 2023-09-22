@@ -58,8 +58,7 @@ function CreateNewEnrichmentItemForm() {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
     console.log("Name:");
-    console.log(enrichmentItemName);
-    
+    console.log(enrichmentItemName);    
     const formData = new FormData();
     formData.append("enrichmentItemName", enrichmentItemName);
     formData.append("file", imageFile || "");
