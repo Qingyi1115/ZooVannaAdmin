@@ -19,6 +19,7 @@ import SpeciesDietaryRequirements from "../../components/SpeciesManagement/ViewS
 import { NavLink } from "react-router-dom";
 import SpeciesEnclosureCompatibilities from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEnclosureCompatibilities";
 import { Separator } from "@/components/ui/separator";
+import SpeciesPhysiologicalRefNorms from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesPhysiologicalRefNorms";
 
 function ViewSpeciesDetailsPage() {
   const apiJson = useApiJson();
@@ -126,7 +127,7 @@ function ViewSpeciesDetailsPage() {
                 <SpeciesEnclosureCompatibilities curSpecies={curSpecies} />
               </TabsContent>
               <TabsContent value="physioref">
-                Change your password here.
+                <SpeciesPhysiologicalRefNorms curSpecies={curSpecies} />
               </TabsContent>
             </Tabs>
             {/* <Accordion type="multiple">

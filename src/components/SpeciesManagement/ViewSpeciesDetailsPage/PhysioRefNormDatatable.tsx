@@ -3,6 +3,7 @@ import useApiJson from "../../../hooks/useApiJson";
 import {
   AnimalFeedCategory,
   AnimalGrowthStage,
+  AnimalGrowthState,
   PresentationContainer,
   PresentationLocation,
   PresentationMethod,
@@ -29,100 +30,100 @@ import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import Species from "../../../models/Species";
+import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
 
-interface DietNeedDatatableProps {
-  dietNeedsList: SpeciesDietNeed[];
-  setDietNeedsList: React.Dispatch<React.SetStateAction<SpeciesDietNeed[]>>;
+interface PhysioRefNormDatatableProps {
+  physiologicalRefNormsList: PhysiologicalReferenceNorms[];
+  setPhysiologicalRefNormsList: React.Dispatch<
+    React.SetStateAction<PhysiologicalReferenceNorms[]>
+  >;
   curSpecies: Species;
 }
 
-const emptyDietNeeds: SpeciesDietNeed = {
-  speciesDietNeedId: 1,
-  animalFeedCategory: AnimalFeedCategory.FISH,
-  amountPerMealGram: 100,
-  amountPerWeekGram: 1000,
-  presentationContainer: PresentationContainer.SILICONE_DISH,
-  presentationMethod: PresentationMethod.CHOPPED,
-  presentationLocation: PresentationLocation.IN_CONTAINER,
-  growthStage: AnimalGrowthStage.ADULT,
+const emptyPhysioRefNorm: PhysiologicalReferenceNorms = {
+  physiologicalRefId: 1,
+  sizeMaleCm: 100,
+  sizeFemaleCm: 90,
+  weightMaleKg: 200,
+  weightFemaleKg: 190,
+  ageToGrowthAge: 15,
+  growthStage: AnimalGrowthStage.JUVENILE,
 };
 
-function DietNeedDatatable(props: DietNeedDatatableProps) {
-  const { curSpecies, dietNeedsList, setDietNeedsList } = props;
+function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
+  const {
+    curSpecies,
+    physiologicalRefNormsList,
+    setPhysiologicalRefNormsList,
+  } = props;
+
   const apiJson = useApiJson();
-  const [selectedDietNeeds, setSelectedDietNeeds] =
-    useState<SpeciesDietNeed>(emptyDietNeeds);
-  const [deleteSpeciesDietNeedsDialog, setDeleteSpeciesDietNeedsDialog] =
+  const [selectedPhysioRefNorm, setSelectedPhysioRefNorm] =
+    useState<PhysiologicalReferenceNorms>(emptyPhysioRefNorm);
+  const [deletePhysioRefNormDialog, setDeletePhysioRefNormDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
 
-  const dt = useRef<DataTable<SpeciesDietNeed[]>>(null);
+  const dt = useRef<DataTable<PhysiologicalReferenceNorms[]>>(null);
 
   const toastShadcn = useToast().toast;
 
-  //
-  const exportCSV = () => {
-    dt.current?.exportCSV();
-  };
-
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-  const navigateEditProduct = (species: SpeciesDietNeed) => {};
-
   // Delete stuff
-  const confirmDeleteDietaryReq = (speciesDietNeed: SpeciesDietNeed) => {
-    setSelectedDietNeeds(speciesDietNeed);
-    setDeleteSpeciesDietNeedsDialog(true);
+  const confirmDeletePhysioRefNorm = (
+    physioRefNorm: PhysiologicalReferenceNorms
+  ) => {
+    setSelectedPhysioRefNorm(physioRefNorm);
+    setDeletePhysioRefNormDialog(true);
   };
 
-  const hideDeleteDietaryReqDialog = () => {
-    setDeleteSpeciesDietNeedsDialog(false);
+  const hideDeletePhysioRefNormDialog = () => {
+    setDeletePhysioRefNormDialog(false);
   };
 
   // delete species stuff
-  const deleteSpeciesDietaryReq = async () => {
-    let _dietNeedsList = dietNeedsList.filter(
-      (val) => val.speciesDietNeedId !== selectedDietNeeds?.speciesDietNeedId
+  const deletePhysioRefNorm = async () => {
+    let _physiologicalRefNormsList = physiologicalRefNormsList.filter(
+      (val) =>
+        val.physiologicalRefId !== selectedPhysioRefNorm?.physiologicalRefId
     );
 
-    const deleteSpeciesDietaryReqApi = async () => {
+    const deletePhysioRefNormApi = async () => {
       try {
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/species/deleteDietNeed/" +
-            selectedDietNeeds?.speciesDietNeedId
+          "http://localhost:3000/api/species/deletePhysiologicalReferenceNorms/" +
+            selectedPhysioRefNorm?.physiologicalRefId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
-          description: "Successfully deleted species dietary requirements",
+          description:
+            "Successfully deleted the species physiological reference norm",
         });
-        setDietNeedsList(_dietNeedsList);
-        setDeleteSpeciesDietNeedsDialog(false);
-        setSelectedDietNeeds(emptyDietNeeds);
+        setPhysiologicalRefNormsList(_physiologicalRefNormsList);
+        setDeletePhysioRefNormDialog(false);
+        setSelectedPhysioRefNorm(emptyPhysioRefNorm);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting species dietary requirements: \n" +
+            "An error has occurred while deleting species physiological reference norm: \n" +
             apiJson.error,
         });
       }
     };
-    deleteSpeciesDietaryReqApi();
+    deletePhysioRefNormApi();
   };
 
-  const deleteSpeciesDialogFooter = (
+  const deletePhysioRefNormDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteDietaryReqDialog}>
+      <Button onClick={hideDeletePhysioRefNormDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteSpeciesDietaryReq}>
+      <Button variant={"destructive"} onClick={deletePhysioRefNorm}>
         <HiCheck />
         Yes
       </Button>
@@ -130,11 +131,11 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
   );
   // end delete stuff
 
-  const actionBodyTemplate = (speciesDietNeed: SpeciesDietNeed) => {
+  const actionBodyTemplate = (physioRefNorm: PhysiologicalReferenceNorms) => {
     return (
       <React.Fragment>
         <NavLink
-          to={`/species/editdietaryrequirements/${curSpecies.speciesCode}/${speciesDietNeed.speciesDietNeedId}`}
+          to={`/species/editphysiorefnorm/${curSpecies.speciesCode}/${physioRefNorm.physiologicalRefId}`}
         >
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
@@ -144,7 +145,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteDietaryReq(speciesDietNeed)}
+          onClick={() => confirmDeletePhysioRefNorm(physioRefNorm)}
         >
           <HiTrash className="mr-1" />
           <span>Delete</span>
@@ -155,7 +156,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Dietary Requirements</h4>
+      <h4 className="m-1">Physiological Reference Norms</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -174,11 +175,11 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
     <div>
       <DataTable
         ref={dt}
-        value={dietNeedsList}
-        selection={selectedDietNeeds}
+        value={physiologicalRefNormsList}
+        selection={selectedPhysioRefNorm}
         onSelectionChange={(e) => {
           if (Array.isArray(e.value)) {
-            setDietNeedsList(e.value);
+            setPhysiologicalRefNormsList(e.value);
           }
         }}
         dataKey="speciesId"
@@ -194,44 +195,44 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
         header={header}
       >
         <Column
+          field="physiologicalRefId"
+          header="Growth Stage"
+          sortable
+          style={{ minWidth: "10rem" }}
+        ></Column>
+        <Column
           field="growthStage"
           header="Growth Stage"
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="animalFeedCategory"
+          field="ageToGrowthAge"
           header="Feed Category"
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="amountPerMealGram"
+          field="sizeMaleCm"
           header="Amount Per Meal (grams)"
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="amountPerWeekGram"
+          field="weightMaleKg"
           header="Amount Per Week (grams)"
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="presentationContainer"
+          field="sizeFemaleCm"
           header="Recommended Container"
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="presentationMethod"
+          field="weightFemaleKg"
           header="Recommended Method"
-          sortable
-          style={{ minWidth: "10rem" }}
-        ></Column>
-        <Column
-          field="presentationLocation"
-          header="Feed Location"
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
@@ -245,19 +246,20 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
         ></Column>
       </DataTable>
       <Dialog
-        visible={deleteSpeciesDietNeedsDialog}
+        visible={deletePhysioRefNormDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteSpeciesDialogFooter}
-        onHide={hideDeleteDietaryReqDialog}
+        footer={deletePhysioRefNormDialogFooter}
+        onHide={hideDeletePhysioRefNormDialog}
       >
         <div className="confirmation-content">
           <i className="" />
-          {selectedDietNeeds && (
+          {selectedPhysioRefNorm && (
             <span>
-              Are you sure you want to delete the current dietary requirements?
+              Are you sure you want to delete the current physiological
+              reference norm?
             </span>
           )}
         </div>
@@ -266,4 +268,4 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
   );
 }
 
-export default DietNeedDatatable;
+export default PhysioRefNormDatatable;

@@ -42,6 +42,7 @@ import ViewEmployeeDetailsPage from "./pages/employeeAccountManagement/ViewEmplo
 import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNewDietaryRequirementsPage";
 import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
+import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -137,6 +138,16 @@ function App() {
                   element={
                     user ? (
                       <EditEducationalContentPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/species/createphysioref/:speciesCode/"
+                  element={
+                    user ? (
+                      <CreatePhysiologicalRefNormPage />
                     ) : (
                       <Navigate to="/login" />
                     )
