@@ -26,6 +26,28 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
     console.log(props);
     const toastShadcn = useToast().toast;
 
+    const resetPassword = async() => {
+        try {
+            const responseJson = await apiJson.put(
+              `http://localhost:3000/api/employee/resetPassword/${curEmployee.employeeId}`, curEmployee);
+
+            toastShadcn({
+              // variant: "destructive",
+              title: "Email for password reset has been sent!",
+              description:
+                "Successfully send password reset email" + curEmployee.employeeName,
+            });
+            setRefreshSeed(refreshSeed + 1);
+          } catch (error: any) {
+            // got error
+            toastShadcn({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description:
+                "An error has occurred while sending email: \n" + apiJson.error,
+            });
+          }
+    }
 
     return(
         <div>
@@ -75,6 +97,14 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
                     Education
                 </TableCell>
                 <TableCell>{curEmployee.employeeEducation}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell className="w-1/3 font-bold" colSpan={2}>
+                        Password
+                    </TableCell>
+                    <TableCell>
+                        <Button type="button" onClick={resetPassword}>Reset Password</Button>
+                    </TableCell>
                 </TableRow>
 
                 {/*<TableCell className="w-1/5 font-bold" rowSpan={8}>

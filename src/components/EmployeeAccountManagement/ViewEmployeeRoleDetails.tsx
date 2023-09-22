@@ -36,6 +36,8 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
     const [role, setRole] = useState<string | undefined>();
     const [roleType, setRoleType] = useState<string | undefined>();
     const [specializationType, setSpecializationType] = useState<string | undefined>();
+    const [updateRoleDialog, setUpdateRoleDialog] = useState<boolean>(false);
+    const [updateSpecializationDialog, setUpdateSpecializationDialog] = useState<boolean>(false);
 
     function validateRoleType(props: ValidityState) {
         if (props != undefined) {
@@ -127,6 +129,7 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                 description:
                     "Successfully disabled " + role + " role access: " + curEmployee.employeeName,
             });
+            setDisableRoleDialog(false);
             setRefreshSeed(refreshSeed + 1);
         } catch (error: any) {
             // got error
@@ -155,15 +158,14 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
         <HiX />
         No
         </Button>
-        {role && <Button variant={"destructive"} onClick={() => disableRole}>
+        {role && <Button variant={"destructive"} onClick={disableRole}>
         <HiCheck />
         Yes
         </Button>}
     </React.Fragment>
     );
 
-    async function enableRole(e: React.FormEvent<HTMLFormElement>){
-        e.preventDefault();
+    async function enableRole(e : any){
         try {
             let roleJson;
             console.log(props, role);
@@ -197,8 +199,7 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
             }
             console.log("this way please " + role);
             console.log(result.role, result.roleJson);
-            const responseJson = await apiJson.put(
-                `http://localhost:3000/api/employee/getEmployee/${curEmployee.employeeId}/enableRole`, result);
+            const responseJson = await apiJson.put(`http://localhost:3000/api/employee/getEmployee/${curEmployee.employeeId}/enableRole`, result);
 
             console.log("Here2" + responseJson);
             
@@ -208,7 +209,7 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                 description:
                     "Successfully granted role access: " + curEmployee.employeeName,
             });
-            //setRefreshSeed(refreshSeed + 1);
+            setRefreshSeed(refreshSeed + 1);
         } catch (error: any) {
             // got error
             toastShadcn({
@@ -218,17 +219,112 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                 "An error has occurred while granting access: \n" + apiJson.error,
             });
         }
-        enableRole;
+    } 
+
+    async function updateSpecialization(e : any){
+        try {
+            let roleJson;
+            console.log(props, role);
+            
+            roleJson = specializationType;
+
+            let result;
+            
+            result = {
+                role,
+                roleJson,
+            }
+            console.log("this way please " + role);
+            console.log(result.role, result.roleJson);
+            const responseJson = await apiJson.put(`http://localhost:3000/api/employee/getEmployee/${curEmployee.employeeId}/updateSpecializationType`, result);
+
+            console.log("Here2" + responseJson);
+            
+            toastShadcn({
+                // variant: "destructive",
+                title: "Role Type is updated!",
+                description:
+                    "Successfully update Specialization Type" + curEmployee.employeeName,
+            });
+            setRefreshSeed(refreshSeed + 1);
+        } catch (error: any) {
+            // got error
+            toastShadcn({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description:
+                "An error has occurred while updating specialization type: \n" + apiJson.error,
+            });
+        }
+    } 
+
+    const hideSpecializationTypeDialog = () => {
+        setUpdateSpecializationDialog(false);
+    }
+
+    async function updateRole(e : any){
+        try {
+            let roleJson;
+            console.log(props, role);
+            
+            roleJson = roleType;
+
+            let result;
+            
+            result = {
+                role,
+                roleJson,
+            }
+            console.log("this way please " + role);
+            console.log(result.role, result.roleJson);
+            const responseJson = await apiJson.put(`http://localhost:3000/api/employee/getEmployee/${curEmployee.employeeId}/updateRoleType`, result);
+
+            console.log("Here2" + responseJson);
+            
+            toastShadcn({
+                // variant: "destructive",
+                title: "Role Type is updated!",
+                description:
+                    "Successfully update role type" + curEmployee.employeeName,
+            });
+            setRefreshSeed(refreshSeed + 1);
+        } catch (error: any) {
+            // got error
+            toastShadcn({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description:
+                "An error has occurred while updating role type: \n" + apiJson.error,
+            });
+        }
     } 
 
     const hideEnableRoleDialog = () => {
         setDisableRoleDialog(false);
     }
 
+    const hideUpdateRoleDialog = () => {
+        setUpdateRoleDialog(false);
+    }
+
     const confirmEnableRole= (props: string) => {
         setRole(props);
         console.log(props, role);
-        setEnableRoleDialog(true);
+        if(props === "Keeper" && !curEmployee.keeper) {
+            setEnableRoleDialog(true);
+        }
+        else if (props === "General Staff" && !curEmployee.generalStaff) {
+            setEnableRoleDialog(true);
+        }
+        else if (props === "Planning Staff" && !curEmployee.planningStaff) {
+            setEnableRoleDialog(true);
+        }
+        else if (props === "Keeper" || props === "General Staff" || props === "Planning Staff") {
+            enableRole(undefined);
+            
+            console.log("HEEEEEE")
+        }
+        
     };
 
     const enableRoleDialogFooter= (
@@ -244,6 +340,16 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
         </React.Fragment>
     );
 
+    const updateRoleType = (props: string) => {
+        setRole(props);
+        setUpdateRoleDialog(true);
+    }
+
+    const updateSpecializationType = (props: string) => {
+        setRole(props);
+        setUpdateSpecializationDialog(true);
+    }
+
     return(
         <div>
             <div className="overflow-hidden rounded-lg border border-strokedark/40 lg:mx-20">
@@ -253,7 +359,7 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                 <TableHead className="w-3/3 font-bold" colSpan={3}>
                     Access Role
                 </TableHead>
-                <TableHead className="w-1/3 font-bold"></TableHead>
+                <TableHead className="w-1/3 font-bold" colSpan={2}></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -262,8 +368,7 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                         Account Manager
                     </TableCell>
                     <TableCell className="w-1/6" colSpan={2}>{curEmployee.isAccountManager ? "Yes" : "No"}</TableCell>
-                    <TableCell className="w-1/6" colSpan={1}>{
-                    curEmployee.isAccountManager ? 
+                    <TableCell className="w-1/6" colSpan={2}>{curEmployee.isAccountManager ? 
                         <Button type="button" onClick={disableAccountManager}>Revoke access</Button>
                         : 
                         <Button type="button" onClick={enableAccountManager}>Set As Account Manager</Button>
@@ -278,12 +383,12 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                 
                     <TableRow>
                         {curEmployee.keeper && <TableCell className="w-1/6 font-bold">Disabled</TableCell>}
-                        {curEmployee.keeper && <TableCell colSpan={1}>{curEmployee.keeper.isDisabled ? "Yes" : "No"}</TableCell>}
+                        {curEmployee.keeper && <TableCell >{curEmployee.keeper.isDisabled ? "Yes" : "No"}</TableCell>}
                         <TableCell className="w-1/3" rowSpan={1} colSpan={1}>
-                        {!curEmployee.keeper || curEmployee.keeper.isDisabled
-                        ? <Button type="button" onClick={() => confirmEnableRole("Keeper")}>Enable</Button>
-                        : <Button type="button" onClick={() => confirmDisableRole("Keeper")}>Disable</Button>}
-                    </TableCell>
+                            {!curEmployee.keeper || curEmployee.keeper.isDisabled
+                            ? <Button type="button" onClick={() => confirmEnableRole("Keeper")}>Enable</Button>
+                            : <Button type="button" onClick={() => confirmDisableRole("Keeper")}>Disable</Button>}
+                        </TableCell>
                     </TableRow>
                 {/*{(!curEmployee.keeper || curEmployee.keeper.isDisabled) && 
                     <TableRow>
@@ -295,17 +400,94 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                 {curEmployee.keeper && 
                     <TableRow>
                         <TableCell className="w-1/6 font-bold">Keeper Type</TableCell>
-                        <TableCell>{curEmployee.keeper.keeperType.toString()}</TableCell>
+                        <TableCell colSpan={1}>{curEmployee.keeper.keeperType.toString()}</TableCell>
+                        <TableCell colSpan={1}>
+                            <Button type="button" onClick={() => updateRoleType("Keeper")}>Change</Button>
+                        </TableCell>
                     </TableRow>
                 }
                 {curEmployee.keeper && 
                     <TableRow>
                         <TableCell className="w-1/6 font-bold">Specialization Type</TableCell>
-                        <TableCell>{curEmployee.keeper.specialization.toString()}</TableCell>
+                        <TableCell colSpan={1}>{curEmployee.keeper.specialization.toString()}</TableCell>
+                        <TableCell colSpan={1}>
+                            <Button type="button" onClick={() => updateSpecializationType("Keeper")}>Change</Button>
+                        </TableCell>
                     </TableRow>
                 }
                 <TableRow>
+                    <TableCell className="w-1/4 font-bold" rowSpan={4} colSpan={1}>
+                        General Staff Role
+                    </TableCell>
                 </TableRow>
+                
+                    <TableRow>
+                        {curEmployee.generalStaff && <TableCell className="w-1/6 font-bold">Disabled</TableCell>}
+                        {curEmployee.generalStaff && <TableCell colSpan={1}>{curEmployee.generalStaff.isDisabled ? "Yes" : "No"}</TableCell>}
+                        <TableCell className="w-1/3" rowSpan={1} colSpan={1}>
+                            {!curEmployee.generalStaff || curEmployee.generalStaff.isDisabled
+                            ? <Button type="button" onClick={() => confirmEnableRole("General Staff")}>Enable</Button>
+                            : <Button type="button" onClick={() => confirmDisableRole("General Staff")}>Disable</Button>}
+                        </TableCell>
+                    </TableRow>
+                {/*{(!curEmployee.keeper || curEmployee.keeper.isDisabled) && 
+                    <TableRow>
+                        <TableCell className="w-1/4" colSpan={3}>
+                            <Button type="button" onClick={() => confirmEnableRole("Keeper")}>Enable</Button>
+                        </TableCell>
+                    </TableRow>
+                }*/}
+                {curEmployee.generalStaff && 
+                    <TableRow>
+                        <TableCell className="w-1/6 font-bold">General Staff Type</TableCell>
+                        <TableCell colSpan={1}>{curEmployee.generalStaff.generalStaffType.toString()}</TableCell>
+                        <TableCell colSpan={1}>
+                            <Button type="button" onClick={() => updateRoleType("General Staff")}>Change</Button>
+                        </TableCell>
+                    </TableRow>
+                }
+
+                <TableRow>
+                    <TableCell className="w-1/4 font-bold" rowSpan={4} colSpan={1}>
+                        Planning Staff Role
+                    </TableCell>
+                </TableRow>
+
+                <TableRow>
+                    {curEmployee.planningStaff && <TableCell className="w-1/6 font-bold">Disabled</TableCell>}
+                    {curEmployee.planningStaff && <TableCell colSpan={1}>{curEmployee.planningStaff.isDisabled ? "Yes" : "No"}</TableCell>}
+                    <TableCell className="w-1/3" rowSpan={1} colSpan={1}>
+                        {!curEmployee.planningStaff || curEmployee.planningStaff.isDisabled
+                        ? <Button type="button" onClick={() => confirmEnableRole("Planning Staff")}>Enable</Button>
+                        : <Button type="button" onClick={() => confirmDisableRole("Planning Staff")}>Disable</Button>}
+                    </TableCell>
+                </TableRow>
+                {/*{(!curEmployee.keeper || curEmployee.keeper.isDisabled) && 
+                    <TableRow>
+                        <TableCell className="w-1/4" colSpan={3}>
+                            <Button type="button" onClick={() => confirmEnableRole("Keeper")}>Enable</Button>
+                        </TableCell>
+                    </TableRow>
+                }*/}
+                {curEmployee.planningStaff && 
+                    <TableRow>
+                        <TableCell className="w-1/6 font-bold">Planning Staff Type</TableCell>
+                        <TableCell colSpan={1}>{curEmployee.planningStaff.plannerType.toString()}</TableCell>
+                        <TableCell colSpan={1}>
+                            <Button type="button" onClick={() => updateRoleType("Planning Staff")}>Change</Button>
+                        </TableCell>
+                        
+                    </TableRow>
+                }
+                {curEmployee.planningStaff && 
+                    <TableRow>
+                        <TableCell className="w-1/6 font-bold">Specialization Type</TableCell>
+                        <TableCell colSpan={1}>{curEmployee.planningStaff.specialization.toString()}</TableCell>
+                        <TableCell colSpan={1}>
+                            <Button type="button" onClick={() => updateSpecializationType("Planning Staff")}>Change</Button>
+                        </TableCell>
+                    </TableRow>
+                }
 
                 {/*<TableCell className="w-1/5 font-bold" rowSpan={8}>
                 Taxonomy
@@ -467,6 +649,124 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                         </>
                     </Form.Submit>
                 </Form.Root>
+                }
+
+                { updateRoleDialog && role &&
+                    <Form.Root
+                className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
+                onSubmit={updateRole}>
+                    {role === "Keeper" && 
+                    <FormFieldSelect
+                    formFieldName="keeperType"
+                    label="Keeper Type"
+                    required={true}
+                    placeholder="Select a keeper type"
+                    valueLabelPair={[
+                        ["KEEPER", "Keeper"],
+                        ["SENIOR_KEEPER", "Senior Keeper"],
+                    ]}
+                    value={roleType}
+                    setValue={setRoleType}
+                    validateFunction={validateRoleType}
+                    />
+                    }
+                    {role === "General Staff" && 
+                        <FormFieldSelect
+                        formFieldName="generalStaffType"
+                        label="General Staff Type"
+                        required={true}
+                        placeholder="Select a general staff type."
+                        valueLabelPair={[
+                            ["ZOO_OPERATIONS", "Operations"],
+                            ["ZOO_MAINTENANCE", "Maintenance"],
+                        ]}
+                        value={roleType}
+                        setValue={setRoleType}
+                        validateFunction={validateRoleType}
+                        />
+                    }
+                    {role === "Planning Staff" && 
+                        <FormFieldSelect
+                        formFieldName="planningStaffType"
+                        label="Planning Staff Type"
+                        required={true}
+                        placeholder="Select a planning staff type."
+                        valueLabelPair={[
+                            ["CURATOR", "Curator"],
+                            ["OPERATIONS_MANAGER", "Operations Manager"],
+                            ["CUSTOMER_OPERATIONS", "Customer Operations"],
+                            ["MARKETING", "Marketing"],
+                            ["SALES", "Sales"],
+                        ]}
+                        value={roleType}
+                        setValue={setRoleType}
+                        validateFunction={validateRoleType}
+                        />
+                    }
+                    <Form.Submit asChild>
+                        <>
+                            <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80" onClick = {updateRole}>
+                                Save
+                            </button>
+                            <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80" onClick = {hideUpdateRoleDialog}>
+                                Cancel
+                            </button>
+                        </>
+                    </Form.Submit>
+                    </Form.Root>
+                }
+                
+                { updateSpecializationDialog && role &&
+                    <Form.Root
+                    className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
+                    onSubmit={updateSpecialization}>
+                        {role === "Keeper" && 
+                        <FormFieldSelect
+                        formFieldName="specializationType"
+                        label="Specialization Type"
+                        required={true}
+                        placeholder="Select a specialization"
+                        valueLabelPair={[
+                            ["MAMMAL", "Mammal"],
+                            ["BIRD", "Bird"],
+                            ["FISH", "Fish"],
+                            ["REPTILE", "Reptile"],
+                            ["AMPHIBIAN", "Amphibian"]
+                        ]}
+                        value={specializationType}
+                        setValue={setSpecializationType}
+                        validateFunction={validateSpecializationType}
+                        />
+                        }
+                        {role === "Planning Staff" && 
+                        <FormFieldSelect
+                        formFieldName="specializationType"
+                        label="Specialization Type"
+                        required={true}
+                        placeholder="Select a specialization"
+                        valueLabelPair={[
+                            ["MAMMAL", "Mammal"],
+                            ["BIRD", "Bird"],
+                            ["FISH", "Fish"],
+                            ["REPTILE", "Reptile"],
+                            ["AMPHIBIAN", "Amphibian"]
+                        ]}
+                        value={specializationType}
+                        setValue={setSpecializationType}
+                        validateFunction={validateSpecializationType}
+                        />
+                        }
+                        <Form.Submit asChild>
+                        <>
+                            <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80" onClick = {updateSpecialization}>
+                                Save
+                            </button>
+                            <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80" onClick = {hideSpecializationTypeDialog}>
+                                Cancel
+                            </button>
+                        </>
+                    </Form.Submit>
+                    </Form.Root>
                 }
         </div>
     )
