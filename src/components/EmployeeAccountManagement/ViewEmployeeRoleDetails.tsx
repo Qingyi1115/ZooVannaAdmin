@@ -225,17 +225,15 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
         try {
             let roleJson;
             console.log(props, role);
-            
-            roleJson = specializationType;
 
             let result;
             
             result = {
                 role,
-                roleJson,
+                specializationType,
             }
             console.log("this way please " + role);
-            console.log(result.role, result.roleJson);
+            console.log(result.role, result.specializationType);
             const responseJson = await apiJson.put(`http://localhost:3000/api/employee/getEmployee/${curEmployee.employeeId}/updateSpecializationType`, result);
 
             console.log("Here2" + responseJson);
@@ -264,19 +262,15 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
 
     async function updateRole(e : any){
         try {
-            let roleJson;
-            console.log(props, role);
-            
-            roleJson = roleType;
-
+            console.log(props, role);     
             let result;
             
             result = {
                 role,
-                roleJson,
+                roleType,
             }
             console.log("this way please " + role);
-            console.log(result.role, result.roleJson);
+            console.log(result.role, result.roleType);
             const responseJson = await apiJson.put(`http://localhost:3000/api/employee/getEmployee/${curEmployee.employeeId}/updateRoleType`, result);
 
             console.log("Here2" + responseJson);
@@ -401,18 +395,22 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                     <TableRow>
                         <TableCell className="w-1/6 font-bold">Keeper Type</TableCell>
                         <TableCell colSpan={1}>{curEmployee.keeper.keeperType.toString()}</TableCell>
-                        <TableCell colSpan={1}>
-                            <Button type="button" onClick={() => updateRoleType("Keeper")}>Change</Button>
-                        </TableCell>
+                        {!curEmployee.keeper.isDisabled && 
+                            <TableCell colSpan={1}>
+                                <Button type="button" onClick={() => updateRoleType("Keeper")}>Change</Button>
+                            </TableCell>
+                        }
                     </TableRow>
                 }
                 {curEmployee.keeper && 
                     <TableRow>
                         <TableCell className="w-1/6 font-bold">Specialization Type</TableCell>
                         <TableCell colSpan={1}>{curEmployee.keeper.specialization.toString()}</TableCell>
-                        <TableCell colSpan={1}>
-                            <Button type="button" onClick={() => updateSpecializationType("Keeper")}>Change</Button>
-                        </TableCell>
+                        {!curEmployee.keeper.isDisabled && 
+                            <TableCell colSpan={1}>
+                                <Button type="button" onClick={() => updateSpecializationType("Keeper")}>Change</Button>
+                            </TableCell>
+                        }
                     </TableRow>
                 }
                 <TableRow>
@@ -441,9 +439,11 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                     <TableRow>
                         <TableCell className="w-1/6 font-bold">General Staff Type</TableCell>
                         <TableCell colSpan={1}>{curEmployee.generalStaff.generalStaffType.toString()}</TableCell>
-                        <TableCell colSpan={1}>
-                            <Button type="button" onClick={() => updateRoleType("General Staff")}>Change</Button>
-                        </TableCell>
+                        {!curEmployee.generalStaff.isDisabled && 
+                            <TableCell colSpan={1}>
+                                <Button type="button" onClick={() => updateRoleType("General Staff")}>Change</Button>
+                            </TableCell>
+                        }
                     </TableRow>
                 }
 
@@ -473,9 +473,11 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                     <TableRow>
                         <TableCell className="w-1/6 font-bold">Planning Staff Type</TableCell>
                         <TableCell colSpan={1}>{curEmployee.planningStaff.plannerType.toString()}</TableCell>
-                        <TableCell colSpan={1}>
-                            <Button type="button" onClick={() => updateRoleType("Planning Staff")}>Change</Button>
-                        </TableCell>
+                        {!curEmployee.planningStaff.isDisabled && 
+                            <TableCell colSpan={1}>
+                                <Button type="button" onClick={() => updateRoleType("Planning Staff")}>Change</Button>
+                            </TableCell>
+                        }
                         
                     </TableRow>
                 }
@@ -483,9 +485,11 @@ function ViewEmployeeRoleDetails(props: EmployeeInfoDetailsProps) {
                     <TableRow>
                         <TableCell className="w-1/6 font-bold">Specialization Type</TableCell>
                         <TableCell colSpan={1}>{curEmployee.planningStaff.specialization.toString()}</TableCell>
-                        <TableCell colSpan={1}>
-                            <Button type="button" onClick={() => updateSpecializationType("Planning Staff")}>Change</Button>
-                        </TableCell>
+                        {!curEmployee.planningStaff.isDisabled && 
+                            <TableCell colSpan={1}>
+                                <Button type="button" onClick={() => updateSpecializationType("Planning Staff")}>Change</Button>
+                            </TableCell>
+                        }
                     </TableRow>
                 }
 
