@@ -10,7 +10,7 @@ import { InputText } from "primereact/inputtext";
 
 import facility from "src/models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
@@ -38,7 +38,11 @@ function AllfacilityDatatable() {
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", {includes:[]});
+    apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", {includes:[]}).catch(e=>{
+      console.log(e);
+    }).then(res=>{
+      setFacilityList(res["facilities"]);
+    })
   }, []);
   
   //
@@ -113,13 +117,13 @@ function AllfacilityDatatable() {
   const actionBodyTemplate = (facility: facility) => {
     return (
       <React.Fragment>
-        <NavLink to={`/species/viewspeciesdetails/${species.speciesCode}`}>
+        <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}>
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
             <span>View Details</span>
           </Button>
         </NavLink>
-        <NavLink to={`/facility/editfacility/${facility.facilityName}`}>
+        <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}>
           <Button className="mr-2">
             <HiPencil />
             <span>Edit</span>

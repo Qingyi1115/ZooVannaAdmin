@@ -54,6 +54,7 @@ import UpdateProfilePage from "./pages/employeeCommonInfra/UpdateProfilePage";
 import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNewDietaryRequirementsPage";
 import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
 import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
+import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -151,7 +152,13 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editfacility/:facilityName"
+                  path="/assetfacility/viewfacilitydetails/:facilityId"
+                  element={
+                    user ? <ViewFacilityDetailsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/editfacility/:facilityId"
                   element={
                     user ? <EditFacilityPage /> : <Navigate to="/login" />
                   }
@@ -228,6 +235,12 @@ function App() {
                   element={
                     user ?
                       <ViewAllSensorsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/maintenance"
+                  element={
+                    user ? <MaintenanceOperationSuggestionPage /> : <Navigate to="/login" />
                   }
                 />
                 {/*Employee Account Management */}
@@ -310,12 +323,6 @@ function App() {
                   path="/edit-password"
                   element={
                     user ? <EditPasswordPage /> : <Navigate to="/login" />
-                  }
-                />
-                <Route
-                  path="/assetfacility/maintenance"
-                  element={
-                    user ? <MaintenanceOperationSuggestionPage /> : <Navigate to="/login" />
                   }
                 />
                 

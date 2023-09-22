@@ -91,7 +91,7 @@ function CreateNewAnimalFeedForm() {
     formData.append("file", imageFile || "");
     try {
       const responseJson = await apiFormData.post(
-        "http://localhost:3000/api/assetfacility/createNewAnimalFeed",
+        "http://localhost:3000/api/assetFacility/createNewAnimalFeed",
         formData
       );
       // success
