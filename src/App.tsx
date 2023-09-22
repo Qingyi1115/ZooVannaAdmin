@@ -39,6 +39,8 @@ import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEm
 import CreateNewEnclosureRequirementsPage from "./pages/speciesManagement/CreateNewEnclosureRequirementsPage";
 import EditEnclosureRequirementsPage from "./pages/speciesManagement/EditEnclosureRequirementsPage";
 import ViewEmployeeDetailsPage from "./pages/employeeAccountManagement/ViewEmployeeDetailsPage";
+import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNewDietaryRequirementsPage";
+import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -104,6 +106,26 @@ function App() {
                   element={
                     user ? (
                       <EditEnclosureRequirementsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/species/createdietaryrequirements/:speciesCode"
+                  element={
+                    user ? (
+                      <CreateNewDietaryRequirementsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/species/editdietaryrequirements/:speciesCode/:speciesDietNeedId"
+                  element={
+                    user ? (
+                      <EditDietaryRequirementsPage />
                     ) : (
                       <Navigate to="/login" />
                     )

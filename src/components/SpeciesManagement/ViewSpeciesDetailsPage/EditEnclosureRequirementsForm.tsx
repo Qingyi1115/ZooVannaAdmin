@@ -371,6 +371,7 @@ function EditEnclosureRequirementsForm(
             label={`Small Exhibit Height Required (m\u00B2)`}
             required={false}
             placeholder="e.g., 12"
+            pattern={undefined}
             value={smallExhibitHeightRequired}
             setValue={setSmallExhibitHeightRequired}
             validateFunction={() => null}
@@ -384,6 +385,7 @@ function EditEnclosureRequirementsForm(
             label={`Minimum Land Area Required (m\u00B2)`}
             required={true}
             placeholder="e.g., 8"
+            pattern={undefined}
             value={minLandAreaRequired}
             setValue={setMinLandAreaRequired}
             validateFunction={validateMinLandAreaRequired}
@@ -395,6 +397,7 @@ function EditEnclosureRequirementsForm(
             label={`Minimum Water Area Required (m\u00B2)`}
             required={true}
             placeholder="e.g., 8"
+            pattern={undefined}
             value={minWaterAreaRequired}
             setValue={setMinWaterAreaRequired}
             validateFunction={validateMinWaterAreaRequired}
@@ -408,6 +411,7 @@ function EditEnclosureRequirementsForm(
             label={`Minimum acceptable temperate (°C)`}
             required={true}
             placeholder="e.g., 8"
+            pattern={undefined}
             value={acceptableTempMin}
             setValue={setAcceptableTempMin}
             validateFunction={validateTemperatureRange}
@@ -419,6 +423,7 @@ function EditEnclosureRequirementsForm(
             label={`Maximum acceptable temperate (°C)`}
             required={true}
             placeholder="e.g., 8"
+            pattern={undefined}
             value={acceptableTempMax}
             setValue={setAcceptableTempMax}
             validateFunction={validateTemperatureRange}
@@ -432,6 +437,7 @@ function EditEnclosureRequirementsForm(
             label={`Minimum acceptable humidity (g.m⁻³)`}
             required={true}
             placeholder="e.g., 8"
+            pattern={undefined}
             value={acceptableHumidityMin}
             setValue={setAcceptableHumidityMin}
             validateFunction={validateMinHumidity}
@@ -443,6 +449,7 @@ function EditEnclosureRequirementsForm(
             label={`Maximum acceptable humidity (g.m⁻³)`}
             required={true}
             placeholder="e.g., 8"
+            pattern={undefined}
             value={acceptableHumidityMax}
             setValue={setAcceptableHumidityMax}
             validateFunction={validateMaxHumidity}
@@ -455,6 +462,7 @@ function EditEnclosureRequirementsForm(
           label={`Recommended Stand-off Barrier Distance (m)`}
           required={true}
           placeholder="e.g., 12"
+          pattern={undefined}
           value={recommendedStandOffBarrierDistMetres}
           setValue={setRecommendedStandOffBarrierDistMetres}
           validateFunction={validateStandOffBarrierDist}

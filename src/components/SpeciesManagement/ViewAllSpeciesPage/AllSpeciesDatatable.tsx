@@ -114,7 +114,7 @@ function AllSpeciesDatatable() {
 
     const selectedSpeciesCommonName = selectedSpecies.commonName;
 
-    const deleteSpecies = async () => {
+    const deleteSpeciesApi = async () => {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deletespecies/" +
@@ -140,7 +140,7 @@ function AllSpeciesDatatable() {
         });
       }
     };
-    deleteSpecies();
+    deleteSpeciesApi();
   };
 
   const deleteSpeciesDialogFooter = (
