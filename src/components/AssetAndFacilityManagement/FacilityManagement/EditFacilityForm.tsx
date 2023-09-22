@@ -70,16 +70,13 @@ function EditFacilityForm(props: EditFacilityFormProps) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     if (imageFile) {
       const formData = new FormData();
-      formData.append("facilityName", facilityName);
-      formData.append("xCoordinate", xCoordinate);
-      formData.append("yCoordinate", yCoordinate);
-      formData.append("facilityDetail", facilityDetail);
       formData.append("file", imageFile || "");
       try {
         const responseJson = await apiFormData.put(
-          "http://localhost:3000/api/assetfacility/updateFacility",
+          "http://localhost:3000/api/assetFacility/updateFacilityImage",
           formData
         );
         // success
@@ -96,34 +93,33 @@ function EditFacilityForm(props: EditFacilityFormProps) {
             error.message,
         });
       }
-    } else {
-      // no image
-      const updatedFacility = {
-        facilityName,
-        xCoordinate,
-        yCoordinate,
-        facilityDetail
-      };
+    } 
+    // no image
+    const updatedFacility = {
+      facilityName,
+      xCoordinate,
+      yCoordinate,
+      facilityDetail
+    };
 
-      try {
-        const responseJson = await apiJson.put(
-          "http://localhost:3000/api/assetfacility/updateFacility",
-          updatedFacility
-        );
-        // success
-        toastShadcn({
-          description: "Successfully edited facility",
-        });
-        setRefreshSeed(refreshSeed + 1);
-      } catch (error: any) {
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while editing facility details: \n" +
-            error.message,
-        });
-      }
+    try {
+      const responseJson = await apiJson.put(
+        `http://localhost:3000/api/assetFacility/updateFacility/${curFacility.facilityId}`,
+        updatedFacility
+      );
+      // success
+      toastShadcn({
+        description: "Successfully edited facility",
+      });
+      setRefreshSeed(refreshSeed + 1);
+    } catch (error: any) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while editing facility details: \n" +
+          error.message,
+      });
     }
   }
 

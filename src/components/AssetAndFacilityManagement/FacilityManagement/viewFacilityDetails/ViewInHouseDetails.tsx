@@ -15,14 +15,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Facility from "src/models/Facility";
+import InHouse from "src/models/InHouse";
 
-interface EmployeeInfoDetailsProps {
-  curFacility: Facility;
+interface InHouseDetailsProps {
+  curInHouse: InHouse;
   }
-function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
-    const apiJson = useApiJson();
-    const {curFacility} = props;
-    console.log(props);
+function ViewInHouseDetails(props: InHouseDetailsProps) {
+    const {curInHouse} = props;
 
     const toastShadcn = useToast().toast;
 
@@ -40,27 +39,27 @@ function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
           <TableBody>
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Facility Id
+                Is Paid
               </TableCell>
-              <TableCell>{curFacility.facilityId}</TableCell>
+              <TableCell>{String(curInHouse.isPaid)}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Name
+                Facility Type
               </TableCell>
-              <TableCell>{curFacility.facilityName}</TableCell>
+              <TableCell>{curInHouse.facilityType}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
-                X Coordinate
+                Maximum Accommodation Size
               </TableCell>
-              <TableCell>{curFacility.xCoordinate}</TableCell>
+              <TableCell>{curInHouse.maxAccommodationSize}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Y Coordinate
+                Air Condition Avaliable
               </TableCell>
-              <TableCell>{curFacility.yCoordinate}</TableCell>
+              <TableCell>{String(curInHouse.hasAirCon)}</TableCell>
             </TableRow>
 
           </TableBody>
@@ -69,4 +68,4 @@ function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
     )
 }
 
-export default ViewFacilityDetails;
+export default ViewInHouseDetails;

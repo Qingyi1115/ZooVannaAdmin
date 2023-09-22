@@ -73,6 +73,7 @@ function AllfacilityDatatable() {
 
     const deleteFacility = async () => {
       try {
+        setDeleteFacilityDialog(false);
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/assetFacility/deleteFacility/" +
             selectedFacility.facilityId
@@ -85,7 +86,6 @@ function AllfacilityDatatable() {
             "Successfully deleted facility: " + selectedFacility.facilityName,
         });
         setFacilityList(_facility);
-        setDeleteFacilityDialog(false);
         setSelectedFacility(emptyFacility);
       } catch (error: any) {
         // got error

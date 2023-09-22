@@ -55,6 +55,8 @@ import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNe
 import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
 import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
 import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
+import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facility/RemoveMaintenanceStaffPage";
+import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facility/AssignMaintenanceStaffPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -161,6 +163,18 @@ function App() {
                   path="/assetfacility/editfacility/:facilityId"
                   element={
                     user ? <EditFacilityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/editfacility/:facilityId/assignstaff"
+                  element={
+                    user ? <AssignMaintenanceStaffPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/editfacility/:facilityId/removestaff"
+                  element={
+                    user ? <RemoveMaintenanceStaffPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route

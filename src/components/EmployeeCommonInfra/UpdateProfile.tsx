@@ -81,12 +81,14 @@ function UpdateProfile() {
             employeeEducation : edu
           }
         );
-
-        const json = {
-          email:response["employee"].employeeEmail,
-          token:response["newToken"]
-      }
-        dispatch({ type: "LOGIN", payload: json });
+        
+        if (response["newToken"] !== undefined){
+          const json = {
+            email:response["employee"].employeeEmail,
+            token:response["newToken"]
+          }
+          dispatch({ type: "LOGIN", payload: json });
+        }
         navigate("/profile");
         // clearForm();
       } catch (error: any) {

@@ -1,10 +1,10 @@
 import { FacilityType } from "../enums/FacilityType"
 
 interface InHouse {
-    ownership: String
-    ownerContact: String
+    lastMaintained : Date
+    isPaid: Boolean
     maxAccommodationSize: number
-    hasAirCon : Boolean
+    hasAirCon: Boolean
     facilityType: FacilityType
 }
 

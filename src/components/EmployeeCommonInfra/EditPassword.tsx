@@ -25,14 +25,14 @@ function EditPassword() {
   const toastShadcn = useToast().toast;
 
   const [oldpass1, setOldPass1] = useState<string>("");
-  const [oldpass2, setOldPass2] = useState<string>("");
   const [newpass, setNewPass] = useState<string>("");
+  const [newpass2, setNewPass2] = useState<string>("");
   const [formError, setFormError] = useState<JSX.Element|null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
       try {
-        if (oldpass2 != oldpass1){
+        if (newpass != newpass2){
             return setFormError((
                 <div className="font-medium text-danger">
                     Password does not match!
@@ -45,7 +45,7 @@ function EditPassword() {
           "http://localhost:3000/api/employee/updateEmployeePassword",
           {
             newPassword: newpass, 
-            oldPassword: oldpass2, 
+            oldPassword: oldpass1, 
           }
         );
         navigate("/profile");
@@ -89,27 +89,13 @@ function EditPassword() {
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         <FormFieldInput
           type="password"
-          formFieldName="op2"
+          formFieldName="op"
           label="Old Password"
           required={true}
           placeholder="old password"
           value={oldpass1}
           setValue={setOldPass1}
           validateFunction={()=>null}
-        />
-      </div>
-      
-      <hr className="bg-stroke opacity-20" />
-      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        <FormFieldInput
-          type="password"
-          formFieldName="op1"
-          label="Old Password(again)"
-          required={true}
-          placeholder="old password"
-          value={oldpass2}
-          setValue={setOldPass2}
-          validateFunction={validateMatchingPassword}
         />
       </div>
       
@@ -124,6 +110,20 @@ function EditPassword() {
           value={newpass}
           setValue={setNewPass}
           validateFunction={()=>null}
+        />
+      </div>
+      
+      <hr className="bg-stroke opacity-20" />
+      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+        <FormFieldInput
+          type="password"
+          formFieldName="newPassword2"
+          label="New Password(again)"
+          required={true}
+          placeholder="new password"
+          value={newpass2}
+          setValue={setNewPass2}
+          validateFunction={validateMatchingPassword}
         />
       </div>
 

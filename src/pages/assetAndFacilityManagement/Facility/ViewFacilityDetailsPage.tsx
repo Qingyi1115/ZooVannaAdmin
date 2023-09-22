@@ -17,6 +17,7 @@ import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ViewFacilityDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewFacilityDetails";
 import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewThirdPartyDetails";
+import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
 
 
 
@@ -57,11 +58,15 @@ function ViewFacilityDetailsPage() {
 
       return (
         <div className="my-4 flex justify-start gap-6">
-          <NavLink to={`/species/editspecies/${facilityId}`}>
-            <Button>Edit Basic Information</Button>
+        <NavLink to={`/assetfacility/editfacility/${facilityId}/assignstaff`}>
+          <Button>Assign Maintenance Staff</Button>
+        </NavLink>
+          <NavLink to={`/assetfacility/editfacility/${facilityId}/removestaff`}>
+            <Button>Remove Maintenance Staff</Button>
           </NavLink>
         <ViewFacilityDetails curFacility={curFacility}></ViewFacilityDetails>
-        <ViewThirdPartyDetails curThirdParty={curThirdParty}></ViewThirdPartyDetails>
+        {curThirdParty && <ViewThirdPartyDetails curThirdParty={curThirdParty}></ViewThirdPartyDetails> }
+        {curInHouse && <ViewInHouseDetails curInHouse={curInHouse}></ViewInHouseDetails> }
         </div>
       );
     }

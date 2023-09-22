@@ -195,8 +195,9 @@ function CreateNewFacilityForm() {
         setValue={setFacilityDetail}
         validateFunction={validateFacilityName}
       />
+
       {/* Facility Type */}
-      <FormFieldSelect
+       <FormFieldSelect
         formFieldName="facilityType"
         label="Facility Type"
         required={true}
@@ -222,6 +223,7 @@ function CreateNewFacilityForm() {
         validateFunction={validateFacilityName}
       />
       </div>
+      { facilityDetail == "thirdParty" &&
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Ownership */}
         <FormFieldInput
@@ -249,7 +251,8 @@ function CreateNewFacilityForm() {
         />
        
       </div>
-       {/* Is Paid */}
+      }
+      { facilityDetail == "inHouse" &&
        <FormFieldSelect
           formFieldName="isPaid"
           label="Is paid?"
@@ -263,7 +266,7 @@ function CreateNewFacilityForm() {
           setValue={setIsPaid}
           validateFunction={validateFacilityName}
         />
-      
+    }
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
           Add Facility
