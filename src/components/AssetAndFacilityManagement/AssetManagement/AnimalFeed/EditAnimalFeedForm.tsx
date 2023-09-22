@@ -127,7 +127,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
       const updatedAnimalFeedCategory = animalFeedCategory?.toString();
       const updatedAnimalFeed = {
         animalFeedName,
-        updatedAnimalFeedCategory
+        animalFeedCategory
       };
       console.log(updatedAnimalFeed);
 

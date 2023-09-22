@@ -20,7 +20,18 @@ function EditAnimalFeedPage() {
   const [curAnimalFeed, setCurAnimalFeed] = useState<AnimalFeed>(emptyAnimalFeed);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/assetfacility/getAnimalFeed/${animalFeedName}`);
+    const fetchAnimalFeed = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/assetfacility/getanimalFeed/${animalFeedName}`
+        );
+        setCurAnimalFeed(responseJson as AnimalFeed);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    fetchAnimalFeed();
   }, []);
 
   useEffect(() => {
