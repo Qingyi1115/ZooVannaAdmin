@@ -18,6 +18,13 @@ import { Dialog } from "primereact/dialog";
 function AllEmployeesDatatable() {
   const apiJson = useApiJson();
 
+  // date options
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  };
+
   let employee: Employee = {
     employeeId: -1,
     employeeName: "",
@@ -38,7 +45,8 @@ function AllEmployeesDatatable() {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const [employeeResignationDialog, setEmployeeResignationDialog] = useState<boolean>(false);
+  const [employeeResignationDialog, setEmployeeResignationDialog] =
+    useState<boolean>(false);
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
@@ -49,9 +57,9 @@ function AllEmployeesDatatable() {
           { includes: ["keeper", "generalStaff", "planningStaff"] }
         );
         setEmployeeList(responseJson.employees as Employee[]);
-         //console.log("Here " + responseJson);
-         //const help = responseJson as Employee[];
-         //console.log(help);
+        //console.log("Here " + responseJson);
+        //const help = responseJson as Employee[];
+        //console.log(help);
       } catch (error: any) {
         console.log(error);
       }
@@ -61,16 +69,18 @@ function AllEmployeesDatatable() {
 
   const hideEmployeeResignationDialog = () => {
     setEmployeeResignationDialog(false);
-  }
+  };
 
-  const resignEmployee = async () => { 
+  const resignEmployee = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
     console.log(selectedEmployee);
 
-    const resignEmployee = async() => {
+    const resignEmployee = async () => {
       try {
         const responseJson = await apiJson.put(
-          `http://localhost:3000/api/employee/disableEmployee/${selectedEmployee.employeeId}`, selectedEmployee);
+          `http://localhost:3000/api/employee/disableEmployee/${selectedEmployee.employeeId}`,
+          selectedEmployee
+        );
 
         toastShadcn({
           // variant: "destructive",
@@ -87,13 +97,13 @@ function AllEmployeesDatatable() {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while disabling employee: \n" + apiJson.error,
+            "An error has occurred while disabling employee: \n" +
+            apiJson.error,
         });
       }
-    }
+    };
     resignEmployee();
-
-  }
+  };
 
   const employeeResignationDialogFooter = (
     <React.Fragment>
@@ -107,8 +117,6 @@ function AllEmployeesDatatable() {
       </Button>
     </React.Fragment>
   );
-
-  
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -127,7 +135,7 @@ function AllEmployeesDatatable() {
     </div>
   );
 
-  const confirmEmployeeResignation = (employee:Employee) => {
+  const confirmEmployeeResignation = (employee: Employee) => {
     setSelectedEmployee(employee);
     setEmployeeResignationDialog(true);
   };
@@ -136,30 +144,29 @@ function AllEmployeesDatatable() {
     console.log(employee.dateOfResignation);
     return (
       <React.Fragment>
-        <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
+        <NavLink
+          to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}
+        >
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
             <span>View Details</span>
           </Button>
         </NavLink>
-        {employee.dateOfResignation ?
-        <Button
-        disabled
-        variant={"destructive"}
-        >
-          <HiTrash className="mr-1" />
-          <span>Disabled</span>
-        </Button>
-        :
-        <Button
-        variant={"destructive"}
-        className="mr-2"
-        onClick={() => confirmEmployeeResignation(employee)}
-        >
-          <HiTrash className="mr-1" />
-          <span>Disable</span>
-        </Button>
-        } 
+        {employee.dateOfResignation ? (
+          <Button disabled variant={"destructive"}>
+            <HiTrash className="mr-1" />
+            <span>Disabled</span>
+          </Button>
+        ) : (
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmEmployeeResignation(employee)}
+          >
+            <HiTrash className="mr-1" />
+            <span>Disable</span>
+          </Button>
+        )}
       </React.Fragment>
     );
   };
@@ -219,17 +226,23 @@ function AllEmployeesDatatable() {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
+              body={(employee) => {
+                return new Date(employee.employeeBirthDate).toLocaleDateString(
+                  "en-SG",
+                  dateOptions
+                );
+              }}
               field="employeeBirthDate"
               header="Birthday"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-                        body={actionBodyTemplate}
-                        header="Actions"
-                        exportable={false}
-                        style={{ minWidth: "18rem" }}
-                    ></Column>
+              body={actionBodyTemplate}
+              header="Actions"
+              exportable={false}
+              style={{ minWidth: "18rem" }}
+            ></Column>
           </DataTable>
         </div>
         <Dialog
