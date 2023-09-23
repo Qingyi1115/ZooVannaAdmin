@@ -6,13 +6,18 @@ import FormFieldInput from "../../../FormFieldInput";
 import FormFieldSelect from "../../../FormFieldSelect";
 import useApiFormData from "../../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
-
+import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 // Field validations
 function validateName(props: ValidityState) {
   if (props != undefined) {
     if (props.valueMissing) {
       return (
-        <div className="font-medium text-danger">* Please enter a valid name!</div>
+        <div className="font-medium text-danger">
+          * Please enter a valid name!
+        </div>
       );
     }
     // add any other cases here
@@ -24,9 +29,7 @@ function validateImage(props: ValidityState) {
   if (props != undefined) {
     if (props.valueMissing) {
       return (
-        <div className="font-medium text-danger">
-          * Please upload an image
-        </div>
+        <div className="font-medium text-danger">* Please upload an image</div>
       );
     }
     // add any other cases here
@@ -39,6 +42,7 @@ function validateImage(props: ValidityState) {
 function CreateNewEnrichmentItemForm() {
   const apiFormData = useApiFormData();
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const [enrichmentItemName, setEnrichmentItemName] = useState<string>(""); // text input
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -58,7 +62,7 @@ function CreateNewEnrichmentItemForm() {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
     console.log("Name:");
-    console.log(enrichmentItemName);    
+    console.log(enrichmentItemName);
     const formData = new FormData();
     formData.append("enrichmentItemName", enrichmentItemName);
     formData.append("file", imageFile || "");
@@ -71,6 +75,8 @@ function CreateNewEnrichmentItemForm() {
       toastShadcn({
         description: "Successfully created enrichment item",
       });
+      const redirectUrl = `/assetfacility/viewallenrichmentitems`;
+      navigate(redirectUrl);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -91,26 +97,42 @@ function CreateNewEnrichmentItemForm() {
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >
-      <span className="self-center text-title-xl font-bold">
-        Add Enrichment Item
-      </span>
-      <hr className="bg-stroke opacity-20" />
+      <div className="flex flex-col">
+        <div className="mb-4 flex justify-between">
+          <NavLink
+            className="flex"
+            to={`/assetfacility/viewallenrichmentitems`}
+          >
+            <Button variant={"outline"} type="button" className="">
+              Back
+            </Button>
+          </NavLink>
+          <span className="self-center text-lg text-graydark"></span>
+          <Button disabled className="invisible">
+            Back
+          </Button>
+        </div>
+        <Separator />
+        <span className="mt-4 self-center text-title-xl font-bold">
+          Create Enrichment Item
+        </span>
+      </div>
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Enrichment Item Picture */}
-      <Form.Field
-        name="enrichmentItemImage"
-        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-      >
-        <Form.Label className="font-medium">Enrichment Item Image</Form.Label>
-        <Form.Control
-          type="file"
-          required
-          accept=".png, .jpg, .jpeg, .webp"
-          onChange={handleFileChange}
-          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
-        />
-        <Form.ValidityState>{validateImage}</Form.ValidityState>
-      </Form.Field>
+        <Form.Field
+          name="enrichmentItemImage"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">Enrichment Item Image</Form.Label>
+          <Form.Control
+            type="file"
+            required
+            accept=".png, .jpg, .jpeg, .webp"
+            onChange={handleFileChange}
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+          />
+          <Form.ValidityState>{validateImage}</Form.ValidityState>
+        </Form.Field>
         {/* Enrichment Item Name */}
         <FormFieldInput
           type="text"
@@ -120,10 +142,10 @@ function CreateNewEnrichmentItemForm() {
           placeholder="e.g., Puzzle"
           value={enrichmentItemName}
           setValue={setEnrichmentItemName}
-          validateFunction={validateName} pattern={undefined}           />
+          validateFunction={validateName}
+          pattern={undefined}
+        />
       </div>
-
-
 
       <Form.Submit asChild>
         <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">

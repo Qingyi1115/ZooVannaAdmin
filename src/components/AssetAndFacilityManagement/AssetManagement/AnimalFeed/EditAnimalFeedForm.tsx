@@ -8,7 +8,11 @@ import FormFieldInput from "../../../FormFieldInput";
 import AnimalFeed from "../../../../models/AnimalFeed";
 import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 import FormFieldSelect from "../../../FormFieldSelect";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { NavLink } from "react-router-dom";
 
 interface EditAnimalFeedFormProps {
   curAnimalFeed: AnimalFeed;
@@ -20,14 +24,20 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
   const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const { curAnimalFeed, refreshSeed, setRefreshSeed } = props;
 
-  const [animalFeedName, setAnimalFeedName] = useState<string>(curAnimalFeed.animalFeedName);
+  const animalFeedId = curAnimalFeed.animalFeedId;
+  const [animalFeedName, setAnimalFeedName] = useState<string>(
+    curAnimalFeed.animalFeedName
+  );
   const [animalFeedCategory, setAnimalFeedCategory] = useState<
     string | undefined
   >(curAnimalFeed.animalFeedCategory); // select from set list
-  const [animalFeedImageUrl, setImageUrl] = useState<string | null>(curAnimalFeed.animalFeedImageUrl);
+  const [animalFeedImageUrl, setImageUrl] = useState<string | null>(
+    curAnimalFeed.animalFeedImageUrl
+  );
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
@@ -61,7 +71,6 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
     return null;
   }
 
-
   function validateAnimalFeedCategory(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
@@ -82,7 +91,9 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
   function onAnimalFeedCategorySelectChange(e: MultiSelectChangeEvent) {
     setAnimalFeedCategory(e.value);
 
-    const element = document.getElementById("selectMultiAnimalFeedCategoryField");
+    const element = document.getElementById(
+      "selectMultiAnimalFeedCategoryField"
+    );
     if (element) {
       const isDataInvalid = element.getAttribute("data-invalid");
       if (isDataInvalid == "true") {
@@ -103,9 +114,15 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
     if (imageFile) {
       const formData = new FormData();
       formData.append("file", imageFile || "");
+      formData.append("animalFeedId", animalFeedId.toString() || "");
+      formData.append("animalFeedName", animalFeedName);
+      formData.append(
+        "animalFeedCategory",
+        animalFeedCategory?.toString() || ""
+      );
       try {
         const responseJson = await apiFormData.put(
-          "http://localhost:3000/api/assetfacility/updateAnimalFeedImage",
+          "http://localhost:3000/api/assetfacility/updateAnimalFeed",
           formData
         );
         // success
@@ -113,6 +130,8 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
           description: "Successfully edited animal feed",
         });
         setRefreshSeed(refreshSeed + 1);
+        const redirectUrl = `/assetfacility/viewallanimalfeed`;
+        navigate(redirectUrl);
       } catch (error: any) {
         toastShadcn({
           variant: "destructive",
@@ -126,8 +145,9 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
     // no image
     const updatedAnimalFeedCategory = animalFeedCategory?.toString();
     const updatedAnimalFeed = {
+      animalFeedId,
       animalFeedName,
-      animalFeedCategory
+      animalFeedCategory,
     };
     console.log(updatedAnimalFeed);
 
@@ -141,6 +161,8 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
         description: "Successfully edited animal feed",
       });
       setRefreshSeed(refreshSeed + 1);
+      const redirectUrl = `/assetfacility/viewallanimalfeed`;
+      navigate(redirectUrl);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -150,50 +172,49 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
           error.message,
       });
     }
-
   }
 
-  useEffect(() => {
-    if (imageFile) {
-      if (!apiFormData.loading) {
-        if (apiFormData.error) {
-          // got error
-          toastShadcn({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description:
-              "An error has occurred while editing animalFeed details: \n" +
-              apiFormData.error,
-          });
-        } else if (apiFormData.result) {
-          // success
-          console.log("success?");
-          toastShadcn({
-            description: "Successfully edited animal feed:",
-          });
-        }
-      }
-    } else {
-      if (!apiJson.loading) {
-        if (apiJson.error) {
-          // got error
-          toastShadcn({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description:
-              "An error has occurred while editing animalFeed details: \n" +
-              apiJson.error,
-          });
-        } else if (apiJson.result) {
-          // success
-          console.log("succes?");
-          toastShadcn({
-            description: "Successfully edited animal feed:",
-          });
-        }
-      }
-    }
-  }, [apiFormData.loading, apiJson.loading]);
+  // useEffect(() => {
+  //   if (imageFile) {
+  //     if (!apiFormData.loading) {
+  //       if (apiFormData.error) {
+  //         // got error
+  //         toastShadcn({
+  //           variant: "destructive",
+  //           title: "Uh oh! Something went wrong.",
+  //           description:
+  //             "An error has occurred while editing animalFeed details: \n" +
+  //             apiFormData.error,
+  //         });
+  //       } else if (apiFormData.result) {
+  //         // success
+  //         console.log("success?");
+  //         toastShadcn({
+  //           description: "Successfully edited animal feed:",
+  //         });
+  //       }
+  //     }
+  //   } else {
+  //     if (!apiJson.loading) {
+  //       if (apiJson.error) {
+  //         // got error
+  //         toastShadcn({
+  //           variant: "destructive",
+  //           title: "Uh oh! Something went wrong.",
+  //           description:
+  //             "An error has occurred while editing animalFeed details: \n" +
+  //             apiJson.error,
+  //         });
+  //       } else if (apiJson.result) {
+  //         // success
+  //         console.log("succes?");
+  //         toastShadcn({
+  //           description: "Successfully edited animal feed:",
+  //         });
+  //       }
+  //     }
+  //   }
+  // }, [apiFormData.loading, apiJson.loading]);
 
   return (
     <div>
@@ -203,10 +224,25 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
           onSubmit={handleSubmit}
           encType="multipart/form-data"
         >
-          <span className="self-center text-title-xl font-bold">
-            Edit Animal Feed: {curAnimalFeed.animalFeedName}
-          </span>
-          <hr className="bg-stroke opacity-20" />
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink className="flex" to={`/assetfacility/viewallanimalfeed`}>
+                <Button variant={"outline"} type="button" className="">
+                  Back
+                </Button>
+              </NavLink>
+              <span className="self-center text-lg text-graydark">
+                Edit Animal Feed
+              </span>
+              <Button disabled className="invisible">
+                Back
+              </Button>
+            </div>
+            <Separator />
+            <span className="mt-4 self-center text-title-xl font-bold">
+              {curAnimalFeed.animalFeedName}
+            </span>
+          </div>
           {/* Animal Feed Picture */}
           <Form.Field
             name="animalFeedImage"
@@ -216,7 +252,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
             <img
               src={"http://localhost:3000/" + curAnimalFeed.animalFeedImageUrl}
               alt="Current animal feed image"
-              className="my-4 aspect-square w-1/5 rounded-full border shadow-4"
+              className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"
             />
             <Form.Label className="font-medium">
               Upload A New Image &#40;Do not upload if no changes&#41;
@@ -241,7 +277,9 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
               placeholder="e.g., Carrots, Beef,..."
               value={animalFeedName}
               setValue={setAnimalFeedName}
-              validateFunction={validateAnimalFeedName} pattern={undefined} />
+              validateFunction={validateAnimalFeedName}
+              pattern={undefined}
+            />
           </div>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
             {/* Animal Feed Category */}
@@ -263,7 +301,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
                 ["PELLETS", "Pellets"],
                 ["NECTAR", "Nectar"],
                 ["SUPPLEMENTS", "Supplements"],
-                ["OTHERS", "Others"]
+                ["OTHERS", "Others"],
               ]}
               value={animalFeedCategory}
               setValue={setAnimalFeedCategory}
@@ -279,7 +317,6 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
           {formError && (
             <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
           )}
-
         </Form.Root>
       )}
     </div>

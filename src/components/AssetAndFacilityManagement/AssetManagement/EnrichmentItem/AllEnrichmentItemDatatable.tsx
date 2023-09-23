@@ -22,11 +22,14 @@ function AllEnrichmentItemDatatable() {
   let emptyEnrichmentItem: EnrichmentItem = {
     enrichmentItemId: -1,
     enrichmentItemName: "",
-    enrichmentItemImageUrl: ""
+    enrichmentItemImageUrl: "",
   };
 
-  const [enrichmentItemList, setEnrichmentItemList] = useState<EnrichmentItem[]>([]);
-  const [selectedEnrichmentItem, setSelectedEnrichmentItem] = useState<EnrichmentItem>(emptyEnrichmentItem);
+  const [enrichmentItemList, setEnrichmentItemList] = useState<
+    EnrichmentItem[]
+  >([]);
+  const [selectedEnrichmentItem, setSelectedEnrichmentItem] =
+    useState<EnrichmentItem>(emptyEnrichmentItem);
   const [deleteEnrichmentItemDialog, setDeleteEnrichmentItemDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -48,7 +51,6 @@ function AllEnrichmentItemDatatable() {
     fetchEnrichmentItem();
   }, []);
 
-
   //
   const exportCSV = () => {
     dt.current?.exportCSV();
@@ -61,8 +63,8 @@ function AllEnrichmentItemDatatable() {
   const imageBodyTemplate = (rowData: EnrichmentItem) => {
     return (
       <img
-      src={"http://localhost:3000/" + rowData.enrichmentItemImageUrl}
-      alt={rowData.enrichmentItemName}
+        src={"http://localhost:3000/" + rowData.enrichmentItemImageUrl}
+        alt={rowData.enrichmentItemName}
         className="border-round shadow-2"
         style={{ width: "64px" }}
       />
@@ -97,7 +99,8 @@ function AllEnrichmentItemDatatable() {
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted enrichment item: " + selectedEnrichmentItem.enrichmentItemName,
+            "Successfully deleted enrichment item: " +
+            selectedEnrichmentItem.enrichmentItemName,
         });
         setEnrichmentItemList(_enrichmentItem);
         setDeleteEnrichmentItemDialog(false);
@@ -108,7 +111,8 @@ function AllEnrichmentItemDatatable() {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting enrichmentItem: \n" + apiJson.error,
+            "An error has occurred while deleting enrichmentItem: \n" +
+            apiJson.error,
         });
       }
     };
@@ -132,7 +136,9 @@ function AllEnrichmentItemDatatable() {
   const actionBodyTemplate = (enrichmentItem: EnrichmentItem) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemId}`}>
+        <NavLink
+          to={`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemId}`}
+        >
           <Button className="mr-2">
             <HiEye className="mr-auto" />
           </Button>
@@ -187,21 +193,21 @@ function AllEnrichmentItemDatatable() {
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} enrichmentItem"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} enrichment items"
             globalFilter={globalFilter}
             header={header}
           >
-             <Column
+            <Column
               field="enrichmentItemId"
               header="ID"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "4rem" }}
             ></Column>
             <Column
               field="enrichmentItemName"
               header="Name"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "18rem" }}
             ></Column>
             <Column
               field="enrichmentItemImageUrl"
@@ -212,7 +218,7 @@ function AllEnrichmentItemDatatable() {
               body={actionBodyTemplate}
               header="Actions"
               exportable={false}
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
         </div>

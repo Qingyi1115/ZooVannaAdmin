@@ -540,7 +540,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && "!text-white")
                               }
                             >
-                              Add Animal Feed
+                              Create Animal Feed
                             </NavLink>
                           </li>
                           <li>
@@ -562,7 +562,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && "!text-white")
                               }
                             >
-                              Add Enrichment Item
+                              Create Enrichment Item
                             </NavLink>
                           </li>
                           {/* <li>

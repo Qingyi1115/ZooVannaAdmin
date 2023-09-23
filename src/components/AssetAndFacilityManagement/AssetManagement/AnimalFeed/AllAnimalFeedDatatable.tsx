@@ -24,18 +24,18 @@ function AllAnimalFeedDatatable() {
     animalFeedId: -1,
     animalFeedName: "",
     animalFeedImageUrl: "",
-    animalFeedCategory: AnimalFeedCategory.OTHERS
+    animalFeedCategory: AnimalFeedCategory.OTHERS,
   };
 
   const [animalFeedList, setAnimalFeedList] = useState<AnimalFeed[]>([]);
-  const [selectedAnimalFeed, setSelectedAnimalFeed] = useState<AnimalFeed>(emptyAnimalFeed);
+  const [selectedAnimalFeed, setSelectedAnimalFeed] =
+    useState<AnimalFeed>(emptyAnimalFeed);
   const [deleteAnimalFeedDialog, setDeleteAnimalFeedDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<AnimalFeed[]>>(null);
   const toastShadcn = useToast().toast;
-
 
   useEffect(() => {
     const fetchAnimalFeed = async () => {
@@ -63,8 +63,8 @@ function AllAnimalFeedDatatable() {
   const imageBodyTemplate = (rowData: AnimalFeed) => {
     return (
       <img
-      src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
-      alt={rowData.animalFeedName}
+        src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
+        alt={rowData.animalFeedName}
         className="border-round shadow-2"
         style={{ width: "64px" }}
       />
@@ -99,7 +99,8 @@ function AllAnimalFeedDatatable() {
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted animal feed: " + selectedAnimalFeed.animalFeedName,
+            "Successfully deleted animal feed: " +
+            selectedAnimalFeed.animalFeedName,
         });
         setAnimalFeedList(_animalFeed);
         setDeleteAnimalFeedDialog(false);
@@ -110,7 +111,8 @@ function AllAnimalFeedDatatable() {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting animalFeed: \n" + apiJson.error,
+            "An error has occurred while deleting animalFeed: \n" +
+            apiJson.error,
         });
       }
     };
@@ -134,7 +136,9 @@ function AllAnimalFeedDatatable() {
   const actionBodyTemplate = (animalFeed: AnimalFeed) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}>
+        <NavLink
+          to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}
+        >
           <Button className="mr-2">
             <HiEye className="mr-auto" />
           </Button>
@@ -189,10 +193,16 @@ function AllAnimalFeedDatatable() {
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animalFeed"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal feeds"
             globalFilter={globalFilter}
             header={header}
           >
+            <Column
+              field="animalFeedId"
+              header="Name"
+              sortable
+              style={{ minWidth: "4rem" }}
+            ></Column>
             <Column
               field="animalFeedName"
               header="Name"
@@ -214,7 +224,7 @@ function AllAnimalFeedDatatable() {
               body={actionBodyTemplate}
               header="Actions"
               exportable={false}
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
         </div>
