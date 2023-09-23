@@ -3,6 +3,7 @@ interface Facility {
   facilityName: string;
   xCoordinate: number;
   yCoordinate: number;
+  isSheltered: Boolean;
   facilityDetail: string;
   facilityDetailJson: any
 }
