@@ -106,7 +106,7 @@ function CreateNewEnrichmentItemForm() {
               Back
             </Button>
           </NavLink>
-          <span className="mt-4 self-center text-title-xl font-bold">
+          <span className="self-center text-title-xl font-bold">
             Create Enrichment Item
           </span>
           <Button disabled className="invisible">

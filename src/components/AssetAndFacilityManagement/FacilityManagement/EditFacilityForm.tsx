@@ -34,13 +34,13 @@ function EditFacilityForm(props: EditFacilityFormProps) {
     curFacility.facilityDetail); // dropdown
   const [maxAccommodationSize, setMaxAccommodationSize] = useState<number>(curFacility.facilityDetailJson.maxAccommodationSize); // number
   const [hasAirCon, setHasAirCon] = useState<string | undefined>(
-    curFacility.facilityDetailJson.hasAirCon? "true" : "false"); // dropdown
+    curFacility.facilityDetailJson.hasAirCon ? "true" : "false"); // dropdown
   const [ownership, setOwnership] = useState<string>(curFacility.facilityDetail == "thirdParty" ? curFacility.facilityDetailJson.ownership : ""); // text input
   const [ownerContact, setOwnerContact] = useState<string>(curFacility.facilityDetail == "thirdParty" ? curFacility.facilityDetailJson.ownerContact : ""); // string
   const [isPaid, setIsPaid] = useState<string | undefined>(
-    curFacility.facilityDetail == "inHouse" ? (curFacility.facilityDetailJson.isPaid? "true" : "false") : ""); // dropdown
+    curFacility.facilityDetail == "inHouse" ? (curFacility.facilityDetailJson.isPaid ? "true" : "false") : ""); // dropdown
   const [isSheltered, setIsSheltered] = useState<string | undefined>(
-    curFacility.facilityDetailJson.isSheltered? "true" : "false"); // dropdown
+    curFacility.facilityDetailJson.isSheltered ? "true" : "false"); // dropdown
   const [facilityType, setFacilityType] = useState<string | undefined>(
     curFacility.facilityDetailJson.facilityType); // dropdown 
 
@@ -125,11 +125,9 @@ function EditFacilityForm(props: EditFacilityFormProps) {
         >
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
-                <Button variant={"outline"} type="button" className="">
-                  Back
-                </Button>
-              </NavLink>
+              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+                Back
+              </Button>
               <span className="self-center text-lg text-graydark">
                 Edit Facility
               </span>

@@ -127,14 +127,9 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
         >
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink
-                className="flex"
-                to={`/assetfacility/viewallenrichmentitems`}
-              >
-                <Button variant={"outline"} type="button" className="">
-                  Back
-                </Button>
-              </NavLink>
+              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+                Back
+              </Button>
               <span className="self-center text-lg text-graydark">
                 Edit Enrichment Item
               </span>

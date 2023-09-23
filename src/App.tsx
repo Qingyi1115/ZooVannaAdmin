@@ -35,6 +35,9 @@ import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/Enric
 import CreateNewSensorPage from "./pages/assetAndFacilityManagement/Sensor/CreateNewSensorPage";
 import EditSensorPage from "./pages/assetAndFacilityManagement/Sensor/EditSensorPage";
 import ViewAllSensorsPage from "./pages/assetAndFacilityManagement/Sensor/ViewAllSensorsPage";
+import CreateNewHubPage from "./pages/assetAndFacilityManagement/Hub/CreateNewHubPage";
+import EditHubPage from "./pages/assetAndFacilityManagement/Hub/EditHubPage";
+import ViewAllHubsPage from "./pages/assetAndFacilityManagement/Hub/ViewAllHubsPage";
 
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
@@ -60,6 +63,7 @@ import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facil
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
+
 
 function App() {
   const { state } = useAuthContext();
@@ -290,6 +294,22 @@ function App() {
                   path="/assetfacility/viewallsensors"
                   element={
                     user ? <ViewAllSensorsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/createhub"
+                  element={
+                    user ? <CreateNewHubPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/edithub/:hubName"
+                  element={user ? <EditHubPage /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/assetfacility/viewallhubs"
+                  element={
+                    user ? <ViewAllHubsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route

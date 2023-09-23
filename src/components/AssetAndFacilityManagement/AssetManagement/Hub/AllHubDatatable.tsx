@@ -8,47 +8,50 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
-import AnimalFeed from "../../../../models/AnimalFeed";
+import Hub from "../../../../models/Hub";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
-import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
+import { HubStatus } from "../../../../enums/HubStatus";
 import { useToast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
 
-function AllAnimalFeedDatatable() {
+function AllHubDatatable() {
   const apiJson = useApiJson();
 
-  let emptyAnimalFeed: AnimalFeed = {
-    animalFeedId: -1,
-    animalFeedName: "",
-    animalFeedImageUrl: "",
-    animalFeedCategory: AnimalFeedCategory.OTHERS,
+  let emptyHub: Hub = {
+    hubProcessorId: -1,
+    processorName: "",
+    ipAddressName: "",
+    lastDataUpdate: null,
+    hubSecret: "",
+    hubStatus: HubStatus.PENDING
   };
 
-  const [animalFeedList, setAnimalFeedList] = useState<AnimalFeed[]>([]);
-  const [selectedAnimalFeed, setSelectedAnimalFeed] =
-    useState<AnimalFeed>(emptyAnimalFeed);
-  const [deleteAnimalFeedDialog, setDeleteAnimalFeedDialog] =
+  const [hubList, setHubList] = useState<Hub[]>([]);
+  const [selectedHub, setSelectedHub] =
+    useState<Hub>(emptyHub);
+  const [deleteHubDialog, setDeleteHubDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<AnimalFeed[]>>(null);
+  const dt = useRef<DataTable<Hub[]>>(null);
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    const fetchAnimalFeed = async () => {
+    const fetchHub = async () => {
       try {
         const responseJson = await apiJson.get(
-          "http://localhost:3000/api/assetfacility/getallanimalfeed"
+          "http://localhost:3000/api/assetfacility/getAllHubs"
         );
-        setAnimalFeedList(responseJson as AnimalFeed[]);
+        setHubList(responseJson["hubs"] as Hub[]);
       } catch (error: any) {
         console.log(error);
       }
     };
-    fetchAnimalFeed();
+    fetchHub();
   }, []);
 
   //
@@ -60,83 +63,73 @@ function AllAnimalFeedDatatable() {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
-  const imageBodyTemplate = (rowData: AnimalFeed) => {
-    return (
-      <img
-        src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
-        alt={rowData.animalFeedName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
-    );
+  const navigateEditProduct = (hub: Hub) => { };
+
+  const confirmDeleteHub = (hub: Hub) => {
+    setSelectedHub(hub);
+    setDeleteHubDialog(true);
   };
 
-  const navigateEditProduct = (animalFeed: AnimalFeed) => { };
-
-  const confirmDeleteAnimalFeed = (animalFeed: AnimalFeed) => {
-    setSelectedAnimalFeed(animalFeed);
-    setDeleteAnimalFeedDialog(true);
+  const hideDeleteHubDialog = () => {
+    setDeleteHubDialog(false);
   };
 
-  const hideDeleteAnimalFeedDialog = () => {
-    setDeleteAnimalFeedDialog(false);
-  };
-
-  // delete animalFeed stuff
-  const deleteAnimalFeed = async () => {
-    let _animalFeed = animalFeedList.filter(
-      (val) => val.animalFeedId !== selectedAnimalFeed?.animalFeedId
+  // delete hub stuff
+  const deleteHub = async () => {
+    let _hub = hubList.filter(
+      (val) => val.hubProcessorId !== selectedHub?.hubProcessorId
     );
 
-    const deleteAnimalFeed = async () => {
+    const deleteHub = async () => {
       try {
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deleteAnimalFeed/" +
-          selectedAnimalFeed.animalFeedName
+          "http://localhost:3000/api/assetFacility/deleteHub/" +
+          selectedHub.hubProcessorId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted animal feed: " +
-            selectedAnimalFeed.animalFeedName,
+            "Successfully deleted hub: " +
+            selectedHub.processorName,
         });
-        setAnimalFeedList(_animalFeed);
-        setDeleteAnimalFeedDialog(false);
-        setSelectedAnimalFeed(emptyAnimalFeed);
+        setHubList(_hub);
+        setDeleteHubDialog(false);
+        setSelectedHub(emptyHub);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting animalFeed: \n" +
+            "An error has occurred while deleting hub: \n" +
             apiJson.error,
         });
       }
     };
-    deleteAnimalFeed();
+    deleteHub();
   };
 
-  const deleteAnimalFeedDialogFooter = (
+  const deleteHubDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteAnimalFeedDialog}>
+      <Button onClick={hideDeleteHubDialog}>
         <HiX className="mr-2" />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteAnimalFeed}>
+      <Button variant={"destructive"} onClick={deleteHub}>
         <HiCheck className="mr-2" />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete animalFeed stuff
+  // end delete hub stuff
 
-  const actionBodyTemplate = (animalFeed: AnimalFeed) => {
+  const actionBodyTemplate = (hub: Hub) => {
     return (
       <React.Fragment>
         <NavLink
-          to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}
+          to={`/assetfacility/updateHub/${hub.hubProcessorId}`}
         >
           <Button className="mr-2">
             <HiPencil className="mr-auto" />
@@ -145,7 +138,7 @@ function AllAnimalFeedDatatable() {
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteAnimalFeed(animalFeed)}
+          onClick={() => confirmDeleteHub(hub)}
         >
           <HiTrash className="mx-auto" />
         </Button>
@@ -155,7 +148,7 @@ function AllAnimalFeedDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage AnimalFeed</h4>
+      <h4 className="m-1">Manage Hub</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -175,47 +168,75 @@ function AllAnimalFeedDatatable() {
       <div>
         <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
-          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink to={"/assetfacility/createhub"}>
+                {/* TODO: Preload hub details? */}
+                <Button className="mr-2">
+                  <HiPlus className="mr-auto" />
+                </Button>
+              </NavLink>
+              <span className=" self-center text-title-xl font-bold">
+                All Hubs
+              </span>
+              <Button onClick={exportCSV}>Export to .csv</Button>
+            </div>
+            <Separator />
+          </div>
 
           <DataTable
             ref={dt}
-            value={animalFeedList}
-            selection={selectedAnimalFeed}
+            value={hubList}
+            selection={selectedHub}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedAnimalFeed(e.value);
+                setSelectedHub(e.value);
               }
             }}
-            dataKey="animalFeedId"
+            dataKey="hubProcessorId"
             paginator
             rows={10}
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal feeds"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} hubs"
             globalFilter={globalFilter}
             header={header}
           >
             <Column
-              field="animalFeedId"
+              field="hubProcessorId"
               header="ID"
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
-              field="animalFeedName"
-              header="Name"
+              field="processorName"
+              header="Processor Name"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="animalFeedImageUrl"
-              header="Image"
-              body={imageBodyTemplate}
+              field="ipAddressName"
+              header="IP Address Name"
+              sortable
+              style={{ minWidth: "16rem" }}
             ></Column>
             <Column
-              field="animalFeedCategory"
-              header="Animal Feed Category"
+              field="lastDataUpdate"
+              header="Last Data Update"
+              sortable
+              style={{ minWidth: "16rem" }}
+            ></Column>
+            <Column
+              field="hubSecret"
+              header="Hub Secret"
+              sortable
+              style={{ minWidth: "16rem" }}
+            ></Column>
+            <Column
+              field="hubStatus"
+              header="Hub Status"
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
@@ -229,23 +250,23 @@ function AllAnimalFeedDatatable() {
         </div>
       </div>
       <Dialog
-        visible={deleteAnimalFeedDialog}
+        visible={deleteHubDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteAnimalFeedDialogFooter}
-        onHide={hideDeleteAnimalFeedDialog}
+        footer={deleteHubDialogFooter}
+        onHide={hideDeleteHubDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedAnimalFeed && (
+          {selectedHub && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedAnimalFeed.animalFeedName}</b>?
+              <b>{selectedHub.processorName}</b>?
             </span>
           )}
         </div>
@@ -254,4 +275,4 @@ function AllAnimalFeedDatatable() {
   );
 }
 
-export default AllAnimalFeedDatatable;
+export default AllHubDatatable;

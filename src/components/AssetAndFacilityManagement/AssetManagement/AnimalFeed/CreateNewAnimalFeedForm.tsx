@@ -126,12 +126,10 @@ function CreateNewAnimalFeedForm() {
       {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <NavLink className="flex" to={`/assetfacility/viewallanimalfeed`}>
-            <Button variant={"outline"} type="button" className="">
-              Back
-            </Button>
-          </NavLink>
-          <span className="mt-4 self-center text-title-xl font-bold">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+            Back
+          </Button>
+          <span className="self-center text-title-xl font-bold">
             Create Animal Feed
           </span>
           <Button disabled className="invisible">

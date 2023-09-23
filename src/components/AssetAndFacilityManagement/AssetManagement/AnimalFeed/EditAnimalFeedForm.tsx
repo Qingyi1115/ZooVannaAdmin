@@ -174,48 +174,6 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
     }
   }
 
-  // useEffect(() => {
-  //   if (imageFile) {
-  //     if (!apiFormData.loading) {
-  //       if (apiFormData.error) {
-  //         // got error
-  //         toastShadcn({
-  //           variant: "destructive",
-  //           title: "Uh oh! Something went wrong.",
-  //           description:
-  //             "An error has occurred while editing animalFeed details: \n" +
-  //             apiFormData.error,
-  //         });
-  //       } else if (apiFormData.result) {
-  //         // success
-  //         console.log("success?");
-  //         toastShadcn({
-  //           description: "Successfully edited animal feed:",
-  //         });
-  //       }
-  //     }
-  //   } else {
-  //     if (!apiJson.loading) {
-  //       if (apiJson.error) {
-  //         // got error
-  //         toastShadcn({
-  //           variant: "destructive",
-  //           title: "Uh oh! Something went wrong.",
-  //           description:
-  //             "An error has occurred while editing animalFeed details: \n" +
-  //             apiJson.error,
-  //         });
-  //       } else if (apiJson.result) {
-  //         // success
-  //         console.log("succes?");
-  //         toastShadcn({
-  //           description: "Successfully edited animal feed:",
-  //         });
-  //       }
-  //     }
-  //   }
-  // }, [apiFormData.loading, apiJson.loading]);
-
   return (
     <div>
       {curAnimalFeed && (
@@ -227,11 +185,9 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink className="flex" to={`/assetfacility/viewallanimalfeed`}>
-                <Button variant={"outline"} type="button" className="">
-                  Back
-                </Button>
-              </NavLink>
+              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+                Back
+              </Button>             
               <span className="self-center text-lg text-graydark">
                 Edit Animal Feed
               </span>

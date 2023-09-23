@@ -7,7 +7,7 @@ import FormFieldSelect from "../../FormFieldSelect";
 import useApiJson from "../../../hooks/useApiJson";
 import useApiFormData from "../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -26,7 +26,7 @@ function validateFacilityName(props: ValidityState) {
 function CreateNewFacilityForm() {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
-
+  const navigate = useNavigate();
   const [facilityName, setFacilityName] = useState<string>(""); // text input
   const [xCoordinate, setXCoordinate] = useState<string>(""); // number
   const [yCoordinate, setYCoordinate] = useState<string>(""); // number
@@ -95,7 +95,7 @@ function CreateNewFacilityForm() {
           error.message,
       });
     }
-    // console.log(apiFormData.result);
+    console.log(apiJson.result);
 
     // handle success case or failurecase using apiJson
   }
@@ -109,12 +109,10 @@ function CreateNewFacilityForm() {
       {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
-            <Button variant={"outline"} type="button" className="">
-              Back
-            </Button>
-          </NavLink>
-          <span className="mt-4 self-center text-title-xl font-bold">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+            Back
+          </Button>
+          <span className="self-center text-title-xl font-bold">
             Create Facility
           </span>
           <Button disabled className="invisible">

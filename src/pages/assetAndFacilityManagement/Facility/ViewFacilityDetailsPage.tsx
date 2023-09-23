@@ -24,6 +24,7 @@ import ManageMaintenanceStaff from "../../../components/AssetAndFacilityManageme
 import Employee from "../../../models/Employee";
 import { Separator } from "@/components/ui/separator";
 import ManageMaintenanceStaffPage from "./ManageMaintenanceStaffPage";
+import ViewAllHubsPage from "../Hub/ViewAllHubsPage";
 
 
 
@@ -95,10 +96,11 @@ function ViewFacilityDetailsPage() {
           className="w-full"
         >
           <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <span className="invisible">_____</span>
             <TabsTrigger value="facilityDetails">Facility Details</TabsTrigger>
+            <TabsTrigger value="hubs">Hubs</TabsTrigger>
             <TabsTrigger value="sensors">Sensors</TabsTrigger>
             <TabsTrigger value="manageMaintenance">Manage Maintenance Staff</TabsTrigger>
+            <TabsTrigger value="customerReport">Customer Report</TabsTrigger>
           </TabsList>
           <TabsContent value="facilityDetails">
             <div className="relative flex flex-col">
@@ -110,8 +112,14 @@ function ViewFacilityDetailsPage() {
           <TabsContent value="sensors">
             <ViewAllSensorPage />
           </TabsContent>
+          <TabsContent value="hubs">
+            <ViewAllHubsPage />
+          </TabsContent>
           <TabsContent value="manageMaintenance">
             <ManageMaintenanceStaffPage />
+          </TabsContent>
+          <TabsContent value="customerReport">
+            {/* <ViewAllCustomerReportsPage /> */}
           </TabsContent>
         </Tabs>
 

@@ -52,13 +52,13 @@ function CreateNewEmployeeForm() {
 
     let roleJson;
 
-    if(role ==="keeper") {
+    if (role === "keeper") {
       roleJson = {
         keeperType: roleType,
         isDisabled: false,
         specialization: specializationType
       }
-    } 
+    }
     else if (role === "generalStaff") {
       roleJson = {
         generalStaffType: roleType,
@@ -66,7 +66,7 @@ function CreateNewEmployeeForm() {
       }
     }
 
-    else if(role === "planningStaff") {
+    else if (role === "planningStaff") {
       roleJson = {
         plannerType: roleType,
         isDisabled: false,
@@ -151,7 +151,7 @@ function CreateNewEmployeeForm() {
           <div className="font-medium text-danger">* Please enter a valid phone number!</div>
         );
       }
-      else if(props.patternMismatch) {
+      else if (props.patternMismatch) {
         return (
           <div className="font-medium text-danger">* Please enter 8-digit phone number</div>
         )
@@ -160,7 +160,7 @@ function CreateNewEmployeeForm() {
     }
     return null;
   }
-  
+
   function validateRole(props: ValidityState) {
     if (props != undefined) {
       if (role == undefined) {
@@ -311,7 +311,7 @@ function CreateNewEmployeeForm() {
           if (e && e.value !== undefined) {
             setBirthday(e.value);
           }
-          }}/>
+        }} />
       </div>
       <FormFieldSelect
         formFieldName="isAccountManager"
@@ -324,9 +324,9 @@ function CreateNewEmployeeForm() {
         ]}
         value={accountManager}
         setValue={(e) => {
-          if(e && e !== "undefined") {
+          if (e && e !== "undefined") {
             setAccountManager(e);
-            if(e === "true") {
+            if (e === "true") {
               setIsAccountManager(true);
             } else {
               setIsAccountManager(false);
@@ -350,7 +350,7 @@ function CreateNewEmployeeForm() {
         validateFunction={validateRole}
       />
 
-      {role === "keeper" && 
+      {role === "keeper" &&
         <FormFieldSelect
           formFieldName="keeperType"
           label="Keeper Type"
@@ -366,7 +366,7 @@ function CreateNewEmployeeForm() {
         />
       }
 
-      {role === "keeper" && 
+      {role === "keeper" &&
         <FormFieldSelect
           formFieldName="specializationType"
           label="Specialization Type"
@@ -385,7 +385,7 @@ function CreateNewEmployeeForm() {
         />
       }
 
-      {role === "generalStaff" && 
+      {role === "generalStaff" &&
         <FormFieldSelect
           formFieldName="generalStaffType"
           label="General Staff Type"
@@ -401,7 +401,7 @@ function CreateNewEmployeeForm() {
         />
       }
 
-      {role === "planningStaff" && 
+      {role === "planningStaff" &&
         <FormFieldSelect
           formFieldName="planningStaffType"
           label="Planning Staff Type"
@@ -420,7 +420,7 @@ function CreateNewEmployeeForm() {
         />
       }
 
-      {role === "planningStaff" && 
+      {role === "planningStaff" &&
         <FormFieldSelect
           formFieldName="specializationType"
           label="Specialization Type"
