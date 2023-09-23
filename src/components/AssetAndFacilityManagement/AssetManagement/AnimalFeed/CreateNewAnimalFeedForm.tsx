@@ -123,6 +123,7 @@ function CreateNewAnimalFeedForm() {
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >
+      {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
           <NavLink className="flex" to={`/assetfacility/viewallanimalfeed`}>
@@ -130,16 +131,16 @@ function CreateNewAnimalFeedForm() {
               Back
             </Button>
           </NavLink>
-          <span className="self-center text-lg text-graydark"></span>
+          <span className="mt-4 self-center text-title-xl font-bold">
+            Create Animal Feed
+          </span>
           <Button disabled className="invisible">
             Back
           </Button>
         </div>
         <Separator />
-        <span className="mt-4 self-center text-title-xl font-bold">
-          Create Animal Feed
-        </span>
       </div>
+
       {/* Animal Feed Picture */}
       <Form.Field
         name="animalFeedImage"

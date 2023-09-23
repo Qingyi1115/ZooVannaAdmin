@@ -224,6 +224,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
           onSubmit={handleSubmit}
           encType="multipart/form-data"
         >
+          {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               <NavLink className="flex" to={`/assetfacility/viewallanimalfeed`}>
@@ -243,19 +244,20 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
               {curAnimalFeed.animalFeedName}
             </span>
           </div>
+
           {/* Animal Feed Picture */}
           <Form.Field
             name="animalFeedImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <span className="font-medium">Current Image</span>
+            <Form.Label className="font-medium">Current Image</Form.Label>
             <img
               src={"http://localhost:3000/" + curAnimalFeed.animalFeedImageUrl}
               alt="Current animal feed image"
               className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"
             />
             <Form.Label className="font-medium">
-              Upload A New Image &#40;Do not upload if no changes&#41;
+              Upload A New Image
             </Form.Label>
             <Form.Control
               type="file"
