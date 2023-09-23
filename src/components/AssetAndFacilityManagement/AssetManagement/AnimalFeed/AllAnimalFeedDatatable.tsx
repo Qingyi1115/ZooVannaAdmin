@@ -122,11 +122,11 @@ function AllAnimalFeedDatatable() {
   const deleteAnimalFeedDialogFooter = (
     <React.Fragment>
       <Button onClick={hideDeleteAnimalFeedDialog}>
-        <HiX />
+        <HiX className="mr-2" />
         No
       </Button>
       <Button variant={"destructive"} onClick={deleteAnimalFeed}>
-        <HiCheck />
+        <HiCheck className="mr-2" />
         Yes
       </Button>
     </React.Fragment>

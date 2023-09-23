@@ -122,11 +122,11 @@ function AllEnrichmentItemDatatable() {
   const deleteEnrichmentItemDialogFooter = (
     <React.Fragment>
       <Button onClick={hideDeleteEnrichmentItemDialog}>
-        <HiX />
+        <HiX className="mr-2" />
         No
       </Button>
       <Button variant={"destructive"} onClick={deleteEnrichmentItem}>
-        <HiCheck />
+        <HiCheck className="mr-2" />
         Yes
       </Button>
     </React.Fragment>

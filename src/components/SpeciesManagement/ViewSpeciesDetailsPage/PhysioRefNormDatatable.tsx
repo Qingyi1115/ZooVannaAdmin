@@ -121,11 +121,11 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
   const deletePhysioRefNormDialogFooter = (
     <React.Fragment>
       <Button onClick={hideDeletePhysioRefNormDialog}>
-        <HiX />
+        <HiX className="mr-2" />
         No
       </Button>
       <Button variant={"destructive"} onClick={deletePhysioRefNorm}>
-        <HiCheck />
+        <HiCheck className="mr-2" />
         Yes
       </Button>
     </React.Fragment>
@@ -197,45 +197,45 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
       >
         <Column
           field="physiologicalRefId"
-          header="Growth Stage"
+          header="ID"
           sortable
-          style={{ minWidth: "10rem" }}
+          style={{ minWidth: "4rem" }}
         ></Column>
         <Column
           field="growthStage"
           header="Growth Stage"
           sortable
-          style={{ minWidth: "10rem" }}
+          style={{ minWidth: "12rem" }}
         ></Column>
         <Column
           field="ageToGrowthAge"
-          header="Feed Category"
+          header="Age to Reach Growth Stage"
           sortable
-          style={{ minWidth: "10rem" }}
+          style={{ minWidth: "12rem" }}
         ></Column>
         <Column
           field="sizeMaleCm"
-          header="Amount Per Meal (grams)"
+          header="Average Size Male (cm)"
           sortable
-          style={{ minWidth: "10rem" }}
+          style={{ minWidth: "12rem" }}
         ></Column>
         <Column
           field="weightMaleKg"
-          header="Amount Per Week (grams)"
+          header="Average Weight Male (kg)"
           sortable
-          style={{ minWidth: "10rem" }}
+          style={{ minWidth: "12rem" }}
         ></Column>
         <Column
           field="sizeFemaleCm"
-          header="Recommended Container"
+          header="Average Size Female (cm)"
           sortable
-          style={{ minWidth: "10rem" }}
+          style={{ minWidth: "12rem" }}
         ></Column>
         <Column
           field="weightFemaleKg"
-          header="Recommended Method"
+          header="Average Weight Female (kg)"
           sortable
-          style={{ minWidth: "10rem" }}
+          style={{ minWidth: "12rem" }}
         ></Column>
         <Column
           body={actionBodyTemplate}
