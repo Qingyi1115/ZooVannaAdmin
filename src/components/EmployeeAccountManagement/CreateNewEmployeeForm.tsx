@@ -7,6 +7,9 @@ import FormFieldSelect from "../FormFieldSelect";
 import useApiJson from "../../hooks/useApiJson";
 import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -14,7 +17,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 function CreateNewEmployeeForm() {
   const apiJson = useApiJson();
-
+  const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
   const [fullName, setFullName] = useState<string>(""); // text input
@@ -49,6 +52,7 @@ function CreateNewEmployeeForm() {
     e.preventDefault();
     console.log("Name:");
     console.log(fullName);
+
 
     let roleJson;
 
@@ -237,10 +241,21 @@ function CreateNewEmployeeForm() {
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >
-      <span className="self-center text-title-xl font-bold">
-        Create New Employee
-      </span>
-      <hr className="bg-stroke opacity-20" />
+      {/* Title Header and back button */}
+      <div className="flex flex-col">
+        <div className="mb-4 flex justify-between">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+            Back
+          </Button>
+          <span className="self-center text-title-xl font-bold">
+            Create New Employee
+          </span>
+          <Button disabled className="invisible">
+            Back
+          </Button>
+        </div>
+        <Separator />
+      </div>
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* First Name */}
         <FormFieldInput
