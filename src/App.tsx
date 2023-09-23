@@ -318,7 +318,7 @@ function App() {
                 <Route
                   path="/employeeAccount/viewEmployeeDetails/:employeeId"
                   element={
-                    user ? <ViewEmployeeDetailsPage /> : <Navigate to="login" />
+                    user ? <ViewEmployeeDetailsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
