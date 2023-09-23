@@ -30,13 +30,47 @@ function EditPassword() {
   const [newpass2, setNewPass2] = useState<string>("");
   const [formError, setFormError] = useState<JSX.Element | null>(null);
 
+  function setPassword1(value:any){
+      setNewPass(value)
+  }
+
+  function setPassword2(value:any){
+    setNewPass2(value)
+  }
+
+  useEffect(() => {
+    handleValidation();
+  }, [newpass, newpass2]);
+
+
+  function handleValidation(){
+    if (newpass.length < 8){
+      setFormError(
+        <div className="font-medium text-danger">
+          Password must be at least length 8 and above!
+        </div>
+      );
+      return false;
+    }
+    if (newpass != newpass2) {
+      setFormError(
+        <div className="font-medium text-danger">
+          Password does not match!
+        </div>
+      );
+      return false;
+    }
+    setFormError(null);
+    return true;
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      if (newpass != newpass2) {
+      if (!handleValidation()) {
         return setFormError(
           <div className="font-medium text-danger">
-            Password does not match!
+            Please remedy issues!
           </div>
         );
       }
@@ -124,7 +158,7 @@ function EditPassword() {
           pattern={undefined}
           placeholder="new password"
           value={newpass}
-          setValue={setNewPass}
+          setValue={setPassword1}
           validateFunction={() => null}
         />
       </div>
@@ -138,8 +172,8 @@ function EditPassword() {
           pattern={undefined}
           placeholder="new password"
           value={newpass2}
-          setValue={setNewPass2}
-          validateFunction={validateMatchingPassword}
+          setValue={setPassword2}
+          validateFunction={() => null}
         />
       </div>
 
