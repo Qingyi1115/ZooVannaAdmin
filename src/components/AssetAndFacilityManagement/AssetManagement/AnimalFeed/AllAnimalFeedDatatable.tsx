@@ -10,7 +10,7 @@ import { InputText } from "primereact/inputtext";
 
 import AnimalFeed from "../../../../models/AnimalFeed";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -180,15 +180,15 @@ function AllAnimalFeedDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
-                Back
-              </Button>
+              <NavLink to={"/assetfacility/createanimalfeed"}>
+                <Button className="mr-2">
+                  <HiPlus className="mr-auto" />
+                </Button>
+              </NavLink>
               <span className="self-center text-title-xl font-bold">
                 All Animal Feed
               </span>
-              <Button disabled className="invisible">
-                Back
-              </Button>
+              <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
             <Separator />
           </div>
