@@ -3,7 +3,7 @@ import CreateNewFacilityForm from "../../../components/AssetAndFacilityManagemen
 
 function CreateNewFacilityPage() {
   return (
-    <div>
+    <div className="p-10">
       <CreateNewFacilityForm />
     </div>
   );

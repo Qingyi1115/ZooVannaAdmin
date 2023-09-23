@@ -146,11 +146,11 @@ function AllSpeciesDatatable() {
   const deleteSpeciesDialogFooter = (
     <React.Fragment>
       <Button onClick={hideDeleteSpeciesDialog}>
-        <HiX />
+        <HiX className="mr-2" />
         No
       </Button>
       <Button variant={"destructive"} onClick={deleteSpecies}>
-        <HiCheck />
+        <HiCheck className="mr-2" />
         Yes
       </Button>
     </React.Fragment>
@@ -164,7 +164,6 @@ function AllSpeciesDatatable() {
           <NavLink to={`/species/viewspeciesdetails/${species.speciesCode}`}>
             <Button className="mr-2">
               <HiEye className="mr-auto" />
-              
             </Button>
           </NavLink>
           <Button
@@ -173,7 +172,6 @@ function AllSpeciesDatatable() {
             onClick={() => confirmDeleteSpecies(species)}
           >
             <HiTrash className="mx-auto" />
-           
           </Button>
         </div>
       </React.Fragment>

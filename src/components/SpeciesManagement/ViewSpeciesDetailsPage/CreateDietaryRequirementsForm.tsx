@@ -75,7 +75,7 @@ function CreateDietaryRequirementsForm(
       if (growthStage == undefined) {
         return (
           <div className="font-medium text-danger">
-            * Please select a native continent
+            * Please select a growth stage
           </div>
         );
       }
@@ -237,7 +237,7 @@ function CreateDietaryRequirementsForm(
           <div className="mb-4 flex justify-between">
             <NavLink
               className="flex"
-              to={`/species/viewspeciesdetails/${speciesCode}`}
+              to={`/species/viewspeciesdetails/${speciesCode}/dietneed`}
             >
               <Button variant={"outline"} type="button" className="">
                 Back

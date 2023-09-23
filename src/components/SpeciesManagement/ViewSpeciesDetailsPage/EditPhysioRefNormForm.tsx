@@ -72,7 +72,7 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
       if (growthStage == undefined) {
         return (
           <div className="font-medium text-danger">
-            * Please select a native continent
+            * Please select a growth stage
           </div>
         );
       }
@@ -203,14 +203,14 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
           <div className="mb-4 flex justify-between">
             <NavLink
               className="flex"
-              to={`/species/viewspeciesdetails/${speciesCode}`}
+              to={`/species/viewspeciesdetails/${speciesCode}/physioref`}
             >
               <Button variant={"outline"} type="button" className="">
                 Back
               </Button>
             </NavLink>
             <span className="self-center text-lg text-graydark">
-              Create Species Dietary Requirements
+              Edit Physiological Reference Norms
             </span>
             <Button disabled className="invisible">
               Back

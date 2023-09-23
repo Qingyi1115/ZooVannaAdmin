@@ -3,7 +3,7 @@ import CreateNewEnrichmentItemForm from "../../../components/AssetAndFacilityMan
 
 function CreateNewEnrichmentItemPage() {
   return (
-    <div>
+    <div className="p-10">
       <CreateNewEnrichmentItemForm />
     </div>
   );
