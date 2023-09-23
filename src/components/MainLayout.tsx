@@ -19,11 +19,11 @@ function MainLayout(props: PropsType) {
   const { state } = useAuthContext();
   const { user } = state;
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden">
       {user && (
         <SidebarNew sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       )}
-      <div className="no-scrollbar relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+      <div className="no-scrollbar relative flex w-full flex-1 flex-col overflow-y-auto overflow-x-hidden">
         {user && (
           <HeaderNew
             sidebarOpen={sidebarOpen}
