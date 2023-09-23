@@ -10,12 +10,13 @@ import { InputText } from "primereact/inputtext";
 
 import facility from "src/models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import Facility from "../../../models/Facility";
+import { Separator } from "@/components/ui/separator";
 
 function AllfacilityDatatable() {
   const apiJson = useApiJson();
@@ -131,13 +132,12 @@ function AllfacilityDatatable() {
   );
   // end delete facility stuff
 
-  const actionBodyTemplate = (facility: facility) => {
+  const actionBodyTemplate = (facility: Facility) => {
     return (
       <React.Fragment>
         <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}>
           <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mr-1" />
-
           </Button>
         </NavLink>
         <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}>
@@ -160,7 +160,7 @@ function AllfacilityDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage facility</h4>
+      <h4 className="m-1">Manage facilities</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -180,7 +180,21 @@ function AllfacilityDatatable() {
       <div>
         <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
-          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink to={"/assetfacility/createfacility"}>
+                <Button className="mr-2">
+                  <HiPlus className="mr-auto" />
+                </Button>
+              </NavLink>
+              <span className=" self-center text-title-xl font-bold">
+                All Facilities
+              </span>
+              <Button onClick={exportCSV}>Export to .csv</Button>
+            </div>
+            <Separator />
+          </div>
 
           <DataTable
             ref={dt}
@@ -197,10 +211,16 @@ function AllfacilityDatatable() {
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facility"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facilities"
             globalFilter={globalFilter}
             header={header}
           >
+            <Column
+              field="facilityId"
+              header="ID"
+              sortable
+              style={{ minWidth: "4rem" }}
+            ></Column>
             <Column
               field="facilityName"
               header="Name"

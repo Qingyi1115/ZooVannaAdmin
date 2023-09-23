@@ -261,6 +261,12 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
             header={header}
           >
             <Column
+              field="employeeId"
+              header="ID"
+              sortable
+              style={{ minWidth: "4rem" }}
+            ></Column>
+            <Column
               field="employeeName"
               header="Name"
               sortable

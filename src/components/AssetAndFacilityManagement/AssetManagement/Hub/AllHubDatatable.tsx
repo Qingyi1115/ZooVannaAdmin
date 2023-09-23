@@ -128,6 +128,11 @@ function AllHubDatatable() {
   const actionBodyTemplate = (hub: Hub) => {
     return (
       <React.Fragment>
+        <NavLink to={`/assetfacility/viewhubdetails/${hub.hubProcessorId}`}>
+          <Button variant={"outline"} className="mb-1 mr-1">
+            <HiEye className="mr-1" />
+          </Button>
+        </NavLink>
         <NavLink
           to={`/assetfacility/updateHub/${hub.hubProcessorId}`}
         >
