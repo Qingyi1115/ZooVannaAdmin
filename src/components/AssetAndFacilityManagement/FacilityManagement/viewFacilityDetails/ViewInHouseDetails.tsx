@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import Employee from "../../../../models/Employee";
 import { Button } from "@/components/ui/button";
 import useApiJson from "../../../../hooks/useApiJson";
@@ -19,16 +19,16 @@ import InHouse from "src/models/InHouse";
 
 interface InHouseDetailsProps {
   curInHouse: InHouse;
-  }
+}
 function ViewInHouseDetails(props: InHouseDetailsProps) {
-    const {curInHouse} = props;
+  const { curInHouse } = props;
 
-    const toastShadcn = useToast().toast;
+  const toastShadcn = useToast().toast;
 
-    return(
-      <div className="">
-        <Table>
-          {/* <TableHeader className=" bg-whiten">
+  return (
+    <div className="">
+      <Table>
+        {/* <TableHeader className=" bg-whiten">
             <TableRow>
               <TableHead className="w-1/3 font-bold" colSpan={2}>
                 Attribute
@@ -36,36 +36,36 @@ function ViewInHouseDetails(props: InHouseDetailsProps) {
               <TableHead>Value</TableHead>
             </TableRow>
           </TableHeader> */}
-          <TableBody>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Is Paid
-              </TableCell>
-              <TableCell>{String(curInHouse.isPaid)}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Facility Type
-              </TableCell>
-              <TableCell>{curInHouse.facilityType}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Maximum Accommodation Size
-              </TableCell>
-              <TableCell>{curInHouse.maxAccommodationSize}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Air Condition Avaliable
-              </TableCell>
-              <TableCell>{String(curInHouse.hasAirCon)}</TableCell>
-            </TableRow>
+        <TableBody>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Is Paid
+            </TableCell>
+            <TableCell>{String(curInHouse.isPaid)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Facility Type
+            </TableCell>
+            <TableCell>{curInHouse.facilityType}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Maximum Accommodation Size
+            </TableCell>
+            <TableCell>{curInHouse.maxAccommodationSize}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Air Condition Avaliable
+            </TableCell>
+            <TableCell>{String(curInHouse.hasAirCon) == "false" ? "No" : "Yes"}</TableCell>
+          </TableRow>
 
-          </TableBody>
-        </Table>
-      </div>
-    )
+        </TableBody>
+      </Table>
+    </div>
+  )
 }
 
 export default ViewInHouseDetails;
