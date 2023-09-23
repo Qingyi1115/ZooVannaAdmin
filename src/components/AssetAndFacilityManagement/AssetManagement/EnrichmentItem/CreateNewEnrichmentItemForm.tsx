@@ -97,26 +97,25 @@ function CreateNewEnrichmentItemForm() {
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >
+
+      {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <NavLink
-            className="flex"
-            to={`/assetfacility/viewallenrichmentitems`}
-          >
+          <NavLink className="flex" to={`/assetfacility/viewallenrichmentitems`}>
             <Button variant={"outline"} type="button" className="">
               Back
             </Button>
           </NavLink>
-          <span className="self-center text-lg text-graydark"></span>
+          <span className="mt-4 self-center text-title-xl font-bold">
+            Create Enrichment Item
+          </span>
           <Button disabled className="invisible">
             Back
           </Button>
         </div>
         <Separator />
-        <span className="mt-4 self-center text-title-xl font-bold">
-          Create Enrichment Item
-        </span>
       </div>
+
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Enrichment Item Picture */}
         <Form.Field
