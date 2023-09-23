@@ -40,6 +40,8 @@ import ViewAllSensorsPage from "./pages/assetAndFacilityManagement/Sensor/ViewAl
 import CreateNewHubPage from "./pages/assetAndFacilityManagement/Hub/CreateNewHubPage";
 import EditHubPage from "./pages/assetAndFacilityManagement/Hub/EditHubPage";
 import ViewAllHubsPage from "./pages/assetAndFacilityManagement/Hub/ViewAllHubsPage";
+import ViewHubDetailsPage from "./pages/assetAndFacilityManagement/Hub/ViewHubDetailsPage";
+import ViewSensorDetailsPage from "./pages/assetAndFacilityManagement/Sensor/ViewSensorDetailsPage";
 
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
@@ -299,6 +301,16 @@ function App() {
                   }
                 />
                 <Route
+                  path="/assetfacility/viewsensordetails/:sensorId"
+                  element={
+                    user ? (
+                      <ViewSensorDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
                   path="/assetfacility/createhub"
                   element={
                     user ? <CreateNewHubPage /> : <Navigate to="/login" />
@@ -312,6 +324,16 @@ function App() {
                   path="/assetfacility/viewallhubs"
                   element={
                     user ? <ViewAllHubsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/viewhubdetails/:hubProcessorId"
+                  element={
+                    user ? (
+                      <ViewHubDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
