@@ -135,7 +135,7 @@ function AllfacilityDatatable() {
     return (
       <React.Fragment>
         <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}>
-          <Button className="mb-1 mr-1">
+          <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mr-1" />
 
           </Button>
