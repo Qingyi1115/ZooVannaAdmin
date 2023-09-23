@@ -146,7 +146,7 @@ function MaintenanceOperationSuggestion() {
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensor"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensors"
             globalFilter={globalFilter}
           >
             <Column

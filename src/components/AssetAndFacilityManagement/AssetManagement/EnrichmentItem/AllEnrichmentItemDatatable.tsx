@@ -13,11 +13,13 @@ import useApiJson from "../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
 
 function AllEnrichmentItemDatatable() {
   const apiJson = useApiJson();
+  const navigate = useNavigate();
 
   let emptyEnrichmentItem: EnrichmentItem = {
     enrichmentItemId: -1,
@@ -175,7 +177,21 @@ function AllEnrichmentItemDatatable() {
       <div>
         <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
-          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+                Back
+              </Button>
+              <span className="self-center text-title-xl font-bold">
+                All Enrichment Items
+              </span>
+              <Button disabled className="invisible">
+                Back
+              </Button>
+            </div>
+            <Separator />
+          </div>
 
           <DataTable
             ref={dt}

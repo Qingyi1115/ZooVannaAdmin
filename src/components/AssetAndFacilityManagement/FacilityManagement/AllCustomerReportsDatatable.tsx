@@ -7,50 +7,57 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-
-import Customer from "../../models/Customer";
-import useApiJson from "../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import useApiJson from "../../../hooks/useApiJson";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
-import { Country } from "../../enums/Country";
+import { NavLink, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import CustomerReport from "../../../models/CustomerReport";
 
-function AllCustomerDatatable() {
+function AllCustomerReportsDatatable() {
   const apiJson = useApiJson();
-  const toastShadcn = useToast().toast;
+  const { facilityDetail } = useParams<{ facilityDetail: string }>();
+  const facilityDetailJson = (facilityDetail == "thirdParty" ?
+    {
+      ownership: "",
+      ownerContact: "",
+      maxAccommodationSize: "",
+      hasAirCon: "",
+      customerReportType: ""
+    } :
+    {
+      isPaid: "",
+      maxAccommodationSize: "",
+      hasAirCon: "",
+      customerReportType: ""
+    })
 
-  let emptyCustomer: Customer = {
-    customerId: -1,
-    firstName: "",
-    lastName: "",
-    email: "",
-    contactNo: "",
-    birthday: new Date(),
-    address: "",
-    nationality: Country.Singapore,
-    passwordHash: "",
-    salt: ""
+  let emptyCustomerReport: CustomerReport = {
+    customerReportId: -1,
+    dateTime: new Date(),
+    title: "",
+    remarks: "",
+    viewed: false
   };
 
-  const [customerList, setCustomerList] = useState<Customer[]>([]);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer>(emptyCustomer);
-  const [deleteCustomerDialog, setDeleteCustomerDialog] =
+  const [customerReportList, setCustomerReportList] = useState<CustomerReport[]>([]);
+  const [selectedCustomerReport, setSelectedCustomerReport] = useState<CustomerReport>(emptyCustomerReport);
+  const [deletecustomerReportDialog, setDeleteCustomerReportDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Customer[]>>(null);
+  const dt = useRef<DataTable<CustomerReport[]>>(null);
+  const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    apiJson.get("http://localhost:3000/api/customer/getallcustomer");
+    apiJson.post("http://localhost:3000/api/assetFacility/getAllCustomerReport", { includes: [] }).catch(e => {
+      console.log(e);
+    }).then(res => {
+      setCustomerReportList(res["customerReports"]);
+    })
   }, []);
-
-  useEffect(() => {
-    const customerData = apiJson.result as Customer[];
-    setCustomerList(customerData);
-  }, [apiJson.loading]);
 
   //
   const exportCSV = () => {
@@ -61,93 +68,88 @@ function AllCustomerDatatable() {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
-  // const imageBodyTemplate = (rowData: Customer) => {
-  //   return (
-  //     <img
-  //       src={rowData.customerImageUrl}
-  //       alt={rowData.customerName}
-  //       className="border-round shadow-2"
-  //       style={{ width: "64px" }}
-  //     />
-  //   );
-  // };
 
-  const navigateEditProduct = (customer: Customer) => { };
 
-  const confirmDeleteCustomer = (customer: Customer) => {
-    setSelectedCustomer(customer);
-    setDeleteCustomerDialog(true);
+  const confirmDeletecustomerReport = (customerReport: CustomerReport) => {
+    setSelectedCustomerReport(customerReport);
+    setDeleteCustomerReportDialog(true);
   };
 
-  const hideDeleteCustomerDialog = () => {
-    setDeleteCustomerDialog(false);
+  const hideDeleteCustomerReportDialog = () => {
+    setDeleteCustomerReportDialog(false);
   };
 
-  // delete customer stuff
-  const deleteCustomer = async () => {
-    let _customer = customerList.filter(
-      (val) => val.customerId !== selectedCustomer?.customerId
+  // delete customerReport stuff
+  const deleteCustomerReport = async () => {
+    let _customerReport = customerReportList.filter(
+      (val) => val.customerReportId !== selectedCustomerReport?.customerReportId
     );
 
-    const selectedCustomerName = selectedCustomer.firstName + selectedCustomer.lastName;
-
-    const deleteCustomer = async () => {
+    const deleteCustomerReport = async () => {
       try {
+        setDeleteCustomerReportDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/customer/deleteCustomer/" +
-          selectedCustomer.email
+          "http://localhost:3000/api/assetFacility/deleteCustomerReport/" +
+          selectedCustomerReport.customerReportId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted customer: " + selectedCustomerName,
+            "Successfully deleted customerReport: " + selectedCustomerReport.customerReportId,
         });
-        setCustomerList(_customer);
-        setDeleteCustomerDialog(false);
-        setSelectedCustomer(emptyCustomer);
+        setCustomerReportList(_customerReport);
+        setSelectedCustomerReport(emptyCustomerReport);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting customer: \n" + apiJson.error,
+            "An error has occurred while deleting customerReport: \n" + apiJson.error,
         });
       }
     };
-    deleteCustomer();
+    deleteCustomerReport();
   };
 
-  const deleteCustomerDialogFooter = (
+  const deleteCustomerReportDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteCustomerDialog}>
+      <Button onClick={hideDeleteCustomerReportDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteCustomer}>
+      <Button variant={"destructive"} onClick={deleteCustomerReport}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete customer stuff
+  // end delete customerReport stuff
 
-  const actionBodyTemplate = (customer: Customer) => {
+  const actionBodyTemplate = (customerReport: CustomerReport) => {
     return (
       <React.Fragment>
-        <NavLink to={`/customer/editcustomer/${customer.firstName + " " + customer.lastName}`}>
-          <Button className="mr-2">
-            <HiEye className="mr-auto" />
+        <NavLink to={`/assetcustomerReport/viewcustomerReportdetails/${customerReport.customerReportId}`}>
+          <Button variant={"outline"} className="mb-1 mr-1">
+            <HiEye className="mr-1" />
+
+          </Button>
+        </NavLink>
+        <NavLink to={`/assetcustomerReport/editcustomerReport/${customerReport.customerReportId}`}>
+          <Button className="mr-1">
+            <HiPencil className="mr-1" />
+
           </Button>
         </NavLink>
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteCustomer(customer)}
+          onClick={() => confirmDeletecustomerReport(customerReport)}
         >
           <HiTrash className="mx-auto" />
+
         </Button>
       </React.Fragment>
     );
@@ -155,7 +157,7 @@ function AllCustomerDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Customer</h4>
+      <h4 className="m-1">Manage Customer Reports</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -175,17 +177,17 @@ function AllCustomerDatatable() {
       <div>
         <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
-
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink to={"/customer/createnewcustomer"}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
+              <NavLink to={"/assetcustomerReport/createsensor"}>
+                {/* TODO: Preload hub details? */}
+                <Button disabled className="invisible">
+                  Back
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">
-                All Customers
+                All Customer Reports
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
@@ -194,75 +196,52 @@ function AllCustomerDatatable() {
 
           <DataTable
             ref={dt}
-            value={customerList}
-            selection={selectedCustomer}
+            value={customerReportList}
+            selection={selectedCustomerReport}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedCustomer(e.value);
+                setSelectedCustomerReport(e.value);
               }
             }}
-            dataKey="customerId"
+            dataKey="customerReportId"
             paginator
             rows={10}
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} customers"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} customer reports"
             globalFilter={globalFilter}
             header={header}
           >
             <Column
-              field="customerId"
+              field="customerReportId"
               header="ID"
               sortable
-              style={{ minWidth: "4rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="firstName"
-              header="First Name"
+              field="dateTime"
+              header="Date"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="lastName"
-              header="Last Name"
+              field="title"
+              header="Title"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="email"
-              header="Email"
+              field="remarks"
+              header="Remarks"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="contactNo"
-              header="Contact Number"
+              field="viewed"
+              header="Viewed?"
               sortable
               style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="birthday"
-              header="Birthday"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="address"
-              header="Address"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            {/* <Column
-              field="customerImageUrl"
-              header="Image"
-              body={imageBodyTemplate}
-            ></Column> */}
-            <Column
-              field="nationality"
-              header="Nationality"
-              sortable
-              style={{ minWidth: "16rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}
@@ -274,23 +253,23 @@ function AllCustomerDatatable() {
         </div>
       </div>
       <Dialog
-        visible={deleteCustomerDialog}
+        visible={deletecustomerReportDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteCustomerDialogFooter}
-        onHide={hideDeleteCustomerDialog}
+        footer={deleteCustomerReportDialogFooter}
+        onHide={hideDeleteCustomerReportDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedCustomer && (
+          {selectedCustomerReport && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedCustomer.firstName + " " + selectedCustomer.lastName}</b>?
+              <b>{selectedCustomerReport.customerReportId}</b>?
             </span>
           )}
         </div>
@@ -299,4 +278,4 @@ function AllCustomerDatatable() {
   );
 }
 
-export default AllCustomerDatatable;
+export default AllCustomerReportsDatatable;

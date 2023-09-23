@@ -8,6 +8,9 @@ import useApiJson from "../../hooks/useApiJson";
 import useApiFormData from "../../hooks/useApiFormData";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
 
 // Field validations
 function validateName(props: ValidityState) {
@@ -41,7 +44,8 @@ function validateImage(props: ValidityState) {
 function CreateNewCustomerForm() {
   const apiFormData = useApiFormData();
   const toastShadcn = useToast().toast;
-  
+  const navigate = useNavigate();
+
   const [firstName, setFirstName] = useState<string>(""); // text input
   const [lastName, setLastName] = useState<string>(""); // text input
   const [email, setEmail] = useState<string>(""); // text input
@@ -116,10 +120,21 @@ function CreateNewCustomerForm() {
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >
-      <span className="self-center text-title-xl font-bold">
-        Create New Customer
-      </span>
-      <hr className="bg-stroke opacity-20" />
+      {/* Title Header and back button */}
+      <div className="flex flex-col">
+        <div className="mb-4 flex justify-between">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+            Back
+          </Button>
+          <span className="self-center text-title-xl font-bold">
+            Create Customer
+          </span>
+          <Button disabled className="invisible">
+            Back
+          </Button>
+        </div>
+        <Separator />
+      </div>
       {/* Customer Picture */}
       <Form.Field
         name="customerImage"
@@ -145,8 +160,7 @@ function CreateNewCustomerForm() {
           placeholder="First Name"
           value={firstName}
           setValue={setFirstName}
-          validateFunction={validateName}
-        />
+          validateFunction={validateName} pattern={undefined} />
       </div>
       {/* Last Name */}
       <FormFieldInput
@@ -157,8 +171,7 @@ function CreateNewCustomerForm() {
         placeholder="Last Name"
         value={lastName}
         setValue={setLastName}
-        validateFunction={validateName}
-      />
+        validateFunction={validateName} pattern={undefined} />
       {/* Email */}
       <FormFieldInput
         type="text"
@@ -168,8 +181,7 @@ function CreateNewCustomerForm() {
         placeholder="Email"
         value={email}
         setValue={setEmail}
-        validateFunction={validateName}
-      />
+        validateFunction={validateName} pattern={undefined} />
       {/* Contact Number */}
       <FormFieldInput
         type="text"
@@ -179,8 +191,7 @@ function CreateNewCustomerForm() {
         placeholder="Contact Number"
         value={contactNo}
         setValue={setContactNo}
-        validateFunction={validateName}
-      />
+        validateFunction={validateName} pattern={undefined} />
       {/* Birthday */}
       <div className="card flex justify-content-center">
         <div>Birthday</div>
@@ -188,7 +199,7 @@ function CreateNewCustomerForm() {
           if (e && e.value !== undefined) {
             setBirthday(e.value);
           }
-          }}/>
+        }} />
       </div>
       {/* Address */}
       <FormFieldInput
@@ -199,8 +210,7 @@ function CreateNewCustomerForm() {
         placeholder="Address"
         value={address}
         setValue={setAddress}
-        validateFunction={validateName}
-      />
+        validateFunction={validateName} pattern={undefined} />
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Nationality */}
         <FormFieldSelect
