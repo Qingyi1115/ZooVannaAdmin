@@ -46,11 +46,11 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const [employeeResignationDialog, setEmployeeResignationDialog] = useState<boolean>(false);
+  const [employeeRemovalDialog, setEmployeeRemovalDialog] = useState<boolean>(false);
   const toastShadcn = useToast().toast;
 
-  const hideEmployeeResignationDialog = () => {
-    setEmployeeResignationDialog(false);
+  const hideEmployeeRemovalDialog = () => {
+    setEmployeeRemovalDialog(false);
   }
 
   const exportCSV = () => {
@@ -61,7 +61,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
-  const resignEmployee = async () => {
+  const removeMaintenanceStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
@@ -70,12 +70,12 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
 
       toastShadcn({
         // variant: "destructive",
-        title: "Deletion Successful",
+        title: "Removal Successful",
         description:
-          "Successfully disabled employee: " + selectedEmployeeName,
+          "Successfully removed maintenance staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
-      setEmployeeResignationDialog(false);
+      setEmployeeRemovalDialog(false);
       window.location.reload();
     } catch (error: any) {
       // got error
@@ -89,13 +89,13 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
 
   }
 
-  const employeeResignationDialogFooter = (
+  const employeeRemovalDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideEmployeeResignationDialog}>
+      <Button onClick={hideEmployeeRemovalDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={resignEmployee}>
+      <Button variant={"destructive"} onClick={removeMaintenanceStaff}>
         <HiCheck />
         Yes
       </Button>
@@ -119,9 +119,9 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
     </div>
   );
 
-  const confirmEmployeeResignation = (employee: Employee) => {
+  const confirmEmployeeRemoval = (employee: Employee) => {
     setSelectedEmployee(employee);
-    setEmployeeResignationDialog(true);
+    setEmployeeRemovalDialog(true);
   };
 
   const actionBodyTemplate = (employee: Employee) => {
@@ -140,7 +140,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
           <Button
             variant={"destructive"}
             className="mr-2"
-            onClick={() => confirmEmployeeResignation(employee)}
+            onClick={() => confirmEmployeeRemoval(employee)}
           >
             <HiTrash className="mr-1" />
             <span>Remove</span>
@@ -237,13 +237,13 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
           </DataTable>
         </div>
         <Dialog
-          visible={employeeResignationDialog}
+          visible={employeeRemovalDialog}
           style={{ width: "32rem" }}
           breakpoints={{ "960px": "75vw", "641px": "90vw" }}
           header="Confirm"
           modal
-          footer={employeeResignationDialogFooter}
-          onHide={hideEmployeeResignationDialog}
+          footer={employeeRemovalDialogFooter}
+          onHide={hideEmployeeRemovalDialog}
         >
           <div className="confirmation-content">
             <i
