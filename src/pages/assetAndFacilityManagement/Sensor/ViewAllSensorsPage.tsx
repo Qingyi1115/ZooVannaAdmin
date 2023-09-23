@@ -21,7 +21,7 @@ interface Product {
 function ViewAllSensorPage() {
   return (
     <div className="p-10">
-      <div className="flex w-full flex-col gap-6 bg-white p-10 text-black ">
+      <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
         <AllSensorDatatable />
       </div>
     </div>
