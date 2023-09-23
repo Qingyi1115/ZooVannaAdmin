@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Employee from "src/models/Employee";
-import AssignMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/AssignGeneralStaff";
+import AssignMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/ManageMaintenanceStaff";
 
 
 
