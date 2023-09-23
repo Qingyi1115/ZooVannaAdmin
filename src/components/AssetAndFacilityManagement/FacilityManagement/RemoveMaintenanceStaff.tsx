@@ -11,13 +11,15 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
 import GeneralStaff from "../../../models/GeneralStaff";
+import { Toolbar } from "primereact/toolbar";
+import { Separator } from "@/components/ui/separator";
 
 {
   /*const toast = useRef<Toast>(null);*/
 }
 interface RemoveMaintenanceStaffProps {
-    facilityId: number;
-    employeeList: Employee[];
+  facilityId: number;
+  employeeList: Employee[];
 }
 
 function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
@@ -51,12 +53,20 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
     setEmployeeResignationDialog(false);
   }
 
-  const resignEmployee = async () => { 
+  const exportCSV = () => {
+    dt.current?.exportCSV();
+  };
+
+  const rightToolbarTemplate = () => {
+    return <Button onClick={exportCSV}>Export to .csv</Button>;
+  };
+
+  const resignEmployee = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, {employeeIds:[selectedEmployee.employeeId,]});
+        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
 
       toastShadcn({
         // variant: "destructive",
@@ -94,7 +104,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Employees</h4>
+      <h4 className="m-1">Manage Maintenance Staff</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -109,7 +119,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
     </div>
   );
 
-  const confirmEmployeeResignation = (employee:Employee) => {
+  const confirmEmployeeResignation = (employee: Employee) => {
     setSelectedEmployee(employee);
     setEmployeeResignationDialog(true);
   };
@@ -125,17 +135,17 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
           </Button>
         </NavLink>
         {employee.dateOfResignation ?
-        <span>Removed</span>
-        :
-        <Button
-        variant={"destructive"}
-        className="mr-2"
-        onClick={() => confirmEmployeeResignation(employee)}
-        >
-          <HiTrash className="mr-1" />
-          <span>Remove</span>
-        </Button>
-        } 
+          <span>Removed</span>
+          :
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmEmployeeResignation(employee)}
+          >
+            <HiTrash className="mr-1" />
+            <span>Remove</span>
+          </Button>
+        }
       </React.Fragment>
     );
   };
@@ -144,7 +154,25 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div>
+        <div className="rounded-lg bg-white p-4">
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink className="flex" to={`/assetfacility/viewfacilitydetails/${facilityId}`}>
+                <Button variant={"outline"} type="button" className="">
+                  Back
+                </Button>
+              </NavLink>
+              <span className="mt-4 self-center text-title-xl font-bold">
+                Remove Maintenance Staff
+              </span>
+              <Button disabled className="invisible">
+                Back
+              </Button>
+            </div>
+            <Separator />
+          </div>
+          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
           <DataTable
             ref={dt}
             value={employeeList}
@@ -201,11 +229,11 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-                        body={actionBodyTemplate}
-                        header="Actions"
-                        exportable={false}
-                        style={{ minWidth: "18rem" }}
-                    ></Column>
+              body={actionBodyTemplate}
+              header="Actions"
+              exportable={false}
+              style={{ minWidth: "18rem" }}
+            ></Column>
           </DataTable>
         </div>
         <Dialog

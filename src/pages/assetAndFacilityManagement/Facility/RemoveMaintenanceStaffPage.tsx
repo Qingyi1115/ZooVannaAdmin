@@ -24,14 +24,14 @@ import Employee from "src/models/Employee";
 function RemoveMaintenanceStaffPage() {
 
   const apiJson = useApiJson();
-  const { facilityId } = useParams<{ facilityId: string}>();
+  const { facilityId } = useParams<{ facilityId: string }>();
   const [assignedStaffs, setAssignedStaffs] = useState<Employee[]>([]);
 
   useEffect(() => {
     try {
       apiJson.get(
         `http://localhost:3000/api/assetFacility/getAssignedMaintenanceStaffOfFacility/${facilityId}`
-      ).catch(e=>console.log(e)).then(res=>{
+      ).catch(e => console.log(e)).then(res => {
         console.log("getAssignedMaintenanceStaffOfFacility", res)
         setAssignedStaffs(res["maintenanceStaffs"]);
       });
@@ -42,9 +42,12 @@ function RemoveMaintenanceStaffPage() {
   }, []);
 
   return (
-    <div className="my-4 flex justify-start gap-6">
-    {facilityId && <RemoveMaintenanceStaff facilityId={Number(facilityId)} employeeList={assignedStaffs}></RemoveMaintenanceStaff>}
+    <div className="p-10">
+      <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
+        {facilityId && <RemoveMaintenanceStaff facilityId={Number(facilityId)} employeeList={assignedStaffs}></RemoveMaintenanceStaff>}
+      </div>
     </div>
+
   );
 }
 

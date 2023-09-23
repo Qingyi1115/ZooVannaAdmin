@@ -5,19 +5,18 @@ import useApiJson from "../../../hooks/useApiJson";
 import Employee from "../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
-import { NavLink } from "react-router-dom";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { NavLink, useNavigate } from "react-router-dom";
+import { HiCheck, HiClipboard, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
 import GeneralStaff from "../../../models/GeneralStaff";
+import { Toolbar } from "primereact/toolbar";
+import { Separator } from "@/components/ui/separator";
 
-{
-  /*const toast = useRef<Toast>(null);*/
-}
 interface AssignMaintenanceStaffProps {
-    facilityId: number;
-    employeeList: Employee[];
+  facilityId: number;
+  employeeList: Employee[];
 }
 
 function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
@@ -46,17 +45,24 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeResignationDialog, setEmployeeResignationDialog] = useState<boolean>(false);
   const toastShadcn = useToast().toast;
-
+  const navigate = useNavigate();
   const hideEmployeeResignationDialog = () => {
     setEmployeeResignationDialog(false);
   }
+  const exportCSV = () => {
+    dt.current?.exportCSV();
+  };
 
-  const assignEmployee = async () => { 
+  const rightToolbarTemplate = () => {
+    return <Button onClick={exportCSV}>Export to .csv</Button>;
+  };
+
+  const assignEmployee = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, {employeeIds:[selectedEmployee.employeeId,]});
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
 
       toastShadcn({
         // variant: "destructive",
@@ -94,7 +100,7 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Employees</h4>
+      <h4 className="m-1">Manage Maintenance Staff</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -109,7 +115,7 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
     </div>
   );
 
-  const confirmEmployeeResignation = (employee:Employee) => {
+  const confirmEmployeeResignation = (employee: Employee) => {
     setSelectedEmployee(employee);
     setEmployeeResignationDialog(true);
   };
@@ -121,21 +127,21 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
         <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
-           
+            <span>View Details</span>
           </Button>
         </NavLink>
         {employee.dateOfResignation ?
-        <span>Removed</span>
-        :
-        <Button
-        variant={"destructive"}
-        className="mr-2"
-        onClick={() => confirmEmployeeResignation(employee)}
-        >
-          <HiTrash className="mr-1" />
-          <span>Remove</span>
-        </Button>
-        } 
+          <span>Removed</span>
+          :
+          <Button
+            variant={"outline"}
+            className="mr-2"
+            onClick={() => confirmEmployeeResignation(employee)}
+          >
+            <HiClipboard className="mr-1" />
+            <span>Assign</span>
+          </Button>
+        }
       </React.Fragment>
     );
   };
@@ -144,7 +150,26 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div>
+        <div className="rounded-lg bg-white p-4">
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink className="flex" to={`/assetfacility/viewfacilitydetails/${facilityId}`}>
+                <Button variant={"outline"} type="button" className="">
+                  Back
+                </Button>
+              </NavLink>
+              <span className="mt-4 self-center text-title-xl font-bold">
+                Assign Maintenance Staff
+              </span>
+              <Button disabled className="invisible">
+                Back
+              </Button>
+            </div>
+            <Separator />
+          </div>
+
+          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
           <DataTable
             ref={dt}
             value={employeeList}
@@ -177,12 +202,6 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="employeeAddress"
-              header="Employee Address"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
               field="employeePhoneNumber"
               header="Phone Number"
               sortable
@@ -195,17 +214,11 @@ function AssignMaintenanceStaff(props: AssignMaintenanceStaffProps) {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="employeeBirthDate"
-              header="Birthday"
-              sortable
-              style={{ minWidth: "12rem" }}
+              body={actionBodyTemplate}
+              header="Actions"
+              exportable={false}
+              style={{ minWidth: "18rem" }}
             ></Column>
-            <Column
-                        body={actionBodyTemplate}
-                        header="Actions"
-                        exportable={false}
-                        style={{ minWidth: "18rem" }}
-                    ></Column>
           </DataTable>
         </div>
         <Dialog
