@@ -17,6 +17,7 @@ import {
 import Facility from "src/models/Facility";
 import { Separator } from "@radix-ui/react-select";
 import { NavLink } from "react-router-dom";
+import { HiPencil } from "react-icons/hi";
 
 interface EmployeeInfoDetailsProps {
   curFacility: Facility;
@@ -30,27 +31,13 @@ function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
 
   return (
     <div className="flex flex-col">
-      <div className="mb-4 flex justify-between">
-        <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
-          <Button variant={"outline"} type="button" className="">
-            Back
+      <div className="my-4 flex justify-start gap-6">
+        <NavLink to={`/assetfacility/editfacility/${curFacility.facilityId}`}>
+          <Button className="mr-2">
+            <HiPencil className="mr-auto" />
           </Button>
         </NavLink>
-        <span className="self-center text-lg text-graydark">
-          View Facility Details
-        </span>
-        <Button disabled className="invisible">
-          Back
-        </Button>
       </div>
-      <Separator />
-      <hr className="bg-stroke opacity-20" />
-      <span className="mt-4 self-center text-title-xl font-bold">
-        {curFacility.facilityName}
-      </span>
-      <Separator />
-
-
       <Table>
         {/* <TableHeader className=" bg-whiten">
             <TableRow>

@@ -216,7 +216,7 @@ function EditSensorForm(props: EditSensorFormProps) {
               placeholder="e.g., Carrots, Beef,..."
               value={sensorName}
               setValue={setSensorName}
-              validateFunction={validateSensorName}            />
+              validateFunction={validateSensorName} pattern={undefined}            />
 
             <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
               {/* Sensor Category */}

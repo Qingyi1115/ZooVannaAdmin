@@ -19,7 +19,7 @@ interface ManageMaintenanceStaffProps {
   employeeList: Employee[];
 }
 
-function assignMaintenanceStaff(props: ManageMaintenanceStaffProps) {
+function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
   const { facilityId, employeeList } = props;
@@ -229,22 +229,18 @@ function assignMaintenanceStaff(props: ManageMaintenanceStaffProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink className="flex" to={`/assetfacility/viewfacilitydetails/${facilityId}`}>
-                <Button variant={"outline"} type="button" className="">
-                  Back
-                </Button>
-              </NavLink>
-              <span className="mt-4 self-center text-title-xl font-bold">
-                Manage Maintenance Staff
-              </span>
               <Button disabled className="invisible">
                 Back
               </Button>
+              <span className=" self-center text-title-xl font-bold">
+                Manage Maintenance Staff
+              </span>
+              <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
             <Separator />
           </div>
 
-          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+          {/* <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar> */}
           <DataTable
             ref={dt}
             value={employeeList}
@@ -345,4 +341,4 @@ function assignMaintenanceStaff(props: ManageMaintenanceStaffProps) {
   );
 }
 
-export default assignMaintenanceStaff;
+export default manageMaintenanceStaff;

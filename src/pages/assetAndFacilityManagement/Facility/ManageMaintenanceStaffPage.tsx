@@ -3,11 +3,11 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Employee from "src/models/Employee";
-import AssignMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/ManageMaintenanceStaff";
+import ManageMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/ManageMaintenanceStaff";
 
 
 
-function AssignMaintenanceStaffPage() {
+function ManageMaintenanceStaffPage() {
 
   const apiJson = useApiJson();
   const { facilityId } = useParams<{ facilityId: string }>();
@@ -45,11 +45,11 @@ function AssignMaintenanceStaffPage() {
 
   return (
     <div className="p-10">
-      <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
-        {facilityId && <AssignMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList}></AssignMaintenanceStaff>}
+      <div className="flex w-full flex-col gap-6 bg-white p-10 text-black ">
+        {facilityId && <ManageMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList}></ManageMaintenanceStaff>}
       </div>
     </div>
   );
 }
 
-export default AssignMaintenanceStaffPage;
+export default ManageMaintenanceStaffPage;
