@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import Employee from "../../../../models/Employee";
 import { Button } from "@/components/ui/button";
 import useApiJson from "../../../../hooks/useApiJson";
@@ -15,21 +15,44 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Facility from "src/models/Facility";
+import { Separator } from "@radix-ui/react-select";
+import { NavLink } from "react-router-dom";
 
 interface EmployeeInfoDetailsProps {
   curFacility: Facility;
-  }
+}
 function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
-    const apiJson = useApiJson();
-    const {curFacility} = props;
-    console.log(props);
+  const apiJson = useApiJson();
+  const { curFacility } = props;
+  console.log(props);
 
-    const toastShadcn = useToast().toast;
+  const toastShadcn = useToast().toast;
 
-    return(
-      <div className="">
-        <Table>
-          {/* <TableHeader className=" bg-whiten">
+  return (
+    <div className="flex flex-col">
+      <div className="mb-4 flex justify-between">
+        <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
+          <Button variant={"outline"} type="button" className="">
+            Back
+          </Button>
+        </NavLink>
+        <span className="self-center text-lg text-graydark">
+          View Facility Details
+        </span>
+        <Button disabled className="invisible">
+          Back
+        </Button>
+      </div>
+      <Separator />
+      <hr className="bg-stroke opacity-20" />
+      <span className="mt-4 self-center text-title-xl font-bold">
+        {curFacility.facilityName}
+      </span>
+      <Separator />
+
+
+      <Table>
+        {/* <TableHeader className=" bg-whiten">
             <TableRow>
               <TableHead className="w-1/3 font-bold" colSpan={2}>
                 Attribute
@@ -37,36 +60,51 @@ function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
               <TableHead>Value</TableHead>
             </TableRow>
           </TableHeader> */}
-          <TableBody>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Facility Id
-              </TableCell>
-              <TableCell>{curFacility.facilityId}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Name
-              </TableCell>
-              <TableCell>{curFacility.facilityName}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                X Coordinate
-              </TableCell>
-              <TableCell>{curFacility.xCoordinate}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Y Coordinate
-              </TableCell>
-              <TableCell>{curFacility.yCoordinate}</TableCell>
-            </TableRow>
-
-          </TableBody>
-        </Table>
-      </div>
-    )
+        <TableBody>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Facility Id
+            </TableCell>
+            <TableCell>{curFacility.facilityId}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Name
+            </TableCell>
+            <TableCell>{curFacility.facilityName}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              X Coordinate
+            </TableCell>
+            <TableCell>{curFacility.xCoordinate}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Y Coordinate
+            </TableCell>
+            <TableCell>{curFacility.yCoordinate}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Shelter available
+            </TableCell>
+            <TableCell>{String(curFacility.isSheltered) == "false" ? "No" : "Yes"}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Owner Type
+            </TableCell>
+            <TableCell>{curFacility.facilityDetail == "inHouse" ? "In-house" : "Third-party"}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
+  )
 }
 
 export default ViewFacilityDetails;
