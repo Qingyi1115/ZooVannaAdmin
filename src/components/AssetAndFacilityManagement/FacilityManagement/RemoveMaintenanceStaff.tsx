@@ -5,7 +5,7 @@ import useApiJson from "../../../hooks/useApiJson";
 import Employee from "../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -48,6 +48,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeRemovalDialog, setEmployeeRemovalDialog] = useState<boolean>(false);
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const hideEmployeeRemovalDialog = () => {
     setEmployeeRemovalDialog(false);
@@ -158,12 +159,10 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink className="flex" to={`/assetfacility/viewfacilitydetails/${facilityId}`}>
-                <Button variant={"outline"} type="button" className="">
-                  Back
-                </Button>
-              </NavLink>
-              <span className="mt-4 self-center text-title-xl font-bold">
+              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+                Back
+              </Button>
+              <span className="self-center text-title-xl font-bold">
                 Remove Maintenance Staff
               </span>
               <Button disabled className="invisible">

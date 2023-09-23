@@ -9,6 +9,9 @@ import Sensor from "../../../../models/Sensor";
 import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 import FormFieldSelect from "../../../FormFieldSelect";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface EditSensorFormProps {
   curSensor: Sensor;
@@ -28,7 +31,7 @@ function EditSensorForm(props: EditSensorFormProps) {
     string | undefined
   >(curSensor.sensorType); // select from set list
   const [imageFile, setImageFile] = useState<File | null>(null);
-
+  const navigate = useNavigate();
   const [formError, setFormError] = useState<string | null>(null);
 
   // field validations
@@ -202,10 +205,26 @@ function EditSensorForm(props: EditSensorFormProps) {
           onSubmit={handleSubmit}
           encType="multipart/form-data"
         >
-          <span className="self-center text-title-xl font-bold">
-            Edit Sensor: {curSensor.sensorName}
-          </span>
-          <hr className="bg-stroke opacity-20" />
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink className="flex" to={`/assetfacility/viewallsensors`}>
+                <Button variant={"outline"} type="button" className="">
+                  Back
+                </Button>
+              </NavLink>
+              <span className="self-center text-lg text-graydark">
+                Edit Sensor
+              </span>
+              <Button disabled className="invisible">
+                Back
+              </Button>
+            </div>
+            <Separator />
+            <span className="mt-4 self-center text-title-xl font-bold">
+              {curSensor.sensorName}
+            </span>
+          </div>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
             {/* Sensor Name */}
             <FormFieldInput
@@ -213,10 +232,10 @@ function EditSensorForm(props: EditSensorFormProps) {
               formFieldName="sensorName"
               label="Sensor Name"
               required={true}
-              placeholder="e.g., Carrots, Beef,..."
+              placeholder="e.g., Camera, Light..."
               value={sensorName}
               setValue={setSensorName}
-              validateFunction={validateSensorName} pattern={undefined}            />
+              validateFunction={validateSensorName} pattern={undefined} />
 
             <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
               {/* Sensor Category */}
