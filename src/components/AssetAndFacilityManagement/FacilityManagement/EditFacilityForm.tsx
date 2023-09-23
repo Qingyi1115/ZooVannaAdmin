@@ -9,6 +9,9 @@ import Facility from "../../../models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 import FormFieldSelect from "../../../components/FormFieldSelect";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface EditFacilityFormProps {
   curFacility: Facility;
@@ -20,38 +23,35 @@ function EditFacilityForm(props: EditFacilityFormProps) {
   const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const { curFacility, refreshSeed, setRefreshSeed } = props;
 
   const [facilityName, setFacilityName] = useState<string>(curFacility.facilityName);
   const [xCoordinate, setXCoordinate] = useState<number>(curFacility.xCoordinate);
   const [yCoordinate, setYCoordinate] = useState<number>(curFacility.yCoordinate);
-  const [facilityDetail, setFacilityDetail] = useState<string>(curFacility.facilityDetail);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [facilityDetail, setFacilityDetail] = useState<string | undefined>(
+    curFacility.facilityDetail); // dropdown
+  const [maxAccommodationSize, setMaxAccommodationSize] = useState<number>(curFacility.facilityDetailJson.maxAccommodationSize); // number
+  const [hasAirCon, setHasAirCon] = useState<string | undefined>(
+    curFacility.facilityDetailJson.hasAirCon); // dropdown
+  const [ownership, setOwnership] = useState<string>(curFacility.facilityDetail == "thirdParty" ? curFacility.facilityDetailJson.ownership : ""); // text input
+  const [ownerContact, setOwnerContact] = useState<string>(curFacility.facilityDetail == "thirdParty" ? curFacility.facilityDetailJson.ownerContact : ""); // string
+  const [isPaid, setIsPaid] = useState<string | undefined>(
+    curFacility.facilityDetail == "inHouse" ? curFacility.facilityDetailJson.isPaid : ""); // dropdown
+  const [isSheltered, setIsSheltered] = useState<string | undefined>(
+    curFacility.facilityDetailJson.isSheltered); // dropdown
+  const [facilityType, setFacilityType] = useState<string | undefined>(
+    curFacility.facilityDetailJson.facilityType); // dropdown 
+
 
   const [formError, setFormError] = useState<string | null>(null);
-
-  // field validations
-  // function validateImage(props: ValidityState) {
-  //   if (props != undefined) {
-  //     if (props.valueMissing) {
-  //       return (
-  //         <div className="font-medium text-danger">
-  //           * Please upload an image
-  //         </div>
-  //       );
-  //     }
-  //     // add any other cases here
-  //   }
-  //   return null;
-  // }
-
   function validateFacilityName(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
           <div className="font-medium text-danger">
-            * Please enter an facility name
+            * Please enter a valid value!
           </div>
         );
       }
@@ -63,44 +63,34 @@ function EditFacilityForm(props: EditFacilityFormProps) {
 
   // end field validations
 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files && event.target.files[0];
-    setImageFile(file);
-  }
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append("file", imageFile || "");
-      try {
-        const responseJson = await apiFormData.put(
-          "http://localhost:3000/api/assetFacility/updateFacilityImage",
-          formData
-        );
-        // success
-        toastShadcn({
-          description: "Successfully edited facility",
-        });
-        setRefreshSeed(refreshSeed + 1);
-      } catch (error: any) {
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while editing facility details: \n" +
-            error.message,
-        });
-      }
-    } 
-    // no image
+    const facilityDetailJson = (facilityDetail == "thirdParty" ?
+      {
+        ownership: ownership,
+        ownerContact: ownerContact,
+        maxAccommodationSize: maxAccommodationSize,
+        hasAirCon: Boolean(hasAirCon),
+        facilityType: facilityType
+      } :
+      {
+        isPaid: Boolean(isPaid),
+        maxAccommodationSize: maxAccommodationSize,
+        hasAirCon: Boolean(hasAirCon),
+        facilityType: facilityType
+      })
+    console.log(facilityDetailJson);
+
     const updatedFacility = {
-      facilityName,
-      xCoordinate,
-      yCoordinate,
-      facilityDetail
-    };
+      facilityName: facilityName,
+      xCoordinate: xCoordinate,
+      yCoordinate: yCoordinate,
+      isSheltered: Boolean(isSheltered),
+      facilityDetail: facilityDetail,
+      facilityDetailJson: facilityDetailJson
+    }
+    console.log(updatedFacility);
 
     try {
       const responseJson = await apiJson.put(
@@ -123,60 +113,36 @@ function EditFacilityForm(props: EditFacilityFormProps) {
     }
   }
 
-  useEffect(() => {
-    if (imageFile) {
-      if (!apiFormData.loading) {
-        if (apiFormData.error) {
-          // got error
-          toastShadcn({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description:
-              "An error has occurred while editing facility details: \n" +
-              apiFormData.error,
-          });
-        } else if (apiFormData.result) {
-          // success
-          console.log("success?");
-          toastShadcn({
-            description: "Successfully edited facility:",
-          });
-        }
-      }
-    } else {
-      if (!apiJson.loading) {
-        if (apiJson.error) {
-          // got error
-          toastShadcn({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description:
-              "An error has occurred while editing facility details: \n" +
-              apiJson.error,
-          });
-        } else if (apiJson.result) {
-          // success
-          console.log("succes?");
-          toastShadcn({
-            description: "Successfully edited facility:",
-          });
-        }
-      }
-    }
-  }, [apiFormData.loading, apiJson.loading]);
+
 
   return (
-    <div>
+    <div className="flex flex-col">
       {curFacility && (
         <Form.Root
           className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
           onSubmit={handleSubmit}
           encType="multipart/form-data"
         >
-          <span className="self-center text-title-xl font-bold">
-            Edit Facility: {curFacility.facilityName}
-          </span>
-          <hr className="bg-stroke opacity-20" />
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
+                <Button variant={"outline"} type="button" className="">
+                  Back
+                </Button>
+              </NavLink>
+              <span className="self-center text-lg text-graydark">
+                Edit Facility
+              </span>
+              <Button disabled className="invisible">
+                Back
+              </Button>
+            </div>
+            <Separator />
+            <span className="mt-4 self-center text-title-xl font-bold">
+              {curFacility.facilityName}
+            </span>
+          </div>
+
 
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
             {/* Facility Name */}
@@ -185,11 +151,11 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               formFieldName="facilityName"
               label="Facility Name"
               required={true}
-              placeholder="e.g., Toilet"
+              placeholder=""
               value={facilityName}
               setValue={setFacilityName}
-              validateFunction={validateFacilityName}
-              />
+              validateFunction={validateFacilityName} pattern={undefined}
+            />
             {/* X Coordinate */}
             <FormFieldInput
               type="number"
@@ -199,8 +165,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               placeholder="1-1000"
               value={xCoordinate}
               setValue={setXCoordinate}
-              validateFunction={validateFacilityName}
-              />
+              validateFunction={validateFacilityName} pattern={undefined} />
             {/* Y Coordinate */}
             <FormFieldInput
               type="number"
@@ -210,31 +175,146 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               placeholder="1-1000"
               value={yCoordinate}
               setValue={setYCoordinate}
+              validateFunction={validateFacilityName} pattern={undefined} />
+          </div>
+          {/* Maximum Accomodation Size */}
+          <FormFieldInput
+            type="number"
+            formFieldName="maxAccommodationSize"
+            label="Maximum Accomodation Size"
+            required={true}
+            placeholder="1-1000"
+            value={maxAccommodationSize}
+            setValue={setMaxAccommodationSize}
+            validateFunction={validateFacilityName}
+            pattern={undefined}
+          />
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+
+            {/* Has air-con */}
+            <FormFieldSelect
+              formFieldName="hasAirCon"
+              label="Has air-con?"
+              required={true}
+              placeholder=""
+              valueLabelPair={[
+                ["true", "Yes"],
+                ["false", "No"]
+              ]}
+              value={hasAirCon}
+              setValue={setHasAirCon}
               validateFunction={validateFacilityName}
-              />
+            />
+            {/* Is Sheltered */}
+            <FormFieldSelect
+              formFieldName="hasAirCon"
+              label="Is sheltered?"
+              required={true}
+              placeholder=""
+              valueLabelPair={[
+                ["true", "Yes"],
+                ["false", "No"]
+              ]}
+              value={isSheltered}
+              setValue={setIsSheltered}
+              validateFunction={validateFacilityName}
+            />
+          </div>
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12"> {/* Facility Details */}
+            <FormFieldSelect
+              formFieldName="facilityDetail"
+              label="Facility Owner Type"
+              required={true}
+              placeholder="Select an facility owner type..."
+              valueLabelPair={[
+                ["inHouse", "In-house"],
+                ["thirdParty", "Third-party"]
+              ]}
+              value={facilityDetail}
+              setValue={setFacilityDetail}
+              validateFunction={validateFacilityName}
+            />
+
+            {/* Facility Type */}
+            <FormFieldSelect
+              formFieldName="facilityType"
+              label="Facility Type"
+              required={true}
+              placeholder="Select a facility type..."
+              valueLabelPair={[
+                ["INFORMATION_CENTRE", "Information Centre"],
+                ["ZOO_DIRECTORY", "Zoo Directory"],
+                ["AMPHITHEATRE", "Amphitheatre"],
+                ["GAZEBO", "Gazebo"],
+                ["AED", "AED"],
+                ["RESTROOM", "Restroom"],
+                ["NURSERY", "Nursery"],
+                ["FIRST_AID", "First Aid"],
+                ["BENCHES", "Benches"],
+                ["PLAYGROUND", "Playground"],
+                ["TRAMSTOP", "Tram Stop"],
+                ["PARKING", "Parking"],
+                ["RESTAURANT", "Restaurant"],
+                ["SHOP_SOUVENIR", "Shop/Souvenir"],
+              ]}
+              value={facilityType}
+              setValue={setFacilityType}
+              validateFunction={validateFacilityName}
+            />
+          </div>
+          {facilityDetail == "thirdParty" &&
             <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-              {/* Facility Details */}
+              {/* Ownership */}
               <FormFieldInput
                 type="text"
-                formFieldName="facilityDetail"
-                label="Facility Name"
+                formFieldName="ownership"
+                label="Ownership"
                 required={true}
-                placeholder="e.g., Toilet"
-                value={facilityDetail}
-                setValue={setFacilityDetail}
+                placeholder=""
+                value={ownership}
+                setValue={setOwnership}
                 validateFunction={validateFacilityName}
-                />
-            </div>
+                pattern={undefined}
 
-            <Form.Submit asChild>
-              <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-                Submit Edit Facility
-              </button>
-            </Form.Submit>
-            {formError && (
-              <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
-            )}
-          </div>
+              />
+              {/* Owner Contact */}
+              <FormFieldInput
+                type="text"
+                formFieldName="ownerContact"
+                label="Owner Contact"
+                required={true}
+                placeholder=""
+                value={ownerContact}
+                setValue={setOwnerContact}
+                validateFunction={validateFacilityName} pattern={undefined}
+              />
+
+            </div>
+          }
+          {facilityDetail == "inHouse" &&
+            <FormFieldSelect
+              formFieldName="isPaid"
+              label="Is paid?"
+              required={true}
+              placeholder=""
+              valueLabelPair={[
+                ["true", "Yes"],
+                ["false", "No"]
+              ]}
+              value={isPaid}
+              setValue={setIsPaid}
+              validateFunction={validateFacilityName}
+            />
+          }
+          <Form.Submit asChild>
+            <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
+              Submit Edit Facility
+            </button>
+          </Form.Submit>
+          {formError && (
+            <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+          )}
+
         </Form.Root>
       )}
     </div>
