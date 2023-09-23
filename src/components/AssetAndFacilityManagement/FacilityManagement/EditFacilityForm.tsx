@@ -34,13 +34,13 @@ function EditFacilityForm(props: EditFacilityFormProps) {
     curFacility.facilityDetail); // dropdown
   const [maxAccommodationSize, setMaxAccommodationSize] = useState<number>(curFacility.facilityDetailJson.maxAccommodationSize); // number
   const [hasAirCon, setHasAirCon] = useState<string | undefined>(
-    curFacility.facilityDetailJson.hasAirCon); // dropdown
+    curFacility.facilityDetailJson.hasAirCon? "true" : "false"); // dropdown
   const [ownership, setOwnership] = useState<string>(curFacility.facilityDetail == "thirdParty" ? curFacility.facilityDetailJson.ownership : ""); // text input
   const [ownerContact, setOwnerContact] = useState<string>(curFacility.facilityDetail == "thirdParty" ? curFacility.facilityDetailJson.ownerContact : ""); // string
   const [isPaid, setIsPaid] = useState<string | undefined>(
-    curFacility.facilityDetail == "inHouse" ? curFacility.facilityDetailJson.isPaid : ""); // dropdown
+    curFacility.facilityDetail == "inHouse" ? (curFacility.facilityDetailJson.isPaid? "true" : "false") : ""); // dropdown
   const [isSheltered, setIsSheltered] = useState<string | undefined>(
-    curFacility.facilityDetailJson.isSheltered); // dropdown
+    curFacility.facilityDetailJson.isSheltered? "true" : "false"); // dropdown
   const [facilityType, setFacilityType] = useState<string | undefined>(
     curFacility.facilityDetailJson.facilityType); // dropdown 
 
@@ -71,13 +71,13 @@ function EditFacilityForm(props: EditFacilityFormProps) {
         ownership: ownership,
         ownerContact: ownerContact,
         maxAccommodationSize: maxAccommodationSize,
-        hasAirCon: Boolean(hasAirCon),
+        hasAirCon: hasAirCon == "true",
         facilityType: facilityType
       } :
       {
-        isPaid: Boolean(isPaid),
+        isPaid: isPaid == "true",
         maxAccommodationSize: maxAccommodationSize,
-        hasAirCon: Boolean(hasAirCon),
+        hasAirCon: hasAirCon == "true",
         facilityType: facilityType
       })
     console.log(facilityDetailJson);
@@ -86,7 +86,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
       facilityName: facilityName,
       xCoordinate: xCoordinate,
       yCoordinate: yCoordinate,
-      isSheltered: Boolean(isSheltered),
+      isSheltered: isSheltered == "true",
       facilityDetail: facilityDetail,
       facilityDetailJson: facilityDetailJson
     }
