@@ -78,7 +78,7 @@ function EditDietaryRequirementsForm(props: EditDietaryRequirementsFormProps) {
       if (growthStage == undefined) {
         return (
           <div className="font-medium text-danger">
-            * Please select a native continent
+            * Please select a growth stage
           </div>
         );
       }

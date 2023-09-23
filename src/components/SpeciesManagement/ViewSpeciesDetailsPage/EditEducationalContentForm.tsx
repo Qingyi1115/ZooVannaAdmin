@@ -98,7 +98,7 @@ function EditEducationalContentForm(props: EditEducationalContentForm) {
               </Button>
             </NavLink>
             <span className="self-center text-lg text-graydark">
-              Create Species Enclosure Requirements
+              Edit Educational Content
             </span>
             <Button disabled className="invisible">
               Back

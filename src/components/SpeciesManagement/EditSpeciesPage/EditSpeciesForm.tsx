@@ -515,7 +515,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
                   </Button>
                 </NavLink>
                 <span className="self-center text-lg text-graydark">
-                  Edit Species
+                  Edit Species Basic Information
                 </span>
                 <Button disabled className="invisible">
                   Back

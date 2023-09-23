@@ -72,7 +72,7 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
       if (growthStage == undefined) {
         return (
           <div className="font-medium text-danger">
-            * Please select a native continent
+            * Please select a growth stage
           </div>
         );
       }
@@ -210,7 +210,7 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
               </Button>
             </NavLink>
             <span className="self-center text-lg text-graydark">
-              Create Species Dietary Requirements
+              Edit Physiological Reference Norms
             </span>
             <Button disabled className="invisible">
               Back

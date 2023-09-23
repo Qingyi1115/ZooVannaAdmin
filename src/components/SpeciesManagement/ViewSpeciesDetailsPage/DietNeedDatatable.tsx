@@ -119,11 +119,11 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
   const deleteSpeciesDialogFooter = (
     <React.Fragment>
       <Button onClick={hideDeleteDietaryReqDialog}>
-        <HiX />
+        <HiX className="mr-2" />
         No
       </Button>
       <Button variant={"destructive"} onClick={deleteSpeciesDietaryReq}>
-        <HiCheck />
+        <HiCheck className="mr-2" />
         Yes
       </Button>
     </React.Fragment>
