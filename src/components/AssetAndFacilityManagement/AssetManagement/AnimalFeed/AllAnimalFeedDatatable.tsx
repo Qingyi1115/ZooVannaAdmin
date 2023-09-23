@@ -65,13 +65,12 @@ function AllAnimalFeedDatatable() {
       <img
         src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
         alt={rowData.animalFeedName}
-        className="border-round shadow-2"
-        style={{ width: "64px" }}
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
       />
     );
   };
 
-  const navigateEditProduct = (animalFeed: AnimalFeed) => {};
+  const navigateEditProduct = (animalFeed: AnimalFeed) => { };
 
   const confirmDeleteAnimalFeed = (animalFeed: AnimalFeed) => {
     setSelectedAnimalFeed(animalFeed);
@@ -92,7 +91,7 @@ function AllAnimalFeedDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/assetFacility/deleteAnimalFeed/" +
-            selectedAnimalFeed.animalFeedName
+          selectedAnimalFeed.animalFeedName
         );
 
         toastShadcn({
@@ -140,7 +139,7 @@ function AllAnimalFeedDatatable() {
           to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}
         >
           <Button className="mr-2">
-            <HiEye className="mr-auto" />
+            <HiPencil className="mr-auto" />
           </Button>
         </NavLink>
         <Button

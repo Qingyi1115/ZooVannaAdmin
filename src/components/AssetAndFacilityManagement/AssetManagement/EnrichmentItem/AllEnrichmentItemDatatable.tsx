@@ -65,13 +65,12 @@ function AllEnrichmentItemDatatable() {
       <img
         src={"http://localhost:3000/" + rowData.enrichmentItemImageUrl}
         alt={rowData.enrichmentItemName}
-        className="border-round shadow-2"
-        style={{ width: "64px" }}
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
       />
     );
   };
 
-  const navigateEditProduct = (enrichmentItem: EnrichmentItem) => {};
+  const navigateEditProduct = (enrichmentItem: EnrichmentItem) => { };
 
   const confirmDeleteEnrichmentItem = (enrichmentItem: EnrichmentItem) => {
     setSelectedEnrichmentItem(enrichmentItem);
@@ -92,7 +91,7 @@ function AllEnrichmentItemDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/assetFacility/deleteEnrichmentItem/" +
-            selectedEnrichmentItem.enrichmentItemName
+          selectedEnrichmentItem.enrichmentItemName
         );
 
         toastShadcn({
@@ -140,7 +139,7 @@ function AllEnrichmentItemDatatable() {
           to={`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemId}`}
         >
           <Button className="mr-2">
-            <HiEye className="mr-auto" />
+            <HiPencil className="mr-auto" />
           </Button>
         </NavLink>
         <Button
@@ -207,7 +206,7 @@ function AllEnrichmentItemDatatable() {
               field="enrichmentItemName"
               header="Name"
               sortable
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
             <Column
               field="enrichmentItemImageUrl"
