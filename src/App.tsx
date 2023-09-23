@@ -24,6 +24,8 @@ import ViewSpeciesDetailsPage from "./pages/speciesManagement/ViewSpeciesDetails
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
 import EditFacilityPage from "./pages/assetAndFacilityManagement/Facility/EditFacilityPage";
 import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilitiesPage";
+import CreateNewFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityLogPage";
+import ViewAllCustomerReportsPage from "./pages/assetAndFacilityManagement/Facility/ViewAllCustomerReportsPage";
 
 //assets
 import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/CreateNewAnimalFeedPage";
@@ -317,6 +319,26 @@ function App() {
                   element={
                     user ? (
                       <MaintenanceOperationSuggestionPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/assetfacility/createfacilitylog"
+                  element={
+                    user ? (
+                      <CreateNewFacilityLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/assetfacility/viewallcustomerreports"
+                  element={
+                    user ? (
+                      <ViewAllCustomerReportsPage />
                     ) : (
                       <Navigate to="/login" />
                     )

@@ -25,6 +25,7 @@ import Employee from "../../../models/Employee";
 import { Separator } from "@/components/ui/separator";
 import ManageMaintenanceStaffPage from "./ManageMaintenanceStaffPage";
 import ViewAllHubsPage from "../Hub/ViewAllHubsPage";
+import ViewAllCustomerReportsPage from "./ViewAllCustomerReportsPage";
 
 
 
@@ -119,7 +120,7 @@ function ViewFacilityDetailsPage() {
             <ManageMaintenanceStaffPage />
           </TabsContent>
           <TabsContent value="customerReport">
-            {/* <ViewAllCustomerReportsPage /> */}
+            <ViewAllCustomerReportsPage />
           </TabsContent>
         </Tabs>
 

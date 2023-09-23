@@ -125,6 +125,11 @@ function AllSensorDatatable() {
   const actionBodyTemplate = (sensor: Sensor) => {
     return (
       <React.Fragment>
+        <NavLink to={`/assetfacility/viewsensordetails/${sensor.sensorId}`}>
+          <Button variant={"outline"} className="mb-1 mr-1">
+            <HiEye className="mr-1" />
+          </Button>
+        </NavLink>
         <NavLink to={`/assetFacility/editSensor/${sensor.sensorName}`}>
           <Button className="mr-2">
             <HiPencil className="mr-auto" />
@@ -195,10 +200,16 @@ function AllSensorDatatable() {
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensor"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensors"
             globalFilter={globalFilter}
             header={header}
           >
+            <Column
+              field="sensorId"
+              header="ID"
+              sortable
+              style={{ minWidth: "4rem" }}
+            ></Column>
             <Column
               field="sensorName"
               header="Name"
