@@ -6,10 +6,11 @@ import Employee from "src/models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink } from "react-router-dom";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
+import { Separator } from "@/components/ui/separator";
 
 {
   /*const toast = useRef<Toast>(null);*/
@@ -48,6 +49,10 @@ function AllEmployeesDatatable() {
   const [employeeResignationDialog, setEmployeeResignationDialog] =
     useState<boolean>(false);
   const toastShadcn = useToast().toast;
+
+  const exportCSV = () => {
+    dt.current?.exportCSV();
+  };
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -175,6 +180,21 @@ function AllEmployeesDatatable() {
     <div>
       <div>
         <Toast ref={toast} />
+        {/* Title Header and back button */}
+        <div className="flex flex-col">
+          <div className="mb-4 flex justify-between">
+            <NavLink to={"/assetfacility/createfacility"}>
+              <Button className="mr-2">
+                <HiPlus className="mr-auto" />
+              </Button>
+            </NavLink>
+            <span className=" self-center text-title-xl font-bold">
+              All Employees
+            </span>
+            <Button onClick={exportCSV}>Export to .csv</Button>
+          </div>
+          <Separator />
+        </div>
         <div>
           <DataTable
             ref={dt}
