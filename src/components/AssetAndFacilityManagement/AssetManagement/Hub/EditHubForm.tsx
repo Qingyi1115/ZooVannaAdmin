@@ -13,6 +13,7 @@ import FormFieldSelect from "../../../FormFieldSelect";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
+import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 
 interface EditHubFormProps {
   curHub: Hub;
@@ -21,7 +22,6 @@ interface EditHubFormProps {
 }
 
 function EditHubForm(props: EditHubFormProps) {
-  const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
@@ -29,15 +29,9 @@ function EditHubForm(props: EditHubFormProps) {
   const { curHub, refreshSeed, setRefreshSeed } = props;
 
   const hubProcessorId = curHub.hubProcessorId;
-  const [processorName, setHubName] = useState<string>(
+  const [processorName, setProcessorName] = useState<string>(
     curHub.processorName
   );
-  const [hubStatus, setHubStatus] = useState<
-    string | undefined
-  >(curHub.hubStatus); // select from set list
-
-  const [imageFile, setImageFile] = useState<File | null>(null);
-
   const [formError, setFormError] = useState<string | null>(null);
 
   function validateHubName(props: ValidityState) {
@@ -45,22 +39,7 @@ function EditHubForm(props: EditHubFormProps) {
       if (props.valueMissing) {
         return (
           <div className="font-medium text-danger">
-            * Please enter an hub name
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
-
-  function validateHubStatus(props: ValidityState) {
-    // console.log(props);
-    if (props != undefined) {
-      if (hubStatus == undefined) {
-        return (
-          <div className="font-medium text-danger">
-            * Please select an hub category
+            * Please enter a valid value
           </div>
         );
       }
@@ -70,73 +49,23 @@ function EditHubForm(props: EditHubFormProps) {
   }
 
   // end field validations
-
-  function onHubStatusSelectChange(e: MultiSelectChangeEvent) {
-    setHubStatus(e.value);
-
-    const element = document.getElementById(
-      "selectMultiHubStatusField"
-    );
-    if (element) {
-      const isDataInvalid = element.getAttribute("data-invalid");
-      if (isDataInvalid == "true") {
-        element.setAttribute("data-valid", "true");
-        element.removeAttribute("data-invalid");
-      }
-    }
-  }
-
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files && event.target.files[0];
-    setImageFile(file);
+  function clearForm() {
+    setProcessorName("");
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    console.log("Name:");
+    console.log(processorName);
 
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append("file", imageFile || "");
-      formData.append("hubProcessorId", hubProcessorId.toString() || "");
-      formData.append("processorName", processorName);
-      formData.append(
-        "hubStatus",
-        hubStatus?.toString() || ""
-      );
-      try {
-        const responseJson = await apiFormData.put(
-          "http://localhost:3000/api/assetfacility/updateHub",
-          formData
-        );
-        // success
-        toastShadcn({
-          description: "Successfully edited hub",
-        });
-        setRefreshSeed(refreshSeed + 1);
-        const redirectUrl = `/assetfacility/viewallanimalfeed`;
-        navigate(redirectUrl);
-      } catch (error: any) {
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while editing hub details: \n" +
-            error.message,
-        });
-      }
-    }
-    // no image
-    const updatedHubStatus = hubStatus?.toString();
     const updatedHub = {
-      hubProcessorId,
-      processorName,
-      hubStatus,
-    };
+      processorName: processorName,
+    }
     console.log(updatedHub);
 
     try {
       const responseJson = await apiJson.put(
-        "http://localhost:3000/api/assetFacility/updateHub",
+        `http://localhost:3000/api/assetfacility/updateHub/${curHub.hubProcessorId}`,
         updatedHub
       );
       // success
@@ -144,7 +73,7 @@ function EditHubForm(props: EditHubFormProps) {
         description: "Successfully edited hub",
       });
       setRefreshSeed(refreshSeed + 1);
-      const redirectUrl = `/assetfacility/viewallanimalfeed`;
+      const redirectUrl = `/assetfacility/viewallhubs`;
       navigate(redirectUrl);
     } catch (error: any) {
       toastShadcn({
@@ -157,47 +86,6 @@ function EditHubForm(props: EditHubFormProps) {
     }
   }
 
-  // useEffect(() => {
-  //   if (imageFile) {
-  //     if (!apiFormData.loading) {
-  //       if (apiFormData.error) {
-  //         // got error
-  //         toastShadcn({
-  //           variant: "destructive",
-  //           title: "Uh oh! Something went wrong.",
-  //           description:
-  //             "An error has occurred while editing hub details: \n" +
-  //             apiFormData.error,
-  //         });
-  //       } else if (apiFormData.result) {
-  //         // success
-  //         console.log("success?");
-  //         toastShadcn({
-  //           description: "Successfully edited hub:",
-  //         });
-  //       }
-  //     }
-  //   } else {
-  //     if (!apiJson.loading) {
-  //       if (apiJson.error) {
-  //         // got error
-  //         toastShadcn({
-  //           variant: "destructive",
-  //           title: "Uh oh! Something went wrong.",
-  //           description:
-  //             "An error has occurred while editing hub details: \n" +
-  //             apiJson.error,
-  //         });
-  //       } else if (apiJson.result) {
-  //         // success
-  //         console.log("succes?");
-  //         toastShadcn({
-  //           description: "Successfully edited hub:",
-  //         });
-  //       }
-  //     }
-  //   }
-  // }, [apiFormData.loading, apiJson.loading]);
 
   return (
     <div>
@@ -232,45 +120,25 @@ function EditHubForm(props: EditHubFormProps) {
               formFieldName="processorName"
               label="Hub Name"
               required={true}
-              placeholder="e.g., Carrots, Beef,..."
-              value={processorName}
-              setValue={setHubName}
-              validateFunction={validateHubName}
+              placeholder=""
               pattern={undefined}
-            />
-          </div>
-          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-            {/* Hub Category */}
-            <FormFieldSelect
-              formFieldName="hubStatus"
-              label="Hub Category"
-              required={true}
-              placeholder="Select an hub category..."
-              valueLabelPair={[
-                ["RED_MEAT", "Red Meat"],
-                ["WHITE_MEAT", "White Meat"],
-                ["FISH", "Fish"],
-                ["INSECTS", "Insects"],
-                ["HAY", "Hay"],
-                ["VEGETABLES", "Vegetables"],
-                ["FRUITS", "Fruits"],
-                ["GRAINS", "Grains"],
-                ["BROWSE", "Browse"],
-                ["PELLETS", "Pellets"],
-                ["NECTAR", "Nectar"],
-                ["SUPPLEMENTS", "Supplements"],
-                ["OTHERS", "Others"],
-              ]}
-              value={hubStatus}
-              setValue={setHubStatus}
-              validateFunction={validateHubStatus}
+              value={processorName}
+              setValue={setProcessorName}
+              validateFunction={validateHubName}
             />
           </div>
 
           <Form.Submit asChild>
-            <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-              Submit Edit Hub
-            </button>
+            <Button
+              disabled={apiJson.loading}
+              className="h-12 w-2/3 self-center rounded-full text-lg"
+            >
+              {!apiJson.loading ? (
+                <div>Submit</div>
+              ) : (
+                <div>Loading</div>
+              )}
+            </Button>
           </Form.Submit>
           {formError && (
             <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>

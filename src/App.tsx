@@ -317,16 +317,28 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/edithub/:hubName"
+                  path="/assetfacility/createhub/:facilityId"
+                  element={
+                    user ? <CreateNewHubPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/edithub/:hubProcessorId"
                   element={user ? <EditHubPage /> : <Navigate to="/login" />}
                 />
                 <Route
-                  path="/assetfacility/viewallhubs"
+                  path="/assetfacility/viewallhubs/:facilityId"
                   element={
                     user ? <ViewAllHubsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
+                  path="/assetfacility/viewallhubs/"
+                  element={
+                    user ? <ViewAllHubsPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* <Route
                   path="/assetfacility/viewhubdetails/:hubProcessorId"
                   element={
                     user ? (
@@ -335,7 +347,7 @@ function App() {
                       <Navigate to="/login" />
                     )
                   }
-                />
+                /> */}
                 <Route
                   path="/assetfacility/maintenance"
                   element={

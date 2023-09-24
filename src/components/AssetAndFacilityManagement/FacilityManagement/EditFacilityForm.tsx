@@ -20,7 +20,6 @@ interface EditFacilityFormProps {
 }
 
 function EditFacilityForm(props: EditFacilityFormProps) {
-  const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();

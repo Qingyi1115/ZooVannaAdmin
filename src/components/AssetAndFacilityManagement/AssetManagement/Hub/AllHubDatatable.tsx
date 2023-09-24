@@ -17,8 +17,17 @@ import { NavLink } from "react-router-dom";
 import { HubStatus } from "../../../../enums/HubStatus";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import Facility from "../../../../models/Facility";
+import CreateNewHubPage from "../../../../pages/assetAndFacilityManagement/Hub/CreateNewHubPage";
+import CreateNewHubForm from "./CreateNewHubForm";
 
-function AllHubDatatable() {
+interface AllHubDatatableProps {
+  curFacility: Facility;
+  refreshSeed: number;
+  setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function AllHubDatatable(props: AllHubDatatableProps) {
   const apiJson = useApiJson();
 
   let emptyHub: Hub = {
@@ -39,6 +48,7 @@ function AllHubDatatable() {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<Hub[]>>(null);
   const toastShadcn = useToast().toast;
+  const { curFacility, refreshSeed, setRefreshSeed } = props;
 
   useEffect(() => {
     const fetchHub = async () => {
@@ -129,15 +139,18 @@ function AllHubDatatable() {
     return (
       <React.Fragment>
         <NavLink to={`/assetfacility/viewhubdetails/${hub.hubProcessorId}`}>
-          <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mr-1" />
+          <Button
+            variant={"outline"}
+            className="mb-1 mr-1"
+            onClick={() => confirmDeleteHub(hub)}>
+            <HiEye className="mx-auto" />
           </Button>
         </NavLink>
         <NavLink
-          to={`/assetfacility/updateHub/${hub.hubProcessorId}`}
+          to={`/assetfacility/edithub/${hub.hubProcessorId}`}
         >
           <Button className="mr-2">
-            <HiPencil className="mr-auto" />
+            <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
         <Button
@@ -153,7 +166,7 @@ function AllHubDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Hub</h4>
+      <h4 className="m-1">Manage Hubs</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -176,8 +189,11 @@ function AllHubDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink to={"/assetfacility/createhub"}>
-                {/* TODO: Preload hub details? */}
+              {/* <Button className="mr-2"
+                onClick={() => <CreateNewHubForm curFacility={curFacility} refreshSeed={0} setRefreshSeed={setRefreshSeed} />}>
+                <HiPlus className="mr-auto" />
+              </Button> */}
+              <NavLink to={`/assetfacility/createhub/${curFacility.facilityId}`}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
                 </Button>
@@ -202,6 +218,7 @@ function AllHubDatatable() {
             dataKey="hubProcessorId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -248,8 +265,10 @@ function AllHubDatatable() {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "9rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>
         </div>

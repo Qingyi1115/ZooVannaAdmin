@@ -12,19 +12,22 @@ import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import Facility from "../../../../models/Facility";
 
-function CreateNewHubForm() {
+interface CreateNewHubFormProps {
+  curFacility: Facility;
+  refreshSeed: number;
+  setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function CreateNewHubForm(props: CreateNewHubFormProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
+  const { curFacility, refreshSeed, setRefreshSeed } = props;
+  const [facilityId, setFacilityId] = useState<number>(props.curFacility.facilityId); // text input
   const [processorName, setProcessorName] = useState<string>(""); // text input
-  const [ipAddressName, setIpAddressName] = useState<string>(""); // text input
-  const [lastDataUpdate, setLastDataUpdate] = useState<string | Date | Date[] | null>(null);
-  const [hubStatus, setHubStatus] = useState<
-    string | undefined
-  >(undefined); // radio group
-  const [hubSecret, setHubSecret] = useState<string>(""); // text input
   const [formError, setFormError] = useState<string | null>(null);
 
   // Field validations
@@ -61,11 +64,6 @@ function CreateNewHubForm() {
 
   function clearForm() {
     setProcessorName("");
-    setIpAddressName("");
-    setLastDataUpdate(null);
-    setHubSecret("");
-    setHubStatus(undefined);
-
   }
 
 
@@ -75,15 +73,10 @@ function CreateNewHubForm() {
     e.preventDefault();
     console.log("Name:");
     console.log(processorName);
-    console.log("Status:");
-    console.log(hubStatus);
 
     const newHub = {
+      facilityId: facilityId,
       processorName: processorName,
-      ipAddressName: ipAddressName,
-      lastDataUpdate: lastDataUpdate,
-      hubSecret: hubSecret,
-      hubStatus: hubStatus
     }
     console.log(newHub);
 
@@ -96,7 +89,7 @@ function CreateNewHubForm() {
       toastShadcn({
         description: "Successfully created hub",
       });
-      const redirectUrl = `/assetfacility/viewallhubs`;
+      const redirectUrl = `/assetfacility/viewfacilitydetails/${facilityId}`;
       navigate(redirectUrl);
     } catch (error: any) {
       toastShadcn({
@@ -132,6 +125,18 @@ function CreateNewHubForm() {
       </div>
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+        {/* Facility Id */}
+        <FormFieldInput
+          type="text"
+          formFieldName="facilityId"
+          label="Facility ID"
+          required={true}
+          placeholder=""
+          pattern={undefined}
+          value={facilityId}
+          setValue={setFacilityId}
+          validateFunction={validateName}
+        />
         {/* Hub Name */}
         <FormFieldInput
           type="text"
@@ -143,54 +148,6 @@ function CreateNewHubForm() {
           value={processorName}
           setValue={setProcessorName}
           validateFunction={validateName}
-        />
-      </div>
-      {/* IP Address Name */}
-      <FormFieldInput
-        type="text"
-        formFieldName="ipAddressName"
-        label="IP Address Name"
-        required={true}
-        placeholder=""
-        pattern={undefined}
-        value={ipAddressName}
-        setValue={setIpAddressName}
-        validateFunction={validateName}
-      />
-      {/* Last Data Update */}
-      <div>Last Data Update</div>
-      <Calendar value={lastDataUpdate} onChange={(e: CalendarChangeEvent) => {
-        if (e && e.value !== undefined) {
-          setLastDataUpdate(e.value);
-        }
-      }} />
-      {/* Hub Secret*/}
-      <FormFieldInput
-        type="text"
-        formFieldName="hubSecret"
-        label="Hub Secret"
-        required={true}
-        placeholder=""
-        pattern={undefined}
-        value={hubSecret}
-        setValue={setHubSecret}
-        validateFunction={validateName}
-      />
-      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        {/* Hub Status */}
-        <FormFieldSelect
-          formFieldName="hubStatus"
-          label="Hub Status"
-          required={true}
-          placeholder="Select an hub status..."
-          valueLabelPair={[
-            ["PENDING", "Pending"],
-            ["CONNECTED", "Connected"],
-            ["DISCONNECTED", "Disconnected"]
-          ]}
-          value={hubStatus}
-          setValue={setHubStatus}
-          validateFunction={validateHubStatus}
         />
       </div>
 

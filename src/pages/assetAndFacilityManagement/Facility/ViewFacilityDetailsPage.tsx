@@ -26,6 +26,7 @@ import { Separator } from "@/components/ui/separator";
 import ManageMaintenanceStaffPage from "./ManageMaintenanceStaffPage";
 import ViewAllHubsPage from "../Hub/ViewAllHubsPage";
 import ViewAllCustomerReportsPage from "./ViewAllCustomerReportsPage";
+import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
 
 
 
@@ -114,7 +115,7 @@ function ViewFacilityDetailsPage() {
             <ViewAllSensorPage />
           </TabsContent>
           <TabsContent value="hubs">
-            <ViewAllHubsPage />
+            <AllHubDatatable curFacility={curFacility} refreshSeed={0} setRefreshSeed={setRefreshSeed} />
           </TabsContent>
           <TabsContent value="manageMaintenance">
             <ManageMaintenanceStaffPage />
