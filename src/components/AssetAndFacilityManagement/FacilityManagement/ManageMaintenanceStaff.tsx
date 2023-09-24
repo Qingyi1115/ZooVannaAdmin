@@ -6,7 +6,7 @@ import Employee from "../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiCheck, HiClipboard, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiClipboard, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
@@ -185,8 +185,8 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
           <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
             <Button
               variant={"outline"}
-              className="mb-1 mr-1">
-              <HiEye className="mr-1" />
+              className="mr-2">
+              <HiEye className="mx-auto" />
 
             </Button>
           </NavLink>
@@ -200,17 +200,16 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
                 className="mr-2"
                 onClick={() => confirmAssignment(employee)}
               >
-                <HiClipboard className="mr-1" />
-
+                <HiPlus className="mx-auto" />
               </Button>
               <Button
                 disabled={!assigned}
                 name="removeButton"
                 variant={"destructive"}
-                className="mr-2"
+                className="mx-auto"
                 onClick={() => confirmEmployeeRemoval(employee)}
               >
-                <HiTrash className="mr-1" />
+                <HiTrash className="mx-auto" />
 
               </Button>
             </div>
@@ -229,11 +228,17 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <Button disabled className="invisible">
-                Back
+              <Button
+                disabled={assigned}
+                name="assignButton"
+                variant={"default"}
+                className="mr-2"
+                onClick={() => confirmAssignment(employee)}
+              >
+                <HiPlus className="mx-auto" />
               </Button>
               <span className=" self-center text-title-xl font-bold">
-                Manage Maintenance Staff
+                Maintenance Staff
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
@@ -253,6 +258,7 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
             dataKey="employeeId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -293,8 +299,10 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>
         </div>

@@ -133,7 +133,7 @@ function AllCustomerReportsDatatable() {
       <React.Fragment>
         <NavLink to={`/assetcustomerReport/viewcustomerReportdetails/${customerReport.customerReportId}`}>
           <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mr-1" />
+            <HiEye className="mx-auto" />
 
           </Button>
         </NavLink>
@@ -206,6 +206,7 @@ function AllCustomerReportsDatatable() {
             dataKey="customerReportId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -246,8 +247,10 @@ function AllCustomerReportsDatatable() {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
         </div>

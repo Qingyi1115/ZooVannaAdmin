@@ -141,7 +141,7 @@ function AllEnrichmentItemDatatable() {
           to={`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemId}`}
         >
           <Button className="mr-2">
-            <HiPencil className="mr-auto" />
+            <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
         <Button
@@ -205,6 +205,7 @@ function AllEnrichmentItemDatatable() {
             dataKey="enrichmentItemId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -232,6 +233,8 @@ function AllEnrichmentItemDatatable() {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
               style={{ minWidth: "9rem" }}
             ></Column>

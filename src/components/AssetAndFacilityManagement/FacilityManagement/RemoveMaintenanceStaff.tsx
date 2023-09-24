@@ -131,7 +131,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
       <React.Fragment>
         <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
           <Button className="mb-1 mr-1">
-            <HiEye className="mr-1" />
+            <HiEye className="mx-auto" />
             <span>View Details</span>
           </Button>
         </NavLink>
@@ -143,7 +143,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
             className="mr-2"
             onClick={() => confirmEmployeeRemoval(employee)}
           >
-            <HiTrash className="mr-1" />
+            <HiTrash className="mx-auto" />
             <span>Remove</span>
           </Button>
         }
@@ -184,6 +184,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
             dataKey="employeeId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -230,8 +231,10 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
         </div>

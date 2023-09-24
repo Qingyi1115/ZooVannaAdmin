@@ -137,7 +137,7 @@ function AllfacilityDatatable() {
       <React.Fragment>
         <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}>
           <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mr-1" />
+            <HiEye className="mx-auto" />
           </Button>
         </NavLink>
         <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}>
@@ -208,6 +208,7 @@ function AllfacilityDatatable() {
             dataKey="facilityId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -248,8 +249,10 @@ function AllfacilityDatatable() {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>
         </div>

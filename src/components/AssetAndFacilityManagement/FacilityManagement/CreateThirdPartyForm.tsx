@@ -7,6 +7,7 @@ import FormFieldSelect from "../../FormFieldSelect";
 import useApiJson from "../../../hooks/useApiJson";
 import useApiFormData from "../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 function validateFacilityName(props: ValidityState) {
   if (props != undefined) {
@@ -154,9 +155,16 @@ function CreateNewFacilityForm() {
         validateFunction={validateFacilityName}
       />
       <Form.Submit asChild>
-        <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-          Add Facility
-        </button>
+        <Button
+          disabled={apiJson.loading}
+          className="h-12 w-2/3 self-center rounded-full text-lg"
+        >
+          {!apiJson.loading ? (
+            <div>Submit</div>
+          ) : (
+            <div>Loading</div>
+          )}
+        </Button>
       </Form.Submit>
       {formError && (
         <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>

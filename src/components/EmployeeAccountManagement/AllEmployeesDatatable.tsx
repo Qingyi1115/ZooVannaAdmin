@@ -153,13 +153,12 @@ function AllEmployeesDatatable() {
           to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}
         >
           <Button className="mb-1 mr-1">
-            <HiEye className="mr-1" />
-            <span>View Details</span>
+            <HiEye className="mx-auto" />
           </Button>
         </NavLink>
         {employee.dateOfResignation ? (
           <Button disabled variant={"destructive"}>
-            <HiTrash className="mr-1" />
+            <HiTrash className="mx-auto" />
             <span>Disabled</span>
           </Button>
         ) : (
@@ -168,8 +167,7 @@ function AllEmployeesDatatable() {
             className="mr-2"
             onClick={() => confirmEmployeeResignation(employee)}
           >
-            <HiTrash className="mr-1" />
-            <span>Disable</span>
+            <HiTrash className="mx-auto" />
           </Button>
         )}
       </React.Fragment>
@@ -208,6 +206,7 @@ function AllEmployeesDatatable() {
             dataKey="employeeId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -260,8 +259,10 @@ function AllEmployeesDatatable() {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
         </div>

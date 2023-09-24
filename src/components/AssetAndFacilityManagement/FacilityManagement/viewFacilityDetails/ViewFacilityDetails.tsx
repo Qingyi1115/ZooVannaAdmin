@@ -19,10 +19,10 @@ import { Separator } from "@radix-ui/react-select";
 import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 
-interface EmployeeInfoDetailsProps {
+interface FacilityDetailsProps {
   curFacility: Facility;
 }
-function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
+function ViewFacilityDetails(props: FacilityDetailsProps) {
   const apiJson = useApiJson();
   const { curFacility } = props;
   console.log(props);
@@ -34,7 +34,7 @@ function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
       <div className="my-4 flex justify-start gap-6">
         <NavLink to={`/assetfacility/editfacility/${curFacility.facilityId}`}>
           <Button className="mr-2">
-            <HiPencil className="mr-auto" />
+            <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
       </div>
@@ -50,7 +50,7 @@ function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
         <TableBody>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Facility Id
+              Facility ID
             </TableCell>
             <TableCell>{curFacility.facilityId}</TableCell>
           </TableRow>

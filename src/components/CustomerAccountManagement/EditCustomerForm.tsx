@@ -8,6 +8,7 @@ import FormFieldInput from "../FormFieldInput";
 import FormFieldRadioGroup from "../FormFieldRadioGroup";
 import Customer from "src/models/Customer";
 import FormFieldSelect from "../FormFieldSelect";
+import { Button } from "@/components/ui/button";
 
 interface EditCustomerFormProps {
   curCustomer: Customer;
@@ -167,8 +168,7 @@ function EditCustomerForm(props: EditCustomerFormProps) {
               placeholder="First Name"
               value={firstName}
               setValue={setFirstName}
-              validateFunction={validateName}
-            />
+              validateFunction={validateName} pattern={undefined} />
             {/* Last Name */}
             <FormFieldInput
               type="text"
@@ -178,8 +178,7 @@ function EditCustomerForm(props: EditCustomerFormProps) {
               placeholder="Last Name"
               value={lastName}
               setValue={setLastName}
-              validateFunction={validateName}
-            />
+              validateFunction={validateName} pattern={undefined} />
             {/* Email */}
             <FormFieldInput
               type="text"
@@ -189,8 +188,7 @@ function EditCustomerForm(props: EditCustomerFormProps) {
               placeholder="Email"
               value={email}
               setValue={setEmail}
-              validateFunction={validateName}
-            />
+              validateFunction={validateName} pattern={undefined} />
             {/* Contact Number */}
             <FormFieldInput
               type="text"
@@ -200,8 +198,7 @@ function EditCustomerForm(props: EditCustomerFormProps) {
               placeholder="Contact Number"
               value={contactNo}
               setValue={setContactNo}
-              validateFunction={validateName}
-            />
+              validateFunction={validateName} pattern={undefined} />
             {/* Birthday */}
             <FormFieldInput
               type="text"
@@ -211,8 +208,7 @@ function EditCustomerForm(props: EditCustomerFormProps) {
               placeholder="Birthday"
               value={birthday.toString()}
               setValue={setBirthday.toString}
-              validateFunction={validateName}
-            />
+              validateFunction={validateName} pattern={undefined} />
             {/* Address */}
             <FormFieldInput
               type="text"
@@ -222,8 +218,7 @@ function EditCustomerForm(props: EditCustomerFormProps) {
               placeholder="Address"
               value={address}
               setValue={setAddress}
-              validateFunction={validateName}
-            />
+              validateFunction={validateName} pattern={undefined} />
             <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
               {/* Nationality */}
               <FormFieldSelect
@@ -489,9 +484,16 @@ function EditCustomerForm(props: EditCustomerFormProps) {
             </div>
 
             <Form.Submit asChild>
-              <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-                Submit Edit Customer
-              </button>
+              <Button
+                disabled={apiFormData.loading}
+                className="h-12 w-2/3 self-center rounded-full text-lg"
+              >
+                {!apiFormData.loading ? (
+                  <div>Submit</div>
+                ) : (
+                  <div>Loading</div>
+                )}
+              </Button>
             </Form.Submit>
             {formError && (
               <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>

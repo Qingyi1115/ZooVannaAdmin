@@ -187,7 +187,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
             <div className="mb-4 flex justify-between">
               <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
                 Back
-              </Button>             
+              </Button>
               <span className="self-center text-lg text-graydark">
                 Edit Animal Feed
               </span>
@@ -268,9 +268,15 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
           </div>
 
           <Form.Submit asChild>
-            <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-              Submit Edit Animal Feed
-            </button>
+            <Button
+              disabled={apiFormData.loading}
+              className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
+              {!apiFormData.loading ? (
+                <div>Submit</div>
+              ) : (
+                <div>Loading</div>
+              )}
+            </Button>
           </Form.Submit>
           {formError && (
             <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
