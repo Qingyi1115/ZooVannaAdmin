@@ -712,7 +712,7 @@ function EditEnclosureRequirementsForm(
             className="h-12 w-2/3 self-center rounded-full text-lg"
           >
             {!apiJson.loading ? (
-              <div>Edit Enclosure Requirements</div>
+              <div>Submit</div>
             ) : (
               <div>Loading</div>
             )}

@@ -17,6 +17,7 @@ import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
 function CreateNewSpeciesForm() {
   const apiFormData = useApiFormData();
@@ -435,10 +436,21 @@ function CreateNewSpeciesForm() {
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
-        <span className="self-center text-title-xl font-bold">
-          Create a New Species
-        </span>
-        <hr className="bg-stroke opacity-20" />
+        {/* Title Header and back button */}
+        <div className="flex flex-col">
+          <div className="mb-4 flex justify-between">
+            <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+              Back
+            </Button>
+            <span className="self-center text-title-xl font-bold">
+              Create Species
+            </span>
+            <Button disabled className="invisible">
+              Back
+            </Button>
+          </div>
+          <Separator />
+        </div>
         {/* Species Picture */}
         <Form.Field
           name="speciesImage"
@@ -655,7 +667,7 @@ function CreateNewSpeciesForm() {
             type="text"
             value={selectedBiomes}
             required
-            // onChange={onValueChange}
+          // onChange={onValueChange}
           />
           <MultiSelect
             value={selectedBiomes}

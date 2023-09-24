@@ -8,6 +8,7 @@ import FormFieldInput from "../FormFieldInput";
 import FormFieldRadioGroup from "../FormFieldRadioGroup";
 import Employee from "src/models/Employee";
 import FormFieldSelect from "../FormFieldSelect";
+import { Button } from "@/components/ui/button";
 
 interface EditEmployeeFormProps {
   curEmployee: Employee;
@@ -74,7 +75,7 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
   function validateIsAccountManager(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
-      if (isAccountManager== undefined) {
+      if (isAccountManager == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please select admin privileges
@@ -219,13 +220,20 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
               validateFunction={validateName}
             />
             <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-              
+
             </div>
 
             <Form.Submit asChild>
-              <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-                Submit Edit Employee
-              </button>
+              <Button
+                disabled={apiFormData.loading}
+                className="h-12 w-2/3 self-center rounded-full text-lg"
+              >
+                {!apiFormData.loading ? (
+                  <div>Submit</div>
+                ) : (
+                  <div>Loading</div>
+                )}
+              </Button>
             </Form.Submit>
             {formError && (
               <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>

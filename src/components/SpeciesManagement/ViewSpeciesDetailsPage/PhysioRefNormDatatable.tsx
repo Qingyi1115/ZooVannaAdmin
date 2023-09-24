@@ -92,7 +92,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deletePhysiologicalReferenceNorms/" +
-            selectedPhysioRefNorm?.physiologicalRefId
+          selectedPhysioRefNorm?.physiologicalRefId
         );
 
         toastShadcn({

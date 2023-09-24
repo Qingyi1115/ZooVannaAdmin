@@ -123,18 +123,6 @@ function ViewFacilityDetailsPage() {
             <ViewAllCustomerReportsPage />
           </TabsContent>
         </Tabs>
-
-        {/* <div className="relative flex flex-col">
-          <ViewFacilityDetails curFacility={curFacility}></ViewFacilityDetails>
-          {curThirdParty && <ViewThirdPartyDetails curThirdParty={curThirdParty}></ViewThirdPartyDetails>}
-          {curInHouse && <ViewInHouseDetails curInHouse={curInHouse}></ViewInHouseDetails>}
-        </div>
-
-        <div className="mb-4 flex justify-start gap-6 self-center">
-          <NavLink to={`/assetfacility/editfacility/${facilityId}/managestaff`}>
-            <Button>Manage Maintenance Staff</Button>
-          </NavLink>
-        </div> */}
       </div>
     </div>
   );

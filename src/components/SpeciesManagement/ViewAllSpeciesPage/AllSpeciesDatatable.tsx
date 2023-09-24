@@ -18,11 +18,12 @@ import Species from "../../../models/Species";
 import useApiJson from "../../../hooks/useApiJson";
 import { ColumnGroup } from "primereact/columngroup";
 import { Row } from "primereact/row";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
 
 function AllSpeciesDatatable() {
   const apiJson = useApiJson();
@@ -95,7 +96,7 @@ function AllSpeciesDatatable() {
     );
   };
 
-  const navigateEditProduct = (species: Species) => {};
+  const navigateEditProduct = (species: Species) => { };
 
   const confirmDeleteSpecies = (species: Species) => {
     setSelectedSpecies(species);
@@ -118,7 +119,7 @@ function AllSpeciesDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deletespecies/" +
-            selectedSpecies.speciesCode
+          selectedSpecies.speciesCode
         );
 
         toastShadcn({
@@ -199,7 +200,21 @@ function AllSpeciesDatatable() {
     <div>
       <div>
         <div className="rounded-lg bg-white p-4">
-          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink to={"/species/createspecies"}>
+                <Button className="mr-2">
+                  <HiPlus className="mr-auto" />
+                </Button>
+              </NavLink>
+              <span className=" self-center text-title-xl font-bold">
+                All Species
+              </span>
+              <Button onClick={exportCSV}>Export to .csv</Button>
+            </div>
+            <Separator />
+          </div>
 
           <DataTable
             ref={dt}

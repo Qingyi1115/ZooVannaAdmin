@@ -302,7 +302,7 @@ function CreatePhysiologicalRefNormForm(
               className="h-12 w-2/3 self-center rounded-full text-lg"
             >
               {!apiJson.loading ? (
-                <div>Create Dietary Requirements</div>
+                <div>Submit</div>
               ) : (
                 <div>Loading</div>
               )}

@@ -44,10 +44,8 @@ function ManageMaintenanceStaffPage() {
   }, [assignedStaffIds, allStaffs]);
 
   return (
-    <div className="p-10">
-      <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
-        {facilityId && <ManageMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList}></ManageMaintenanceStaff>}
-      </div>
+    <div className="flex w-full flex-col gap-6 rounded-lg bg-white p-5 text-black">
+      {facilityId && <ManageMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList}></ManageMaintenanceStaff>}
     </div>
   );
 }
