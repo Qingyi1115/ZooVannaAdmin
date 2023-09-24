@@ -136,59 +136,59 @@ function EditEnclosureRequirementsForm(
     return null;
   }
 
-  function validateTemperatureRange(props: ValidityState) {
-    // if (props != undefined) {
-    if (acceptableTempMin >= acceptableTempMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum acceptable temperature must be smaller than the maximum
-        </div>
-      );
+  function validateMinTemperature(props: ValidityState) {
+    if (props != undefined) {
+      if (Number(acceptableTempMin) >= Number(acceptableTempMax)) {
+        return (
+          <div className="font-medium text-danger">
+            * Minimum acceptable temperature must be smaller than the maximum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    if (acceptableTempMin >= acceptableTempMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum acceptable temperature must be smaller than the maximum
-        </div>
-      );
+    return null;
+  }
+
+  function validateMaxTemperature(props: ValidityState) {
+    if (props != undefined) {
+      if (Number(acceptableTempMin) >= Number(acceptableTempMax)) {
+        return (
+          <div className="font-medium text-danger">
+            * Maximum acceptable temperature must be greater than the minimum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    // add any other cases here
-    // }
     return null;
   }
 
   function validateMinHumidity(props: ValidityState) {
-    // if (props != undefined) {
-    if (acceptableHumidityMin >= acceptableHumidityMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum acceptable humidity must be smaller than the maximum
-        </div>
-      );
+    if (props != undefined) {
+      if (Number(acceptableHumidityMax) < Number(acceptableHumidityMin)) {
+        return (
+          <div className="font-medium text-danger">
+            * Minimum acceptable humidity must be smaller than the maximum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    if (acceptableHumidityMin < 0) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum humidity must be equal to or greater than 0
-        </div>
-      );
-    }
-    // add any other cases here
-    // }
     return null;
   }
 
   function validateMaxHumidity(props: ValidityState) {
-    // if (props != undefined) {
-    if (acceptableHumidityMin >= acceptableHumidityMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Maximum acceptable humidity must be greater than the minimum
-        </div>
-      );
+    if (props != undefined) {
+      if (Number(acceptableHumidityMin) >= Number(acceptableHumidityMax)) {
+        return (
+          <div className="font-medium text-danger">
+            * Maximum acceptable humidity must be greater than the minimum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    // add any other cases here
-    // }
     return null;
   }
 
@@ -422,7 +422,7 @@ function EditEnclosureRequirementsForm(
             pattern={undefined}
             value={acceptableTempMin}
             setValue={setAcceptableTempMin}
-            validateFunction={validateTemperatureRange}
+            validateFunction={validateMinTemperature}
           />
           {/* Min Water Area Required */}
           <FormFieldInput
@@ -434,7 +434,7 @@ function EditEnclosureRequirementsForm(
             pattern={undefined}
             value={acceptableTempMax}
             setValue={setAcceptableTempMax}
-            validateFunction={validateTemperatureRange}
+            validateFunction={validateMaxTemperature}
           />
         </div>
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
