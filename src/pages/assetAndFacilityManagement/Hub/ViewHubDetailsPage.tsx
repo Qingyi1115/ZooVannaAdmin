@@ -28,21 +28,13 @@ function ViewHubDetailsPage() {
   const [curHub, setCurHub] = useState<Hub>(emptyHub);
 
   useEffect(() => {
-    const fetchHub = async () => {
-      try {
-        const responseJson = await apiJson.post(
-          `http://localhost:3000/api/assetFacility/getHub/${hubProcessorId}`,
-          { includes: ["sensors", "facility"] });
-        setCurHub(responseJson.hubProcessor as Hub);
-        console.log(curHub);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-
-    fetchHub();
+      apiJson.post(
+        `http://localhost:3000/api/assetFacility/getHub/${hubProcessorId}`,
+        { includes: ["sensors", "facility"] }).then(res =>{
+          setCurHub(res.hubProcessor as Hub);
+          console.log(curHub);
+        }).catch(e=>console.log(e));
   }, [refreshSeed]);
-
 
   return (
     <div className="p-10">
