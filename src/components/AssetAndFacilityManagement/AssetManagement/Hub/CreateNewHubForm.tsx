@@ -15,7 +15,7 @@ import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import Facility from "../../../../models/Facility";
 
 interface CreateNewHubFormProps {
-  curFacility: Facility;
+  pageFacilityId: string | undefined;
   refreshSeed: number;
   setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -25,8 +25,9 @@ function CreateNewHubForm(props: CreateNewHubFormProps) {
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
-  const { curFacility, refreshSeed, setRefreshSeed } = props;
-  const [facilityId, setFacilityId] = useState<number>(props.curFacility.facilityId); // text input
+  const { pageFacilityId, refreshSeed, setRefreshSeed } = props;
+  const [facilityId, setFacilityId] = useState<string | undefined>(pageFacilityId); // text input
+
   const [processorName, setProcessorName] = useState<string>(""); // text input
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -45,13 +46,13 @@ function CreateNewHubForm(props: CreateNewHubFormProps) {
     return null;
   }
 
-  function validateHubStatus(props: ValidityState) {
+  function validateFacilityId(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
       if (props.valueMissing) {
         return (
           <div className="font-medium text-danger">
-            * Please select an hub status
+            * Please enter a valid value
           </div>
         );
       }
@@ -63,6 +64,7 @@ function CreateNewHubForm(props: CreateNewHubFormProps) {
   // end field validations
 
   function clearForm() {
+    setFacilityId("");
     setProcessorName("");
   }
 
@@ -121,7 +123,10 @@ function CreateNewHubForm(props: CreateNewHubFormProps) {
             Back
           </Button>
         </div>
-        <Separator />
+        {/* <hr className="bg-stroke opacity-20" />
+        <span className="mt-4 self-center text-title-xl font-bold">
+          {curFacility.facilityName}
+        </span> */}
       </div>
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -135,7 +140,7 @@ function CreateNewHubForm(props: CreateNewHubFormProps) {
           pattern={undefined}
           value={facilityId}
           setValue={setFacilityId}
-          validateFunction={validateName}
+          validateFunction={validateFacilityId}
         />
         {/* Hub Name */}
         <FormFieldInput

@@ -16,6 +16,7 @@ import { NavLink } from "react-router-dom";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 
 interface EditHubFormProps {
+  pageFacilityId: string | undefined;
   curHub: Hub;
   refreshSeed: number;
   setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
@@ -26,8 +27,8 @@ function EditHubForm(props: EditHubFormProps) {
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
-  const { curHub, refreshSeed, setRefreshSeed } = props;
-
+  const { pageFacilityId, curHub, refreshSeed, setRefreshSeed } = props;
+  const [facilityId, setFacilityId] = useState<string | undefined>(pageFacilityId); // text input
   const hubProcessorId = curHub.hubProcessorId;
   const [processorName, setProcessorName] = useState<string>(
     curHub.processorName
@@ -48,8 +49,24 @@ function EditHubForm(props: EditHubFormProps) {
     return null;
   }
 
+  function validateFacilityId(props: ValidityState) {
+    // console.log(props);
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter a valid value
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
   // end field validations
   function clearForm() {
+    setFacilityId("");
     setProcessorName("");
   }
 
@@ -114,6 +131,18 @@ function EditHubForm(props: EditHubFormProps) {
             </span>
           </div>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+            {/* Facility Id */}
+            <FormFieldInput
+              type="text"
+              formFieldName="facilityId"
+              label="Facility ID"
+              required={true}
+              placeholder=""
+              pattern={undefined}
+              value={facilityId}
+              setValue={setFacilityId}
+              validateFunction={validateFacilityId}
+            />
             {/* Hub Name */}
             <FormFieldInput
               type="text"

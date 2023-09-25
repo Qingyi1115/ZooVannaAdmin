@@ -1,55 +1,62 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import EditAnimalFeedForm from "../../../components/AssetAndFacilityManagement/AssetManagement/AnimalFeed/EditAnimalFeedForm";
+import EditHubForm from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/EditHubForm";
 import useApiJson from "../../../hooks/useApiJson";
-import AnimalFeed from "src/models/AnimalFeed";
-import { AnimalFeedCategory } from "../../../enums/AnimalFeedCategory";
+import Hub from "src/models/Hub";
+import { HubStatus } from "../../../enums/HubStatus";
+import Facility from "../../../models/Facility";
 
 
-function EditAnimalFeedPage() {
+function EditHubPage() {
   const apiJson = useApiJson();
+  const { hubProcessorId } = useParams<{ hubProcessorId: string }>();
+  const { facilityId } = useParams<{ facilityId: string }>();
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
-  let emptyAnimalFeed: AnimalFeed = {
-    animalFeedId: -1,
-    animalFeedName: "",
-    animalFeedImageUrl: "",
-    animalFeedCategory: AnimalFeedCategory.OTHERS
+  let emptyHub: Hub = {
+    hubProcessorId: -1,
+    processorName: "",
+    ipAddressName: "",
+    lastDataUpdate: null,
+    hubSecret: "",
+    hubStatus: HubStatus.PENDING,
+    facilityId: -1
   };
 
-  const { animalFeedName } = useParams<{ animalFeedName: string }>();
-  const [curAnimalFeed, setCurAnimalFeed] = useState<AnimalFeed>(emptyAnimalFeed);
-  const [refreshSeed, setRefreshSeed] = useState<number>(0);
- 
+
+  const [curHub, setCurHub] = useState<Hub>(emptyHub);
+
   useEffect(() => {
-    const fetchAnimalFeed = async () => {
+    const fetchHub = async () => {
       try {
-        const responseJson = await apiJson.get(
-          `http://localhost:3000/api/assetfacility/getAnimalFeed/${animalFeedName}`
-        );
-        setCurAnimalFeed(responseJson as AnimalFeed);
+        const responseJson = await apiJson.post(
+          `http://localhost:3000/api/assetfacility/getHub/${hubProcessorId}`,
+          { includes: [] });
+        setCurHub(responseJson as Hub);
       } catch (error: any) {
         console.log(error);
       }
     };
 
-    fetchAnimalFeed();
+    fetchHub();
   }, [refreshSeed]);
 
   useEffect(() => {
-    const animalFeed = apiJson.result as AnimalFeed;
-    setCurAnimalFeed(animalFeed);
+    const hub = apiJson.result as Hub;
+    setCurHub(hub);
   }, [apiJson.loading]);
 
   return (
     <div className="p-10">
-      {curAnimalFeed && curAnimalFeed.animalFeedId != -1 && (
-        <EditAnimalFeedForm 
-        curAnimalFeed={curAnimalFeed} 
-        refreshSeed={refreshSeed} 
-        setRefreshSeed={setRefreshSeed} />
+      {curHub && curHub.hubProcessorId != -1 && (
+        <EditHubForm
+          pageFacilityId={facilityId}
+          curHub={curHub}
+          refreshSeed={refreshSeed}
+          setRefreshSeed={setRefreshSeed} />
       )}
     </div>
   );
 }
 
-export default EditAnimalFeedPage;
+export default EditHubPage;

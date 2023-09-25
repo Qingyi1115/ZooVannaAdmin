@@ -36,7 +36,8 @@ function AllHubDatatable(props: AllHubDatatableProps) {
     ipAddressName: "",
     lastDataUpdate: null,
     hubSecret: "",
-    hubStatus: HubStatus.PENDING
+    hubStatus: HubStatus.PENDING,
+    facilityId: -1
   };
 
   const [hubList, setHubList] = useState<Hub[]>([]);
@@ -138,16 +139,15 @@ function AllHubDatatable(props: AllHubDatatableProps) {
   const actionBodyTemplate = (hub: Hub) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewhubdetails/${hub.hubProcessorId}`}>
+        <NavLink to={`/assetfacility/viewhubdetails/${curFacility.facilityId}/${hub.hubProcessorId}`}>
           <Button
             variant={"outline"}
-            className="mb-1 mr-1"
-            onClick={() => confirmDeleteHub(hub)}>
+            className="mb-1 mr-1">
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
         <NavLink
-          to={`/assetfacility/edithub/${hub.hubProcessorId}`}
+          to={`/assetfacility/edithub/${curFacility.facilityId}/${hub.hubProcessorId}`}
         >
           <Button className="mr-2">
             <HiPencil className="mx-auto" />

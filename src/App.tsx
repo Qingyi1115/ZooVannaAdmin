@@ -327,6 +327,10 @@ function App() {
                   element={user ? <EditHubPage /> : <Navigate to="/login" />}
                 />
                 <Route
+                  path="/assetfacility/edithub/:facilityId/:hubProcessorId"
+                  element={user ? <EditHubPage /> : <Navigate to="/login" />}
+                />
+                <Route
                   path="/assetfacility/viewallhubs/:facilityId"
                   element={
                     user ? <ViewAllHubsPage /> : <Navigate to="/login" />
@@ -338,16 +342,16 @@ function App() {
                     user ? <ViewAllHubsPage /> : <Navigate to="/login" />
                   }
                 />
-                {/* <Route
+                <Route
                   path="/assetfacility/viewhubdetails/:hubProcessorId"
                   element={
-                    user ? (
-                      <ViewHubDetailsPage />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                /> */}
+                    user ? (<ViewHubDetailsPage />) : (<Navigate to="/login" />)}
+                />
+                <Route
+                  path="/assetfacility/viewhubdetails/:facilityId/:hubProcessorId"
+                  element={
+                    user ? (<ViewHubDetailsPage />) : (<Navigate to="/login" />)}
+                />
                 <Route
                   path="/assetfacility/maintenance"
                   element={
