@@ -24,6 +24,8 @@ import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/C
 import EditFacilityPage from "./pages/assetAndFacilityManagement/Facility/EditFacilityPage";
 import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilitiesPage";
 import CreateNewFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityLogPage";
+import EditFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/EditFacilityLogPage";
+import ViewFacilityLogDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityLogDetailsPage";
 
 //assets
 import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/CreateNewAnimalFeedPage";
@@ -370,10 +372,30 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/createfacilitylog"
+                  path="/assetfacility/createfacilitylog/:facilityId"
                   element={
                     user ? (
                       <CreateNewFacilityLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/assetfacility/editfacilitylog/:logId"
+                  element={
+                    user ? (
+                      <EditFacilityLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/assetfacility/viewfacilitylogdetails/:logId"
+                  element={
+                    user ? (
+                      <ViewFacilityLogDetailsPage />
                     ) : (
                       <Navigate to="/login" />
                     )

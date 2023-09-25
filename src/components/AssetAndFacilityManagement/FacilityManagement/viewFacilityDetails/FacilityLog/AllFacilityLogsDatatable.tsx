@@ -8,7 +8,7 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import useApiJson from "../../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink, useParams } from "react-router-dom";
@@ -16,24 +16,25 @@ import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import FacilityLog from "../../../../../models/FacilityLog";
 import Facility from "../../../../../models/Facility";
+import InHouse from "../../../../../models/InHouse";
+import { FacilityType } from "../../../../../enums/FacilityType";
 
-function AllFacilityLogsDatatable() {
+interface AllFacilityLogsDatatableProps {
+  curFacility: Facility;
+  curInHouse: InHouse;
+}
+
+function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const apiJson = useApiJson();
-  const { facilityDetail } = useParams<{ facilityDetail: string }>();
-  const facilityDetailJson = (facilityDetail == "thirdParty" ?
-    {
-      ownership: "",
-      ownerContact: "",
-      maxAccommodationSize: "",
-      hasAirCon: "",
-      facilityType: ""
-    } :
-    {
-      isPaid: "",
-      maxAccommodationSize: "",
-      hasAirCon: "",
-      facilityType: ""
-    })
+  const { curFacility, curInHouse } = props;
+  let emptyInHouse: InHouse = {
+    isPaid: false,
+    lastMaintained: new Date(),
+    maxAccommodationSize: 0,
+    hasAirCon: false,
+    facilityType: FacilityType.AED,
+    facilityLogs: []
+  };
 
   let emptyFacility: Facility = {
     facilityId: -1,
@@ -41,7 +42,7 @@ function AllFacilityLogsDatatable() {
     xCoordinate: 0,
     yCoordinate: 0,
     facilityDetail: "",
-    facilityDetailJson: facilityDetailJson,
+    facilityDetailJson: emptyInHouse,
     isSheltered: false,
     hubProcessors: []
   };
@@ -56,7 +57,7 @@ function AllFacilityLogsDatatable() {
     facility: emptyFacility
   };
 
-  const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([]);
+  const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>(curInHouse.facilityLogs);
   const [selectedFacilityLog, setSelectedFacilityLog] = useState<FacilityLog>(emptyFacilityLog);
   const [deletefacilityLogDialog, setDeleteFacilityLogDialog] =
     useState<boolean>(false);
@@ -65,24 +66,9 @@ function AllFacilityLogsDatatable() {
   const dt = useRef<DataTable<FacilityLog[]>>(null);
   const toastShadcn = useToast().toast;
 
-  useEffect(() => {
-    apiJson.post("http://localhost:3000/api/assetFacility/getAllFacilityLog", { includes: [] }).catch(e => {
-      console.log(e);
-    }).then(res => {
-      setFacilityLogList(res["facilityLogs"]);
-    })
-  }, []);
-
-  //
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
-
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-
 
   const confirmDeletefacilityLog = (facilityLog: FacilityLog) => {
     setSelectedFacilityLog(facilityLog);
@@ -145,13 +131,13 @@ function AllFacilityLogsDatatable() {
   const actionBodyTemplate = (facilityLog: FacilityLog) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacilityLog/viewfacilityLogdetails/${facilityLog.logId}`}>
+        <NavLink to={`/assetfacility/viewfacilityLogdetails/${facilityLog.logId}`}>
           <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mx-auto" />
 
           </Button>
         </NavLink>
-        <NavLink to={`/assetfacilityLog/editfacilityLog/${facilityLog.logId}`}>
+        <NavLink to={`/assetfacility/editfacilityLog/${facilityLog.logId}`}>
           <Button className="mr-1">
             <HiPencil className="mr-1" />
 
@@ -171,7 +157,7 @@ function AllFacilityLogsDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Customer Reports</h4>
+      <h4 className="m-1">Manage Facility Logs</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -194,14 +180,13 @@ function AllFacilityLogsDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink to={"/assetfacilityLog/createsensor"}>
-
-                <Button disabled className="invisible">
-                  Back
+              <NavLink to={`/assetfacility/createfacilitylog/${curFacility.facilityId}`}>
+                <Button className="mr-2">
+                  <HiPlus className="mr-auto" />
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">
-                All Customer Reports
+                All Facility Logs
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
