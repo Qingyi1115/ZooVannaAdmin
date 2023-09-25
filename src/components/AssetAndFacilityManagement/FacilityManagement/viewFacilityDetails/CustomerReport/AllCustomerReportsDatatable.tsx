@@ -55,11 +55,6 @@ function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-
 
   const confirmDeletecustomerReport = (customerReport: CustomerReport) => {
     setSelectedCustomerReport(customerReport);

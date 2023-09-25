@@ -65,11 +65,6 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-  const navigateEditProduct = (species: SpeciesDietNeed) => {};
 
   // Delete stuff
   const confirmDeleteDietaryReq = (speciesDietNeed: SpeciesDietNeed) => {
@@ -91,7 +86,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deleteDietNeed/" +
-            selectedDietNeeds?.speciesDietNeedId
+          selectedDietNeeds?.speciesDietNeedId
         );
 
         toastShadcn({

@@ -69,12 +69,6 @@ function AllfacilityDatatable() {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-
-
   const confirmDeletefacility = (facility: facility) => {
     setSelectedFacility(facility);
     setDeleteFacilityDialog(true);

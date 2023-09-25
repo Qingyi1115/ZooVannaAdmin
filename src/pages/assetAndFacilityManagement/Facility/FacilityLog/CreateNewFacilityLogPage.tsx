@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import CreateNewFacilityLogForm from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/CreateNewFacilityLogForm";
+import CreateNewFacilityLogForm from "../../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/CreateNewFacilityLogForm";
 import { useParams } from "react-router-dom";
-import useApiJson from "../../../hooks/useApiJson";
-import Facility from "../../../models/Facility";
+import useApiJson from "../../../../hooks/useApiJson";
+import Facility from "../../../../models/Facility";
 
 function CreateNewFacilityLogPage() {
   const apiJson = useApiJson();

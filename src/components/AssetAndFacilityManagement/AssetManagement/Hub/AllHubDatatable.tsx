@@ -69,11 +69,6 @@ function AllHubDatatable(props: AllHubDatatableProps) {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-  const navigateEditProduct = (hub: Hub) => { };
 
   const confirmDeleteHub = (hub: Hub) => {
     setSelectedHub(hub);

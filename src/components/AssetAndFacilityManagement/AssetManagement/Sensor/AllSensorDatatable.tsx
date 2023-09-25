@@ -69,12 +69,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-  const navigateEditProduct = (sensor: Sensor) => { };
-
+ 
   const confirmDeleteSensor = (sensor: Sensor) => {
     setSelectedSensor(sensor);
     setDeleteSensorDialog(true);

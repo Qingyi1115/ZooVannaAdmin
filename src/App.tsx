@@ -23,9 +23,9 @@ import ViewSpeciesDetailsPage from "./pages/speciesManagement/ViewSpeciesDetails
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
 import EditFacilityPage from "./pages/assetAndFacilityManagement/Facility/EditFacilityPage";
 import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilitiesPage";
-import CreateNewFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityLogPage";
-import EditFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/EditFacilityLogPage";
-import ViewFacilityLogDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityLogDetailsPage";
+import CreateNewFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/CreateNewFacilityLogPage";
+import EditFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/EditFacilityLogPage";
+import ViewFacilityLogDetailsPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/ViewFacilityLogDetailsPage";
 
 //assets
 import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/CreateNewAnimalFeedPage";
@@ -61,8 +61,8 @@ import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNe
 import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
 import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
 import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
-import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facility/RemoveMaintenanceStaffPage";
-import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facility/ManageMaintenanceStaffPage";
+import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/RemoveMaintenanceStaffPage";
+import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageMaintenanceStaffPage";
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";

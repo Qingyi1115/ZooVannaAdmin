@@ -58,10 +58,7 @@ function AllEnrichmentItemDatatable() {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
+ 
   const imageBodyTemplate = (rowData: EnrichmentItem) => {
     return (
       <img

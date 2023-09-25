@@ -10,9 +10,9 @@ import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagemen
 import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Employee from "../../../models/Employee";
-import ManageMaintenanceStaffPage from "./ManageMaintenanceStaffPage";
+import ManageMaintenanceStaffPage from "../MaintenanceOperations/ManageMaintenanceStaffPage";
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
-import ViewAllFacilityLogsPage from "./ViewAllFacilityLogsPage";
+import ViewAllFacilityLogsPage from "./FacilityLog/ViewAllFacilityLogsPage";
 import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
 import ThirdParty from "src/models/ThirdParty";
 import InHouse from "src/models/InHouse";

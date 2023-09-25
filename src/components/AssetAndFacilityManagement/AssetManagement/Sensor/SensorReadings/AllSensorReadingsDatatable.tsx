@@ -62,11 +62,7 @@ function AllSensorReadingDatatable(props: AllSensorReadingDatatableProps) {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-  const navigateEditProduct = (sensorReading: SensorReading) => { };
+ 
 
   const confirmDeleteSensorReading = (sensorReading: SensorReading) => {
     setSelectedSensorReading(sensorReading);

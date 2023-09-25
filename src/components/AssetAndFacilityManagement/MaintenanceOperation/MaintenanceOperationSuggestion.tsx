@@ -129,8 +129,6 @@ function MaintenanceOperationSuggestion() {
       <div>
         <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
-          {/* <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar> */}
-
           <DataTable
             ref={dt}
             value={objectsList}

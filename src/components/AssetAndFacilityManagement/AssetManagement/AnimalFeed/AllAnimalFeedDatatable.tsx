@@ -51,10 +51,7 @@ function AllAnimalFeedDatatable() {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
+ 
   const imageBodyTemplate = (rowData: AnimalFeed) => {
     return (
       <img

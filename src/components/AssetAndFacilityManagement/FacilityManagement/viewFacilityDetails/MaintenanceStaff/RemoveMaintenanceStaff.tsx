@@ -58,9 +58,6 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
 
   const removeMaintenanceStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
@@ -171,7 +168,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
             </div>
             <Separator />
           </div>
-          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+      
           <DataTable
             ref={dt}
             value={employeeList}

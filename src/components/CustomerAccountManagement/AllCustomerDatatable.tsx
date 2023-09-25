@@ -51,23 +51,6 @@ function AllCustomerDatatable() {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-  // const imageBodyTemplate = (rowData: Customer) => {
-  //   return (
-  //     <img
-  //       src={rowData.customerImageUrl}
-  //       alt={rowData.customerName}
-  //       className="border-round shadow-2"
-  //       style={{ width: "64px" }}
-  //     />
-  //   );
-  // };
-
-  const navigateEditProduct = (customer: Customer) => { };
-
   const confirmDeleteCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
     setDeleteCustomerDialog(true);

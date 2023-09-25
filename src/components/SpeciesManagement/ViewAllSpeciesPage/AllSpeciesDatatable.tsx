@@ -82,10 +82,6 @@ function AllSpeciesDatatable() {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
   const imageBodyTemplate = (rowData: Species) => {
     return (
       <img
