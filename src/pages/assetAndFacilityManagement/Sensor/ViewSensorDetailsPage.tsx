@@ -47,7 +47,10 @@ function ViewSensorDetailsPage() {
     dateOfActivation: new Date(),
     dateOfLastMaintained: new Date(),
     sensorType: SensorType.CAMERA,
-    hub: emptyHub
+    hub: emptyHub,
+    sensorReading: [],
+    maintenanceLogs: [],
+    generalStaff: []
   };
 
 
@@ -55,6 +58,8 @@ function ViewSensorDetailsPage() {
   const [curSensor, setCurSensor] = useState<Sensor>(emptySensor);
   const { tab } = useParams<{ tab: string }>();
 
+
+  // Add this later: includes: ["hubProcessor", "sensorReading", "maintenanceLogs", "generalStaff"]
   useEffect(() => {
     apiJson.post(
       `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,

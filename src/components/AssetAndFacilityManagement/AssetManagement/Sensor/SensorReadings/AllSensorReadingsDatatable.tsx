@@ -8,61 +8,54 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
-import Sensor from "../../../../models/Sensor";
-import useApiJson from "../../../../hooks/useApiJson";
+import SensorReading from "../../../../../models/SensorReading";
+import useApiJson from "../../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
-import { SensorType } from "../../../../enums/SensorType";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
-import Hub from "../../../../models/Hub";
+import Hub from "../../../../../models/Hub";
+import Sensor from "../../../../../models/Sensor";
 
-interface AllSensorDatatableProps {
-  curHub: Hub,
+interface AllSensorReadingDatatableProps {
+  curSensor: Sensor,
 }
 
-function AllSensorDatatable(props: AllSensorDatatableProps) {
+function AllSensorReadingDatatable(props: AllSensorReadingDatatableProps) {
   const apiJson = useApiJson();
-  const { curHub } = props;
-
-  let emptySensor: Sensor = {
-    sensorId: -1,
-    sensorName: "",
-    dateOfActivation: new Date(),
-    dateOfLastMaintained: new Date(),
-    sensorType: SensorType.CAMERA,
-    hub: curHub,
-    sensorReading: [],
-    maintenanceLogs: [],
-    generalStaff: []
+  const { curSensor } = props;
+  let emptySensorReading: SensorReading = {
+    readingDate: new Date(),
+    value: 0,
+    sensor: curSensor
   };
 
-  const [sensorList, setSensorList] = useState<Sensor[]>(curHub.sensors);
-  const [selectedSensor, setSelectedSensor] = useState<Sensor>(emptySensor);
-  const [deleteSensorDialog, setDeleteSensorDialog] =
+  const [sensorReadingList, setSensorReadingList] = useState<SensorReading[]>(curSensor.sensorReading);
+  const [selectedSensorReading, setSelectedSensorReading] = useState<SensorReading>(emptySensorReading);
+  const [deleteSensorReadingDialog, setDeleteSensorReadingDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Sensor[]>>(null);
+  const dt = useRef<DataTable<SensorReading[]>>(null);
   const toastShadcn = useToast().toast;
 
 
-  // View all sensors
+  // View all sensorReading
   // useEffect(() => {
-  //   const fetchSensor = async () => {
+  //   const fetchSensorReading = async () => {
   //     try {
   //       const responseJson = await apiJson.get(
-  //         "http://localhost:3000/api/assetFacility/getAllSensors"
+  //         "http://localhost:3000/api/assetFacility/getAllSensorReadings"
   //       );
-  //       console.log(responseJson["sensors"]);
-  //       setSensorList(responseJson["sensors"] as Sensor[]);
+  //       console.log(responseJson["sensorReading"]);
+  //       setSensorReadingList(responseJson["sensorReading"] as SensorReading[]);
   //     } catch (error: any) {
   //       console.log(error);
   //     }
   //   };
-  //   fetchSensor();
+  //   fetchSensorReading();
   // }, []);
 
   const exportCSV = () => {
@@ -73,83 +66,73 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
 
-  const navigateEditProduct = (sensor: Sensor) => { };
+  const navigateEditProduct = (sensorReading: SensorReading) => { };
 
-  const confirmDeleteSensor = (sensor: Sensor) => {
-    setSelectedSensor(sensor);
-    setDeleteSensorDialog(true);
+  const confirmDeleteSensorReading = (sensorReading: SensorReading) => {
+    setSelectedSensorReading(sensorReading);
+    setDeleteSensorReadingDialog(true);
   };
 
-  const hideDeleteSensorDialog = () => {
-    setDeleteSensorDialog(false);
+  const hideDeleteSensorReadingDialog = () => {
+    setDeleteSensorReadingDialog(false);
   };
 
-  // delete sensor stuff
-  const deleteSensor = async () => {
-    let _sensor = sensorList.filter(
-      (val) => val.sensorId !== selectedSensor?.sensorId
+  // delete sensorReading stuff
+  const deleteSensorReading = async () => {
+    let _sensorReading = sensorReadingList.filter(
+      (val) => val.readingDate !== selectedSensorReading?.readingDate
     );
 
-    const deleteSensor = async () => {
+    const deleteSensorReading = async () => {
       try {
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deletesensor/" +
-          selectedSensor.sensorId
+          "http://localhost:3000/api/assetFacility/deletesensorReading/" +
+          selectedSensorReading.readingDate
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted sensor: " + selectedSensor.sensorName,
+            "Successfully deleted sensor reading: " + selectedSensorReading.readingDate,
         });
-        setSensorList(_sensor);
-        setDeleteSensorDialog(false);
-        setSelectedSensor(emptySensor);
+        setSensorReadingList(_sensorReading);
+        setDeleteSensorReadingDialog(false);
+        setSelectedSensorReading(emptySensorReading);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting sensor: \n" + apiJson.error,
+            "An error has occurred while deleting sensor reading: \n" + apiJson.error,
         });
       }
     };
-    deleteSensor();
+    deleteSensorReading();
   };
 
-  const deleteSensorDialogFooter = (
+  const deleteSensorReadingDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteSensorDialog}>
+      <Button onClick={hideDeleteSensorReadingDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteSensor}>
+      <Button variant={"destructive"} onClick={deleteSensorReading}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete sensor stuff
+  // end delete sensorReading stuff
 
-  const actionBodyTemplate = (sensor: Sensor) => {
+  const actionBodyTemplate = (sensorReading: SensorReading) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewsensordetails/${sensor.sensorId}`}>
-          <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
-          </Button>
-        </NavLink>
-        <NavLink to={`/assetFacility/editsensor/${sensor.sensorId}`}>
-          <Button className="mr-2">
-            <HiPencil className="mx-auto" />
-          </Button>
-        </NavLink>
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteSensor(sensor)}
+          onClick={() => confirmDeleteSensorReading(sensorReading)}
         >
           <HiTrash className="mx-auto" />
         </Button>
@@ -159,7 +142,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Sensors</h4>
+      <h4 className="m-1">Manage Sensor Readings</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -182,13 +165,11 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink to={`/assetfacility/createsensor/${curHub.hubProcessorId}`}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
+              <Button disabled className="invisible">
+                Back
+              </Button>
               <span className=" self-center text-title-xl font-bold">
-                All Sensors
+                All Sensor Readings
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
@@ -197,53 +178,35 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
 
           <DataTable
             ref={dt}
-            value={sensorList}
-            selection={selectedSensor}
+            value={sensorReadingList}
+            selection={selectedSensorReading}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedSensor(e.value);
+                setSelectedSensorReading(e.value);
               }
             }}
-            dataKey="sensorId"
+            dataKey="readingDate"
             paginator
             rows={10}
             scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensors"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensorReading"
             globalFilter={globalFilter}
             header={header}
           >
             <Column
-              field="sensorId"
-              header="ID"
+              field="readingDate"
+              header="Reading Date"
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
-              field="sensorName"
-              header="Name"
+              field="value"
+              header="Value"
               sortable
               style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="dateOfActivation"
-              header="Activation Date"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="dateOfLastMaintained"
-              header="Last Maintained"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="sensorType"
-              header="Sensor Type"
-              sortable
-              style={{ minWidth: "16rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}
@@ -251,29 +214,29 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "5rem" }}
             ></Column>
           </DataTable>
         </div>
       </div>
       <Dialog
-        visible={deleteSensorDialog}
+        visible={deleteSensorReadingDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteSensorDialogFooter}
-        onHide={hideDeleteSensorDialog}
+        footer={deleteSensorReadingDialogFooter}
+        onHide={hideDeleteSensorReadingDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedSensor && (
+          {selectedSensorReading && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedSensor.sensorName}</b>?
+              <b>{String(selectedSensorReading.readingDate)}</b>?
             </span>
           )}
         </div>
@@ -282,4 +245,4 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
   );
 }
 
-export default AllSensorDatatable;
+export default AllSensorReadingDatatable;

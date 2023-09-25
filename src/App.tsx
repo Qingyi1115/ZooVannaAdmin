@@ -35,7 +35,6 @@ import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/Enrichmen
 import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/ViewAllAnimalFeedPage";
 import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/EnrichmentItem/ViewAllEnrichmentItemsPage";
 import EditSensorPage from "./pages/assetAndFacilityManagement/Sensor/EditSensorPage";
-import ViewAllSensorsPage from "./pages/assetAndFacilityManagement/Sensor/ViewAllSensorsPage";
 import EditHubPage from "./pages/assetAndFacilityManagement/Hub/EditHubPage";
 import ViewAllHubsPage from "./pages/assetAndFacilityManagement/Hub/ViewAllHubsPage";
 import ViewHubDetailsPage from "./pages/assetAndFacilityManagement/Hub/ViewHubDetailsPage";
@@ -306,18 +305,7 @@ function App() {
                   path="/assetfacility/editsensor/:sensorId"
                   element={user ? <EditSensorPage /> : <Navigate to="/login" />}
                 />
-                <Route
-                  path="/assetfacility/viewallsensors"
-                  element={
-                    user ? <ViewAllSensorsPage /> : <Navigate to="/login" />
-                  }
-                />
-                <Route
-                  path="/assetfacility/viewallsensors/:hubProcessorId"
-                  element={
-                    user ? <ViewAllSensorsPage /> : <Navigate to="/login" />
-                  }
-                />
+
                 <Route
                   path="/assetfacility/viewsensordetails/:sensorId"
                   element={
