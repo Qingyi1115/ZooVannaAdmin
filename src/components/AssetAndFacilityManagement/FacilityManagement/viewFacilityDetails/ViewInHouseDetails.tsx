@@ -41,7 +41,7 @@ function ViewInHouseDetails(props: InHouseDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Is Paid
             </TableCell>
-            <TableCell>{String(curInHouse.isPaid)}</TableCell>
+            <TableCell>{String(curInHouse.isPaid) == "false" ? "No" : "Yes"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

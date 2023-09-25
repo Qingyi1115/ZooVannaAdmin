@@ -39,7 +39,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
   const [isPaid, setIsPaid] = useState<string | undefined>(
     curFacility.facilityDetail == "inHouse" ? (curFacility.facilityDetailJson.isPaid ? "true" : "false") : ""); // dropdown
   const [isSheltered, setIsSheltered] = useState<string | undefined>(
-    curFacility.facilityDetailJson.isSheltered ? "true" : "false"); // dropdown
+    curFacility.isSheltered ? "true" : "false"); // dropdown
   const [facilityType, setFacilityType] = useState<string | undefined>(
     curFacility.facilityDetailJson.facilityType); // dropdown 
 
@@ -71,22 +71,22 @@ function EditFacilityForm(props: EditFacilityFormProps) {
         ownerContact: ownerContact,
         maxAccommodationSize: maxAccommodationSize,
         hasAirCon: hasAirCon == "true",
-        facilityType: facilityType
+        facilityType: facilityType,
       } :
       {
         isPaid: isPaid == "true",
         maxAccommodationSize: maxAccommodationSize,
         hasAirCon: hasAirCon == "true",
-        facilityType: facilityType
+        facilityType: facilityType,
       })
-    console.log(facilityDetailJson);
+    console.log("facilityDetailJson", facilityDetailJson);
 
     const updatedFacility = {
       facilityName: facilityName,
       xCoordinate: xCoordinate,
       yCoordinate: yCoordinate,
-      isSheltered: isSheltered == "true",
       facilityDetail: facilityDetail,
+      isSheltered: isSheltered == "true",
       facilityDetailJson: facilityDetailJson
     }
     console.log(updatedFacility);
@@ -218,7 +218,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
             />
           </div>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12"> {/* Facility Details */}
-            <FormFieldSelect
+            {/* <FormFieldSelect
               formFieldName="facilityDetail"
               label="Facility Owner Type"
               required={true}
@@ -230,7 +230,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               value={facilityDetail}
               setValue={setFacilityDetail}
               validateFunction={validateFacilityName}
-            />
+            /> */}
 
             {/* Facility Type */}
             <FormFieldSelect
