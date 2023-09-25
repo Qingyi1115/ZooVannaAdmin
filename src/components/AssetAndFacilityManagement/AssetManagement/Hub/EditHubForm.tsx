@@ -90,7 +90,7 @@ function EditHubForm(props: EditHubFormProps) {
         description: "Successfully edited hub",
       });
       setRefreshSeed(refreshSeed + 1);
-      const redirectUrl = `/assetfacility/viewallhubs`;
+      const redirectUrl = `/assetfacility/viewfacilitydetails/${pageFacilityId}/hubs`;
       navigate(redirectUrl);
     } catch (error: any) {
       toastShadcn({

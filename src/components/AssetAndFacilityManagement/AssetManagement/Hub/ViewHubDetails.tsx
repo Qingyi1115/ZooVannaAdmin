@@ -14,27 +14,46 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Facility from "src/models/Facility";
+import Hub from "../../../../models/Hub";
 import { Separator } from "@radix-ui/react-select";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 
-interface EmployeeInfoDetailsProps {
-  curFacility: Facility;
+interface HubDetailsProps {
+  pageFacilityId: string | undefined;
+  curHub: Hub;
+  refreshSeed: number;
+  setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
 }
-function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
-  const apiJson = useApiJson();
-  const { curFacility } = props;
+function ViewHubDetails(props: HubDetailsProps) {
+  const { pageFacilityId, curHub, refreshSeed, setRefreshSeed } = props;
   console.log(props);
-
+  const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
   return (
     <div className="flex flex-col">
-      <div className="my-4 flex justify-start gap-6">
-        <NavLink to={`/assetfacility/editfacility/${curFacility.facilityId}`}>
+      <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
+
+        <div className="flex justify-between">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+            Back
+          </Button>
+          <span className="self-center text-lg text-graydark">
+            View Hub Details
+          </span>
+          <Button disabled className="invisible">
+            Back
+          </Button>
+        </div>
+
+        <hr className="bg-stroke opacity-20" />
+        <span className=" self-center text-title-xl font-bold">
+          {curHub.processorName}
+        </span>
+        <NavLink to={`/assetfacility/edithub/${curHub.hubProcessorId}`}>
           <Button className="mr-2">
-            <HiPencil className="mr-auto" />
+            <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
       </div>
@@ -50,39 +69,39 @@ function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
         <TableBody>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Facility Id
+              Hub ID
             </TableCell>
-            <TableCell>{curFacility.facilityId}</TableCell>
+            <TableCell>{curHub.hubProcessorId}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Name
             </TableCell>
-            <TableCell>{curFacility.facilityName}</TableCell>
+            <TableCell>{curHub.processorName}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              X Coordinate
+              IP Address Name
             </TableCell>
-            <TableCell>{curFacility.xCoordinate}</TableCell>
+            <TableCell>{curHub.ipAddressName}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Y Coordinate
+              Last Data Update
             </TableCell>
-            <TableCell>{curFacility.yCoordinate}</TableCell>
+            <TableCell>{String(curHub.lastDataUpdate)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Shelter available
+              Hub Secret
             </TableCell>
-            <TableCell>{String(curFacility.isSheltered) == "false" ? "No" : "Yes"}</TableCell>
+            <TableCell>{String(curHub.hubSecret) == "false" ? "No" : "Yes"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Owner Type
+              Hub Status
             </TableCell>
-            <TableCell>{curFacility.facilityDetail == "inHouse" ? "In-house" : "Third-party"}</TableCell>
+            <TableCell>{curHub.hubStatus}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -94,4 +113,4 @@ function ViewFacilityDetails(props: EmployeeInfoDetailsProps) {
   )
 }
 
-export default ViewFacilityDetails;
+export default ViewHubDetails;

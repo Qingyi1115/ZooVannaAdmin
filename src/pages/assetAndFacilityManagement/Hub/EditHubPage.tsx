@@ -30,9 +30,9 @@ function EditHubPage() {
     const fetchHub = async () => {
       try {
         const responseJson = await apiJson.post(
-          `http://localhost:3000/api/assetfacility/getHub/${hubProcessorId}`,
-          { includes: [] });
-        setCurHub(responseJson as Hub);
+          `http://localhost:3000/api/assetFacility/getHub/${hubProcessorId}`,
+          { includes: ["sensors", "facility"] });
+        setCurHub(responseJson.hubProcessor as Hub);
       } catch (error: any) {
         console.log(error);
       }
