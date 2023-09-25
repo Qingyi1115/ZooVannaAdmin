@@ -112,7 +112,7 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
-      const responseJson = await apiJson.put(
+      const responseJson = await apiJson.del(
         `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
 
       toastShadcn({

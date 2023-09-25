@@ -44,7 +44,8 @@ function ViewFacilityDetailsPage() {
     yCoordinate: 0,
     facilityDetail: "",
     facilityDetailJson: undefined,
-    isSheltered: false
+    isSheltered: false,
+    hubProcessors: []
   };
 
   const [curFacility, setCurFacility] = useState<Facility>(facility);
@@ -59,7 +60,7 @@ function ViewFacilityDetailsPage() {
       try {
         const responseJson = await apiJson.post(
           `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
-          { includes: [] }
+          { includes: ["hubProcessors"] }
         );
         console.log(responseJson);
         setCurFacility(responseJson.facility as Facility);

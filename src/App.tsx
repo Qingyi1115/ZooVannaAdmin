@@ -205,6 +205,12 @@ function App() {
                   }
                 />
                 <Route
+                  path="/assetfacility/viewfacilitydetails/:facilityId/:tab"
+                  element={
+                    user ? <ViewFacilityDetailsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
                   path="/assetfacility/editfacility/:facilityId"
                   element={
                     user ? <EditFacilityPage /> : <Navigate to="/login" />
