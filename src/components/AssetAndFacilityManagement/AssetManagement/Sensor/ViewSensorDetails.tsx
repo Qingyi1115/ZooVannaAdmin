@@ -14,17 +14,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Facility from "src/models/Facility";
+import Sensor from "src/models/Sensor";
 import { Separator } from "@radix-ui/react-select";
 import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 
-interface FacilityDetailsProps {
-  curFacility: Facility;
+interface SensorDetailsProps {
+  curSensor: Sensor;
 }
-function ViewFacilityDetails(props: FacilityDetailsProps) {
+function ViewSensorDetails(props: SensorDetailsProps) {
   const apiJson = useApiJson();
-  const { curFacility } = props;
+  const { curSensor } = props;
   console.log(props);
 
   const toastShadcn = useToast().toast;
@@ -32,61 +32,43 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
   return (
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
-        <NavLink to={`/assetfacility/editfacility/${curFacility.facilityId}`}>
+        <NavLink to={`/assetfacility/editsensor/${curSensor.sensorId}`}>
           <Button className="mr-2">
             <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
       </div>
       <Table>
-        {/* <TableHeader className=" bg-whiten">
-            <TableRow>
-              <TableHead className="w-1/3 font-bold" colSpan={2}>
-                Attribute
-              </TableHead>
-              <TableHead>Value</TableHead>
-            </TableRow>
-          </TableHeader> */}
         <TableBody>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Facility Id
+              ID
             </TableCell>
-            <TableCell>{curFacility.facilityId}</TableCell>
+            <TableCell>{curSensor.sensorId}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Name
             </TableCell>
-            <TableCell>{curFacility.facilityName}</TableCell>
+            <TableCell>{String(curSensor.sensorName)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              X Coordinate
+              Date of Activation
             </TableCell>
-            <TableCell>{curFacility.xCoordinate}</TableCell>
+            <TableCell>{String(curSensor.dateOfActivation)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Y Coordinate
+              Last Maintained
             </TableCell>
-            <TableCell>{curFacility.yCoordinate}</TableCell>
+            <TableCell>{String(curSensor.dateOfLastMaintained)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Shelter available
+              Type
             </TableCell>
-            <TableCell>{String(curFacility.isSheltered) == "false" ? "No" : "Yes"}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Owner Type
-            </TableCell>
-            <TableCell>{curFacility.facilityDetail == "inHouse" ? "In-house" : "Third-party"}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-            </TableCell>
+            <TableCell>{String(curSensor.sensorType)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -94,4 +76,4 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
   )
 }
 
-export default ViewFacilityDetails;
+export default ViewSensorDetails;

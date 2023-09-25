@@ -33,7 +33,8 @@ function EditFacilityPage() {
     yCoordinate: 0,
     facilityDetail: "",
     facilityDetailJson: facilityDetailJson,
-    isSheltered: false
+    isSheltered: false,
+    hubProcessors: []
   };
 
   const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);

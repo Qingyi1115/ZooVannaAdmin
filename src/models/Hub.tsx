@@ -1,8 +1,8 @@
 import { HubStatus } from "src/enums/HubStatus";
 import Sensor from "./Sensor";
+import Facility from "./Facility";
 
 interface Hub {
-    facilityId: number;
     hubProcessorId: number;
     processorName: string;
     ipAddressName: string;
@@ -10,5 +10,6 @@ interface Hub {
     hubSecret: string;
     hubStatus: HubStatus;
     sensors: Sensor[];
+    facility: Facility;
 }
 export default Hub;

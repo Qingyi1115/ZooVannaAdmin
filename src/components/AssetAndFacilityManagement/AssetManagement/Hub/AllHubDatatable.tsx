@@ -18,18 +18,15 @@ import { HubStatus } from "../../../../enums/HubStatus";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../models/Facility";
-import CreateNewHubPage from "../../../../pages/assetAndFacilityManagement/Hub/CreateNewHubPage";
-import CreateNewHubForm from "./CreateNewHubForm";
 
 interface AllHubDatatableProps {
   curFacility: Facility;
-  refreshSeed: number;
-  setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function AllHubDatatable(props: AllHubDatatableProps) {
   const apiJson = useApiJson();
 
+  const { curFacility } = props;
   let emptyHub: Hub = {
     hubProcessorId: -1,
     processorName: "",
@@ -37,21 +34,11 @@ function AllHubDatatable(props: AllHubDatatableProps) {
     lastDataUpdate: null,
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
-    facilityId: -1,
+    facility: curFacility,
     sensors: []
   };
 
-  const { curFacility, refreshSeed, setRefreshSeed } = props;
-  const [hubList, setHubList] = useState<Hub[]>(curFacility.hubProcessors);
-  const [selectedHub, setSelectedHub] =
-    useState<Hub>(emptyHub);
-  const [deleteHubDialog, setDeleteHubDialog] =
-    useState<boolean>(false);
-  const [globalFilter, setGlobalFilter] = useState<string>("");
-  const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Hub[]>>(null);
-  const toastShadcn = useToast().toast;
-
+  // Get all hubs in system
   // useEffect(() => {
   //   const fetchHub = async () => {
   //     try {
@@ -67,6 +54,17 @@ function AllHubDatatable(props: AllHubDatatableProps) {
   // }, []);
 
   //
+
+  const [hubList, setHubList] = useState<Hub[]>(curFacility.hubProcessors);
+  const [selectedHub, setSelectedHub] =
+    useState<Hub>(emptyHub);
+  const [deleteHubDialog, setDeleteHubDialog] =
+    useState<boolean>(false);
+  const [globalFilter, setGlobalFilter] = useState<string>("");
+  const toast = useRef<Toast>(null);
+  const dt = useRef<DataTable<Hub[]>>(null);
+  const toastShadcn = useToast().toast;
+
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
@@ -140,7 +138,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
   const actionBodyTemplate = (hub: Hub) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewhubdetails/${curFacility.facilityId}/${hub.hubProcessorId}`}>
+        <NavLink to={`/assetfacility/viewhubdetails/${hub.hubProcessorId}`}>
           <Button
             variant={"outline"}
             className="mb-1 mr-1">
@@ -148,7 +146,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
           </Button>
         </NavLink>
         <NavLink
-          to={`/assetfacility/edithub/${curFacility.facilityId}/${hub.hubProcessorId}`}
+          to={`/assetfacility/edithub/${hub.hubProcessorId}`}
         >
           <Button className="mr-2">
             <HiPencil className="mx-auto" />
@@ -190,10 +188,6 @@ function AllHubDatatable(props: AllHubDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {/* <Button className="mr-2"
-                onClick={() => <CreateNewHubForm curFacility={curFacility} refreshSeed={0} setRefreshSeed={setRefreshSeed} />}>
-                <HiPlus className="mr-auto" />
-              </Button> */}
               <NavLink to={`/assetfacility/createhub/${curFacility.facilityId}`}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />

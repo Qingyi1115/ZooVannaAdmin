@@ -7,17 +7,19 @@ import FormFieldSelect from "../../../FormFieldSelect";
 import { SensorType } from "../../../../enums/SensorType";
 import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 
-function CreateNewAnimalFeedForm() {
+function CreateNewSensorForm() {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
+  const { hubProcessorId } = useParams<{ hubProcessorId: string }>();
+  const [pageHubProcessorId, setPageHubProcessorId] = useState<string | undefined>(hubProcessorId); // text input
   const [sensorName, setSensorName] = useState<string>(""); // text input
   const [sensorType, setSensorType] = useState<
     string | undefined
@@ -55,7 +57,20 @@ function CreateNewAnimalFeedForm() {
     }
     return null;
   }
-
+  function validateHubProcessorId(props: ValidityState) {
+    // console.log(props);
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter a valid value
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
 
   // end field validations
 
@@ -75,21 +90,22 @@ function CreateNewAnimalFeedForm() {
     console.log(sensorType);
 
     const newSensor = {
+      hubProcessorId: pageHubProcessorId,
       sensorName: sensorName,
-      dateOfActivation: dateOfActivation,
-      dateOfLastMaintained: dateOfLastMaintained,
       sensorType: sensorType
     }
     console.log(newSensor);
 
     try {
       const responseJson = await apiJson.post(
-        "http://localhost:3000/api/assetFacility/createSensor",
+        "http://localhost:3000/api/assetFacility/addSensor",
         newSensor);
       // success
       toastShadcn({
         description: "Successfully created sensor",
       });
+      const redirectUrl = `/assetfacility/viewhubdetails/${hubProcessorId}`;
+      navigate(redirectUrl);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -124,6 +140,18 @@ function CreateNewAnimalFeedForm() {
         <Separator />
       </div>
 
+      {/* Hub Processor ID */}
+      <FormFieldInput
+        type="number"
+        formFieldName="facilityId"
+        label="Hub Processor ID"
+        required={true}
+        placeholder=""
+        pattern={undefined}
+        value={pageHubProcessorId}
+        setValue={setPageHubProcessorId}
+        validateFunction={validateHubProcessorId}
+      />
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Sensor Name */}
         <FormFieldInput
@@ -136,21 +164,6 @@ function CreateNewAnimalFeedForm() {
           setValue={setSensorName}
           validateFunction={validateName} pattern={undefined} />
       </div>
-      {/* Activation Date */}
-      <div>Activation Date</div>
-      <Calendar value={dateOfActivation} onChange={(e: CalendarChangeEvent) => {
-        if (e && e.value !== undefined) {
-          setDateOfActivation(e.value);
-        }
-      }} />
-
-      {/* Last Maintained */}
-      <div>Last Maintained</div>
-      <Calendar value={dateOfLastMaintained} onChange={(e: CalendarChangeEvent) => {
-        if (e && e.value !== undefined) {
-          setDateOfLastMaintained(e.value);
-        }
-      }} />
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Sensor Type */}
         <FormFieldSelect
@@ -191,4 +204,4 @@ function CreateNewAnimalFeedForm() {
   );
 }
 
-export default CreateNewAnimalFeedForm;
+export default CreateNewSensorForm;

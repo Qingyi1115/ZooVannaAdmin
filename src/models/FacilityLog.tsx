@@ -3,13 +3,12 @@ import InHouse from "./InHouse";
 
 interface FacilityLog {
   logId: number;
-  dateTime: Date; 
+  dateTime: Date;
   isMaintenance: Boolean;
   title: string;
   details: string;
   remark: string;
   facility: Facility;
-  inHouse: InHouse;
 }
 
 export default FacilityLog;

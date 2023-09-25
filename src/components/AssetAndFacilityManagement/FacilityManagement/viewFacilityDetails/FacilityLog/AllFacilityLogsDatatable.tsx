@@ -15,6 +15,7 @@ import { NavLink, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import FacilityLog from "../../../../../models/FacilityLog";
+import Facility from "../../../../../models/Facility";
 
 function AllFacilityLogsDatatable() {
   const apiJson = useApiJson();
@@ -25,14 +26,25 @@ function AllFacilityLogsDatatable() {
       ownerContact: "",
       maxAccommodationSize: "",
       hasAirCon: "",
-      facilityLogType: ""
+      facilityType: ""
     } :
     {
       isPaid: "",
       maxAccommodationSize: "",
       hasAirCon: "",
-      facilityLogType: ""
+      facilityType: ""
     })
+
+  let emptyFacility: Facility = {
+    facilityId: -1,
+    facilityName: "",
+    xCoordinate: 0,
+    yCoordinate: 0,
+    facilityDetail: "",
+    facilityDetailJson: facilityDetailJson,
+    isSheltered: false,
+    hubProcessors: []
+  };
 
   let emptyFacilityLog: FacilityLog = {
     logId: 0,
@@ -41,8 +53,7 @@ function AllFacilityLogsDatatable() {
     title: "",
     details: "",
     remark: "",
-    facility: undefined,
-    inHouse: undefined
+    facility: emptyFacility
   };
 
   const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([]);
@@ -184,7 +195,7 @@ function AllFacilityLogsDatatable() {
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               <NavLink to={"/assetfacilityLog/createsensor"}>
-                {/* TODO: Preload hub details? */}
+
                 <Button disabled className="invisible">
                   Back
                 </Button>

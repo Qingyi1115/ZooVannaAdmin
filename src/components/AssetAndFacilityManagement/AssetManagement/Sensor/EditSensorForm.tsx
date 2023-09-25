@@ -15,8 +15,6 @@ import { Separator } from "@/components/ui/separator";
 
 interface EditSensorFormProps {
   curSensor: Sensor;
-  refreshSeed: number;
-  setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function EditSensorForm(props: EditSensorFormProps) {
@@ -24,7 +22,7 @@ function EditSensorForm(props: EditSensorFormProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
-  const { curSensor, refreshSeed, setRefreshSeed } = props;
+  const { curSensor } = props;
 
   const [sensorName, setSensorName] = useState<string>(curSensor.sensorName);
   const [sensorType, setSensorType] = useState<
@@ -34,20 +32,6 @@ function EditSensorForm(props: EditSensorFormProps) {
   const navigate = useNavigate();
   const [formError, setFormError] = useState<string | null>(null);
 
-  // field validations
-  // function validateImage(props: ValidityState) {
-  //   if (props != undefined) {
-  //     if (props.valueMissing) {
-  //       return (
-  //         <div className="font-medium text-danger">
-  //           * Please upload an image
-  //         </div>
-  //       );
-  //     }
-  //     // add any other cases here
-  //   }
-  //   return null;
-  // }
 
   function validateSensorName(props: ValidityState) {
     if (props != undefined) {
@@ -115,7 +99,7 @@ function EditSensorForm(props: EditSensorFormProps) {
         toastShadcn({
           description: "Successfully edited sensor",
         });
-        setRefreshSeed(refreshSeed + 1);
+
       } catch (error: any) {
         toastShadcn({
           variant: "destructive",
@@ -129,20 +113,20 @@ function EditSensorForm(props: EditSensorFormProps) {
       // no image
       const updatedSensorType = sensorType?.toString();
       const updatedSensor = {
-        sensorName,
-        updatedSensorType
+        sensorName: sensorName,
+        sensorType: updatedSensorType
       };
 
       try {
         const responseJson = await apiJson.put(
-          "http://localhost:3000/api/assetfacility/updateSensor",
+          `http://localhost:3000/api/assetfacility/updateSensor/${curSensor.sensorId}`,
           updatedSensor
         );
         // success
         toastShadcn({
           description: "Successfully edited sensor",
         });
-        setRefreshSeed(refreshSeed + 1);
+
       } catch (error: any) {
         toastShadcn({
           variant: "destructive",
@@ -208,11 +192,9 @@ function EditSensorForm(props: EditSensorFormProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink className="flex" to={`/assetfacility/viewallsensors`}>
-                <Button variant={"outline"} type="button" className="">
-                  Back
-                </Button>
-              </NavLink>
+              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+                Back
+              </Button>
               <span className="self-center text-lg text-graydark">
                 Edit Sensor
               </span>
@@ -237,43 +219,41 @@ function EditSensorForm(props: EditSensorFormProps) {
               setValue={setSensorName}
               validateFunction={validateSensorName} pattern={undefined} />
 
-            <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-              {/* Sensor Category */}
-              <FormFieldSelect
-                formFieldName="sensorType"
-                label="Sensor Category"
-                required={true}
-                placeholder="Select an sensor category..."
-                valueLabelPair={[
-                  ["TEMPERATURE", "Temperature"],
-                  ["LIGHT", "Light"],
-                  ["HUMIDITY", "Humidity"],
-                  ["SOUND", "Sound"],
-                  ["MOTION", "Motion"],
-                  ["CAMERA", "Camera"]
-                ]}
-                value={sensorType}
-                setValue={setSensorType}
-                validateFunction={validateSensorType}
-              />
-            </div>
-
-            <Form.Submit asChild>
-              <Button
-                disabled={apiJson.loading}
-                className="h-12 w-2/3 self-center rounded-full text-lg"
-              >
-                {!apiJson.loading ? (
-                  <div>Submit</div>
-                ) : (
-                  <div>Loading</div>
-                )}
-              </Button>
-            </Form.Submit>
-            {formError && (
-              <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
-            )}
+            {/* Sensor Category */}
+            <FormFieldSelect
+              formFieldName="sensorType"
+              label="Sensor Category"
+              required={true}
+              placeholder="Select an sensor category..."
+              valueLabelPair={[
+                ["TEMPERATURE", "Temperature"],
+                ["LIGHT", "Light"],
+                ["HUMIDITY", "Humidity"],
+                ["SOUND", "Sound"],
+                ["MOTION", "Motion"],
+                ["CAMERA", "Camera"]
+              ]}
+              value={sensorType}
+              setValue={setSensorType}
+              validateFunction={validateSensorType}
+            />
           </div>
+          <Form.Submit asChild>
+            <Button
+              disabled={apiJson.loading}
+              className="h-12 w-2/3 self-center rounded-full text-lg"
+            >
+              {!apiJson.loading ? (
+                <div>Submit</div>
+              ) : (
+                <div>Loading</div>
+              )}
+            </Button>
+          </Form.Submit>
+          {formError && (
+            <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+          )}
+
         </Form.Root>
       )}
     </div>

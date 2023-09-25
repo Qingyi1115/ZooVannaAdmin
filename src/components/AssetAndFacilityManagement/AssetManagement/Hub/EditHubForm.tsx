@@ -90,8 +90,7 @@ function EditHubForm(props: EditHubFormProps) {
         description: "Successfully edited hub",
       });
       setRefreshSeed(refreshSeed + 1);
-      const redirectUrl = `/assetfacility/viewfacilitydetails/${pageFacilityId}/hubs`;
-      navigate(redirectUrl);
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -115,10 +114,9 @@ function EditHubForm(props: EditHubFormProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink to={`/assetfacility/viewfacilitydetails/${pageFacilityId}/hubs`}>
-                <Button variant={"outline"} type="button" className="">
-                  Back
-                </Button></NavLink>
+              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+                Back
+              </Button>
               <span className="self-center text-lg text-graydark">
                 Edit Hub
               </span>
@@ -132,18 +130,6 @@ function EditHubForm(props: EditHubFormProps) {
             </span>
           </div>
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-            {/* Facility Id */}
-            <FormFieldInput
-              type="text"
-              formFieldName="facilityId"
-              label="Facility ID"
-              required={true}
-              placeholder=""
-              pattern={undefined}
-              value={facilityId}
-              setValue={setFacilityId}
-              validateFunction={validateFacilityId}
-            />
             {/* Hub Name */}
             <FormFieldInput
               type="text"

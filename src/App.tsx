@@ -3,12 +3,11 @@ import {
   Routes,
   Route,
   Navigate,
-  useLocation,
 } from "react-router-dom";
 import { useAuthContext } from "./hooks/useAuthContext";
-import React, { useState } from "react";
+import { useState } from "react";
 
-import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import { PrimeReactProvider } from "primereact/api";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -34,14 +33,14 @@ import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/Ed
 import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/EditEnrichmentItemPage";
 import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/ViewAllAnimalFeedPage";
 import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/EnrichmentItem/ViewAllEnrichmentItemsPage";
-import CreateNewSensorPage from "./pages/assetAndFacilityManagement/Sensor/CreateNewSensorPage";
 import EditSensorPage from "./pages/assetAndFacilityManagement/Sensor/EditSensorPage";
 import ViewAllSensorsPage from "./pages/assetAndFacilityManagement/Sensor/ViewAllSensorsPage";
-import CreateNewHubPage from "./pages/assetAndFacilityManagement/Hub/CreateNewHubPage";
 import EditHubPage from "./pages/assetAndFacilityManagement/Hub/EditHubPage";
 import ViewAllHubsPage from "./pages/assetAndFacilityManagement/Hub/ViewAllHubsPage";
 import ViewHubDetailsPage from "./pages/assetAndFacilityManagement/Hub/ViewHubDetailsPage";
 import ViewSensorDetailsPage from "./pages/assetAndFacilityManagement/Sensor/ViewSensorDetailsPage";
+import CreateNewHubForm from "./components/AssetAndFacilityManagement/AssetManagement/Hub/CreateNewHubForm";
+import CreateNewSensorForm from "./components/AssetAndFacilityManagement/AssetManagement/Sensor/CreateNewSensorForm";
 
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
@@ -291,17 +290,29 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/createsensor"
+                  path="/assetfacility/createsensor/"
                   element={
-                    user ? <CreateNewSensorPage /> : <Navigate to="/login" />
+                    user ? <CreateNewSensorForm /> : <Navigate to="/login" />
                   }
                 />
                 <Route
-                  path="/assetfacility/editsensor/:sensorName"
+                  path="/assetfacility/createsensor/:hubProcessorId"
+                  element={
+                    user ? <CreateNewSensorForm /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/editsensor/:sensorId"
                   element={user ? <EditSensorPage /> : <Navigate to="/login" />}
                 />
                 <Route
                   path="/assetfacility/viewallsensors"
+                  element={
+                    user ? <ViewAllSensorsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/viewallsensors/:hubProcessorId"
                   element={
                     user ? <ViewAllSensorsPage /> : <Navigate to="/login" />
                   }
@@ -319,21 +330,17 @@ function App() {
                 <Route
                   path="/assetfacility/createhub"
                   element={
-                    user ? <CreateNewHubPage /> : <Navigate to="/login" />
+                    user ? <CreateNewHubForm /> : <Navigate to="/login" />
                   }
                 />
                 <Route
                   path="/assetfacility/createhub/:facilityId"
                   element={
-                    user ? <CreateNewHubPage /> : <Navigate to="/login" />
+                    user ? <CreateNewHubForm /> : <Navigate to="/login" />
                   }
                 />
                 <Route
                   path="/assetfacility/edithub/:hubProcessorId"
-                  element={user ? <EditHubPage /> : <Navigate to="/login" />}
-                />
-                <Route
-                  path="/assetfacility/edithub/:facilityId/:hubProcessorId"
                   element={user ? <EditHubPage /> : <Navigate to="/login" />}
                 />
                 <Route
@@ -350,11 +357,6 @@ function App() {
                 />
                 <Route
                   path="/assetfacility/viewhubdetails/:hubProcessorId"
-                  element={
-                    user ? (<ViewHubDetailsPage />) : (<Navigate to="/login" />)}
-                />
-                <Route
-                  path="/assetfacility/viewhubdetails/:facilityId/:hubProcessorId"
                   element={
                     user ? (<ViewHubDetailsPage />) : (<Navigate to="/login" />)}
                 />

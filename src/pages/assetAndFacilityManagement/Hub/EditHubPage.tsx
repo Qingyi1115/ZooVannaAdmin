@@ -13,6 +13,17 @@ function EditHubPage() {
   const { facilityId } = useParams<{ facilityId: string }>();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
+  let emptyFacility: Facility = {
+    facilityId: -1,
+    facilityName: "",
+    xCoordinate: 0,
+    yCoordinate: 0,
+    facilityDetail: "",
+    facilityDetailJson: undefined,
+    isSheltered: false,
+    hubProcessors: []
+  };
+
   let emptyHub: Hub = {
     hubProcessorId: -1,
     processorName: "",
@@ -20,25 +31,21 @@ function EditHubPage() {
     lastDataUpdate: null,
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
-    facilityId: -1
+    facility: emptyFacility,
+    sensors: []
   };
+
 
 
   const [curHub, setCurHub] = useState<Hub>(emptyHub);
 
   useEffect(() => {
-    const fetchHub = async () => {
-      try {
-        const responseJson = await apiJson.post(
-          `http://localhost:3000/api/assetFacility/getHub/${hubProcessorId}`,
-          { includes: ["sensors", "facility"] });
-        setCurHub(responseJson.hubProcessor as Hub);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-
-    fetchHub();
+    apiJson.post(
+      `http://localhost:3000/api/assetFacility/getHub/${hubProcessorId}`,
+      { includes: ["sensors", "facility"] }).then(res => {
+        setCurHub(res.hubProcessor as Hub);
+        console.log(curHub);
+      }).catch(e => console.log(e));
   }, [refreshSeed]);
 
 

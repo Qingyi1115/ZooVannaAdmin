@@ -17,19 +17,26 @@ import { NavLink } from "react-router-dom";
 import { SensorType } from "../../../../enums/SensorType";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import Hub from "../../../../models/Hub";
 
-function AllSensorDatatable() {
+interface AllSensorDatatableProps {
+  curHub: Hub,
+}
+
+function AllSensorDatatable(props: AllSensorDatatableProps) {
   const apiJson = useApiJson();
+  const { curHub } = props;
 
   let emptySensor: Sensor = {
     sensorId: -1,
     sensorName: "",
     dateOfActivation: new Date(),
     dateOfLastMaintained: new Date(),
-    sensorType: SensorType.CAMERA
+    sensorType: SensorType.CAMERA,
+    hub: curHub
   };
 
-  const [sensorList, setSensorList] = useState<Sensor[]>([]);
+  const [sensorList, setSensorList] = useState<Sensor[]>(curHub.sensors);
   const [selectedSensor, setSelectedSensor] = useState<Sensor>(emptySensor);
   const [deleteSensorDialog, setDeleteSensorDialog] =
     useState<boolean>(false);
@@ -38,22 +45,23 @@ function AllSensorDatatable() {
   const dt = useRef<DataTable<Sensor[]>>(null);
   const toastShadcn = useToast().toast;
 
-  useEffect(() => {
-    const fetchSensor = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/assetFacility/getAllSensors"
-        );
-        console.log(responseJson["sensors"]);
-        setSensorList(responseJson["sensors"] as Sensor[]);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    fetchSensor();
-  }, []);
 
-  //
+  // View all sensors
+  // useEffect(() => {
+  //   const fetchSensor = async () => {
+  //     try {
+  //       const responseJson = await apiJson.get(
+  //         "http://localhost:3000/api/assetFacility/getAllSensors"
+  //       );
+  //       console.log(responseJson["sensors"]);
+  //       setSensorList(responseJson["sensors"] as Sensor[]);
+  //     } catch (error: any) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchSensor();
+  // }, []);
+
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
@@ -130,7 +138,7 @@ function AllSensorDatatable() {
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        <NavLink to={`/assetFacility/editSensor/${sensor.sensorName}`}>
+        <NavLink to={`/assetFacility/editsensor/${sensor.sensorId}`}>
           <Button className="mr-2">
             <HiPencil className="mx-auto" />
           </Button>
@@ -171,8 +179,7 @@ function AllSensorDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink to={"/assetfacility/createsensor"}>
-                {/* TODO: Preload hub details? */}
+              <NavLink to={`/assetfacility/createsensor/${curHub.hubProcessorId}`}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
                 </Button>

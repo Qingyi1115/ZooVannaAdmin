@@ -1,43 +1,25 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
-import Species from "../../../models/Species";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewThirdPartyDetails";
-import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ViewAllSensorPage from "./ViewAllSensorsPage";
-import ManageMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ManageMaintenanceStaff";
-import Employee from "../../../models/Employee";
-import { Separator } from "@/components/ui/separator";
 
-import ViewAllHubsPage from "../Hub/ViewAllHubsPage";
 import ViewSensorDetails from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/ViewSensorDetails";
+import Hub from "../../../models/Hub";
+import { HubStatus } from "../../../enums/HubStatus";
+import { SensorType } from "../../../enums/SensorType";
+import Sensor from "../../../models/Sensor";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
 
 
 function ViewSensorDetailsPage() {
   const apiJson = useApiJson();
-  const { facilityId } = useParams<{ facilityId: string }>();
-  const [assignedStaffIds, setAssignedStaffIds] = useState<number[]>([]);
-  const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
-  const [empList, setEmpList] = useState<Employee[]>([]);
   const navigate = useNavigate();
 
-  let facility: Facility = {
+  let emptyFacility: Facility = {
     facilityId: -1,
     facilityName: "",
     xCoordinate: 0,
@@ -48,29 +30,39 @@ function ViewSensorDetailsPage() {
     hubProcessors: []
   };
 
-  const [curFacility, setCurFacility] = useState<Facility>(facility);
-  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  let emptyHub: Hub = {
+    hubProcessorId: -1,
+    processorName: "",
+    ipAddressName: "",
+    lastDataUpdate: null,
+    hubSecret: "",
+    hubStatus: HubStatus.PENDING,
+    facility: emptyFacility,
+    sensors: []
+  };
+
+  let emptySensor: Sensor = {
+    sensorId: -1,
+    sensorName: "",
+    dateOfActivation: new Date(),
+    dateOfLastMaintained: new Date(),
+    sensorType: SensorType.CAMERA,
+    hub: emptyHub
+  };
+
+
+  const { sensorId } = useParams<{ sensorId: string }>();
+  const [curSensor, setCurSensor] = useState<Sensor>(emptySensor);
   const { tab } = useParams<{ tab: string }>();
 
-  const curThirdParty = curFacility.facilityDetail == "thirdParty" ? curFacility.facilityDetailJson : undefined;
-  const curInHouse = curFacility.facilityDetail == "inHouse" ? curFacility.facilityDetailJson : undefined;
-
   useEffect(() => {
-    const fetchFacilities = async () => {
-      try {
-        const responseJson = await apiJson.post(
-          `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
-          { includes: [] }
-        );
-        console.log(responseJson);
-        setCurFacility(responseJson.facility as Facility);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-
-    fetchFacilities();
-  }, [refreshSeed]);
+    apiJson.post(
+      `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
+      { includes: [] }).then(res => {
+        setCurSensor(res.sensor as Sensor);
+        console.log(curSensor);
+      }).catch(e => console.log(e));
+  }, []);
 
   return (
     <div className="p-10">
@@ -86,16 +78,31 @@ function ViewSensorDetailsPage() {
             Back
           </Button>
         </div>
-
         <hr className="bg-stroke opacity-20" />
         <span className=" self-center text-title-xl font-bold">
-          {curFacility.facilityName}
+          {curSensor.sensorName}
         </span>
-        <div className="relative flex flex-col">
-          <ViewSensorDetails curFacility={curFacility}></ViewSensorDetails>
-          {curThirdParty && <ViewThirdPartyDetails curThirdParty={curThirdParty}></ViewThirdPartyDetails>}
-          {curInHouse && <ViewInHouseDetails curInHouse={curInHouse}></ViewInHouseDetails>}
-        </div>
+
+        <Tabs
+          defaultValue={tab ? `${tab}` : "sensorDetails"}
+          className="w-full"
+        ><TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
+            <TabsTrigger value="sensorDetails">Hub Details</TabsTrigger>
+            <TabsTrigger value="sensorReadings">Sensor Readings</TabsTrigger>
+            <TabsTrigger value="maintenanceLogs">Maintenance Logs</TabsTrigger>
+            <TabsTrigger value="generalStaff">General Staff</TabsTrigger>
+          </TabsList>
+          <TabsContent value="sensorDetails">
+            <ViewSensorDetails curSensor={curSensor}></ViewSensorDetails>
+          </TabsContent>
+          <TabsContent value="sensorReadings">
+          </TabsContent>
+          <TabsContent value="maintenanceLogs">
+          </TabsContent>
+          <TabsContent value="generalStaff">
+          </TabsContent>
+        </Tabs>
+
       </div>
     </div>
   );

@@ -181,7 +181,7 @@ function AllCustomerReportsDatatable() {
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               <NavLink to={"/assetcustomerReport/createsensor"}>
-                {/* TODO: Preload hub details? */}
+
                 <Button disabled className="invisible">
                   Back
                 </Button>

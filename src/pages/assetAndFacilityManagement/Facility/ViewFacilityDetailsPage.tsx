@@ -1,32 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
-import Species from "../../../models/Species";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ViewFacilityDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewFacilityDetails";
 import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewThirdPartyDetails";
 import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ViewAllSensorPage from "../Sensor/ViewAllSensorsPage";
-import ManageMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ManageMaintenanceStaff";
 import Employee from "../../../models/Employee";
-import { Separator } from "@/components/ui/separator";
 import ManageMaintenanceStaffPage from "./ManageMaintenanceStaffPage";
-import ViewAllHubsPage from "../Hub/ViewAllHubsPage";
 import ViewAllCustomerReportsPage from "./ViewAllCustomerReportsPage";
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
+import ViewAllFacilityLogsPage from "./ViewAllFacilityLogsPage";
 
 
 
@@ -37,7 +24,7 @@ function ViewFacilityDetailsPage() {
   const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
   const [empList, setEmpList] = useState<Employee[]>([]);
 
-  let facility: Facility = {
+  let emptyFacility: Facility = {
     facilityId: -1,
     facilityName: "",
     xCoordinate: 0,
@@ -48,7 +35,7 @@ function ViewFacilityDetailsPage() {
     hubProcessors: []
   };
 
-  const [curFacility, setCurFacility] = useState<Facility>(facility);
+  const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
   const { tab } = useParams<{ tab: string }>();
 
@@ -113,10 +100,10 @@ function ViewFacilityDetailsPage() {
             </div>
           </TabsContent>
           <TabsContent value="facilityLog">
-            <ViewAllSensorPage />
+            <ViewAllFacilityLogsPage />
           </TabsContent>
           <TabsContent value="hubs">
-            <AllHubDatatable curFacility={curFacility} refreshSeed={0} setRefreshSeed={setRefreshSeed} />
+            <AllHubDatatable curFacility={curFacility} />
           </TabsContent>
           <TabsContent value="manageMaintenance">
             <ManageMaintenanceStaffPage />

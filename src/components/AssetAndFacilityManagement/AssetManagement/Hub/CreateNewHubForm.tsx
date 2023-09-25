@@ -7,26 +7,22 @@ import FormFieldSelect from "../../../FormFieldSelect";
 import useApiJson from "../../../../hooks/useApiJson";
 import { HubStatus } from "../../../../enums/HubStatus";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import Facility from "../../../../models/Facility";
 
-interface CreateNewHubFormProps {
-  pageFacilityId: string | undefined;
-  refreshSeed: number;
-  setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
-}
 
-function CreateNewHubForm(props: CreateNewHubFormProps) {
+
+function CreateNewHubForm() {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
-  const { pageFacilityId, refreshSeed, setRefreshSeed } = props;
-  const [facilityId, setFacilityId] = useState<string | undefined>(pageFacilityId); // text input
+  const { facilityId } = useParams<{ facilityId: string }>();
+  const [pageFacilityId, setFacilityId] = useState<string | undefined>(facilityId); // text input
 
   const [processorName, setProcessorName] = useState<string>(""); // text input
   const [formError, setFormError] = useState<string | null>(null);
@@ -123,22 +119,18 @@ function CreateNewHubForm(props: CreateNewHubFormProps) {
             Back
           </Button>
         </div>
-        {/* <hr className="bg-stroke opacity-20" />
-        <span className="mt-4 self-center text-title-xl font-bold">
-          {curFacility.facilityName}
-        </span> */}
       </div>
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Facility Id */}
         <FormFieldInput
-          type="text"
+          type="number"
           formFieldName="facilityId"
           label="Facility ID"
           required={true}
           placeholder=""
           pattern={undefined}
-          value={facilityId}
+          value={pageFacilityId}
           setValue={setFacilityId}
           validateFunction={validateFacilityId}
         />
