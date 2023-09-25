@@ -40,17 +40,10 @@ function AllAnimalFeedDatatable() {
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    const fetchAnimalFeed = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/assetfacility/getallanimalfeed"
-        );
-        setAnimalFeedList(responseJson as AnimalFeed[]);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    fetchAnimalFeed();
+    apiJson.get(
+      "http://localhost:3000/api/assetfacility/getallanimalfeed")
+      .then(res => { setAnimalFeedList(res.animalFeeds as AnimalFeed[]); })
+      .catch(e => console.log(e));
   }, []);
 
   //
