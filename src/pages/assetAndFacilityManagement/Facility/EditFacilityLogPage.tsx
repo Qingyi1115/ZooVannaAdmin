@@ -1,38 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import EditFacilityForm from "../../../components/AssetAndFacilityManagement/FacilityManagement/EditFacilityForm";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
+import EditFacilityLogForm from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/EditFacilityLogForm";
 
 function EditFacilityPage() {
   const apiJson = useApiJson();
-
-  const { facilityId } = useParams<{ facilityId: string }>();
-  const { facilityDetail } = useParams<{ facilityDetail: string }>();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
-
-  const facilityDetailJson = (facilityDetail == "thirdParty" ?
-    {
-      ownership: "",
-      ownerContact: "",
-      maxAccommodationSize: "",
-      hasAirCon: "",
-      facilityType: ""
-    } :
-    {
-      isPaid: "",
-      maxAccommodationSize: "",
-      hasAirCon: "",
-      facilityType: ""
-    })
-
+  const { facilityId } = useParams<{ facilityId: string }>();
   let emptyFacility: Facility = {
     facilityId: -1,
     facilityName: "",
     xCoordinate: 0,
     yCoordinate: 0,
     facilityDetail: "",
-    facilityDetailJson: facilityDetailJson,
+    facilityDetailJson: undefined,
     isSheltered: false,
     hubProcessors: []
   };
@@ -48,9 +30,7 @@ function EditFacilityPage() {
   return (
     <div className="p-10">
       {curFacility && curFacility.facilityId != -1 && (
-        <EditFacilityForm curFacility={curFacility}
-          refreshSeed={refreshSeed}
-          setRefreshSeed={setRefreshSeed} />
+        <EditFacilityLogForm curFacility={curFacility} />
       )}
     </div>
   );
