@@ -22,7 +22,7 @@ function EditEmployeePage() {
     employeePasswordhash: "",
     employeeSalt: "",
     isAccountManager: false,
-    employeeProfileUrl:""
+    employeeProfileUrl: ""
   };
 
   const { employeeId } = useParams<{ employeeId: string }>();
@@ -31,11 +31,6 @@ function EditEmployeePage() {
   useEffect(() => {
     apiJson.get(`http://localhost:3000/api/employee/getemployee/${employeeId}`);
   }, []);
-
-  useEffect(() => {
-    const employee = apiJson.result as Employee;
-    setCurEmployee(employee);
-  }, [apiJson.loading]);
 
   return (
     <div className="p-10">

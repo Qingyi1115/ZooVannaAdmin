@@ -41,10 +41,6 @@ function EditHubPage() {
     fetchHub();
   }, [refreshSeed]);
 
-  useEffect(() => {
-    const hub = apiJson.result as Hub;
-    setCurHub(hub);
-  }, [apiJson.loading]);
 
   return (
     <div className="p-10">

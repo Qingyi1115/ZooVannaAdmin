@@ -115,9 +115,10 @@ function EditHubForm(props: EditHubFormProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
-                Back
-              </Button>
+              <NavLink to={`/assetfacility/viewfacilitydetails/${pageFacilityId}/hubs`}>
+                <Button variant={"outline"} type="button" className="">
+                  Back
+                </Button></NavLink>
               <span className="self-center text-lg text-graydark">
                 Edit Hub
               </span>

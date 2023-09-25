@@ -23,17 +23,12 @@ function EditSensorPage() {
     apiJson.get(`http://localhost:3000/api/assetfacility/getSensor/${sensorId}`);
   }, []);
 
-  useEffect(() => {
-    const sensor = apiJson.result as Sensor;
-    setCurSensor(sensor);
-  }, [apiJson.loading]);
-
   return (
     <div className="p-10">
       {curSensor && curSensor.sensorId != -1 && (
         <EditSensorForm curSensor={curSensor} refreshSeed={0} setRefreshSeed={function (value: React.SetStateAction<number>): void {
           throw new Error("Function not implemented.");
-        } } />
+        }} />
       )}
     </div>
   );

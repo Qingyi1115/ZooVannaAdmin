@@ -47,12 +47,6 @@ function AllCustomerDatatable() {
     apiJson.get("http://localhost:3000/api/customer/getallcustomer");
   }, []);
 
-  useEffect(() => {
-    const customerData = apiJson.result as Customer[];
-    setCustomerList(customerData);
-  }, [apiJson.loading]);
-
-  //
   const exportCSV = () => {
     dt.current?.exportCSV();
   };

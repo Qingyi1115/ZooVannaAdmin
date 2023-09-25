@@ -41,7 +41,8 @@ function AllHubDatatable(props: AllHubDatatableProps) {
     sensors: []
   };
 
-  const [hubList, setHubList] = useState<Hub[]>([]);
+  const { curFacility, refreshSeed, setRefreshSeed } = props;
+  const [hubList, setHubList] = useState<Hub[]>(curFacility.hubProcessors);
   const [selectedHub, setSelectedHub] =
     useState<Hub>(emptyHub);
   const [deleteHubDialog, setDeleteHubDialog] =
@@ -50,21 +51,20 @@ function AllHubDatatable(props: AllHubDatatableProps) {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<Hub[]>>(null);
   const toastShadcn = useToast().toast;
-  const { curFacility, refreshSeed, setRefreshSeed } = props;
 
-  useEffect(() => {
-    const fetchHub = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/assetfacility/getAllHubs"
-        );
-        setHubList(responseJson["hubs"] as Hub[]);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    fetchHub();
-  }, []);
+  // useEffect(() => {
+  //   const fetchHub = async () => {
+  //     try {
+  //       const responseJson = await apiJson.get(
+  //         "http://localhost:3000/api/assetfacility/getAllHubs"
+  //       );
+  //       setHubList(responseJson["hubs"] as Hub[]);
+  //     } catch (error: any) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchHub();
+  // }, []);
 
   //
   const exportCSV = () => {

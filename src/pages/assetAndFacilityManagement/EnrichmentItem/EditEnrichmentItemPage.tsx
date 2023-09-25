@@ -29,10 +29,6 @@ function EditEnrichmentItemPage() {
     fetchEnrichmentItem();
   }, [refreshSeed]);
 
-  useEffect(() => {
-    const enrichmentItem = apiJson.result as EnrichmentItem;
-    setCurEnrichmentItem(enrichmentItem);
-  }, [apiJson.loading]);
 
   return (
     <div className="p-10">
