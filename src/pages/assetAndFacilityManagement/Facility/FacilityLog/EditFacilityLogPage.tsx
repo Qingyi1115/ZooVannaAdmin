@@ -5,7 +5,7 @@ import Facility from "../../../../models/Facility";
 import EditFacilityLogForm from "../../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/EditFacilityLogForm";
 import FacilityLog from "../../../../models/FacilityLog";
 
-function EditFacilityPage() {
+function EditFacilityLogPage() {
   const apiJson = useApiJson();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
   const { logId } = useParams<{ logId: string }>();
@@ -47,4 +47,4 @@ function EditFacilityPage() {
   );
 }
 
-export default EditFacilityPage;
+export default EditFacilityLogPage;

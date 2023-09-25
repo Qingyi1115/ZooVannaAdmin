@@ -5,7 +5,7 @@ interface MaintenanceLog {
   dateTime: Date;
   title: string;
   details: string;
-  remark: string;
+  remarks: string;
   sensor: Sensor;
 }
 

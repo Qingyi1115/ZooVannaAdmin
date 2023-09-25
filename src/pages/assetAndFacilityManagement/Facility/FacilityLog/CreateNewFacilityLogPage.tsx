@@ -23,7 +23,7 @@ function CreateNewFacilityLogPage() {
 
   useEffect(() => {
     apiJson.post(`http://localhost:3000/api/assetFacility/getFacility/${facilityId}`, { includes: [] }).then(res => {
-      setCurFacility(res["facility"]);
+      setCurFacility(res.facility as Facility);
     });
   }, [refreshSeed]);
 

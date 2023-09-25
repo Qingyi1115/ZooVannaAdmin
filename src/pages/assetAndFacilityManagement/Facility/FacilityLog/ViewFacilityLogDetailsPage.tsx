@@ -8,7 +8,7 @@ import ViewFacilityLogDetails from "../../../../components/AssetAndFacilityManag
 
 
 
-function ViewFacilityDetailsPage() {
+function ViewFacilityLogDetailsPage() {
   const apiJson = useApiJson();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
   const { logId } = useParams<{ logId: string }>();
@@ -50,4 +50,4 @@ function ViewFacilityDetailsPage() {
   );
 }
 
-export default ViewFacilityDetailsPage;
+export default ViewFacilityLogDetailsPage;
