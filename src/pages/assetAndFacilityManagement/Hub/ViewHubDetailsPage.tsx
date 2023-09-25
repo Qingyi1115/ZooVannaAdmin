@@ -20,7 +20,8 @@ function ViewHubDetailsPage() {
     lastDataUpdate: null,
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
-    facilityId: -1
+    facilityId: -1,
+    sensors: []
   };
 
 

@@ -37,7 +37,8 @@ function AllHubDatatable(props: AllHubDatatableProps) {
     lastDataUpdate: null,
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
-    facilityId: -1
+    facilityId: -1,
+    sensors: []
   };
 
   const [hubList, setHubList] = useState<Hub[]>([]);

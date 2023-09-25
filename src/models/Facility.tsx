@@ -1,3 +1,5 @@
+import HubProcessor from "./Hub";
+
 interface Facility {
   facilityId: number;
   facilityName: string;
@@ -5,7 +7,8 @@ interface Facility {
   yCoordinate: number;
   isSheltered: Boolean;
   facilityDetail: string;
-  facilityDetailJson: any
+  facilityDetailJson: any;
+  hubProcessors: HubProcessor[];
 }
 
 export default Facility;

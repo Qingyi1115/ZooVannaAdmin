@@ -1,4 +1,5 @@
 import { HubStatus } from "src/enums/HubStatus";
+import Sensor from "./Sensor";
 
 interface Hub {
     facilityId: number;
@@ -7,6 +8,7 @@ interface Hub {
     ipAddressName: string;
     lastDataUpdate: Date | null;
     hubSecret: string;
-    hubStatus: HubStatus
+    hubStatus: HubStatus;
+    sensors: Sensor[];
 }
 export default Hub;
