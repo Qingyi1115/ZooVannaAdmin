@@ -11,9 +11,9 @@ import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/F
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Employee from "../../../models/Employee";
 import ManageMaintenanceStaffPage from "./ManageMaintenanceStaffPage";
-import ViewAllCustomerReportsPage from "./ViewAllCustomerReportsPage";
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
 import ViewAllFacilityLogsPage from "./ViewAllFacilityLogsPage";
+import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
 
 
 
@@ -94,7 +94,7 @@ function ViewFacilityDetailsPage() {
           </TabsList>
           <TabsContent value="facilityDetails">
             <div className="relative flex flex-col">
-              <ViewFacilityDetails curFacility={curFacility}></ViewFacilityDetails>
+              <ViewFacilityDetails curFacility={curFacility} />
               {curThirdParty && <ViewThirdPartyDetails curThirdParty={curThirdParty}></ViewThirdPartyDetails>}
               {curInHouse && <ViewInHouseDetails curInHouse={curInHouse}></ViewInHouseDetails>}
             </div>
@@ -109,7 +109,7 @@ function ViewFacilityDetailsPage() {
             <ManageMaintenanceStaffPage />
           </TabsContent>
           <TabsContent value="customerReport">
-            <ViewAllCustomerReportsPage />
+            <AllCustomerReportsDatatable curFacility={curFacility} />
           </TabsContent>
         </Tabs>
       </div>

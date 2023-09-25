@@ -24,7 +24,6 @@ import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/C
 import EditFacilityPage from "./pages/assetAndFacilityManagement/Facility/EditFacilityPage";
 import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilitiesPage";
 import CreateNewFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityLogPage";
-import ViewAllCustomerReportsPage from "./pages/assetAndFacilityManagement/Facility/ViewAllCustomerReportsPage";
 
 //assets
 import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/CreateNewAnimalFeedPage";
@@ -380,7 +379,7 @@ function App() {
                     )
                   }
                 />
-                <Route
+                {/* <Route
                   path="/assetfacility/viewallcustomerreports"
                   element={
                     user ? (
@@ -389,7 +388,7 @@ function App() {
                       <Navigate to="/login" />
                     )
                   }
-                />
+                /> */}
                 {/*Employee Account Management */}
                 <Route
                   path="/employeeAccount/viewEmployees"

@@ -15,25 +15,15 @@ import { NavLink, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import CustomerReport from "../../../../../models/CustomerReport";
+import Facility from "../../../../../models/Facility";
 
-function AllCustomerReportsDatatable() {
+interface AllCustomerReportsDatatableProps {
+  curFacility: Facility;
+}
+
+function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
   const apiJson = useApiJson();
-  const { facilityDetail } = useParams<{ facilityDetail: string }>();
-  const facilityDetailJson = (facilityDetail == "thirdParty" ?
-    {
-      ownership: "",
-      ownerContact: "",
-      maxAccommodationSize: "",
-      hasAirCon: "",
-      customerReportType: ""
-    } :
-    {
-      isPaid: "",
-      maxAccommodationSize: "",
-      hasAirCon: "",
-      customerReportType: ""
-    })
-
+  const { curFacility } = props;
   let emptyCustomerReport: CustomerReport = {
     customerReportId: -1,
     dateTime: new Date(),
@@ -51,13 +41,14 @@ function AllCustomerReportsDatatable() {
   const dt = useRef<DataTable<CustomerReport[]>>(null);
   const toastShadcn = useToast().toast;
 
-  useEffect(() => {
-    apiJson.post("http://localhost:3000/api/assetFacility/getAllCustomerReport", { includes: [] }).catch(e => {
-      console.log(e);
-    }).then(res => {
-      setCustomerReportList(res["customerReports"]);
-    })
-  }, []);
+  // Get all customer reports
+  // useEffect(() => {
+  //   apiJson.post("http://localhost:3000/api/assetFacility/getAllCustomerReport", { includes: [] }).catch(e => {
+  //     console.log(e);
+  //   }).then(res => {
+  //     setCustomerReportList(res["customerReports"]);
+  //   })
+  // }, []);
 
   //
   const exportCSV = () => {
