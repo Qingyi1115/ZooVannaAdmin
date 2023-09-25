@@ -1,25 +1,28 @@
 import { Toast } from "primereact/toast";
-import React, { useEffect, useState, useRef, forwardRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { DataTable } from "primereact/datatable";
-import useApiJson from "../../../hooks/useApiJson";
-import Employee from "../../../models/Employee";
+import useApiJson from "../../../../../hooks/useApiJson";
+import Employee from "../../../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiCheck, HiClipboard, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
-import GeneralStaff from "../../../models/GeneralStaff";
+import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
 
-interface ManageMaintenanceStaffProps {
+{
+  /*const toast = useRef<Toast>(null);*/
+}
+interface RemoveMaintenanceStaffProps {
   facilityId: number;
   employeeList: Employee[];
 }
 
-function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
+function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
   const { facilityId, employeeList } = props;
@@ -43,15 +46,9 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const [employeeAssignmentDialog, setAssignmentDialog] = useState<boolean>(false);
   const [employeeRemovalDialog, setEmployeeRemovalDialog] = useState<boolean>(false);
-  const [assigned, setAssigned] = useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
-
-  const hideEmployeeAssignmentDialog = () => {
-    setAssignmentDialog(false);
-  }
 
   const hideEmployeeRemovalDialog = () => {
     setEmployeeRemovalDialog(false);
@@ -61,58 +58,15 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
     dt.current?.exportCSV();
   };
 
-
   const rightToolbarTemplate = () => {
     return <Button onClick={exportCSV}>Export to .csv</Button>;
   };
-
-  const assignEmployee = async () => {
-    const selectedEmployeeName = selectedEmployee.employeeName;
-
-    try {
-      const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
-
-      toastShadcn({
-        // variant: "destructive",
-        title: "Assignment Successful",
-        description:
-          "Successfully assigned maintenance staff: " + selectedEmployeeName,
-      });
-      setSelectedEmployee(employee);
-      setAssignmentDialog(false);
-      // window.location.reload();
-      setAssigned(true);
-    } catch (error: any) {
-      // got error
-      toastShadcn({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description:
-          "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
-      });
-    }
-
-  }
-
-  const employeeAssignmentDialogFooter = (
-    <React.Fragment>
-      <Button variant={"destructive"} onClick={hideEmployeeAssignmentDialog}>
-        <HiX />
-        No
-      </Button>
-      <Button onClick={assignEmployee}>
-        <HiCheck />
-        Yes
-      </Button>
-    </React.Fragment>
-  );
 
   const removeMaintenanceStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
-      const responseJson = await apiJson.del(
+      const responseJson = await apiJson.put(
         `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
 
       toastShadcn({
@@ -123,8 +77,7 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
       });
       setSelectedEmployee(employee);
       setEmployeeRemovalDialog(false);
-      setAssigned(false);
-      // window.location.reload();
+      window.location.reload();
     } catch (error: any) {
       // got error
       toastShadcn({
@@ -167,11 +120,6 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
     </div>
   );
 
-  const confirmAssignment = (employee: Employee) => {
-    setSelectedEmployee(employee);
-    setAssignmentDialog(true);
-  };
-
   const confirmEmployeeRemoval = (employee: Employee) => {
     setSelectedEmployee(employee);
     setEmployeeRemovalDialog(true);
@@ -181,41 +129,24 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
     console.log(employee.dateOfResignation);
     return (
       <React.Fragment>
-        <div className="mb-4 flex">
-          <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
-            <Button
-              variant={"outline"}
-              className="mr-2">
-              <HiEye className="mx-auto" />
-
-            </Button>
-          </NavLink>
-          {employee.dateOfResignation ?
-            <span>Removed</span>
-            : <div>
-              <Button
-                disabled={assigned}
-                name="assignButton"
-                variant={"default"}
-                className="mr-2"
-                onClick={() => confirmAssignment(employee)}
-              >
-                <HiPlus className="mx-auto" />
-              </Button>
-              <Button
-                disabled={!assigned}
-                name="removeButton"
-                variant={"destructive"}
-                className="mx-auto"
-                onClick={() => confirmEmployeeRemoval(employee)}
-              >
-                <HiTrash className="mx-auto" />
-
-              </Button>
-            </div>
-
-          }
-        </div>
+        <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
+          <Button className="mb-1 mr-1">
+            <HiEye className="mx-auto" />
+            <span>View Details</span>
+          </Button>
+        </NavLink>
+        {employee.dateOfResignation ?
+          <span>Removed</span>
+          :
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmEmployeeRemoval(employee)}
+          >
+            <HiTrash className="mx-auto" />
+            <span>Remove</span>
+          </Button>
+        }
       </React.Fragment>
     );
   };
@@ -228,24 +159,19 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <Button
-                disabled={assigned}
-                name="assignButton"
-                variant={"default"}
-                className="mr-2"
-                onClick={() => confirmAssignment(employee)}
-              >
-                <HiPlus className="mx-auto" />
+              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+                Back
               </Button>
-              <span className=" self-center text-title-xl font-bold">
-                Maintenance Staff
+              <span className="self-center text-title-xl font-bold">
+                Remove Maintenance Staff
               </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
+              <Button disabled className="invisible">
+                Back
+              </Button>
             </div>
             <Separator />
           </div>
-
-          {/* <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar> */}
+          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
           <DataTable
             ref={dt}
             value={employeeList}
@@ -267,12 +193,6 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
             header={header}
           >
             <Column
-              field="employeeId"
-              header="ID"
-              sortable
-              style={{ minWidth: "4rem" }}
-            ></Column>
-            <Column
               field="employeeName"
               header="Name"
               sortable
@@ -281,6 +201,12 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
             <Column
               field="employeeEmail"
               header="Email"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="employeeAddress"
+              header="Employee Address"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -297,37 +223,21 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
+              field="employeeBirthDate"
+              header="Birthday"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
               body={actionBodyTemplate}
               header="Actions"
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
         </div>
-        <Dialog
-          visible={employeeAssignmentDialog}
-          style={{ width: "32rem" }}
-          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-          header="Confirm"
-          modal
-          footer={employeeAssignmentDialogFooter}
-          onHide={hideEmployeeAssignmentDialog}
-        >
-          <div className="confirmation-content">
-            <i
-              className="pi pi-exclamation-triangle mr-3"
-              style={{ fontSize: "2rem" }}
-            />
-            {selectedEmployee && (
-              <span>
-                Are you sure you want to assign this facility to{" "}
-                <b>{selectedEmployee.employeeName}?</b>
-              </span>
-            )}
-          </div>
-        </Dialog>
         <Dialog
           visible={employeeRemovalDialog}
           style={{ width: "32rem" }}
@@ -355,4 +265,4 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
   );
 }
 
-export default manageMaintenanceStaff;
+export default RemoveMaintenanceStaff;

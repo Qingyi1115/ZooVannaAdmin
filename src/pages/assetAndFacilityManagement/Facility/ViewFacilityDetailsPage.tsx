@@ -20,7 +20,7 @@ import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagemen
 import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ViewAllSensorPage from "../Sensor/ViewAllSensorsPage";
-import ManageMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/ManageMaintenanceStaff";
+import ManageMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ManageMaintenanceStaff";
 import Employee from "../../../models/Employee";
 import { Separator } from "@/components/ui/separator";
 import ManageMaintenanceStaffPage from "./ManageMaintenanceStaffPage";
@@ -101,8 +101,8 @@ function ViewFacilityDetailsPage() {
           <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
             <TabsTrigger value="facilityDetails">Facility Details</TabsTrigger>
             <TabsTrigger value="hubs">Hubs</TabsTrigger>
-            <TabsTrigger value="sensors">Sensors</TabsTrigger>
             <TabsTrigger value="manageMaintenance">Manage Maintenance Staff</TabsTrigger>
+            <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>
             <TabsTrigger value="customerReport">Customer Report</TabsTrigger>
           </TabsList>
           <TabsContent value="facilityDetails">
@@ -112,7 +112,7 @@ function ViewFacilityDetailsPage() {
               {curInHouse && <ViewInHouseDetails curInHouse={curInHouse}></ViewInHouseDetails>}
             </div>
           </TabsContent>
-          <TabsContent value="sensors">
+          <TabsContent value="facilityLog">
             <ViewAllSensorPage />
           </TabsContent>
           <TabsContent value="hubs">

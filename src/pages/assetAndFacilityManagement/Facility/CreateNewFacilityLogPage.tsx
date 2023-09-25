@@ -1,5 +1,5 @@
 import React from "react";
-import CreateNewFacilityLogForm from "../../../components/AssetAndFacilityManagement/FacilityManagement/CreateNewFacilityLogForm";
+import CreateNewFacilityLogForm from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/CreateNewFacilityLogForm";
 
 function CreateNewFacilityLogPage() {
   return (

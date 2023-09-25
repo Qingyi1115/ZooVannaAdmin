@@ -7,18 +7,16 @@ import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-
-import facility from "src/models/Facility";
-import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import useApiJson from "../../../../../hooks/useApiJson";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import Facility from "../../../models/Facility";
 import { Separator } from "@/components/ui/separator";
+import CustomerReport from "../../../../../models/CustomerReport";
 
-function AllfacilityDatatable() {
+function AllCustomerReportsDatatable() {
   const apiJson = useApiJson();
   const { facilityDetail } = useParams<{ facilityDetail: string }>();
   const facilityDetailJson = (facilityDetail == "thirdParty" ?
@@ -27,39 +25,37 @@ function AllfacilityDatatable() {
       ownerContact: "",
       maxAccommodationSize: "",
       hasAirCon: "",
-      facilityType: ""
+      customerReportType: ""
     } :
     {
       isPaid: "",
       maxAccommodationSize: "",
       hasAirCon: "",
-      facilityType: ""
+      customerReportType: ""
     })
 
-  let emptyFacility: Facility = {
-    facilityId: -1,
-    facilityName: "",
-    xCoordinate: 0,
-    yCoordinate: 0,
-    facilityDetail: "",
-    facilityDetailJson: facilityDetailJson,
-    isSheltered: false
+  let emptyCustomerReport: CustomerReport = {
+    customerReportId: -1,
+    dateTime: new Date(),
+    title: "",
+    remarks: "",
+    viewed: false
   };
 
-  const [facilityList, setFacilityList] = useState<facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<facility>(emptyFacility);
-  const [deletefacilityDialog, setDeleteFacilityDialog] =
+  const [customerReportList, setCustomerReportList] = useState<CustomerReport[]>([]);
+  const [selectedCustomerReport, setSelectedCustomerReport] = useState<CustomerReport>(emptyCustomerReport);
+  const [deletecustomerReportDialog, setDeleteCustomerReportDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<facility[]>>(null);
+  const dt = useRef<DataTable<CustomerReport[]>>(null);
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", { includes: [] }).catch(e => {
+    apiJson.post("http://localhost:3000/api/assetFacility/getAllCustomerReport", { includes: [] }).catch(e => {
       console.log(e);
     }).then(res => {
-      setFacilityList(res["facilities"]);
+      setCustomerReportList(res["customerReports"]);
     })
   }, []);
 
@@ -74,73 +70,74 @@ function AllfacilityDatatable() {
 
 
 
-  const confirmDeletefacility = (facility: facility) => {
-    setSelectedFacility(facility);
-    setDeleteFacilityDialog(true);
+  const confirmDeletecustomerReport = (customerReport: CustomerReport) => {
+    setSelectedCustomerReport(customerReport);
+    setDeleteCustomerReportDialog(true);
   };
 
-  const hideDeleteFacilityDialog = () => {
-    setDeleteFacilityDialog(false);
+  const hideDeleteCustomerReportDialog = () => {
+    setDeleteCustomerReportDialog(false);
   };
 
-  // delete facility stuff
-  const deleteFacility = async () => {
-    let _facility = facilityList.filter(
-      (val) => val.facilityId !== selectedFacility?.facilityId
+  // delete customerReport stuff
+  const deleteCustomerReport = async () => {
+    let _customerReport = customerReportList.filter(
+      (val) => val.customerReportId !== selectedCustomerReport?.customerReportId
     );
 
-    const deleteFacility = async () => {
+    const deleteCustomerReport = async () => {
       try {
-        setDeleteFacilityDialog(false);
+        setDeleteCustomerReportDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deleteFacility/" +
-          selectedFacility.facilityId
+          "http://localhost:3000/api/assetFacility/deleteCustomerReport/" +
+          selectedCustomerReport.customerReportId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted facility: " + selectedFacility.facilityName,
+            "Successfully deleted customerReport: " + selectedCustomerReport.customerReportId,
         });
-        setFacilityList(_facility);
-        setSelectedFacility(emptyFacility);
+        setCustomerReportList(_customerReport);
+        setSelectedCustomerReport(emptyCustomerReport);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting facility: \n" + apiJson.error,
+            "An error has occurred while deleting customerReport: \n" + apiJson.error,
         });
       }
     };
-    deleteFacility();
+    deleteCustomerReport();
   };
 
-  const deleteFacilityDialogFooter = (
+  const deleteCustomerReportDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteFacilityDialog}>
+      <Button onClick={hideDeleteCustomerReportDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteFacility}>
+      <Button variant={"destructive"} onClick={deleteCustomerReport}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete facility stuff
+  // end delete customerReport stuff
 
-  const actionBodyTemplate = (facility: Facility) => {
+  const actionBodyTemplate = (customerReport: CustomerReport) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}>
+        <NavLink to={`/assetcustomerReport/viewcustomerReportdetails/${customerReport.customerReportId}`}>
           <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mx-auto" />
+
           </Button>
         </NavLink>
-        <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}>
+        <NavLink to={`/assetcustomerReport/editcustomerReport/${customerReport.customerReportId}`}>
           <Button className="mr-1">
             <HiPencil className="mr-1" />
 
@@ -149,7 +146,7 @@ function AllfacilityDatatable() {
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeletefacility(facility)}
+          onClick={() => confirmDeletecustomerReport(customerReport)}
         >
           <HiTrash className="mx-auto" />
 
@@ -160,7 +157,7 @@ function AllfacilityDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage facilities</h4>
+      <h4 className="m-1">Manage Customer Reports</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -183,13 +180,14 @@ function AllfacilityDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink to={"/assetfacility/createfacility"}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
+              <NavLink to={"/assetcustomerReport/createsensor"}>
+                {/* TODO: Preload hub details? */}
+                <Button disabled className="invisible">
+                  Back
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">
-                All Facilities
+                All Customer Reports
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
@@ -198,51 +196,51 @@ function AllfacilityDatatable() {
 
           <DataTable
             ref={dt}
-            value={facilityList}
-            selection={selectedFacility}
+            value={customerReportList}
+            selection={selectedCustomerReport}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedFacility(e.value);
+                setSelectedCustomerReport(e.value);
               }
             }}
-            dataKey="facilityId"
+            dataKey="customerReportId"
             paginator
             rows={10}
             scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facilities"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} customer reports"
             globalFilter={globalFilter}
             header={header}
           >
             <Column
-              field="facilityId"
+              field="customerReportId"
               header="ID"
               sortable
-              style={{ minWidth: "4rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="facilityName"
-              header="Name"
+              field="dateTime"
+              header="Date"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="xCoordinate"
-              header="X Coordinate"
+              field="title"
+              header="Title"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="yCoordinate"
-              header="Y Coordinate"
+              field="remarks"
+              header="Remarks"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="isSheltered"
-              header="Shelter available"
+              field="viewed"
+              header="Viewed?"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -252,29 +250,29 @@ function AllfacilityDatatable() {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
         </div>
       </div>
       <Dialog
-        visible={deletefacilityDialog}
+        visible={deletecustomerReportDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteFacilityDialogFooter}
-        onHide={hideDeleteFacilityDialog}
+        footer={deleteCustomerReportDialogFooter}
+        onHide={hideDeleteCustomerReportDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedFacility && (
+          {selectedCustomerReport && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedFacility.facilityName}</b>?
+              <b>{selectedCustomerReport.customerReportId}</b>?
             </span>
           )}
         </div>
@@ -283,4 +281,4 @@ function AllfacilityDatatable() {
   );
 }
 
-export default AllfacilityDatatable;
+export default AllCustomerReportsDatatable;

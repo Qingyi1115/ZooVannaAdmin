@@ -39,14 +39,6 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
         </NavLink>
       </div>
       <Table>
-        {/* <TableHeader className=" bg-whiten">
-            <TableRow>
-              <TableHead className="w-1/3 font-bold" colSpan={2}>
-                Attribute
-              </TableHead>
-              <TableHead>Value</TableHead>
-            </TableRow>
-          </TableHeader> */}
         <TableBody>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

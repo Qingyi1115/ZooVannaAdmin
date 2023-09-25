@@ -13,7 +13,8 @@ function EditSensorPage() {
     sensorName: "",
     dateOfActivation: new Date(),
     dateOfLastMaintained: new Date(),
-    sensorType: SensorType.CAMERA
+    sensorType: SensorType.CAMERA,
+    hubProcessorId: 0
   };
 
   const { sensorId } = useParams<{ sensorId: string }>();

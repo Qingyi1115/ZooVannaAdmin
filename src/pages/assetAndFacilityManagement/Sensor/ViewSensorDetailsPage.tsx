@@ -19,7 +19,7 @@ import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagemen
 import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ViewAllSensorPage from "./ViewAllSensorsPage";
-import ManageMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/ManageMaintenanceStaff";
+import ManageMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ManageMaintenanceStaff";
 import Employee from "../../../models/Employee";
 import { Separator } from "@/components/ui/separator";
 
@@ -44,7 +44,8 @@ function ViewSensorDetailsPage() {
     yCoordinate: 0,
     facilityDetail: "",
     facilityDetailJson: undefined,
-    isSheltered: false
+    isSheltered: false,
+    hubProcessors: []
   };
 
   const [curFacility, setCurFacility] = useState<Facility>(facility);

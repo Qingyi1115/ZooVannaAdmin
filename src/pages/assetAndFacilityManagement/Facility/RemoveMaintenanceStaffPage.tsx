@@ -16,7 +16,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import GeneralStaff from "../../../models/GeneralStaff";
-import RemoveMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/RemoveMaintenanceStaff";
+import RemoveMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/RemoveMaintenanceStaff";
 import Employee from "src/models/Employee";
 
 
