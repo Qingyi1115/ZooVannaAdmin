@@ -11,6 +11,7 @@ import { HubStatus } from "../../../enums/HubStatus";
 import { SensorType } from "../../../enums/SensorType";
 import Sensor from "../../../models/Sensor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import AllSensorReadingDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/SensorReadings/AllSensorReadingsDatatable";
 
 
 
@@ -101,6 +102,7 @@ function ViewSensorDetailsPage() {
             <ViewSensorDetails curSensor={curSensor}></ViewSensorDetails>
           </TabsContent>
           <TabsContent value="sensorReadings">
+            <AllSensorReadingDatatable curSensor={curSensor}></AllSensorReadingDatatable>
           </TabsContent>
           <TabsContent value="maintenanceLogs">
           </TabsContent>
