@@ -53,7 +53,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     isMaintenance: false,
     title: "",
     details: "",
-    remark: "",
+    remarks: "",
     facility: emptyFacility
   };
 

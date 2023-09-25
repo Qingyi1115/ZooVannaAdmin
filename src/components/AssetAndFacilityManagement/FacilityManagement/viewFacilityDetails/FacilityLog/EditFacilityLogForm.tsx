@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import FacilityLog from "../../../../../models/FacilityLog";
 
 interface EditFacilityLogFormProps {
-  facilityLog: FacilityLog
+  curFacilityLog: FacilityLog
 }
 
 function EditFacilityForm(props: EditFacilityLogFormProps) {
@@ -25,7 +25,7 @@ function EditFacilityForm(props: EditFacilityLogFormProps) {
   const [title, setTitle] = useState<string>(""); // text input
   const [details, setDetails] = useState<string>(""); // text input
   const [remarks, setRemarks] = useState<string>(""); // text input
-  const { facilityLog } = props;
+  const { curFacilityLog } = props;
   const [formError, setFormError] = useState<string | null>(null);
 
   function validateFacilityLogName(props: ValidityState) {
@@ -55,7 +55,7 @@ function EditFacilityForm(props: EditFacilityLogFormProps) {
 
     try {
       const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/editFacilityLog/${facilityLog.logId}`,
+        `http://localhost:3000/api/assetFacility/editFacilityLog/${curFacilityLog.logId}`,
         newFacilityLog);
       // success
       toastShadcn({
@@ -98,7 +98,7 @@ function EditFacilityForm(props: EditFacilityLogFormProps) {
           </div>
           <Separator />
           <span className="mt-4 self-center text-title-xl font-bold">
-            {facilityLog.title}
+            {curFacilityLog.title}
           </span>
         </div>
 

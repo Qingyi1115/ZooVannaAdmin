@@ -7,7 +7,7 @@ interface FacilityLog {
   isMaintenance: Boolean;
   title: string;
   details: string;
-  remark: string;
+  remarks: string;
   facility: Facility;
 }
 

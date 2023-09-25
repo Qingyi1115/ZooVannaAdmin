@@ -3,11 +3,12 @@ import { useParams } from "react-router";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
 import EditFacilityLogForm from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/EditFacilityLogForm";
+import FacilityLog from "../../../models/FacilityLog";
 
 function EditFacilityPage() {
   const apiJson = useApiJson();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
-  const { facilityId } = useParams<{ facilityId: string }>();
+  const { logId } = useParams<{ logId: string }>();
   let emptyFacility: Facility = {
     facilityId: -1,
     facilityName: "",
@@ -19,18 +20,28 @@ function EditFacilityPage() {
     hubProcessors: []
   };
 
-  const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
+  let emptyFacilityLog: FacilityLog = {
+    logId: -1,
+    dateTime: new Date(),
+    isMaintenance: false,
+    title: "",
+    details: "",
+    remarks: "",
+    facility: emptyFacility
+  }
+
+  const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/assetFacility/getFacility/${facilityId}`, { includes: [] }).then(res => {
-      setCurFacility(res["facility"]);
+    apiJson.post(`http://localhost:3000/api/assetFacility/getFacilityLog/${logId}`, { includes: [] }).then(res => {
+      setCurFacilityLog(res.facilityLog as FacilityLog);
     });
   }, [refreshSeed]);
 
   return (
     <div className="p-10">
-      {curFacility && curFacility.facilityId != -1 && (
-        <EditFacilityLogForm curFacility={curFacility} />
+      {curFacilityLog && curFacilityLog.logId != -1 && (
+        <EditFacilityLogForm curFacilityLog={curFacilityLog} />
       )}
     </div>
   );
