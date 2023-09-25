@@ -33,7 +33,7 @@ function useApiJson<TData = any>() {
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { state } = useAuthContext();
+  const { state, dispatch } = useAuthContext();
   const { user } = state;
 
   const request = async (
@@ -59,6 +59,10 @@ function useApiJson<TData = any>() {
 
       if (!response.ok) {
         const errorObject = await response.json();
+        if (response.status == 401){
+          dispatch({ type: "LOGOUT" });
+        }
+
         const errorString = errorObject.error.toString();
         throw new Error(errorString);
       }
