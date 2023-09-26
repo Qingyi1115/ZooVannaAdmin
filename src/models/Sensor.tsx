@@ -11,7 +11,7 @@ interface Sensor {
     dateOfLastMaintained: Date | null;
     sensorType: SensorType,
     hub: Hub
-    sensorReading: SensorReading[]
+    sensorReadings: SensorReading[]
     maintenanceLogs: MaintenanceLog[],
     generalStaff: Employee[]
 }

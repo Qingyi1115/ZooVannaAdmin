@@ -32,7 +32,7 @@ function AllSensorReadingDatatable(props: AllSensorReadingDatatableProps) {
     sensor: curSensor
   };
 
-  const [sensorReadingList, setSensorReadingList] = useState<SensorReading[]>(curSensor.sensorReading);
+  const [sensorReadingList, setSensorReadingList] = useState<SensorReading[]>(curSensor.sensorReadings);
   const [selectedSensorReading, setSelectedSensorReading] = useState<SensorReading>(emptySensorReading);
   const [deleteSensorReadingDialog, setDeleteSensorReadingDialog] =
     useState<boolean>(false);
@@ -62,7 +62,7 @@ function AllSensorReadingDatatable(props: AllSensorReadingDatatableProps) {
     dt.current?.exportCSV();
   };
 
- 
+
 
   const confirmDeleteSensorReading = (sensorReading: SensorReading) => {
     setSelectedSensorReading(sensorReading);

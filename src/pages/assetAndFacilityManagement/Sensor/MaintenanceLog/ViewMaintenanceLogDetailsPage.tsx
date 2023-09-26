@@ -45,7 +45,7 @@ function ViewMaintenanceLogDetailsPage() {
     dateOfLastMaintained: new Date(),
     sensorType: SensorType.CAMERA,
     hub: emptyHub,
-    sensorReading: [],
+    sensorReadings: [],
     maintenanceLogs: [],
     generalStaff: []
   };
@@ -63,7 +63,7 @@ function ViewMaintenanceLogDetailsPage() {
 
   useEffect(() => {
     apiJson.post(`http://localhost:3000/api/assetFacility/getSensorMaintenanceLog/${logId}`, { includes: [] }).then(res => {
-      setCurMaintenanceLog(res.facilityLog as MaintenanceLog);
+      setCurMaintenanceLog(res.maintenanceLog as MaintenanceLog);
     });
   }, [refreshSeed]);
 

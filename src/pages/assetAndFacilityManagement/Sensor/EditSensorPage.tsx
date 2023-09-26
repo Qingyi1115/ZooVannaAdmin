@@ -40,7 +40,7 @@ function EditSensorPage() {
     dateOfLastMaintained: new Date(),
     sensorType: SensorType.CAMERA,
     hub: emptyHub,
-    sensorReading: [],
+    sensorReadings: [],
     maintenanceLogs: [],
     generalStaff: []
   };
@@ -51,7 +51,7 @@ function EditSensorPage() {
   useEffect(() => {
     apiJson.post(
       `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
-      { includes: [] }).then(res => {
+      { includes: ["hubProcessor", "sensorReadings", "maintenanceLogs", "generalStaff"] }).then(res => {
         setCurSensor(res.sensor as Sensor);
         console.log(curSensor);
       }).catch(e => console.log(e));

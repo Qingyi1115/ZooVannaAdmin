@@ -41,7 +41,7 @@ function CreateNewMaintenanceLogPage() {
     dateOfLastMaintained: new Date(),
     sensorType: SensorType.CAMERA,
     hub: emptyHub,
-    sensorReading: [],
+    sensorReadings: [],
     maintenanceLogs: [],
     generalStaff: []
   };
@@ -49,7 +49,9 @@ function CreateNewMaintenanceLogPage() {
   const [curSensor, setCurSensor] = useState<Sensor>(emptySensor);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/assetfacility/getSensor/${sensorId}`, { includes: [] }).then(res => {
+    apiJson.post(`http://localhost:3000/api/assetfacility/getSensor/${sensorId}`, {
+      includes: ["hubProcessor", "sensorReadings", "maintenanceLogs", "generalStaff"]
+    }).then(res => {
       setCurSensor(res.sensor as Sensor);
     });
   }, [refreshSeed]);
