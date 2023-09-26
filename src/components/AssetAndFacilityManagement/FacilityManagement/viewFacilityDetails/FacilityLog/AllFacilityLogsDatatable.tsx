@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-
+import { DataView } from 'primereact/dataview';
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 // import { ProductService } from './service/ProductService';
@@ -172,6 +172,36 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     </div>
   );
 
+  const listItem = (facilityLog: FacilityLog) => {
+    return (
+      <div className="col-12">
+        <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
+          <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+            <div className="flex flex-column align-items-center sm:align-items-start gap-3">
+              <div className="text-2xl font-bold text-900">{facilityLog.title}</div>
+              <div className="flex align-items-center gap-3">
+                <span className="flex align-items-center gap-2">
+                  <span className="font-semibold">{facilityLog.details}</span>
+                  <span className="font-semibold">{facilityLog.remarks}</span>
+                </span>
+              </div>
+            </div>
+            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
+              <span className="text-2xl font-semibold">${String(facilityLog.dateTime)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const itemTemplate = (facilityLog: FacilityLog) => {
+    if (!facilityLog) {
+      return;
+    }
+    return listItem(facilityLog);
+  };
+
   return (
     <div>
       <div>
@@ -252,6 +282,12 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
+          <DataView
+            value={facilityLogList}
+            itemTemplate={itemTemplate}
+            layout="list"
+            header={header}
+          />
         </div>
       </div>
       <Dialog
