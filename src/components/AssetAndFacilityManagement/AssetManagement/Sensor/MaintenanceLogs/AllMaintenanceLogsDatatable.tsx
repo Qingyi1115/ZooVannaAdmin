@@ -190,7 +190,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} customer reports"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensor maintenance logs"
             globalFilter={globalFilter}
             header={header}
           >
