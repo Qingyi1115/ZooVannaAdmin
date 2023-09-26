@@ -241,12 +241,6 @@ function AllHubDatatable(props: AllHubDatatableProps) {
               style={{ minWidth: "16rem" }}
             ></Column>
             <Column
-              field="hubSecret"
-              header="Hub Secret"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
               field="hubStatus"
               header="Hub Status"
               sortable

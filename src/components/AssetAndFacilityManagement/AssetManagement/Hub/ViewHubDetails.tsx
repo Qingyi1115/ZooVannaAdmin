@@ -27,20 +27,20 @@ interface HubDetailsProps {
 function ViewHubDetails(props: HubDetailsProps) {
   const { curHub, refreshSeed, setRefreshSeed } = props;
   console.log(props);
-  
+
   const toastShadcn = useToast().toast;
 
   return (
     <div className="flex flex-col">
-      
-        <NavLink to={`/assetfacility/edithub/${curHub.hubProcessorId}`}>
-          <Button className="mr-2">
-            <HiPencil className="mx-auto" />
-          </Button>
-        </NavLink>
 
-        <Table>
-          {/* <TableHeader className=" bg-whiten">
+      <NavLink to={`/assetfacility/edithub/${curHub.hubProcessorId}`}>
+        <Button className="mr-2">
+          <HiPencil className="mx-auto" />
+        </Button>
+      </NavLink>
+
+      <Table>
+        {/* <TableHeader className=" bg-whiten">
             <TableRow>
               <TableHead className="w-1/3 font-bold" colSpan={2}>
                 Attribute
@@ -48,50 +48,44 @@ function ViewHubDetails(props: HubDetailsProps) {
               <TableHead>Value</TableHead>
             </TableRow>
           </TableHeader> */}
-          <TableBody>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Hub ID
-              </TableCell>
-              <TableCell>{curHub.hubProcessorId}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Name
-              </TableCell>
-              <TableCell>{curHub.processorName}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                IP Address Name
-              </TableCell>
-              <TableCell>{curHub.ipAddressName}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Last Data Update
-              </TableCell>
-              <TableCell>{String(curHub.lastDataUpdate)}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Hub Secret
-              </TableCell>
-              <TableCell>{String(curHub.hubSecret) == "false" ? "No" : "Yes"}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-                Hub Status
-              </TableCell>
-              <TableCell>{curHub.hubStatus}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
+        <TableBody>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Hub ID
+            </TableCell>
+            <TableCell>{curHub.hubProcessorId}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Name
+            </TableCell>
+            <TableCell>{curHub.processorName}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              IP Address Name
+            </TableCell>
+            <TableCell>{curHub.ipAddressName}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Last Data Update
+            </TableCell>
+            <TableCell>{String(curHub.lastDataUpdate)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Hub Status
+            </TableCell>
+            <TableCell>{curHub.hubStatus}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
   )
 }
 

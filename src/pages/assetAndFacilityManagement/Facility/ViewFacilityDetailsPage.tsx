@@ -12,11 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Employee from "../../../models/Employee";
 import ManageMaintenanceStaffPage from "../MaintenanceOperations/ManageMaintenanceStaffPage";
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
-import ViewAllFacilityLogsPage from "./FacilityLog/ViewAllFacilityLogsPage";
 import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
-import ThirdParty from "src/models/ThirdParty";
-import InHouse from "src/models/InHouse";
-import { FacilityType } from "src/enums/FacilityType";
 import AllFacilityLogsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/AllFacilityLogsDatatable";
 
 
