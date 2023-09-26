@@ -52,7 +52,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
             </TableCell>
             <TableCell>{curFacility.facilityName}</TableCell>
           </TableRow>
-          <TableRow>
+          {/* <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               X Coordinate
             </TableCell>
@@ -63,7 +63,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
               Y Coordinate
             </TableCell>
             <TableCell>{curFacility.yCoordinate}</TableCell>
-          </TableRow>
+          </TableRow> */}
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Shelter available

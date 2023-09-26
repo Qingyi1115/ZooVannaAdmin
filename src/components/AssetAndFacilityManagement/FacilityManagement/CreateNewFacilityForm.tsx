@@ -28,8 +28,6 @@ function CreateNewFacilityForm() {
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
   const [facilityName, setFacilityName] = useState<string>(""); // text input
-  const [xCoordinate, setXCoordinate] = useState<string>(""); // number
-  const [yCoordinate, setYCoordinate] = useState<string>(""); // number
   const [facilityDetail, setFacilityDetail] = useState<string | undefined>(
     undefined); // dropdown
   const [maxAccommodationSize, setMaxAccommodationSize] = useState<number>(); // number
@@ -70,8 +68,6 @@ function CreateNewFacilityForm() {
 
     const newFacility = {
       facilityName: facilityName,
-      xCoordinate: xCoordinate,
-      yCoordinate: yCoordinate,
       isSheltered: Boolean(isSheltered),
       facilityDetail: facilityDetail,
       facilityDetailJson: facilityDetailJson
@@ -133,27 +129,6 @@ function CreateNewFacilityForm() {
           setValue={setFacilityName}
           validateFunction={validateFacilityName} pattern={undefined}
         />
-        {/* X Coordinate */}
-        <FormFieldInput
-          type="number"
-          formFieldName="xCoordinate"
-          label="X Coordinate"
-          required={true}
-          placeholder="1-1000"
-          value={xCoordinate}
-          setValue={setXCoordinate}
-          validateFunction={validateFacilityName} pattern={undefined} />
-        {/* Y Coordinate */}
-        <FormFieldInput
-          type="number"
-          formFieldName="yCoordinate"
-          label="Y Coordinate"
-          required={true}
-          placeholder="1-1000"
-          value={yCoordinate}
-          setValue={setYCoordinate}
-          validateFunction={validateFacilityName}
-          pattern={undefined} />
       </div>
       {/* Maximum Accomodation Size */}
       <FormFieldInput

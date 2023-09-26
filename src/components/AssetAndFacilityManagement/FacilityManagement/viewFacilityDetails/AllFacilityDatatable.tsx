@@ -224,14 +224,8 @@ function AllfacilityDatatable() {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="xCoordinate"
-              header="X Coordinate"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="yCoordinate"
-              header="Y Coordinate"
+              field="facilityDetail"
+              header="Owner Type"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
