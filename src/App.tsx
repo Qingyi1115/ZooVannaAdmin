@@ -66,7 +66,7 @@ import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNe
 import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
 import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
 import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
-import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/RemoveMaintenanceStaffPage";
+import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageOperationStaffPage";
 import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageMaintenanceStaffPage";
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";

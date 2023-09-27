@@ -13,6 +13,7 @@ import Sensor from "../../../models/Sensor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AllSensorReadingDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/SensorReadings/AllSensorReadingsDatatable";
 import AllMaintenanceLogsDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/AllMaintenanceLogsDatatable";
+import ManageGeneralStaffPage from "./ManageGeneralStaffPage";
 
 
 
@@ -109,6 +110,7 @@ function ViewSensorDetailsPage() {
             <AllMaintenanceLogsDatatable curSensor={curSensor} />
           </TabsContent>
           <TabsContent value="generalStaff">
+            <ManageGeneralStaffPage />
           </TabsContent>
         </Tabs>
 

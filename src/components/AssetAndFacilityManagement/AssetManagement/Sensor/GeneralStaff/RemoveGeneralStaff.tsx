@@ -17,16 +17,16 @@ import { Separator } from "@/components/ui/separator";
 {
   /*const toast = useRef<Toast>(null);*/
 }
-interface RemoveMaintenanceStaffProps {
-  facilityId: number;
+interface RemoveGeneralStaffProps {
+  sensorId: number;
   employeeList: Employee[];
   setRefreshSeed: Function;
 }
 
-function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
+function RemoveGeneralStaff(props: RemoveGeneralStaffProps) {
   const apiJson = useApiJson();
 
-  const { facilityId, employeeList, setRefreshSeed } = props;
+  const { sensorId, employeeList, setRefreshSeed } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -60,21 +60,21 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
   };
 
 
-  const removeMaintenanceStaff = async () => {
+  const removeGeneralStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
       const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res=>{
-          console.log("ih",res["inHouse"]["maintenanceStaffs"])
+        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromSensor/${sensorId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
+          console.log("sensor", res["sensor"]["generalStaffs"])
           setRefreshSeed([])
-        }).catch(err=>console.log("err",err));
-        
+        }).catch(err => console.log("err", err));
+
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
         description:
-          "Successfully removed maintenance staff: " + selectedEmployeeName,
+          "Successfully removed general staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setEmployeeRemovalDialog(false);
@@ -85,7 +85,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while removing maintenance staff: \n" + apiJson.error,
+          "An error has occurred while removing general staff: \n" + apiJson.error,
       });
     }
 
@@ -97,7 +97,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={removeMaintenanceStaff}>
+      <Button variant={"destructive"} onClick={removeGeneralStaff}>
         <HiCheck />
         Yes
       </Button>
@@ -106,7 +106,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Maintenance Staff</h4>
+      <h4 className="m-1">Manage General Staff</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -163,7 +163,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
                 Back
               </Button>
               <span className="self-center text-title font-bold">
-                Remove Maintenance Staff
+                Remove General Staff
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
@@ -263,4 +263,4 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
   );
 }
 
-export default RemoveMaintenanceStaff;
+export default RemoveGeneralStaff;
