@@ -51,7 +51,7 @@ function AllAnimalFeedDatatable() {
     dt.current?.exportCSV();
   };
 
- 
+
   const imageBodyTemplate = (rowData: AnimalFeed) => {
     return (
       <img
@@ -147,7 +147,7 @@ function AllAnimalFeedDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage AnimalFeed</h4>
+      <h4 className="m-1">Manage Animal Feed</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText

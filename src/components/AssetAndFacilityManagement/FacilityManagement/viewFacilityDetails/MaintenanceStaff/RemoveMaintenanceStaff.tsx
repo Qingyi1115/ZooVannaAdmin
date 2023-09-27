@@ -123,13 +123,13 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
   };
 
   const actionBodyTemplate = (employee: Employee) => {
-    console.log(employee.dateOfResignation);
     return (
       <React.Fragment>
         <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
-          <Button className="mb-1 mr-1">
+          <Button
+            variant={"outline"}
+            className="mb-1 mr-1">
             <HiEye className="mx-auto" />
-            <span>View Details</span>
           </Button>
         </NavLink>
         {employee.dateOfResignation ?
@@ -141,7 +141,6 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
             onClick={() => confirmEmployeeRemoval(employee)}
           >
             <HiTrash className="mx-auto" />
-            <span>Remove</span>
           </Button>
         }
       </React.Fragment>
@@ -156,19 +155,17 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
-                Back
-              </Button>
-              <span className="self-center text-title-xl font-bold">
-                Remove Maintenance Staff
-              </span>
               <Button disabled className="invisible">
                 Back
               </Button>
+              <span className="self-center text-title font-bold">
+                Remove Maintenance Staff
+              </span>
+              <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
             <Separator />
           </div>
-      
+
           <DataTable
             ref={dt}
             value={employeeList}

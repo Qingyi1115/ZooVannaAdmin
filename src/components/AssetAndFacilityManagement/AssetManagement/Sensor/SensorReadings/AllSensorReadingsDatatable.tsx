@@ -188,7 +188,7 @@ function AllSensorReadingDatatable(props: AllSensorReadingDatatableProps) {
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensorReading"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensor readings"
             globalFilter={globalFilter}
             header={header}
           >
