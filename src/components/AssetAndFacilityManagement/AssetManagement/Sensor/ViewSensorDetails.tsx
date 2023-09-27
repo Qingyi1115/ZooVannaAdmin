@@ -17,7 +17,7 @@ import {
 import Sensor from "src/models/Sensor";
 import { Separator } from "@radix-ui/react-select";
 import { NavLink } from "react-router-dom";
-import { HiPencil } from "react-icons/hi";
+import { HiPencil, HiCamera } from "react-icons/hi";
 
 interface SensorDetailsProps {
   curSensor: Sensor;
@@ -25,7 +25,6 @@ interface SensorDetailsProps {
 function ViewSensorDetails(props: SensorDetailsProps) {
   const apiJson = useApiJson();
   const { curSensor } = props;
-  console.log(props);
 
   const toastShadcn = useToast().toast;
 
@@ -37,6 +36,13 @@ function ViewSensorDetails(props: SensorDetailsProps) {
             <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
+
+        <NavLink to={`/assetfacility/viewcamera/${curSensor.sensorId}`}>
+          <Button className="mr-2">
+            <HiCamera className="mx-auto" />
+          </Button>
+        </NavLink>
+
       </div>
       <Table>
         <TableBody>

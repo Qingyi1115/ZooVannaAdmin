@@ -71,6 +71,7 @@ import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Maint
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
+import ViewCameraPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraPage";
 
 
 function App() {
@@ -321,6 +322,18 @@ function App() {
                     )
                   }
                 />
+
+                <Route
+                  path="/assetfacility/viewcamera/:sensorId"
+                  element={
+                    user ? (
+                      <ViewCameraPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
                 <Route
                   path="/assetfacility/createhub"
                   element={
