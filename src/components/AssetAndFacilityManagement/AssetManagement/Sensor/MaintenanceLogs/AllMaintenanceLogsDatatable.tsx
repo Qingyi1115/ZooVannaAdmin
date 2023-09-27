@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 
-import { DataTable } from "primereact/datatable";
+import { DataView } from "primereact/dataview";
 import { Column } from "primereact/column";
 // import { ProductService } from './service/ProductService';
 import { Toast } from "primereact/toast";
@@ -18,6 +18,10 @@ import MaintenanceLog from "../../../../../models/MaintenanceLog";
 import Sensor from "../../../../../models/Sensor";
 import InHouse from "../../../../../models/InHouse";
 import { SensorType } from "../../../../../enums/SensorType";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { ScrollPanel } from "primereact/scrollpanel";
+import { Card } from "primereact/card";
+import { DataTable } from "primereact/datatable";
 
 interface AllMaintenanceLogsDatatableProps {
   curSensor: Sensor;
@@ -136,9 +140,45 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
     );
   };
 
+  //Sort results
+  interface SortOption {
+    label: string;
+    value: string;
+  }
+  const [sortKey, setSortKey] = useState<string>('');
+  const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(0);
+  const [sortField, setSortField] = useState<string>('');
+  const sortOptions: SortOption[] = [
+    { label: 'Latest log', value: '!dateTime' },
+    { label: 'Earliest log', value: 'dateTime' },
+    { label: 'Title (A-Z)', value: 'title' },
+    { label: 'Title (Z-A)', value: '!title' }
+  ]
+
+  const onSortChange = (event: DropdownChangeEvent) => {
+    const value = event.value;
+
+    if (value.indexOf('!') === 0) {
+      setSortOrder(-1);
+      setSortField(value.substring(1, value.length));
+      setSortKey(value);
+    } else {
+      setSortOrder(1);
+      setSortField(value);
+      setSortKey(value);
+    }
+  };
+
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h4 className="m-1">Manage Maintenance Logs</h4>
+      <Dropdown
+        options={sortOptions}
+        value={sortKey}
+        optionLabel="label"
+        placeholder="Sort By"
+        onChange={onSortChange}
+      />
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -152,6 +192,43 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
       </span>
     </div>
   );
+
+  const listItem = (maintenanceLog: MaintenanceLog) => {
+    return (
+      <div>
+        <Card
+          title={maintenanceLog.title}
+          subTitle={"Date created: " + maintenanceLog.dateTime.toString()}
+          footer={<Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
+          >
+            <HiTrash className="mx-auto" />
+          </Button>}>
+          <div className="flex flex-col left gap-6 lg:flex-row lg:gap-12">
+
+            <ScrollPanel style={{ width: '100%', height: '100px' }}>
+              <div className="text-xl font-bold text-900">Details</div>
+              <p>{maintenanceLog.details}</p>
+            </ScrollPanel>
+            <ScrollPanel style={{ width: '100%', height: '100px' }}>
+              <div className="text-xl font-bold text-900">Remarks</div>
+              <p>{maintenanceLog.remarks}</p>
+            </ScrollPanel>
+          </div>
+
+        </Card>
+      </div>
+    )
+  }
+
+  const itemTemplate = (maintenanceLog: MaintenanceLog) => {
+    if (!maintenanceLog) {
+      return;
+    }
+    return listItem(maintenanceLog);
+  };
 
   return (
     <div>
@@ -173,66 +250,20 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
             </div>
             <Separator />
           </div>
-
-          <DataTable
-            ref={dt}
+          <DataView
             value={maintenanceLogList}
-            selection={selectedMaintenanceLog}
-            onSelectionChange={(e) => {
-              if (Array.isArray(e.value)) {
-                setSelectedMaintenanceLog(e.value);
-              }
-            }}
+            itemTemplate={itemTemplate}
+            layout="list"
             dataKey="logId"
-            paginator
-            rows={10}
-            scrollable
-            selectionMode={"single"}
-            rowsPerPageOptions={[5, 10, 25]}
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensor maintenance logs"
-            globalFilter={globalFilter}
             header={header}
-          >
-            <Column
-              field="logId"
-              header="ID"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="dateTime"
-              header="Date"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="title"
-              header="Title"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="remarks"
-              header="Remarks"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="viewed"
-              header="Viewed?"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              body={actionBodyTemplate}
-              header="Actions"
-              frozen
-              alignFrozen="right"
-              exportable={false}
-              style={{ minWidth: "9rem" }}
-            ></Column>
-          </DataTable>
+            sortField={sortField}
+            sortOrder={sortOrder}
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facility logs"
+            rows={10}
+            rowsPerPageOptions={[5, 10, 25]}
+            paginator
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          />
         </div>
       </div>
       <Dialog

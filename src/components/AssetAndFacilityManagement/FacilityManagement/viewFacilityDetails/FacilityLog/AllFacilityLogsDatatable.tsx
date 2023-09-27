@@ -18,6 +18,9 @@ import FacilityLog from "../../../../../models/FacilityLog";
 import Facility from "../../../../../models/Facility";
 import InHouse from "../../../../../models/InHouse";
 import { FacilityType } from "../../../../../enums/FacilityType";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { Card } from "primereact/card";
+import { ScrollPanel } from "primereact/scrollpanel";
 
 interface AllFacilityLogsDatatableProps {
   curFacility: Facility;
@@ -57,7 +60,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     facility: emptyFacility
   };
 
-  const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>(curInHouse.facilityLogs);
+  const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([]);
   const [selectedFacilityLog, setSelectedFacilityLog] = useState<FacilityLog>(emptyFacilityLog);
   const [deletefacilityLogDialog, setDeleteFacilityLogDialog] =
     useState<boolean>(false);
@@ -65,6 +68,13 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<FacilityLog[]>>(null);
   const toastShadcn = useToast().toast;
+
+  useEffect(() => {
+    apiJson.get(
+      `http://localhost:3000/api/assetfacility/getFacilityLogs/${curFacility.facilityId}`)
+      .then(res => { setFacilityLogList(res.facilityLogs as FacilityLog[]); })
+      .catch(e => console.log(e));
+  }, []);
 
   const exportCSV = () => {
     dt.current?.exportCSV();
@@ -97,7 +107,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted facilityLog: " + selectedFacilityLog.logId,
+            "Successfully deleted facilityLog: " + selectedFacilityLog.title,
         });
         setFacilityLogList(_facilityLog);
         setSelectedFacilityLog(emptyFacilityLog);
@@ -155,42 +165,88 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     );
   };
 
+  //Sort results
+  interface SortOption {
+    label: string;
+    value: string;
+  }
+  const [sortKey, setSortKey] = useState<string>('');
+  const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(0);
+  const [sortField, setSortField] = useState<string>('');
+  const sortOptions: SortOption[] = [
+    { label: 'Latest log', value: '!dateTime' },
+    { label: 'Earliest log', value: 'dateTime' },
+    { label: 'Title (A-Z)', value: 'title' },
+    { label: 'Title (Z-A)', value: '!title' }
+  ]
+
+  const onSortChange = (event: DropdownChangeEvent) => {
+    const value = event.value;
+
+    if (value.indexOf('!') === 0) {
+      setSortOrder(-1);
+      setSortField(value.substring(1, value.length));
+      setSortKey(value);
+    } else {
+      setSortOrder(1);
+      setSortField(value);
+      setSortKey(value);
+    }
+  };
+
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Facility Logs</h4>
-      <span className="p-input-icon-left">
-        <i className="pi pi-search" />
-        <InputText
-          type="search"
-          placeholder="Search..."
-          onInput={(e) => {
-            const target = e.target as HTMLInputElement;
-            setGlobalFilter(target.value);
-          }}
+      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+        <h4 className="m-1">Manage Facility Logs</h4>
+        <Dropdown
+          options={sortOptions}
+          value={sortKey}
+          optionLabel="label"
+          placeholder="Sort By"
+          onChange={onSortChange}
         />
-      </span>
+        <span className="p-input-icon-left">
+          <i className="pi pi-search" />
+
+          <InputText
+            type="search"
+            placeholder="Search..."
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              setGlobalFilter(target.value);
+            }}
+          />
+        </span>
+      </div>
     </div>
   );
 
   const listItem = (facilityLog: FacilityLog) => {
     return (
-      <div className="col-12">
-        <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-          <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-            <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-              <div className="text-2xl font-bold text-900">{facilityLog.title}</div>
-              <div className="flex align-items-center gap-3">
-                <span className="flex align-items-center gap-2">
-                  <span className="font-semibold">{facilityLog.details}</span>
-                  <span className="font-semibold">{facilityLog.remarks}</span>
-                </span>
-              </div>
-            </div>
-            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-              <span className="text-2xl font-semibold">${String(facilityLog.dateTime)}</span>
-            </div>
+      <div>
+        <Card
+          title={facilityLog.title}
+          subTitle={"Date created: " + facilityLog.dateTime.toString()}
+          footer={<Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmDeletefacilityLog(facilityLog)}
+          >
+            <HiTrash className="mx-auto" />
+          </Button>}>
+          <div className="flex flex-col left gap-6 lg:flex-row lg:gap-12">
+
+            <ScrollPanel style={{ width: '100%', height: '100px' }}>
+              <div className="text-xl font-bold text-900">Details</div>
+              <p>{facilityLog.details}</p>
+            </ScrollPanel>
+            <ScrollPanel style={{ width: '100%', height: '100px' }}>
+              <div className="text-xl font-bold text-900">Remarks</div>
+              <p>{facilityLog.remarks}</p>
+            </ScrollPanel>
           </div>
-        </div>
+
+        </Card>
       </div>
     )
   }
@@ -222,71 +278,19 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             </div>
             <Separator />
           </div>
-
-          <DataTable
-            ref={dt}
-            value={facilityLogList}
-            selection={selectedFacilityLog}
-            onSelectionChange={(e) => {
-              if (Array.isArray(e.value)) {
-                setSelectedFacilityLog(e.value);
-              }
-            }}
-            dataKey="logId"
-            paginator
-            rows={10}
-            scrollable
-            selectionMode={"single"}
-            rowsPerPageOptions={[5, 10, 25]}
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facility logs"
-            globalFilter={globalFilter}
-            header={header}
-          >
-            <Column
-              field="logId"
-              header="ID"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="dateTime"
-              header="Date"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="title"
-              header="Title"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="remarks"
-              header="Remarks"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="viewed"
-              header="Viewed?"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              body={actionBodyTemplate}
-              header="Actions"
-              frozen
-              alignFrozen="right"
-              exportable={false}
-              style={{ minWidth: "9rem" }}
-            ></Column>
-          </DataTable>
           <DataView
             value={facilityLogList}
             itemTemplate={itemTemplate}
             layout="list"
+            dataKey="logId"
             header={header}
+            sortField={sortField}
+            sortOrder={sortOrder}
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facility logs"
+            rows={10}
+            rowsPerPageOptions={[5, 10, 25]}
+            paginator
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           />
         </div>
       </div>
@@ -307,7 +311,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           {selectedFacilityLog && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedFacilityLog.logId}</b>?
+              <b>{selectedFacilityLog.title}</b>?
             </span>
           )}
         </div>
