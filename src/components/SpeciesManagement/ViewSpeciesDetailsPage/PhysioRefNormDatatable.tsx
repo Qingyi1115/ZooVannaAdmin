@@ -92,7 +92,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deletePhysiologicalReferenceNorms/" +
-          selectedPhysioRefNorm?.physiologicalRefId
+            selectedPhysioRefNorm?.physiologicalRefId
         );
 
         toastShadcn({
@@ -139,7 +139,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
           to={`/species/editphysiorefnorm/${curSpecies.speciesCode}/${physioRefNorm.physiologicalRefId}`}
         >
           <Button className="mr-2">
-            <HiEye className="mr-auto" />
+            <HiPencil className="mr-auto" />
             {/* <span>View Details</span> */}
           </Button>
         </NavLink>
