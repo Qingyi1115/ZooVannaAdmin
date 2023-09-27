@@ -74,7 +74,7 @@ function ViewHubDetailsPage() {
           className="w-full"
         ><TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
             <TabsTrigger value="hubDetails">Hub Details</TabsTrigger>
-            <TabsTrigger value="sensors">Sensors</TabsTrigger>
+            {curHub.hubStatus != HubStatus.PENDING && <TabsTrigger value="sensors">Sensors</TabsTrigger>}
           </TabsList>
           <TabsContent value="hubDetails">
             <ViewHubDetails curHub={curHub} refreshSeed={refreshSeed}

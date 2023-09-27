@@ -34,7 +34,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
     dateOfLastMaintained: new Date(),
     sensorType: SensorType.CAMERA,
     hub: curHub,
-    sensorReading: [],
+    sensorReadings: [],
     maintenanceLogs: [],
     generalStaff: []
   };
@@ -69,7 +69,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
     dt.current?.exportCSV();
   };
 
- 
+
   const confirmDeleteSensor = (sensor: Sensor) => {
     setSelectedSensor(sensor);
     setDeleteSensorDialog(true);

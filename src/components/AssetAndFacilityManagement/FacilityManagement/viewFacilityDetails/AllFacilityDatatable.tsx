@@ -57,7 +57,7 @@ function AllfacilityDatatable() {
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", { includes: [] }).catch(e => {
+    apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", { includes: ["facilityDetail"] }).catch(e => {
       console.log(e);
     }).then(res => {
       setFacilityList(res["facilities"]);
