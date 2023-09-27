@@ -30,7 +30,6 @@ const navigate = useNavigate();
             ipAddressName: res.ipAddressName,
             signature: res.signature,
         }
-        console.log("newAuth", newAuth);
         setAuthorization(newAuth);
       }).catch(e => console.log(e));
   }, []);
