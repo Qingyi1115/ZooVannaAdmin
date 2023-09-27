@@ -14,6 +14,7 @@ import ManageMaintenanceStaffPage from "../MaintenanceOperations/ManageMaintenan
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
 import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
 import AllFacilityLogsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/AllFacilityLogsDatatable";
+import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
 
 
 
@@ -104,11 +105,12 @@ function ViewFacilityDetailsPage() {
           className="w-full"
         >
           <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <TabsTrigger value="facilityDetails">Facility Details</TabsTrigger>
+            <TabsTrigger value="facilityDetails">Details</TabsTrigger>
             <TabsTrigger value="hubs">Hubs</TabsTrigger>
-            {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="manageMaintenance">Manage Maintenance Staff</TabsTrigger>}
+            {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
+            {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
-            <TabsTrigger value="customerReport">Customer Report</TabsTrigger>
+            <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
           </TabsList>
           <TabsContent value="facilityDetails">
             <div className="relative flex flex-col">
@@ -125,6 +127,9 @@ function ViewFacilityDetailsPage() {
           </TabsContent>
           <TabsContent value="manageMaintenance">
             <ManageMaintenanceStaffPage />
+          </TabsContent>
+          <TabsContent value="manageOperations">
+            <ManageOperationStaffPage />
           </TabsContent>
           <TabsContent value="customerReport">
             <AllCustomerReportsDatatable curFacility={curFacility} />
