@@ -45,7 +45,6 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeAssignmentDialog, setAssignmentDialog] = useState<boolean>(false);
   const [employeeRemovalDialog, setEmployeeRemovalDialog] = useState<boolean>(false);
-  const [assigned, setAssigned] = useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
@@ -77,7 +76,6 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
       setSelectedEmployee(employee);
       setAssignmentDialog(false);
       // window.location.reload();
-      setAssigned(true);
     } catch (error: any) {
       // got error
       toastShadcn({
@@ -118,7 +116,6 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
       });
       setSelectedEmployee(employee);
       setEmployeeRemovalDialog(false);
-      setAssigned(false);
       // window.location.reload();
     } catch (error: any) {
       // got error
@@ -173,7 +170,6 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
   };
 
   const actionBodyTemplate = (employee: Employee) => {
-    console.log(employee.dateOfResignation);
     return (
       <React.Fragment>
         <div className="mb-4 flex">
@@ -182,14 +178,12 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
               variant={"outline"}
               className="mr-2">
               <HiEye className="mx-auto" />
-
             </Button>
           </NavLink>
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>
               <Button
-                disabled={assigned}
                 name="assignButton"
                 variant={"default"}
                 className="mr-2"
@@ -197,16 +191,14 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
               >
                 <HiPlus className="mx-auto" />
               </Button>
-              <Button
-                disabled={!assigned}
+              {/* <Button
                 name="removeButton"
                 variant={"destructive"}
                 className="mx-auto"
                 onClick={() => confirmEmployeeRemoval(employee)}
               >
                 <HiTrash className="mx-auto" />
-
-              </Button>
+              </Button> */}
             </div>
 
           }
@@ -223,24 +215,18 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <Button
-                disabled={assigned}
-                name="assignButton"
-                variant={"default"}
-                className="mr-2"
-                onClick={() => confirmAssignment(employee)}
-              >
-                <HiPlus className="mx-auto" />
+              <Button disabled className="invisible">
+                Back
               </Button>
-              <span className=" self-center text-title-xl font-bold">
-                Maintenance Staff
+              <span className=" self-center text-title font-bold">
+                Assign Maintenance Staff
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
             <Separator />
           </div>
 
-         
+
           <DataTable
             ref={dt}
             value={employeeList}
