@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import PhysioRefNormDatatable from "./PhysioRefNormDatatable";
 import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
 
+import { Chart } from "primereact/chart";
+
 interface SpeciesPhysiologicalRefNormsProps {
   curSpecies: Species;
 }
@@ -28,15 +30,44 @@ function SpeciesPhysiologicalRefNorms(
   >([]);
   const [resetSeed, setResetSeed] = useState<number>(0);
 
+  // chart
+  const [weightChartData, setWeightChartData] = useState({});
+  const [weightChartOptions, setWeightChartOptions] = useState({});
+  const [sizeChartData, setSizeChartData] = useState({});
+  const [sizeChartOptions, setSizeChartOptions] = useState({});
+
+  const customPhysioRefNormsSortFunction = (
+    a: PhysiologicalReferenceNorms,
+    b: PhysiologicalReferenceNorms
+  ) => {
+    const customSortOrder = [
+      "INFANT",
+      "JUVENILE",
+      "ADOLESCENT",
+      "ADULT",
+      "ELDER",
+    ];
+    const indexA = customSortOrder.indexOf(a.growthStage);
+    const indexB = customSortOrder.indexOf(b.growthStage);
+
+    // Compare based on the custom sort order indexes
+    if (indexA < indexB) return -1;
+    if (indexA > indexB) return 1;
+    return 0;
+  };
   useEffect(() => {
     const fetchPhysioRefNormsList = async () => {
       try {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/species/getAllPhysiologicalReferenceNormsByCode/${curSpecies.speciesCode}`
         );
-        setPhysiologicalRefNormsList(
-          responseJson as PhysiologicalReferenceNorms[]
+        // sort list first
+        const rawPhysioRefNormsList =
+          responseJson as PhysiologicalReferenceNorms[];
+        const sortedPhysioRefNormsList = rawPhysioRefNormsList.sort(
+          customPhysioRefNormsSortFunction
         );
+        setPhysiologicalRefNormsList(sortedPhysioRefNormsList);
       } catch (error: any) {
         console.log(error);
       }
@@ -44,6 +75,185 @@ function SpeciesPhysiologicalRefNorms(
 
     fetchPhysioRefNormsList();
   }, [resetSeed]);
+
+  useEffect(() => {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue("--text-color");
+    const textColorSecondary = documentStyle.getPropertyValue(
+      "--text-color-secondary"
+    );
+    const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
+    const weightMaleDataPoints = physiologicalRefNormsList.map((item) => ({
+      x: item.ageToGrowthAge,
+      y: item.weightMaleKg,
+      growthStage: item.growthStage,
+    }));
+    const weightFemaleDataPoints = physiologicalRefNormsList.map((item) => ({
+      x: item.ageToGrowthAge,
+      y: item.weightFemaleKg,
+      growthStage: item.growthStage,
+    }));
+    const data = {
+      labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
+      datasets: [
+        {
+          label: "Male (kg)",
+          data: weightMaleDataPoints,
+          fill: false,
+          borderColor: "#3b82f6",
+          tension: 0.4,
+        },
+        {
+          label: "Female (kg)",
+          data: weightFemaleDataPoints,
+          fill: false,
+          borderColor: "#ec4899",
+          tension: 0.4,
+        },
+      ],
+    };
+    const options = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.6,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor,
+          },
+        },
+        tooltip: {
+          enabled: true, // Enable tooltips
+          callbacks: {
+            // Customize the tooltip label
+            title: (context: any) => {
+              const dataPoint = context[0].raw; // Assuming you want to use the first data point
+              return `Growth Stage: ${dataPoint.growthStage}, Age: ${dataPoint.x}`;
+              // Modify the title content as needed
+            },
+            label: (context: any) => {
+              const tooltipLabel = `Weight: ${context.raw.y} kg`;
+              // You can modify the tooltipLabel as needed
+              return tooltipLabel;
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+          },
+          type: "linear",
+          min: 0,
+          max: curSpecies.lifeExpectancyYears * 1.2,
+        },
+        y: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+          },
+          min: 0,
+        },
+      },
+    };
+    setWeightChartData(data);
+    setWeightChartOptions(options);
+  }, [physiologicalRefNormsList]);
+
+  useEffect(() => {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue("--text-color");
+    const textColorSecondary = documentStyle.getPropertyValue(
+      "--text-color-secondary"
+    );
+    const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
+    const sizeMaleDataPoints = physiologicalRefNormsList.map((item) => ({
+      x: item.ageToGrowthAge,
+      y: item.sizeMaleCm,
+      growthStage: item.growthStage,
+    }));
+    const sizeFemaleDataPoints = physiologicalRefNormsList.map((item) => ({
+      x: item.ageToGrowthAge,
+      y: item.sizeFemaleCm,
+      growthStage: item.growthStage,
+    }));
+    const data = {
+      labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
+      datasets: [
+        {
+          label: "Male (cm)",
+          data: sizeMaleDataPoints,
+          fill: false,
+          borderColor: "#3b82f6",
+          tension: 0.4,
+        },
+        {
+          label: "Female (cm)",
+          data: sizeFemaleDataPoints,
+          fill: false,
+          borderColor: "#ec4899",
+          tension: 0.4,
+        },
+      ],
+    };
+    const options = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.6,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor,
+          },
+        },
+        tooltip: {
+          enabled: true, // Enable tooltips
+          callbacks: {
+            // Customize the tooltip label
+            title: (context: any) => {
+              const dataPoint = context[0].raw; // Assuming you want to use the first data point
+              return `Growth Stage: ${dataPoint.growthStage}, Age: ${dataPoint.x}`;
+              // Modify the title content as needed
+            },
+            label: (context: any) => {
+              const tooltipLabel = `Size: ${context.raw.y} cm`;
+              // You can modify the tooltipLabel as needed
+              return tooltipLabel;
+            },
+          },
+        },
+      },
+
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+          },
+          type: "linear",
+          min: 0,
+          max: curSpecies.lifeExpectancyYears * 1.2,
+        },
+        y: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+          },
+          min: 0,
+        },
+      },
+    };
+    setSizeChartData(data);
+    setSizeChartOptions(options);
+  }, [physiologicalRefNormsList]);
 
   return (
     <div className="">
@@ -60,6 +270,23 @@ function SpeciesPhysiologicalRefNorms(
           setPhysiologicalRefNormsList={setPhysiologicalRefNormsList}
         />
       )}
+      <div>
+        <span className="text-lg font-medium">
+          Average {curSpecies.commonName} Weight (kg)
+        </span>
+        <Chart
+          type="line"
+          data={weightChartData}
+          options={weightChartOptions}
+        />
+      </div>
+      <br />
+      <div>
+        <span className="text-lg font-medium">
+          Average {curSpecies.commonName} Size (kg)
+        </span>
+        <Chart type="line" data={sizeChartData} options={sizeChartOptions} />
+      </div>
     </div>
   );
 }
