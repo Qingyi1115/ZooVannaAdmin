@@ -236,6 +236,9 @@ function SpeciesPhysiologicalRefNorms(
           grid: {
             color: surfaceBorder,
           },
+          type: "linear",
+          min: 0,
+          max: curSpecies.lifeExpectancyYears * 1.2,
         },
         y: {
           ticks: {
@@ -244,6 +247,7 @@ function SpeciesPhysiologicalRefNorms(
           grid: {
             color: surfaceBorder,
           },
+          min: 0,
         },
       },
     };
