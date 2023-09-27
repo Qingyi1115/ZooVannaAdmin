@@ -104,6 +104,60 @@ function EditEnclosureRequirementsForm(
   const [soilPercentMax, setSoilPercentMax] = useState<number>(
     curEnclosureNeeds.soilPercentMax
   );
+  // totalMin and totalMax to help w validation
+  const [totalTerrainMinPercent, setTotalTerrainMinPercent] = useState(
+    curEnclosureNeeds.longGrassPercentMin +
+      curEnclosureNeeds.shortGrassPercentMin +
+      curEnclosureNeeds.rockPercentMin +
+      curEnclosureNeeds.sandPercentMin +
+      curEnclosureNeeds.snowPercentMin +
+      curEnclosureNeeds.soilPercentMin
+  );
+
+  const [totalTerrainMaxPercent, setTotalTerrainMaxPercent] = useState(
+    curEnclosureNeeds.longGrassPercentMax +
+      curEnclosureNeeds.shortGrassPercentMax +
+      curEnclosureNeeds.rockPercentMax +
+      curEnclosureNeeds.sandPercentMax +
+      curEnclosureNeeds.snowPercentMax +
+      curEnclosureNeeds.soilPercentMax
+  );
+
+  useEffect(() => {
+    setTotalTerrainMinPercent(
+      longGrassPercentMin +
+        shortGrassPercentMin +
+        rockPercentMin +
+        sandPercentMin +
+        snowPercentMin +
+        soilPercentMin
+    );
+  }, [
+    longGrassPercentMin,
+    shortGrassPercentMin,
+    rockPercentMin,
+    sandPercentMin,
+    snowPercentMin,
+    soilPercentMin,
+  ]);
+
+  useEffect(() => {
+    setTotalTerrainMaxPercent(
+      longGrassPercentMax +
+        shortGrassPercentMax +
+        rockPercentMax +
+        sandPercentMax +
+        snowPercentMax +
+        soilPercentMax
+    );
+  }, [
+    longGrassPercentMax,
+    shortGrassPercentMax,
+    rockPercentMax,
+    sandPercentMax,
+    snowPercentMax,
+    soilPercentMax,
+  ]);
 
   ///////
   // validate functions
@@ -292,15 +346,13 @@ function EditEnclosureRequirementsForm(
         toastShadcn({
           variant: "destructive",
           title: "Invalid Terrain Distribution",
-          description:
-            "Your recommended distribution will not result in any valid actual distributions because total minimums are too high",
+          description: `Your recommended distribution will not result in any valid actual distributions. Total terrain minimum percentages should be equal to or smaller than 100%. (Current: ${totalTerrainMinPercent}%)`,
         });
       } else if (terrainDistributionValidation.isMaxTooLow) {
         toastShadcn({
           variant: "destructive",
           title: "Invalid Terrain Distribution",
-          description:
-            "Your recommended distribution will not result in any valid actual distributions because total maximums are too low",
+          description: `Your recommended distribution will not result in any valid actual distributions. Total terrain maximum percentages should be equal to or greater than 100%. (Current: ${totalTerrainMaxPercent}%)`,
         });
       }
 
@@ -512,7 +564,27 @@ function EditEnclosureRequirementsForm(
         </Form.Field>
         <br />
         <div className="mb-[-10] text-lg font-bold text-black">
-          Recommended Terrain Distribution
+          <span>Recommended Terrain Distribution</span>
+          <div className="text-md font-normal">
+            Current Total Minimum Percentages:{" "}
+            <span
+              className={
+                totalTerrainMinPercent <= 100 ? `text-success` : `text-danger`
+              }
+            >
+              {totalTerrainMinPercent}%
+            </span>
+          </div>
+          <div className="text-md font-normal">
+            Current Total Maximum Percentages:{" "}
+            <span
+              className={
+                totalTerrainMaxPercent >= 100 ? `text-success` : `text-danger`
+              }
+            >
+              {totalTerrainMaxPercent}%
+            </span>
+          </div>
         </div>
         {/* Long Grass Coverage Range */}
         <Form.Field
@@ -711,11 +783,7 @@ function EditEnclosureRequirementsForm(
             disabled={apiJson.loading}
             className="h-12 w-2/3 self-center rounded-full text-lg"
           >
-            {!apiJson.loading ? (
-              <div>Submit</div>
-            ) : (
-              <div>Loading</div>
-            )}
+            {!apiJson.loading ? <div>Submit</div> : <div>Loading</div>}
           </Button>
         </Form.Submit>
         {/* {formError && (

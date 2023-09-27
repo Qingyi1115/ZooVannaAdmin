@@ -87,6 +87,47 @@ function CreateEnclosureRequirementsForm(
   const [newEnclosureRequirementsCreated, setNewEnclosureRequirementsCreated] =
     useState<boolean>(false);
 
+  // totalMin and totalMax to help w validation
+  const [totalTerrainMinPercent, setTotalTerrainMinPercent] = useState(0);
+
+  const [totalTerrainMaxPercent, setTotalTerrainMaxPercent] = useState(0);
+
+  useEffect(() => {
+    setTotalTerrainMinPercent(
+      longGrassPercentMin +
+        shortGrassPercentMin +
+        rockPercentMin +
+        sandPercentMin +
+        snowPercentMin +
+        soilPercentMin
+    );
+  }, [
+    longGrassPercentMin,
+    shortGrassPercentMin,
+    rockPercentMin,
+    sandPercentMin,
+    snowPercentMin,
+    soilPercentMin,
+  ]);
+
+  useEffect(() => {
+    setTotalTerrainMaxPercent(
+      longGrassPercentMax +
+        shortGrassPercentMax +
+        rockPercentMax +
+        sandPercentMax +
+        snowPercentMax +
+        soilPercentMax
+    );
+  }, [
+    longGrassPercentMax,
+    shortGrassPercentMax,
+    rockPercentMax,
+    sandPercentMax,
+    snowPercentMax,
+    soilPercentMax,
+  ]);
+
   ///////
   // validate functions
   ////////
@@ -273,15 +314,13 @@ function CreateEnclosureRequirementsForm(
         toastShadcn({
           variant: "destructive",
           title: "Invalid Terrain Distribution",
-          description:
-            "Your recommended distribution will not result in any valid actual distributions because total minimums are too high",
+          description: `Your recommended distribution will not result in any valid actual distributions. Total terrain minimum percentages should be equal to or smaller than 100%. (Current: ${totalTerrainMinPercent}%)`,
         });
       } else if (terrainDistributionValidation.isMaxTooLow) {
         toastShadcn({
           variant: "destructive",
           title: "Invalid Terrain Distribution",
-          description:
-            "Your recommended distribution will not result in any valid actual distributions because total maximums are too low",
+          description: `Your recommended distribution will not result in any valid actual distributions. Total terrain maximum percentages should be equal to or greater than 100%. (Current: ${totalTerrainMaxPercent}%)`,
         });
       }
 
@@ -519,7 +558,27 @@ function CreateEnclosureRequirementsForm(
           <br />
 
           <div className="mb-[-10] text-lg font-bold text-black">
-            Recommended Terrain Distribution
+            <span>Recommended Terrain Distribution</span>
+            <div className="text-md font-normal">
+              Current Total Minimum Percentages:{" "}
+              <span
+                className={
+                  totalTerrainMinPercent <= 100 ? `text-success` : `text-danger`
+                }
+              >
+                {totalTerrainMinPercent}%
+              </span>
+            </div>
+            <div className="text-md font-normal">
+              Current Total Maximum Percentages:{" "}
+              <span
+                className={
+                  totalTerrainMaxPercent >= 100 ? `text-success` : `text-danger`
+                }
+              >
+                {totalTerrainMaxPercent}%
+              </span>
+            </div>
           </div>
           {/* Long Grass Coverage Range */}
           <Form.Field
