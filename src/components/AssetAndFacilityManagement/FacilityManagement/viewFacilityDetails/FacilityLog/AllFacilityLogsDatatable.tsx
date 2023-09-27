@@ -224,26 +224,25 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const listItem = (facilityLog: FacilityLog) => {
     return (
       <div>
-        <Card
+        <Card className="my-4 relative"
           title={facilityLog.title}
-          subTitle={"Date created: " + facilityLog.dateTime.toString()}
-          footer={<Button
+          subTitle={"Date created: " + facilityLog.dateTime.toString()}>
+          <Button className="absolute top-5 right-5"
             variant={"destructive"}
-            className="mr-2"
             onClick={() => confirmDeletefacilityLog(facilityLog)}
           >
             <HiTrash className="mx-auto" />
-          </Button>}>
-          <div className="flex flex-col left gap-6 lg:flex-row lg:gap-12">
-
-            <ScrollPanel style={{ width: '100%', height: '100px' }}>
+          </Button>
+          <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
+            <div>
               <div className="text-xl font-bold text-900">Details</div>
               <p>{facilityLog.details}</p>
-            </ScrollPanel>
-            <ScrollPanel style={{ width: '100%', height: '100px' }}>
+            </div>
+            <Separator orientation="vertical" />
+            <div>
               <div className="text-xl font-bold text-900">Remarks</div>
               <p>{facilityLog.remarks}</p>
-            </ScrollPanel>
+            </div>
           </div>
 
         </Card>
