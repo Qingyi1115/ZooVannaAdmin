@@ -273,7 +273,9 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <span className=" self-center text-title-xl font-bold">
                 All Facility Logs
               </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
+              <Button disabled className="invisible">
+                Back
+              </Button>
             </div>
             <Separator />
           </div>
