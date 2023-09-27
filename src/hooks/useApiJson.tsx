@@ -92,7 +92,7 @@ function useApiJson<TData = any>() {
   };
 
   const del = async (url: string, body: any = null) => {
-    return request(url, "DELETE");
+    return request(url, "DELETE", body);
   };
 
   return {

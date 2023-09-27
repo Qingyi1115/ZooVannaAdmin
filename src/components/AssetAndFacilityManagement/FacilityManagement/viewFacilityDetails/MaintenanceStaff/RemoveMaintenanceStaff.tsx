@@ -20,12 +20,13 @@ import { Separator } from "@/components/ui/separator";
 interface RemoveMaintenanceStaffProps {
   facilityId: number;
   employeeList: Employee[];
+  setRefreshSeed: Function;
 }
 
 function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
-  const { facilityId, employeeList } = props;
+  const { facilityId, employeeList, setRefreshSeed } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -63,9 +64,12 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
-      const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
-
+      const responseJson = await apiJson.del(
+        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res=>{
+          console.log("ih",res["inHouse"]["maintenanceStaffs"])
+          setRefreshSeed([])
+        }).catch(err=>console.log("err",err));
+        
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
@@ -74,7 +78,7 @@ function RemoveMaintenanceStaff(props: RemoveMaintenanceStaffProps) {
       });
       setSelectedEmployee(employee);
       setEmployeeRemovalDialog(false);
-      window.location.reload();
+      // window.location.reload();
     } catch (error: any) {
       // got error
       toastShadcn({

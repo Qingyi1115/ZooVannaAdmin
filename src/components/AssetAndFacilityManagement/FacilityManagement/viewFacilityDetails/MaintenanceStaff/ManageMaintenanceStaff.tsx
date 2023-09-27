@@ -17,12 +17,13 @@ import { Separator } from "@/components/ui/separator";
 interface ManageMaintenanceStaffProps {
   facilityId: number;
   employeeList: Employee[];
+  setRefreshSeed:Function;
 }
 
 function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
-  const { facilityId, employeeList } = props;
+  const { facilityId, employeeList, setRefreshSeed } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -65,7 +66,10 @@ function manageMaintenanceStaff(props: ManageMaintenanceStaffProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res=>{
+          console.log("ih",res["inHouse"]);
+          setRefreshSeed([]);
+        }).catch(err=>console.log("err",err));
 
       toastShadcn({
         // variant: "destructive",

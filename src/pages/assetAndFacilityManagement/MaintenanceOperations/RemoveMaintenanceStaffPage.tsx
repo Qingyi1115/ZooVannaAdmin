@@ -44,7 +44,7 @@ function RemoveMaintenanceStaffPage() {
   return (
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg bg-white p-5 text-black">
-        {facilityId && <RemoveMaintenanceStaff facilityId={Number(facilityId)} employeeList={assignedStaffs}></RemoveMaintenanceStaff>}
+        {facilityId && <RemoveMaintenanceStaff facilityId={Number(facilityId)} employeeList={assignedStaffs} setAssignedStaffs={setAssignedStaffs}></RemoveMaintenanceStaff>}
       </div>
     </div>
 
