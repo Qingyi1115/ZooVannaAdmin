@@ -45,7 +45,7 @@ import CreateNewSensorForm from "./components/AssetAndFacilityManagement/AssetMa
 import CreateNewMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/CreateNewMaintenanceLogPage";
 import EditMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/EditMaintenanceLogPage";
 import ViewMaintenanceLogDetailsPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/ViewMaintenanceLogDetailsPage";
-
+import ViewAllAssetsPage from "./pages/assetAndFacilityManagement/ViewAllAssetsPage";
 
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
@@ -71,6 +71,7 @@ import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Maint
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
+
 
 
 function App() {
@@ -244,6 +245,12 @@ function App() {
                   path="/assetfacility/viewallfacilities"
                   element={
                     user ? <ViewAllFacilitiesPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/viewallassets"
+                  element={
+                    user ? <ViewAllAssetsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
