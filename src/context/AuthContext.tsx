@@ -8,7 +8,7 @@ import React, {
 
 // Structure of objects that can be accessed
 interface User {
-  email: string;
+  employeeData: any;
   token: string;
 }
 
