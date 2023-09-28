@@ -120,7 +120,7 @@ const DropdownNotification = () => {
               {facilityList.length ? <p className="text-sm"><div className="text-red-600">
                 <BsHouseExclamation />
                 Facilities to maintain {facilityList.length}</div>
-              </p>:<p className="text-sm"><div className="text-green-500">
+              </p>:<p className="text-sm"><div className="text-green-700">
                 <BsHouseExclamation />
                 Facilities are all maintained!</div>
               </p>}
@@ -159,7 +159,7 @@ const DropdownNotification = () => {
               {sensorList.length ? <p className="text-sm"><div className="text-red-600">
                 <BsBroadcast />
                   Sensors to maintain {sensorList.length}</div>
-              </p>:<p className="text-sm"><div className="text-green-500">
+              </p>:<p className="text-sm"><div className="text-green-700">
                 <BsBroadcast />
                   Sensors are all maintained!</div>
               </p>}
