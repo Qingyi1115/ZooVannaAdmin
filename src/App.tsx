@@ -72,6 +72,7 @@ import EditEducationalContentPage from "./pages/speciesManagement/EditEducationa
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
 import SensorMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/SensorMaintenanceChartPage";
+import FacilityMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/FacilityMaintenanceChartPage";
 
 
 
@@ -247,6 +248,16 @@ function App() {
                   element={
                     user ? (
                       <SensorMaintenanceChartPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/assetfacility/viewFacilityMaintenanceChart/:facilityId"
+                  element={
+                    user ? (
+                      <FacilityMaintenanceChartPage />
                     ) : (
                       <Navigate to="/login" />
                     )
