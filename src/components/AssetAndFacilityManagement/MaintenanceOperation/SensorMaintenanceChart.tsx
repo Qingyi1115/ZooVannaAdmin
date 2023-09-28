@@ -12,8 +12,8 @@ interface SensorMaintenanceChartProps {
 }
 
 export default function SensorMaintenanceChart(props: SensorMaintenanceChartProps) {
-    const [chartData, setChartData] = useState({});
-    const [chartOptions, setChartOptions] = useState({});
+    const [chartData, setChartData] = useState<any>(undefined);
+    const [chartOptions, setChartOptions] = useState<any>(undefined);
     const { sensorId } = props;
     const apiJson = useApiJson();
     const navigate = useNavigate();
