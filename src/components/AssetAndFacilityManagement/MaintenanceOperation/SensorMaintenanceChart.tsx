@@ -5,10 +5,11 @@ import useApiJson from '../../../hooks/useApiJson';
 import { addQuarters } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { NavLink } from 'react-router-dom';
 
 interface SensorMaintenanceChartProps {
     sensorId: number;
-  }
+}
 
 export default function SensorMaintenanceChart(props: SensorMaintenanceChartProps) {
     const [chartData, setChartData] = useState({});
@@ -19,14 +20,14 @@ export default function SensorMaintenanceChart(props: SensorMaintenanceChartProp
 
     useEffect(() => {
         apiJson.get(`http://localhost:3000/api/assetFacility/getSensorMaintenancePredictionValues/${sensorId}`).catch(e => console.log(e)).then(res => {
-            console.log("res",res)
+            console.log("res", res)
             res.newCycleLength.push(res.cycleLength[0])
             const documentStyle = getComputedStyle(document.documentElement);
             const textColor = documentStyle.getPropertyValue('--text-color');
             const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
             const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
             const data = {
-                labels: res.newDateResults.map((datestr:string) => new Date(datestr).toLocaleDateString()).concat(res.dateResults.map((datestr:string) => new Date(datestr).toLocaleDateString())),
+                labels: res.newDateResults.map((datestr: string) => new Date(datestr).toLocaleDateString()).concat(res.dateResults.map((datestr: string) => new Date(datestr).toLocaleDateString())),
                 datasets: [
                     {
                         label: 'Maintenance cycle length',
@@ -100,12 +101,24 @@ export default function SensorMaintenanceChart(props: SensorMaintenanceChartProp
     }, []);
 
     return (
-        <div className="card">
-                <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
-              Back
-            </Button>
-            <Chart type="line" data={chartData} options={chartOptions} />
+        <div className="p-10">
+            <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
+                <div className="flex justify-between">
+                    <NavLink className="flex" to={`/assetfacility/maintenance/sensorMaintenance`}>
+                        <Button variant={"outline"} type="button" className="">
+                            Back
+                        </Button>
+                    </NavLink>
+                    <span className="self-center text-title-xl font-bold">
+                        Sensor Maintenance Chart
+                    </span>
+                    <Button disabled className="invisible">
+                        Back
+                    </Button>
+                </div>
+                <Chart type="line" data={chartData} options={chartOptions} />
+
+            </div>
         </div>
     )
 }
-        

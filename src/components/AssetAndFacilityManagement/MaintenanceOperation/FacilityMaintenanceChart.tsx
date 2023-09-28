@@ -5,10 +5,11 @@ import useApiJson from '../../../hooks/useApiJson';
 import { addQuarters } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { NavLink } from 'react-router-dom';
 
 interface FacilityMaintenanceChartProps {
     facilityId: number;
-  }
+}
 
 export default function FacilityMaintenanceChart(props: FacilityMaintenanceChartProps) {
     const [chartData, setChartData] = useState<any>(undefined);
@@ -19,7 +20,7 @@ export default function FacilityMaintenanceChart(props: FacilityMaintenanceChart
 
     useEffect(() => {
         apiJson.get(`http://localhost:3000/api/assetFacility/getFacilityMaintenancePredictionValues/${facilityId}`).catch(e => console.log(e)).then(res => {
-            console.log("res",res)
+            console.log("res", res)
             if (res === undefined) return
             res.newCycleLength.push(res.cycleLength[0])
             const documentStyle = getComputedStyle(document.documentElement);
@@ -27,7 +28,7 @@ export default function FacilityMaintenanceChart(props: FacilityMaintenanceChart
             const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
             const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
             const data = {
-                labels: res.newDateResults.map((datestr:string) => new Date(datestr).toLocaleDateString()).concat(res.dateResults.map((datestr:string) => new Date(datestr).toLocaleDateString())),
+                labels: res.newDateResults.map((datestr: string) => new Date(datestr).toLocaleDateString()).concat(res.dateResults.map((datestr: string) => new Date(datestr).toLocaleDateString())),
                 datasets: [
                     {
                         label: 'Maintenance cycle length',
@@ -101,13 +102,24 @@ export default function FacilityMaintenanceChart(props: FacilityMaintenanceChart
     }, []);
 
     return (
-        <div className="card">
-                <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
-              Back
-            </Button>
-            {chartData && <Chart type="line" data={chartData} options={chartOptions} />}
-            {!chartData && <h1>No maintenance data to predict!</h1>}
+        <div className="p-10">
+            <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
+                <div className="flex justify-between">
+                    <NavLink className="flex" to={`/assetfacility/maintenance/facilityMaintenance`}>
+                        <Button variant={"outline"} type="button" className="">
+                            Back
+                        </Button>
+                    </NavLink>
+                    <span className="self-center text-title-xl font-bold">
+                        Facility Maintenance Chart
+                    </span>
+                    <Button disabled className="invisible">
+                        Back
+                    </Button>
+                </div>
+                {chartData && <Chart type="line" data={chartData} options={chartOptions} />}
+                {!chartData && <h1>No maintenance data to predict!</h1>}
+            </div>
         </div>
     )
 }
-        

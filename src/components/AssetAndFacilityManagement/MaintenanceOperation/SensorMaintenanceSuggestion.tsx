@@ -10,10 +10,11 @@ import { InputText } from "primereact/inputtext";
 
 import Sensor from "../../../models/Sensor";
 import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiOutlinePresentationChartLine, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { SensorType } from "../../../enums/SensorType";
+import { Separator } from "@/components/ui/separator";
 
 export function compareDates(d1: Date, d2: Date): number {
   let date1 = d1.getTime();
@@ -30,7 +31,7 @@ interface MaintenanceDetails {
   id: number
 }
 
-function MaintenanceOperationSuggestion() {
+function SensorMaintenanceSuggestion() {
   const apiJson = useApiJson();
 
   const [objectsList, setObjectsList] = useState<MaintenanceDetails[]>([]);
@@ -69,16 +70,6 @@ function MaintenanceOperationSuggestion() {
         id: sensor.sensorId
       })
     })
-    facilityList.forEach((facility: any) => {
-      obj.push({
-        name: facility.facilityName,
-        description: (facility.isSheltered ? "Sheltered " : "Unsheltered ") + (facility.facilityDetail as string).toLocaleLowerCase(),
-        lastMaintenance: new Date(facility.facilityDetailJson["lastMaintained"]).toLocaleString(),
-        suggestedMaintenance: new Date(facility.predictedMaintenanceDate).toLocaleString(),
-        type: "Facility",
-        id: facility.facilityId
-      })
-    })
     setObjectsList(obj)
     console.log("dates", new Date().toLocaleString(), "dates", new Date().toDateString(), "dates", new Date().toLocaleDateString(), "dates", new Date())
   }, [facilityList, sensorList]);
@@ -86,14 +77,14 @@ function MaintenanceOperationSuggestion() {
   const actionBodyTemplate = (objDetails: MaintenanceDetails) => {
     return (
       <React.Fragment>
-        <NavLink to={objDetails.type == "Sensor" ? `/assetfacility/editsensor/${objDetails.id}` : `/assetfacility/editsensor/${objDetails.id}`}>
+        <NavLink to={`/assetfacility/viewsensordetails/${objDetails.id}`}>
           <Button variant="outline" className="mb-1 mr-1">
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        <NavLink to={objDetails.type == "Sensor" ? `/assetfacility/editsensor/${objDetails.id}` : `/assetfacility/editsensor/${objDetails.id}`}>
+        <NavLink to={`/assetfacility/viewSensorMaintenanceChart/${objDetails.id}`}>
           <Button className="mb-1 mr-1">
-            <HiPencil className="mr-1" />
+            <HiOutlinePresentationChartLine className="mr-1" />
           </Button>
         </NavLink>
         {/* <Button
@@ -106,6 +97,10 @@ function MaintenanceOperationSuggestion() {
         </Button> */}
       </React.Fragment>
     );
+  };
+
+  const exportCSV = () => {
+    dt.current?.exportCSV();
   };
 
   const header = (
@@ -130,6 +125,19 @@ function MaintenanceOperationSuggestion() {
       <div>
         <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <Button disabled className="invisible">
+                Back
+              </Button>
+              <span className=" self-center text-title-xl font-bold">
+                Sensor Maintenance Suggestions
+              </span>
+              <Button onClick={exportCSV}>Export to .csv</Button>
+            </div>
+            <Separator />
+          </div>
           <DataTable
             ref={dt}
             value={objectsList}
@@ -211,4 +219,4 @@ function MaintenanceOperationSuggestion() {
   );
 }
 
-export default MaintenanceOperationSuggestion;
+export default SensorMaintenanceSuggestion;

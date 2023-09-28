@@ -351,6 +351,16 @@ function App() {
                   }
                 />
                 <Route
+                  path="/assetfacility/viewsensordetails/:sensorId/:tab"
+                  element={
+                    user ? (
+                      <ViewSensorDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
                   path="/assetfacility/createhub"
                   element={
                     user ? <CreateNewHubForm /> : <Navigate to="/login" />
@@ -384,7 +394,22 @@ function App() {
                     user ? (<ViewHubDetailsPage />) : (<Navigate to="/login" />)}
                 />
                 <Route
+                  path="/assetfacility/viewhubdetails/:hubProcessorId/:tab"
+                  element={
+                    user ? (<ViewHubDetailsPage />) : (<Navigate to="/login" />)}
+                />
+                <Route
                   path="/assetfacility/maintenance"
+                  element={
+                    user ? (
+                      <MaintenanceOperationSuggestionPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/assetfacility/maintenance/:tab"
                   element={
                     user ? (
                       <MaintenanceOperationSuggestionPage />
