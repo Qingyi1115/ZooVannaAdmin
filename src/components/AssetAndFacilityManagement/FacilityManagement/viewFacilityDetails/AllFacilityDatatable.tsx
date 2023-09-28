@@ -17,9 +17,12 @@ import { NavLink, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import Facility from "../../../../models/Facility";
 import { Separator } from "@/components/ui/separator";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 function AllfacilityDatatable() {
   const apiJson = useApiJson();
+  const { state, dispatch } = useAuthContext();
+  const { user } = state;
   const { facilityDetail } = useParams<{ facilityDetail: string }>();
   const facilityDetailJson = (facilityDetail == "thirdParty" ?
     {
@@ -84,33 +87,28 @@ function AllfacilityDatatable() {
       (val) => val.facilityId !== selectedFacility?.facilityId
     );
 
-    const deleteFacility = async () => {
-      try {
-        setDeleteFacilityDialog(false);
-        const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deleteFacility/" +
-          selectedFacility.facilityId
-        );
+    setDeleteFacilityDialog(false);
+    const responseJson = await apiJson.del(
+      "http://localhost:3000/api/assetFacility/deleteFacility/" +
+      selectedFacility.facilityId
+    ).then(()=>{
 
-        toastShadcn({
-          // variant: "destructive",
-          title: "Deletion Successful",
-          description:
-            "Successfully deleted facility: " + selectedFacility.facilityName,
-        });
-        setFacilityList(_facility);
-        setSelectedFacility(emptyFacility);
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while deleting facility: \n" + apiJson.error,
-        });
-      }
-    };
-    deleteFacility();
+      toastShadcn({
+        // variant: "destructive",
+        title: "Deletion Successful",
+        description:
+          "Successfully deleted facility: " + selectedFacility.facilityName,
+      });
+      setFacilityList(_facility);
+      setSelectedFacility(emptyFacility);
+    }).catch(error=>{
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while deleting facility: \n" + apiJson.error,
+      });
+    });
   };
 
   const deleteFacilityDialogFooter = (
@@ -119,7 +117,11 @@ function AllfacilityDatatable() {
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteFacility}>
+      <Button 
+      variant={"destructive"} 
+      onClick={deleteFacility} 
+      // disabled={}
+      >
         <HiCheck />
         Yes
       </Button>
