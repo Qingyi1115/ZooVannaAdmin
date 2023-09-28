@@ -54,20 +54,6 @@ function MaintenanceOperationSuggestion() {
       });
       setFacilityList(facility);
       console.log("facilities aft", facility)
-    }).then(() => {
-      apiJson.get(
-        "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
-      ).catch(error => {
-        console.log(error);
-      }).then(responseJson => {
-        let sensors = responseJson["sensors"]
-        console.log("sensors before", sensors)
-        sensors.filter((sensor: any) => {
-          sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
-        });
-        setSensorList(sensors);
-        console.log("sensors aft", sensors)
-      });
     });
   }, []);
 
@@ -101,15 +87,13 @@ function MaintenanceOperationSuggestion() {
     return (
       <React.Fragment>
         <NavLink to={objDetails.type == "Sensor" ? `/assetfacility/editsensor/${objDetails.id}` : `/assetfacility/editsensor/${objDetails.id}`}>
-          <Button className="mb-1 mr-1">
+          <Button variant="outline" className="mb-1 mr-1">
             <HiEye className="mx-auto" />
-            <span>View Details</span>
           </Button>
         </NavLink>
         <NavLink to={objDetails.type == "Sensor" ? `/assetfacility/editsensor/${objDetails.id}` : `/assetfacility/editsensor/${objDetails.id}`}>
           <Button className="mb-1 mr-1">
             <HiPencil className="mr-1" />
-            <span>Edit</span>
           </Button>
         </NavLink>
         {/* <Button

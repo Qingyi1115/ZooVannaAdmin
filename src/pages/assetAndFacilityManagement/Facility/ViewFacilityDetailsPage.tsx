@@ -107,9 +107,9 @@ function ViewFacilityDetailsPage() {
           <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
             <TabsTrigger value="facilityDetails">Details</TabsTrigger>
             <TabsTrigger value="hubs">Hubs</TabsTrigger>
+            {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
-            {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
             <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
           </TabsList>
           <TabsContent value="facilityDetails">
