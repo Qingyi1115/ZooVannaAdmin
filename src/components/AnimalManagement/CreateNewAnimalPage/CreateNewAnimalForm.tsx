@@ -11,6 +11,7 @@ import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
 import { HiCheck } from "react-icons/hi";
 
+import useApiJson from "../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -19,12 +20,15 @@ import { NavLink } from "react-router-dom";
 import {
   AcquisitionMethod,
   AnimalGrowthStage,
+  AnimalSex,
   AnimalStatusType,
 } from "../../../enums/Enumurated";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import Species from "src/models/Species";
 
 function CreateNewAnimalForm() {
   const apiFormData = useApiFormData();
+  const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
@@ -33,6 +37,7 @@ function CreateNewAnimalForm() {
     -animalId: Long
     -animalCode: String
     -houseName: String
+    -sex: AnimalSex 
     -dateOfBirth: Date
     -placeOfBirth: String
     -rfidTagNum: String
@@ -52,7 +57,10 @@ function CreateNewAnimalForm() {
     -parent1 (if any), leave blank if unknown
     -parent2 (if any)
   */
+  const [speciesList, setSpeciesList] = useState<Species[]>([]);
+
   const [houseName, setHouseName] = useState<string>("");
+  const [sex, setSex] = useState<string | undefined>(undefined);
   const [dateOfBirth, setDateOfBirth] = useState<string | Date | Date[] | null>(
     null
   );
@@ -81,8 +89,24 @@ function CreateNewAnimalForm() {
   // const [causeOfDeath, setCauseOfDeath] = useState<string>("");
   // const [growthStage, setGrowthStage] = useState<string | undefined>(undefined);
   // const animalStatus = "NORMAL";
+  const [speciesCode, setSpeciesCode] = useState<string>("");
 
   const [imageFile, setImageFile] = useState<File | null>(null);
+
+  // get list of all species
+  useEffect(() => {
+    const fetchSpecies = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/species/getallspecies"
+        );
+        setSpeciesList(responseJson as Species[]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchSpecies();
+  }, []);
 
   // validate functions
   function validateImage(props: ValidityState) {
@@ -112,6 +136,7 @@ function CreateNewAnimalForm() {
 
     const formData = new FormData();
     formData.append("houseName", houseName);
+    formData.append("sex", sex?.toString() || "");
     formData.append("dateOfBirth", dateOfBirth?.toString() || "");
     formData.append("placeOfBirth", placeOfBirth);
     formData.append("rfidTagNum", rfidTagNum);
@@ -229,6 +254,38 @@ function CreateNewAnimalForm() {
             pattern={undefined}
             value={rfidTagNum}
             setValue={setRfidTagNum}
+            validateFunction={() => null}
+          />
+        </div>
+
+        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+          {/* Animal Sex */}
+          <FormFieldSelect
+            formFieldName="sex"
+            label="Animal Sex"
+            required={true}
+            placeholder="Select an acquisition method..."
+            valueLabelPair={Object.keys(AnimalSex).map((animalSexKey) => [
+              animalSexKey.toString(),
+              AnimalSex[animalSexKey as keyof typeof AnimalSex].toString(),
+            ])}
+            value={sex}
+            setValue={setSex}
+            validateFunction={() => null}
+          />
+
+          {/* Species */}
+          <FormFieldSelect
+            formFieldName="species"
+            label="Species"
+            required={true}
+            placeholder="Select an acquisition method..."
+            valueLabelPair={speciesList.map((species) => [
+              species.speciesCode,
+              species.commonName,
+            ])}
+            value={sex}
+            setValue={setSex}
             validateFunction={() => null}
           />
         </div>

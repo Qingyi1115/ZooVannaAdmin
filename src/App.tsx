@@ -65,6 +65,7 @@ import EditEducationalContentPage from "./pages/speciesManagement/EditEducationa
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
 import CreateNewAnimalPage from "./pages/animalManagement/CreateNewAnimalPage";
+import ViewAllAnimalsPage from "./pages/animalManagement/ViewAllAnimalsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -189,6 +190,12 @@ function App() {
                   path="/animal/createanimal"
                   element={
                     user ? <CreateNewAnimalPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewallanimals"
+                  element={
+                    user ? <ViewAllAnimalsPage /> : <Navigate to="/login" />
                   }
                 />
                 {/* Asset and Facility Management */}
