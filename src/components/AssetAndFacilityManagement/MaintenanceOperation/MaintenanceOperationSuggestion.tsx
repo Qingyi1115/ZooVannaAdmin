@@ -124,6 +124,23 @@ function MaintenanceOperationSuggestion() {
     );
   };
 
+  const header = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h4 className="m-1">Manage Sensor Maintenance</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+    </div>
+  );
+
   return (
     <div>
       <div>
@@ -147,6 +164,7 @@ function MaintenanceOperationSuggestion() {
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensors"
             globalFilter={globalFilter}
+            header={header}
           >
             <Column
               field="name"
