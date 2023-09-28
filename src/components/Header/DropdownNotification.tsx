@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
-import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/MaintenanceOperationSuggestion";
 import { BsBroadcast, BsFillHouseExclamationFill, BsHouseExclamation } from "react-icons/bs";
+import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
