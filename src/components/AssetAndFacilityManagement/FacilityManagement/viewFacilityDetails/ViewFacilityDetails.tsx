@@ -34,7 +34,8 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
       <div className="my-4 flex justify-start gap-6">
         <NavLink to={`/assetfacility/editfacility/${curFacility.facilityId}`}>
           <Button className="mr-2">
-            <HiPencil className="mx-auto" />
+            <HiPencil className="mx-auto" ></HiPencil>
+            Edit Facility details
           </Button>
         </NavLink>
       </div>
