@@ -1,9 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "./hooks/useAuthContext";
 import { useState } from "react";
 
@@ -27,7 +22,6 @@ import ViewFacilityLogDetailsPage from "./pages/assetAndFacilityManagement/Facil
 import CreateNewFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/CreateNewFacilityLogPage";
 import EditFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/EditFacilityLogPage";
 
-
 //assets
 import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/CreateNewAnimalFeedPage";
 import CreateNewEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/CreateNewEnrichmentItemPage";
@@ -45,7 +39,6 @@ import CreateNewSensorForm from "./components/AssetAndFacilityManagement/AssetMa
 import CreateNewMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/CreateNewMaintenanceLogPage";
 import EditMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/EditMaintenanceLogPage";
 import ViewMaintenanceLogDetailsPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/ViewMaintenanceLogDetailsPage";
-
 
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
@@ -71,7 +64,7 @@ import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Maint
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
-
+import CreateNewAnimalPage from "./pages/animalManagement/CreateNewAnimalPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -191,6 +184,13 @@ function App() {
                     user ? <EditPhysioRefNormPage /> : <Navigate to="/login" />
                   }
                 />
+                {/* Animal Management */}
+                <Route
+                  path="/animal/createanimal"
+                  element={
+                    user ? <CreateNewAnimalPage /> : <Navigate to="/login" />
+                  }
+                />
                 {/* Asset and Facility Management */}
                 <Route
                   path="/assetfacility/createfacility"
@@ -211,7 +211,11 @@ function App() {
                 <Route
                   path="/assetfacility/viewfacilitydetails/:facilityId/:tab"
                   element={
-                    user ? <ViewFacilityDetailsPage /> : <Navigate to="/login" />
+                    user ? (
+                      <ViewFacilityDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
@@ -314,11 +318,7 @@ function App() {
                 <Route
                   path="/assetfacility/viewsensordetails/:sensorId"
                   element={
-                    user ? (
-                      <ViewSensorDetailsPage />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
+                    user ? <ViewSensorDetailsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -352,7 +352,8 @@ function App() {
                 <Route
                   path="/assetfacility/viewhubdetails/:hubProcessorId"
                   element={
-                    user ? (<ViewHubDetailsPage />) : (<Navigate to="/login" />)}
+                    user ? <ViewHubDetailsPage /> : <Navigate to="/login" />
+                  }
                 />
                 <Route
                   path="/assetfacility/maintenance"
@@ -377,11 +378,7 @@ function App() {
                 <Route
                   path="/assetfacility/editmaintenancelog/:logId"
                   element={
-                    user ? (
-                      <EditMaintenanceLogPage />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
+                    user ? <EditMaintenanceLogPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -407,11 +404,7 @@ function App() {
                 <Route
                   path="/assetfacility/editfacilitylog/:logId"
                   element={
-                    user ? (
-                      <EditFacilityLogPage />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
+                    user ? <EditFacilityLogPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -450,7 +443,11 @@ function App() {
                 <Route
                   path="/employeeAccount/viewEmployeeDetails/:employeeId"
                   element={
-                    user ? <ViewEmployeeDetailsPage /> : <Navigate to="/login" />
+                    user ? (
+                      <ViewEmployeeDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route

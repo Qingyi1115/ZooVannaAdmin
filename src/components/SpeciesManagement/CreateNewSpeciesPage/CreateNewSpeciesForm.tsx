@@ -18,6 +18,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { NavLink } from "react-router-dom";
 
 function CreateNewSpeciesForm() {
   const apiFormData = useApiFormData();
@@ -330,42 +331,6 @@ function CreateNewSpeciesForm() {
     setImageFile(file);
   }
 
-  // function clearForm() {
-  //   setCommonName("");
-  //   setScientificName("");
-  //   setAliasName("");
-  //   setConservationStatus("");
-  //   setConservationStatus(undefined);
-  //   setDomain("");
-  //   setDomain(undefined);
-  //   setKingdom("");
-  //   setKingdom(undefined);
-  //   setPhylum("");
-  //   setSpeciesClass("");
-  //   setOrder("");
-  //   setFamily("");
-  //   setGenus("");
-  //   setNativeContinent("");
-  //   setNativeContinent(undefined);
-  //   setSelectedBiomes(undefined);
-  //   setGroupSexualDynamic("");
-  //   setGroupSexualDynamic(undefined);
-  //   setHabitatOrExhibit("");
-  //   setHabitatOrExhibit(undefined);
-  //   setGeneralDietPreference("");
-  //   setGeneralDietPreference(undefined);
-  //   setEducationalDescription("");
-  //   setLifeExpectancyYears(0);
-  //   // Clear image
-  //   var speciesImageInput = document.getElementById(
-  //     "speciesImage"
-  //   ) as HTMLInputElement;
-  //   if (speciesImageInput) {
-  //     speciesImageInput.value = "";
-  //   }
-  //   setImageFile(null);
-  // }
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
@@ -439,9 +404,11 @@ function CreateNewSpeciesForm() {
         {/* Title Header and back button */}
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
-              Back
-            </Button>
+            <NavLink className="flex" to={`/species/viewallspecies`}>
+              <Button variant={"outline"} type="button" className="">
+                Back
+              </Button>
+            </NavLink>
             <span className="self-center text-title-xl font-bold">
               Create Species
             </span>
@@ -667,7 +634,7 @@ function CreateNewSpeciesForm() {
             type="text"
             value={selectedBiomes}
             required
-          // onChange={onValueChange}
+            // onChange={onValueChange}
           />
           <MultiSelect
             value={selectedBiomes}

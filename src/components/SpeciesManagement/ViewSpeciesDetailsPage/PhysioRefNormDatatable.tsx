@@ -42,7 +42,7 @@ interface PhysioRefNormDatatableProps {
 }
 
 const emptyPhysioRefNorm: PhysiologicalReferenceNorms = {
-  physiologicalRefId: 1,
+  physiologicalRefId: -1,
   sizeMaleCm: 100,
   sizeFemaleCm: 90,
   weightMaleKg: 200,
@@ -183,7 +183,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
             setPhysiologicalRefNormsList(e.value);
           }
         }}
-        dataKey="speciesId"
+        dataKey="physiologicalRefId"
         paginator
         // showGridlines
         rows={10}
