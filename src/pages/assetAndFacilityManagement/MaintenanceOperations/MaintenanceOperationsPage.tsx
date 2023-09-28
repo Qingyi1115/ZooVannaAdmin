@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import MaintenanceOperationSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/MaintenanceOperationSuggestion";
 import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import FactilityMaintenanceSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/FactilityMaintenanceSuggestion";
 
 
 function MaintenanceOperationSuggestionPage() {
@@ -18,7 +19,7 @@ function MaintenanceOperationSuggestionPage() {
             <TabsTrigger value="sensorMaintenance">Sensor Maintenance</TabsTrigger>
           </TabsList>
           <TabsContent value="facilityMaintenance">
-            {/* Facility maintenance page uhhhhhhhhhh */}
+            <FactilityMaintenanceSuggestion />
           </TabsContent>
           <TabsContent value="sensorMaintenance">
             <MaintenanceOperationSuggestion />
