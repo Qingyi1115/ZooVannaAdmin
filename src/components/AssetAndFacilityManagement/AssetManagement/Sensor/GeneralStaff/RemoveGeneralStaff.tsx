@@ -106,7 +106,7 @@ function RemoveGeneralStaff(props: RemoveGeneralStaffProps) {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage General Staff</h4>
+      <h4 className="m-1">Manage Maintenance Staff</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -163,7 +163,7 @@ function RemoveGeneralStaff(props: RemoveGeneralStaffProps) {
                 Back
               </Button>
               <span className="self-center text-title font-bold">
-                Remove General Staff
+                Remove Maintenance Staff
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>

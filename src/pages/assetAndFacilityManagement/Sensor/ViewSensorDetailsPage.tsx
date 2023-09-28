@@ -98,7 +98,7 @@ function ViewSensorDetailsPage() {
             <TabsTrigger value="sensorDetails">Hub Details</TabsTrigger>
             <TabsTrigger value="sensorReadings">Sensor Readings</TabsTrigger>
             <TabsTrigger value="maintenanceLogs">Maintenance Logs</TabsTrigger>
-            <TabsTrigger value="generalStaff">General Staff</TabsTrigger>
+            <TabsTrigger value="generalStaff">Maintenance Staff</TabsTrigger>
           </TabsList>
           <TabsContent value="sensorDetails">
             <ViewSensorDetails curSensor={curSensor}></ViewSensorDetails>

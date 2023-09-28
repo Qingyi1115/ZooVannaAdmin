@@ -54,8 +54,8 @@ function ManageGeneralStaffPage() {
         className="w-full"
       >
         <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-          <TabsTrigger value="assignstaff">Assign General Staff</TabsTrigger>
-          <TabsTrigger value="removestaff">Remove General Staff</TabsTrigger>
+          <TabsTrigger value="assignstaff">Assign Maintenance Staff</TabsTrigger>
+          <TabsTrigger value="removestaff">Remove Maintenance Staff</TabsTrigger>
         </TabsList>
         <TabsContent value="assignstaff">
           {sensorId && <ManageGeneralStaff sensorId={Number(sensorId)} employeeList={empList} setRefreshSeed={setRefreshSeed}></ManageGeneralStaff>}

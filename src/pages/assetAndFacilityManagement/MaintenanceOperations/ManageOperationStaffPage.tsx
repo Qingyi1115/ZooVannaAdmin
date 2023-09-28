@@ -49,7 +49,8 @@ function ManageOperationStaffPage() {
   return (
 
     <div className="flex w-full flex-col gap-6 rounded-lg bg-white p-5 text-black">
-      <Tabs
+      <ManageOperationStaff facilityId={Number(facilityId)} employeeList={empList} setRefreshSeed={setRefreshSeed}></ManageOperationStaff>
+      {/* <Tabs
         defaultValue={tab ? `${tab}` : "assignstaff"}
         className="w-full"
       >
@@ -63,7 +64,7 @@ function ManageOperationStaffPage() {
         <TabsContent value="removestaff">
           {facilityId && <RemoveOperationStaff facilityId={Number(facilityId)} employeeList={currEmpList} setRefreshSeed={setRefreshSeed}></RemoveOperationStaff>}
         </TabsContent>
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 }

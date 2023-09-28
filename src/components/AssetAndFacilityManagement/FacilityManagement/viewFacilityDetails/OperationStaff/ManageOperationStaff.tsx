@@ -195,14 +195,17 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               >
                 <HiPlus className="mx-auto" />
               </Button>
-              {/* <Button
-                name="removeButton"
-                variant={"destructive"}
-                className="mx-auto"
-                onClick={() => confirmEmployeeRemoval(employee)}
-              >
-                <HiTrash className="mx-auto" />
-              </Button> */}
+              {employee.dateOfResignation ?
+                <span>Removed</span>
+                :
+                <Button
+                  variant={"destructive"}
+                  className="mr-2"
+                  onClick={() => confirmEmployeeRemoval(employee)}
+                >
+                  <HiTrash className="mx-auto" />
+                </Button>
+              }
             </div>
 
           }
@@ -223,7 +226,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 Back
               </Button>
               <span className=" self-center text-title font-bold">
-                Assign Operations Staff
+                Manage Operations Staff
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
