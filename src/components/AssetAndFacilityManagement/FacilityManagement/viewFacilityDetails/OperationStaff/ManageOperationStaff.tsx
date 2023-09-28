@@ -64,7 +64,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             emp.currentlyAssigned = emp.generalStaff.operatedFacility?.facilityId == facilityId;
             allStaffs.push(emp)
           }
-          
         }
         setEmployeeList(allStaffs);
 
