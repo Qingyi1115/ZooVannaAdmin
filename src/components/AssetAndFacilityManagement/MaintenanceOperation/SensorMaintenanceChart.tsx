@@ -116,8 +116,8 @@ export default function SensorMaintenanceChart(props: SensorMaintenanceChartProp
                         Back
                     </Button>
                 </div>
-                <Chart type="line" data={chartData} options={chartOptions} />
-
+                {chartData && <Chart type="line" data={chartData} options={chartOptions} />}
+                {!chartData && <h1>No maintenance data to predict!</h1>}
             </div>
         </div>
     )
