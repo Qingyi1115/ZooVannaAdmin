@@ -25,8 +25,8 @@ function ManageOperationStaffPage() {
       setCurrEmpList(res["operationStaffs"]);
       assignedStaffs = res["operationStaffs"];
     }).then(() => {
-      apiJson.get(
-        `http://localhost:3000/api/assetFacility/getAllOperationStaff`
+      apiJson.post(
+        "http://localhost:3000/api/assetFacility/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
       ).catch(e => console.log(e)).then(res => {
         const allStaffs = res["operationStaffs"];
         const assignedStaffIds = []
