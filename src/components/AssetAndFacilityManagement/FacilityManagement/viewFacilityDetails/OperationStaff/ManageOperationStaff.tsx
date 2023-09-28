@@ -16,14 +16,12 @@ import { Separator } from "@/components/ui/separator";
 
 interface ManageOperationStaffProps {
   facilityId: number;
-  employeeList: Employee[];
-  setRefreshSeed: Function;
 }
 
 function manageOperationStaff(props: ManageOperationStaffProps) {
   const apiJson = useApiJson();
 
-  const { facilityId, employeeList, setRefreshSeed } = props;
+  const { facilityId } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -49,6 +47,30 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
+  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
+
+  useEffect(() => {
+      apiJson.post(
+        "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
+      ).catch(e => console.log(e)).then(res => {
+        const allStaffs :Employee[] = []
+        console.log("res",res)
+        for (const staff of res["generalStaffs"]){ 
+          if (staff.generalStaffType == "ZOO_OPERATIONS") {
+            let emp = staff.employee;
+            staff.employee = undefined;
+            emp["generalStaff"] = staff
+            emp.currentlyAssigned = emp.generalStaff.operatedFacility?.facilityId == facilityId;
+            allStaffs.push(emp)
+          }
+          
+        }
+        setEmployeeList(allStaffs);
+
+    });
+  }, [refreshSeed]);
+
   const hideEmployeeAssignmentDialog = () => {
     setAssignmentDialog(false);
   }
@@ -67,7 +89,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     try {
       const responseJson = await apiJson.put(
         `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-          console.log("ih", res["inHouse"]);
           setRefreshSeed([]);
         }).catch(err => console.log("err", err));
 
@@ -111,6 +132,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     try {
       const responseJson = await apiJson.del(
         `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
+        setRefreshSeed([]);
 
       toastShadcn({
         // variant: "destructive",
@@ -173,7 +195,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     setEmployeeRemovalDialog(true);
   };
 
-  const actionBodyTemplate = (employee: Employee) => {
+  const actionBodyTemplate = (employee: any) => {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
@@ -191,6 +213,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 name="assignButton"
                 variant={"default"}
                 className="mr-2"
+                disabled = {employee.generalStaff?.operatedFacility !== null || employee.currentlyAssigned}
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
@@ -201,6 +224,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 <Button
                   variant={"destructive"}
                   className="mr-2"
+                  disabled = {!employee.currentlyAssigned}
                   onClick={() => confirmEmployeeRemoval(employee)}
                 >
                   <HiTrash className="mx-auto" />
@@ -281,6 +305,12 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             <Column
               field="employeeEducation"
               header="Education"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="generalStaff.operatedFacilityName"
+              header="Current Facility ID"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
