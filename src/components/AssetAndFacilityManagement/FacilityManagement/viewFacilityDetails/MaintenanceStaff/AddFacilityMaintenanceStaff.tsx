@@ -14,16 +14,16 @@ import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
 
-interface ManageGeneralStaffProps {
-  sensorId: number;
+interface AddFacilityMaintenanceStaffProps {
+  facilityId: number;
   employeeList: Employee[];
-  setRefreshSeed: Function;
+  setRefreshSeed:Function;
 }
 
-function manageGeneralStaff(props: ManageGeneralStaffProps) {
+function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
-  const { sensorId, employeeList, setRefreshSeed } = props;
+  const { facilityId, employeeList, setRefreshSeed } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -66,16 +66,16 @@ function manageGeneralStaff(props: ManageGeneralStaffProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToSensor/${sensorId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-          console.log("sensor", res["sensor"]);
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res=>{
+          console.log("ih",res["inHouse"]);
           setRefreshSeed([]);
-        }).catch(err => console.log("err", err));
+        }).catch(err=>console.log("err",err));
 
       toastShadcn({
         // variant: "destructive",
         title: "Assignment Successful",
         description:
-          "Successfully assigned general staff: " + selectedEmployeeName,
+          "Successfully assigned maintenance staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setAssignmentDialog(false);
@@ -86,7 +86,7 @@ function manageGeneralStaff(props: ManageGeneralStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while assigning general staff: \n" + apiJson.error,
+          "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
       });
     }
 
@@ -105,18 +105,18 @@ function manageGeneralStaff(props: ManageGeneralStaffProps) {
     </React.Fragment>
   );
 
-  const removeGeneralStaff = async () => {
+  const removeMaintenanceStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
       const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeGeneralStaffFromFacility/${sensorId}`, { employeeIds: [selectedEmployee.employeeId,] });
+        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
 
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
         description:
-          "Successfully removed general staff: " + selectedEmployeeName,
+          "Successfully removed maintenance staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setEmployeeRemovalDialog(false);
@@ -127,7 +127,7 @@ function manageGeneralStaff(props: ManageGeneralStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while removing general staff: \n" + apiJson.error,
+          "An error has occurred while removing maintenance staff: \n" + apiJson.error,
       });
     }
 
@@ -139,7 +139,7 @@ function manageGeneralStaff(props: ManageGeneralStaffProps) {
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={removeGeneralStaff}>
+      <Button variant={"destructive"} onClick={removeMaintenanceStaff}>
         <HiCheck />
         Yes
       </Button>
@@ -340,4 +340,4 @@ function manageGeneralStaff(props: ManageGeneralStaffProps) {
   );
 }
 
-export default manageGeneralStaff;
+export default AddFacilityMaintenanceStaff;

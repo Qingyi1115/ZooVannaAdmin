@@ -18,6 +18,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Hub from "../../../../../models/Hub";
 import Sensor from "../../../../../models/Sensor";
+import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
 interface AllSensorReadingDatatableProps {
   curSensor: Sensor,
@@ -26,6 +27,8 @@ interface AllSensorReadingDatatableProps {
 function AllSensorReadingDatatable(props: AllSensorReadingDatatableProps) {
   const apiJson = useApiJson();
   const { curSensor } = props;
+  const employee = useAuthContext().state.user?.employeeData;
+  
   let emptySensorReading: SensorReading = {
     readingDate: new Date(),
     value: 0,

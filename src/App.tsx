@@ -67,7 +67,7 @@ import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRe
 import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
 import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
 import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageOperationStaffPage";
-import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageMaintenanceStaffPage";
+import ManageFacilityMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageFacilityMaintenanceStaffPage";
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
@@ -227,7 +227,7 @@ function App() {
                   path="/assetfacility/editfacility/:facilityId/managestaff"
                   element={
                     user ? (
-                      <AssignMaintenanceStaffPage />
+                      <ManageFacilityMaintenanceStaffPage />
                     ) : (
                       <Navigate to="/login" />
                     )

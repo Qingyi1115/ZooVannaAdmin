@@ -18,6 +18,7 @@ import Sensor from "src/models/Sensor";
 import { Separator } from "@radix-ui/react-select";
 import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 interface SensorDetailsProps {
   curSensor: Sensor;
@@ -25,18 +26,20 @@ interface SensorDetailsProps {
 function ViewSensorDetails(props: SensorDetailsProps) {
   const apiJson = useApiJson();
   const { curSensor } = props;
-  console.log(props);
+  const employee = useAuthContext().state.user?.employeeData;
 
   const toastShadcn = useToast().toast;
 
   return (
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
+      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <NavLink to={`/assetfacility/editsensor/${curSensor.sensorId}`}>
           <Button className="mr-2">
             <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
+      )}
       </div>
       <Table>
         <TableBody>

@@ -18,6 +18,7 @@ import { SensorType } from "../../../../enums/SensorType";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Hub from "../../../../models/Hub";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 interface AllSensorDatatableProps {
   curHub: Hub,
@@ -26,6 +27,7 @@ interface AllSensorDatatableProps {
 function AllSensorDatatable(props: AllSensorDatatableProps) {
   const apiJson = useApiJson();
   const { curHub } = props;
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptySensor: Sensor = {
     sensorId: -1,
@@ -136,11 +138,14 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
+      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <NavLink to={`/assetFacility/editsensor/${sensor.sensorId}`}>
           <Button className="mr-2">
             <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
+      )}
+      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <Button
           variant={"destructive"}
           className="mr-2"
@@ -148,6 +153,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
         >
           <HiTrash className="mx-auto" />
         </Button>
+      )}
       </React.Fragment>
     );
   };
@@ -177,11 +183,14 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
+              
+              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
               <NavLink to={`/assetfacility/createsensor/${curHub.hubProcessorId}`}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
                 </Button>
               </NavLink>
+              )}
               <span className=" self-center text-title-xl font-bold">
                 All Sensors
               </span>

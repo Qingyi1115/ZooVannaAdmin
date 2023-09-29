@@ -3,13 +3,13 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Employee from "src/models/Employee";
-import ManageMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ManageMaintenanceStaff";
-import RemoveMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/RemoveMaintenanceStaff";
+import AddFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/AddFacilityMaintenanceStaff";
+import RemoveFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/RemoveFacilityMaintenanceStaff";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
 
-function ManageMaintenanceStaffPage() {
+function ManageFacilityMaintenanceStaffPage() {
   const apiJson = useApiJson();
   const { facilityId } = useParams<{ facilityId: string }>();
   const [empList, setEmpList] = useState<Employee[]>([]);
@@ -58,14 +58,14 @@ function ManageMaintenanceStaffPage() {
           <TabsTrigger value="removestaff">Remove Maintenance Staff</TabsTrigger>
         </TabsList>
         <TabsContent value="assignstaff">
-          {facilityId && <ManageMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList} setRefreshSeed={setRefreshSeed}></ManageMaintenanceStaff>}
+          {facilityId && <AddFacilityMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList} setRefreshSeed={setRefreshSeed}></AddFacilityMaintenanceStaff>}
         </TabsContent>
         <TabsContent value="removestaff">
-          {facilityId && <RemoveMaintenanceStaff facilityId={Number(facilityId)} employeeList={currEmpList} setRefreshSeed={setRefreshSeed}></RemoveMaintenanceStaff>}
+          {facilityId && <RemoveFacilityMaintenanceStaff facilityId={Number(facilityId)} employeeList={currEmpList} setRefreshSeed={setRefreshSeed}></RemoveFacilityMaintenanceStaff>}
         </TabsContent>
       </Tabs>
     </div>
   );
 }
 
-export default ManageMaintenanceStaffPage;
+export default ManageFacilityMaintenanceStaffPage;

@@ -440,7 +440,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         className={`translate transform overflow-hidden ${!open && "hidden"
                           }`}
                       >
+
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
+                          
+                        {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
+                          employee.generalStaff) && (
                           <li>
                             <NavLink
                               to="/assetfacility/maintenance"
@@ -452,6 +456,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Maintenance Management
                             </NavLink>
                           </li>
+                          )}
+                          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
+                            employee.generalStaff) && (
                           <li>
                             <NavLink
                               to="/assetfacility/viewallfacilities"
@@ -463,6 +470,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               View All Customer Facilities
                             </NavLink>
                           </li>
+                          )}
+                          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
                           <li>
                             <NavLink
                               to="/assetfacility/createfacility"
@@ -474,6 +483,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Add Customer Facility
                             </NavLink>
                           </li>
+                          )}
+                          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
+                            employee.generalStaff) && (
                           <li>
                             <NavLink
                               to="/assetfacility/viewallassets"
@@ -485,6 +497,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               View All Assets
                             </NavLink>
                           </li>
+                          )}
                           {/* <li>
                             <NavLink
                               to="/assetfacility/viewallanimalfeed"
@@ -496,6 +509,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               View All Animal Feed
                             </NavLink>
                           </li> */}
+                          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER"))&& (
                           <li>
                             <NavLink
                               to="/assetfacility/createanimalfeed"
@@ -507,6 +521,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Create Animal Feed
                             </NavLink>
                           </li>
+                          )}
                           {/* <li>
                             <NavLink
                               to="/assetfacility/viewallenrichmentitems"
@@ -518,6 +533,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               View All Enrichment Items
                             </NavLink>
                           </li> */}
+                          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) &&(
                           <li>
                             <NavLink
                               to="/assetfacility/createenrichmentitem"
@@ -529,6 +545,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Create Enrichment Item
                             </NavLink>
                           </li>
+                          )}
                           {/* <li>
                             <NavLink
                               to="/assetfacility/viewallsensors"

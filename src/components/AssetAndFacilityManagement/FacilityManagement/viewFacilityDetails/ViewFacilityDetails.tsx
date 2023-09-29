@@ -18,6 +18,7 @@ import Facility from "src/models/Facility";
 import { Separator } from "@radix-ui/react-select";
 import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 interface FacilityDetailsProps {
   curFacility: Facility;
@@ -25,19 +26,22 @@ interface FacilityDetailsProps {
 function ViewFacilityDetails(props: FacilityDetailsProps) {
   const apiJson = useApiJson();
   const { curFacility } = props;
-  console.log(props);
+  const employee = useAuthContext().state.user?.employeeData;
 
   const toastShadcn = useToast().toast;
 
   return (
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
+        
+      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <NavLink to={`/assetfacility/editfacility/${curFacility.facilityId}`}>
           <Button className="mr-2">
             <HiPencil className="mx-auto" ></HiPencil>
             Edit Facility details
           </Button>
         </NavLink>
+      )}
       </div>
       <Table>
         <TableBody>

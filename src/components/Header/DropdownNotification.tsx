@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import { BsBroadcast, BsFillHouseExclamationFill, BsHouseExclamation } from "react-icons/bs";
 import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const apiJson = useApiJson();
+  const { state } = useAuthContext();
+  const employee = state.user?.employeeData;
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
@@ -37,6 +40,44 @@ const DropdownNotification = () => {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
+
+  useEffect(() => {
+    if (!(employee.planningStaff?.plannerType == "OPERATION_MANAGER") &&
+    !employee.generalStaff) return;
+    apiJson.get(
+      "http://localhost:3000/api/assetFacility/getFacilityMaintenanceSuggestions"
+    ).catch(error => {
+      console.log(error);
+    }).then(responseJson => {
+      if (responseJson === undefined) return;
+      let facility = responseJson["facilities"]
+      // console.log("facilities", responseJson)
+      facility = facility.filter((f: any) => {
+        f.predictedMaintenanceDate && (compareDates(new Date(f.predictedMaintenanceDate), new Date()) <= 0)
+      });
+      setFacilityList(facility);
+      // console.log("facilities aft", facility)
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!(employee.planningStaff?.plannerType == "OPERATION_MANAGER") &&
+    !employee.generalStaff) return;
+    apiJson.get(
+      "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
+    ).catch(error => {
+      console.log(error);
+    }).then(responseJson => {
+      let sensors = responseJson["sensors"]
+      // console.log("sensors before", sensors)
+      // sensors = 
+      sensors= sensors.filter((sensor: any) => {
+        sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
+      });
+      setSensorList(sensors);
+      // console.log("sensors aft", sensors)
+    });
+  }, []);
 
   return (
     <li className="relative">
@@ -76,81 +117,91 @@ const DropdownNotification = () => {
         <div className="px-4.5 py-3">
           <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
         </div>
+        {((employee.planningStaff?.plannerType == "OPERATION_MANAGER") ||
+    employee.generalStaff) && (
+    <ul className="flex h-auto flex-col overflow-y-auto">
 
-        <ul className="flex h-auto flex-col overflow-y-auto">
+    <li>
+      <Link
+        className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+        to="/assetfacility/maintenance"
+      >
+        {facilityList.length ? <div className="text-red-600"><p className="text-sm">
+          <BsHouseExclamation />
+          Facilities to maintain {facilityList.length}</p></div>
+        :<div className="text-green-700"><p className="text-sm">
+          <BsHouseExclamation />
+          Facilities are all maintained!</p></div>
+        }
 
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="/assetfacility/maintenance"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  Edit your information in a swipe
-                </span>{" "}
-                Sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim.
-              </p>
+        <p className="text-xs">Today</p>
+      </Link>
+    </li>
 
-              <p className="text-xs">Today</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  It is a long established fact
-                </span>{" "}
-                that a reader will be distracted by the readable.
-              </p>
 
-              <p className="text-xs">24 Feb, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="/assetfacility/maintenance"
-            >
-              {sensorList.length ? <p className="text-sm"><div className="text-red-600">
-                <BsBroadcast />
-                  Sensors to maintain {sensorList.length}</div>
-              </p>:<p className="text-sm"><div className="text-green-700">
-                <BsBroadcast />
-                  Sensors are all maintained!</div>
-              </p>}
-              
+    {facilityList && facilityList.map((facility) => {
+      return (
 
-              <p className="text-xs">Today</p>
+        <li>
+        <Link
+          className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+          to="/assetfacility/maintenance"
+        >
+          <BsHouseExclamation />
+          <p className="text-sm">
+            <span className="text-black dark:text-white">
+            {facility.facilityName}
+            </span>{" "}
+          </p>
+          <p className="text-xs">Suggested Date: {new Date(facility.predictedMaintenanceDate).toLocaleDateString()}</p>
 
-            </Link>
-          </li>
+        </Link>
+      </li>
+      );
+    })}
 
-          {sensorList.map((sensor) => {
-            return (
+    <li>
+      <Link
+        className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+        to="/assetfacility/maintenance"
+      >
+        {sensorList.length ? <div className="text-red-600"><p className="text-sm">
+          <BsBroadcast />
+            Sensors to maintain {sensorList.length}
+        </p></div>:<div className="text-green-700"><p className="text-sm">
+          <BsBroadcast />
+            Sensors are all maintained!</p></div>
+        }
+        
 
-              <li>
-              <Link
-                className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                to="/assetfacility/maintenance"
-              >
-                <BsBroadcast />
-                <p className="text-sm">
-                  <span className="text-black dark:text-white">
-                  {sensor.sensorName}
-                  </span>{" "}
-                </p>
-                <p className="text-xs">Suggested Date: {new Date(sensor.predictedMaintenanceDate).toLocaleDateString()}</p>
-  
-              </Link>
-            </li>
-            );
-          })}
+        <p className="text-xs">Today</p>
 
-        </ul>
+      </Link>
+    </li>
+
+    {sensorList.map((sensor) => {
+      return (
+
+        <li>
+        <Link
+          className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+          to="/assetfacility/maintenance"
+        >
+          <BsBroadcast />
+          <p className="text-sm">
+            <span className="text-black dark:text-white">
+            {sensor.sensorName}
+            </span>{" "}
+          </p>
+          <p className="text-xs">Suggested Date: {new Date(sensor.predictedMaintenanceDate).toLocaleDateString()}</p>
+
+        </Link>
+      </li>
+      );
+    })}
+
+  </ul>)}
+        
       </div>
     </li>
   );

@@ -4,12 +4,12 @@ import { useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Employee from "src/models/Employee";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ManageGeneralStaff from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/GeneralStaff/ManageGeneralStaff";
-import RemoveGeneralStaff from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/GeneralStaff/RemoveGeneralStaff";
+import AddSensorMaintenanceStaff from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/GeneralStaff/AddSensorMaintenanceStaff";
+import RemoveSensorMaintenanceStaff from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/GeneralStaff/RemoveSensorMaintenanceStaff";
 
 
 
-function ManageGeneralStaffPage() {
+function ManageSensorGeneralStaffPage() {
   const apiJson = useApiJson();
   const { sensorId } = useParams<{ sensorId: string }>();
   const [empList, setEmpList] = useState<Employee[]>([]);
@@ -58,14 +58,14 @@ function ManageGeneralStaffPage() {
           <TabsTrigger value="removestaff">Remove Maintenance Staff</TabsTrigger>
         </TabsList>
         <TabsContent value="assignstaff">
-          {sensorId && <ManageGeneralStaff sensorId={Number(sensorId)} employeeList={empList} setRefreshSeed={setRefreshSeed}></ManageGeneralStaff>}
+          {sensorId && <AddSensorMaintenanceStaff sensorId={Number(sensorId)} employeeList={empList} setRefreshSeed={setRefreshSeed}></AddSensorMaintenanceStaff>}
         </TabsContent>
         <TabsContent value="removestaff">
-          {sensorId && <RemoveGeneralStaff sensorId={Number(sensorId)} employeeList={currEmpList} setRefreshSeed={setRefreshSeed}></RemoveGeneralStaff>}
+          {sensorId && <RemoveSensorMaintenanceStaff sensorId={Number(sensorId)} employeeList={currEmpList} setRefreshSeed={setRefreshSeed}></RemoveSensorMaintenanceStaff>}
         </TabsContent>
       </Tabs>
     </div>
   );
 }
 
-export default ManageGeneralStaffPage;
+export default ManageSensorGeneralStaffPage;

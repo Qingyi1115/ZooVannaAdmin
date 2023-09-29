@@ -17,16 +17,16 @@ import { Separator } from "@/components/ui/separator";
 {
   /*const toast = useRef<Toast>(null);*/
 }
-interface RemoveGeneralStaffProps {
-  sensorId: number;
+interface RemoveFacilityMaintenanceStaffProps {
+  facilityId: number;
   employeeList: Employee[];
   setRefreshSeed: Function;
 }
 
-function RemoveGeneralStaff(props: RemoveGeneralStaffProps) {
+function RemoveFacilityMaintenanceStaff(props: RemoveFacilityMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
-  const { sensorId, employeeList, setRefreshSeed } = props;
+  const { facilityId, employeeList, setRefreshSeed } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -60,21 +60,21 @@ function RemoveGeneralStaff(props: RemoveGeneralStaffProps) {
   };
 
 
-  const removeGeneralStaff = async () => {
+  const removeMaintenanceStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
       const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromSensor/${sensorId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-          console.log("sensor", res["sensor"]["generalStaffs"])
+        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res=>{
+          console.log("ih",res["inHouse"]["maintenanceStaffs"])
           setRefreshSeed([])
-        }).catch(err => console.log("err", err));
-
+        }).catch(err=>console.log("err",err));
+        
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
         description:
-          "Successfully removed general staff: " + selectedEmployeeName,
+          "Successfully removed maintenance staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setEmployeeRemovalDialog(false);
@@ -85,7 +85,7 @@ function RemoveGeneralStaff(props: RemoveGeneralStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while removing general staff: \n" + apiJson.error,
+          "An error has occurred while removing maintenance staff: \n" + apiJson.error,
       });
     }
 
@@ -97,7 +97,7 @@ function RemoveGeneralStaff(props: RemoveGeneralStaffProps) {
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={removeGeneralStaff}>
+      <Button variant={"destructive"} onClick={removeMaintenanceStaff}>
         <HiCheck />
         Yes
       </Button>
@@ -263,4 +263,4 @@ function RemoveGeneralStaff(props: RemoveGeneralStaffProps) {
   );
 }
 
-export default RemoveGeneralStaff;
+export default RemoveFacilityMaintenanceStaff;

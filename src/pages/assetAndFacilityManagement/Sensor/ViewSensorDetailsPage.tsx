@@ -13,14 +13,13 @@ import Sensor from "../../../models/Sensor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AllSensorReadingDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/SensorReadings/AllSensorReadingsDatatable";
 import AllMaintenanceLogsDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/AllMaintenanceLogsDatatable";
-import ManageGeneralStaffPage from "./ManageGeneralStaffPage";
-
-
-
+import ManageSensorGeneralStaffPage from "./ManageSensorGeneralStaffPage";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 function ViewSensorDetailsPage() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptyFacility: Facility = {
     facilityId: -1,
@@ -98,7 +97,7 @@ function ViewSensorDetailsPage() {
             <TabsTrigger value="sensorDetails">Hub Details</TabsTrigger>
             <TabsTrigger value="sensorReadings">Sensor Readings</TabsTrigger>
             <TabsTrigger value="maintenanceLogs">Maintenance Logs</TabsTrigger>
-            <TabsTrigger value="generalStaff">Maintenance Staff</TabsTrigger>
+            {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (<TabsTrigger value="generalStaff">Maintenance Staff</TabsTrigger>)}
           </TabsList>
           <TabsContent value="sensorDetails">
             <ViewSensorDetails curSensor={curSensor}></ViewSensorDetails>
@@ -109,9 +108,11 @@ function ViewSensorDetailsPage() {
           <TabsContent value="maintenanceLogs">
             <AllMaintenanceLogsDatatable curSensor={curSensor} />
           </TabsContent>
+          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <TabsContent value="generalStaff">
-            <ManageGeneralStaffPage />
+            <ManageSensorGeneralStaffPage />
           </TabsContent>
+          )}
         </Tabs>
 
       </div>

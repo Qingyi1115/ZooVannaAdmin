@@ -17,10 +17,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptyAnimalFeed: AnimalFeed = {
     animalFeedId: -1,
@@ -170,11 +172,13 @@ function AllAnimalFeedDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
+            {(employee.planningStaff?.plannerType == "CURATOR") && (
               <NavLink to={"/assetfacility/createanimalfeed"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
                 </Button>
               </NavLink>
+            )}
               <span className="self-center text-title-xl font-bold">
                 All Animal Feed
               </span>
@@ -226,14 +230,17 @@ function AllAnimalFeedDatatable() {
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
-            <Column
-              body={actionBodyTemplate}
-              header="Actions"
-              frozen
-              alignFrozen="right"
-              exportable={false}
-              style={{ minWidth: "9rem" }}
-            ></Column>
+            
+            {(employee.planningStaff?.plannerType == "CURATOR") && (
+              <Column
+                body={actionBodyTemplate}
+                header="Actions"
+                frozen
+                alignFrozen="right"
+                exportable={false}
+                style={{ minWidth: "9rem" }}
+              ></Column>
+            )}
           </DataTable>
         </div>
       </div>

@@ -16,10 +16,12 @@ import { Button } from "@/components/ui/button";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 function AllEnrichmentItemDatatable() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptyEnrichmentItem: EnrichmentItem = {
     enrichmentItemId: -1,
@@ -177,11 +179,13 @@ function AllEnrichmentItemDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
+            {(employee.planningStaff?.plannerType == "CURATOR") && (
               <NavLink to={"/assetfacility/createenrichmentitem"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
                 </Button>
               </NavLink>
+            )}
               <span className="self-center text-title-xl font-bold">
                 All Enrichment Items
               </span>
@@ -227,14 +231,16 @@ function AllEnrichmentItemDatatable() {
               header="Image"
               body={imageBodyTemplate}
             ></Column>
-            <Column
-              body={actionBodyTemplate}
-              header="Actions"
-              frozen
-              alignFrozen="right"
-              exportable={false}
-              style={{ minWidth: "9rem" }}
-            ></Column>
+            {(employee.planningStaff?.plannerType == "CURATOR") && (
+              <Column
+                body={actionBodyTemplate}
+                header="Actions"
+                frozen
+                alignFrozen="right"
+                exportable={false}
+                style={{ minWidth: "9rem" }}
+              ></Column>
+            )}
           </DataTable>
         </div>
       </div>

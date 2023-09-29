@@ -35,7 +35,6 @@ function FacilityMaintenanceSuggestion() {
   const apiJson = useApiJson();
 
   const [objectsList, setObjectsList] = useState<MaintenanceDetails[]>([]);
-  const [sensorList, setSensorList] = useState<any[]>([]);
   const [facilityList, setFacilityList] = useState<any[]>([]);
   const [selectedObject, setSelectedObject] = useState<MaintenanceDetails>({ name: "", description: "", lastMaintenance: "", suggestedMaintenance: "", type: "", id: -1 });
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -61,18 +60,20 @@ function FacilityMaintenanceSuggestion() {
   useEffect(() => {
     let obj: any = []
     facilityList.forEach((facility: any) => {
+      console.log("facility", facility)
       obj.push({
         name: facility.facilityName,
         description: (facility.isSheltered ? "Sheltered " : "Unsheltered ") + (facility.facilityDetail as string).toLocaleLowerCase(),
         lastMaintenance: new Date(facility.facilityDetailJson["lastMaintained"]).toLocaleString(),
-        suggestedMaintenance: new Date(facility.predictedMaintenanceDate).toLocaleString(),
+        suggestedMaintenance: facility.predictedMaintenanceDate ?
+        new Date(facility.predictedMaintenanceDate).toLocaleString() : "No suggested date", 
         type: "Facility",
         id: facility.facilityId
       })
     })
     setObjectsList(obj)
     console.log("dates", new Date().toLocaleString(), "dates", new Date().toDateString(), "dates", new Date().toLocaleDateString(), "dates", new Date())
-  }, [facilityList, sensorList]);
+  }, [facilityList]);
 
   const exportCSV = () => {
     dt.current?.exportCSV();

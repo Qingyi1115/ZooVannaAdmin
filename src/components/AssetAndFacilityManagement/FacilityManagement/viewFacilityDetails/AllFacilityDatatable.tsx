@@ -21,8 +21,7 @@ import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 function AllfacilityDatatable() {
   const apiJson = useApiJson();
-  const { state, dispatch } = useAuthContext();
-  const { user } = state;
+  const employee = useAuthContext().state.user?.employeeData;
   const { facilityDetail } = useParams<{ facilityDetail: string }>();
   const facilityDetailJson = (facilityDetail == "thirdParty" ?
     {
@@ -63,6 +62,7 @@ function AllfacilityDatatable() {
     apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", { includes: ["facilityDetail"] }).catch(e => {
       console.log(e);
     }).then(res => {
+      console.log("res", res)
       setFacilityList(res["facilities"]);
     })
   }, []);
@@ -137,20 +137,23 @@ function AllfacilityDatatable() {
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
+        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}>
           <Button className="mr-1">
             <HiPencil className="mr-1" />
 
           </Button>
         </NavLink>
+        )}
+        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <Button
           variant={"destructive"}
           className="mr-2"
           onClick={() => confirmDeletefacility(facility)}
         >
           <HiTrash className="mx-auto" />
-
         </Button>
+        )}
       </React.Fragment>
     );
   };
@@ -180,11 +183,13 @@ function AllfacilityDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
+              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
               <NavLink to={"/assetfacility/createfacility"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
                 </Button>
               </NavLink>
+              )}
               <span className=" self-center text-title-xl font-bold">
                 All Facilities
               </span>

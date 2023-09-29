@@ -10,11 +10,12 @@ import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagemen
 import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Employee from "../../../models/Employee";
-import ManageMaintenanceStaffPage from "../MaintenanceOperations/ManageMaintenanceStaffPage";
+import ManageFacilityMaintenanceStaffPage from "../MaintenanceOperations/ManageFacilityMaintenanceStaffPage";
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
 import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
 import AllFacilityLogsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/AllFacilityLogsDatatable";
 import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 
 
@@ -24,6 +25,7 @@ function ViewFacilityDetailsPage() {
   const [assignedStaffIds, setAssignedStaffIds] = useState<number[]>([]);
   const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
   const [empList, setEmpList] = useState<Employee[]>([]);
+  const employee = useAuthContext().state.user?.employeeData;
 
   // let emptyThirdParty: ThirdParty = {
   //   ownership: "",
@@ -106,10 +108,11 @@ function ViewFacilityDetailsPage() {
         >
           <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
             <TabsTrigger value="facilityDetails">Details</TabsTrigger>
+
             <TabsTrigger value="hubs">Hubs</TabsTrigger>
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
-            {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
-            {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
+            {curFacility.facilityDetail == "inHouse" && employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
+            {curFacility.facilityDetail == "inHouse" && employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
             <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
           </TabsList>
           <TabsContent value="facilityDetails">
@@ -125,12 +128,16 @@ function ViewFacilityDetailsPage() {
           <TabsContent value="hubs">
             <AllHubDatatable curFacility={curFacility} />
           </TabsContent>
+          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <TabsContent value="manageMaintenance">
-            <ManageMaintenanceStaffPage />
+            <ManageFacilityMaintenanceStaffPage />
           </TabsContent>
+          )}
+          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <TabsContent value="manageOperations">
             <ManageOperationStaffPage />
           </TabsContent>
+          )}
           <TabsContent value="customerReport">
             <AllCustomerReportsDatatable curFacility={curFacility} />
           </TabsContent>

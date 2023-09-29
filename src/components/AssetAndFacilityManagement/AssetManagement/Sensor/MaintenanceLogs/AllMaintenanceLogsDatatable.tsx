@@ -22,6 +22,7 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { ScrollPanel } from "primereact/scrollpanel";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
+import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
 interface AllMaintenanceLogsDatatableProps {
   curSensor: Sensor;
@@ -30,7 +31,7 @@ interface AllMaintenanceLogsDatatableProps {
 function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   const apiJson = useApiJson();
   const { curSensor } = props;
-  console.log(curSensor);
+  const employee = useAuthContext().state.user?.employeeData;
 
 
   let emptyMaintenanceLog: MaintenanceLog = {
@@ -199,7 +200,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
         <Card
           title={maintenanceLog.title}
           subTitle={"Date created: " + maintenanceLog.dateTime.toString()}
-          footer={<Button
+          footer={(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <Button
             variant={"destructive"}
             className="mr-2"
             onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
@@ -238,11 +239,13 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
+            {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
               <NavLink to={`/assetfacility/createmaintenancelog/${curSensor.sensorId}`}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
                 </Button>
               </NavLink>
+            )}
               <span className=" self-center text-title-xl font-bold">
                 All Maintenance Logs
               </span>
