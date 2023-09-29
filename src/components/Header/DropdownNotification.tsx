@@ -6,10 +6,10 @@ import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const apiJson = useApiJson();
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
-  const apiJson = useApiJson();
   const [facilityList, setFacilityList] = useState<any[]>([]);
   const [sensorList, setSensorList] = useState<any[]>([]);
 
@@ -37,39 +37,6 @@ const DropdownNotification = () => {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
-
-  useEffect(() => {
-    apiJson.get(
-      "http://localhost:3000/api/assetFacility/getFacilityMaintenanceSuggestions"
-    ).catch(error => {
-      console.log(error);
-    }).then(responseJson => {
-      let facility = responseJson["facilities"]
-      console.log("facilities", responseJson)
-      facility = facility.filter((f: any) => {
-        f.predictedMaintenanceDate && (compareDates(new Date(f.predictedMaintenanceDate), new Date()) <= 0)
-      });
-      setFacilityList(facility);
-      console.log("facilities aft", facility)
-    });
-  }, []);
-
-  useEffect(() => {
-    apiJson.get(
-      "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
-    ).catch(error => {
-      console.log(error);
-    }).then(responseJson => {
-      let sensors = responseJson["sensors"]
-      console.log("sensors before", sensors)
-      // sensors = 
-      sensors= sensors.filter((sensor: any) => {
-        sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
-      });
-      setSensorList(sensors);
-      console.log("sensors aft", sensors)
-    });
-  }, []);
 
   return (
     <li className="relative">
@@ -117,40 +84,32 @@ const DropdownNotification = () => {
               className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
               to="/assetfacility/maintenance"
             >
-              {facilityList.length ? <p className="text-sm"><div className="text-red-600">
-                <BsHouseExclamation />
-                Facilities to maintain {facilityList.length}</div>
-              </p>:<p className="text-sm"><div className="text-green-700">
-                <BsHouseExclamation />
-                Facilities are all maintained!</div>
-              </p>}
+              <p className="text-sm">
+                <span className="text-black dark:text-white">
+                  Edit your information in a swipe
+                </span>{" "}
+                Sint occaecat cupidatat non proident, sunt in culpa qui officia
+                deserunt mollit anim.
+              </p>
 
               <p className="text-xs">Today</p>
             </Link>
           </li>
+          <li>
+            <Link
+              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+              to="#"
+            >
+              <p className="text-sm">
+                <span className="text-black dark:text-white">
+                  It is a long established fact
+                </span>{" "}
+                that a reader will be distracted by the readable.
+              </p>
 
-
-          {facilityList && facilityList.map((facility) => {
-            return (
-
-              <li>
-              <Link
-                className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                to="/assetfacility/maintenance"
-              >
-                <BsHouseExclamation />
-                <p className="text-sm">
-                  <span className="text-black dark:text-white">
-                  {facility.facilityName}
-                  </span>{" "}
-                </p>
-                <p className="text-xs">Suggested Date: {new Date(facility.predictedMaintenanceDate).toLocaleDateString()}</p>
-  
-              </Link>
-            </li>
-            );
-          })}
-
+              <p className="text-xs">24 Feb, 2025</p>
+            </Link>
+          </li>
           <li>
             <Link
               className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"

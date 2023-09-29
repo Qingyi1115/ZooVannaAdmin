@@ -6,6 +6,7 @@ import SidebarLinkGroup from "./SidebarLinkGroup";
 import { BsBuildingGear } from "react-icons/bs";
 import { GiLion } from "react-icons/gi";
 import { HiOutlineUserGroup, HiOutlineUserAdd } from "react-icons/hi";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -15,6 +16,8 @@ interface SidebarProps {
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
   const { pathname } = location;
+  const { state } = useAuthContext();
+  const employee = state.user?.employeeData;
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -26,6 +29,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   // close on click outside
   useEffect(() => {
+    console.log("employee", employee)
     const clickHandler = ({ target }: MouseEvent) => {
       if (!sidebar.current || !trigger.current) return;
       if (
