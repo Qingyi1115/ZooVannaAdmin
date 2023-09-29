@@ -7,12 +7,26 @@ import { PrimeReactProvider } from "primereact/api";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import MainLayout from "./components/MainLayout";
+
+import NotFoundPage from "./pages/NotFoundPage";
+
+// Species
 import ViewAllSpeciesPage from "./pages/speciesManagement/ViewAllSpeciesPage";
 import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage";
 import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
-import NotFoundPage from "./pages/NotFoundPage";
-
 import ViewSpeciesDetailsPage from "./pages/speciesManagement/ViewSpeciesDetailsPage";
+import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNewDietaryRequirementsPage";
+import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
+
+import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
+import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
+import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
+
+// Animal
+import CreateNewAnimalPage from "./pages/animalManagement/CreateNewAnimalPage";
+import ViewAllAnimalsPage from "./pages/animalManagement/ViewAllAnimalsPage";
+import ViewAnimalDetailsPage from "./pages/animalManagement/ViewAnimalDetailsPage";
+import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDetailsPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -39,6 +53,10 @@ import CreateNewSensorForm from "./components/AssetAndFacilityManagement/AssetMa
 import CreateNewMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/CreateNewMaintenanceLogPage";
 import EditMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/EditMaintenanceLogPage";
 import ViewMaintenanceLogDetailsPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/ViewMaintenanceLogDetailsPage";
+import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
+import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
+import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/RemoveMaintenanceStaffPage";
+import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageMaintenanceStaffPage";
 
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
@@ -55,17 +73,6 @@ import ViewEmployeeDetailsPage from "./pages/employeeAccountManagement/ViewEmplo
 import ProfilePage from "./pages/employeeCommonInfra/ProfilePage";
 import EditPasswordPage from "./pages/employeeCommonInfra/EditPasswordPage";
 import UpdateProfilePage from "./pages/employeeCommonInfra/UpdateProfilePage";
-import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNewDietaryRequirementsPage";
-import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
-import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
-import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
-import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/RemoveMaintenanceStaffPage";
-import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageMaintenanceStaffPage";
-import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
-import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
-import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
-import CreateNewAnimalPage from "./pages/animalManagement/CreateNewAnimalPage";
-import ViewAllAnimalsPage from "./pages/animalManagement/ViewAllAnimalsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -196,6 +203,22 @@ function App() {
                   path="/animal/viewallanimals"
                   element={
                     user ? <ViewAllAnimalsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewanimaldetails/:animalCode"
+                  element={
+                    user ? <ViewAnimalDetailsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewpopulationdetails/:speciesCode"
+                  element={
+                    user ? (
+                      <ViewPopulationDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 {/* Asset and Facility Management */}

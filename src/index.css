@@ -45,6 +45,12 @@
   }
 }
 
+.p-rowgroup-header > :first-child {
+  /* display: inline-block; */
+  /* flex: 1; */
+  /* width: 100%; */
+}
+
 /* animations */
 @keyframes slideDown {
   from {

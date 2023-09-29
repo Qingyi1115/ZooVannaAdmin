@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import EnclosureCapabilitiesTable from "./EnclosureCapabilitiesTable";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 

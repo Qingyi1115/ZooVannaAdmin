@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import { classNames } from "primereact/utils";
-import { DataTable } from "primereact/datatable";
+import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { Column } from "primereact/column";
 // import { Toast } from "primereact/toast";
 import { FileUpload } from "primereact/fileupload";
@@ -187,6 +187,10 @@ function AllAnimalsDatatable() {
   const [deleteAnimalDialog, setDeleteAnimalDialog] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
 
+  const [expandedRows, setExpandedRows] = useState<
+    DataTableExpandedRows | Animal[]
+  >([]);
+
   const dt = useRef<DataTable<Animal[]>>(null);
 
   const toastShadcn = useToast().toast;
@@ -336,17 +340,26 @@ function AllAnimalsDatatable() {
 
   const rowGroupHeaderTemplate = (animal: Animal) => {
     return (
-      <div className="flex justify-between">
-        <div className="flex items-center gap-4 ">
-          <img
-            alt={animal.species?.commonName}
-            src={"http://localhost:3000/" + animal.species?.imageUrl}
-            className="aspect-square w-10 rounded-full border border-white object-cover shadow-4"
-          />
-          <span className="text-lg font-bold">{animal.species.commonName}</span>
-        </div>
-        <Button>View Population Details</Button>
-      </div>
+      <React.Fragment>
+        <span className="flex justify-between">
+          <span className="flex items-center gap-4 ">
+            <img
+              alt={animal.species?.commonName}
+              src={"http://localhost:3000/" + animal.species?.imageUrl}
+              className="aspect-square w-10 rounded-full border border-white object-cover shadow-4"
+            />
+            <span className="text-lg font-bold">
+              {animal.species.commonName} ({animal.species.speciesCode})
+            </span>
+          </span>
+
+          <NavLink
+            to={`/animal/viewpopulationdetails/${animal.species.speciesCode}`}
+          >
+            <Button>View Population Details</Button>
+          </NavLink>
+        </span>
+      </React.Fragment>
     );
   };
 
@@ -394,6 +407,9 @@ function AllAnimalsDatatable() {
             }}
             dataKey="animalId"
             rowGroupMode="subheader"
+            // expandableRowGroups
+            // expandedRows={expandedRows}
+            // onRowToggle={(e) => setExpandedRows(e.data)}
             groupRowsBy="species.commonName"
             rowGroupHeaderTemplate={rowGroupHeaderTemplate}
             rowGroupFooterTemplate={rowGroupFooterTemplate}
@@ -429,7 +445,7 @@ function AllAnimalsDatatable() {
             ></Column>
             <Column
               field="sex"
-              header="Code"
+              header="Sex"
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
