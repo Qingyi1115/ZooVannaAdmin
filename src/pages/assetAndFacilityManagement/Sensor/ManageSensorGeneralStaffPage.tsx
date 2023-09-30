@@ -17,33 +17,33 @@ function ManageSensorGeneralStaffPage() {
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
   const { tab } = useParams<{ tab: string }>();
 
-  useEffect(() => {
-    let assignedStaffs: any = []
-    apiJson.get(
-      `http://localhost:3000/api/assetFacility/getAssignedGeneralStaffOfFacility/${sensorId}`
-    ).catch(e => console.log(e)).then(res => {
-      setCurrEmpList(res["generalStaffs"]);
-      assignedStaffs = res["generalStaffs"];
-    }).then(() => {
-      apiJson.post(
-        "http://localhost:3000/api/assetFacility/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-      ).catch(e => console.log(e)).then(res => {
-        const allStaffs = res["generalStaffs"];
-        const assignedStaffIds = []
-        for (const staff of assignedStaffs) {
-          assignedStaffIds.push(staff.employeeId)
-        }
-        const subset = []
-        for (const employee of allStaffs) {
-          if (!assignedStaffIds.includes(employee.employeeId)) {
-            subset.push(employee);
-          }
-        }
+  // useEffect(() => {
+  //   let assignedStaffs: any = []
+  //   apiJson.get(
+  //     `http://localhost:3000/api/assetFacility/getAssignedGeneralStaffOfFacility/${sensorId}`
+  //   ).catch(e => console.log(e)).then(res => {
+  //     setCurrEmpList(res["generalStaffs"]);
+  //     assignedStaffs = res["generalStaffs"];
+  //   }).then(() => {
+  //     apiJson.post(
+  //       "http://localhost:3000/api/assetFacility/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
+  //     ).catch(e => console.log(e)).then(res => {
+  //       const allStaffs = res["generalStaffs"];
+  //       const assignedStaffIds = []
+  //       for (const staff of assignedStaffs) {
+  //         assignedStaffIds.push(staff.employeeId)
+  //       }
+  //       const subset = []
+  //       for (const employee of allStaffs) {
+  //         if (!assignedStaffIds.includes(employee.employeeId)) {
+  //           subset.push(employee);
+  //         }
+  //       }
 
-        setEmpList(subset)
-      });
-    });
-  }, [refreshSeed]);
+  //       setEmpList(subset)
+  //     });
+  //   });
+  // }, [refreshSeed]);
 
 
   return (

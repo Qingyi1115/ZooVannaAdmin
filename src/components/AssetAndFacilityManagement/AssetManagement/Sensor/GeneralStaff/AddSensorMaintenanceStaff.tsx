@@ -13,6 +13,7 @@ import { Dialog } from "primereact/dialog";
 import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
+import Sensor from "../../../../../models/Sensor";
 
 interface AddSensorMaintenanceStaffProps {
   sensorId: number;
@@ -61,10 +62,11 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
           let emp = staff.employee;
           staff.employee = undefined;
           emp["generalStaff"] = staff
-          emp.currentlyAssigned = emp.generalStaff.sensors?.sensorId == sensorId;
+          emp.currentlyAssigned = (emp.generalStaff.sensors as Sensor[]).find(sensor=>Number(sensor.sensorId) == sensorId);
           allStaffs.push(emp)
         }
       }
+      console.log("allStaffs", allStaffs)
       setEmployeeList(allStaffs);
 
     });
@@ -87,9 +89,8 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToSensor/${sensorId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-          console.log("sensor", res["sensor"]);
-
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToSensor/${sensorId}`, { employeeId: selectedEmployee.employeeId }).then(res => {
+          setRefreshSeed([]);
         }).catch(err => console.log("err", err));
 
       toastShadcn({
@@ -130,9 +131,10 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
-      const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeGeneralStaffFromFacility/${sensorId}`, { employeeIds: [selectedEmployee.employeeId,] });
+      const responseJson = await apiJson.put(
+        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromSensor/${sensorId}`, { employeeId: selectedEmployee.employeeId });
 
+        setRefreshSeed([]);
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
@@ -194,7 +196,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
     setEmployeeRemovalDialog(true);
   };
 
-  const actionBodyTemplate = (employee: Employee) => {
+  const actionBodyTemplate = (employee: any) => {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
@@ -212,7 +214,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
                 name="assignButton"
                 variant={"default"}
                 className="mr-2"
-                disabled={employee.generalStaff?.sensors !== null || employee.currentlyAssigned}
+                disabled={employee.currentlyAssigned}
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
