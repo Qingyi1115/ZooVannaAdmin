@@ -65,7 +65,8 @@ function SensorMaintenanceSuggestion() {
         name: sensor.sensorName,
         description: "Sensor " + (sensor.sensorType as string).toLocaleLowerCase(),
         lastMaintenance: new Date(sensor.dateOfLastMaintained).toLocaleString(),
-        suggestedMaintenance: new Date(sensor.predictedMaintenanceDate).toLocaleString(),
+        suggestedMaintenance: sensor.predictedMaintenanceDate?
+        new Date(sensor.predictedMaintenanceDate).toLocaleString():"No suggested date",
         type: "Sensor",
         id: sensor.sensorId
       })
