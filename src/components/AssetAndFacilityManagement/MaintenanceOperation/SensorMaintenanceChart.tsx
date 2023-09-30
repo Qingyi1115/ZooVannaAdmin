@@ -70,7 +70,7 @@ export default function SensorMaintenanceChart(props: SensorMaintenanceChartProp
                     y: {
                         type: 'linear',
                         display: true,
-                        position: 'left',
+                        position: 'right',
                         ticks: {
                             color: textColorSecondary
                         },
@@ -78,18 +78,6 @@ export default function SensorMaintenanceChart(props: SensorMaintenanceChartProp
                             color: surfaceBorder
                         }
                     },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        ticks: {
-                            color: textColorSecondary
-                        },
-                        grid: {
-                            drawOnChartArea: false,
-                            color: surfaceBorder
-                        }
-                    }
                 }
             };
 

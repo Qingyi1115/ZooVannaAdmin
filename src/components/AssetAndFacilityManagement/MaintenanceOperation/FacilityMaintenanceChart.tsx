@@ -71,17 +71,6 @@ export default function FacilityMaintenanceChart(props: FacilityMaintenanceChart
                     y: {
                         type: 'linear',
                         display: true,
-                        position: 'left',
-                        ticks: {
-                            color: textColorSecondary
-                        },
-                        grid: {
-                            color: surfaceBorder
-                        }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
                         position: 'right',
                         ticks: {
                             color: textColorSecondary
@@ -90,7 +79,7 @@ export default function FacilityMaintenanceChart(props: FacilityMaintenanceChart
                             drawOnChartArea: false,
                             color: surfaceBorder
                         }
-                    }
+                    },
                 }
             };
 
