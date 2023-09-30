@@ -20,11 +20,12 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
     const [chartOptions, setChartOptions] = useState<any>(undefined);
     const { sensorId } = props;
     const apiJson = useApiJson();
-    const timeLimit = 1000 * 60 * 60 * 3; // How far back in the past 3 hours
-    const intervalDurationInMilliseconds = 60 * 1000; // Every 1 minute
-    const intervalFrequency = 10;                     // Every 10 intercals show time on x axis
-    const startDate = new Date(Date.now() - timeLimit);
-    const endDate = new Date();
+
+    const [timeLimit, setTimeLimit] = useState<number>(1000 * 60 * 60 * 3);
+    const [intervalDurationInMilliseconds, setIntervalDurationInMilliseconds] = useState<any>(60 * 1000);
+    const [intervalFrequency, setIntervalFrequency] = useState<any>(10);
+    const [startDate, setStartDate] = useState<any>(new Date(Date.now() - timeLimit));
+    const [endDate, setEndDate] = useState<any>(new Date());
     const [refresh, setRefresh] = useState<any>(0);
 
     useEffect(() => {
@@ -127,7 +128,7 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
           setChartData(data);
           setChartOptions(options);
         }).catch(e => console.log(e));
-    }, [refresh]);
+    }, [refresh,timeLimit,intervalDurationInMilliseconds, intervalFrequency, startDate, endDate, refresh]);
 
     useEffect(()=>{
       const looper = () => {
