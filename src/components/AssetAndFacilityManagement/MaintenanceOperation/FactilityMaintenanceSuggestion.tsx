@@ -66,7 +66,7 @@ function FacilityMaintenanceSuggestion() {
         description: (facility.isSheltered ? "Sheltered " : "Unsheltered ") + (facility.facilityDetail as string).toLocaleLowerCase(),
         lastMaintenance: new Date(facility.facilityDetailJson["lastMaintained"]).toLocaleString(),
         suggestedMaintenance: facility.predictedMaintenanceDate ?
-        new Date(facility.predictedMaintenanceDate).toLocaleString() : "No suggested date", 
+          new Date(facility.predictedMaintenanceDate).toLocaleString() : "No suggested date",
         type: "Facility",
         id: facility.facilityId
       })

@@ -203,7 +203,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/animal" ||
-                            pathname.includes("animal")) &&
+                          pathname.includes("animal")) &&
                           "bg-graydark"
                           }`}
                         onClick={(e) => {
@@ -427,7 +427,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                     (isActive && "!text-white")
                                   }
                                 >
-                                  Maintenance Management
+                                  Facility Maintenance
                                 </NavLink>
                               </li>
                             )}
