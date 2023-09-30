@@ -4,6 +4,7 @@ import useApiJson from "../../hooks/useApiJson";
 import { BsBroadcast, BsFillHouseExclamationFill, BsHouseExclamation } from "react-icons/bs";
 import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { HiClipboardList } from "react-icons/hi";
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -115,10 +116,11 @@ const DropdownNotification = () => {
         }`}
       >
         <div className="px-4.5 py-3">
-          <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
+          <h5 className="text-sm font-medium text-bodydark2"><HiClipboardList size={20}></HiClipboardList>Notification </h5>
         </div>
-        {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
-    employee.generalStaff) && (
+
+  {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
+    employee.generalStaff) ? (
     <ul className="flex h-auto flex-col overflow-y-auto">
 
     <li>
@@ -199,8 +201,10 @@ const DropdownNotification = () => {
       </li>
       );
     })}
-
-  </ul>)}
+    </ul>
+  ):
+  <div className="text-green-700"><p className="text-xs"><ul  className="px-3 py-2"><li>
+    You have no maintenance notifications!</li></ul></p></div>}
         
       </div>
     </li>
