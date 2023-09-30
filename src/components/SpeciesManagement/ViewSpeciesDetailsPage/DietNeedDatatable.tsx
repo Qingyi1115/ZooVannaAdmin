@@ -37,7 +37,7 @@ interface DietNeedDatatableProps {
 }
 
 const emptyDietNeeds: SpeciesDietNeed = {
-  speciesDietNeedId: 1,
+  speciesDietNeedId: -1,
   animalFeedCategory: AnimalFeedCategory.FISH,
   amountPerMealGram: 100,
   amountPerWeekGram: 1000,
@@ -175,7 +175,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
             setDietNeedsList(e.value);
           }
         }}
-        dataKey="speciesId"
+        dataKey="speciesDietNeedId"
         paginator
         // showGridlines
         rows={10}

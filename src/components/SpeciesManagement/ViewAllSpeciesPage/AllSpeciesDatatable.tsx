@@ -92,7 +92,7 @@ function AllSpeciesDatatable() {
     );
   };
 
-  const navigateEditProduct = (species: Species) => { };
+  const navigateEditProduct = (species: Species) => {};
 
   const confirmDeleteSpecies = (species: Species) => {
     setSelectedSpecies(species);
@@ -115,7 +115,7 @@ function AllSpeciesDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deletespecies/" +
-          selectedSpecies.speciesCode
+            selectedSpecies.speciesCode
         );
 
         toastShadcn({
