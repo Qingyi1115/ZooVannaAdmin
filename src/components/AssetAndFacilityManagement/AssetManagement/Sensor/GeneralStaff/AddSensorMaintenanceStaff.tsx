@@ -57,7 +57,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
       const allStaffs: Employee[] = []
       console.log("res", res)
       for (const staff of res["generalStaffs"]) {
-        if (staff.generalStaffType == "ZOO_OPERATIONS") {
+        if (staff.generalStaffType == "ZOO_MAINTENANCE") {
           let emp = staff.employee;
           staff.employee = undefined;
           emp["generalStaff"] = staff
