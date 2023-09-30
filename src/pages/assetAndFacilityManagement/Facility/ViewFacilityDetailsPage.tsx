@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
 
@@ -26,6 +26,7 @@ function ViewFacilityDetailsPage() {
   const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
   const [empList, setEmpList] = useState<Employee[]>([]);
   const employee = useAuthContext().state.user?.employeeData;
+  const navigate = useNavigate();
 
   // let emptyThirdParty: ThirdParty = {
   //   ownership: "",
@@ -84,11 +85,14 @@ function ViewFacilityDetailsPage() {
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         <div className="flex justify-between">
-          <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
+          {/* <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
             <Button variant={"outline"} type="button" className="">
               Back
             </Button>
-          </NavLink>
+          </NavLink> */}
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+            Back
+          </Button>
           <span className="self-center text-lg text-graydark">
             View Facility Details
           </span>
@@ -129,14 +133,14 @@ function ViewFacilityDetailsPage() {
             <AllHubDatatable curFacility={curFacility} />
           </TabsContent>
           {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <TabsContent value="manageMaintenance">
-            <ManageFacilityMaintenanceStaffPage />
-          </TabsContent>
+            <TabsContent value="manageMaintenance">
+              <ManageFacilityMaintenanceStaffPage />
+            </TabsContent>
           )}
           {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <TabsContent value="manageOperations">
-            <ManageOperationStaffPage />
-          </TabsContent>
+            <TabsContent value="manageOperations">
+              <ManageOperationStaffPage />
+            </TabsContent>
           )}
           <TabsContent value="customerReport">
             <AllCustomerReportsDatatable curFacility={curFacility} />

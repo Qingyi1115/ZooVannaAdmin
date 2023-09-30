@@ -231,14 +231,14 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           title={facilityLog.title}
           subTitle={ facilityLog.dateTime ? 
             "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}>
-          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
+          {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
           <Button className="absolute top-5 right-5"
             variant={"destructive"}
             onClick={() => confirmDeletefacilityLog(facilityLog)}
           >
             <HiTrash className="mx-auto" />
           </Button>
-          )}
+          )} */}
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>
               <div className="text-xl font-bold text-900">Details</div>
