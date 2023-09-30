@@ -8,110 +8,136 @@ import { NavLink } from 'react-router-dom';
 import Sensor from '../../../../../models/Sensor';
 import { render } from 'react-dom';
 import { compareDates } from '../../../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion';
+import useApiJson from '../../../../../hooks/useApiJson';
+import SensorReading from 'src/models/SensorReading';
 
 interface AllSensorReadingDatatableProps {
-  curSensor: Sensor;
+  sensorId: string;
 }
 
 export default function AllSensorReadingDatatable(props: AllSensorReadingDatatableProps) {
     const [chartData, setChartData] = useState<any>(undefined);
     const [chartOptions, setChartOptions] = useState<any>(undefined);
-    const { curSensor } = props;
-    const timeLimit = 1000 * 60 * 60 * 3
+    const { sensorId } = props;
+    const apiJson = useApiJson();
+    const timeLimit = 1000 * 60 * 60 * 3; // How far back in the past 3 hours
+    const intervalDurationInMilliseconds = 60 * 1000; // Every 1 minute
+    const intervalFrequency = 10;                     // Every 10 intercals show time on x axis
+    const startDate = new Date(Date.now() - timeLimit);
+    const endDate = new Date();
+    const [refresh, setRefresh] = useState<any>(0);
 
     useEffect(() => {
-      const documentStyle = getComputedStyle(document.documentElement);
-      const textColor = documentStyle.getPropertyValue('--text-color');
-      const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-      const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-      const limit = new Date(Date.now() - timeLimit)
-      const sorted = curSensor.sensorReadings.filter(reading=>(compareDates(limit, new Date(reading.readingDate)) < 0)).sort((a,b)=> compareDates( new Date(a.readingDate), new Date(b.readingDate)));
-      if (!sorted.length) return;
+      apiJson.post(
+        `http://localhost:3000/api/assetFacility/getSensorReading/${sensorId}`,
+        { startDate: startDate, endDate: endDate }
+        ).then(res => {
+          const curSensor = res.sensor;
+          const sensorReadings = (res.sensorReadings as SensorReading[]);
 
-      const getMin = (date:Date)=> Math.floor(date.getTime() / 60000)
-
-      let currMin = getMin(new Date(sorted[0].readingDate))
-      let previousReading = sorted[0].value
-      const points : number[] = [previousReading]
-      const labels : string[] = [new Date(currMin*60000).toLocaleTimeString()]
-
-      for (const reading of sorted){
-        let readingDate = new Date(reading.readingDate);
-        const readingMin = getMin(readingDate);
-        if (readingMin==currMin){
-          points[points.length-1] = (points[points.length-1] + reading.value) / 2
-          previousReading = points[points.length-1]
-        }else{
-          currMin = currMin + 1
-          while (currMin != readingMin){
-            currMin % 10 == 0 ? labels.push(new Date(currMin * 60000).toLocaleTimeString()) : labels.push("")
-            points.push(previousReading)
-            currMin = currMin + 1
+          console.log("Updated chart!")
+          const documentStyle = getComputedStyle(document.documentElement);
+          const textColor = documentStyle.getPropertyValue('--text-color');
+          const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+          const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+          const sorted = sensorReadings.sort((a,b)=> compareDates( new Date(a.readingDate), new Date(b.readingDate)));
+          if (!sorted.length) return;
+    
+          const getInterval = (date:Date)=> Math.floor(date.getTime() / intervalDurationInMilliseconds)
+    
+          let currMin = getInterval(new Date(sorted[0].readingDate))
+          let previousReading = sorted[0].value
+          const points : number[] = [previousReading]
+          const labels : string[] = [new Date(currMin*intervalDurationInMilliseconds).toLocaleTimeString()]
+    
+          for (const reading of sorted){
+            let readingDate = new Date(reading.readingDate);
+            const readingMin = getInterval(readingDate);
+            if (readingMin==currMin){
+              points[points.length-1] = (points[points.length-1] + reading.value) / 2
+              previousReading = points[points.length-1]
+            }else{
+              currMin = currMin + 1
+              while (currMin != readingMin){
+                currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()) : labels.push("")
+                points.push(previousReading)
+                currMin = currMin + 1
+              }
+              currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()) : labels.push("")
+              points.push(reading.value)
+              previousReading = reading.value
+            }
           }
-          currMin % 10 == 0 ? labels.push(new Date(currMin * 60000).toLocaleTimeString()) : labels.push("")
-          points.push(reading.value)
-          previousReading = reading.value
-        }
-      }
-      labels[labels.length-1] = new Date(sorted[sorted.length-1].readingDate).toLocaleTimeString()
-
-      console.log("labels",labels)
-      console.log("points",points)
-      const data = {
-          labels: labels,
-          datasets: [
-              {
-                  label: curSensor.sensorType == "CAMERA" ? "No. customers" :curSensor.sensorType,
-                  fill: false,
-                  borderColor: documentStyle.getPropertyValue('--blue-500'),
-                  yAxisID: 'y',
-                  tension: 0,
-                  data: points,
-                  radius: 0
-              }
-          ]
-      };
-      const options = {
-          scaleShowValues: true,
-          stacked: false,
-          maintainAspectRatio: false,
-          aspectRatio: 0.6,
-          plugins: {
-              legend: {
-                  labels: {
-                      color: textColor
+          labels[labels.length-1] = new Date(sorted[sorted.length-1].readingDate).toLocaleTimeString()
+    
+          const data = {
+              labels: labels,
+              datasets: [
+                  {
+                      label: curSensor.sensorType == "CAMERA" ? "No. customers" :curSensor.sensorType,
+                      fill: false,
+                      borderColor: documentStyle.getPropertyValue('--blue-500'),
+                      yAxisID: 'y',
+                      tension: 0,
+                      data: points,
+                      radius: 0
                   }
-              }
-          },
-          scales: {
-              x: {
-                  ticks: {
-                      // color: textColorSecondary,
-                      autoSkip: false
-                  },
-                  grid: {
-                        drawOnChartArea: false,
-                  //     color: surfaceBorder
-                  },
+              ]
+          };
+          const options = {
+              animation: {
+                  duration: 0
               },
-              y: {
-                  type: 'linear',
-                  display: true,
-                  position: 'left',
-                  ticks: {
-                      color: textColorSecondary
+              scaleShowValues: true,
+              stacked: false,
+              maintainAspectRatio: false,
+              aspectRatio: 0.6,
+              plugins: {
+                  legend: {
+                      labels: {
+                          color: textColor
+                      }
+                  }
+              },
+              scales: {
+                  x: {
+                      ticks: {
+                          // color: textColorSecondary,
+                          autoSkip: false
+                      },
+                      grid: {
+                            drawOnChartArea: false,
+                      //     color: surfaceBorder
+                      },
                   },
-                  grid: {
-                      color: surfaceBorder
+                  y: {
+                      type: 'linear',
+                      display: true,
+                      position: 'left',
+                      ticks: {
+                          color: textColorSecondary
+                      },
+                      grid: {
+                          color: surfaceBorder
+                      }
                   }
               }
-          }
+          };
+    
+          setChartData(data);
+          setChartOptions(options);
+        }).catch(e => console.log(e));
+    }, [refresh]);
+
+    useEffect(()=>{
+      const looper = () => {
+        setRefresh([])
+        setTimeout(()=>{
+          looper()
+        }, 10000)
       };
-
-      setChartData(data);
-      setChartOptions(options);
-    }, []);
-
+      looper();
+    }, [])
 
 
     return (

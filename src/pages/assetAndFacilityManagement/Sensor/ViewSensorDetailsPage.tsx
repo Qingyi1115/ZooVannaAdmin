@@ -65,7 +65,7 @@ function ViewSensorDetailsPage() {
   useEffect(() => {
     apiJson.post(
       `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
-      { includes: ["hubProcessor", "sensorReadings", "maintenanceLogs", "generalStaff"] }).then(res => {
+      { includes: ["hubProcessor", "maintenanceLogs", "generalStaff"] }).then(res => {
         setCurSensor(res.sensor as Sensor);
         console.log(curSensor);
       }).catch(e => console.log(e));
@@ -103,7 +103,7 @@ function ViewSensorDetailsPage() {
             <ViewSensorDetails curSensor={curSensor}></ViewSensorDetails>
           </TabsContent>
           <TabsContent value="sensorReadings">
-            <AllSensorReadingDatatable curSensor={curSensor}></AllSensorReadingDatatable>
+            <AllSensorReadingDatatable sensorId={sensorId || ""}></AllSensorReadingDatatable>
           </TabsContent>
           <TabsContent value="maintenanceLogs">
             <AllMaintenanceLogsDatatable curSensor={curSensor} />
