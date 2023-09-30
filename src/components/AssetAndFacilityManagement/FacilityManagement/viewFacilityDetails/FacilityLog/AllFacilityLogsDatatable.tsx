@@ -21,6 +21,7 @@ import { FacilityType } from "../../../../../enums/FacilityType";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { Card } from "primereact/card";
 import { ScrollPanel } from "primereact/scrollpanel";
+import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
 interface AllFacilityLogsDatatableProps {
   curFacility: Facility;
@@ -30,6 +31,7 @@ interface AllFacilityLogsDatatableProps {
 function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const apiJson = useApiJson();
   const { curFacility, curInHouse } = props;
+  const employee = useAuthContext().state.user?.employeeData;
   let emptyInHouse: InHouse = {
     isPaid: false,
     lastMaintained: new Date(),
@@ -135,6 +137,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
         Yes
       </Button>
     </React.Fragment>
+
   );
   // end delete facilityLog stuff
 
@@ -226,13 +229,16 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
       <div>
         <Card className="my-4 relative"
           title={facilityLog.title}
-          subTitle={"Date created: " + facilityLog.dateTime.toString()}>
+          subTitle={ facilityLog.dateTime ? 
+            "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}>
+          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
           <Button className="absolute top-5 right-5"
             variant={"destructive"}
             onClick={() => confirmDeletefacilityLog(facilityLog)}
           >
             <HiTrash className="mx-auto" />
           </Button>
+          )}
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>
               <div className="text-xl font-bold text-900">Details</div>
@@ -265,11 +271,14 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
+              {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+              employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && 
               <NavLink to={`/assetfacility/createfacilitylog/${curFacility.facilityId}`}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
                 </Button>
               </NavLink>
+              )}
               <span className=" self-center text-title-xl font-bold">
                 All Facility Logs
               </span>

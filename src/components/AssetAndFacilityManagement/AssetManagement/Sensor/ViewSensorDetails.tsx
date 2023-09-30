@@ -59,13 +59,13 @@ function ViewSensorDetails(props: SensorDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Date of Activation
             </TableCell>
-            <TableCell>{String(curSensor.dateOfActivation)}</TableCell>
+            <TableCell>{curSensor.dateOfActivation? new Date(curSensor.dateOfActivation).toLocaleString() : "Unknown"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Last Maintained
             </TableCell>
-            <TableCell>{String(curSensor.dateOfLastMaintained)}</TableCell>
+            <TableCell>{curSensor.dateOfLastMaintained? new Date(curSensor.dateOfLastMaintained).toLocaleString() : "Unknown"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

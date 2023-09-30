@@ -46,8 +46,11 @@ function ViewHubDetailsPage() {
     apiJson.post(
       `http://localhost:3000/api/assetFacility/getHub/${hubProcessorId}`,
       { includes: ["sensors", "facility"] }).then(res => {
+        for (const sensor of res.hubProcessor.sensors){
+          sensor.dateOfActivation = new Date(sensor.dateOfActivation).toLocaleString()
+          sensor.dateOfLastMaintained = new Date(sensor.dateOfLastMaintained).toLocaleString()
+        }
         setCurHub(res.hubProcessor as Hub);
-        console.log(curHub);
       }).catch(e => console.log(e));
   }, [refreshSeed]);
 

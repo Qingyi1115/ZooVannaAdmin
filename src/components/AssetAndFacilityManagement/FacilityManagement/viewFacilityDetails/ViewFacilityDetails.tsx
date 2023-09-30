@@ -19,6 +19,7 @@ import { Separator } from "@radix-ui/react-select";
 import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import { BsWrenchAdjustable } from "react-icons/bs";
 
 interface FacilityDetailsProps {
   curFacility: Facility;
@@ -42,6 +43,23 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
           </Button>
         </NavLink>
       )}
+      {(employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+      <NavLink to={`/assetfacility/completefacilitymaintenance/${curFacility.facilityId}`}>
+        <Button className="mr-2">
+          <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+          Complete maintenance
+        </Button>
+      </NavLink>
+      )}
+      {(employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
+      <NavLink to={`/assetfacility/createfacilitylog/${curFacility.facilityId}`}>
+        <Button className="mr-2">
+          <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+          Create Operations Log
+        </Button>
+      </NavLink>
+      )}
+
       </div>
       <Table>
         <TableBody>
