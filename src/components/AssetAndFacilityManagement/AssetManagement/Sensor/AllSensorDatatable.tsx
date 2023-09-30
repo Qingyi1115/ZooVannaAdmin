@@ -22,11 +22,12 @@ import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 interface AllSensorDatatableProps {
   curHub: Hub,
+  refreshSeed:any;
 }
 
 function AllSensorDatatable(props: AllSensorDatatableProps) {
   const apiJson = useApiJson();
-  const { curHub } = props;
+  const { curHub, refreshSeed } = props;
   const employee = useAuthContext().state.user?.employeeData;
 
   let emptySensor: Sensor = {
@@ -50,22 +51,9 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
   const dt = useRef<DataTable<Sensor[]>>(null);
   const toastShadcn = useToast().toast;
 
-
-  // View all sensors
-  // useEffect(() => {
-  //   const fetchSensor = async () => {
-  //     try {
-  //       const responseJson = await apiJson.get(
-  //         "http://localhost:3000/api/assetFacility/getAllSensors"
-  //       );
-  //       console.log(responseJson["sensors"]);
-  //       setSensorList(responseJson["sensors"] as Sensor[]);
-  //     } catch (error: any) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchSensor();
-  // }, []);
+  useEffect(() => {
+    setSensorList(curHub.sensors);
+  }, [refreshSeed]);
 
   const exportCSV = () => {
     dt.current?.exportCSV();

@@ -14,6 +14,7 @@ function ViewHubDetailsPage() {
   const apiJson = useApiJson();
   const { hubProcessorId } = useParams<{ hubProcessorId: string }>();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  const [refreshSeed2, setRefreshSeed2] = useState<any>(0);
   const navigate = useNavigate();
 
   let emptyFacility: Facility = {
@@ -51,7 +52,7 @@ function ViewHubDetailsPage() {
           sensor.dateOfLastMaintained = new Date(sensor.dateOfLastMaintained).toLocaleString()
         }
         setCurHub(res.hubProcessor as Hub);
-      }).catch(e => console.log(e));
+      }).catch(e => console.log(e)).then(()=>setRefreshSeed2([]));
   }, [refreshSeed]);
 
   return (
@@ -84,7 +85,7 @@ function ViewHubDetailsPage() {
               setRefreshSeed={setRefreshSeed} />
           </TabsContent>
           <TabsContent value="sensors">
-            <AllSensorDatatable curHub={curHub} />
+            <AllSensorDatatable curHub={curHub} refreshSeed={refreshSeed2} />
           </TabsContent>
         </Tabs>
       </div>
