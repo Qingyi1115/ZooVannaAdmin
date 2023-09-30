@@ -197,26 +197,28 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   const listItem = (maintenanceLog: MaintenanceLog) => {
     return (
       <div>
-        <Card
+        <Card className="my-4 relative"
           title={maintenanceLog.title}
-          subTitle={"Date created: " + maintenanceLog.dateTime.toString()}
-          footer={(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <Button
-            variant={"destructive"}
-            className="mr-2"
-            onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>}>
+          subTitle={maintenanceLog.dateTime ?
+            "Date created: " + new Date(maintenanceLog.dateTime).toLocaleString() : ""}
+        >
+          {/* {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <Button
+              variant={"destructive"}
+              className="absolute top-5 right-5"
+              onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
+            >
+              <HiTrash className="mx-auto" />
+            </Button>} */}
           <div className="flex flex-col left gap-6 lg:flex-row lg:gap-12">
-
-            <ScrollPanel style={{ width: '100%', height: '100px' }}>
+            <div>
               <div className="text-xl font-bold text-900">Details</div>
               <p>{maintenanceLog.details}</p>
-            </ScrollPanel>
-            <ScrollPanel style={{ width: '100%', height: '100px' }}>
+            </div>
+            <Separator orientation="vertical" />
+            <div>
               <div className="text-xl font-bold text-900">Remarks</div>
               <p>{maintenanceLog.remarks}</p>
-            </ScrollPanel>
+            </div>
           </div>
 
         </Card>
@@ -239,13 +241,13 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-            {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-              <NavLink to={`/assetfacility/createmaintenancelog/${curSensor.sensorId}`}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
-            )}
+              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+                <NavLink to={`/assetfacility/createmaintenancelog/${curSensor.sensorId}`}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                  </Button>
+                </NavLink>
+              )}
               <span className=" self-center text-title-xl font-bold">
                 All Maintenance Logs
               </span>
