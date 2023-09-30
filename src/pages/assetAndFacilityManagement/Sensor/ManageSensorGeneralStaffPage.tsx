@@ -49,7 +49,8 @@ function ManageSensorGeneralStaffPage() {
   return (
 
     <div className="flex w-full flex-col gap-6 rounded-lg bg-white p-5 text-black">
-      <Tabs
+      <AddSensorMaintenanceStaff sensorId={Number(sensorId)} />
+      {/* <Tabs
         defaultValue={tab ? `${tab}` : "assignstaff"}
         className="w-full"
       >
@@ -63,7 +64,7 @@ function ManageSensorGeneralStaffPage() {
         <TabsContent value="removestaff">
           {sensorId && <RemoveSensorMaintenanceStaff sensorId={Number(sensorId)} employeeList={currEmpList} setRefreshSeed={setRefreshSeed}></RemoveSensorMaintenanceStaff>}
         </TabsContent>
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 }

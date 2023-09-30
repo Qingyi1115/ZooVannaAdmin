@@ -16,14 +16,12 @@ import { Separator } from "@/components/ui/separator";
 
 interface AddSensorMaintenanceStaffProps {
   sensorId: number;
-  employeeList: Employee[];
-  setRefreshSeed: Function;
 }
 
 function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
-  const { sensorId, employeeList, setRefreshSeed } = props;
+  const { sensorId } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -49,6 +47,29 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
+  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
+
+  useEffect(() => {
+    apiJson.post(
+      "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
+    ).catch(e => console.log(e)).then(res => {
+      const allStaffs: Employee[] = []
+      console.log("res", res)
+      for (const staff of res["generalStaffs"]) {
+        if (staff.generalStaffType == "ZOO_OPERATIONS") {
+          let emp = staff.employee;
+          staff.employee = undefined;
+          emp["generalStaff"] = staff
+          emp.currentlyAssigned = emp.generalStaff.sensors?.sensorId == sensorId;
+          allStaffs.push(emp)
+        }
+      }
+      setEmployeeList(allStaffs);
+
+    });
+  }, [refreshSeed]);
+
   const hideEmployeeAssignmentDialog = () => {
     setAssignmentDialog(false);
   }
@@ -68,7 +89,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
       const responseJson = await apiJson.put(
         `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToSensor/${sensorId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
           console.log("sensor", res["sensor"]);
-          setRefreshSeed([]);
+
         }).catch(err => console.log("err", err));
 
       toastShadcn({
@@ -191,18 +212,20 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
                 name="assignButton"
                 variant={"default"}
                 className="mr-2"
+                disabled={employee.generalStaff?.sensors !== null || employee.currentlyAssigned}
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
               </Button>
-              {/* <Button
+              <Button
                 name="removeButton"
                 variant={"destructive"}
                 className="mx-auto"
+                disabled={!employee.currentlyAssigned}
                 onClick={() => confirmEmployeeRemoval(employee)}
               >
                 <HiTrash className="mx-auto" />
-              </Button> */}
+              </Button>
             </div>
 
           }
@@ -223,7 +246,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
                 Back
               </Button>
               <span className=" self-center text-title font-bold">
-                Assign Maintenance Staff
+                Manage Sensor Maintenance Staff
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>

@@ -51,21 +51,21 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   useEffect(() => {
-      apiJson.post(
-        "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-      ).catch(e => console.log(e)).then(res => {
-        const allStaffs :Employee[] = []
-        console.log("res",res)
-        for (const staff of res["generalStaffs"]){ 
-          if (staff.generalStaffType == "ZOO_OPERATIONS") {
-            let emp = staff.employee;
-            staff.employee = undefined;
-            emp["generalStaff"] = staff
-            emp.currentlyAssigned = emp.generalStaff.operatedFacility?.facilityId == facilityId;
-            allStaffs.push(emp)
-          }
+    apiJson.post(
+      "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
+    ).catch(e => console.log(e)).then(res => {
+      const allStaffs: Employee[] = []
+      console.log("res", res)
+      for (const staff of res["generalStaffs"]) {
+        if (staff.generalStaffType == "ZOO_OPERATIONS") {
+          let emp = staff.employee;
+          staff.employee = undefined;
+          emp["generalStaff"] = staff
+          emp.currentlyAssigned = emp.generalStaff.operatedFacility?.facilityId == facilityId;
+          allStaffs.push(emp)
         }
-        setEmployeeList(allStaffs);
+      }
+      setEmployeeList(allStaffs);
 
     });
   }, [refreshSeed]);
@@ -131,7 +131,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     try {
       const responseJson = await apiJson.del(
         `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
-        setRefreshSeed([]);
+      setRefreshSeed([]);
 
       toastShadcn({
         // variant: "destructive",
@@ -212,7 +212,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 name="assignButton"
                 variant={"default"}
                 className="mr-2"
-                disabled = {employee.generalStaff?.operatedFacility !== null || employee.currentlyAssigned}
+                disabled={employee.generalStaff?.operatedFacility !== null || employee.currentlyAssigned}
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
@@ -223,7 +223,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 <Button
                   variant={"destructive"}
                   className="mr-2"
-                  disabled = {!employee.currentlyAssigned}
+                  disabled={!employee.currentlyAssigned}
                   onClick={() => confirmEmployeeRemoval(employee)}
                 >
                   <HiTrash className="mx-auto" />
@@ -319,7 +319,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "13rem" }}
             ></Column>
           </DataTable>
         </div>
