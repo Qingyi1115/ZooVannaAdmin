@@ -202,11 +202,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <NavLink
                         to="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${
-                          (pathname === "/animal" ||
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/animal" ||
                             pathname.includes("animal")) &&
                           "bg-graydark"
-                        }`}
+                          }`}
                         onClick={(e) => {
                           e.preventDefault();
                           sidebarExpanded
@@ -217,9 +216,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <IoPawOutline className="h-5 w-5" />
                         Animal
                         <svg
-                          className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
-                            open && "rotate-180"
-                          }`}
+                          className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && "rotate-180"
+                            }`}
                           width="20"
                           height="20"
                           viewBox="0 0 20 20"
@@ -235,9 +233,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </svg>
                       </NavLink>
                       <div
-                        className={`translate transform overflow-hidden ${
-                          !open && "hidden"
-                        }`}
+                        className={`translate transform overflow-hidden ${!open && "hidden"
+                          }`}
                       >
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                           <li>
@@ -419,62 +416,62 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       >
 
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
-                          
-                        {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
-                          employee.generalStaff) && (
-                          <li>
-                            <NavLink
-                              to="/assetfacility/maintenance"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              Maintenance Management
-                            </NavLink>
-                          </li>
-                          )}
+
                           {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
                             employee.generalStaff) && (
-                          <li>
-                            <NavLink
-                              to="/assetfacility/viewallfacilities"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              View All Customer Facilities
-                            </NavLink>
-                          </li>
-                          )}
+                              <li>
+                                <NavLink
+                                  to="/assetfacility/maintenance"
+                                  className={({ isActive }) =>
+                                    "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                    (isActive && "!text-white")
+                                  }
+                                >
+                                  Maintenance Management
+                                </NavLink>
+                              </li>
+                            )}
+                          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
+                            employee.generalStaff) && (
+                              <li>
+                                <NavLink
+                                  to="/assetfacility/viewallfacilities"
+                                  className={({ isActive }) =>
+                                    "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                    (isActive && "!text-white")
+                                  }
+                                >
+                                  View All Customer Facilities
+                                </NavLink>
+                              </li>
+                            )}
                           {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
-                          <li>
-                            <NavLink
-                              to="/assetfacility/createfacility"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              Add Customer Facility
-                            </NavLink>
-                          </li>
+                            <li>
+                              <NavLink
+                                to="/assetfacility/createfacility"
+                                className={({ isActive }) =>
+                                  "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                  (isActive && "!text-white")
+                                }
+                              >
+                                Add Customer Facility
+                              </NavLink>
+                            </li>
                           )}
                           {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
                             employee.generalStaff) && (
-                          <li>
-                            <NavLink
-                              to="/assetfacility/viewallassets"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              View All Assets
-                            </NavLink>
-                          </li>
-                          )}
+                              <li>
+                                <NavLink
+                                  to="/assetfacility/viewallassets"
+                                  className={({ isActive }) =>
+                                    "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                    (isActive && "!text-white")
+                                  }
+                                >
+                                  View All Assets
+                                </NavLink>
+                              </li>
+                            )}
                           {/* <li>
                             <NavLink
                               to="/assetfacility/viewallanimalfeed"
@@ -486,18 +483,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               View All Animal Feed
                             </NavLink>
                           </li> */}
-                          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER"))&& (
-                          <li>
-                            <NavLink
-                              to="/assetfacility/createanimalfeed"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              Create Animal Feed
-                            </NavLink>
-                          </li>
+                          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
+                            <li>
+                              <NavLink
+                                to="/assetfacility/createanimalfeed"
+                                className={({ isActive }) =>
+                                  "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                  (isActive && "!text-white")
+                                }
+                              >
+                                Create Animal Feed
+                              </NavLink>
+                            </li>
                           )}
                           {/* <li>
                             <NavLink
@@ -510,18 +507,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               View All Enrichment Items
                             </NavLink>
                           </li> */}
-                          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) &&(
-                          <li>
-                            <NavLink
-                              to="/assetfacility/createenrichmentitem"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
-                            >
-                              Create Enrichment Item
-                            </NavLink>
-                          </li>
+                          {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
+                            <li>
+                              <NavLink
+                                to="/assetfacility/createenrichmentitem"
+                                className={({ isActive }) =>
+                                  "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                  (isActive && "!text-white")
+                                }
+                              >
+                                Create Enrichment Item
+                              </NavLink>
+                            </li>
                           )}
                           {/* <li>
                             <NavLink
@@ -631,7 +628,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </SidebarLinkGroup>
 
               {/* <!-- Menu Item Customer Management--> */}
-              <SidebarLinkGroup
+              {/*<SidebarLinkGroup
                 activeCondition={
                   pathname === "/" || pathname.includes("customer")
                 }
@@ -671,7 +668,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           />
                         </svg>
                       </NavLink>
-                      {/* <!-- Dropdown Menu Start --> */}
+                      {/* <!-- Dropdown Menu Start -->
                       <div
                         className={`translate transform overflow-hidden ${!open && "hidden"
                           }`}
@@ -701,11 +698,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                         </ul>
                       </div>
-                      {/* <!-- Dropdown Menu End --> */}
+                      {/* <!-- Dropdown Menu End --> *
                     </React.Fragment>
                   );
                 }}
-              </SidebarLinkGroup>
+              </SidebarLinkGroup>*/}
 
               {/* <!-- Menu Item Customer Management--> */}
               {/* <SidebarLinkGroup
