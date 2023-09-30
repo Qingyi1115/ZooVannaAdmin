@@ -24,7 +24,9 @@ import {
   AnimalStatusType,
 } from "../../../enums/Enumurated";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import Species from "src/models/Species";
+import Species from "../../../models/Species";
+
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
 function CreateNewAnimalForm() {
   const apiFormData = useApiFormData();
@@ -89,7 +91,9 @@ function CreateNewAnimalForm() {
   // const [causeOfDeath, setCauseOfDeath] = useState<string>("");
   // const [growthStage, setGrowthStage] = useState<string | undefined>(undefined);
   // const animalStatus = "NORMAL";
-  const [speciesCode, setSpeciesCode] = useState<string>("");
+  const [selectedSpecies, setSelectedSpecies] = useState<Species | undefined>(
+    undefined
+  );
 
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -133,6 +137,7 @@ function CreateNewAnimalForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
+    console.log(selectedSpecies);
 
     const formData = new FormData();
     formData.append("houseName", houseName);
@@ -152,6 +157,7 @@ function CreateNewAnimalForm() {
       "behavioralDefiningCharacteristics",
       behavioralDefiningCharacteristics
     );
+    formData.append("selectedSpeciesCode", selectedSpecies?.speciesCode || "");
     formData.append("file", imageFile || "");
 
     const createAnimal = async () => {
@@ -181,6 +187,37 @@ function CreateNewAnimalForm() {
     };
     // createAnimal();
   }
+
+  // species dropdown
+  const selectedSpeciesTemplate = (option: Species, props: any) => {
+    if (option) {
+      return (
+        <div className="align-items-center flex">
+          <img
+            alt={option.commonName}
+            src={"http://localhost:3000/" + option.imageUrl}
+            className="mr-2 aspect-square h-6 w-6 rounded-full object-cover"
+          />
+          <div>{option.commonName}</div>
+        </div>
+      );
+    }
+
+    return <span>{props.placeholder}</span>;
+  };
+
+  const speceiesOptionTemplate = (option: Species) => {
+    return (
+      <div className="align-items-center flex">
+        <img
+          alt={option.commonName}
+          src={"http://localhost:3000/" + option.imageUrl}
+          className="mr-2 aspect-square h-8 w-8 rounded-full object-cover"
+        />
+        <div>{option.commonName}</div>
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -275,19 +312,24 @@ function CreateNewAnimalForm() {
           />
 
           {/* Species */}
-          <FormFieldSelect
-            formFieldName="species"
-            label="Species"
-            required={true}
-            placeholder="Select an acquisition method..."
-            valueLabelPair={speciesList.map((species) => [
-              species.speciesCode,
-              species.commonName,
-            ])}
-            value={sex}
-            setValue={setSex}
-            validateFunction={() => null}
-          />
+          <Form.Field
+            name="dateOfBirth"
+            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          >
+            <Form.Label className="font-medium">Species</Form.Label>
+            <Dropdown
+              value={selectedSpecies}
+              onChange={(e: DropdownChangeEvent) => setSelectedSpecies(e.value)}
+              options={speciesList}
+              optionLabel="commonName"
+              placeholder="Select a Species"
+              filter
+              valueTemplate={selectedSpeciesTemplate}
+              itemTemplate={speceiesOptionTemplate}
+              className="md:w-14rem w-full"
+            />
+            {/* <Form.ValidityState>{validateImage}</Form.ValidityState> */}
+          </Form.Field>
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">

@@ -20,7 +20,7 @@ function SpeciesCard(props: SpeciesCardProps) {
   const { curSpecies } = props;
   return (
     <NavLink to={`/species/viewspeciesdetails/${curSpecies.speciesCode}`}>
-      <Card className=" w-full transition-all hover:bg-secondary/70">
+      <Card className=" w-full transition-all hover:bg-muted/50">
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
             <img
