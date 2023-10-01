@@ -1,9 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "./hooks/useAuthContext";
 import { useState } from "react";
 
@@ -26,7 +21,6 @@ import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/Facility/V
 import ViewFacilityLogDetailsPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/ViewFacilityLogDetailsPage";
 import CreateNewFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/CreateNewFacilityLogPage";
 import EditFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/EditFacilityLogPage";
-
 
 //assets
 import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/CreateNewAnimalFeedPage";
@@ -73,8 +67,6 @@ import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhys
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
 import SensorMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/SensorMaintenanceChartPage";
 import FacilityMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/FacilityMaintenanceChartPage";
-
-
 
 function App() {
   const { state } = useAuthContext();
@@ -214,7 +206,11 @@ function App() {
                 <Route
                   path="/assetfacility/viewfacilitydetails/:facilityId/:tab"
                   element={
-                    user ? <ViewFacilityDetailsPage /> : <Navigate to="/login" />
+                    user ? (
+                      <ViewFacilityDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
@@ -343,21 +339,13 @@ function App() {
                 <Route
                   path="/assetfacility/viewsensordetails/:sensorId"
                   element={
-                    user ? (
-                      <ViewSensorDetailsPage />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
+                    user ? <ViewSensorDetailsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
                   path="/assetfacility/viewsensordetails/:sensorId/:tab"
                   element={
-                    user ? (
-                      <ViewSensorDetailsPage />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
+                    user ? <ViewSensorDetailsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -391,12 +379,14 @@ function App() {
                 <Route
                   path="/assetfacility/viewhubdetails/:hubProcessorId"
                   element={
-                    user ? (<ViewHubDetailsPage />) : (<Navigate to="/login" />)}
+                    user ? <ViewHubDetailsPage /> : <Navigate to="/login" />
+                  }
                 />
                 <Route
                   path="/assetfacility/viewhubdetails/:hubProcessorId/:tab"
                   element={
-                    user ? (<ViewHubDetailsPage />) : (<Navigate to="/login" />)}
+                    user ? <ViewHubDetailsPage /> : <Navigate to="/login" />
+                  }
                 />
                 <Route
                   path="/assetfacility/maintenance"
@@ -431,11 +421,7 @@ function App() {
                 <Route
                   path="/assetfacility/editmaintenancelog/:logId"
                   element={
-                    user ? (
-                      <EditMaintenanceLogPage />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
+                    user ? <EditMaintenanceLogPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -461,11 +447,7 @@ function App() {
                 <Route
                   path="/assetfacility/editfacilitylog/:logId"
                   element={
-                    user ? (
-                      <EditFacilityLogPage />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
+                    user ? <EditFacilityLogPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -504,7 +486,11 @@ function App() {
                 <Route
                   path="/employeeAccount/viewEmployeeDetails/:employeeId"
                   element={
-                    user ? <ViewEmployeeDetailsPage /> : <Navigate to="/login" />
+                    user ? (
+                      <ViewEmployeeDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
