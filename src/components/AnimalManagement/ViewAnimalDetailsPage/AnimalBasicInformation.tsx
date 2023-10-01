@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import SpeciesCard from "./SpeciesCard";
+import EnclosureCard from "./EnclosureCard";
 
 interface AnimalBasicInformationProps {
   curAnimal: Animal;
@@ -29,7 +30,7 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
       <div>
         Current Location: <br />
         <div>
-          blabla enclosure card here, can navigate to view enclosure details
+          <EnclosureCard />
         </div>
       </div>
       <Table>

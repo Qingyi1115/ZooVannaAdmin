@@ -5,6 +5,176 @@ import Species from "../../models/Species";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { NavLink, useParams } from "react-router-dom";
+import Animal from "../../models/Animal";
+import AnimalsBySpeciesDatatable from "../../components/AnimalManagement/ViewPopulationDetailsPage.tsx/AnimalsBySpeciesDatatable";
+
+import { Chart } from "primereact/chart";
+import {
+  AcquisitionMethod,
+  AnimalGrowthStage,
+  AnimalSex,
+} from "../../enums/Enumurated";
+
+let testPandaSpecies: Species = {
+  speciesId: 1,
+  speciesCode: "SPE001",
+  commonName: "Panda",
+  scientificName: "Ailuropoda Melanoleuca",
+  aliasName: "",
+  conservationStatus: "",
+  domain: "",
+  kingdom: "",
+  phylum: "",
+  speciesClass: "",
+  order: "",
+  family: "",
+  genus: "",
+  nativeContinent: "",
+  nativeBiomes: "",
+  educationalDescription: "",
+  educationalFunFact: "",
+  groupSexualDynamic: "",
+  habitatOrExhibit: "habitat",
+  imageUrl: "img/species/panda.jpg",
+  generalDietPreference: "",
+  lifeExpectancyYears: 0,
+};
+
+let emptyAnimal: Animal = {
+  animalId: -1,
+  animalCode: "",
+  imageUrl: "",
+  houseName: "",
+  sex: AnimalSex.MALE,
+  dateOfBirth: new Date(),
+  placeOfBirth: "",
+  rfidTagNum: "",
+  acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
+  dateOfAcquisition: new Date(),
+  acquisitionRemarks: "",
+  weight: -1,
+  physicalDefiningCharacteristics: "",
+  behavioralDefiningCharacteristics: "",
+  dateOfDeath: null,
+  locationOfDeath: null,
+  causeOfDeath: null,
+  growthStage: AnimalGrowthStage.ADOLESCENT,
+  animalStatus: "",
+  species: testPandaSpecies,
+};
+
+let testAnimalList: Animal[] = [
+  {
+    animalId: 1,
+    animalCode: "ANI001",
+    imageUrl: "",
+    houseName: "Kai Kai",
+    sex: AnimalSex.MALE,
+    dateOfBirth: new Date(),
+    placeOfBirth: "",
+    rfidTagNum: "RFID00001",
+    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
+    dateOfAcquisition: new Date(),
+    acquisitionRemarks: "Acquisition Remarks blabla",
+    weight: -1,
+    physicalDefiningCharacteristics: "Big head",
+    behavioralDefiningCharacteristics: "Lazy",
+    dateOfDeath: null,
+    locationOfDeath: null,
+    causeOfDeath: null,
+    growthStage: AnimalGrowthStage.JUVENILE,
+    animalStatus: "NORMAL",
+    species: testPandaSpecies,
+  },
+  {
+    animalId: 2,
+    animalCode: "ANI002",
+    houseName: "Jia Jia",
+    imageUrl: "",
+    sex: AnimalSex.FEMALE,
+    dateOfBirth: new Date(),
+    placeOfBirth: "",
+    rfidTagNum: "RFID00002",
+    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
+    dateOfAcquisition: new Date(),
+    acquisitionRemarks: "Acquisition Remarks blabla",
+    weight: -1,
+    physicalDefiningCharacteristics: "Bigger head",
+    behavioralDefiningCharacteristics: "Lazier",
+    dateOfDeath: null,
+    locationOfDeath: null,
+    causeOfDeath: null,
+    growthStage: AnimalGrowthStage.JUVENILE,
+    animalStatus: "NORMAL",
+    species: testPandaSpecies,
+  },
+  {
+    animalId: 3,
+    animalCode: "ANI003",
+    houseName: "Ha Ha",
+    imageUrl: "",
+    sex: AnimalSex.FEMALE,
+    dateOfBirth: new Date(),
+    placeOfBirth: "",
+    rfidTagNum: "RFID00002",
+    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
+    dateOfAcquisition: new Date(),
+    acquisitionRemarks: "Acquisition Remarks blabla",
+    weight: -1,
+    physicalDefiningCharacteristics: "Bigger head",
+    behavioralDefiningCharacteristics: "Lazier",
+    dateOfDeath: null,
+    locationOfDeath: null,
+    causeOfDeath: null,
+    growthStage: AnimalGrowthStage.ADOLESCENT,
+    animalStatus: "NORMAL",
+    species: testPandaSpecies,
+  },
+  {
+    animalId: 4,
+    animalCode: "ANI004",
+    houseName: "Ho Ho",
+    imageUrl: "",
+    sex: AnimalSex.MALE,
+    dateOfBirth: new Date(),
+    placeOfBirth: "",
+    rfidTagNum: "RFID00002",
+    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
+    dateOfAcquisition: new Date(),
+    acquisitionRemarks: "Acquisition Remarks blabla",
+    weight: -1,
+    physicalDefiningCharacteristics: "Bigger head",
+    behavioralDefiningCharacteristics: "Lazier",
+    dateOfDeath: null,
+    locationOfDeath: null,
+    causeOfDeath: null,
+    growthStage: AnimalGrowthStage.ADULT,
+    animalStatus: "NORMAL",
+    species: testPandaSpecies,
+  },
+  {
+    animalId: 5,
+    animalCode: "ANI005",
+    houseName: "Lmao Lmao",
+    imageUrl: "",
+    sex: AnimalSex.UNKNOWN,
+    dateOfBirth: new Date(),
+    placeOfBirth: "",
+    rfidTagNum: "RFID00002",
+    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
+    dateOfAcquisition: new Date(),
+    acquisitionRemarks: "Acquisition Remarks blabla",
+    weight: -1,
+    physicalDefiningCharacteristics: "Bigger head",
+    behavioralDefiningCharacteristics: "Lazier",
+    dateOfDeath: null,
+    locationOfDeath: null,
+    causeOfDeath: null,
+    growthStage: AnimalGrowthStage.ELDER,
+    animalStatus: "NORMAL",
+    species: testPandaSpecies,
+  },
+];
 
 function ViewPopulationDetailsPage() {
   const apiJson = useApiJson();
@@ -12,6 +182,12 @@ function ViewPopulationDetailsPage() {
   const { speciesCode } = useParams<{ speciesCode: string }>();
 
   const [curSpecies, setCurSpecies] = useState<Species>();
+  const [curAnimalList, setCurAnimalList] = useState<Animal[]>(testAnimalList);
+
+  const [sexChartData, setSexChartData] = useState({});
+  const [sexChartOptions, setSexChartOptions] = useState({});
+  const [ageChartData, setAgeChartData] = useState({});
+  const [ageChartOptions, setAgeChartOptions] = useState({});
 
   useEffect(() => {
     const fetchSpecies = async () => {
@@ -27,6 +203,164 @@ function ViewPopulationDetailsPage() {
 
     fetchSpecies();
   }, []);
+
+  useEffect(() => {
+    const fetchAnimalsBySpecies = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/animal/getanimalsbyspecies/${speciesCode}`
+        );
+        setCurAnimalList(responseJson as Animal[]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    // fetchAnimalsBySpecies();
+  }, []);
+
+  // sex distributiton chart
+  useEffect(() => {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const numMale = curAnimalList.reduce((count, animal) => {
+      if (animal.sex === "MALE") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+    const numFemale = curAnimalList.reduce((count, animal) => {
+      if (animal.sex === "FEMALE") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+    const numAsexual = curAnimalList.reduce((count, animal) => {
+      if (animal.sex === "ASEXUAL") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+    const numUnknown = curAnimalList.reduce((count, animal) => {
+      if (animal.sex === "UNKNOWN") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+    console.log("numMale: " + numMale);
+    console.log("numFemale: " + numFemale);
+    console.log("numAsexual: " + numAsexual);
+    console.log("numUnknown: " + numUnknown);
+    const data = {
+      labels: [
+        `Male: ${numMale}`,
+        `Female: ${numFemale}`,
+        `Asexual: ${numAsexual}`,
+        `Unknown: ${numUnknown}`,
+      ],
+      datasets: [
+        {
+          data: [numMale, numFemale, numAsexual, numUnknown],
+          backgroundColor: [
+            "#3b82f6",
+            "#ec4899",
+            documentStyle.getPropertyValue("--yellow-500"),
+            documentStyle.getPropertyValue("--gray-500"),
+          ],
+          hoverBackgroundColor: [
+            "#3b82f690",
+            "#ec489990",
+            documentStyle.getPropertyValue("--yellow-400"),
+            documentStyle.getPropertyValue("--gray-400"),
+          ],
+          label: "Number of individuals",
+        },
+      ],
+    };
+    const options = {
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+          },
+          position: "right",
+        },
+      },
+    };
+
+    setSexChartData(data);
+    setSexChartOptions(options);
+  }, [curAnimalList]);
+
+  // age distribution chart
+  useEffect(() => {
+    const numInfant = curAnimalList.reduce((count, animal) => {
+      if (animal.growthStage === "INFANT") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+    const numJuvenile = curAnimalList.reduce((count, animal) => {
+      if (animal.growthStage === "JUVENILE") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+    const numAdolescent = curAnimalList.reduce((count, animal) => {
+      if (animal.growthStage === "ADOLESCENT") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+    const numAdult = curAnimalList.reduce((count, animal) => {
+      if (animal.growthStage === "ADULT") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+    const numElder = curAnimalList.reduce((count, animal) => {
+      if (animal.growthStage === "ELDER") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+    const data = {
+      labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
+      datasets: [
+        {
+          label: "Age Distribution by Growth Stage",
+          data: [numInfant, numJuvenile, numAdolescent, numAdult, numElder],
+          backgroundColor: [
+            "rgba(255, 159, 64, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 99, 132, 0.2)",
+          ],
+          borderColor: [
+            "rgb(255, 159, 64)",
+            "rgb(75, 192, 192)",
+            "rgb(54, 162, 235)",
+            "rgb(153, 102, 255)",
+            "rgb(255, 99, 132)",
+          ],
+          borderWidth: 1,
+        },
+      ],
+    };
+    const options = {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+      ticks: {
+        stepSize: 1,
+      },
+    };
+
+    setAgeChartData(data);
+    setAgeChartOptions(options);
+  }, [curAnimalList]);
 
   return (
     <div className="p-10">
@@ -47,18 +381,49 @@ function ViewPopulationDetailsPage() {
           </div>
           <Separator />
           <span className="mt-4 self-center text-title-xl font-bold">
-            {/* {curSpecies.commonName} */}
+            {curSpecies?.commonName}
           </span>
         </div>
         <div>
-          <span className="font-bold">Population Basic Information</span>
-          <ul>
-            <li>Total population</li>
-            <li>Sex distribution</li>
-            <li>Average age</li>
-            <li>Exact age distribution, use a graph maybe</li>
-          </ul>
+          <span className="text-xl font-bold">
+            Total Current Population: {curAnimalList.length}
+          </span>
         </div>
+        <div>
+          <AnimalsBySpeciesDatatable
+            curAnimalList={curAnimalList}
+            setCurAnimalList={setCurAnimalList}
+          />
+        </div>
+        <div>
+          <span className="text-lg font-bold">Sex Distribution</span>
+          <br />
+          <span>(Number of individuals)</span>
+          <Chart
+            type="pie"
+            data={sexChartData}
+            options={sexChartOptions}
+            className="w-1/3"
+          />
+        </div>
+        <div>
+          <span className="text-lg font-bold">Age Distribution</span>
+          <br />
+          <span>(Number of individuals)</span>
+          <Chart
+            type="bar"
+            data={ageChartData}
+            options={ageChartOptions}
+            className="w-1/2"
+          />
+        </div>
+        <ul>
+          <li>Total population</li>
+          <li>Sex distribution</li>
+          <li>Average age</li>
+          <li>Exact age distribution, use a graph maybe</li>
+        </ul>
+        <div>Datatable for all individuals of this species</div>
         <div>
           <span className="font-bold">Feeding Plan</span>
           <br />
