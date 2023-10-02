@@ -74,6 +74,7 @@ import FacilityMaintenanceChartPage from "./pages/assetAndFacilityManagement/Mai
 
 //promotion management page
 import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
+import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -554,6 +555,12 @@ function App() {
                   path="/promotion/createnewpromotion"
                   element={
                     user ? <CreateNewPromotionPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/promotion/viewallpromotions"
+                  element={
+                    user ? <ViewAllPromotionsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route

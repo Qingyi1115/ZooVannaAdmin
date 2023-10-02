@@ -1091,17 +1091,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         }`}
                       >
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
-                          {/* <li>
-                        <NavLink
-                          to="/promotion/viewallpromotion"
-                          className={({ isActive }) =>
-                            "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                            (isActive && "!text-white")
-                          }
-                        >
-                          View All Promotions
-                        </NavLink>
-                      </li> */}
+                          <li>
+                            <NavLink
+                              to="/promotion/viewallpromotions"
+                              className={({ isActive }) =>
+                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                (isActive && "!text-white")
+                              }
+                            >
+                              View All Promotions
+                            </NavLink>
+                          </li>
                           <li>
                             <NavLink
                               to="/promotion/createnewpromotion"
