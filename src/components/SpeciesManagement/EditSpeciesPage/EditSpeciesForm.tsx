@@ -21,6 +21,8 @@ import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 
+import { useNavigate } from "react-router-dom";
+
 interface EditSpeciesFormProps {
   curSpecies: Species;
   refreshSeed: number;
@@ -29,6 +31,7 @@ interface EditSpeciesFormProps {
 
 function EditSpeciesForm(props: EditSpeciesFormProps) {
   const apiFormData = useApiFormData();
+  const navigate = useNavigate();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
@@ -389,6 +392,8 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
           description: "Successfully edited species",
         });
         setRefreshSeed(refreshSeed + 1);
+        const redirectUrl = `/species/viewspeciesdetails/${curSpecies.speciesCode}/basicinfo`;
+        navigate(redirectUrl);
       } catch (error: any) {
         toastShadcn({
           variant: "destructive",
@@ -434,6 +439,8 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
           description: "Successfully edited species",
         });
         setRefreshSeed(refreshSeed + 1);
+        const redirectUrl = `/species/viewspeciesdetails/${curSpecies.speciesCode}/basicinfo`;
+        navigate(redirectUrl);
       } catch (error: any) {
         toastShadcn({
           variant: "destructive",
@@ -508,7 +515,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
                   </Button>
                 </NavLink>
                 <span className="self-center text-lg text-graydark">
-                  Edit Species
+                  Edit Species Basic Information
                 </span>
                 <Button disabled className="invisible">
                   Back
@@ -862,11 +869,7 @@ function EditSpeciesForm(props: EditSpeciesFormProps) {
                 disabled={apiFormData.loading}
                 className="h-12 w-2/3 self-center rounded-full text-lg"
               >
-                {!apiFormData.loading ? (
-                  <div>Submit Edit Species</div>
-                ) : (
-                  <div>Loading</div>
-                )}
+                {!apiFormData.loading ? <div>Submit</div> : <div>Loading</div>}
               </Button>
             </Form.Submit>
             {formError && (

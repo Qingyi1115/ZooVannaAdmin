@@ -10,12 +10,13 @@ import { InputText } from "primereact/inputtext";
 
 import Customer from "../../models/Customer";
 import useApiJson from "../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { Country } from "../../enums/Country";
 import { useToast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
 
 function AllCustomerDatatable() {
   const apiJson = useApiJson();
@@ -46,33 +47,10 @@ function AllCustomerDatatable() {
     apiJson.get("http://localhost:3000/api/customer/getallcustomer");
   }, []);
 
-  useEffect(() => {
-    const customerData = apiJson.result as Customer[];
-    setCustomerList(customerData);
-  }, [apiJson.loading]);
-
-  //
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-  // const imageBodyTemplate = (rowData: Customer) => {
-  //   return (
-  //     <img
-  //       src={rowData.customerImageUrl}
-  //       alt={rowData.customerName}
-  //       className="border-round shadow-2"
-  //       style={{ width: "64px" }}
-  //     />
-  //   );
-  // };
-
-  const navigateEditProduct = (customer: Customer) => {};
-  
   const confirmDeleteCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
     setDeleteCustomerDialog(true);
@@ -94,7 +72,7 @@ function AllCustomerDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/customer/deleteCustomer/" +
-            selectedCustomer.email
+          selectedCustomer.email
         );
 
         toastShadcn({
@@ -174,7 +152,22 @@ function AllCustomerDatatable() {
       <div>
         <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
-          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink to={"/customer/createnewcustomer"}>
+                <Button className="mr-2">
+                  <HiPlus className="mr-auto" />
+                </Button>
+              </NavLink>
+              <span className=" self-center text-title-xl font-bold">
+                All Customers
+              </span>
+              <Button onClick={exportCSV}>Export to .csv</Button>
+            </div>
+            <Separator />
+          </div>
 
           <DataTable
             ref={dt}
@@ -188,13 +181,20 @@ function AllCustomerDatatable() {
             dataKey="customerId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} customer"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} customers"
             globalFilter={globalFilter}
             header={header}
           >
+            <Column
+              field="customerId"
+              header="ID"
+              sortable
+              style={{ minWidth: "4rem" }}
+            ></Column>
             <Column
               field="firstName"
               header="First Name"
@@ -245,8 +245,10 @@ function AllCustomerDatatable() {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
         </div>

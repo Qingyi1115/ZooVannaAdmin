@@ -8,15 +8,20 @@ import useApiJson from "../../../../hooks/useApiJson";
 import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
 import useApiFormData from "../../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 function CreateNewAnimalFeedForm() {
   const apiFormData = useApiFormData();
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const [animalFeedName, setAnimalFeedName] = useState<string>(""); // text input
-  const [animalFeedCategory, setAnimalFeedCategory] = useState<string | undefined>(
-    undefined
-  ); // radio group
+  const [animalFeedCategory, setAnimalFeedCategory] = useState<
+    string | undefined
+  >(undefined); // radio group
   const [animalFeedImageUrl, setImageUrl] = useState<string | null>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
@@ -26,14 +31,15 @@ function CreateNewAnimalFeedForm() {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="font-medium text-danger">* Please enter a valid name!</div>
+          <div className="font-medium text-danger">
+            * Please enter a valid name!
+          </div>
         );
       }
       // add any other cases here
     }
     return null;
   }
-
 
   function validateAnimalFeedCategory(props: ValidityState) {
     // console.log(props);
@@ -98,6 +104,8 @@ function CreateNewAnimalFeedForm() {
       toastShadcn({
         description: "Successfully created animal feed",
       });
+      const redirectUrl = `/assetfacility/viewallanimalfeed`;
+      navigate(redirectUrl);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -107,7 +115,6 @@ function CreateNewAnimalFeedForm() {
           error.message,
       });
     }
-
   }
 
   return (
@@ -116,10 +123,26 @@ function CreateNewAnimalFeedForm() {
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >
-      <span className="self-center text-title-xl font-bold">
-        Add Animal Feed
-      </span>
-      <hr className="bg-stroke opacity-20" />
+      {/* Title Header and back button */}
+      <div className="flex flex-col">
+        <div className="mb-4 flex justify-between">
+          <NavLink
+            to="/assetfacility/viewallanimalfeed">
+            <Button variant={"outline"} type="button" className="">
+              Back
+            </Button>
+          </NavLink>
+
+          <span className="self-center text-title-xl font-bold">
+            Create Animal Feed
+          </span>
+          <Button disabled className="invisible">
+            Back
+          </Button>
+        </div>
+        <Separator />
+      </div>
+
       {/* Animal Feed Picture */}
       <Form.Field
         name="animalFeedImage"
@@ -147,7 +170,7 @@ function CreateNewAnimalFeedForm() {
           value={animalFeedName}
           setValue={setAnimalFeedName}
           validateFunction={validateName}
-          />
+        />
       </div>
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -170,7 +193,7 @@ function CreateNewAnimalFeedForm() {
             ["PELLETS", "Pellets"],
             ["NECTAR", "Nectar"],
             ["SUPPLEMENTS", "Supplements"],
-            ["OTHERS", "Others"]
+            ["OTHERS", "Others"],
           ]}
           value={animalFeedCategory}
           setValue={setAnimalFeedCategory}
@@ -178,16 +201,23 @@ function CreateNewAnimalFeedForm() {
         />
       </div>
 
-
       <Form.Submit asChild>
-        <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-          Create Animal Feed
-        </button>
+        <Button
+          disabled={apiFormData.loading}
+          className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
+          {!apiFormData.loading ? (
+            <div>Submit</div>
+          ) : (
+            <div>Loading</div>
+          )}
+        </Button>
       </Form.Submit>
-      {formError && (
-        <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
-      )}
-    </Form.Root>
+      {
+        formError && (
+          <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+        )
+      }
+    </Form.Root >
   );
 }
 

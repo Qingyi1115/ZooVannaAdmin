@@ -6,10 +6,11 @@ import Employee from "src/models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink } from "react-router-dom";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
+import { Separator } from "@/components/ui/separator";
 
 {
   /*const toast = useRef<Toast>(null);*/
@@ -17,6 +18,13 @@ import { Dialog } from "primereact/dialog";
 
 function AllEmployeesDatatable() {
   const apiJson = useApiJson();
+
+  // date options
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  };
 
   let employee: Employee = {
     employeeId: -1,
@@ -38,8 +46,13 @@ function AllEmployeesDatatable() {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const [employeeResignationDialog, setEmployeeResignationDialog] = useState<boolean>(false);
+  const [employeeResignationDialog, setEmployeeResignationDialog] =
+    useState<boolean>(false);
   const toastShadcn = useToast().toast;
+
+  const exportCSV = () => {
+    dt.current?.exportCSV();
+  };
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -49,9 +62,9 @@ function AllEmployeesDatatable() {
           { includes: ["keeper", "generalStaff", "planningStaff"] }
         );
         setEmployeeList(responseJson.employees as Employee[]);
-         //console.log("Here " + responseJson);
-         //const help = responseJson as Employee[];
-         //console.log(help);
+        //console.log("Here " + responseJson);
+        //const help = responseJson as Employee[];
+        //console.log(help);
       } catch (error: any) {
         console.log(error);
       }
@@ -61,16 +74,18 @@ function AllEmployeesDatatable() {
 
   const hideEmployeeResignationDialog = () => {
     setEmployeeResignationDialog(false);
-  }
+  };
 
-  const resignEmployee = async () => { 
+  const resignEmployee = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
     console.log(selectedEmployee);
 
-    const resignEmployee = async() => {
+    const resignEmployee = async () => {
       try {
         const responseJson = await apiJson.put(
-          `http://localhost:3000/api/employee/disableEmployee/${selectedEmployee.employeeId}`, selectedEmployee);
+          `http://localhost:3000/api/employee/disableEmployee/${selectedEmployee.employeeId}`,
+          selectedEmployee
+        );
 
         toastShadcn({
           // variant: "destructive",
@@ -87,13 +102,13 @@ function AllEmployeesDatatable() {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while disabling employee: \n" + apiJson.error,
+            "An error has occurred while disabling employee: \n" +
+            apiJson.error,
         });
       }
-    }
+    };
     resignEmployee();
-
-  }
+  };
 
   const employeeResignationDialogFooter = (
     <React.Fragment>
@@ -107,8 +122,6 @@ function AllEmployeesDatatable() {
       </Button>
     </React.Fragment>
   );
-
-  
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -127,7 +140,7 @@ function AllEmployeesDatatable() {
     </div>
   );
 
-  const confirmEmployeeResignation = (employee:Employee) => {
+  const confirmEmployeeResignation = (employee: Employee) => {
     setSelectedEmployee(employee);
     setEmployeeResignationDialog(true);
   };
@@ -136,30 +149,27 @@ function AllEmployeesDatatable() {
     console.log(employee.dateOfResignation);
     return (
       <React.Fragment>
-        <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
+        <NavLink
+          to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}
+        >
           <Button className="mb-1 mr-1">
-            <HiEye className="mr-1" />
-            <span>View Details</span>
+            <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        {employee.dateOfResignation ?
-        <Button
-        disabled
-        variant={"destructive"}
-        >
-          <HiTrash className="mr-1" />
-          <span>Disabled</span>
-        </Button>
-        :
-        <Button
-        variant={"destructive"}
-        className="mr-2"
-        onClick={() => confirmEmployeeResignation(employee)}
-        >
-          <HiTrash className="mr-1" />
-          <span>Disable</span>
-        </Button>
-        } 
+        {employee.dateOfResignation ? (
+          <Button disabled variant={"destructive"}>
+            <HiTrash className="mx-auto" />
+            <span>Disabled</span>
+          </Button>
+        ) : (
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmEmployeeResignation(employee)}
+          >
+            <HiTrash className="mx-auto" />
+          </Button>
+        )}
       </React.Fragment>
     );
   };
@@ -168,6 +178,21 @@ function AllEmployeesDatatable() {
     <div>
       <div>
         <Toast ref={toast} />
+        {/* Title Header and back button */}
+        <div className="flex flex-col">
+          <div className="mb-4 flex justify-between">
+            <NavLink to={"/employee/createNewEmployee"}>
+              <Button className="mr-2">
+                <HiPlus className="mr-auto" />
+              </Button>
+            </NavLink>
+            <span className=" self-center text-title-xl font-bold">
+              All Employees
+            </span>
+            <Button onClick={exportCSV}>Export to .csv</Button>
+          </div>
+          <Separator />
+        </div>
         <div>
           <DataTable
             ref={dt}
@@ -181,6 +206,7 @@ function AllEmployeesDatatable() {
             dataKey="employeeId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -219,17 +245,25 @@ function AllEmployeesDatatable() {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
+              body={(employee) => {
+                return new Date(employee.employeeBirthDate).toLocaleDateString(
+                  "en-SG",
+                  dateOptions
+                );
+              }}
               field="employeeBirthDate"
               header="Birthday"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-                        body={actionBodyTemplate}
-                        header="Actions"
-                        exportable={false}
-                        style={{ minWidth: "18rem" }}
-                    ></Column>
+              body={actionBodyTemplate}
+              header="Actions"
+              frozen
+              alignFrozen="right"
+              exportable={false}
+              style={{ minWidth: "9rem" }}
+            ></Column>
           </DataTable>
         </div>
         <Dialog

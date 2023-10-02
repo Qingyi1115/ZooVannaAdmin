@@ -7,6 +7,9 @@ import FormFieldSelect from "../FormFieldSelect";
 import useApiJson from "../../hooks/useApiJson";
 import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -14,7 +17,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 function CreateNewEmployeeForm() {
   const apiJson = useApiJson();
-
+  const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
   const [fullName, setFullName] = useState<string>(""); // text input
@@ -50,15 +53,16 @@ function CreateNewEmployeeForm() {
     console.log("Name:");
     console.log(fullName);
 
+
     let roleJson;
 
-    if(role ==="keeper") {
+    if (role === "keeper") {
       roleJson = {
         keeperType: roleType,
         isDisabled: false,
         specialization: specializationType
       }
-    } 
+    }
     else if (role === "generalStaff") {
       roleJson = {
         generalStaffType: roleType,
@@ -66,7 +70,7 @@ function CreateNewEmployeeForm() {
       }
     }
 
-    else if(role === "planningStaff") {
+    else if (role === "planningStaff") {
       roleJson = {
         plannerType: roleType,
         isDisabled: false,
@@ -151,7 +155,7 @@ function CreateNewEmployeeForm() {
           <div className="font-medium text-danger">* Please enter a valid phone number!</div>
         );
       }
-      else if(props.patternMismatch) {
+      else if (props.patternMismatch) {
         return (
           <div className="font-medium text-danger">* Please enter 8-digit phone number</div>
         )
@@ -160,7 +164,7 @@ function CreateNewEmployeeForm() {
     }
     return null;
   }
-  
+
   function validateRole(props: ValidityState) {
     if (props != undefined) {
       if (role == undefined) {
@@ -237,10 +241,21 @@ function CreateNewEmployeeForm() {
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >
-      <span className="self-center text-title-xl font-bold">
-        Create New Employee
-      </span>
-      <hr className="bg-stroke opacity-20" />
+      {/* Title Header and back button */}
+      <div className="flex flex-col">
+        <div className="mb-4 flex justify-between">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+            Back
+          </Button>
+          <span className="self-center text-title-xl font-bold">
+            Create New Employee
+          </span>
+          <Button disabled className="invisible">
+            Back
+          </Button>
+        </div>
+        <Separator />
+      </div>
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* First Name */}
         <FormFieldInput
@@ -311,7 +326,7 @@ function CreateNewEmployeeForm() {
           if (e && e.value !== undefined) {
             setBirthday(e.value);
           }
-          }}/>
+        }} />
       </div>
       <FormFieldSelect
         formFieldName="isAccountManager"
@@ -324,9 +339,9 @@ function CreateNewEmployeeForm() {
         ]}
         value={accountManager}
         setValue={(e) => {
-          if(e && e !== "undefined") {
+          if (e && e !== "undefined") {
             setAccountManager(e);
-            if(e === "true") {
+            if (e === "true") {
               setIsAccountManager(true);
             } else {
               setIsAccountManager(false);
@@ -350,7 +365,7 @@ function CreateNewEmployeeForm() {
         validateFunction={validateRole}
       />
 
-      {role === "keeper" && 
+      {role === "keeper" &&
         <FormFieldSelect
           formFieldName="keeperType"
           label="Keeper Type"
@@ -366,7 +381,7 @@ function CreateNewEmployeeForm() {
         />
       }
 
-      {role === "keeper" && 
+      {role === "keeper" &&
         <FormFieldSelect
           formFieldName="specializationType"
           label="Specialization Type"
@@ -385,7 +400,7 @@ function CreateNewEmployeeForm() {
         />
       }
 
-      {role === "generalStaff" && 
+      {role === "generalStaff" &&
         <FormFieldSelect
           formFieldName="generalStaffType"
           label="General Staff Type"
@@ -401,7 +416,7 @@ function CreateNewEmployeeForm() {
         />
       }
 
-      {role === "planningStaff" && 
+      {role === "planningStaff" &&
         <FormFieldSelect
           formFieldName="planningStaffType"
           label="Planning Staff Type"
@@ -420,7 +435,7 @@ function CreateNewEmployeeForm() {
         />
       }
 
-      {role === "planningStaff" && 
+      {role === "planningStaff" &&
         <FormFieldSelect
           formFieldName="specializationType"
           label="Specialization Type"
@@ -439,9 +454,16 @@ function CreateNewEmployeeForm() {
         />
       }
       <Form.Submit asChild>
-        <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-          Create Employee
-        </button>
+        <Button
+          disabled={apiJson.loading}
+          className="h-12 w-2/3 self-center rounded-full text-lg"
+        >
+          {!apiJson.loading ? (
+            <div>Submit</div>
+          ) : (
+            <div>Loading</div>
+          )}
+        </Button>
       </Form.Submit>
       {formError && (
         <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>

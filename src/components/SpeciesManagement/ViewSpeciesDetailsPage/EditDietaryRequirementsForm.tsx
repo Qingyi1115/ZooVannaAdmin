@@ -27,6 +27,7 @@ import {
   PresentationMethod,
 } from "../../../enums/Enumurated";
 
+import { useNavigate } from "react-router-dom";
 interface EditDietaryRequirementsFormProps {
   curSpecies: Species;
   curSpeciesDietNeed: SpeciesDietNeed;
@@ -35,7 +36,7 @@ interface EditDietaryRequirementsFormProps {
 function EditDietaryRequirementsForm(props: EditDietaryRequirementsFormProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
-
+  const navigate = useNavigate();
   const { curSpecies, curSpeciesDietNeed } = props;
 
   // fields
@@ -77,7 +78,7 @@ function EditDietaryRequirementsForm(props: EditDietaryRequirementsFormProps) {
       if (growthStage == undefined) {
         return (
           <div className="font-medium text-danger">
-            * Please select a native continent
+            * Please select a growth stage
           </div>
         );
       }
@@ -212,6 +213,8 @@ function EditDietaryRequirementsForm(props: EditDietaryRequirementsFormProps) {
           description: "Successfully updated new dietary requirements.",
         });
         // setNewDietaryRequirementCreated(true);
+        const redirectUrl = `/species/viewspeciesdetails/${curSpecies.speciesCode}/dietneed`;
+        navigate(redirectUrl);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -228,29 +231,33 @@ function EditDietaryRequirementsForm(props: EditDietaryRequirementsFormProps) {
 
   return (
     <div>
-      <NavLink
-        className="mx-auto mb-6 flex justify-center"
-        to={`/species/viewspeciesdetails/${curSpecies.speciesCode}`}
-      >
-        <Button
-          type="button"
-          className="h-12 w-2/3 self-center rounded-full px-4 text-lg xl:w-1/3"
-        >
-          Back to Species Details
-        </Button>
-      </NavLink>
       <Form.Root
         className="flex w-full flex-col gap-8 rounded-lg bg-white text-black"
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
-        <span className="flex flex-col items-center self-center text-title-xl font-bold">
-          <span className="text-center font-medium">
-            Create Species Dietary Requirements for{" "}
+        <div className="flex flex-col">
+          <div className="mb-4 flex justify-between">
+            <NavLink
+              className="flex"
+              to={`/species/viewspeciesdetails/${speciesCode}/dietneed`}
+            >
+              <Button variant={"outline"} type="button" className="">
+                Back
+              </Button>
+            </NavLink>
+            <span className="self-center text-lg text-graydark">
+              Edit Species Dietary Requirements
+            </span>
+            <Button disabled className="invisible">
+              Back
+            </Button>
+          </div>
+          <Separator />
+          <span className="mt-4 self-center text-title-xl font-bold">
+            {curSpecies.commonName}
           </span>
-          {curSpecies.commonName}
-        </span>
-        <hr className="bg-stroke opacity-20" />
+        </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
           {/* Growth Stage*/}
@@ -381,7 +388,7 @@ function EditDietaryRequirementsForm(props: EditDietaryRequirementsFormProps) {
             className="h-12 w-2/3 self-center rounded-full text-lg"
           >
             {!apiJson.loading ? (
-              <div>Edit Dietary Requirements</div>
+              <div>Submit</div>
             ) : (
               <div>Loading</div>
             )}

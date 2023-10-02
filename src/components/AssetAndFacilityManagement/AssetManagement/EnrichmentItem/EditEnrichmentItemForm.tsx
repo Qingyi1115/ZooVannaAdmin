@@ -9,6 +9,10 @@ import FormFieldRadioGroup from "../../../FormFieldRadioGroup";
 import EnrichmentItem from "../../../../models/EnrichmentItem";
 import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface EditEnrichmentItemFormProps {
   curEnrichmentItem: EnrichmentItem;
@@ -20,11 +24,18 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
   const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const { curEnrichmentItem, refreshSeed, setRefreshSeed } = props;
-  const [enrichmentItemId, setEnrichmentItemId] = useState<number>(curEnrichmentItem.enrichmentItemId);
-  const [enrichmentItemName, setEnrichmentItemName] = useState<string>(curEnrichmentItem.enrichmentItemName);
-  const [enrichmentItemImageUrl, setImageUrl] = useState<string | null>(curEnrichmentItem.enrichmentItemImageUrl);
+  const [enrichmentItemId, setEnrichmentItemId] = useState<number>(
+    curEnrichmentItem.enrichmentItemId
+  );
+  const [enrichmentItemName, setEnrichmentItemName] = useState<string>(
+    curEnrichmentItem.enrichmentItemName
+  );
+  const [enrichmentItemImageUrl, setImageUrl] = useState<string | null>(
+    curEnrichmentItem.enrichmentItemImageUrl
+  );
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formError, setFormError] = useState<string | null>(null);
@@ -54,6 +65,8 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
     if (imageFile) {
       const formData = new FormData();
       formData.append("file", imageFile || "");
+      formData.append("enrichmentItemName", enrichmentItemName);
+      formData.append("enrichmentItemId", enrichmentItemId.toString() || "");
       console.log(formData);
       try {
         const responseJson = await apiFormData.put(
@@ -74,32 +87,34 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
             error.message,
         });
       }
-    } 
-      // no image
-      const updatedEnrichmentItem = {
-        enrichmentItemId,
-        enrichmentItemName
-      };
-      console.log(updatedEnrichmentItem);
-      try {
-        const responseJson = await apiJson.put(
-          "http://localhost:3000/api/assetfacility/updateEnrichmentItem",
-          updatedEnrichmentItem
-        );
-        // success
-        toastShadcn({
-          description: "Successfully edited enrichment item",
-        });
-        setRefreshSeed(refreshSeed + 1);
-      } catch (error: any) {
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while editing enrichment item details: \n" +
-            error.message,
-        });
-      }
+    }
+    // no image
+    const updatedEnrichmentItem = {
+      enrichmentItemId,
+      enrichmentItemName,
+    };
+    console.log(updatedEnrichmentItem);
+    try {
+      const responseJson = await apiJson.put(
+        "http://localhost:3000/api/assetfacility/updateEnrichmentItem",
+        updatedEnrichmentItem
+      );
+      // success
+      toastShadcn({
+        description: "Successfully edited enrichment item",
+      });
+      setRefreshSeed(refreshSeed + 1);
+      const redirectUrl = `/assetfacility/viewallenrichmentitems`;
+      navigate(redirectUrl);
+    } catch (error: any) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while editing enrichment item details: \n" +
+          error.message,
+      });
+    }
   }
 
   return (
@@ -110,19 +125,37 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
           onSubmit={handleSubmit}
           encType="multipart/form-data"
         >
-          <span className="self-center text-title-xl font-bold">
-            Edit Enrichment Item: {curEnrichmentItem.enrichmentItemName}
-          </span>
-          <hr className="bg-stroke opacity-20" />
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+                Back
+              </Button>
+              <span className="self-center text-lg text-graydark">
+                Edit Enrichment Item
+              </span>
+              <Button disabled className="invisible">
+                Back
+              </Button>
+            </div>
+            <Separator />
+            <span className="mt-4 self-center text-title-xl font-bold">
+              {curEnrichmentItem.enrichmentItemName}
+            </span>
+          </div>
           {/* Enrichment Item Picture */}
           <Form.Field
             name="enrichmentItemImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <span className="font-medium">Current Image</span>
-            <img src={"http://localhost:3000/" + curEnrichmentItem.enrichmentItemImageUrl}
+            <img
+              src={
+                "http://localhost:3000/" +
+                curEnrichmentItem.enrichmentItemImageUrl
+              }
               alt="Current enrichment item image"
-              className="my-4 aspect-square w-1/5 rounded-full border shadow-4"/>
+              className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"
+            />
             <Form.Label className="font-medium">
               Change Enrichment Item Image
             </Form.Label>
@@ -136,27 +169,33 @@ function EditEnrichmentItemForm(props: EditEnrichmentItemFormProps) {
             />
             {/* <Form.ValidityState>{validateImage}</Form.ValidityState> */}
           </Form.Field>
-          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-            {/* Enrichment Item Name */}
-            <FormFieldInput
-              type="text"
-              formFieldName="enrichmentItemName"
-              label="Enrichment Item Name"
-              required={true}
-              placeholder="e.g., Puzzle Feeder, Chew Toy,..."
-              value={enrichmentItemName}
-              setValue={setEnrichmentItemName}
-              validateFunction={validateEnrichmentItemName} pattern={undefined}      />
+          {/* Enrichment Item Name */}
+          <FormFieldInput
+            type="text"
+            formFieldName="enrichmentItemName"
+            label="Enrichment Item Name"
+            required={true}
+            placeholder="e.g., Puzzle Feeder, Chew Toy,..."
+            value={enrichmentItemName}
+            setValue={setEnrichmentItemName}
+            validateFunction={validateEnrichmentItemName}
+            pattern={undefined}
+          />
 
-            <Form.Submit asChild>
-              <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
-                Edit Enrichment Item
-              </button>
-            </Form.Submit>
-            {formError && (
-              <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
-            )}
-          </div>
+          <Form.Submit asChild>
+            <Button
+              disabled={apiFormData.loading}
+              className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
+              {!apiFormData.loading ? (
+                <div>Submit</div>
+              ) : (
+                <div>Loading</div>
+              )}
+            </Button>
+          </Form.Submit>
+          {formError && (
+            <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+          )}
         </Form.Root>
       )}
     </div>

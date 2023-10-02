@@ -10,25 +10,38 @@ import { InputText } from "primereact/inputtext";
 
 import Sensor from "../../../../models/Sensor";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { SensorType } from "../../../../enums/SensorType";
 import { useToast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
+import Hub from "../../../../models/Hub";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
-function AllSensorDatatable() {
+interface AllSensorDatatableProps {
+  curHub: Hub,
+}
+
+function AllSensorDatatable(props: AllSensorDatatableProps) {
   const apiJson = useApiJson();
+  const { curHub } = props;
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptySensor: Sensor = {
     sensorId: -1,
     sensorName: "",
     dateOfActivation: new Date(),
     dateOfLastMaintained: new Date(),
-    sensorType: SensorType.CAMERA
+    sensorType: SensorType.CAMERA,
+    hub: curHub,
+    sensorReadings: [],
+    maintenanceLogs: [],
+    generalStaff: []
   };
 
-  const [sensorList, setSensorList] = useState<Sensor[]>([]);
+  const [sensorList, setSensorList] = useState<Sensor[]>(curHub.sensors);
   const [selectedSensor, setSelectedSensor] = useState<Sensor>(emptySensor);
   const [deleteSensorDialog, setDeleteSensorDialog] =
     useState<boolean>(false);
@@ -37,31 +50,27 @@ function AllSensorDatatable() {
   const dt = useRef<DataTable<Sensor[]>>(null);
   const toastShadcn = useToast().toast;
 
-  useEffect(() => {
-    const fetchSensor = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/assetFacility/getAllSensors"
-        );
-        console.log(responseJson["sensors"] );
-        setSensorList(responseJson["sensors"] as Sensor[]);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    fetchSensor();
-  }, []);
 
-  //
+  // View all sensors
+  // useEffect(() => {
+  //   const fetchSensor = async () => {
+  //     try {
+  //       const responseJson = await apiJson.get(
+  //         "http://localhost:3000/api/assetFacility/getAllSensors"
+  //       );
+  //       console.log(responseJson["sensors"]);
+  //       setSensorList(responseJson["sensors"] as Sensor[]);
+  //     } catch (error: any) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchSensor();
+  // }, []);
+
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-  const navigateEditProduct = (sensor: Sensor) => {};
 
   const confirmDeleteSensor = (sensor: Sensor) => {
     setSelectedSensor(sensor);
@@ -82,7 +91,7 @@ function AllSensorDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/assetFacility/deletesensor/" +
-            selectedSensor.sensorId
+          selectedSensor.sensorId
         );
 
         toastShadcn({
@@ -124,11 +133,19 @@ function AllSensorDatatable() {
   const actionBodyTemplate = (sensor: Sensor) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetFacility/updateSensor/${sensor.sensorName}`}>
-          <Button className="mr-2">
-            <HiEye className="mr-auto" />
+        <NavLink to={`/assetfacility/viewsensordetails/${sensor.sensorId}`}>
+          <Button variant={"outline"} className="mb-1 mr-1">
+            <HiEye className="mx-auto" />
           </Button>
         </NavLink>
+      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        <NavLink to={`/assetFacility/editsensor/${sensor.sensorId}`}>
+          <Button className="mr-2">
+            <HiPencil className="mx-auto" />
+          </Button>
+        </NavLink>
+      )}
+      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <Button
           variant={"destructive"}
           className="mr-2"
@@ -136,13 +153,14 @@ function AllSensorDatatable() {
         >
           <HiTrash className="mx-auto" />
         </Button>
+      )}
       </React.Fragment>
     );
   };
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Sensor</h4>
+      <h4 className="m-1">Manage Sensors</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -162,7 +180,24 @@ function AllSensorDatatable() {
       <div>
         <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
-          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              
+              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+              <NavLink to={`/assetfacility/createsensor/${curHub.hubProcessorId}`}>
+                <Button className="mr-2">
+                  <HiPlus className="mr-auto" />
+                </Button>
+              </NavLink>
+              )}
+              <span className=" self-center text-title-xl font-bold">
+                All Sensors
+              </span>
+              <Button onClick={exportCSV}>Export to .csv</Button>
+            </div>
+            <Separator />
+          </div>
 
           <DataTable
             ref={dt}
@@ -176,13 +211,20 @@ function AllSensorDatatable() {
             dataKey="sensorId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensor"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensors"
             globalFilter={globalFilter}
             header={header}
           >
+            <Column
+              field="sensorId"
+              header="ID"
+              sortable
+              style={{ minWidth: "4rem" }}
+            ></Column>
             <Column
               field="sensorName"
               header="Name"
@@ -210,8 +252,10 @@ function AllSensorDatatable() {
             <Column
               body={actionBodyTemplate}
               header="Actions"
+              frozen
+              alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "18rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>
         </div>

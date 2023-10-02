@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-
+import { useNavigate } from "react-router-dom";
 interface SpeciesBasicInfoDetailsProps {
   curSpecies: Species;
 }

@@ -25,7 +25,7 @@ function SpeciesDietaryRequirements(props: SpeciesDietaryRequirementsProps) {
   const [resetSeed, setResetSeed] = useState<number>(0);
 
   useEffect(() => {
-    const fetchSpecies = async () => {
+    const fetchDietNeedsList = async () => {
       try {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/species/getAllDietNeedbySpeciesCode/${curSpecies.speciesCode}`
@@ -36,7 +36,7 @@ function SpeciesDietaryRequirements(props: SpeciesDietaryRequirementsProps) {
       }
     };
 
-    fetchSpecies();
+    fetchDietNeedsList();
   }, [resetSeed]);
 
   return (

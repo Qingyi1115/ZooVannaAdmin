@@ -3,7 +3,7 @@ import CreateNewAnimalFeedForm from "../../../components/AssetAndFacilityManagem
 
 function CreateNewAnimalFeedPage() {
   return (
-    <div>
+    <div className="p-10">
       <CreateNewAnimalFeedForm />
     </div>
   );

@@ -10,25 +10,30 @@ import { InputText } from "primereact/inputtext";
 
 import AnimalFeed from "../../../../models/AnimalFeed";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
 import { useToast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();
+  const navigate = useNavigate();
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptyAnimalFeed: AnimalFeed = {
     animalFeedId: -1,
     animalFeedName: "",
     animalFeedImageUrl: "",
-    animalFeedCategory: AnimalFeedCategory.OTHERS
+    animalFeedCategory: AnimalFeedCategory.OTHERS,
   };
 
   const [animalFeedList, setAnimalFeedList] = useState<AnimalFeed[]>([]);
-  const [selectedAnimalFeed, setSelectedAnimalFeed] = useState<AnimalFeed>(emptyAnimalFeed);
+  const [selectedAnimalFeed, setSelectedAnimalFeed] =
+    useState<AnimalFeed>(emptyAnimalFeed);
   const [deleteAnimalFeedDialog, setDeleteAnimalFeedDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -36,19 +41,11 @@ function AllAnimalFeedDatatable() {
   const dt = useRef<DataTable<AnimalFeed[]>>(null);
   const toastShadcn = useToast().toast;
 
-
   useEffect(() => {
-    const fetchAnimalFeed = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/assetfacility/getallanimalfeed"
-        );
-        setAnimalFeedList(responseJson as AnimalFeed[]);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    fetchAnimalFeed();
+    apiJson.get(
+      "http://localhost:3000/api/assetfacility/getallanimalfeed")
+      .then(res => { setAnimalFeedList(res.animalFeeds as AnimalFeed[]); })
+      .catch(e => console.log(e));
   }, []);
 
   //
@@ -56,22 +53,18 @@ function AllAnimalFeedDatatable() {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
 
   const imageBodyTemplate = (rowData: AnimalFeed) => {
     return (
       <img
-      src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
-      alt={rowData.animalFeedName}
-        className="border-round shadow-2"
-        style={{ width: "64px" }}
+        src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
+        alt={rowData.animalFeedName}
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
       />
     );
   };
 
-  const navigateEditProduct = (animalFeed: AnimalFeed) => {};
+  const navigateEditProduct = (animalFeed: AnimalFeed) => { };
 
   const confirmDeleteAnimalFeed = (animalFeed: AnimalFeed) => {
     setSelectedAnimalFeed(animalFeed);
@@ -92,14 +85,15 @@ function AllAnimalFeedDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/assetFacility/deleteAnimalFeed/" +
-            selectedAnimalFeed.animalFeedName
+          selectedAnimalFeed.animalFeedName
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted animal feed: " + selectedAnimalFeed.animalFeedName,
+            "Successfully deleted animal feed: " +
+            selectedAnimalFeed.animalFeedName,
         });
         setAnimalFeedList(_animalFeed);
         setDeleteAnimalFeedDialog(false);
@@ -110,7 +104,8 @@ function AllAnimalFeedDatatable() {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting animalFeed: \n" + apiJson.error,
+            "An error has occurred while deleting animalFeed: \n" +
+            apiJson.error,
         });
       }
     };
@@ -120,11 +115,11 @@ function AllAnimalFeedDatatable() {
   const deleteAnimalFeedDialogFooter = (
     <React.Fragment>
       <Button onClick={hideDeleteAnimalFeedDialog}>
-        <HiX />
+        <HiX className="mr-2" />
         No
       </Button>
       <Button variant={"destructive"} onClick={deleteAnimalFeed}>
-        <HiCheck />
+        <HiCheck className="mr-2" />
         Yes
       </Button>
     </React.Fragment>
@@ -134,9 +129,11 @@ function AllAnimalFeedDatatable() {
   const actionBodyTemplate = (animalFeed: AnimalFeed) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}>
+        <NavLink
+          to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}
+        >
           <Button className="mr-2">
-            <HiEye className="mr-auto" />
+            <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
         <Button
@@ -152,7 +149,7 @@ function AllAnimalFeedDatatable() {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage AnimalFeed</h4>
+      <h4 className="m-1">Manage Animal Feed</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -172,7 +169,23 @@ function AllAnimalFeedDatatable() {
       <div>
         <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
-          <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+            {(employee.planningStaff?.plannerType == "CURATOR") && (
+              <NavLink to={"/assetfacility/createanimalfeed"}>
+                <Button className="mr-2">
+                  <HiPlus className="mr-auto" />
+                </Button>
+              </NavLink>
+            )}
+              <span className="self-center text-title-xl font-bold">
+                All Animal Feed
+              </span>
+              <Button onClick={exportCSV}>Export to .csv</Button>
+            </div>
+            <Separator />
+          </div>
 
           <DataTable
             ref={dt}
@@ -186,13 +199,20 @@ function AllAnimalFeedDatatable() {
             dataKey="animalFeedId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animalFeed"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal feeds"
             globalFilter={globalFilter}
             header={header}
           >
+            <Column
+              field="animalFeedId"
+              header="ID"
+              sortable
+              style={{ minWidth: "4rem" }}
+            ></Column>
             <Column
               field="animalFeedName"
               header="Name"
@@ -210,12 +230,17 @@ function AllAnimalFeedDatatable() {
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
-            <Column
-              body={actionBodyTemplate}
-              header="Actions"
-              exportable={false}
-              style={{ minWidth: "18rem" }}
-            ></Column>
+            
+            {(employee.planningStaff?.plannerType == "CURATOR") && (
+              <Column
+                body={actionBodyTemplate}
+                header="Actions"
+                frozen
+                alignFrozen="right"
+                exportable={false}
+                style={{ minWidth: "9rem" }}
+              ></Column>
+            )}
           </DataTable>
         </div>
       </div>

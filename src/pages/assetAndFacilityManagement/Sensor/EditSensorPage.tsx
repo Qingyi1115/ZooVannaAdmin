@@ -4,36 +4,63 @@ import EditSensorForm from "../../../components/AssetAndFacilityManagement/Asset
 import useApiJson from "../../../hooks/useApiJson";
 import Sensor from "../../../models/Sensor";
 import { SensorType } from "../../../enums/SensorType";
+import Hub from "../../../models/Hub";
+import Facility from "../../../models/Facility";
+import { HubStatus } from "../../../enums/HubStatus";
 
 function EditSensorPage() {
   const apiJson = useApiJson();
+
+  let emptyFacility: Facility = {
+    facilityId: -1,
+    facilityName: "",
+    xCoordinate: 0,
+    yCoordinate: 0,
+    facilityDetail: "",
+    facilityDetailJson: undefined,
+    isSheltered: false,
+    hubProcessors: []
+  };
+
+  let emptyHub: Hub = {
+    hubProcessorId: -1,
+    processorName: "",
+    ipAddressName: "",
+    lastDataUpdate: null,
+    hubSecret: "",
+    hubStatus: HubStatus.PENDING,
+    facility: emptyFacility,
+    sensors: []
+  };
 
   let emptySensor: Sensor = {
     sensorId: -1,
     sensorName: "",
     dateOfActivation: new Date(),
     dateOfLastMaintained: new Date(),
-    sensorType: SensorType.CAMERA
+    sensorType: SensorType.CAMERA,
+    hub: emptyHub,
+    sensorReadings: [],
+    maintenanceLogs: [],
+    generalStaff: []
   };
 
   const { sensorId } = useParams<{ sensorId: string }>();
   const [curSensor, setCurSensor] = useState<Sensor>(emptySensor);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/assetfacility/getSensor/${sensorId}`);
+    apiJson.post(
+      `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
+      { includes: ["hubProcessor", "sensorReadings", "maintenanceLogs", "generalStaff"] }).then(res => {
+        setCurSensor(res.sensor as Sensor);
+        console.log(curSensor);
+      }).catch(e => console.log(e));
   }, []);
-
-  useEffect(() => {
-    const sensor = apiJson.result as Sensor;
-    setCurSensor(sensor);
-  }, [apiJson.loading]);
 
   return (
     <div className="p-10">
       {curSensor && curSensor.sensorId != -1 && (
-        <EditSensorForm curSensor={curSensor} refreshSeed={0} setRefreshSeed={function (value: React.SetStateAction<number>): void {
-          throw new Error("Function not implemented.");
-        } } />
+        <EditSensorForm curSensor={curSensor} />
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import * as Form from "@radix-ui/react-form";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import * as Checkbox from "@radix-ui/react-checkbox";
@@ -15,9 +16,12 @@ import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
 function CreateNewSpeciesForm() {
   const apiFormData = useApiFormData();
+  const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
   //   const [speciesCode, setSpeciesCode] = useState<string>("");
@@ -410,6 +414,7 @@ function CreateNewSpeciesForm() {
 
         // clearForm();
         setNewSpeciesCreated(true);
+        navigate("/species/viewallspecies");
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -431,10 +436,21 @@ function CreateNewSpeciesForm() {
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
-        <span className="self-center text-title-xl font-bold">
-          Create a New Species
-        </span>
-        <hr className="bg-stroke opacity-20" />
+        {/* Title Header and back button */}
+        <div className="flex flex-col">
+          <div className="mb-4 flex justify-between">
+            <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+              Back
+            </Button>
+            <span className="self-center text-title-xl font-bold">
+              Create Species
+            </span>
+            <Button disabled className="invisible">
+              Back
+            </Button>
+          </div>
+          <Separator />
+        </div>
         {/* Species Picture */}
         <Form.Field
           name="speciesImage"
@@ -651,7 +667,7 @@ function CreateNewSpeciesForm() {
             type="text"
             value={selectedBiomes}
             required
-            // onChange={onValueChange}
+          // onChange={onValueChange}
           />
           <MultiSelect
             value={selectedBiomes}
@@ -748,41 +764,13 @@ function CreateNewSpeciesForm() {
         />
 
         <Form.Submit asChild>
-          {!newSpeciesCreated ? (
-            <Button
-              disabled={apiFormData.loading}
-              className="h-12 w-2/3 self-center rounded-full text-lg"
-            >
-              {!apiFormData.loading ? (
-                <div>Create Species</div>
-              ) : (
-                <div>Loading</div>
-              )}
-            </Button>
-          ) : (
-            <Button
-              disabled
-              className="h-12 w-2/3 self-center rounded-full text-lg"
-            >
-              Reload the page to create another species
-            </Button>
-          )}
-        </Form.Submit>
-        {formError && (
-          <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
-        )}
-        {newSpeciesCreated && (
           <Button
-            type="button"
-            variant={"outline"}
-            onClick={() => {
-              window.location.reload();
-            }}
-            className="w-1/4 self-center rounded-full text-lg"
+            disabled={apiFormData.loading}
+            className="h-12 w-2/3 self-center rounded-full text-lg"
           >
-            Reload Page
+            {!apiFormData.loading ? <div>Submit</div> : <div>Loading</div>}
           </Button>
-        )}
+        </Form.Submit>
       </Form.Root>
     </div>
   );

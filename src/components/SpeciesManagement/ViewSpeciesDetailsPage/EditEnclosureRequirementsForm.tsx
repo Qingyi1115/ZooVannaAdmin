@@ -18,7 +18,7 @@ import { NavLink } from "react-router-dom";
 
 import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
 import { Separator } from "@/components/ui/separator";
-
+import { useNavigate } from "react-router-dom";
 interface EditEnclosureRequirementsFormProps {
   curSpecies: Species;
   curEnclosureNeeds: SpeciesEnclosureNeed;
@@ -29,6 +29,7 @@ function EditEnclosureRequirementsForm(
 ) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const { curSpecies, curEnclosureNeeds } = props;
 
@@ -103,6 +104,60 @@ function EditEnclosureRequirementsForm(
   const [soilPercentMax, setSoilPercentMax] = useState<number>(
     curEnclosureNeeds.soilPercentMax
   );
+  // totalMin and totalMax to help w validation
+  const [totalTerrainMinPercent, setTotalTerrainMinPercent] = useState(
+    curEnclosureNeeds.longGrassPercentMin +
+      curEnclosureNeeds.shortGrassPercentMin +
+      curEnclosureNeeds.rockPercentMin +
+      curEnclosureNeeds.sandPercentMin +
+      curEnclosureNeeds.snowPercentMin +
+      curEnclosureNeeds.soilPercentMin
+  );
+
+  const [totalTerrainMaxPercent, setTotalTerrainMaxPercent] = useState(
+    curEnclosureNeeds.longGrassPercentMax +
+      curEnclosureNeeds.shortGrassPercentMax +
+      curEnclosureNeeds.rockPercentMax +
+      curEnclosureNeeds.sandPercentMax +
+      curEnclosureNeeds.snowPercentMax +
+      curEnclosureNeeds.soilPercentMax
+  );
+
+  useEffect(() => {
+    setTotalTerrainMinPercent(
+      longGrassPercentMin +
+        shortGrassPercentMin +
+        rockPercentMin +
+        sandPercentMin +
+        snowPercentMin +
+        soilPercentMin
+    );
+  }, [
+    longGrassPercentMin,
+    shortGrassPercentMin,
+    rockPercentMin,
+    sandPercentMin,
+    snowPercentMin,
+    soilPercentMin,
+  ]);
+
+  useEffect(() => {
+    setTotalTerrainMaxPercent(
+      longGrassPercentMax +
+        shortGrassPercentMax +
+        rockPercentMax +
+        sandPercentMax +
+        snowPercentMax +
+        soilPercentMax
+    );
+  }, [
+    longGrassPercentMax,
+    shortGrassPercentMax,
+    rockPercentMax,
+    sandPercentMax,
+    snowPercentMax,
+    soilPercentMax,
+  ]);
 
   ///////
   // validate functions
@@ -135,59 +190,59 @@ function EditEnclosureRequirementsForm(
     return null;
   }
 
-  function validateTemperatureRange(props: ValidityState) {
-    // if (props != undefined) {
-    if (acceptableTempMin >= acceptableTempMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum acceptable temperature must be smaller than the maximum
-        </div>
-      );
+  function validateMinTemperature(props: ValidityState) {
+    if (props != undefined) {
+      if (Number(acceptableTempMin) >= Number(acceptableTempMax)) {
+        return (
+          <div className="font-medium text-danger">
+            * Minimum acceptable temperature must be smaller than the maximum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    if (acceptableTempMin >= acceptableTempMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum acceptable temperature must be smaller than the maximum
-        </div>
-      );
+    return null;
+  }
+
+  function validateMaxTemperature(props: ValidityState) {
+    if (props != undefined) {
+      if (Number(acceptableTempMin) >= Number(acceptableTempMax)) {
+        return (
+          <div className="font-medium text-danger">
+            * Maximum acceptable temperature must be greater than the minimum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    // add any other cases here
-    // }
     return null;
   }
 
   function validateMinHumidity(props: ValidityState) {
-    // if (props != undefined) {
-    if (acceptableHumidityMin >= acceptableHumidityMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum acceptable humidity must be smaller than the maximum
-        </div>
-      );
+    if (props != undefined) {
+      if (Number(acceptableHumidityMax) < Number(acceptableHumidityMin)) {
+        return (
+          <div className="font-medium text-danger">
+            * Minimum acceptable humidity must be smaller than the maximum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    if (acceptableHumidityMin < 0) {
-      return (
-        <div className="font-medium text-danger">
-          * Minimum humidity must be equal to or greater than 0
-        </div>
-      );
-    }
-    // add any other cases here
-    // }
     return null;
   }
 
   function validateMaxHumidity(props: ValidityState) {
-    // if (props != undefined) {
-    if (acceptableHumidityMin >= acceptableHumidityMax) {
-      return (
-        <div className="font-medium text-danger">
-          * Maximum acceptable humidity must be greater than the minimum
-        </div>
-      );
+    if (props != undefined) {
+      if (Number(acceptableHumidityMin) >= Number(acceptableHumidityMax)) {
+        return (
+          <div className="font-medium text-danger">
+            * Maximum acceptable humidity must be greater than the minimum
+          </div>
+        );
+      }
+      // add any other cases here
     }
-    // add any other cases here
-    // }
     return null;
   }
 
@@ -291,15 +346,13 @@ function EditEnclosureRequirementsForm(
         toastShadcn({
           variant: "destructive",
           title: "Invalid Terrain Distribution",
-          description:
-            "Your recommended distribution will not result in any valid actual distributions because total minimums are too high",
+          description: `Your recommended distribution will not result in any valid actual distributions. Total terrain minimum percentages should be equal to or smaller than 100%. (Current: ${totalTerrainMinPercent}%)`,
         });
       } else if (terrainDistributionValidation.isMaxTooLow) {
         toastShadcn({
           variant: "destructive",
           title: "Invalid Terrain Distribution",
-          description:
-            "Your recommended distribution will not result in any valid actual distributions because total maximums are too low",
+          description: `Your recommended distribution will not result in any valid actual distributions. Total terrain maximum percentages should be equal to or greater than 100%. (Current: ${totalTerrainMaxPercent}%)`,
         });
       }
 
@@ -324,6 +377,8 @@ function EditEnclosureRequirementsForm(
         });
 
         // clearForm();
+        const redirectUrl = `/species/viewspeciesdetails/${curSpecies.speciesCode}/enclosureneed`;
+        navigate(redirectUrl);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -349,14 +404,14 @@ function EditEnclosureRequirementsForm(
           <div className="mb-4 flex justify-between">
             <NavLink
               className="flex"
-              to={`/species/viewspeciesdetails/${speciesCode}`}
+              to={`/species/viewspeciesdetails/${speciesCode}/enclosureneed`}
             >
               <Button variant={"outline"} type="button" className="">
                 Back
               </Button>
             </NavLink>
             <span className="self-center text-lg text-graydark">
-              Create Species Enclosure Requirements
+              Edit Species Enclosure Requirements
             </span>
             <Button disabled className="invisible">
               Back
@@ -419,7 +474,7 @@ function EditEnclosureRequirementsForm(
             pattern={undefined}
             value={acceptableTempMin}
             setValue={setAcceptableTempMin}
-            validateFunction={validateTemperatureRange}
+            validateFunction={validateMinTemperature}
           />
           {/* Min Water Area Required */}
           <FormFieldInput
@@ -431,7 +486,7 @@ function EditEnclosureRequirementsForm(
             pattern={undefined}
             value={acceptableTempMax}
             setValue={setAcceptableTempMax}
-            validateFunction={validateTemperatureRange}
+            validateFunction={validateMaxTemperature}
           />
         </div>
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -509,7 +564,27 @@ function EditEnclosureRequirementsForm(
         </Form.Field>
         <br />
         <div className="mb-[-10] text-lg font-bold text-black">
-          Recommended Terrain Distribution
+          <span>Recommended Terrain Distribution</span>
+          <div className="text-md font-normal">
+            Current Total Minimum Percentages:{" "}
+            <span
+              className={
+                totalTerrainMinPercent <= 100 ? `text-success` : `text-danger`
+              }
+            >
+              {totalTerrainMinPercent}%
+            </span>
+          </div>
+          <div className="text-md font-normal">
+            Current Total Maximum Percentages:{" "}
+            <span
+              className={
+                totalTerrainMaxPercent >= 100 ? `text-success` : `text-danger`
+              }
+            >
+              {totalTerrainMaxPercent}%
+            </span>
+          </div>
         </div>
         {/* Long Grass Coverage Range */}
         <Form.Field
@@ -708,11 +783,7 @@ function EditEnclosureRequirementsForm(
             disabled={apiJson.loading}
             className="h-12 w-2/3 self-center rounded-full text-lg"
           >
-            {!apiJson.loading ? (
-              <div>Edit Enclosure Requirements</div>
-            ) : (
-              <div>Loading</div>
-            )}
+            {!apiJson.loading ? <div>Submit</div> : <div>Loading</div>}
           </Button>
         </Form.Submit>
         {/* {formError && (

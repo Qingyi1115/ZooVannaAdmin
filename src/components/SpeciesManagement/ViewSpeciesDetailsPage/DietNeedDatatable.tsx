@@ -65,14 +65,8 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
     dt.current?.exportCSV();
   };
 
-  const rightToolbarTemplate = () => {
-    return <Button onClick={exportCSV}>Export to .csv</Button>;
-  };
-
-  const navigateEditProduct = (species: SpeciesDietNeed) => {};
-
   // Delete stuff
-  const confirmDeleteEnclosureReq = (speciesDietNeed: SpeciesDietNeed) => {
+  const confirmDeleteDietaryReq = (speciesDietNeed: SpeciesDietNeed) => {
     setSelectedDietNeeds(speciesDietNeed);
     setDeleteSpeciesDietNeedsDialog(true);
   };
@@ -119,11 +113,11 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
   const deleteSpeciesDialogFooter = (
     <React.Fragment>
       <Button onClick={hideDeleteDietaryReqDialog}>
-        <HiX />
+        <HiX className="mr-2" />
         No
       </Button>
       <Button variant={"destructive"} onClick={deleteSpeciesDietaryReq}>
-        <HiCheck />
+        <HiCheck className="mr-2" />
         Yes
       </Button>
     </React.Fragment>
@@ -136,18 +130,18 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
         <NavLink
           to={`/species/editdietaryrequirements/${curSpecies.speciesCode}/${speciesDietNeed.speciesDietNeedId}`}
         >
-          <Button className="mb-1 mr-1">
-            <HiEye className="mr-1" />
-            <span>Edit</span>
+          <Button className="mr-2">
+            <HiPencil className="mr-auto" />
+            {/* <span>View Details</span> */}
           </Button>
         </NavLink>
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteEnclosureReq(speciesDietNeed)}
+          onClick={() => confirmDeleteDietaryReq(speciesDietNeed)}
         >
-          <HiTrash className="mr-1" />
-          <span>Delete</span>
+          <HiTrash className="mx-auto" />
+          {/* <span>Delete</span> */}
         </Button>
       </React.Fragment>
     );
@@ -189,7 +183,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
         selectionMode={"single"}
         rowsPerPageOptions={[5, 10, 25]}
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} species"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} dietary requirements"
         globalFilter={globalFilter}
         header={header}
       >
@@ -241,7 +235,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
           frozen
           alignFrozen="right"
           exportable={false}
-          style={{ minWidth: "14rem" }}
+          style={{ minWidth: "9rem" }}
         ></Column>
       </DataTable>
       <Dialog

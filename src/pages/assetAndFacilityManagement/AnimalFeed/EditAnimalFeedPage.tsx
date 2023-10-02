@@ -35,11 +35,7 @@ function EditAnimalFeedPage() {
     fetchAnimalFeed();
   }, [refreshSeed]);
 
-  useEffect(() => {
-    const animalFeed = apiJson.result as AnimalFeed;
-    setCurAnimalFeed(animalFeed);
-  }, [apiJson.loading]);
-
+  
   return (
     <div className="p-10">
       {curAnimalFeed && curAnimalFeed.animalFeedId != -1 && (

@@ -29,11 +29,6 @@ function EditCustomerPage() {
     apiJson.get(`http://localhost:3000/api/customer/getcustomer/${customerName}`);
   }, []);
 
-  useEffect(() => {
-    const customer = apiJson.result as Customer;
-    setCurCustomer(customer);
-  }, [apiJson.loading]);
-
   return (
     <div className="p-10">
       {curCustomer && curCustomer.customerId != -1 && (
