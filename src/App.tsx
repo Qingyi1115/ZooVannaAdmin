@@ -370,10 +370,6 @@ function App() {
                   element={user ? <CreateNewSensorForm /> : <Navigate to="/login" />}
                 />
 
-                <Route
-                  path="/assetfacility/editsensor/:sensorName"
-                  element={user ? <EditSensorPage /> : <Navigate to="/login" />}
-                />
                 {/* <Route
                   path="/assetfacility/viewallsensors"
                   element={
