@@ -47,7 +47,6 @@ import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage
 import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
 
 //employee account management page
-import EditEmployeePage from "./pages/employeeAccountManagement/EditEmployeePage";
 import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
 import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
 import CreateNewEnclosureRequirementsPage from "./pages/speciesManagement/CreateNewEnclosureRequirementsPage";
@@ -60,6 +59,11 @@ import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNe
 import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
 import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
 import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
+//import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facility/AssignMaintenanceStaffPage";
+import CreateNewListingPage from "./pages/listingManagement/CreateNewListingPage";
+import ViewAllListingsPage from "./pages/listingManagement/ViewAllListingsPage";
+import EditListingPage from "./pages/listingManagement/EditListingPage";
+import ViewListingDetailsPage from "./pages/listingManagement/ViewListingDetailsPage";
 import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageOperationStaffPage";
 import ManageFacilityMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageFacilityMaintenanceStaffPage";
 import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
@@ -67,6 +71,7 @@ import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhys
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
 import SensorMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/SensorMaintenanceChartPage";
 import FacilityMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/FacilityMaintenanceChartPage";
+
 
 //promotion management page
 import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
@@ -322,18 +327,22 @@ function App() {
                     )
                   }
                 />
-                <Route
-                  path="/assetfacility/createsensor/"
+                {/*<Route
+                  path="/assetfacility/createsensor"
                   element={
-                    user ? <CreateNewSensorForm /> : <Navigate to="/login" />
+                    user ? <CreateNewSensorPage /> : <Navigate to="/login" />
                   }
-                />
+                />*/}
                 <Route
-                  path="/assetfacility/createsensor/:hubProcessorId"
-                  element={
-                    user ? <CreateNewSensorForm /> : <Navigate to="/login" />
-                  }
+                  path="/assetfacility/editsensor/:sensorName"
+                  element={user ? <EditSensorPage /> : <Navigate to="/login" />}
                 />
+                {/*<Route
+                  path="/assetfacility/viewallsensors"
+                  element={
+                    user ? <ViewAllSensorsPage /> : <Navigate to="/login" />
+                  }
+                />*/}
                 <Route
                   path="/assetfacility/editsensor/:sensorId"
                   element={user ? <EditSensorPage /> : <Navigate to="/login" />}
@@ -494,12 +503,14 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+
                   }
                 />
                 <Route
                   path="/employeeAccount/editemployee"
                   element={
                     user ? <EditEmployeePage /> : <Navigate to="/login" />
+
                   }
                 />
 
@@ -536,6 +547,7 @@ function App() {
                   }
                 />
                 <Route
+
                   path="/employee/editemployee"
                   element={
                     user ? <EditEmployeePage /> : <Navigate to="/login" />
@@ -548,6 +560,7 @@ function App() {
                   }
                 />
                 <Route
+
                   path="/profile"
                   element={user ? <ProfilePage /> : <Navigate to="/login" />}
                 />
@@ -561,6 +574,31 @@ function App() {
                   path="/edit-password"
                   element={
                     user ? <EditPasswordPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* Listing Management */}
+                <Route
+                  path="/listing/createnewlisting"
+                  element={
+                    user ? <CreateNewListingPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/listing/viewalllistings"
+                  element={
+                    user ? <ViewAllListingsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/listing/editlisting/:listingId"
+                  element={
+                    user ? <EditListingPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/listing/viewlisting/:listingId"
+                  element={
+                    user ? <ViewListingDetailsPage /> : <Navigate to="/login" />
                   }
                 />
               </Route>
