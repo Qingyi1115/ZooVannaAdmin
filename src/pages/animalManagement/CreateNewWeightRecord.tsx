@@ -69,14 +69,14 @@ let testPandaAnimal: Animal = {
 function CreateNewWeightRecord() {
   const apiJson = useApiJson();
 
-  const { animalId } = useParams<{ animalId: string }>();
+  const { animalCode } = useParams<{ animalCode: string }>();
   const [curAnimal, setCurAnimal] = useState<Animal | null>(testPandaAnimal);
 
   useEffect(() => {
     const fetchCurAnimal = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/animal/getAnimal/${animalId}`
+          `http://localhost:3000/api/animal/getAnimal/${animalCode}`
         );
         setCurAnimal(responseJson as Animal);
       } catch (error: any) {

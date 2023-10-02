@@ -59,7 +59,7 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
         {curAnimal.houseName}'s Details:
       </span>
       <div className="my-4 flex justify-start gap-6">
-        <NavLink to={`/species/editspecies/${curAnimal.animalId}`}>
+        <NavLink to={`/animal/editanimal/${curAnimal.animalCode}`}>
           <Button>Edit Basic Information</Button>
         </NavLink>
         <Button>Change Status</Button>

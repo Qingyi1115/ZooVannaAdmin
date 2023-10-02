@@ -1,7 +1,121 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import useApiJson from "../../hooks/useApiJson";
+
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { NavLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Animal from "../../models/Animal";
+import Species from "../../models/Species";
+import {
+  AcquisitionMethod,
+  AnimalGrowthStage,
+  AnimalSex,
+} from "../../enums/Enumurated";
+import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
+import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
+
+let testPandaSpecies: Species = {
+  speciesId: 1,
+  speciesCode: "SPE001",
+  commonName: "Giant Panda",
+  scientificName: "Ailuropoda Melanoleuca",
+  aliasName: "",
+  conservationStatus: "",
+  domain: "",
+  kingdom: "",
+  phylum: "",
+  speciesClass: "",
+  order: "",
+  family: "",
+  genus: "",
+  nativeContinent: "",
+  nativeBiomes: "",
+  educationalDescription: "",
+  educationalFunFact: "",
+  groupSexualDynamic: "",
+  habitatOrExhibit: "habitat",
+  imageUrl: "img/species/panda.jpg",
+  generalDietPreference: "",
+  lifeExpectancyYears: 65,
+};
+
+let testPandaAnimal: Animal = {
+  animalId: 1,
+  animalCode: "ANI001",
+  imageUrl: "",
+  houseName: "Kai Kai",
+  sex: AnimalSex.MALE,
+  dateOfBirth: new Date("1983-06-06"),
+  placeOfBirth: "Place of Birth haha",
+  rfidTagNum: "RFID00001",
+  acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
+  dateOfAcquisition: new Date(),
+  acquisitionRemarks: "Acquisition Remarks blabla",
+  weight: -1,
+  physicalDefiningCharacteristics: "Big head",
+  behavioralDefiningCharacteristics: "Lazy",
+  dateOfDeath: null,
+  locationOfDeath: null,
+  causeOfDeath: null,
+  growthStage: AnimalGrowthStage.JUVENILE,
+  animalStatus: "NORMAL",
+  species: testPandaSpecies,
+};
 
 function ViewAnimalFullLineage() {
-  return <div>ViewAnimalFullLineage</div>;
+  const apiJson = useApiJson();
+  const { animalCode } = useParams<{ animalCode: string }>();
+
+  const [curAnimal, setCurAnimal] = useState<Animal>(testPandaAnimal);
+
+  useEffect(() => {
+    const fetchAnimalsBySpecies = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/animal/getAnimal/${animalCode}`
+        );
+        setCurAnimal(responseJson as Animal);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    // fetchAnimalsBySpecies();
+  }, []);
+
+  return (
+    <div className="p-10">
+      <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
+        <div className="flex flex-col">
+          <div className="mb-4 flex justify-between">
+            <NavLink
+              className="flex"
+              to={`/animal/viewanimaldetails/${curAnimal.animalCode}`}
+            >
+              <Button variant={"outline"} type="button" className="">
+                Back
+              </Button>
+            </NavLink>
+            <span className="self-center text-lg text-graydark">
+              Animal Lineage
+            </span>
+            <Button disabled className="invisible">
+              Back
+            </Button>
+          </div>
+          <Separator />
+          <span className="mt-4 self-center text-title-xl font-bold">
+            {curAnimal.houseName}
+          </span>
+        </div>
+        {/*  */}
+        <div>Family Tree</div>
+      </div>
+    </div>
+  );
 }
 
 export default ViewAnimalFullLineage;

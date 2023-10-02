@@ -224,17 +224,18 @@ function App() {
                   }
                 />
                 <Route
-                  path="/animal/createweightrecord/:animalId"
+                  path="/animal/createweightrecord/:animalCode"
                   element={
                     user ? <CreateNewWeightRecord /> : <Navigate to="/login" />
                   }
                 />
                 <Route
-                  path="/animal/viewfulllineage/:animalId"
+                  path="/animal/viewfulllineage/:animalCode"
                   element={
                     user ? <ViewAnimalFullLineage /> : <Navigate to="/login" />
                   }
                 />
+
                 {/* Asset and Facility Management */}
                 <Route
                   path="/assetfacility/createfacility"

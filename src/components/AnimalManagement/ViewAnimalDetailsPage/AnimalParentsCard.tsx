@@ -209,7 +209,7 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
               </div>
             )}
           </div>
-          <NavLink to={`/animal/viewfulllineage/${curAnimal.animalId}`}>
+          <NavLink to={`/animal/viewfulllineage/${curAnimal.animalCode}`}>
             <Button className="w-full">View Full Lineage (Family Tree)</Button>
           </NavLink>
         </CardContent>

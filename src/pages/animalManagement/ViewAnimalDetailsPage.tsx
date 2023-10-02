@@ -70,6 +70,8 @@ function ViewAnimalDetailsPage() {
 
   const [curAnimal, setCurAnimal] = useState<Animal>(testPandaAnimal);
 
+  // useEffect to fetch animal
+
   return (
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
