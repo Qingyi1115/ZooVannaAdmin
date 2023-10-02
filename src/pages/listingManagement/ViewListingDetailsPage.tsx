@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import ViewListingDetails from "../../components/ListingManagement/ViewListingDetails";
 import { ListingType, ListingStatus } from "../../enums/Enumurated";
@@ -11,6 +11,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 function ViewListingDetailsPage() {
   const apiJson = useApiJson();
@@ -28,6 +30,7 @@ function ViewListingDetailsPage() {
   const { listingId } = useParams<{ listingId: string }>();
   const [curListing, setCurListing] = useState<Listing>(emptyListing);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -49,19 +52,28 @@ function ViewListingDetailsPage() {
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default">
         {curListing && curListing.listingId != -1 && (
           <div className="flex flex-col">
-            <span className="self-center text-xl font-bold">
-              Listing Details
-            </span>{" "}
-            <br />
-            <span className="self-center text-title-xl font-bold">
-              {curListing.name}
-            </span>
-            <hr className="opacity-2 my-2 bg-stroke" />
-            {/*<img
-                  src={"http://localhost:3000/" + curSpecies.imageUrl}
-                  alt="Current species image"
-                  className="my-4 aspect-square w-1/5 self-center rounded-full border shadow-4"
-                />*/}
+            <div className="flex flex-col">
+              <div className="mb-4 flex justify-between">
+                <Button
+                  variant={"outline"}
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className=""
+                >
+                  Back
+                </Button>
+                <span className="self-center text-lg text-graydark">
+                  Listing Details
+                </span>
+                <Button disabled className="invisible">
+                  Back
+                </Button>
+              </div>
+              <Separator />
+              <span className="mt-4 self-center text-title-xl font-bold">
+                {curListing.name}
+              </span>
+            </div>
             <Accordion type="multiple">
               <AccordionItem value="item-1">
                 <AccordionTrigger>Information</AccordionTrigger>

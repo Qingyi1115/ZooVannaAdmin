@@ -78,14 +78,6 @@ function ViewEmployeeDetailsPage() {
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default">
         {curEmployee && curEmployee.employeeId != -1 && (
           <div className="flex flex-col">
-            <span className="self-center text-xl font-bold">
-              Employee Details
-            </span>{" "}
-            <br />
-            <span className="self-center text-title-xl font-bold">
-              {curEmployee.employeeName}
-            </span>
-            <hr className="opacity-2 my-2 bg-stroke" />
             <div className="flex flex-col">
               <div className="mb-4 flex justify-between">
                 <Button
@@ -97,7 +89,7 @@ function ViewEmployeeDetailsPage() {
                   Back
                 </Button>
                 <span className="self-center text-lg text-graydark">
-                  Edit Employee
+                  Employee Details
                 </span>
                 <Button disabled className="invisible">
                   Back

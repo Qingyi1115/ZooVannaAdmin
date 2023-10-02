@@ -186,9 +186,6 @@ function AllEmployeesDatatable() {
                 <HiPlus className="mr-auto" />
               </Button>
             </NavLink>
-            <span className=" self-center text-title-xl font-bold">
-              All Employees
-            </span>
             <Button onClick={exportCSV}>Export to .csv</Button>
           </div>
           <Separator />

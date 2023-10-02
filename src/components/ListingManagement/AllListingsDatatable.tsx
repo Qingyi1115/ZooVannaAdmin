@@ -6,11 +6,12 @@ import Listing from "src/models/Listing";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink } from "react-router-dom";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
 import { ListingStatus, ListingType } from "../../enums/Enumurated";
+import { Separator } from "@/components/ui/separator";
 
 {
   /*const toast = useRef<Toast>(null);*/
@@ -31,6 +32,9 @@ function AllListingsDatatable() {
   };
 
   const toast = useRef<Toast>(null);
+  const exportCSV = () => {
+    dt.current?.exportCSV();
+  };
 
   const [listingList, setlistingList] = useState<Listing[]>([]);
   const [selectedListing, setSelectedListing] = useState<Listing>(listing);
@@ -279,6 +283,17 @@ function AllListingsDatatable() {
     <div>
       <div>
         <Toast ref={toast} />
+        <div className="flex flex-col">
+          <div className="mb-4 flex justify-between">
+            <NavLink to={"/employee/createNewEmployee"}>
+              <Button className="mr-2">
+                <HiPlus className="mr-auto" />
+              </Button>
+            </NavLink>
+            <Button onClick={exportCSV}>Export to .csv</Button>
+          </div>
+          <Separator />
+        </div>
         <div>
           <DataTable
             ref={dt}
