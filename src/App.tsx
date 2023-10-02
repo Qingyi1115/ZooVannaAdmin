@@ -364,16 +364,22 @@ function App() {
                     user ? <CreateNewSensorPage /> : <Navigate to="/login" />
                   }
                 />*/}
+
+                <Route
+                  path="/assetfacility/createsensor/:hubProcessorId"
+                  element={user ? <CreateNewSensorForm /> : <Navigate to="/login" />}
+                />
+
                 <Route
                   path="/assetfacility/editsensor/:sensorName"
                   element={user ? <EditSensorPage /> : <Navigate to="/login" />}
                 />
-                {/*<Route
+                {/* <Route
                   path="/assetfacility/viewallsensors"
                   element={
                     user ? <ViewAllSensorsPage /> : <Navigate to="/login" />
                   }
-                />*/}
+                /> */}
                 <Route
                   path="/assetfacility/editsensor/:sensorId"
                   element={user ? <EditSensorPage /> : <Navigate to="/login" />}
