@@ -72,6 +72,10 @@ import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPa
 import SensorMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/SensorMaintenanceChartPage";
 import FacilityMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/FacilityMaintenanceChartPage";
 
+
+//promotion management page
+import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -499,6 +503,14 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+
+                  }
+                />
+                <Route
+                  path="/employeeAccount/editemployee"
+                  element={
+                    user ? <EditEmployeePage /> : <Navigate to="/login" />
+
                   }
                 />
 
@@ -535,6 +547,20 @@ function App() {
                   }
                 />
                 <Route
+
+                  path="/employee/editemployee"
+                  element={
+                    user ? <EditEmployeePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/promotion/createnewpromotion"
+                  element={
+                    user ? <CreateNewPromotionPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+
                   path="/profile"
                   element={user ? <ProfilePage /> : <Navigate to="/login" />}
                 />
