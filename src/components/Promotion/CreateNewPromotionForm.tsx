@@ -361,7 +361,7 @@ function CreateNewPromotionForm() {
               Back
             </Button>
             <span className="self-center text-title-xl font-bold">
-              Create Species
+              Create Promotion
             </span>
             <Button disabled className="invisible">
               Back
