@@ -119,12 +119,12 @@ function CreateNewPromotionForm() {
             * Please enter percentage value
           </div>
         );
-      } else if (props.patternMismatch) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter only number
-          </div>
-        );
+        // } else if (props.patternMismatch) {
+        //   return (
+        //     <div className="font-medium text-danger">
+        //       * Please enter only number
+        //     </div>
+        //   );
       } else if (percentage <= 0) {
         return (
           <div className="font-medium text-danger">
@@ -151,12 +151,12 @@ function CreateNewPromotionForm() {
             * Please enter minimum spending
           </div>
         );
-      } else if (props.patternMismatch) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter only number
-          </div>
-        );
+        // } else if (props.patternMismatch) {
+        //   return (
+        //     <div className="font-medium text-danger">
+        //       * Please enter only number
+        //     </div>
+        //   );
       } else if (minimumSpending <= 0) {
         return (
           <div className="font-medium text-danger">
@@ -429,11 +429,12 @@ function CreateNewPromotionForm() {
           validateFunction={validateDescription}
         />
 
-        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+        <div className="flex flex-col justify-start gap-6 lg:flex-row lg:gap-12">
           {/* Start Date */}
-          <div className="card justify-content-center flex">
+          <div className="card justify-content-centre flex flex-col">
             <div>Start Date</div>
             <Calendar
+              style={{ flexGrow: 1 }}
               value={startDate}
               onChange={(e: CalendarChangeEvent) => {
                 if (e && e.value !== undefined) {
@@ -443,9 +444,10 @@ function CreateNewPromotionForm() {
             />
           </div>
           {/* End Date */}
-          <div className="card justify-content-center flex">
+          <div className="card justify-content-center flex flex-col">
             <div>End Date</div>
             <Calendar
+              style={{ flexGrow: 1 }}
               value={endDate}
               onChange={(e: CalendarChangeEvent) => {
                 if (e && e.value !== undefined) {
@@ -456,59 +458,59 @@ function CreateNewPromotionForm() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Percentage */}
-          <FormFieldInput
-            type="number"
-            formFieldName="percentage"
-            label="Discount (%)"
-            required={true}
-            placeholder="e.g. 20"
-            pattern={undefined}
-            value={percentage}
-            setValue={setPercentage}
-            validateFunction={validatePercentage}
-          />
-          {/* Minimum Spending */}
-          <FormFieldInput
-            type="number"
-            formFieldName="minimumSpending"
-            label="Minimum Spending ($)"
-            required={true}
-            placeholder="Enter minimum spending for this promotion to be eligible"
-            pattern={undefined}
-            value={minimumSpending}
-            setValue={setMinimumSpending}
-            validateFunction={validateMinimumSpending}
-          />
-        </div>
+        {/* <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12"> */}
+        {/* Percentage */}
+        <FormFieldInput
+          type="number"
+          formFieldName="percentage"
+          label="Discount (%)"
+          required={true}
+          placeholder="e.g. 20"
+          pattern={undefined}
+          value={percentage}
+          setValue={setPercentage}
+          validateFunction={validatePercentage}
+        />
+        {/* Minimum Spending */}
+        <FormFieldInput
+          type="number"
+          formFieldName="minimumSpending"
+          label="Minimum Spending ($)"
+          required={true}
+          placeholder="Enter minimum spending for this promotion to be eligible"
+          pattern={undefined}
+          value={minimumSpending}
+          setValue={setMinimumSpending}
+          validateFunction={validateMinimumSpending}
+        />
+        {/* </div> */}
 
-        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Promo code */}
-          <FormFieldInput
-            type="text"
-            formFieldName="promotionCode"
-            label="Promotion Code"
-            required={true}
-            placeholder="e.g. ZOOVANNABIRTHDAY"
-            pattern={undefined}
-            value={promotionCode}
-            setValue={setPromotionCode}
-            validateFunction={validatePromotionCode}
-          />
-          {/* Maximum Redemption Number */}
-          <FormFieldInput
-            type="number"
-            formFieldName="maxRedeemNum"
-            label="Maximum Redemption Number"
-            required={true}
-            placeholder="Enter maximum total number of redemption for this promotion"
-            pattern={undefined}
-            value={maxRedeemNum}
-            setValue={setMaxRedeemNum}
-            validateFunction={validateMaxRedeemNum}
-          />
-        </div>
+        {/* <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12"> */}
+        {/* Promo code */}
+        <FormFieldInput
+          type="text"
+          formFieldName="promotionCode"
+          label="Promotion Code"
+          required={true}
+          placeholder="e.g. ZOOVANNABIRTHDAY"
+          pattern={undefined}
+          value={promotionCode}
+          setValue={setPromotionCode}
+          validateFunction={validatePromotionCode}
+        />
+        {/* Maximum Redemption Number */}
+        <FormFieldInput
+          type="number"
+          formFieldName="maxRedeemNum"
+          label="Maximum Redemption Number"
+          required={true}
+          placeholder="Enter maximum total number of redemption for this promotion"
+          pattern={undefined}
+          value={maxRedeemNum}
+          setValue={setMaxRedeemNum}
+          validateFunction={validateMaxRedeemNum}
+        />
+        {/* </div> */}
 
         <Form.Submit asChild>
           <Button
