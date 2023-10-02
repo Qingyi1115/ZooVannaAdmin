@@ -8,6 +8,8 @@ interface Listing {
   price: number;
   listingType: ListingType;
   listingStatus: ListingStatus;
+  createdAt: Date;
+  updateTimestamp: Date;
 }
 
 export default Listing;

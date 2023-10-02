@@ -258,7 +258,7 @@ function EditListingForm(props: EditListingFormProps) {
               ["ACTIVE", "Active"],
               ["DISCONTINUED", "Discontinued"],
             ]}
-            value={listingType}
+            value={listingStatus}
             setValue={setListingStatus}
             validateFunction={validateListingStatus}
           />

@@ -58,6 +58,8 @@ import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facil
 import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facility/AssignMaintenanceStaffPage";
 import CreateNewListingPage from "./pages/listingManagement/CreateNewListingPage";
 import ViewAllListingsPage from "./pages/listingManagement/ViewAllListingsPage";
+import EditListingPage from "./pages/listingManagement/EditListingPage";
+import ViewListingDetailsPage from "./pages/listingManagement/ViewListingDetailsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -349,6 +351,18 @@ function App() {
                   path="/listing/viewalllistings"
                   element={
                     user ? <ViewAllListingsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/listing/editlisting/:listingId"
+                  element={
+                    user ? <EditListingPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/listing/viewlisting/:listingId"
+                  element={
+                    user ? <ViewListingDetailsPage /> : <Navigate to="/login" />
                   }
                 />
               </Route>

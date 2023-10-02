@@ -26,32 +26,38 @@ function AllListingsDatatable() {
     price: -1,
     listingType: ListingType.LOCAL_ADULT_ONETIME,
     listingStatus: ListingStatus.DISCONTINUED,
+    createdAt: new Date(),
+    updateTimestamp: new Date(),
   };
 
   const toast = useRef<Toast>(null);
 
   const [listingList, setlistingList] = useState<Listing[]>([]);
-  const [selectedlisting, setSelectedListing] = useState<Listing>(listing);
+  const [selectedListing, setSelectedListing] = useState<Listing>(listing);
   const dt = useRef<DataTable<Listing[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [listingDisableDialog, setlistingDisableDialog] =
     useState<boolean>(false);
   const toastShadcn = useToast().toast;
+  const [disable, setDisable] = useState<boolean>();
+  let [count, setCount] = useState<number>(0);
+  const isInitialRender = useRef(true);
+
+  const fetchlistings = async () => {
+    try {
+      const responseJson = await apiJson.get(
+        "http://localhost:3000/api/listing/getAllListings"
+      );
+      setlistingList(responseJson.result as Listing[]);
+      //console.log("Here " + responseJson);
+      //const help = responseJson as listing[];
+      //console.log(help);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchlistings = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/listing/getAllListings"
-        );
-        setlistingList(responseJson.result as Listing[]);
-        //console.log("Here " + responseJson);
-        //const help = responseJson as listing[];
-        //console.log(help);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
     fetchlistings();
   }, []);
 
@@ -59,14 +65,84 @@ function AllListingsDatatable() {
     setlistingDisableDialog(false);
   };
 
-  const disableListing = async () => {
-    const selectedlistingName = selectedlisting.name;
-    console.log(selectedlisting);
+  const disableListing = () => {
+    setDisable(true);
+    console.log(disable);
+    setCount((count += 1));
+    console.log(count);
+  };
+
+  const enableListing = () => {
+    setDisable(false);
+    console.log("hereee");
+    setCount((count += 1));
+    console.log(count);
+  };
+
+  useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+    if (disable) {
+      console.log(selectedListing);
+      apiJson
+        .del(
+          `http://localhost:3000/api/listing/disableListing/${selectedListing.listingId}`
+        )
+        .catch((error) =>
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while disabling listing: \n" + error,
+          })
+        )
+        .then(() => {
+          toastShadcn({
+            // variant: "destructive",
+            title: "Deletion Successful",
+            description:
+              "Successfully disabled listing: " + selectedListing.name,
+          });
+          setlistingDisableDialog(false);
+          fetchlistings();
+        });
+    } else {
+      console.log(selectedListing);
+      apiJson
+        .del(
+          `http://localhost:3000/api/listing/enableListing/${selectedListing.listingId}`
+        )
+        .catch((error) =>
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while enabling listing: \n" + error,
+          })
+        )
+        .then(() => {
+          toastShadcn({
+            // variant: "destructive",
+            title: "Enable Successful",
+            description:
+              "Successfully enabled listing: " + selectedListing.name,
+          });
+          fetchlistings();
+        });
+    }
+  }, [count, disable]);
+
+  {
+    /*const disableListing = async () => {
+    const selectedlistingName = selectedListing.name;
+    console.log(selectedListing);
 
     const disable = async () => {
       try {
         const responseJson = await apiJson.del(
-          `http://localhost:3000/api/listing/disableListing/${selectedlisting.listingId}`
+          `http://localhost:3000/api/listing/disableListing/${selectedListing.listingId}`
         );
 
         toastShadcn({
@@ -90,9 +166,11 @@ function AllListingsDatatable() {
       }
     };
     disable();
-  };
+  };*/
+  }
 
-  const enableListing = async (listing: Listing) => {
+  {
+    /*const enableListing = async (listing: Listing) => {
     const enable = async () => {
       try {
         console.log(listing);
@@ -119,7 +197,8 @@ function AllListingsDatatable() {
       }
     };
     enable();
-  };
+  };*/
+  }
 
   const listingDisableDialogFooter = (
     <React.Fragment>
@@ -158,16 +237,21 @@ function AllListingsDatatable() {
 
   const confirmlistingEnable = (listing: Listing) => {
     setSelectedListing(listing);
-    enableListing(listing);
+    enableListing();
   };
 
   const actionBodyTemplate = (listing: Listing) => {
     return (
       <React.Fragment>
-        <NavLink to={`/listingAccount/viewlistingDetails/${listing.listingId}`}>
+        <NavLink to={`/listing/viewlisting/${listing.listingId}`}>
           <Button className="mb-1 mr-1">
             <HiEye className="mr-1" />
             <span>View Details</span>
+          </Button>
+        </NavLink>
+        <NavLink to={`/listing/editlisting/${listing.listingId}`}>
+          <Button className="mr-2">
+            <HiEye className="mr-auto" />
           </Button>
         </NavLink>
         {listing.listingStatus === "DISCONTINUED" ? (
@@ -199,7 +283,7 @@ function AllListingsDatatable() {
           <DataTable
             ref={dt}
             value={listingList}
-            selection={selectedlisting}
+            selection={selectedListing}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
                 setSelectedListing(e.value);
@@ -267,10 +351,10 @@ function AllListingsDatatable() {
               className="pi pi-exclamation-triangle mr-3"
               style={{ fontSize: "2rem" }}
             />
-            {selectedlisting && (
+            {selectedListing && (
               <span>
                 Are you sure you want to discontinue{" "}
-                <b>{selectedlisting.name}</b>?
+                <b>{selectedListing.name}</b>?
               </span>
             )}
           </div>
