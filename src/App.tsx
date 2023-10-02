@@ -72,7 +72,6 @@ import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPa
 import SensorMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/SensorMaintenanceChartPage";
 import FacilityMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/FacilityMaintenanceChartPage";
 
-
 //promotion management page
 import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
 
@@ -503,16 +502,15 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
-
                   }
                 />
-                <Route
+                {/* <Route
                   path="/employeeAccount/editemployee"
                   element={
                     user ? <EditEmployeePage /> : <Navigate to="/login" />
 
                   }
-                />
+                /> */}
 
                 {/* Customer Account Management */}
                 <Route
@@ -546,13 +544,12 @@ function App() {
                     user ? <CreateNewEmployeePage /> : <Navigate to="/login" />
                   }
                 />
-                <Route
-
+                {/* <Route
                   path="/employee/editemployee"
                   element={
                     user ? <EditEmployeePage /> : <Navigate to="/login" />
                   }
-                />
+                /> */}
                 <Route
                   path="/promotion/createnewpromotion"
                   element={
@@ -560,7 +557,6 @@ function App() {
                   }
                 />
                 <Route
-
                   path="/profile"
                   element={user ? <ProfilePage /> : <Navigate to="/login" />}
                 />
