@@ -127,6 +127,123 @@ function CreateNewAnimalForm() {
     return null;
   }
 
+  function validateHouseName(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter a house name
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateAnimalSex(props: ValidityState) {
+    // console.log(props);
+    if (props != undefined) {
+      if (sex == undefined) {
+        return (
+          <div className="font-medium text-danger">* Please select a sex</div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateSpecies(props: ValidityState) {
+    // console.log(props);
+    if (props != undefined) {
+      if (selectedSpecies == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select a species
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateAcquisitionMethod(props: ValidityState) {
+    // console.log(props);
+    if (props != undefined) {
+      if (sex == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select an acquisition method
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateDateOfAcquisition(props: ValidityState) {
+    if (props != undefined) {
+      if (dateOfAcquisition == null) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the date of acquisition
+          </div>
+        );
+      }
+    }
+    // add any other cases here
+    return null;
+  }
+
+  function validateCurrentWeight(props: ValidityState) {
+    if (props != undefined) {
+      if (currentWeight == undefined) {
+        return (
+          <div className="font-medium text-danger">* Please enter a weight</div>
+        );
+      } else if (currentWeight <= 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Weight must be greater than 0
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validatePhysicalDefiningCharacteristics(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter some physical defining characteristics
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateBehaviouralDefiningCharacteristics(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter some behavioural defining characteristics
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
   // end validate functions
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -249,7 +366,7 @@ function CreateNewAnimalForm() {
           name="speciesImage"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
-          <Form.Label className="font-medium">Species Image</Form.Label>
+          <Form.Label className="font-medium">Animal Image</Form.Label>
           <Form.Control
             type="file"
             required
@@ -279,7 +396,7 @@ function CreateNewAnimalForm() {
             pattern={undefined}
             value={houseName}
             setValue={setHouseName}
-            validateFunction={() => null}
+            validateFunction={validateHouseName}
           />
           {/* RFID Tag Number */}
           <FormFieldInput
@@ -301,25 +418,43 @@ function CreateNewAnimalForm() {
             formFieldName="sex"
             label="Animal Sex"
             required={true}
-            placeholder="Select an acquisition method..."
+            placeholder="Select a sex..."
             valueLabelPair={Object.keys(AnimalSex).map((animalSexKey) => [
               animalSexKey.toString(),
               AnimalSex[animalSexKey as keyof typeof AnimalSex].toString(),
             ])}
             value={sex}
             setValue={setSex}
-            validateFunction={() => null}
+            validateFunction={validateAnimalSex}
           />
 
-          {/* Species */}
+          {/* Date of Birth */}
           <Form.Field
-            name="dateOfBirth"
+            name="species"
+            id="speciesField"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <Form.Label className="font-medium">Species</Form.Label>
+            <Form.Control
+              className="hidden"
+              type="text"
+              value={selectedSpecies?.commonName}
+              required={true}
+              onChange={() => null}
+            ></Form.Control>
             <Dropdown
               value={selectedSpecies}
-              onChange={(e: DropdownChangeEvent) => setSelectedSpecies(e.value)}
+              onChange={(e: DropdownChangeEvent) => {
+                setSelectedSpecies(e.value);
+                const element = document.getElementById("speciesField");
+                if (element) {
+                  const isDataInvalid = element.getAttribute("data-invalid");
+                  if (isDataInvalid == "true") {
+                    element.setAttribute("data-valid", "true");
+                    element.removeAttribute("data-invalid");
+                  }
+                }
+              }}
               options={speciesList}
               optionLabel="commonName"
               placeholder="Select a Species"
@@ -328,7 +463,7 @@ function CreateNewAnimalForm() {
               itemTemplate={speceiesOptionTemplate}
               className="md:w-14rem w-full"
             />
-            {/* <Form.ValidityState>{validateImage}</Form.ValidityState> */}
+            <Form.ValidityState>{validateSpecies}</Form.ValidityState>
           </Form.Field>
         </div>
 
@@ -337,8 +472,8 @@ function CreateNewAnimalForm() {
           <FormFieldInput
             type="text"
             formFieldName="placeOfBirth"
-            label="Place of Birth"
-            required={true}
+            label="Place of Birth (leave blank if unknown)"
+            required={false}
             placeholder="e.g., African savannah, XYZ Zoo, Merlion Zoo,..."
             pattern={undefined}
             value={placeOfBirth}
@@ -351,7 +486,9 @@ function CreateNewAnimalForm() {
             name="dateOfBirth"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <Form.Label className="font-medium">Date of Birth</Form.Label>
+            <Form.Label className="font-medium">
+              Date of Birth (leave blank if unknown)
+            </Form.Label>
             <Calendar
               value={dateOfBirth}
               className="w-fit"
@@ -382,25 +519,44 @@ function CreateNewAnimalForm() {
             )}
             value={acquisitionMethod}
             setValue={setAcquisitionMethod}
-            validateFunction={() => null}
+            validateFunction={validateAcquisitionMethod}
           />
 
           {/* Date of Acquisition */}
           <Form.Field
             name="dateOfAcquisition"
+            id="dateOfAcquisitionField"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <Form.Label className="font-medium">Date of Acquisition</Form.Label>
+            <Form.Control
+              className="hidden"
+              type="text"
+              value={dateOfAcquisition?.toString()}
+              required={true}
+              onChange={() => null}
+            ></Form.Control>
             <Calendar
               value={dateOfAcquisition}
               className="w-fit"
               onChange={(e: CalendarChangeEvent) => {
                 if (e && e.value !== undefined) {
                   setDateOfAcquisition(e.value);
+
+                  const element = document.getElementById(
+                    "dateOfAcquisitionField"
+                  );
+                  if (element) {
+                    const isDataInvalid = element.getAttribute("data-invalid");
+                    if (isDataInvalid == "true") {
+                      element.setAttribute("data-valid", "true");
+                      element.removeAttribute("data-invalid");
+                    }
+                  }
                 }
               }}
             />
-            {/* <Form.ValidityState>{validateImage}</Form.ValidityState> */}
+            <Form.ValidityState>{validateDateOfAcquisition}</Form.ValidityState>
           </Form.Field>
         </div>
 
@@ -430,7 +586,7 @@ function CreateNewAnimalForm() {
               </Form.ValidityState> */}
         </Form.Field>
 
-        {/* Amount Per Meal */}
+        {/* Current Weight */}
         <FormFieldInput
           type="number"
           formFieldName="currentWeight"
@@ -440,7 +596,7 @@ function CreateNewAnimalForm() {
           placeholder="e.g., 50"
           value={currentWeight}
           setValue={setCurrentWeight}
-          validateFunction={() => null}
+          validateFunction={validateCurrentWeight}
         />
 
         {/* Physical Defining Characteristics */}
@@ -454,6 +610,7 @@ function CreateNewAnimalForm() {
           <Form.Control
             asChild
             value={physicalDefiningCharacteristics}
+            required={true}
             onChange={(e) => setPhysicalDefiningCharacteristics(e.target.value)}
             className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
           >
@@ -461,12 +618,11 @@ function CreateNewAnimalForm() {
               rows={6}
               placeholder="e.g., dark spot to the left of the eye, dark mane down to the belly,..."
               // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
-              required
             />
           </Form.Control>
-          {/* <Form.ValidityState>
-                {validateEducationalDescription}
-              </Form.ValidityState> */}
+          <Form.ValidityState>
+            {validatePhysicalDefiningCharacteristics}
+          </Form.ValidityState>
         </Form.Field>
 
         {/* Behavioural Defining Characteristics */}
@@ -480,6 +636,7 @@ function CreateNewAnimalForm() {
           <Form.Control
             asChild
             value={behavioralDefiningCharacteristics}
+            required={true}
             onChange={(e) =>
               setBehavioralDefiningCharacteristics(e.target.value)
             }
@@ -489,12 +646,11 @@ function CreateNewAnimalForm() {
               rows={6}
               placeholder="e.g., the dominant one in the group, the docile one,..."
               // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
-              required
             />
           </Form.Control>
-          {/* <Form.ValidityState>
-                {validateEducationalDescription}
-              </Form.ValidityState> */}
+          <Form.ValidityState>
+            {validateBehaviouralDefiningCharacteristics}
+          </Form.ValidityState>
         </Form.Field>
 
         <Form.Submit asChild>

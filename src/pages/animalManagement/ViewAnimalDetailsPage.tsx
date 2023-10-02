@@ -14,6 +14,7 @@ import {
   AnimalSex,
 } from "../../enums/Enumurated";
 import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
+import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
 
 let testPandaSpecies: Species = {
   speciesId: 1,
@@ -37,7 +38,7 @@ let testPandaSpecies: Species = {
   habitatOrExhibit: "habitat",
   imageUrl: "img/species/panda.jpg",
   generalDietPreference: "",
-  lifeExpectancyYears: 0,
+  lifeExpectancyYears: 65,
 };
 
 let testPandaAnimal: Animal = {
@@ -46,7 +47,7 @@ let testPandaAnimal: Animal = {
   imageUrl: "",
   houseName: "Kai Kai",
   sex: AnimalSex.MALE,
-  dateOfBirth: new Date(),
+  dateOfBirth: new Date("1983-06-06"),
   placeOfBirth: "Place of Birth haha",
   rfidTagNum: "RFID00001",
   acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
@@ -97,6 +98,7 @@ function ViewAnimalDetailsPage() {
           <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
             <span className="invisible">_____</span>
             <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
+            <TabsTrigger value="weight">Weight</TabsTrigger>
             <TabsTrigger value="feeding">Feeding</TabsTrigger>
             <TabsTrigger value="trainingenrichment">
               Training and Enrichment
@@ -125,6 +127,11 @@ function ViewAnimalDetailsPage() {
               </span>
             </div>
             <AnimalBasicInformation curAnimal={curAnimal} />
+          </TabsContent>
+          <TabsContent value="weight">
+            <div>
+              <AnimalWeightInfo curAnimal={curAnimal} />
+            </div>
           </TabsContent>
           <TabsContent value="feeding">
             <div>
