@@ -107,25 +107,6 @@ function ViewAnimalDetailsPage() {
             <TabsTrigger value="medical">Medical</TabsTrigger>
           </TabsList>
           <TabsContent value="basicinfo">
-            <div>
-              <span>Current Status and the edit status button here?</span>
-            </div>
-            <div>
-              <span>Basic table to show the basic details</span>
-            </div>
-            <div>
-              <span>
-                Show Species and Location (which Enclosure) it is inside as well
-              </span>
-            </div>
-            <div>
-              <span>Genealogy/Lineage</span>
-            </div>
-            <div>
-              <span>
-                Weight stuff??? Show historical weight-ins records on the graph
-              </span>
-            </div>
             <AnimalBasicInformation curAnimal={curAnimal} />
           </TabsContent>
           <TabsContent value="weight">

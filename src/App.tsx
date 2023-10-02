@@ -28,6 +28,7 @@ import ViewAllAnimalsPage from "./pages/animalManagement/ViewAllAnimalsPage";
 import ViewAnimalDetailsPage from "./pages/animalManagement/ViewAnimalDetailsPage";
 import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDetailsPage";
 import CreateNewWeightRecord from "./pages/animalManagement/CreateNewWeightRecord";
+import ViewAnimalFullLineage from "./pages/animalManagement/ViewAnimalFullLineage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -226,6 +227,12 @@ function App() {
                   path="/animal/createweightrecord/:animalId"
                   element={
                     user ? <CreateNewWeightRecord /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewfulllineage/:animalId"
+                  element={
+                    user ? <ViewAnimalFullLineage /> : <Navigate to="/login" />
                   }
                 />
                 {/* Asset and Facility Management */}

@@ -24,12 +24,11 @@ function EnclosureCard() {
       <Card className=" w-full transition-all hover:bg-muted/50">
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
-            {/* <img
-              alt={curSpecies?.commonName}
-              src={"http://localhost:3000/" + curSpecies?.imageUrl}
+            <img
+              alt={""}
+              src={"http://localhost:3000/"}
               className="aspect-square w-20 rounded-full border border-white object-cover shadow-4"
-            /> */}
-            Enclosure Picture
+            />
             <div>
               {/* <div className="text-lg font-bold">{curSpecies.commonName}</div>
               <div>{curSpecies.scientificName}</div> */}

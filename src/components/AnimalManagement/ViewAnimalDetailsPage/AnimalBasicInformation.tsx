@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/table";
 import SpeciesCard from "./SpeciesCard";
 import EnclosureCard from "./EnclosureCard";
+import { NavLink } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import AnimalParentsCard from "./AnimalParentsCard";
 
 interface AnimalBasicInformationProps {
   curAnimal: Animal;
@@ -19,19 +22,47 @@ interface AnimalBasicInformationProps {
 
 function AnimalBasicInformation(props: AnimalBasicInformationProps) {
   const { curAnimal } = props;
+
+  const statusColorClass =
+    curAnimal.animalStatus === "NORMAL"
+      ? "bg-green-600"
+      : curAnimal.animalStatus === "PREGNANT"
+      ? "bg-warning"
+      : curAnimal.animalStatus === "SICK" ||
+        curAnimal.animalStatus === "INJURED"
+      ? "bg-destructive"
+      : "";
+
   return (
     <div>
-      <div>
-        {curAnimal.houseName} is a: <br />
-        <div>
+      <div className="flex w-full justify-between gap-10">
+        <div className="w-full">
+          <span className="text-xl font-medium">
+            {curAnimal.houseName} is a:
+          </span>{" "}
+          <br />
           <SpeciesCard curSpecies={curAnimal.species} />
         </div>
-      </div>
-      <div>
-        Current Location: <br />
-        <div>
+        <div className="w-full">
+          <span className="text-xl font-medium">Current Location: </span>
+          <br />
           <EnclosureCard />
         </div>
+      </div>
+      <br />
+      <div>
+        <span className="text-xl font-medium">(Known) Parents:</span>
+        <AnimalParentsCard curAnimal={curAnimal} />
+      </div>
+      <br />
+      <span className="text-xl font-medium">
+        {curAnimal.houseName}'s Details:
+      </span>
+      <div className="my-4 flex justify-start gap-6">
+        <NavLink to={`/species/editspecies/${curAnimal.animalId}`}>
+          <Button>Edit Basic Information</Button>
+        </NavLink>
+        <Button>Change Status</Button>
       </div>
       <Table>
         {/* <TableHeader className=" bg-whiten">
@@ -43,6 +74,18 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
         </TableHeader> */}
         <TableBody>
+          <TableRow className="">
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Status
+            </TableCell>
+            <TableCell>
+              <div
+                className={`${statusColorClass} w-min rounded-sm p-2 font-bold text-whiter`}
+              >
+                {curAnimal.animalStatus}
+              </div>
+            </TableCell>
+          </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Animal Code
