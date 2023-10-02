@@ -327,7 +327,7 @@ function CreateNewPromotionForm() {
 
         // clearForm();
         setNewPromotionCreated(true);
-        // navigate("/promotion/viewallpromotions");
+        navigate("/promotion/viewallpromotions");
       } catch (error: any) {
         // got error
         toastShadcn({
