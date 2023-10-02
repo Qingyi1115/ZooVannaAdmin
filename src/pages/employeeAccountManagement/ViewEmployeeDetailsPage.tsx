@@ -19,31 +19,13 @@ import { Separator } from "@/components/ui/separator";
 
 function ViewEmployeeDetailsPage() {
   const apiJson = useApiJson();
+
   let employee: Employee = {
     employeeId: -1,
     employeeName: "",
     employeeEmail: "",
     employeeAddress: "",
     employeePhoneNumber: "",
-    employeeDoorAccessCode: "",
-    employeeEducation: "",
-    employeeBirthDate: new Date(),
-    isAccountManager: false,
-    dateOfResignation: new Date(),
-    employeeProfileUrl: "",
-    keeper: null,
-    generalStaff: null,
-    planningStaff: null,
-  };
-  const apiJson = useApiJson();
-  let employee: Employee = {
-    employeeId: -1,
-    employeeName: "",
-    employeeEmail: "",
-    employeeAddress: "",
-    employeePhoneNumber: "",
-    employeePasswordhash: "",
-    employeeSalt: "",
     employeeDoorAccessCode: "",
     employeeEducation: "",
     employeeBirthDate: new Date(),
