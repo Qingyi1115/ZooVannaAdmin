@@ -87,6 +87,10 @@ import ViewAllAssetsPage from "./pages/assetAndFacilityManagement/ViewAllAssetsP
 
 
 
+//promotion management page
+import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
+import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -548,12 +552,13 @@ function App() {
                     )
                   }
                 />
-                <Route
+                {/* <Route
                   path="/employeeAccount/editemployee"
                   element={
                     user ? <EditEmployeePage /> : <Navigate to="/login" />
+
                   }
-                />
+                /> */}
 
                 {/* Customer Account Management */}
                 <Route
@@ -585,6 +590,24 @@ function App() {
                   path="/employee/createnewemployee"
                   element={
                     user ? <CreateNewEmployeePage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* <Route
+                  path="/employee/editemployee"
+                  element={
+                    user ? <EditEmployeePage /> : <Navigate to="/login" />
+                  }
+                /> */}
+                <Route
+                  path="/promotion/createnewpromotion"
+                  element={
+                    user ? <CreateNewPromotionPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/promotion/viewallpromotions"
+                  element={
+                    user ? <ViewAllPromotionsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
