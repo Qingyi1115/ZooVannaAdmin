@@ -190,7 +190,7 @@ function EditListingForm(props: EditListingFormProps) {
           encType="multipart/form-data"
         >
           <span className="self-center text-title-xl font-bold">
-            Edit Animal Feed: {currListing.name}
+            Edit Listing: {currListing.name}
           </span>
           <hr className="bg-stroke opacity-20" />
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
