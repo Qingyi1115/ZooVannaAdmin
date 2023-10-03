@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,110 @@ import {
 } from "../../enums/Enumurated";
 import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
 import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
+import FamilyTree from "../../components/AnimalManagement/ViewAnimalDetailsPage/MyTree";
+import { clone } from "chart.js/dist/helpers/helpers.core";
+
+import { ImSpinner2 } from "react-icons/im";
+
+let testJson = {
+  age: 2,
+  animalId: 1,
+  animalCode: "ANM00001",
+  isGroup: false,
+  houseName: "Pang Pang",
+  sex: "FEMALE",
+  dateOfBirth: "2021-03-04T00:00:00.000Z",
+  placeOfBirth: "Singapore",
+  identifierType: "TYPE",
+  identifierValue: "identifierValue 001",
+  acquisitionMethod: "CAPTIVE_BRED",
+  dateOfAcquisition: "2021-03-04T00:00:00.000Z",
+  acquisitionRemarks: "N.A.",
+  physicalDefiningCharacteristics: "Big face, black spot at the back",
+  behavioralDefiningCharacteristics: "active, friendly",
+  dateOfDeath: null,
+  locationOfDeath: null,
+  causeOfDeath: null,
+  growthStage: "UNKNOWN",
+  animalStatus: "NORMAL",
+  imageUrl: "img/animal/pangPang.jpg",
+  createdAt: "2023-10-03T14:51:17.000Z",
+  updateTimestamp: "2023-10-03T14:51:17.000Z",
+  speciesSpeciesId: 1,
+  enclosureId: null,
+  children: [],
+  parents: [
+    {
+      age: null,
+      animalId: 2,
+      animalCode: "ANM00002",
+      isGroup: true,
+      houseName: "Panda Group 01",
+      sex: null,
+      dateOfBirth: null,
+      placeOfBirth: null,
+      identifierType: null,
+      identifierValue: null,
+      acquisitionMethod: "WILD_CAPTURED",
+      dateOfAcquisition: "2021-03-04T00:00:00.000Z",
+      acquisitionRemarks: null,
+      physicalDefiningCharacteristics: null,
+      behavioralDefiningCharacteristics: null,
+      dateOfDeath: null,
+      locationOfDeath: null,
+      causeOfDeath: null,
+      growthStage: "UNKNOWN",
+      animalStatus: "NORMAL",
+      imageUrl: "img/animal/pandaGroup01.jpg",
+      createdAt: "2023-10-03T14:51:17.000Z",
+      updateTimestamp: "2023-10-03T14:51:17.000Z",
+      speciesSpeciesId: 1,
+      enclosureId: null,
+      parent_child: {
+        createdAt: "2023-10-03T14:51:34.000Z",
+        updateTimestamp: "2023-10-03T14:51:34.000Z",
+        parentId: 1,
+        childId: 2,
+      },
+      parents: [
+        {
+          age: 2,
+          animalId: 3,
+          animalCode: "ANM00003",
+          isGroup: true,
+          houseName: "Panda 3",
+          sex: "FEMALE",
+          dateOfBirth: "2021-03-04T00:00:00.000Z",
+          placeOfBirth: "Singapore",
+          identifierType: "TYPE",
+          identifierValue: "identifierValue 001",
+          acquisitionMethod: "CAPTIVE_BRED",
+          dateOfAcquisition: "2021-03-04T00:00:00.000Z",
+          acquisitionRemarks: "N.A.",
+          physicalDefiningCharacteristics: "Big face, black spot at the back",
+          behavioralDefiningCharacteristics: "active, friendly",
+          dateOfDeath: null,
+          locationOfDeath: null,
+          causeOfDeath: null,
+          growthStage: "UNKNOWN",
+          animalStatus: "NORMAL",
+          imageUrl: "img/animal/pangPang.jpg",
+          createdAt: "2023-10-03T14:51:17.000Z",
+          updateTimestamp: "2023-10-03T14:51:17.000Z",
+          speciesSpeciesId: 1,
+          enclosureId: null,
+          parent_child: {
+            createdAt: "2023-10-03T14:51:39.000Z",
+            updateTimestamp: "2023-10-03T14:51:39.000Z",
+            parentId: 2,
+            childId: 3,
+          },
+          parents: [],
+        },
+      ],
+    },
+  ],
+};
 
 let testPandaSpecies: Species = {
   speciesId: 1,
@@ -65,26 +169,258 @@ let testPandaAnimal: Animal = {
   species: testPandaSpecies,
 };
 
+const testAnimalList = [
+  {
+    id: 1,
+    // pids: [2],
+    fid: null,
+    mid: null,
+    name: "Amber McKenzie",
+    animalCode: "ANI0001",
+    gender: "female",
+    img: "https://cdn.balkan.app/shared/2.jpg",
+  },
+  // {
+  //   id: 2,
+  //   mid: [1],
+  //   // pids: [1],
+  //   name: "Ava Field",
+  //   species: "Giant Panda",
+  //   gender: "male",
+  //   img: "https://cdn.balkan.app/shared/m30/5.jpg",
+  // },
+  // {
+  //   id: 3,
+  //   mid: 1,
+  //   // fid: 2,
+  //   name: "Peter Stevens",
+  //   species: "Giant Panda",
+  //   gender: "male",
+  //   img: "https://cdn.balkan.app/shared/m10/2.jpg",
+  // },
+  // {
+  //   id: 4,
+  //   mid: 1,
+  //   fid: 2,
+  //   name: "Savin Stevens",
+  //   species: "Giant Panda",
+  //   gender: "male",
+  //   img: "https://cdn.balkan.app/shared/m10/1.jpg",
+  // },
+  // {
+  //   id: 5,
+  //   mid: 1,
+  //   fid: 2,
+  //   name: "Emma Stevens",
+  //   species: "Giant Panda",
+  //   gender: "female",
+  //   img: "https://cdn.balkan.app/shared/w10/3.jpg",
+  // },
+  {
+    id: 6,
+    pids: [7],
+    name: "Big Papa",
+    animalCode: "ANI0002",
+    gender: "male",
+    img: "https://cdn.balkan.app/shared/w10/3.jpg",
+  },
+  {
+    id: 7,
+    pids: [6],
+    name: "Big Mama",
+    animalCode: "ANI0003",
+    gender: "female",
+    img: "https://cdn.balkan.app/shared/w10/3.jpg",
+  },
+];
+
+/*
+[
+              {
+                id: 1,
+                pids: [2],
+                name: "Amber McKenzie",
+                gender: "female",
+                img: "https://cdn.balkan.app/shared/2.jpg",
+              },
+              {
+                id: 2,
+                // pids: [1],
+                name: "Ava Field",
+                gender: "male",
+                img: "https://cdn.balkan.app/shared/m30/5.jpg",
+              },
+              {
+                id: 3,
+                mid: 1,
+                fid: 2,
+                name: "Peter Stevens",
+                gender: "male",
+                img: "https://cdn.balkan.app/shared/m10/2.jpg",
+              },
+              {
+                id: 4,
+                mid: 1,
+                fid: 2,
+                name: "Savin Stevens",
+                gender: "male",
+                img: "https://cdn.balkan.app/shared/m10/1.jpg",
+              },
+              {
+                id: 5,
+                mid: 1,
+                fid: 2,
+                name: "Emma Stevens",
+                gender: "female",
+                img: "https://cdn.balkan.app/shared/w10/3.jpg",
+              },
+            ] */
+
 function ViewAnimalFullLineage() {
   const apiJson = useApiJson();
   const { animalCode } = useParams<{ animalCode: string }>();
 
-  const [curAnimal, setCurAnimal] = useState<Animal>(testPandaAnimal);
+  const [curAnimalLineage, setCurAnimalLineage] = useState<any>(testJson);
+  const [familyTreeNodes, setFamilyTreeNodes] = useState<any[]>([]);
+  let tempNodesOutside: any[] = [];
+  const [isLineageRetrieved, setIsLineageRetrieved] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchAnimalsBySpecies = async () => {
+    const fetchLineageByAnimalCode = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/animal/getAnimal/${animalCode}`
+          `http://localhost:3000/api/animal/getLineageByAnimalCode/${animalCode}`
         );
-        setCurAnimal(responseJson as Animal);
+        setCurAnimalLineage(responseJson as Animal);
       } catch (error: any) {
         console.log(error);
       }
     };
 
-    // fetchAnimalsBySpecies();
+    // fetchLineageByAnimalCode();
   }, []);
+
+  // process animal and add them to the nodes list
+  function updateOrAddNode(newNode: any, nodes: any[]): void {
+    const index = nodes.findIndex((node) => node.id === newNode.id);
+
+    if (index === -1) {
+      // Node doesn't exist, add it
+      nodes.push(newNode);
+    } else {
+      // Node already exists, update it
+      const existingNode = nodes[index];
+
+      // Merge pids arrays
+      existingNode.pids = [...new Set(existingNode.pids.concat(newNode.pids))];
+
+      // Update mid and fid if necessary
+      if (newNode.mid !== "" && existingNode.mid === "") {
+        existingNode.mid = newNode.mid;
+      }
+      if (newNode.fid !== "" && existingNode.fid === "") {
+        existingNode.fid = newNode.fid;
+      }
+    }
+  }
+
+  function addPidsBetweenParents(
+    parent1Id: number,
+    parent2Id: number,
+    nodes: any[]
+  ): void {
+    const parent1 = nodes.find((node) => node.id === parent1Id);
+    const parent2 = nodes.find((node) => node.id === parent2Id);
+
+    if (parent1 && !parent1.pids.includes(parent2Id)) {
+      parent1.pids.push(parent2Id);
+    }
+
+    if (parent2 && !parent2.pids.includes(parent1Id)) {
+      parent2.pids.push(parent1Id);
+    }
+  }
+
+  interface FamilyTreeNodeType {
+    id: number;
+    mid: null | number;
+    fid: null | number;
+    pids: [];
+    name: string;
+    animalCode: string;
+    gender: string;
+    img: string;
+  }
+
+  function processAnimal(animal: Animal) {
+    console.log("HERE");
+    console.log("animal houseName:" + animal.houseName);
+    // Process the parents
+    if (animal.parents) {
+      for (const parent of animal.parents) {
+        processAnimal(parent);
+      }
+    }
+
+    //// ACTUAL PROCESSING ////
+    let tempNodes = [...tempNodesOutside];
+    // Initialise node attributes
+    let curAnimalNode: FamilyTreeNodeType = {
+      id: animal.animalId,
+      mid: null,
+      fid: null,
+      pids: [],
+      name: animal.houseName,
+      animalCode: animal.animalCode,
+      gender: animal.sex?.toLowerCase() || "",
+      img: `http://localhost:3000/${animal.imageUrl}`,
+    };
+
+    // If parents.length == 2,
+    if (animal.parents && animal.parents.length == 2) {
+      const parent1 = animal.parents[0];
+      const parent2 = animal.parents[1];
+
+      addPidsBetweenParents(parent1.animalId, parent2.animalId, tempNodes);
+      // add parent1's id to parent2's list of pids INSIDE THE NODE IN THE LIST, ONLY IF IT IS NOT IN ALREADY
+      // add parent2's id to parent1's list of pids INSIDE THE NODE IN THE LIST, ONLY IF IT IS NOT IN ALREADY
+      parent1.sex == "FEMALE"
+        ? (curAnimalNode.mid = parent1.animalId)
+        : (curAnimalNode.fid = parent1.animalId);
+      parent2.sex == "FEMALE"
+        ? (curAnimalNode.mid = parent2.animalId)
+        : (curAnimalNode.fid = parent2.animalId);
+    } else if (animal.parents && animal.parents.length == 1) {
+      const parent1 = animal.parents[0];
+      parent1.sex == "FEMALE"
+        ? (curAnimalNode.mid = parent1.animalId)
+        : (curAnimalNode.fid = parent1.animalId);
+    }
+
+    // add to familyTreeNodes
+    updateOrAddNode(curAnimalNode, tempNodes);
+    // setFamilyTreeNodes([...tempNodes]);
+    tempNodesOutside = [...tempNodes];
+
+    // Process the children
+    if (animal.children) {
+      for (const child of animal.children) {
+        processAnimal(child);
+      }
+    }
+  }
+
+  useEffect(() => {
+    // if (curAnimalLineage) {
+    processAnimal(curAnimalLineage);
+    // }
+    setFamilyTreeNodes(tempNodesOutside);
+    setIsLineageRetrieved(true);
+
+    // fetchAnimalsBySpecies();
+  }, [curAnimalLineage]);
+
+  // end family tree nodes stuff
 
   return (
     <div className="p-10">
@@ -93,7 +429,7 @@ function ViewAnimalFullLineage() {
           <div className="mb-4 flex justify-between">
             <NavLink
               className="flex"
-              to={`/animal/viewanimaldetails/${curAnimal.animalCode}`}
+              to={`/animal/viewanimaldetails/${animalCode}`}
             >
               <Button variant={"outline"} type="button" className="">
                 Back
@@ -108,11 +444,20 @@ function ViewAnimalFullLineage() {
           </div>
           <Separator />
           <span className="mt-4 self-center text-title-xl font-bold">
-            {curAnimal.houseName}
+            {curAnimalLineage.houseName}
           </span>
         </div>
         {/*  */}
-        <div>Family Tree</div>
+        <div className="overflow-hidden rounded-md border border-strokedark/20">
+          {isLineageRetrieved ? (
+            <FamilyTree nodes={familyTreeNodes} />
+          ) : (
+            <div className="flex items-center justify-center p-10 text-lg">
+              <ImSpinner2 className="mr-3 h-5 w-5 animate-spin" /> Family Tree
+              is loading
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

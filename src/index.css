@@ -19,6 +19,10 @@
   }
 } */
 
+#tree > svg {
+  background-color: #f5f9f1;
+}
+
 @layer components {
 }
 

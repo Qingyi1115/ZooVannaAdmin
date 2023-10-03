@@ -198,6 +198,8 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
         },
         tooltip: {
           enabled: true, // Enable tooltips
+          // mode: "index",
+          // intersect: "false",
           callbacks: {
             // Customize the tooltip label
             title: (context: any) => {
