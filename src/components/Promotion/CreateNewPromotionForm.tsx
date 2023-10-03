@@ -27,6 +27,9 @@ function CreateNewPromotionForm() {
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [publishDate, setPublishDate] = useState<string | Date | Date[] | null>(
+    null
+  );
   const [startDate, setStartDate] = useState<string | Date | Date[] | null>(
     null
   );
@@ -252,6 +255,14 @@ function CreateNewPromotionForm() {
       return singaporeDate;
     }
 
+    let isoSingaporePublishDate;
+
+    // Convert startDate and endDate to Singapore time
+    if (typeof publishDate == "string" || publishDate instanceof Date) {
+      const singaporePublishDate = setToMidnightInSingapore(publishDate);
+      isoSingaporePublishDate = singaporePublishDate.toISOString();
+    }
+
     let isoSingaporeStartDate;
 
     // Convert startDate and endDate to Singapore time
@@ -299,6 +310,10 @@ function CreateNewPromotionForm() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
+    formData.append(
+      "publishDate",
+      isoSingaporePublishDate ? isoSingaporePublishDate : today.toISOString()
+    );
     formData.append(
       "startDate",
       isoSingaporeStartDate ? isoSingaporeStartDate : today.toISOString()
@@ -428,6 +443,19 @@ function CreateNewPromotionForm() {
           setValue={setDescription}
           validateFunction={validateDescription}
         />
+
+        <div className="card justify-content-centre flex flex-col">
+          <div>Publish Date</div>
+          <Calendar
+            style={{ flexGrow: 1 }}
+            value={publishDate}
+            onChange={(e: CalendarChangeEvent) => {
+              if (e && e.value !== undefined) {
+                setPublishDate(e.value);
+              }
+            }}
+          />
+        </div>
 
         <div className="flex flex-col justify-start gap-6 lg:flex-row lg:gap-12">
           {/* Start Date */}

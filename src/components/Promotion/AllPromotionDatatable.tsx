@@ -39,6 +39,7 @@ function AllPromotionDatatable() {
     promotionId: -1,
     title: "",
     description: "",
+    publishDate: new Date(),
     startDate: new Date(),
     endDate: new Date(),
     percentage: 0,
@@ -250,6 +251,18 @@ function AllPromotionDatatable() {
               header="Title"
               sortable
               style={{ minWidth: "7rem" }}
+            ></Column>
+            <Column
+              body={(promotion) => {
+                return new Date(promotion.publishDate).toLocaleDateString(
+                  "en-SG",
+                  dateOptions
+                );
+              }}
+              field="publishDate"
+              header="Publish Date"
+              sortable
+              style={{ minWidth: "12rem" }}
             ></Column>
             <Column
               body={(promotion) => {

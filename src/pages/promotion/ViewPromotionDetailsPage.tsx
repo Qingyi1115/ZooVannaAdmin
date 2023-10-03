@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import Promotion from "../../models/Promotion";
 
+
 import {
   Accordion,
   AccordionContent,
@@ -23,6 +24,7 @@ function ViewPromotionDetailsPage() {
     promotionId: -1,
     title: "",
     description: "",
+    publishDate: new Date(),
     startDate: new Date(),
     endDate: new Date(),
     percentage: 0,
