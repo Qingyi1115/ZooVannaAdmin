@@ -87,6 +87,7 @@ import ViewAllAssetsPage from "./pages/assetAndFacilityManagement/ViewAllAssetsP
 import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
 import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
+import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -617,6 +618,12 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/promotion/editpromotion/:promotionId"
+                  element={
+                    user ? <EditPromotionPage /> : <Navigate to="/login" />
                   }
                 />
 

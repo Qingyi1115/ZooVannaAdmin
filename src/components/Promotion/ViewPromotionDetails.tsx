@@ -94,7 +94,7 @@ function ViewPromotionDetails(props: PromotionDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Discount &#40;%&#41;
             </TableCell>
-            <TableCell>{curPromotion.percentage * 100}</TableCell>
+            <TableCell>{curPromotion.percentage}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
