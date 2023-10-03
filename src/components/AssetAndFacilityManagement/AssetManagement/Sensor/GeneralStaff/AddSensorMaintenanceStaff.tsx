@@ -6,7 +6,7 @@ import Employee from "../../../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiCheck, HiClipboard, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiClipboard, HiEye, HiMinus, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
@@ -62,7 +62,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
           let emp = staff.employee;
           staff.employee = undefined;
           emp["generalStaff"] = staff
-          emp.currentlyAssigned = (emp.generalStaff.sensors as Sensor[]).find(sensor=>Number(sensor.sensorId) == sensorId);
+          emp.currentlyAssigned = (emp.generalStaff.sensors as Sensor[]).find(sensor => Number(sensor.sensorId) == sensorId);
           allStaffs.push(emp)
         }
       }
@@ -134,7 +134,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
       const responseJson = await apiJson.put(
         `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromSensor/${sensorId}`, { employeeId: selectedEmployee.employeeId });
 
-        setRefreshSeed([]);
+      setRefreshSeed([]);
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
@@ -226,7 +226,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
                 disabled={!employee.currentlyAssigned}
                 onClick={() => confirmEmployeeRemoval(employee)}
               >
-                <HiTrash className="mx-auto" />
+                <HiMinus className="mx-auto" />
               </Button>
             </div>
 

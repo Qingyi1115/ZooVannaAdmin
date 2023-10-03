@@ -141,7 +141,7 @@ function CreateNewSensorForm() {
       </div>
 
       {/* Hub Processor ID */}
-      <FormFieldInput
+      {/* <FormFieldInput
         type="number"
         formFieldName="facilityId"
         label="Hub Processor ID"
@@ -151,7 +151,7 @@ function CreateNewSensorForm() {
         value={pageHubProcessorId}
         setValue={setPageHubProcessorId}
         validateFunction={validateHubProcessorId}
-      />
+      /> */}
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Sensor Name */}
         <FormFieldInput
