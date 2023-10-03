@@ -25,6 +25,8 @@ import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 
+import * as moment from "moment-timezone";
+
 function AllPromotionDatatable() {
   const apiJson = useApiJson();
 
@@ -100,6 +102,13 @@ function AllPromotionDatatable() {
   const hideDeletePromotionDialog = () => {
     setDeletePromotionDialog(false);
   };
+
+  function convertUtcToTimezone(utcDate: Date, targetTimezone: string): string {
+    const utcMoment = moment.utc(utcDate);
+    const targetMoment = utcMoment.tz(targetTimezone);
+    const formattedTime: string = targetMoment.format("MM-DD-YYYY");
+    return formattedTime;
+  }
 
   // delete promotion stuff
   const deletePromotion = async () => {
@@ -254,10 +263,13 @@ function AllPromotionDatatable() {
             ></Column>
             <Column
               body={(promotion) => {
-                return new Date(promotion.publishDate).toLocaleDateString(
-                  "en-SG",
-                  dateOptions
+                const utcDate = new Date(promotion.publishDate);
+                const singaporeTime = convertUtcToTimezone(
+                  utcDate,
+                  "Asia/Singapore"
                 );
+
+                return singaporeTime;
               }}
               field="publishDate"
               header="Publish Date"
@@ -266,10 +278,13 @@ function AllPromotionDatatable() {
             ></Column>
             <Column
               body={(promotion) => {
-                return new Date(promotion.startDate).toLocaleDateString(
-                  "en-SG",
-                  dateOptions
+                const utcDate = new Date(promotion.startDate);
+                const singaporeTime = convertUtcToTimezone(
+                  utcDate,
+                  "Asia/Singapore"
                 );
+
+                return singaporeTime;
               }}
               field="startDate"
               header="Start Date"
@@ -278,10 +293,13 @@ function AllPromotionDatatable() {
             ></Column>
             <Column
               body={(promotion) => {
-                return new Date(promotion.endDate).toLocaleDateString(
-                  "en-SG",
-                  dateOptions
+                const utcDate = new Date(promotion.endDate);
+                const singaporeTime = convertUtcToTimezone(
+                  utcDate,
+                  "Asia/Singapore"
                 );
+
+                return singaporeTime;
               }}
               field="endDate"
               header="End Date"
