@@ -13,13 +13,23 @@ import {
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import * as moment from "moment-timezone";
 
 interface PromotionDetailsProps {
   curPromotion: Promotion;
 }
 
-function ViewPrmotionDetails(props: PromotionDetailsProps) {
+function ViewPromotionDetails(props: PromotionDetailsProps) {
   const { curPromotion } = props;
+
+  function convertUtcToTimezone(utcDate: Date, targetTimezone: string): string {
+    const utcMoment = moment.utc(utcDate);
+    const targetMoment = utcMoment.tz(targetTimezone);
+    const formattedTime: string = targetMoment.format("MM-DD-YYYY HH:mm");
+    const timestampWithSuffix: string = `${formattedTime} SGT`;
+    return timestampWithSuffix;
+  }
+
   return (
     <div className="">
       <div className="my-4 flex justify-start gap-6">
@@ -57,15 +67,27 @@ function ViewPrmotionDetails(props: PromotionDetailsProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Publish Date
+            </TableCell>
+            <TableCell>
+              {convertUtcToTimezone(curPromotion.publishDate, "Asia/Singapore")}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
               Start Date
             </TableCell>
-            <TableCell>{curPromotion.startDate.toLocaleString()}</TableCell>
+            <TableCell>
+              {convertUtcToTimezone(curPromotion.startDate, "Asia/Singapore")}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               End Date
             </TableCell>
-            <TableCell>{curPromotion.endDate.toLocaleString()}</TableCell>
+            <TableCell>
+              {convertUtcToTimezone(curPromotion.endDate, "Asia/Singapore")}
+            </TableCell>
           </TableRow>
 
           <TableRow>
@@ -104,4 +126,4 @@ function ViewPrmotionDetails(props: PromotionDetailsProps) {
   );
 }
 
-export default ViewPrmotionDetails;
+export default ViewPromotionDetails;
