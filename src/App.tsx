@@ -56,8 +56,6 @@ import ViewMaintenanceLogDetailsPage from "./pages/assetAndFacilityManagement/Se
 import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
 import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
 
-
-
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
 import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage";
@@ -85,11 +83,10 @@ import CreateNewFacilityMaintenanceLogPage from "./pages/assetAndFacilityManagem
 import EditEmployeePage from "./pages/employeeAccountManagement/EditEmployeePage";
 import ViewAllAssetsPage from "./pages/assetAndFacilityManagement/ViewAllAssetsPage";
 
-
-
 //promotion management page
 import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
 import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
+import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -371,7 +368,9 @@ function App() {
 
                 <Route
                   path="/assetfacility/createsensor/:hubProcessorId"
-                  element={user ? <CreateNewSensorForm /> : <Navigate to="/login" />}
+                  element={
+                    user ? <CreateNewSensorForm /> : <Navigate to="/login" />
+                  }
                 />
 
                 {/* <Route
@@ -610,6 +609,17 @@ function App() {
                     user ? <ViewAllPromotionsPage /> : <Navigate to="/login" />
                   }
                 />
+                <Route
+                  path="/promotion/viewpromotion/:promotionId"
+                  element={
+                    user ? (
+                      <ViewPromotionDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
                 <Route
                   path="/profile"
                   element={user ? <ProfilePage /> : <Navigate to="/login" />}

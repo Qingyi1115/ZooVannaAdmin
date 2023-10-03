@@ -156,11 +156,11 @@ function AllPromotionDatatable() {
     return (
       <React.Fragment>
         <div className="mx-auto">
-          {/* <NavLink to={`/promotion/viewpromotion/${promotion.promotionId}`}>
+          <NavLink to={`/promotion/viewpromotion/${promotion.promotionId}`}>
             <Button className="mr-2">
               <HiEye className="mr-auto" />
             </Button>
-          </NavLink> */}
+          </NavLink>
           <Button
             variant={"destructive"}
             className="mr-2"
