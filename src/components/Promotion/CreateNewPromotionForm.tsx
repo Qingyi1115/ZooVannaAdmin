@@ -305,8 +305,6 @@ function CreateNewPromotionForm() {
     //   }
     // }
 
-    const decimalDiscount = percentage / 100;
-
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -322,7 +320,7 @@ function CreateNewPromotionForm() {
       "endDate",
       isoSingaporeEndDate ? isoSingaporeEndDate : today.toISOString()
     );
-    formData.append("percentage", decimalDiscount.toString());
+    formData.append("percentage", percentage.toString());
     formData.append("minimumSpending", minimumSpending.toString());
     formData.append("promotionCode", promotionCode);
     formData.append("maxRedeemNum", maxRedeemNum.toString());
