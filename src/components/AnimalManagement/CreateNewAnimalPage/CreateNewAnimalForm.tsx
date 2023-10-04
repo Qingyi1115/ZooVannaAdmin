@@ -22,6 +22,7 @@ import {
   AnimalGrowthStage,
   AnimalSex,
   AnimalStatusType,
+  IdentifierType,
 } from "../../../enums/Enumurated";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import Species from "../../../models/Species";
@@ -67,7 +68,11 @@ function CreateNewAnimalForm() {
     null
   );
   const [placeOfBirth, setPlaceOfBirth] = useState<string>("");
-  const [rfidTagNum, setRfidTagNum] = useState<string>("");
+  // const [rfidTagNum, setRfidTagNum] = useState<string>("");
+  const [identifierType, setIdentifierType] = useState<string | undefined>(
+    undefined
+  );
+  const [identifierValue, setIdentifierValue] = useState<string>("");
   const [acquisitionMethod, setAcquisitionMethod] = useState<
     string | undefined
   >(undefined);
@@ -84,8 +89,13 @@ function CreateNewAnimalForm() {
     behavioralDefiningCharacteristics,
     setBehavioralDefiningCharacteristics,
   ] = useState<string>("");
+  const [isGroupString, setIsGroupString] = useState<string | undefined>(
+    undefined
+  );
+  const [isGroup, setIsGroup] = useState<boolean>();
   // const [dateOfDeath, setDateOfDeath] = useState<string | Date | Date[] | null>(
   //   null
+
   // );
   // const [locationOfDeath, setLocationOfDeath] = useState<string>("");
   // const [causeOfDeath, setCauseOfDeath] = useState<string>("");
@@ -119,6 +129,35 @@ function CreateNewAnimalForm() {
         return (
           <div className="font-medium text-danger">
             * Please upload an image
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateIsGroup(props: ValidityState) {
+    if (props != undefined) {
+      if (isGroupString == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select whether this is a Group or Individual animal!
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateIdentifierType(props: ValidityState) {
+    if (props != undefined) {
+      if (identifierType == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select an identifier type! Select "None" if no non-natural
+            identifier is used
           </div>
         );
       }
@@ -257,11 +296,15 @@ function CreateNewAnimalForm() {
     console.log(selectedSpecies);
 
     const formData = new FormData();
+    formData.append("speciesCode", selectedSpecies?.speciesCode || "");
     formData.append("houseName", houseName);
+    formData.append("isGroup", isGroup?.toString() || "false");
     formData.append("sex", sex?.toString() || "");
     formData.append("dateOfBirth", dateOfBirth?.toString() || "");
     formData.append("placeOfBirth", placeOfBirth);
-    formData.append("rfidTagNum", rfidTagNum);
+    // formData.append("rfidTagNum", rfidTagNum);
+    formData.append("identifierType", identifierType || "");
+    formData.append("identifierValue", identifierValue);
     formData.append("acquisitionMethod", acquisitionMethod?.toString() || "");
     formData.append("acquisitionRemarks", acquisitionRemarks);
     formData.append("dateOfAcquisition", dateOfAcquisition?.toString() || "");
@@ -274,13 +317,18 @@ function CreateNewAnimalForm() {
       "behavioralDefiningCharacteristics",
       behavioralDefiningCharacteristics
     );
-    formData.append("selectedSpeciesCode", selectedSpecies?.speciesCode || "");
+    formData.append("growthStage", "UNKNOWN");
+    formData.append("animalStatus", "NORMAL");
     formData.append("file", imageFile || "");
+
+    // formData.append("dateOfDeath", "");
+    // formData.append("locationOfDeath", "");
+    // formData.append("causeOfDeath", "");
 
     const createAnimal = async () => {
       try {
         const response = await apiFormData.post(
-          "http://localhost:3000/api/animal/createnewanimal",
+          "http://localhost:3000/api/animal/createNewAnimal",
           formData
         );
         // success
@@ -302,7 +350,7 @@ function CreateNewAnimalForm() {
         });
       }
     };
-    // createAnimal();
+    createAnimal();
   }
 
   // species dropdown
@@ -398,16 +446,61 @@ function CreateNewAnimalForm() {
             setValue={setHouseName}
             validateFunction={validateHouseName}
           />
+
+          <FormFieldSelect
+            formFieldName="isGroupString"
+            label="Is Group Animal?"
+            required={true}
+            placeholder="Is this a group animal?"
+            valueLabelPair={[
+              ["true", "Yes"],
+              ["false", "No"],
+            ]}
+            value={isGroupString}
+            setValue={(e) => {
+              if (e && e !== "undefined") {
+                setIsGroupString(e);
+                if (e === "true") {
+                  setIsGroup(true);
+                } else {
+                  setIsGroup(false);
+                }
+              }
+            }}
+            validateFunction={validateIsGroup}
+          />
+        </div>
+
+        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+          <FormFieldSelect
+            formFieldName="identifierType"
+            label="Identifier Type"
+            required={true}
+            placeholder="Select an identifier type..."
+            valueLabelPair={Object.keys(IdentifierType).map(
+              (identifierTypeKey) => [
+                IdentifierType[
+                  identifierTypeKey as keyof typeof IdentifierType
+                ].toString(),
+                IdentifierType[
+                  identifierTypeKey as keyof typeof IdentifierType
+                ].toString(),
+              ]
+            )}
+            value={identifierType}
+            setValue={setIdentifierType}
+            validateFunction={validateIdentifierType}
+          />
           {/* RFID Tag Number */}
           <FormFieldInput
             type="text"
-            formFieldName="rfidTagNum"
-            label="RFID Tag Number (if any)"
+            formFieldName="identifierValue"
+            label="Identifier Value (if any)"
             required={false}
-            placeholder="e.g., RFID12345,..."
+            placeholder="e.g., RFID12345, YELLOW..."
             pattern={undefined}
-            value={rfidTagNum}
-            setValue={setRfidTagNum}
+            value={identifierValue}
+            setValue={setIdentifierValue}
             validateFunction={() => null}
           />
         </div>
@@ -511,7 +604,10 @@ function CreateNewAnimalForm() {
             placeholder="Select an acquisition method..."
             valueLabelPair={Object.keys(AcquisitionMethod).map(
               (acquisitionMethodKey) => [
-                acquisitionMethodKey.toString(),
+                // acquisitionMethodKey.toString(),
+                AcquisitionMethod[
+                  acquisitionMethodKey as keyof typeof AcquisitionMethod
+                ].toString(),
                 AcquisitionMethod[
                   acquisitionMethodKey as keyof typeof AcquisitionMethod
                 ].toString(),
@@ -578,7 +674,6 @@ function CreateNewAnimalForm() {
               rows={3}
               placeholder="e.g., as part of XX breeding program, transferred from XYZ zoo,..."
               // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
-              required
             />
           </Form.Control>
           {/* <Form.ValidityState>

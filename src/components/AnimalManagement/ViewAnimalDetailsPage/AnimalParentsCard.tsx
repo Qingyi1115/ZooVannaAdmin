@@ -21,92 +21,25 @@ import AnimalBasicInformation from "../../../components/AnimalManagement/ViewAni
 import AnimalWeightInfo from "../../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-
-let testPandaSpecies: Species = {
-  speciesId: 1,
-  speciesCode: "SPE001",
-  commonName: "Giant Panda",
-  scientificName: "Ailuropoda Melanoleuca",
-  aliasName: "",
-  conservationStatus: "",
-  domain: "",
-  kingdom: "",
-  phylum: "",
-  speciesClass: "",
-  order: "",
-  family: "",
-  genus: "",
-  nativeContinent: "",
-  nativeBiomes: "",
-  educationalDescription: "",
-  educationalFunFact: "",
-  groupSexualDynamic: "",
-  habitatOrExhibit: "habitat",
-  imageUrl: "img/species/panda.jpg",
-  generalDietPreference: "",
-  lifeExpectancyYears: 65,
-};
-
-let testPandaParent1: Animal = {
-  animalId: 1,
-  animalCode: "ANI004",
-  imageUrl: "",
-  houseName: "Pa Pa",
-  sex: AnimalSex.MALE,
-  dateOfBirth: new Date("1983-06-06"),
-  placeOfBirth: "Place of Birth haha",
-  rfidTagNum: "RFID00001",
-  acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-  dateOfAcquisition: new Date(),
-  acquisitionRemarks: "Acquisition Remarks blabla",
-  weight: -1,
-  physicalDefiningCharacteristics: "Big head",
-  behavioralDefiningCharacteristics: "Lazy",
-  dateOfDeath: null,
-  locationOfDeath: null,
-  causeOfDeath: null,
-  growthStage: AnimalGrowthStage.JUVENILE,
-  animalStatus: "NORMAL",
-  species: testPandaSpecies,
-};
-
-let testPandaParent2: Animal = {
-  animalId: 1,
-  animalCode: "ANI005",
-  imageUrl: "",
-  houseName: "Ma Ma",
-  sex: AnimalSex.FEMALE,
-  dateOfBirth: new Date("1983-06-06"),
-  placeOfBirth: "Place of Birth haha",
-  rfidTagNum: "RFID00001",
-  acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-  dateOfAcquisition: new Date(),
-  acquisitionRemarks: "Acquisition Remarks blabla",
-  weight: -1,
-  physicalDefiningCharacteristics: "Big head",
-  behavioralDefiningCharacteristics: "Lazy",
-  dateOfDeath: null,
-  locationOfDeath: null,
-  causeOfDeath: null,
-  growthStage: AnimalGrowthStage.JUVENILE,
-  animalStatus: "NORMAL",
-  species: testPandaSpecies,
-};
-
 interface AnimalParentsCardProps {
   curAnimal: Animal;
 }
 function AnimalParentsCard(props: AnimalParentsCardProps) {
   const { curAnimal } = props;
 
-  const [animalParent1, setAnimalParent1] = useState<Animal | null>(
-    testPandaParent1
-  );
-  const [animalParent2, setAnimalParent2] = useState<Animal | null>(
-    testPandaParent2
-  );
+  const [animalParent1, setAnimalParent1] = useState<Animal | null>(null);
+  const [animalParent2, setAnimalParent2] = useState<Animal | null>(null);
 
   // useEffect to fetch parents
+  // no need, already inside, just assign
+  useEffect(() => {
+    if (curAnimal.parents && curAnimal.parents.length == 2) {
+      setAnimalParent1(curAnimal.parents[0]);
+      setAnimalParent2(curAnimal.parents[1]);
+    } else if (curAnimal.parents && curAnimal.parents.length == 1) {
+      setAnimalParent1(curAnimal.parents[0]);
+    }
+  });
 
   return (
     <div>

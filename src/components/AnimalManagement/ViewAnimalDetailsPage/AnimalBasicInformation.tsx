@@ -33,6 +33,27 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
       ? "bg-destructive"
       : "";
 
+  function calculateAge(dateOfBirth: Date): string {
+    const dob = dateOfBirth;
+    const todayDate = new Date();
+
+    // Calculate the difference in milliseconds between the two dates
+    const ageInMilliseconds = todayDate.getTime() - dob.getTime();
+
+    // Convert milliseconds to years (assuming an average year has 365.25 days)
+    const ageInYears = ageInMilliseconds / (365.25 * 24 * 60 * 60 * 1000);
+
+    // Calculate the remaining months
+    const ageInMonths = (ageInYears - Math.floor(ageInYears)) * 12;
+
+    // Format the result as "x years & y months"
+    const formattedAge = `${Math.floor(ageInYears)} years & ${Math.floor(
+      ageInMonths
+    )} months`;
+
+    return formattedAge;
+  }
+
   return (
     <div>
       <div className="flex w-full justify-between gap-10">
@@ -105,23 +126,24 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             <TableCell>{curAnimal.sex}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              RFID Tag Number (if any)
+            <TableCell className="w-1/5 font-bold" rowSpan={3}>
+              Identifier
             </TableCell>
-            <TableCell>{curAnimal.rfidTagNum}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Current Weight
-            </TableCell>
-            <TableCell>{curAnimal.weight} kg</TableCell>
+            <TableCell className="w-1/6 font-bold">Type</TableCell>
+            <TableCell>{curAnimal.identifierType}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/6 font-bold">Value</TableCell>
+            <TableCell>{curAnimal.identifierValue}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Age
             </TableCell>
             <TableCell>
-              <span className="text-red-400">AGEEE AA DO SOMETHING</span>
+              {calculateAge(new Date(curAnimal.dateOfBirth))}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -137,7 +159,9 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Date</TableCell>
-            <TableCell>{curAnimal.dateOfBirth.toDateString()}</TableCell>
+            <TableCell>
+              {new Date(curAnimal.dateOfBirth).toDateString()}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Place</TableCell>
@@ -150,7 +174,9 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Date</TableCell>
-            <TableCell>{curAnimal.dateOfAcquisition.toDateString()}</TableCell>
+            <TableCell>
+              {new Date(curAnimal.dateOfAcquisition).toDateString()}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Method</TableCell>

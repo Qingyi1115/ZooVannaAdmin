@@ -103,10 +103,10 @@ enum AnimalSex {
 }
 
 enum AcquisitionMethod {
-  INHOUSE_CAPTIVE_BRED = "INHOUSE_CAPTIVE_BRED",
-  PRIVATELY_BRED = "PRIVATELY_BRED",
-  FROM_THE_WILD = "FROM_THE_WILD",
-  TRANSFERRED_FROM_ANOTHER_ZOO = "TRANSFERRED_FROM_ANOTHER_ZOO",
+  INHOUSE_CAPTIVE_BRED = "INHOUSE CAPTIVE BRED",
+  PRIVATELY_BRED = "PRIVATELY BRED",
+  FROM_THE_WILD = "FROM THE WILD",
+  TRANSFERRED_FROM_ANOTHER_ZOO = "TRANSFERRED FROM ANOTHER ZOO",
 }
 
 enum AnimalFeedCategory {
@@ -145,6 +145,18 @@ enum Biome {
   TEMPERATE = "TEMPERATE",
   TROPICAL = "TROPICAL",
   TUNDRA = "TUNDRA",
+}
+
+enum IdentifierType {
+  NONE = "None",
+  RFID_TAG = "RFID Tag",
+  MAGNETIC_TAG = "Magnetic Tag",
+  BARCODE_TAG = "Barcode Tag",
+  EAR_TAG = "Ear Tag",
+  COLLAR = "Collar",
+  TATTOOS = "Tattoos",
+  COLORED_BAND = "Colored Band",
+  BRACELETS_ANKLETS = "Bracelets/Anklets",
 }
 
 enum EventType {
@@ -232,4 +244,5 @@ export {
   OrderStatus,
   EnclosureStatus,
   HubStatus,
+  IdentifierType,
 };

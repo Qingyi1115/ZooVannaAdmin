@@ -13,11 +13,12 @@ interface Animal {
   sex: AnimalSex;
   dateOfBirth: Date;
   placeOfBirth: string;
-  rfidTagNum: string;
+  identifierType: string;
+  identifierValue: string;
   acquisitionMethod: AcquisitionMethod;
   dateOfAcquisition: Date;
   acquisitionRemarks: string;
-  weight: number;
+  // weight: number;
   physicalDefiningCharacteristics: string;
   behavioralDefiningCharacteristics: string;
   dateOfDeath: Date | null;

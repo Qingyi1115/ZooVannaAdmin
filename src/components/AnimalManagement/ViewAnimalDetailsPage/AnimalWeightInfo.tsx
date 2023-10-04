@@ -244,7 +244,6 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
 
   return (
     <div>
-      <div>Current Weight: {curAnimal.weight}</div>
       <div className="my-4 flex justify-start gap-6">
         <NavLink to={`/animal/createweightrecord/${curAnimal.animalCode}`}>
           <Button>Create New Weight Record</Button>
