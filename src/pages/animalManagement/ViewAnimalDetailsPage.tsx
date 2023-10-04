@@ -61,7 +61,19 @@ function ViewAnimalDetailsPage() {
             </div>
             <Separator />
             <span className="mt-4 self-center text-title-xl font-bold">
-              {curAnimal.houseName} the {curAnimal.species.commonName}
+              {curAnimal.houseName}{" "}
+              {curAnimal.isGroup ? (
+                ""
+              ) : (
+                <span>the {curAnimal.species.commonName}</span>
+              )}
+              <div className="text-center text-lg">
+                {curAnimal.isGroup ? (
+                  <span>(Group)</span>
+                ) : (
+                  <span>(Individual)</span>
+                )}
+              </div>
             </span>
           </div>
           {/*  */}

@@ -59,6 +59,7 @@ let emptyAnimal: Animal = {
   animalId: -1,
   animalCode: "",
   imageUrl: "",
+  isGroup: false,
   houseName: "",
   identifierType: "",
   identifierValue: "",

@@ -59,7 +59,11 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
       <div className="flex w-full justify-between gap-10">
         <div className="w-full">
           <span className="text-xl font-medium">
-            {curAnimal.houseName} is a:
+            {curAnimal.isGroup ? (
+              <span>{curAnimal.houseName} are a group of:</span>
+            ) : (
+              <span>{curAnimal.houseName} is a:</span>
+            )}
           </span>{" "}
           <br />
           <SpeciesCard curSpecies={curAnimal.species} />

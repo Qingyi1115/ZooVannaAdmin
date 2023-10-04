@@ -8,6 +8,7 @@ import Species from "./Species";
 interface Animal {
   animalId: number;
   animalCode: string;
+  isGroup: boolean;
   imageUrl: string;
   houseName: string;
   sex: AnimalSex;

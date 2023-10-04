@@ -56,11 +56,11 @@ let testPandaSpecies: Species = {
   lifeExpectancyYears: 0,
 };
 
-let testElephantSpecies: Species = {
-  speciesId: 4,
-  speciesCode: "SPE004",
-  commonName: "African Elephant",
-  scientificName: "Loxodonta africana",
+let emptySpecies: Species = {
+  speciesId: -1,
+  speciesCode: "",
+  commonName: "",
+  scientificName: "",
   aliasName: "",
   conservationStatus: "",
   domain: "",
@@ -76,24 +76,24 @@ let testElephantSpecies: Species = {
   educationalFunFact: "",
   groupSexualDynamic: "",
   habitatOrExhibit: "habitat",
-  imageUrl: "img/species/elephant.jpg",
+  imageUrl: "",
   generalDietPreference: "",
   lifeExpectancyYears: 0,
 };
-
 let emptyAnimal: Animal = {
   animalId: -1,
   animalCode: "",
   imageUrl: "",
+  isGroup: false,
   houseName: "",
+  identifierType: "",
+  identifierValue: "",
   sex: AnimalSex.MALE,
   dateOfBirth: new Date(),
   placeOfBirth: "",
-  rfidTagNum: "",
   acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
   dateOfAcquisition: new Date(),
   acquisitionRemarks: "",
-  weight: -1,
   physicalDefiningCharacteristics: "",
   behavioralDefiningCharacteristics: "",
   dateOfDeath: null,
@@ -101,77 +101,8 @@ let emptyAnimal: Animal = {
   causeOfDeath: null,
   growthStage: AnimalGrowthStage.ADOLESCENT,
   animalStatus: "",
-  species: testPandaSpecies,
+  species: emptySpecies,
 };
-
-let testAnimalList: Animal[] = [
-  {
-    animalId: 1,
-    animalCode: "ANI001",
-    imageUrl: "",
-    houseName: "Kai Kai",
-    sex: AnimalSex.MALE,
-    dateOfBirth: new Date(),
-    placeOfBirth: "",
-    rfidTagNum: "RFID00001",
-    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-    dateOfAcquisition: new Date(),
-    acquisitionRemarks: "Acquisition Remarks blabla",
-    weight: -1,
-    physicalDefiningCharacteristics: "Big head",
-    behavioralDefiningCharacteristics: "Lazy",
-    dateOfDeath: null,
-    locationOfDeath: null,
-    causeOfDeath: null,
-    growthStage: AnimalGrowthStage.JUVENILE,
-    animalStatus: "NORMAL",
-    species: testPandaSpecies,
-  },
-  {
-    animalId: 2,
-    animalCode: "ANI002",
-    houseName: "Jia Jia",
-    imageUrl: "",
-    sex: AnimalSex.FEMALE,
-    dateOfBirth: new Date(),
-    placeOfBirth: "",
-    rfidTagNum: "RFID00002",
-    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-    dateOfAcquisition: new Date(),
-    acquisitionRemarks: "Acquisition Remarks blabla",
-    weight: -1,
-    physicalDefiningCharacteristics: "Bigger head",
-    behavioralDefiningCharacteristics: "Lazier",
-    dateOfDeath: null,
-    locationOfDeath: null,
-    causeOfDeath: null,
-    growthStage: AnimalGrowthStage.JUVENILE,
-    animalStatus: "NORMAL",
-    species: testPandaSpecies,
-  },
-  {
-    animalId: 3,
-    animalCode: "ANI003",
-    houseName: "Daisy",
-    imageUrl: "",
-    sex: AnimalSex.FEMALE,
-    dateOfBirth: new Date(),
-    placeOfBirth: "",
-    rfidTagNum: "RFID00003",
-    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-    dateOfAcquisition: new Date(),
-    acquisitionRemarks: "Acquisition Remarks blabla",
-    weight: -1,
-    physicalDefiningCharacteristics: "Grey spots on right side of torso",
-    behavioralDefiningCharacteristics: "Zany",
-    dateOfDeath: null,
-    locationOfDeath: null,
-    causeOfDeath: null,
-    growthStage: AnimalGrowthStage.JUVENILE,
-    animalStatus: "NORMAL",
-    species: testElephantSpecies,
-  },
-];
 
 interface AnimalsBySpeciesDatatableProps {
   curAnimalList: Animal[];
@@ -320,8 +251,8 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
   const calculateAnimalPerSpeciesTotal = (commonName: string) => {
     let total = 0;
 
-    if (testAnimalList) {
-      for (let animal of testAnimalList) {
+    if (curAnimalList) {
+      for (let animal of curAnimalList) {
         if (animal.species.commonName === commonName) {
           total++;
         }

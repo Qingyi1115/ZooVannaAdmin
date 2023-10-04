@@ -155,166 +155,11 @@ let testJson = {
   ],
 };
 
-let testPandaSpecies: Species = {
-  speciesId: 1,
-  speciesCode: "SPE001",
-  commonName: "Giant Panda",
-  scientificName: "Ailuropoda Melanoleuca",
-  aliasName: "",
-  conservationStatus: "",
-  domain: "",
-  kingdom: "",
-  phylum: "",
-  speciesClass: "",
-  order: "",
-  family: "",
-  genus: "",
-  nativeContinent: "",
-  nativeBiomes: "",
-  educationalDescription: "",
-  educationalFunFact: "",
-  groupSexualDynamic: "",
-  habitatOrExhibit: "habitat",
-  imageUrl: "img/species/panda.jpg",
-  generalDietPreference: "",
-  lifeExpectancyYears: 65,
-};
-
-let testPandaAnimal: Animal = {
-  animalId: 1,
-  animalCode: "ANI001",
-  imageUrl: "",
-  houseName: "Kai Kai",
-  sex: AnimalSex.MALE,
-  dateOfBirth: new Date("1983-06-06"),
-  placeOfBirth: "Place of Birth haha",
-  rfidTagNum: "RFID00001",
-  acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-  dateOfAcquisition: new Date(),
-  acquisitionRemarks: "Acquisition Remarks blabla",
-  weight: -1,
-  physicalDefiningCharacteristics: "Big head",
-  behavioralDefiningCharacteristics: "Lazy",
-  dateOfDeath: null,
-  locationOfDeath: null,
-  causeOfDeath: null,
-  growthStage: AnimalGrowthStage.JUVENILE,
-  animalStatus: "NORMAL",
-  species: testPandaSpecies,
-};
-
-const testAnimalList = [
-  {
-    id: 1,
-    // pids: [2],
-    fid: null,
-    mid: null,
-    name: "Amber McKenzie",
-    animalCode: "ANI0001",
-    gender: "female",
-    img: "https://cdn.balkan.app/shared/2.jpg",
-  },
-  // {
-  //   id: 2,
-  //   mid: [1],
-  //   // pids: [1],
-  //   name: "Ava Field",
-  //   species: "Giant Panda",
-  //   gender: "male",
-  //   img: "https://cdn.balkan.app/shared/m30/5.jpg",
-  // },
-  // {
-  //   id: 3,
-  //   mid: 1,
-  //   // fid: 2,
-  //   name: "Peter Stevens",
-  //   species: "Giant Panda",
-  //   gender: "male",
-  //   img: "https://cdn.balkan.app/shared/m10/2.jpg",
-  // },
-  // {
-  //   id: 4,
-  //   mid: 1,
-  //   fid: 2,
-  //   name: "Savin Stevens",
-  //   species: "Giant Panda",
-  //   gender: "male",
-  //   img: "https://cdn.balkan.app/shared/m10/1.jpg",
-  // },
-  // {
-  //   id: 5,
-  //   mid: 1,
-  //   fid: 2,
-  //   name: "Emma Stevens",
-  //   species: "Giant Panda",
-  //   gender: "female",
-  //   img: "https://cdn.balkan.app/shared/w10/3.jpg",
-  // },
-  {
-    id: 6,
-    pids: [7],
-    name: "Big Papa",
-    animalCode: "ANI0002",
-    gender: "male",
-    img: "https://cdn.balkan.app/shared/w10/3.jpg",
-  },
-  {
-    id: 7,
-    pids: [6],
-    name: "Big Mama",
-    animalCode: "ANI0003",
-    gender: "female",
-    img: "https://cdn.balkan.app/shared/w10/3.jpg",
-  },
-];
-
-/*
-[
-              {
-                id: 1,
-                pids: [2],
-                name: "Amber McKenzie",
-                gender: "female",
-                img: "https://cdn.balkan.app/shared/2.jpg",
-              },
-              {
-                id: 2,
-                // pids: [1],
-                name: "Ava Field",
-                gender: "male",
-                img: "https://cdn.balkan.app/shared/m30/5.jpg",
-              },
-              {
-                id: 3,
-                mid: 1,
-                fid: 2,
-                name: "Peter Stevens",
-                gender: "male",
-                img: "https://cdn.balkan.app/shared/m10/2.jpg",
-              },
-              {
-                id: 4,
-                mid: 1,
-                fid: 2,
-                name: "Savin Stevens",
-                gender: "male",
-                img: "https://cdn.balkan.app/shared/m10/1.jpg",
-              },
-              {
-                id: 5,
-                mid: 1,
-                fid: 2,
-                name: "Emma Stevens",
-                gender: "female",
-                img: "https://cdn.balkan.app/shared/w10/3.jpg",
-              },
-            ] */
-
 function ViewAnimalFullLineage() {
   const apiJson = useApiJson();
   const { animalCode } = useParams<{ animalCode: string }>();
 
-  const [curAnimalLineage, setCurAnimalLineage] = useState<any>(testJson);
+  const [curAnimalLineage, setCurAnimalLineage] = useState<any>(null);
   const [familyTreeNodes, setFamilyTreeNodes] = useState<any[]>([]);
   let tempNodesOutside: any[] = [];
   const [isLineageRetrieved, setIsLineageRetrieved] = useState<boolean>(false);
@@ -331,7 +176,7 @@ function ViewAnimalFullLineage() {
       }
     };
 
-    // fetchLineageByAnimalCode();
+    fetchLineageByAnimalCode();
   }, []);
 
   // process animal and add them to the nodes list
@@ -445,11 +290,11 @@ function ViewAnimalFullLineage() {
   }
 
   useEffect(() => {
-    // if (curAnimalLineage) {
-    processAnimal(curAnimalLineage);
-    // }
-    setFamilyTreeNodes(tempNodesOutside);
-    setIsLineageRetrieved(true);
+    if (curAnimalLineage) {
+      processAnimal(curAnimalLineage);
+      setFamilyTreeNodes(tempNodesOutside);
+      setIsLineageRetrieved(true);
+    }
 
     // fetchAnimalsBySpecies();
   }, [curAnimalLineage]);
@@ -478,12 +323,12 @@ function ViewAnimalFullLineage() {
           </div>
           <Separator />
           <span className="mt-4 self-center text-title-xl font-bold">
-            {curAnimalLineage.houseName}
+            {curAnimalLineage ? <div>{curAnimalLineage.houseName}</div> : ""}
           </span>
         </div>
         {/*  */}
         <div className="overflow-hidden rounded-md border border-strokedark/20">
-          {isLineageRetrieved ? (
+          {isLineageRetrieved && curAnimalLineage ? (
             <FamilyTree nodes={familyTreeNodes} />
           ) : (
             <div className="flex items-center justify-center p-10 text-lg">

@@ -131,6 +131,7 @@ enum AnimalGrowthStage {
   ADOLESCENT = "ADOLESCENT",
   ADULT = "ADULT",
   ELDER = "ELDER",
+  UNKNOWN = "UNKNOWN",
 }
 
 enum AnimalStatusType {
