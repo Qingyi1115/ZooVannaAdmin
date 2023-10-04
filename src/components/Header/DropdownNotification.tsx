@@ -5,6 +5,7 @@ import { BsBroadcast, BsFillHouseExclamationFill, BsHouseExclamation } from "rea
 import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { HiClipboardList } from "react-icons/hi";
+import Sensor from "../../models/Sensor";
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -52,12 +53,12 @@ const DropdownNotification = () => {
     }).then(responseJson => {
       if (responseJson === undefined) return;
       let facility = responseJson["facilities"]
-      // console.log("facilities", responseJson)
+      console.log("facilities before", responseJson)
       facility = facility.filter((f: any) => {
         f.predictedMaintenanceDate && (compareDates(new Date(f.predictedMaintenanceDate), new Date()) <= 0)
       });
       setFacilityList(facility);
-      // console.log("facilities aft", facility)
+      console.log("facilities aft", facility)
     });
   }, []);
 
@@ -70,13 +71,21 @@ const DropdownNotification = () => {
       console.log(error);
     }).then(responseJson => {
       let sensors = responseJson["sensors"]
-      // console.log("sensors before", sensors)
-      // sensors = 
-      sensors= sensors.filter((sensor: any) => {
-        sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
+      console.log("sensors before", sensors)
+      sensors.forEach((element:any) => {
+        console.log("pred date", element.predictedMaintenanceDate)
+        console.log("compare date", compareDates(new Date(element.predictedMaintenanceDate), new Date()))
+        console.log("results, ", (compareDates(new Date(element.predictedMaintenanceDate), new Date()) <= 0), element.predictedMaintenanceDate && (compareDates(new Date(element.predictedMaintenanceDate), new Date()) <= 0))
       });
-      setSensorList(sensors);
-      // console.log("sensors aft", sensors)
+      // sensors= sensors.filter((sensor: any) => {
+      //   sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
+      // });
+      let suggestedSensorMaintenanceList = [];
+      for(const sensor of sensors){
+        if (sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)) suggestedSensorMaintenanceList.push(sensor);
+      }
+      setSensorList(suggestedSensorMaintenanceList);
+      console.log("sensors aft", suggestedSensorMaintenanceList)
     });
   }, []);
 
