@@ -53,12 +53,10 @@ const DropdownNotification = () => {
     }).then(responseJson => {
       if (responseJson === undefined) return;
       let facility = responseJson["facilities"]
-      console.log("facilities before", responseJson)
       facility = facility.filter((f: any) => {
-        f.predictedMaintenanceDate && (compareDates(new Date(f.predictedMaintenanceDate), new Date()) <= 0)
+        return f.predictedMaintenanceDate && (compareDates(new Date(f.predictedMaintenanceDate), new Date()) <= 0)
       });
       setFacilityList(facility);
-      console.log("facilities aft", facility)
     });
   }, []);
 
@@ -71,21 +69,10 @@ const DropdownNotification = () => {
       console.log(error);
     }).then(responseJson => {
       let sensors = responseJson["sensors"]
-      console.log("sensors before", sensors)
-      sensors.forEach((element:any) => {
-        console.log("pred date", element.predictedMaintenanceDate)
-        console.log("compare date", compareDates(new Date(element.predictedMaintenanceDate), new Date()))
-        console.log("results, ", (compareDates(new Date(element.predictedMaintenanceDate), new Date()) <= 0), element.predictedMaintenanceDate && (compareDates(new Date(element.predictedMaintenanceDate), new Date()) <= 0))
+      sensors= sensors.filter((sensor: any) => {
+        return sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
       });
-      // sensors= sensors.filter((sensor: any) => {
-      //   sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
-      // });
-      let suggestedSensorMaintenanceList = [];
-      for(const sensor of sensors){
-        if (sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)) suggestedSensorMaintenanceList.push(sensor);
-      }
-      setSensorList(suggestedSensorMaintenanceList);
-      console.log("sensors aft", suggestedSensorMaintenanceList)
+      setSensorList(sensors);
     });
   }, []);
 
@@ -137,7 +124,7 @@ const DropdownNotification = () => {
         className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
         to="/assetfacility/maintenance"
       >
-        {facilityList.length ? <div className="text-red-600"><p className="text-sm">
+        {facilityList.length ? <div className="text-amber-500"><p className="text-sm">
           <BsHouseExclamation />
           Facilities to maintain {facilityList.length}</p></div>
         :<div className="text-green-700"><p className="text-sm">
@@ -153,19 +140,20 @@ const DropdownNotification = () => {
     {facilityList && facilityList.map((facility) => {
       return (
 
-        <li>
+        <li key={facility.facilityId}>
         <Link
           className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
           to="/assetfacility/maintenance"
         >
+        <div className="text-red-700">
           <BsHouseExclamation />
           <p className="text-sm">
-            <span className="text-black dark:text-white">
+            <span className="text-red-700">
             {facility.facilityName}
             </span>{" "}
           </p>
           <p className="text-xs">Suggested Date: {new Date(facility.predictedMaintenanceDate).toLocaleDateString()}</p>
-
+        </div>
         </Link>
       </li>
       );
@@ -176,7 +164,7 @@ const DropdownNotification = () => {
         className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
         to="/assetfacility/maintenance"
       >
-        {sensorList.length ? <div className="text-red-600"><p className="text-sm">
+        {sensorList.length ? <div className="text-amber-500"><p className="text-sm">
           <BsBroadcast />
             Sensors to maintain {sensorList.length}
         </p></div>:<div className="text-green-700"><p className="text-sm">
@@ -193,19 +181,20 @@ const DropdownNotification = () => {
     {sensorList.map((sensor) => {
       return (
 
-        <li>
+        <li key={sensor.sensorId}>
         <Link
           className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
           to="/assetfacility/maintenance"
         >
+          <div className="text-red-700">
           <BsBroadcast />
           <p className="text-sm">
-            <span className="text-black dark:text-white">
+            <span className="text-red-700">
             {sensor.sensorName}
             </span>{" "}
           </p>
           <p className="text-xs">Suggested Date: {new Date(sensor.predictedMaintenanceDate).toLocaleDateString()}</p>
-
+          </div>
         </Link>
       </li>
       );

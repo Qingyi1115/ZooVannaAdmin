@@ -66,7 +66,6 @@ function RemoveFacilityMaintenanceStaff(props: RemoveFacilityMaintenanceStaffPro
     try {
       const responseJson = await apiJson.del(
         `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-          console.log("ih", res["inHouse"]["maintenanceStaffs"])
           setRefreshSeed([])
         }).catch(err => console.log("err", err));
 
@@ -217,12 +216,6 @@ function RemoveFacilityMaintenanceStaff(props: RemoveFacilityMaintenanceStaffPro
             <Column
               field="employeeEducation"
               header="Education"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="employeeBirthDate"
-              header="Birthday"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>

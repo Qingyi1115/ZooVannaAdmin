@@ -62,7 +62,6 @@ function AllfacilityDatatable() {
     apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", { includes: ["facilityDetail"] }).catch(e => {
       console.log(e);
     }).then(res => {
-      console.log("res", res)
       setFacilityList(res["facilities"]);
     })
   }, []);

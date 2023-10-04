@@ -66,7 +66,6 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
     try {
       const responseJson = await apiJson.del(
         `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-          console.log("ih", res["inHouse"]["operationStaffs"])
           setRefreshSeed([])
         }).catch(err => console.log("err", err));
 

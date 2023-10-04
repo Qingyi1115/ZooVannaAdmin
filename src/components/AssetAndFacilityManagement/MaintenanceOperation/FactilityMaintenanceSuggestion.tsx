@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { SensorType } from "../../../enums/SensorType";
 import { Separator } from "@/components/ui/separator";
+import { Tag } from "primereact/tag";
 
 export function compareDates(d1: Date, d2: Date): number {
   let date1 = d1.getTime();
@@ -29,6 +30,10 @@ interface MaintenanceDetails {
   suggestedMaintenance: string,
   type: string,
   id: number
+}
+
+function rowColor(facility:any) {
+  return facility.predictedMaintenanceDate && (compareDates(new Date(facility.predictedMaintenanceDate), new Date()) <= 0) ? "text-red-700" : "text-red-700";
 }
 
 function FacilityMaintenanceSuggestion() {
@@ -47,20 +52,17 @@ function FacilityMaintenanceSuggestion() {
     ).catch(error => {
       console.log(error);
     }).then(responseJson => {
-      let facility = responseJson["facilities"]
-      console.log("facilities before", facility)
-      facility.filter((f: any) => {
-        f.predictedMaintenanceDate && (compareDates(new Date(f.predictedMaintenanceDate), new Date()) <= 0)
-      });
-      setFacilityList(facility);
-      console.log("facilities aft", facility)
+      setFacilityList(responseJson["facilities"].sort((a:any,b:any) => {
+        if (!a.predictedMaintenanceDate) return 1;
+        if (!b.predictedMaintenanceDate) return -1;
+        return compareDates(new Date(a.predictedMaintenanceDate), new Date(b.predictedMaintenanceDate));
+      }));
     });
   }, []);
 
   useEffect(() => {
     let obj: any = []
     facilityList.forEach((facility: any) => {
-      console.log("facility", facility)
       obj.push({
         name: facility.facilityName,
         description: (facility.isSheltered ? "Sheltered " : "Unsheltered ") + (facility.facilityDetail as string).toLocaleLowerCase(),
@@ -68,11 +70,10 @@ function FacilityMaintenanceSuggestion() {
         suggestedMaintenance: facility.predictedMaintenanceDate ?
           new Date(facility.predictedMaintenanceDate).toLocaleString() : "No suggested date",
         type: "Facility",
-        id: facility.facilityId
+        id: facility.facilityId,
       })
     })
     setObjectsList(obj)
-    console.log("dates", new Date().toLocaleString(), "dates", new Date().toDateString(), "dates", new Date().toLocaleDateString(), "dates", new Date())
   }, [facilityList]);
 
   const exportCSV = () => {
@@ -121,6 +122,13 @@ function FacilityMaintenanceSuggestion() {
     </div>
   );
 
+  const statusBodyTemplate = (rowData: any) => {
+    return <Tag value={rowData.suggestedMaintenance} 
+    severity={isNaN(Date.parse(rowData.suggestedMaintenance)) ? "info":  
+      (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 2) ? "danger" 
+      : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" :"success"} />;
+  };
+
   return (
     <div>
       <div>
@@ -148,7 +156,8 @@ function FacilityMaintenanceSuggestion() {
                 setSelectedObject(e.value);
               }
             }}
-            dataKey="objDetails.id"
+            rowClassName={rowColor}
+            dataKey="id"
             paginator
             rows={10}
             scrollable
@@ -163,25 +172,26 @@ function FacilityMaintenanceSuggestion() {
               field="name"
               header="Name"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "4rem" }}
             ></Column>
             <Column
               field="description"
               header="Description"
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "10rem" }}
             ></Column>
             <Column
               field="lastMaintenance"
               header="Last Maintained"
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "13rem" }}
             ></Column>
             <Column
               field="suggestedMaintenance"
               header="Suggested Date of Maintenance"
+              body={statusBodyTemplate}
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "13rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}

@@ -20,7 +20,6 @@ export default function FacilityMaintenanceChart(props: FacilityMaintenanceChart
 
     useEffect(() => {
         apiJson.get(`http://localhost:3000/api/assetFacility/getFacilityMaintenancePredictionValues/${facilityId}`).catch(e => console.log(e)).then(res => {
-            console.log("res", res)
             if (res === undefined) return
             res.newCycleLength.push(res.cycleLength[0])
             const documentStyle = getComputedStyle(document.documentElement);
@@ -36,7 +35,7 @@ export default function FacilityMaintenanceChart(props: FacilityMaintenanceChart
                         borderColor: documentStyle.getPropertyValue('--blue-500'),
                         yAxisID: 'y',
                         tension: 0.2,
-                        data: new Array(res.newDateResults.length).fill(null).concat(res.cycleLength)
+                        data: res.cycleLength.reverse()//
                     },
                     {
                         label: 'Predicted cycle length',
@@ -44,7 +43,7 @@ export default function FacilityMaintenanceChart(props: FacilityMaintenanceChart
                         borderColor: documentStyle.getPropertyValue('--red-500'),
                         yAxisID: 'y',
                         tension: 0.2,
-                        data: res.newCycleLength
+                        data: new Array(res.cycleLength.length-1).fill(null).concat( res.newCycleLength.reverse())
                     }
                 ]
             };
@@ -72,8 +71,9 @@ export default function FacilityMaintenanceChart(props: FacilityMaintenanceChart
                         type: 'linear',
                         display: true,
                         position: 'right',
+                        min: 0,
                         ticks: {
-                            color: textColorSecondary
+                            color: textColorSecondary,
                         },
                         grid: {
                             drawOnChartArea: false,

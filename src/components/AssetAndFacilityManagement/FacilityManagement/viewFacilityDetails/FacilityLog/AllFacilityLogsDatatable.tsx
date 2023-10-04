@@ -74,7 +74,9 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   useEffect(() => {
     apiJson.get(
       `http://localhost:3000/api/assetfacility/getFacilityLogs/${curFacility.facilityId}`)
-      .then(res => { setFacilityLogList(res.facilityLogs as FacilityLog[]); })
+      .then(res => { 
+        setFacilityLogList(res.facilityLogs as FacilityLog[]);
+       })
       .catch(e => console.log(e));
   }, []);
 
@@ -249,6 +251,9 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <div className="text-xl font-bold text-900">Remarks</div>
               <p>{facilityLog.remarks}</p>
             </div>
+              <div className="italic  indent-px ">
+                {(facilityLog.isMaintenance? "Maintenance Log" :"Operation Log")}
+              </div>
           </div>
 
         </Card>

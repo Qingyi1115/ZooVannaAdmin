@@ -53,7 +53,6 @@ function EditSensorPage() {
       `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
       { includes: ["hubProcessor", "sensorReadings", "maintenanceLogs", "generalStaff"] }).then(res => {
         setCurSensor(res.sensor as Sensor);
-        console.log(curSensor);
       }).catch(e => console.log(e));
   }, []);
 

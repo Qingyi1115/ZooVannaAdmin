@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { SensorType } from "../../../enums/SensorType";
 import { Separator } from "@/components/ui/separator";
+import { Tag } from "primereact/tag";
 
 export function compareDates(d1: Date, d2: Date): number {
   let date1 = d1.getTime();
@@ -46,15 +47,13 @@ function SensorMaintenanceSuggestion() {
     apiJson.get(
       "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
     ).catch(error => {
-      console.log(error);
     }).then(responseJson => {
-      let sensors = responseJson["sensors"]
-      console.log("sensors before", sensors)
-      sensors.filter((sensor: any) => {
-        sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
+      let sortedList = responseJson["sensors"].sort((a:any,b:any) => {
+        if (!a.predictedMaintenanceDate) return 1;
+        if (!b.predictedMaintenanceDate) return -1;
+        return compareDates(new Date(a.predictedMaintenanceDate), new Date(b.predictedMaintenanceDate))
       });
-      setSensorList(sensors);
-      console.log("sensors aft", sensors)
+      setSensorList(sortedList);
     });
   }, []);
 
@@ -72,7 +71,6 @@ function SensorMaintenanceSuggestion() {
       })
     })
     setObjectsList(obj)
-    console.log("dates", new Date().toLocaleString(), "dates", new Date().toDateString(), "dates", new Date().toLocaleDateString(), "dates", new Date())
   }, [facilityList, sensorList]);
 
   const actionBodyTemplate = (objDetails: MaintenanceDetails) => {
@@ -121,6 +119,13 @@ function SensorMaintenanceSuggestion() {
     </div>
   );
 
+  const statusBodyTemplate = (rowData: any) => {
+    return <Tag value={rowData.suggestedMaintenance} 
+    severity={isNaN(Date.parse(rowData.suggestedMaintenance)) ? "info":  
+      (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 2) ? "danger" 
+      : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" :"success"} />;
+  };
+
   return (
     <div>
       <div>
@@ -148,7 +153,7 @@ function SensorMaintenanceSuggestion() {
                 setSelectedObject(e.value);
               }
             }}
-            dataKey="objectId"
+            dataKey="id"
             paginator
             rows={10}
             scrollable
@@ -163,25 +168,26 @@ function SensorMaintenanceSuggestion() {
               field="name"
               header="Name"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "4rem" }}
             ></Column>
             <Column
               field="description"
               header="Description"
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "10rem" }}
             ></Column>
             <Column
               field="lastMaintenance"
               header="Last Maintained"
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "13rem" }}
             ></Column>
             <Column
               field="suggestedMaintenance"
               header="Suggested Date of Maintenance"
               sortable
-              style={{ minWidth: "16rem" }}
+              body={statusBodyTemplate}
+              style={{ minWidth: "13rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}

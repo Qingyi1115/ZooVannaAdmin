@@ -56,7 +56,6 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
       "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
     ).catch(e => console.log(e)).then(res => {
       const allStaffs: Employee[] = []
-      console.log("res", res)
       for (const staff of res["generalStaffs"]) {
         if (staff.generalStaffType == "ZOO_MAINTENANCE") {
           let emp = staff.employee;
@@ -66,7 +65,6 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
           allStaffs.push(emp)
         }
       }
-      console.log("allStaffs", allStaffs)
       setEmployeeList(allStaffs);
 
     });
