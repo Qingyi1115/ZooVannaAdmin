@@ -284,6 +284,23 @@ function ViewAnimalFullLineage() {
     // Process the children
     if (animal.children) {
       for (const child of animal.children) {
+        if (!child.parents) {
+          let curChildNode: FamilyTreeNodeType = {
+            id: child.animalId,
+            mid: null,
+            fid: null,
+            pids: [],
+            name: child.houseName,
+            animalCode: child.animalCode,
+            gender: child.sex?.toLowerCase() || "",
+            img: `http://localhost:3000/${child.imageUrl}`,
+          };
+          animal.sex == "FEMALE"
+            ? (curChildNode.mid = animal.animalId)
+            : (curChildNode.fid = animal.animalId);
+          updateOrAddNode(curChildNode, tempNodes);
+          tempNodesOutside = [...tempNodes];
+        }
         processAnimal(child);
       }
     }
@@ -295,11 +312,30 @@ function ViewAnimalFullLineage() {
       setFamilyTreeNodes(tempNodesOutside);
       setIsLineageRetrieved(true);
     }
+    console.log("family tree!");
+    console.log(tempNodesOutside);
 
     // fetchAnimalsBySpecies();
   }, [curAnimalLineage]);
 
   // end family tree nodes stuff
+
+  // edit search box text
+  function changeSearchBoxText() {
+    const treeDiv = document.getElementById("tree");
+
+    if (treeDiv) {
+      // Find the label element within the div
+      const labelElement = treeDiv.querySelector("label");
+
+      if (labelElement) {
+        labelElement.textContent = "New Text Here";
+      }
+    }
+  }
+  // useEffect(() => {
+  //   changeSearchBoxText();
+  // });
 
   return (
     <div className="p-10">
@@ -324,6 +360,14 @@ function ViewAnimalFullLineage() {
           <Separator />
           <span className="mt-4 self-center text-title-xl font-bold">
             {curAnimalLineage ? <div>{curAnimalLineage.houseName}</div> : ""}
+          </span>
+          <span className="self-center">
+            {curAnimalLineage && (
+              <span>
+                (Relatives Included Up to Three Degrees from{" "}
+                {curAnimalLineage.houseName})
+              </span>
+            )}
           </span>
         </div>
         {/*  */}

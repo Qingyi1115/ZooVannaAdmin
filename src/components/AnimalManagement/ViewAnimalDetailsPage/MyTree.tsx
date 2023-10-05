@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import FamilyTree from "@balkangraph/familytree.js";
 
+import { useNavigate } from "react-router-dom";
+
 interface ChartProps {
   nodes: any[]; // Replace 'any' with the actual type of 'nodes'
 }
@@ -62,8 +64,24 @@ FamilyTree.templates.myTemplate.ripple = {
 //     rect: undefined
 // };
 
+// FamilyTree.templates.myTemplate.nodeMenuButton =
+//   '<g style="cursor:pointer;" transform="matrix(1,0,0,1,93,15)" onclick={() => navigate(`/animal/viewanimaldetails/`)}>(...)</g>';
+
 // end node customization
 
+// search placeholder
+FamilyTree.SEARCH_PLACEHOLDER = "Search animal";
+
+interface FamilyTreeNodeType {
+  id: number;
+  mid: null | number;
+  fid: null | number;
+  pids: [];
+  name: string;
+  animalCode: string;
+  gender: string;
+  img: string;
+}
 export default class Chart extends Component<ChartProps> {
   private divRef: React.RefObject<HTMLDivElement>;
   private family: FamilyTree | null = null;
@@ -84,10 +102,11 @@ export default class Chart extends Component<ChartProps> {
   componentDidMount() {
     if (this.divRef.current) {
       this.family = new FamilyTree(this.divRef.current, {
-        nodes: this.props.nodes,
+        nodes: this.props.nodes as FamilyTreeNodeType[],
 
         miniMap: true,
         mouseScrool: FamilyTree.none,
+        nodeMouseClick: FamilyTree.action.none,
         template: "myTemplate",
         partnerChildrenSplitSeparation: 40,
         levelSeparation: 80,
@@ -98,12 +117,28 @@ export default class Chart extends Component<ChartProps> {
         },
       });
 
+      this.family.onNodeDoubleClick((args: any) => {
+        let curAnimalCode = args.data.animalCode;
+        // console.log(args);
+        // window.open(
+        //   `http://localhost:5173/animal/viewanimaldetails/${curAnimalCode}`
+        // );
+        window.location.href = `http://localhost:5173/animal/viewanimaldetails/${curAnimalCode}`;
+      });
+
       // this.family.on("render-link", function (sender, args) {
       //   if (args.cnode.ppid != undefined) {
       //     cx = args.p.xa + 12;
       //     cy = args.p.ya + 9;
       //     args.html += `<use data-ctrl-ec-id="${args.node.id}" xlink:href="#minus" x="${cx}" y="${cy}"/>`;
       //   }
+      // });
+      // this.family.on("click", function (sender, args) {
+      //   var curAnimalCode = args.data["animalCode"];
+      //   window.open(
+      //     `http://localhost:5173/animal/viewanimaldetails/${curAnimalCode}`
+      //   );
+      //   return false;
       // });
     }
   }
