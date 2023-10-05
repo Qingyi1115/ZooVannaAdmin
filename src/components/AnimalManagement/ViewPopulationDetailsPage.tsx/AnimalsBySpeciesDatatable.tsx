@@ -31,31 +31,6 @@ import {
   AnimalSex,
 } from "../../../enums/Enumurated";
 
-let testPandaSpecies: Species = {
-  speciesId: 1,
-  speciesCode: "SPE001",
-  commonName: "Panda",
-  scientificName: "Ailuropoda Melanoleuca",
-  aliasName: "",
-  conservationStatus: "",
-  domain: "",
-  kingdom: "",
-  phylum: "",
-  speciesClass: "",
-  order: "",
-  family: "",
-  genus: "",
-  nativeContinent: "",
-  nativeBiomes: "",
-  educationalDescription: "",
-  educationalFunFact: "",
-  groupSexualDynamic: "",
-  habitatOrExhibit: "habitat",
-  imageUrl: "img/species/panda.jpg",
-  generalDietPreference: "",
-  lifeExpectancyYears: 0,
-};
-
 let emptySpecies: Species = {
   speciesId: -1,
   speciesCode: "",
@@ -78,6 +53,10 @@ let emptySpecies: Species = {
   habitatOrExhibit: "habitat",
   imageUrl: "",
   generalDietPreference: "",
+  ageToJuvenile: 0,
+  ageToAdolescent: 1,
+  ageToAdult: 2,
+  ageToElder: 3,
   lifeExpectancyYears: 0,
 };
 let emptyAnimal: Animal = {

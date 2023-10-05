@@ -59,7 +59,10 @@ function CreateNewSpeciesForm() {
   const [lifeExpectancyYears, setLifeExpectancyYears] = useState<number>(0);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const [formError, setFormError] = useState<string | null>(null);
+  const [ageToJuvenile, setAgeToJuvenile] = useState<number>(0);
+  const [ageToAdolescent, setAgeToAdolescent] = useState<number>(0);
+  const [ageToAdult, setAgeToAdult] = useState<number>(0);
+  const [ageToElder, setAgeToElder] = useState<number>(0);
 
   const [newSpeciesCreated, setNewSpeciesCreated] = useState<boolean>(false);
 
@@ -311,6 +314,50 @@ function CreateNewSpeciesForm() {
     return null;
   }
 
+  function validateAgeToJuvenile(props: ValidityState) {
+    if (Number(ageToJuvenile) <= 0) {
+      return (
+        <div className="font-medium text-danger">
+          * Age to Juvenile must be greater than 0
+        </div>
+      );
+    }
+    return null;
+  }
+
+  function validateAgeToAdolescent(props: ValidityState) {
+    if (Number(ageToAdolescent) <= Number(ageToJuvenile)) {
+      return (
+        <div className="font-medium text-danger">
+          * Age to Adolescent must be greater than Age to Juvenile
+        </div>
+      );
+    }
+    return null;
+  }
+
+  function validateAgeToAdult(props: ValidityState) {
+    if (Number(ageToAdult) <= Number(ageToAdolescent)) {
+      return (
+        <div className="font-medium text-danger">
+          * Age to Adult must be greater than Age to Adolescent
+        </div>
+      );
+    }
+    return null;
+  }
+
+  function validateAgeToElder(props: ValidityState) {
+    if (Number(ageToElder) <= Number(ageToAdult)) {
+      return (
+        <div className="font-medium text-danger">
+          * Age to Elder must be greater than Age to Adult
+        </div>
+      );
+    }
+    return null;
+  }
+
   // end field validations
 
   function onBiomeSelectChange(e: MultiSelectChangeEvent) {
@@ -364,6 +411,10 @@ function CreateNewSpeciesForm() {
       "lifeExpectancyYears",
       lifeExpectancyYears?.toString() || ""
     );
+    formData.append("ageToJuvenile", ageToJuvenile.toString() || "");
+    formData.append("ageToAdolescent", ageToAdolescent.toString() || "");
+    formData.append("ageToAdult", ageToAdult.toString() || "");
+    formData.append("ageToElder", ageToElder.toString() || "");
 
     const createSpecies = async () => {
       try {
@@ -717,6 +768,63 @@ function CreateNewSpeciesForm() {
           setValue={setHabitatOrExhibit}
           validateFunction={validateHabitatOrExhibit}
         />
+
+        <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+          {/* Species Life Expectancy in Years */}
+          <FormFieldInput
+            type="number"
+            formFieldName="ageToJuvenile"
+            label="Age To Reach Juvenile (in Years)"
+            required={true}
+            placeholder="e.g., 8"
+            pattern={undefined}
+            value={ageToJuvenile}
+            setValue={setAgeToJuvenile}
+            validateFunction={validateAgeToJuvenile}
+          />
+
+          {/* Species Life Expectancy in Years */}
+          <FormFieldInput
+            type="number"
+            formFieldName="ageToAdolescent"
+            label="Age To Reach Adolescent (in Years)"
+            required={true}
+            placeholder="e.g., 15"
+            pattern={undefined}
+            value={ageToAdolescent}
+            setValue={setAgeToAdolescent}
+            validateFunction={validateAgeToAdolescent}
+          />
+        </div>
+
+        <div className="flex flex-col gap-6 lg:flex-row lg:gap-24">
+          {/* Species Life Expectancy in Years */}
+          <FormFieldInput
+            type="number"
+            formFieldName="ageToJuvenile"
+            label="Age To Reach Juvenile (in Years)"
+            required={true}
+            placeholder="e.g., 8"
+            pattern={undefined}
+            value={ageToAdult}
+            setValue={setAgeToAdult}
+            validateFunction={validateAgeToAdult}
+          />
+
+          {/* Species Life Expectancy in Years */}
+          <FormFieldInput
+            type="number"
+            formFieldName="ageToAdolescent"
+            label="Age To Reach Elder (in Years)"
+            required={true}
+            placeholder="e.g., 15"
+            pattern={undefined}
+            value={ageToElder}
+            setValue={setAgeToElder}
+            validateFunction={validateAgeToElder}
+          />
+        </div>
+
         {/* Species Life Expectancy in Years */}
         <FormFieldInput
           type="number"

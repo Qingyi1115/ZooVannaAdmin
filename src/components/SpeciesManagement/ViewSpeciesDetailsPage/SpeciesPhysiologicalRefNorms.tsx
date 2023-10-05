@@ -139,6 +139,7 @@ function SpeciesPhysiologicalRefNorms(
       },
       scales: {
         x: {
+          display: true,
           ticks: {
             color: textColorSecondary,
           },
@@ -148,6 +149,10 @@ function SpeciesPhysiologicalRefNorms(
           type: "linear",
           min: 0,
           max: curSpecies.lifeExpectancyYears * 1.2,
+          title: {
+            display: true,
+            text: "Age (in years)",
+          },
         },
         y: {
           ticks: {
@@ -157,6 +162,10 @@ function SpeciesPhysiologicalRefNorms(
             color: surfaceBorder,
           },
           min: 0,
+          title: {
+            display: true,
+            text: "Weight (in kg)",
+          },
         },
       },
     };
@@ -237,6 +246,10 @@ function SpeciesPhysiologicalRefNorms(
           type: "linear",
           min: 0,
           max: curSpecies.lifeExpectancyYears * 1.2,
+          title: {
+            display: true,
+            text: "Age (in years)",
+          },
         },
         y: {
           ticks: {
@@ -246,6 +259,10 @@ function SpeciesPhysiologicalRefNorms(
             color: surfaceBorder,
           },
           min: 0,
+          title: {
+            display: true,
+            text: "Size (in cm)",
+          },
         },
       },
     };

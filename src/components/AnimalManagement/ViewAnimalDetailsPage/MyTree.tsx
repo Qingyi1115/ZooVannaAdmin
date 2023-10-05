@@ -106,7 +106,7 @@ export default class Chart extends Component<ChartProps> {
 
         miniMap: true,
         mouseScrool: FamilyTree.none,
-        nodeMouseClick: FamilyTree.action.none,
+        // nodeMouseClick: FamilyTree.action.none,
         template: "myTemplate",
         partnerChildrenSplitSeparation: 40,
         levelSeparation: 80,

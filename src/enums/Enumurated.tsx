@@ -138,6 +138,16 @@ enum AnimalStatusType {
   TEST = "TEST",
 }
 
+enum AnimalStatus {
+  NORMAL = "NORMAL",
+  PREGNANT = "PREGNANT",
+  SICK = "SICK",
+  INJURED = "INJURED",
+  OFFSITE = "OFFSITE",
+  RELEASED = "RELEASED",
+  DECEASED = "DECEASED",
+}
+
 enum Biome {
   AQUATIC = "AQUATIC",
   DESERT = "DESERT",
