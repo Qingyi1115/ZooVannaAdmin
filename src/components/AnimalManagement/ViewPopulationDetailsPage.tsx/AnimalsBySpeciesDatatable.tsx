@@ -166,7 +166,7 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
     const deleteAnimalApi = async () => {
       try {
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/species/deleteanimal/" +
+          "http://localhost:3000/api/animal/deleteAnimal/" +
             selectedAnimal.animalCode
         );
 
@@ -192,7 +192,7 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
         });
       }
     };
-    // deleteAnimalApi();
+    deleteAnimalApi();
   };
 
   const deleteAnimalDialogFooter = (

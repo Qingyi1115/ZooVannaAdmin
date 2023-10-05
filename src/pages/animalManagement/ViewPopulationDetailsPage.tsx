@@ -271,9 +271,6 @@ function ViewPopulationDetailsPage() {
             className="w-1/2"
           />
         </div>
-        <ul>
-          <li>Average age</li>
-        </ul>
         <div>
           <span className="font-bold">Feeding Plan</span>
           <br />

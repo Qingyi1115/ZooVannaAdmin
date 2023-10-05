@@ -167,9 +167,10 @@ function AllAnimalsDatatable() {
     );
 
     const deleteAnimalApi = async () => {
+      console.log(selectedAnimal.animalCode);
       try {
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/species/deleteanimal/" +
+          "http://localhost:3000/api/animal/deleteAnimal/" +
             selectedAnimal.animalCode
         );
 
@@ -195,7 +196,7 @@ function AllAnimalsDatatable() {
         });
       }
     };
-    // deleteAnimalApi();
+    deleteAnimalApi();
   };
 
   const deleteAnimalDialogFooter = (

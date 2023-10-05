@@ -219,6 +219,12 @@ function App() {
                   }
                 />
                 <Route
+                  path="/animal/viewanimaldetails/:animalCode/"
+                  element={
+                    user ? <ViewAnimalDetailsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
                   path="/animal/viewpopulationdetails/:speciesCode"
                   element={
                     user ? (
