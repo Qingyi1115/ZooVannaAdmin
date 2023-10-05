@@ -19,6 +19,7 @@ import { Separator } from "@radix-ui/react-select";
 import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import { BsWrenchAdjustable } from "react-icons/bs";
 
 interface SensorDetailsProps {
   curSensor: Sensor;
@@ -39,6 +40,14 @@ function ViewSensorDetails(props: SensorDetailsProps) {
             <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
+      )}
+      {(employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+      <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
+        <Button className="mr-2">
+          <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+          Complete maintenance
+        </Button>
+      </NavLink>
       )}
       </div>
       <Table>

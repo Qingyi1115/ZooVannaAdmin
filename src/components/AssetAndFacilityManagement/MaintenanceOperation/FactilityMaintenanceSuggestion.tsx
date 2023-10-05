@@ -68,7 +68,7 @@ function FacilityMaintenanceSuggestion() {
         description: (facility.isSheltered ? "Sheltered " : "Unsheltered ") + (facility.facilityDetail as string).toLocaleLowerCase(),
         lastMaintenance: new Date(facility.facilityDetailJson["lastMaintained"]).toLocaleString(),
         suggestedMaintenance: facility.predictedMaintenanceDate ?
-          new Date(facility.predictedMaintenanceDate).toLocaleString() : "No suggested date",
+          new Date(facility.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Facility",
         id: facility.facilityId,
       })
@@ -123,9 +123,9 @@ function FacilityMaintenanceSuggestion() {
   );
 
   const statusBodyTemplate = (rowData: any) => {
-    return <Tag value={rowData.suggestedMaintenance} 
+    return <Tag value={isNaN(Date.parse(rowData.suggestedMaintenance)) ? rowData.suggestedMaintenance : new Date(rowData.suggestedMaintenance).toLocaleString()} 
     severity={isNaN(Date.parse(rowData.suggestedMaintenance)) ? "info":  
-      (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 2) ? "danger" 
+      (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ? "danger" 
       : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" :"success"} />;
   };
 

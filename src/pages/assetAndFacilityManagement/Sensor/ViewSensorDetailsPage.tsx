@@ -93,7 +93,7 @@ function ViewSensorDetailsPage() {
           defaultValue={tab ? `${tab}` : "sensorDetails"}
           className="w-full"
         ><TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <TabsTrigger value="sensorDetails">Hub Details</TabsTrigger>
+            <TabsTrigger value="sensorDetails">Sensor Details</TabsTrigger>
             <TabsTrigger value="sensorReadings">Sensor Readings</TabsTrigger>
             <TabsTrigger value="maintenanceLogs">Maintenance Logs</TabsTrigger>
             {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (<TabsTrigger value="generalStaff">Maintenance Staff</TabsTrigger>)}
@@ -105,7 +105,7 @@ function ViewSensorDetailsPage() {
             <AllSensorReadingDatatable sensorId={sensorId || ""}></AllSensorReadingDatatable>
           </TabsContent>
           <TabsContent value="maintenanceLogs">
-            <AllMaintenanceLogsDatatable curSensor={curSensor} />
+            <AllMaintenanceLogsDatatable sensorId={Number(sensorId)} />
           </TabsContent>
           {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <TabsContent value="generalStaff">

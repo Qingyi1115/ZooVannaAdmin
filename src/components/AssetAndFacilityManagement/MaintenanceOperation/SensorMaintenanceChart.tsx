@@ -14,19 +14,22 @@ interface SensorMaintenanceChartProps {
 export default function SensorMaintenanceChart(props: SensorMaintenanceChartProps) {
     const [chartData, setChartData] = useState<any>(undefined);
     const [chartOptions, setChartOptions] = useState<any>(undefined);
+    const [chartName, setChartName] = useState<any>("Sensor Maintenance Chart");
     const { sensorId } = props;
     const apiJson = useApiJson();
     const navigate = useNavigate();
 
     useEffect(() => {
         apiJson.get(`http://localhost:3000/api/assetFacility/getSensorMaintenancePredictionValues/${sensorId}`).catch(e => console.log(e)).then(res => {
-            res.newCycleLength.push(res.cycleLength[0])
+            let value = res.values
+            setChartName("Sensor Maintenance Chart : " + value.name);
+            value.newCycleLength.push(value.cycleLength[0])
             const documentStyle = getComputedStyle(document.documentElement);
             const textColor = documentStyle.getPropertyValue('--text-color');
             const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
             const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
             const data = {
-                labels: res.newDateResults.map((datestr: string) => new Date(datestr).toLocaleDateString()).concat(res.dateResults.map((datestr: string) => new Date(datestr).toLocaleDateString())).reverse(),
+                labels: value.newDateResults.map((datestr: string) => new Date(datestr).toLocaleDateString()).concat(value.dateResults.map((datestr: string) => new Date(datestr).toLocaleDateString())).reverse(),
                 datasets: [
                     {
                         label: 'Maintenance cycle length',
@@ -34,7 +37,7 @@ export default function SensorMaintenanceChart(props: SensorMaintenanceChartProp
                         borderColor: documentStyle.getPropertyValue('--blue-500'),
                         yAxisID: 'y',
                         tension: 0.2,
-                        data: res.cycleLength.reverse()//
+                        data: value.cycleLength.reverse()//
                     },
                     {
                         label: 'Predicted cycle length',
@@ -42,7 +45,7 @@ export default function SensorMaintenanceChart(props: SensorMaintenanceChartProp
                         borderColor: documentStyle.getPropertyValue('--red-500'),
                         yAxisID: 'y',
                         tension: 0.2,
-                        data: new Array(res.cycleLength.length-1).fill(null).concat(res.newCycleLength.reverse())
+                        data: new Array(value.cycleLength.length-1).fill(null).concat(value.newCycleLength.reverse())
                     }
                 ]
             };
@@ -98,7 +101,7 @@ export default function SensorMaintenanceChart(props: SensorMaintenanceChartProp
                         </Button>
                     </NavLink>
                     <span className="self-center text-title-xl font-bold">
-                        Sensor Maintenance Chart
+                        {chartName}
                     </span>
                     <Button disabled className="invisible">
                         Back

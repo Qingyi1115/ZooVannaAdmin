@@ -17,6 +17,7 @@ const DropdownNotification = () => {
   const dropdown = useRef<any>(null);
   const [facilityList, setFacilityList] = useState<any[]>([]);
   const [sensorList, setSensorList] = useState<any[]>([]);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -58,7 +59,7 @@ const DropdownNotification = () => {
       });
       setFacilityList(facility);
     });
-  }, []);
+  }, [refreshSeed]);
 
   useEffect(() => {
     if (!(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
@@ -74,7 +75,17 @@ const DropdownNotification = () => {
       });
       setSensorList(sensors);
     });
-  }, []);
+  }, [refreshSeed]);
+  
+  useEffect(() => {
+    const looper = () => {
+      setRefreshSeed([])
+      setTimeout(() => {
+        looper()
+      }, 5000)
+    };
+    looper();
+  }, [])
 
   return (
     <li className="relative">
@@ -122,7 +133,7 @@ const DropdownNotification = () => {
     <li>
       <Link
         className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-        to="/assetfacility/maintenance"
+        to="/assetfacility/maintenance/facilityMaintenance"
       >
         {facilityList.length ? <div className="text-amber-500"><p className="text-sm">
           <BsHouseExclamation />
@@ -143,7 +154,7 @@ const DropdownNotification = () => {
         <li key={facility.facilityId}>
         <Link
           className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-          to="/assetfacility/maintenance"
+          to="/assetfacility/maintenance/facilityMaintenance"
         >
         <div className="text-red-700">
           <BsHouseExclamation />
@@ -162,7 +173,7 @@ const DropdownNotification = () => {
     <li>
       <Link
         className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-        to="/assetfacility/maintenance"
+        to="/assetfacility/maintenance/sensorMaintenance"
       >
         {sensorList.length ? <div className="text-amber-500"><p className="text-sm">
           <BsBroadcast />
@@ -184,7 +195,7 @@ const DropdownNotification = () => {
         <li key={sensor.sensorId}>
         <Link
           className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-          to="/assetfacility/maintenance"
+          to="/assetfacility/maintenance/sensorMaintenance"
         >
           <div className="text-red-700">
           <BsBroadcast />
