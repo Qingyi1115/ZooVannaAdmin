@@ -29,6 +29,7 @@ import ViewAnimalDetailsPage from "./pages/animalManagement/ViewAnimalDetailsPag
 import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDetailsPage";
 import CreateNewWeightRecord from "./pages/animalManagement/CreateNewWeightRecord";
 import ViewAnimalFullLineage from "./pages/animalManagement/ViewAnimalFullLineage";
+import EditAnimalPage from "./pages/animalManagement/EditAnimalPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -202,13 +203,17 @@ function App() {
                   }
                 />
                 <Route
+                  path="/animal/editanimal/:animalCode/"
+                  element={user ? <EditAnimalPage /> : <Navigate to="/login" />}
+                />
+                <Route
                   path="/animal/viewallanimals"
                   element={
                     user ? <ViewAllAnimalsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
-                  path="/animal/viewanimaldetails/:animalCode"
+                  path="/animal/viewanimaldetails/:animalCode/:tab"
                   element={
                     user ? <ViewAnimalDetailsPage /> : <Navigate to="/login" />
                   }
