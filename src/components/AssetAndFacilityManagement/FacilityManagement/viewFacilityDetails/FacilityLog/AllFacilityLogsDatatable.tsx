@@ -24,13 +24,12 @@ import { ScrollPanel } from "primereact/scrollpanel";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
 interface AllFacilityLogsDatatableProps {
-  curFacility: Facility;
-  curInHouse: InHouse;
+  facilityId: number;
 }
 
 function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const apiJson = useApiJson();
-  const { curFacility, curInHouse } = props;
+  const { facilityId } = props;
   const employee = useAuthContext().state.user?.employeeData;
   let emptyInHouse: InHouse = {
     isPaid: false,
@@ -73,7 +72,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
 
   useEffect(() => {
     apiJson.get(
-      `http://localhost:3000/api/assetfacility/getFacilityLogs/${curFacility.facilityId}`)
+      `http://localhost:3000/api/assetfacility/getFacilityLogs/${facilityId}`)
       .then(res => { 
         setFacilityLogList(res.facilityLogs as FacilityLog[]);
        })
@@ -278,7 +277,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             <div className="mb-4 flex justify-between">
               {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
               employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && 
-              <NavLink to={`/assetfacility/createfacilitylog/${curFacility.facilityId}`}>
+              <NavLink to={`/assetfacility/createfacilitylog/${facilityId}`}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
                 </Button>
