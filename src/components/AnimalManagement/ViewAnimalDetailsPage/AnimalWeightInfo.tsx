@@ -158,7 +158,7 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
       growthStage: item.growthStage,
     }));
     const weightRecordDataPoints = animalWeightList.map((record) => ({
-      x: calculateAge(record.dateOfMeasure, curAnimal.dateOfBirth), // Calculate age using the provided function
+      x: calculateAge(record.dateOfMeasure, new Date(curAnimal.dateOfBirth)), // Calculate age using the provided function
       y: record.weightInKg,
     }));
     const data = {
