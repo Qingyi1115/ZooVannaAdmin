@@ -1,244 +1,178 @@
-import React, { useEffect, useState, useRef } from "react";
 
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-// import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
-import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
-
-import SensorReading from "../../../../../models/SensorReading";
-import useApiJson from "../../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
-
+import React, { useState, useEffect } from 'react';
+import { Chart } from 'primereact/chart';
+import { addQuarters } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import Hub from "../../../../../models/Hub";
-import Sensor from "../../../../../models/Sensor";
+import { NavLink } from 'react-router-dom';
+import Sensor from '../../../../../models/Sensor';
+import { render } from 'react-dom';
+import { compareDates } from '../../../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion';
+import useApiJson from '../../../../../hooks/useApiJson';
+import SensorReading from 'src/models/SensorReading';
+import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 
 interface AllSensorReadingDatatableProps {
-  curSensor: Sensor,
+  sensorId: string;
 }
 
-function AllSensorReadingDatatable(props: AllSensorReadingDatatableProps) {
+export default function AllSensorReadingDatatable(props: AllSensorReadingDatatableProps) {
+  const [chartData, setChartData] = useState<any>(undefined);
+  const [chartOptions, setChartOptions] = useState<any>(undefined);
+  const { sensorId } = props;
   const apiJson = useApiJson();
-  const { curSensor } = props;
-  let emptySensorReading: SensorReading = {
-    readingDate: new Date(),
-    value: 0,
-    sensor: curSensor
-  };
 
-  const [sensorReadingList, setSensorReadingList] = useState<SensorReading[]>(curSensor.sensorReadings);
-  const [selectedSensorReading, setSelectedSensorReading] = useState<SensorReading>(emptySensorReading);
-  const [deleteSensorReadingDialog, setDeleteSensorReadingDialog] =
-    useState<boolean>(false);
-  const [globalFilter, setGlobalFilter] = useState<string>("");
-  const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<SensorReading[]>>(null);
-  const toastShadcn = useToast().toast;
+  const [intervalDurationInMilliseconds, setIntervalDurationInMilliseconds] = useState<any>(60 * 1000);
+  const [intervalFrequency, setIntervalFrequency] = useState<any>(80);
+  const [startDate, setStartDate] = useState<Date>(new Date(Date.now() - 1000 * 60 * 60 * 3));
+  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [minDate, setMinDate] = useState<Date>(new Date(Date.now() - 1000 * 60 * 60 * 3));
+  const [refresh, setRefresh] = useState<any>(0);
 
+  useEffect(() => {
+    setIntervalDurationInMilliseconds((endDate.getTime() - startDate.getTime()) / 500);
+    apiJson.post(
+      `http://localhost:3000/api/assetFacility/getSensorReading/${sensorId}`,
+      { startDate: startDate, endDate: endDate }
+    ).then(res => {
+      setMinDate(new Date(res.earlestDate));
+      const curSensor = res.sensor;
+      const sensorReadings = (res.sensorReadings as SensorReading[]);
+      const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue('--text-color');
+      const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+      const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+      const sorted = sensorReadings.sort((a, b) => compareDates(new Date(a.readingDate), new Date(b.readingDate)));
+      if (!sorted.length) return;
 
-  // View all sensorReading
-  // useEffect(() => {
-  //   const fetchSensorReading = async () => {
-  //     try {
-  //       const responseJson = await apiJson.get(
-  //         "http://localhost:3000/api/assetFacility/getAllSensorReadings"
-  //       );
-  //       console.log(responseJson["sensorReading"]);
-  //       setSensorReadingList(responseJson["sensorReading"] as SensorReading[]);
-  //     } catch (error: any) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchSensorReading();
-  // }, []);
+      const getInterval = (date: Date) => Math.floor(date.getTime() / intervalDurationInMilliseconds)
 
-  const exportCSV = () => {
-    dt.current?.exportCSV();
-  };
+      let currMin = getInterval(new Date(sorted[0].readingDate))
+      let previousReading = sorted[0].value
+      const points: number[] = [previousReading]
+      const labels: string[] = [new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()]
 
-
-
-  const confirmDeleteSensorReading = (sensorReading: SensorReading) => {
-    setSelectedSensorReading(sensorReading);
-    setDeleteSensorReadingDialog(true);
-  };
-
-  const hideDeleteSensorReadingDialog = () => {
-    setDeleteSensorReadingDialog(false);
-  };
-
-  // delete sensorReading stuff
-  const deleteSensorReading = async () => {
-    let _sensorReading = sensorReadingList.filter(
-      (val) => val.readingDate !== selectedSensorReading?.readingDate
-    );
-
-    const deleteSensorReading = async () => {
-      try {
-        const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deletesensorReading/" +
-          selectedSensorReading.readingDate
-        );
-
-        toastShadcn({
-          // variant: "destructive",
-          title: "Deletion Successful",
-          description:
-            "Successfully deleted sensor reading: " + selectedSensorReading.readingDate,
-        });
-        setSensorReadingList(_sensorReading);
-        setDeleteSensorReadingDialog(false);
-        setSelectedSensorReading(emptySensorReading);
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while deleting sensor reading: \n" + apiJson.error,
-        });
+      for (const reading of sorted) {
+        let readingDate = new Date(reading.readingDate);
+        const readingMin = getInterval(readingDate);
+        if (readingMin == currMin) {
+          points[points.length - 1] = (points[points.length - 1] + reading.value) / 2
+          previousReading = points[points.length - 1]
+        } else {
+          currMin = currMin + 1
+          while (currMin != readingMin) {
+            currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()) : labels.push("")
+            points.push(previousReading)
+            currMin = currMin + 1
+          }
+          currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()) : labels.push("")
+          points.push(reading.value)
+          previousReading = reading.value
+        }
       }
+      labels[labels.length - 1] = new Date(sorted[sorted.length - 1].readingDate).toLocaleTimeString()
+
+      const data = {
+        labels: labels,
+        datasets: [
+          {
+            label: curSensor.sensorType == "CAMERA" ? "No. customers" : curSensor.sensorType,
+            fill: false,
+            borderColor: documentStyle.getPropertyValue('--blue-500'),
+            yAxisID: 'y',
+            tension: 0,
+            data: points,
+            radius: 0
+          }
+        ]
+      };
+      const options = {
+        animation: {
+          duration: 0
+        },
+        scaleShowValues: true,
+        stacked: false,
+        maintainAspectRatio: false,
+        aspectRatio: 0.6,
+        plugins: {
+          legend: {
+            labels: {
+              color: textColor
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              // color: textColorSecondary,
+              autoSkip: false
+            },
+            grid: {
+              drawOnChartArea: false,
+              //     color: surfaceBorder
+            },
+          },
+          y: {
+            type: 'linear',
+            display: true,
+            position: 'left',
+            ticks: {
+              color: textColorSecondary
+            },
+            grid: {
+              color: surfaceBorder
+            }
+          }
+        }
+      };
+
+      setChartData(data);
+      setChartOptions(options);
+    }).catch(e => console.log(e));
+  }, [refresh, intervalDurationInMilliseconds, intervalFrequency, startDate, endDate]);
+
+  useEffect(() => {
+    const looper = () => {
+      setRefresh([])
+      setTimeout(() => {
+        looper()
+      }, 5000)
     };
-    deleteSensorReading();
-  };
+    looper();
+  }, [])
 
-  const deleteSensorReadingDialogFooter = (
-    <React.Fragment>
-      <Button onClick={hideDeleteSensorReadingDialog}>
-        <HiX />
-        No
-      </Button>
-      <Button variant={"destructive"} onClick={deleteSensorReading}>
-        <HiCheck />
-        Yes
-      </Button>
-    </React.Fragment>
-  );
-  // end delete sensorReading stuff
-
-  const actionBodyTemplate = (sensorReading: SensorReading) => {
-    return (
-      <React.Fragment>
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteSensorReading(sensorReading)}
-        >
-          <HiTrash className="mx-auto" />
-        </Button>
-      </React.Fragment>
-    );
-  };
-
-  const header = (
-    <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Sensor Readings</h4>
-      <span className="p-input-icon-left">
-        <i className="pi pi-search" />
-        <InputText
-          type="search"
-          placeholder="Search..."
-          onInput={(e) => {
-            const target = e.target as HTMLInputElement;
-            setGlobalFilter(target.value);
-          }}
-        />
-      </span>
-    </div>
-  );
 
   return (
-    <div>
-      <div>
-        <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button disabled className="invisible">
-                Back
-              </Button>
-              <span className=" self-center text-title-xl font-bold">
-                All Sensor Readings
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
+    <div className="p-10">
+      <div className="rounded-lg bg-white p-4">
+
+        {chartData ?
+          <div>
+            <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+              {/* Start Date */}
+              <div className="flex justify-content-center">
+                <label htmlFor="startDateCalendar" className="self-center mx-3 text-lg text-graydark">Start Date</label>
+                <Calendar id="startDateCalendar" showTime hourFormat="12" value={startDate} minDate={minDate} maxDate={endDate} onChange={(e: CalendarChangeEvent) => {
+                  if (e && e.value !== null) {
+                    setStartDate(e.value as Date);
+                  }
+                }} />
+              </div>
+              {/* End Date */}
+              <div className=" flex justify-content-center">
+                <label htmlFor="startDateCalendar"  className="self-center mx-3 text-lg text-graydark">End Date</label>
+                <Calendar value={endDate} showTime hourFormat="12" maxDate={new Date()} minDate={startDate} onChange={(e: CalendarChangeEvent) => {
+                  if (e && e.value !== null) {
+                    setEndDate(e.value as Date);
+                  }
+                }} />
+              </div>
             </div>
-            <Separator />
+            <br />
+            <Chart type="line" data={chartData} options={chartOptions} />
           </div>
-
-          <DataTable
-            ref={dt}
-            value={sensorReadingList}
-            selection={selectedSensorReading}
-            onSelectionChange={(e) => {
-              if (Array.isArray(e.value)) {
-                setSelectedSensorReading(e.value);
-              }
-            }}
-            dataKey="readingDate"
-            paginator
-            rows={10}
-            scrollable
-            selectionMode={"single"}
-            rowsPerPageOptions={[5, 10, 25]}
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensor readings"
-            globalFilter={globalFilter}
-            header={header}
-          >
-            <Column
-              field="readingDate"
-              header="Reading Date"
-              sortable
-              style={{ minWidth: "4rem" }}
-            ></Column>
-            <Column
-              field="value"
-              header="Value"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              body={actionBodyTemplate}
-              header="Actions"
-              frozen
-              alignFrozen="right"
-              exportable={false}
-              style={{ minWidth: "5rem" }}
-            ></Column>
-          </DataTable>
-        </div>
+          : <h1>No sensor data!</h1>}
       </div>
-      <Dialog
-        visible={deleteSensorReadingDialog}
-        style={{ width: "32rem" }}
-        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header="Confirm"
-        modal
-        footer={deleteSensorReadingDialogFooter}
-        onHide={hideDeleteSensorReadingDialog}
-      >
-        <div className="confirmation-content">
-          <i
-            className="pi pi-exclamation-triangle mr-3"
-            style={{ fontSize: "2rem" }}
-          />
-          {selectedSensorReading && (
-            <span>
-              Are you sure you want to delete{" "}
-              <b>{String(selectedSensorReading.readingDate)}</b>?
-            </span>
-          )}
-        </div>
-      </Dialog>
     </div>
-  );
+  )
 }
-
-export default AllSensorReadingDatatable;

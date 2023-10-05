@@ -15,7 +15,7 @@ interface ViewFacilityLogDetailsProps {
   curFacilityLog: FacilityLog
 }
 
-function ViewHubDetails(props: ViewFacilityLogDetailsProps) {
+function ViewFacilityLogDetails(props: ViewFacilityLogDetailsProps) {
   const { curFacilityLog } = props;
   console.log(props);
 
@@ -74,4 +74,4 @@ function ViewHubDetails(props: ViewFacilityLogDetailsProps) {
   )
 }
 
-export default ViewHubDetails;
+export default ViewFacilityLogDetails;

@@ -18,6 +18,7 @@ import { HubStatus } from "../../../../enums/HubStatus";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../models/Facility";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 interface AllHubDatatableProps {
   curFacility: Facility;
@@ -25,6 +26,7 @@ interface AllHubDatatableProps {
 
 function AllHubDatatable(props: AllHubDatatableProps) {
   const apiJson = useApiJson();
+  const employee = useAuthContext().state.user?.employeeData;
 
   const { curFacility } = props;
   let emptyHub: Hub = {
@@ -140,20 +142,24 @@ function AllHubDatatable(props: AllHubDatatableProps) {
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        <NavLink
-          to={`/assetfacility/edithub/${hub.hubProcessorId}`}
-        >
-          <Button className="mr-2">
-            <HiPencil className="mx-auto" />
+        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          <NavLink
+            to={`/assetfacility/edithub/${hub.hubProcessorId}`}
+          >
+            <Button className="mr-2">
+              <HiPencil className="mx-auto" />
+            </Button>
+          </NavLink>
+        )}
+        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmDeleteHub(hub)}
+          >
+            <HiTrash className="mx-auto" />
           </Button>
-        </NavLink>
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteHub(hub)}
-        >
-          <HiTrash className="mx-auto" />
-        </Button>
+        )}
       </React.Fragment>
     );
   };
@@ -183,11 +189,14 @@ function AllHubDatatable(props: AllHubDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink to={`/assetfacility/createhub/${curFacility.facilityId}`}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
+              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+                <NavLink to={`/assetfacility/createhub/${curFacility.facilityId}`}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                    Add Hub
+                  </Button>
+                </NavLink>
+              )}
               <span className=" self-center text-title-xl font-bold">
                 All Hubs
               </span>

@@ -58,6 +58,8 @@ function CreateNewMaintenanceLogForm(props: CreateNewMaintenanceLogProps) {
       toastShadcn({
         description: "Successfully created sensor maintenance log",
       });
+      console.log(responseJson);
+      navigate("/assetfacility/maintenance");
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -67,7 +69,6 @@ function CreateNewMaintenanceLogForm(props: CreateNewMaintenanceLogProps) {
           error.message,
       });
     }
-    console.log(apiJson.result);
 
     // handle success case or failurecase using apiJson
   }

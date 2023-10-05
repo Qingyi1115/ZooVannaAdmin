@@ -353,6 +353,7 @@ function AllAnimalsDatatable() {
               <NavLink to={"/animal/createanimal"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
+                  Add Animal
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">

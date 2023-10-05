@@ -85,7 +85,7 @@ function UpdateProfile() {
 
       if (response["newToken"] !== undefined) {
         const json = {
-          email: response["employee"].employeeEmail,
+          employeeData: response["employee"],
           token: response["newToken"],
         };
         dispatch({ type: "LOGIN", payload: json });
