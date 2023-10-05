@@ -243,7 +243,7 @@ function AllAnimalsDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deleteanimal/" +
-            selectedAnimal.animalCode
+          selectedAnimal.animalCode
         );
 
         toastShadcn({
@@ -386,6 +386,7 @@ function AllAnimalsDatatable() {
               <NavLink to={"/animal/createanimal"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
+                  Add Animal
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">

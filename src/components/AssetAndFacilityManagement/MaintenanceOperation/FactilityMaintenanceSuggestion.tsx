@@ -32,7 +32,7 @@ interface MaintenanceDetails {
   id: number
 }
 
-function rowColor(facility:any) {
+function rowColor(facility: any) {
   return facility.predictedMaintenanceDate && (compareDates(new Date(facility.predictedMaintenanceDate), new Date()) <= 0) ? "text-red-700" : "text-red-700";
 }
 
@@ -52,7 +52,7 @@ function FacilityMaintenanceSuggestion() {
     ).catch(error => {
       console.log(error);
     }).then(responseJson => {
-      setFacilityList(responseJson["facilities"].sort((a:any,b:any) => {
+      setFacilityList(responseJson["facilities"].sort((a: any, b: any) => {
         if (!a.predictedMaintenanceDate) return 1;
         if (!b.predictedMaintenanceDate) return -1;
         return compareDates(new Date(a.predictedMaintenanceDate), new Date(b.predictedMaintenanceDate));
@@ -123,10 +123,10 @@ function FacilityMaintenanceSuggestion() {
   );
 
   const statusBodyTemplate = (rowData: any) => {
-    return <Tag value={isNaN(Date.parse(rowData.suggestedMaintenance)) ? rowData.suggestedMaintenance : new Date(rowData.suggestedMaintenance).toLocaleString()} 
-    severity={isNaN(Date.parse(rowData.suggestedMaintenance)) ? "info":  
-      (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ? "danger" 
-      : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" :"success"} />;
+    return <Tag value={isNaN(Date.parse(rowData.suggestedMaintenance)) ? rowData.suggestedMaintenance : new Date(rowData.suggestedMaintenance).toLocaleString()}
+      severity={isNaN(Date.parse(rowData.suggestedMaintenance)) ? "info" :
+        (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ? "danger"
+          : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" : "success"} />;
   };
 
   return (

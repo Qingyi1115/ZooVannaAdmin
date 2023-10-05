@@ -172,13 +172,14 @@ function AllAnimalFeedDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-            {(employee.planningStaff?.plannerType == "CURATOR") && (
-              <NavLink to={"/assetfacility/createanimalfeed"}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
-            )}
+              {(employee.planningStaff?.plannerType == "CURATOR") && (
+                <NavLink to={"/assetfacility/createanimalfeed"}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                    Add Animal Feed
+                  </Button>
+                </NavLink>
+              )}
               <span className="self-center text-title-xl font-bold">
                 All Animal Feed
               </span>
@@ -230,7 +231,7 @@ function AllAnimalFeedDatatable() {
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
-            
+
             {(employee.planningStaff?.plannerType == "CURATOR") && (
               <Column
                 body={actionBodyTemplate}

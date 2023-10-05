@@ -254,6 +254,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
                 <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
+                    Add Maintenance Log
                   </Button>
                 </NavLink>
               )}
@@ -261,7 +262,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
                 All Maintenance Logs
               </span>
               <Button disabled className="invisible">
-                Back
+                Add Maintenance Log
               </Button>
             </div>
             <Separator />

@@ -143,23 +143,23 @@ function AllHubDatatable(props: AllHubDatatableProps) {
           </Button>
         </NavLink>
         {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <NavLink
-          to={`/assetfacility/edithub/${hub.hubProcessorId}`}
-        >
-          <Button className="mr-2">
-            <HiPencil className="mx-auto" />
+          <NavLink
+            to={`/assetfacility/edithub/${hub.hubProcessorId}`}
+          >
+            <Button className="mr-2">
+              <HiPencil className="mx-auto" />
+            </Button>
+          </NavLink>
+        )}
+        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmDeleteHub(hub)}
+          >
+            <HiTrash className="mx-auto" />
           </Button>
-        </NavLink>
-          )}
-          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteHub(hub)}
-        >
-          <HiTrash className="mx-auto" />
-        </Button>
-          )}
+        )}
       </React.Fragment>
     );
   };
@@ -190,11 +190,12 @@ function AllHubDatatable(props: AllHubDatatableProps) {
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-              <NavLink to={`/assetfacility/createhub/${curFacility.facilityId}`}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
+                <NavLink to={`/assetfacility/createhub/${curFacility.facilityId}`}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                    Add Hub
+                  </Button>
+                </NavLink>
               )}
               <span className=" self-center text-title-xl font-bold">
                 All Hubs

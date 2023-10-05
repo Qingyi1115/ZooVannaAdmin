@@ -288,6 +288,7 @@ function AllListingsDatatable() {
             <NavLink to={"/employee/createNewEmployee"}>
               <Button className="mr-2">
                 <HiPlus className="mr-auto" />
+                Add Listing
               </Button>
             </NavLink>
             <Button onClick={exportCSV}>Export to .csv</Button>

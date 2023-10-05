@@ -73,9 +73,9 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   useEffect(() => {
     apiJson.get(
       `http://localhost:3000/api/assetfacility/getFacilityLogs/${facilityId}`)
-      .then(res => { 
+      .then(res => {
         setFacilityLogList(res.facilityLogs as FacilityLog[]);
-       })
+      })
       .catch(e => console.log(e));
   }, []);
 
@@ -230,7 +230,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
       <div>
         <Card className="my-4 relative"
           title={facilityLog.title}
-          subTitle={ facilityLog.dateTime ? 
+          subTitle={facilityLog.dateTime ?
             "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}>
           {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
           <Button className="absolute top-5 right-5"
@@ -250,9 +250,9 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <div className="text-xl font-bold text-900">Remarks</div>
               <p>{facilityLog.remarks}</p>
             </div>
-              <div className="italic  indent-px ">
-                {(facilityLog.isMaintenance? "Maintenance Log" :"Operation Log")}
-              </div>
+            <div className="italic  indent-px ">
+              {(facilityLog.isMaintenance ? "Maintenance Log" : "Operation Log")}
+            </div>
           </div>
 
         </Card>
@@ -276,18 +276,19 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-              employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && 
-              <NavLink to={`/assetfacility/createfacilitylog/${facilityId}`}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
+                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
+                <NavLink to={`/assetfacility/createfacilitylog/${facilityId}`}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                    Add Facility Log
+                  </Button>
+                </NavLink>
               )}
               <span className=" self-center text-title-xl font-bold">
                 All Facility Logs
               </span>
               <Button disabled className="invisible">
-                Back
+                Add Facility Log
               </Button>
             </div>
             <Separator />

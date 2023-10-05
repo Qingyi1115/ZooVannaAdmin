@@ -92,7 +92,7 @@ function AllPromotionDatatable() {
     );
   };
 
-  const navigateEditProduct = (promotion: Promotion) => {};
+  const navigateEditProduct = (promotion: Promotion) => { };
 
   const confirmDeletePromotion = (promotion: Promotion) => {
     setSelectedPromotion(promotion);
@@ -122,7 +122,7 @@ function AllPromotionDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/promotion/deletePromotion/" +
-            selectedPromotion.promotionId
+          selectedPromotion.promotionId
         );
 
         toastShadcn({
@@ -210,6 +210,7 @@ function AllPromotionDatatable() {
               <NavLink to={"/promotion/createpromotion"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
+                  Add Promotion
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">
