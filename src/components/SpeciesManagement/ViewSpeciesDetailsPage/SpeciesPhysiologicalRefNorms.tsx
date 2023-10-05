@@ -83,20 +83,10 @@ function SpeciesPhysiologicalRefNorms(
       "--text-color-secondary"
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
-    // const weightMaleDataPoints = physiologicalRefNormsList.map((item) => ({
-    //   x: item.ageToGrowthAge,
-    //   y: item.weightMaleKg,
-    //   growthStage: item.growthStage,
-    // }));
     const weightMaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
       { x: item.minAge, y: item.weightMaleKg },
       { x: item.maxAge, y: item.weightMaleKg },
     ]);
-    // const weightFemaleDataPoints = physiologicalRefNormsList.map((item) => ({
-    //   x: item.ageToGrowthAge,
-    //   y: item.weightFemaleKg,
-    //   growthStage: item.growthStage,
-    // }));
     const weightFemaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
       { x: item.minAge, y: item.weightFemaleKg },
       { x: item.maxAge, y: item.weightFemaleKg },
@@ -291,7 +281,7 @@ function SpeciesPhysiologicalRefNorms(
       <br />
       <div>
         <span className="text-lg font-medium">
-          Average {curSpecies.commonName} Size (kg)
+          Average {curSpecies.commonName} Size (cm)
         </span>
         <Chart type="line" data={sizeChartData} options={sizeChartOptions} />
       </div>

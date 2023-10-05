@@ -112,7 +112,7 @@ function CreatePhysiologicalRefNormForm(
 
   function validateSizeMaleCm(props: ValidityState) {
     // if (props != undefined) {
-    if (sizeMaleCm <= 0) {
+    if (Number(sizeMaleCm) <= 0) {
       return (
         <div className="font-medium text-danger">
           * Average size of male must be greater than 0
@@ -126,7 +126,7 @@ function CreatePhysiologicalRefNormForm(
 
   function validateSizeFemaleCm(props: ValidityState) {
     // if (props != undefined) {
-    if (sizeFemaleCm <= 0) {
+    if (Number(sizeFemaleCm) <= 0) {
       return (
         <div className="font-medium text-danger">
           * Average size of female must be greater than 0
@@ -140,7 +140,7 @@ function CreatePhysiologicalRefNormForm(
 
   function validateWeightMaleKg(props: ValidityState) {
     // if (props != undefined) {
-    if (weightMaleKg <= 0) {
+    if (Number(weightMaleKg) <= 0) {
       return (
         <div className="font-medium text-danger">
           * Average weight of male must be greater than 0
@@ -154,7 +154,7 @@ function CreatePhysiologicalRefNormForm(
 
   function validateWeightFemaleKg(props: ValidityState) {
     // if (props != undefined) {
-    if (weightFemaleKg <= 0) {
+    if (Number(weightFemaleKg) <= 0) {
       return (
         <div className="font-medium text-danger">
           * Average weight of female must be greater than 0

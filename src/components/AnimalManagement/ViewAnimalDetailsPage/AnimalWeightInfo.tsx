@@ -81,8 +81,7 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
-  const [animalWeightList, setAnimalWeightList] =
-    useState<AnimalWeight[]>(testAnimalWeightList);
+  const [animalWeightList, setAnimalWeightList] = useState<AnimalWeight[]>([]);
   const [physiologicalRefNormsList, setPhysiologicalRefNormsList] = useState<
     PhysiologicalReferenceNorms[]
   >([]);
@@ -95,14 +94,14 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
     const fetchAnimalWeight = async () => {
       try {
         const responseJson = await apiJson.get(
-          "http://localhost:3000/api/animal/getanimalweight/"
+          `http://localhost:3000/api/animal//getAllAnimalWeightsByAnimalCode/${curAnimal.animalCode}`
         );
         setAnimalWeightList(responseJson as AnimalWeight[]);
       } catch (error: any) {
         console.log(error);
       }
     };
-    // fetchAnimalWeight();
+    fetchAnimalWeight();
   }, []);
 
   // Weight chart
@@ -147,20 +146,23 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
       "--text-color-secondary"
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
-    const weightMaleDataPoints = physiologicalRefNormsList.map((item) => ({
-      x: item.ageToGrowthAge,
-      y: item.weightMaleKg,
-      growthStage: item.growthStage,
-    }));
-    const weightFemaleDataPoints = physiologicalRefNormsList.map((item) => ({
-      x: item.ageToGrowthAge,
-      y: item.weightFemaleKg,
-      growthStage: item.growthStage,
-    }));
+    const weightMaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
+      { x: item.minAge, y: item.weightMaleKg },
+      { x: item.maxAge, y: item.weightMaleKg },
+    ]);
+    const weightFemaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
+      { x: item.minAge, y: item.weightFemaleKg },
+      { x: item.maxAge, y: item.weightFemaleKg },
+    ]);
     const weightRecordDataPoints = animalWeightList.map((record) => ({
-      x: calculateAge(record.dateOfMeasure, curAnimal.dateOfBirth), // Calculate age using the provided function
+      x: calculateAge(
+        new Date(record.dateOfMeasure),
+        new Date(curAnimal.dateOfBirth)
+      ), // Calculate age using the provided function
       y: record.weightInKg,
     }));
+    console.log("heheh");
+    console.log(weightRecordDataPoints);
     const data = {
       labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
       datasets: [
@@ -240,7 +242,7 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
     };
     setWeightChartData(data);
     setWeightChartOptions(options);
-  }, [physiologicalRefNormsList]);
+  }, [physiologicalRefNormsList, animalWeightList]);
 
   return (
     <div>
