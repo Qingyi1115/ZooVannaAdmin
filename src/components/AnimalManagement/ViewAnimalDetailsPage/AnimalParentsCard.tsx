@@ -96,84 +96,83 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
           <div className="flex gap-10">
             {/* Parent 1 */}
             {animalParent1 ? (
-              <NavLink
-                to={`/animal/viewanimaldetails/${animalParent1.animalCode}`}
-              >
-                <div className="flex flex-col items-center gap-2 rounded-md border border-strokedark/20 p-4 transition-all hover:bg-muted/50">
-                  <div className="flex items-center gap-4">
-                    <img
-                      alt={"Parent 1 image"}
-                      src={"http://localhost:3000/"}
-                      className="aspect-square w-20 rounded-full border border-white object-cover shadow-4"
-                    />
-                    <div>
-                      <p>Parent 1:</p>
-                      <p className="">
-                        Name:{" "}
-                        <span className="text-lg font-bold">
-                          {animalParent1.houseName}
-                        </span>
-                      </p>
-                      <p className="">
-                        <span className="text-sm">Species:</span>{" "}
-                        {animalParent1.species.commonName}
-                      </p>
-                      <p
-                        className={`${
-                          animalParent1.sex == "MALE"
-                            ? "text-[#3b82f6]"
-                            : animalParent1.sex == "FEMALE"
-                            ? "text-[#ec4899]"
-                            : "text-black"
-                        }`}
-                      >
-                        <span className="text-sm text-black">Sex:</span>{" "}
-                        {animalParent1.sex}
-                      </p>
-                    </div>
-                  </div>
-                  <Separator />
-                  <div className="flex w-full gap-2">
-                    <Dialog
-                      open={openDeleteParentDialog}
-                      onOpenChange={setOpenDeleteParentDialog}
+              <div className="flex flex-col items-center gap-2 rounded-md border border-strokedark/20 p-4 transition-all">
+                <div className="flex items-center gap-4">
+                  <img
+                    alt={"Parent 1 image"}
+                    src={"http://localhost:3000/"}
+                    className="aspect-square w-20 rounded-full border border-white object-cover shadow-4"
+                  />
+                  <div>
+                    <p>Parent 1:</p>
+                    <p className="">
+                      Name:{" "}
+                      <span className="text-lg font-bold">
+                        {animalParent1.houseName}
+                      </span>
+                    </p>
+                    <p className="">
+                      <span className="text-sm">Species:</span>{" "}
+                      {animalParent1.species.commonName}
+                    </p>
+                    <p
+                      className={`${
+                        animalParent1.sex == "MALE"
+                          ? "text-[#3b82f6]"
+                          : animalParent1.sex == "FEMALE"
+                          ? "text-[#ec4899]"
+                          : "text-black"
+                      }`}
                     >
-                      <DialogTrigger>
-                        <Button variant={"destructive"} className="w-full">
-                          Delete
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="h-3/5">
-                        <DialogHeader>
-                          <DialogTitle>Confirm</DialogTitle>
-                        </DialogHeader>
-                        Are you sure you want to delete{" "}
-                        {animalParent1.houseName} as {curAnimal.houseName}'s
-                        parent?
-                        <DialogFooter>
-                          <Button
-                            onClick={() => setOpenDeleteParentDialog(false)}
-                          >
-                            <HiX className="mr-2" />
-                            No
-                          </Button>
-                          <Button
-                            variant={"destructive"}
-                            // onClick={deleteParent}
-                          >
-                            <HiCheck className="mr-2" />
-                            Yes
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                    <Button className="w-full">Change</Button>
-                  </div>
-                  <div className="flex items-center">
-                    Click to view details <HiChevronRight className="h-6 w-6" />
+                      <span className="text-sm text-black">Sex:</span>{" "}
+                      {animalParent1.sex}
+                    </p>
                   </div>
                 </div>
-              </NavLink>
+                <Separator />
+                <div className="flex w-full gap-2">
+                  <Dialog
+                    open={openDeleteParentDialog}
+                    onOpenChange={setOpenDeleteParentDialog}
+                  >
+                    <DialogTrigger className="w-full">
+                      <Button variant={"destructive"} className="w-full">
+                        Delete
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="h-3/5">
+                      <DialogHeader>
+                        <DialogTitle>Confirm</DialogTitle>
+                      </DialogHeader>
+                      Are you sure you want to delete {animalParent1.houseName}{" "}
+                      as {curAnimal.houseName}'s parent?
+                      <DialogFooter>
+                        <Button
+                          onClick={() => setOpenDeleteParentDialog(false)}
+                        >
+                          <HiX className="mr-2" />
+                          No
+                        </Button>
+                        <Button
+                          variant={"destructive"}
+                          // onClick={deleteParent}
+                        >
+                          <HiCheck className="mr-2" />
+                          Yes
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  <Button className="w-full">Change</Button>
+                </div>
+                <NavLink
+                  to={`/animal/viewanimaldetails/${animalParent1.animalCode}`}
+                >
+                  <div className="flex items-center hover:underline hover:underline-offset-2">
+                    Click to view details <HiChevronRight className="h-6 w-6" />
+                  </div>
+                </NavLink>
+              </div>
             ) : (
               <div>There is no known parent</div>
             )}

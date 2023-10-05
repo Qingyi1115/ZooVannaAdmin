@@ -241,6 +241,41 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
     return total;
   };
 
+  const statusTemplate = (animal: Animal) => {
+    const statuses = animal.animalStatus.split(",");
+
+    return (
+      <React.Fragment>
+        <div className="flex flex-col gap-1">
+          {statuses.map((status, index) => (
+            <div
+              key={index}
+              className={
+                status === "NORMAL"
+                  ? "flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] text-sm font-bold text-emerald-900"
+                  : status === "PREGNANT"
+                  ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
+                  : status === "SICK"
+                  ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
+                  : status === "INJURED"
+                  ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
+                  : status === "OFFSITE"
+                  ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
+                  : status === "RELEASED"
+                  ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
+                  : status === "DECEASED"
+                  ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
+                  : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
+              }
+            >
+              {status}
+            </div>
+          ))}
+        </div>
+      </React.Fragment>
+    );
+  };
+
   return (
     <div>
       <div>
@@ -302,6 +337,13 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
+              body={statusTemplate}
+              // field="animalStatus"
+              header="Animal Status"
+              sortable
+              style={{ minWidth: "5rem" }}
+            ></Column>
+            <Column
               field="sex"
               header="Sex"
               sortable
@@ -310,12 +352,6 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
             <Column
               field="rfidTagNum"
               header="RFID Tag Number"
-              sortable
-              style={{ minWidth: "5rem" }}
-            ></Column>
-            <Column
-              field="animalStatus"
-              header="Animal Status"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
