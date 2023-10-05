@@ -47,7 +47,8 @@ const emptyPhysioRefNorm: PhysiologicalReferenceNorms = {
   sizeFemaleCm: 90,
   weightMaleKg: 200,
   weightFemaleKg: 190,
-  ageToGrowthAge: 15,
+  minAge: 10,
+  maxAge: 15,
   growthStage: AnimalGrowthStage.JUVENILE,
 };
 
@@ -205,13 +206,19 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
           field="growthStage"
           header="Growth Stage"
           sortable
-          style={{ minWidth: "12rem" }}
+          style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="ageToGrowthAge"
-          header="Age to Reach Growth Stage"
+          field="minAge"
+          header="Start Age (years)"
           sortable
-          style={{ minWidth: "12rem" }}
+          style={{ minWidth: "6rem" }}
+        ></Column>
+        <Column
+          field="maxAge"
+          header="End Age (years)"
+          sortable
+          style={{ minWidth: "6rem" }}
         ></Column>
         <Column
           field="sizeMaleCm"

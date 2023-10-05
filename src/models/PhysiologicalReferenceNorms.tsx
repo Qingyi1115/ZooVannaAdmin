@@ -12,7 +12,8 @@ interface PhysiologicalReferenceNorms {
   sizeFemaleCm: number;
   weightMaleKg: number;
   weightFemaleKg: number;
-  ageToGrowthAge: number;
+  minAge: number;
+  maxAge: number;
   growthStage: AnimalGrowthStage;
 
   species?: Species;

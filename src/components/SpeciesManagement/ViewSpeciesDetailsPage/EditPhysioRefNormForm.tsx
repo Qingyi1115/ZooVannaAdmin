@@ -57,9 +57,8 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
   const [weightFemaleKg, setWeightFemaleKg] = useState<number>(
     curPhysioRefNorm.weightFemaleKg
   );
-  const [ageToGrowthAge, setAgeToGrowthAge] = useState<number>(
-    curPhysioRefNorm.ageToGrowthAge
-  );
+  const [minAge, setMinAge] = useState<number>(curPhysioRefNorm.minAge);
+  const [maxAge, setMaxAge] = useState<number>(curPhysioRefNorm.maxAge);
   const [growthStage, setGrowthStage] = useState<string | undefined>(
     curPhysioRefNorm.growthStage
   );
@@ -81,12 +80,40 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
     return null;
   }
 
-  function validateAgeToGrowthAge(props: ValidityState) {
+  function validateMinAge(props: ValidityState) {
     // if (props != undefined) {
-    if (sizeMaleCm <= 0) {
+    if (Number(minAge) < 0) {
       return (
         <div className="font-medium text-danger">
-          * Age to reach growth age must be greater than 0
+          * Start age must be equal to or greater than 0
+        </div>
+      );
+    }
+
+    if (Number(minAge) > Number(maxAge)) {
+      return (
+        <div className="font-medium text-danger">
+          * Start age must be smaller than end age
+        </div>
+      );
+    }
+    // add any other cases here
+    // }
+    return null;
+  }
+
+  function validateMaxAge(props: ValidityState) {
+    // if (props != undefined) {
+    if (Number(maxAge) <= 0) {
+      return (
+        <div className="font-medium text-danger">
+          * End age must be greater than 0
+        </div>
+      );
+    } else if (Number(minAge) > Number(maxAge)) {
+      return (
+        <div className="font-medium text-danger">
+          * End age must be greater than start age
         </div>
       );
     }
@@ -162,7 +189,8 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
       sizeFemaleCm,
       weightMaleKg,
       weightFemaleKg,
-      ageToGrowthAge,
+      minAge,
+      maxAge,
       growthStage,
     };
 
@@ -240,18 +268,32 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
           validateFunction={validateGrowthStage}
         />
 
-        {/* Age to Growth Stage */}
-        <FormFieldInput
-          type="number"
-          formFieldName="ageToGrowthAge"
-          label={`Age to Reach Growth Stage`}
-          required={true}
-          pattern={undefined}
-          placeholder="e.g., 8"
-          value={ageToGrowthAge}
-          setValue={setAgeToGrowthAge}
-          validateFunction={validateAgeToGrowthAge}
-        />
+        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+          {/* Min Age / Start Age */}
+          <FormFieldInput
+            type="number"
+            formFieldName="minAge"
+            label={`Start Age`}
+            required={true}
+            pattern={undefined}
+            placeholder="e.g., 8"
+            value={minAge}
+            setValue={setMinAge}
+            validateFunction={validateMinAge}
+          />
+          {/* Max Age / End Age */}
+          <FormFieldInput
+            type="number"
+            formFieldName="maxAge"
+            label={`End Age`}
+            required={true}
+            pattern={undefined}
+            placeholder="e.g., 8"
+            value={maxAge}
+            setValue={setMaxAge}
+            validateFunction={validateMaxAge}
+          />
+        </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
           {/* Size Male cm */}
@@ -312,11 +354,7 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
             disabled={apiJson.loading}
             className="h-12 w-2/3 self-center rounded-full text-lg"
           >
-            {!apiJson.loading ? (
-              <div>Submit</div>
-            ) : (
-              <div>Loading</div>
-            )}
+            {!apiJson.loading ? <div>Submit</div> : <div>Loading</div>}
           </Button>
         </Form.Submit>
       </Form.Root>
