@@ -16,6 +16,7 @@ import {
 } from "../../enums/Enumurated";
 import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
 import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
+import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
 
 function ViewAnimalDetailsPage() {
   const apiJson = useApiJson();
@@ -111,7 +112,7 @@ function ViewAnimalDetailsPage() {
             </TabsContent>
             <TabsContent value="behaviour">
               <div>
-                <span>Behaviour Observation???</span>
+                <AllAnimalObservationLogsDatatable animalId={curAnimal.animalId} />
               </div>
             </TabsContent>
             <TabsContent value="medical">
