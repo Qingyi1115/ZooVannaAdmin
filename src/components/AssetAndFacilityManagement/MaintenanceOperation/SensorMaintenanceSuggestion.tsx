@@ -76,12 +76,14 @@ function SensorMaintenanceSuggestion() {
   const actionBodyTemplate = (objDetails: MaintenanceDetails) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewsensordetails/${objDetails.id}`}>
+        <NavLink to={`/assetfacility/viewsensordetails/${objDetails.id}`}
+        state={{prev:`/assetfacility/maintenance/sensorMaintenance`}}>
           <Button variant="outline" className="mb-1 mr-1">
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        <NavLink to={`/assetfacility/viewSensorMaintenanceChart/${objDetails.id}`}>
+        <NavLink to={`/assetfacility/viewSensorMaintenanceChart/${objDetails.id}`}
+        state={{prev:`/assetfacility/maintenance/sensorMaintenance`}}>
           <Button className="mb-1 mr-1">
             <HiOutlinePresentationChartLine className="mx-auto" />
           </Button>

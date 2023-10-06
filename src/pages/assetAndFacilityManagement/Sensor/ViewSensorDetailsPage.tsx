@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
 
@@ -20,6 +20,7 @@ function ViewSensorDetailsPage() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const employee = useAuthContext().state.user?.employeeData;
+  const location = useLocation();
 
   let emptyFacility: Facility = {
     facilityId: -1,
@@ -74,7 +75,7 @@ function ViewSensorDetailsPage() {
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         <div className="flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
             Back
           </Button>
           <span className="self-center text-lg text-graydark">

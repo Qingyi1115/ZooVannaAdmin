@@ -9,7 +9,7 @@ import Facility from "../../../models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 import FormFieldSelect from "../../../components/FormFieldSelect";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -20,6 +20,7 @@ interface EditFacilityFormProps {
 }
 
 function EditFacilityForm(props: EditFacilityFormProps) {
+  const location = useLocation();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
@@ -124,7 +125,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
         >
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+              <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
                 Back
               </Button>
               <span className="self-center text-lg text-graydark">

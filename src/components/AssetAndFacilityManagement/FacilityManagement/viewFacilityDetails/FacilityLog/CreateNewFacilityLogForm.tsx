@@ -7,7 +7,7 @@ import FormFieldSelect from "../../../../FormFieldSelect";
 import useApiJson from "../../../../../hooks/useApiJson";
 import useApiFormData from "../../../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../../models/Facility";
@@ -29,6 +29,7 @@ function validateFacilityLogName(props: ValidityState) {
 }
 
 function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
+  const location = useLocation();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
       {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">

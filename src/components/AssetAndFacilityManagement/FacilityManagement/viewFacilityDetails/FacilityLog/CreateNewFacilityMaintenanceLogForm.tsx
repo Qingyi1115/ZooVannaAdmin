@@ -7,7 +7,7 @@ import FormFieldSelect from "../../../../FormFieldSelect";
 import useApiJson from "../../../../../hooks/useApiJson";
 import useApiFormData from "../../../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../../models/Facility";
@@ -37,6 +37,7 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
   const [remarks, setRemarks] = useState<string>(""); // text input
   const { curFacility } = props;
   const [formError, setFormError] = useState<string | null>(null);
+  const location = useLocation();
 
 
   async function handleSubmit(e: any) {
@@ -82,7 +83,7 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
       {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">

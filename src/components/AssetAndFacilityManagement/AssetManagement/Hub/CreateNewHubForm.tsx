@@ -14,12 +14,13 @@ import { Separator } from "@/components/ui/separator";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import Facility from "../../../../models/Facility";
 
+import { useLocation } from 'react-router-dom';
 
-
-function CreateNewHubForm() {
+function CreateNewHubForm(prop:any) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { facilityId } = useParams<{ facilityId: string }>();
   const [pageFacilityId, setFacilityId] = useState<string | undefined>(facilityId); // text input
@@ -109,7 +110,7 @@ function CreateNewHubForm() {
       {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">

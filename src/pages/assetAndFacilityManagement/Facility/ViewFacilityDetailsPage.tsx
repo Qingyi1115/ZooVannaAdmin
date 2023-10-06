@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
 
@@ -27,7 +27,7 @@ function ViewFacilityDetailsPage() {
   const [empList, setEmpList] = useState<Employee[]>([]);
   const employee = useAuthContext().state.user?.employeeData;
   const navigate = useNavigate();
-
+  const location = useLocation();
   // let emptyThirdParty: ThirdParty = {
   //   ownership: "",
   //   ownerContact: "",
@@ -90,7 +90,7 @@ function ViewFacilityDetailsPage() {
               Back
             </Button>
           </NavLink> */}
-          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
             Back
           </Button>
           <span className="self-center text-lg text-graydark">
@@ -137,7 +137,7 @@ function ViewFacilityDetailsPage() {
               <ManageFacilityMaintenanceStaffPage />
             </TabsContent>
           )}
-          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          {employee.superAdmin || (employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <TabsContent value="manageOperations">
               <ManageOperationStaffPage />
             </TabsContent>

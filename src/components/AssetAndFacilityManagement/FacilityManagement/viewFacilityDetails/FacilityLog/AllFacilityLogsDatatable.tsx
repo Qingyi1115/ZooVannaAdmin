@@ -145,7 +145,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const actionBodyTemplate = (facilityLog: FacilityLog) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewfacilityLogdetails/${facilityLog.logId}`}>
+        <NavLink to={`/assetfacility/viewfacilityLogdetails/${facilityLog.logId}`} >
           <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mx-auto" />
 
