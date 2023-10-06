@@ -27,7 +27,6 @@ function EditAnimalFeedPage() {
           `http://localhost:3000/api/assetfacility/getAnimalFeedById/${animalFeedId}`
         );
         setCurAnimalFeed(responseJson.animalFeed as AnimalFeed);
-        console.log(responseJson);
       } catch (error: any) {
         console.log(error);
       }
