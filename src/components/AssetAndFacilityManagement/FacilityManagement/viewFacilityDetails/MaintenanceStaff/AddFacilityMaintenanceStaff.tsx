@@ -13,6 +13,7 @@ import { Dialog } from "primereact/dialog";
 import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
+import Facility from "../../../../../models/Facility";
 
 interface AddFacilityMaintenanceStaffProps {
   facilityId: number;
@@ -56,14 +57,19 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     ).catch(e => console.log(e)).then(res => {
       const allStaffs: Employee[] = []
       for (const staff of res["generalStaffs"]) {
+        // console.log(staff);
         if (staff.generalStaffType == "ZOO_MAINTENANCE") {
           let emp = staff.employee;
           staff.employee = undefined;
           emp["generalStaff"] = staff
-          emp.currentlyAssigned = emp.generalStaff.maintainedFacilities?.facilityId == facilityId;
+          const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
+          console.log(maintainedFacility);
+          emp.currentlyAssigned = (maintainedFacility !== undefined);
           allStaffs.push(emp)
         }
+
       }
+      console.log(allStaffs);
       setEmployeeList(allStaffs);
 
     });
@@ -87,7 +93,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     try {
       const responseJson = await apiJson.put(
         `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-
+          setRefreshSeed([]);
         }).catch(err => console.log("err", err));
 
       toastShadcn({
@@ -130,7 +136,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     try {
       const responseJson = await apiJson.del(
         `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
-
+      setRefreshSeed([]);
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
@@ -193,7 +199,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     setEmployeeRemovalDialog(true);
   };
 
-  const actionBodyTemplate = (employee: Employee) => {
+  const actionBodyTemplate = (employee: any) => {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
@@ -210,7 +216,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
               <Button
                 name="assignButton"
                 variant={"default"}
-                // disabled={employee.generalStaff?.maintainedFacilities !== null || employee.currentlyAssigned}
+                disabled={employee.currentlyAssigned}
                 className="mr-2"
                 onClick={() => confirmAssignment(employee)}
               >
@@ -219,7 +225,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
               <Button
                 variant={"destructive"}
                 className="mr-2"
-                // disabled={!employee.currentlyAssigned}
+                disabled={!employee.currentlyAssigned}
                 onClick={() => confirmEmployeeRemoval(employee)}
               >
                 <HiMinus className="mx-auto" />
