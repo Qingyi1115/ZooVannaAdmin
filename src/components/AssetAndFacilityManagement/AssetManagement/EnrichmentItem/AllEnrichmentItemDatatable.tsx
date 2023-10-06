@@ -168,6 +168,16 @@ function AllEnrichmentItemDatatable() {
           }}
         />
       </span>
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
+        <NavLink to={"/assetfacility/createenrichmentitem"}>
+          <Button className="mr-2">
+            <HiPlus className="mr-auto" />
+            Add Enrichment Item
+          </Button>
+        </NavLink> : <Button disabled className="invisible">
+          Export to .csv
+        </Button>}
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -176,22 +186,6 @@ function AllEnrichmentItemDatatable() {
       <div>
         <Toast ref={toast} />
         <div className="">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
-                <NavLink to={"/assetfacility/createenrichmentitem"}>
-                  <Button className="mr-2">
-                    <HiPlus className="mr-auto" />
-                    Add Enrichment Item
-                  </Button>
-                </NavLink> : <Button disabled className="invisible">
-                  Export to .csv
-                </Button>}
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
 
           <DataTable
             ref={dt}

@@ -161,6 +161,17 @@ function AllAnimalFeedDatatable() {
           }}
         />
       </span>
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
+        <NavLink to={"/assetfacility/createanimalfeed"}>
+          <Button className="mr-2">
+            <HiPlus className="mr-auto" />
+            Add Animal Feed
+          </Button>
+        </NavLink> :
+        <Button disabled className="invisible">
+          Export to .csv
+        </Button>}
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -169,23 +180,6 @@ function AllAnimalFeedDatatable() {
       <div>
         <Toast ref={toast} />
         <div className="">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
-                <NavLink to={"/assetfacility/createanimalfeed"}>
-                  <Button className="mr-2">
-                    <HiPlus className="mr-auto" />
-                    Add Animal Feed
-                  </Button>
-                </NavLink> :
-                <Button disabled className="invisible">
-                  Export to .csv
-                </Button>}
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
 
           <DataTable
             ref={dt}
