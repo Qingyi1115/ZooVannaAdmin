@@ -21,6 +21,7 @@ import Species from "../../../models/Species";
 import { AnimalSex, AcquisitionMethod, AnimalGrowthStage } from "../../../enums/Enumurated";
 import { Rating } from "../../../enums/Rating";
 import Employee from "../../../models/Employee";
+import { Column } from "primereact/column";
 
 interface AllAnimalObservationLogsDatatableProps {
   animalId: number;
@@ -118,7 +119,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
 
   useEffect(() => {
     apiJson.get(
-      `http://localhost:3000/api/assetfacility/getAnimalObservationLogs/${animalId}`)
+      `http://localhost:3000/api/animal/getAnimalObservationLogs/${animalId}`)
       .then(res => {
         setAnimalObservationLogList(res.animalObservationLogs as AnimalObservationLog[]);
       })
@@ -148,7 +149,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
       try {
         setDeleteAnimalObservationLogDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deleteAnimalObservationLog/" +
+          "http://localhost:3000/api/animal/deleteAnimalObservationLog/" +
           selectedAnimalObservationLog.animalObservationLogId
         );
 
@@ -191,13 +192,13 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const actionBodyTemplate = (animalObservationLog: AnimalObservationLog) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewanimalObservationLogdetails/${animalObservationLog.animalObservationLogId}`}>
+        <NavLink to={`/animal/viewanimalObservationLogdetails/${animalObservationLog.animalObservationLogId}`}>
           <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mx-auto" />
 
           </Button>
         </NavLink>
-        <NavLink to={`/assetfacility/editanimalObservationLog/${animalObservationLog.animalObservationLogId}`}>
+        <NavLink to={`/animal/editanimalObservationLog/${animalObservationLog.animalObservationLogId}`}>
           <Button className="mr-1">
             <HiPencil className="mr-1" />
 
@@ -225,9 +226,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const [sortField, setSortField] = useState<string>('');
   const sortOptions: SortOption[] = [
     { label: 'Latest log', value: '!dateTime' },
-    { label: 'Earliest log', value: 'dateTime' },
-    { label: 'Title (A-Z)', value: 'title' },
-    { label: 'Title (Z-A)', value: '!title' }
+    { label: 'Earliest log', value: 'dateTime' }
   ]
 
   const onSortChange = (event: DropdownChangeEvent) => {
@@ -248,13 +247,13 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         <h4 className="m-1">Manage Animal Observation Logs</h4>
-        <Dropdown
+        {/* <Dropdown
           options={sortOptions}
           value={sortKey}
           optionLabel="label"
           placeholder="Sort By"
           onChange={onSortChange}
-        />
+        /> */}
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
 
@@ -325,7 +324,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             <div className="mb-4 flex justify-between">
               {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
                 employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
-                <NavLink to={`/assetfacility/createAnimalObservationLog/${animalId}`}>
+                <NavLink to={`/animal/createAnimalObservationLog/${animalId}`}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
                     Add Log
@@ -341,7 +340,72 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             </div>
             <Separator />
           </div>
-          <DataView
+          <DataTable
+            ref={dt}
+            value={animalObservationLogList}
+            selection={selectedAnimalObservationLog}
+            onSelectionChange={(e) => {
+              if (Array.isArray(e.value)) {
+                setSelectedAnimalObservationLog(e.value);
+              }
+            }}
+            dataKey="facilityId"
+            paginator
+            rows={10}
+            scrollable
+            selectionMode={"single"}
+            rowsPerPageOptions={[5, 10, 25]}
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facilities"
+            globalFilter={globalFilter}
+            header={header}
+          >
+            <Column
+              field="animalObservationLogId"
+              header="ID"
+              sortable
+              style={{ minWidth: "4rem" }}
+            ></Column>
+            <Column
+              field="dateTime"
+              header="Date"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="durationInMinutes"
+              header="Duration In Minutes"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="observationQuality"
+              header="Observation Quality"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="details"
+              header="Details"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="animals.animalCode"
+              header="Animals"
+              sortable
+              style={{ minWidth: "12rem" }}
+              filter
+              filterPlaceholder="Search by animal code"
+            ></Column>
+            <Column
+              field="employee.employeeName"
+              header="Employee"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+          </DataTable>
+          {/* <DataView
             value={animalObservationLogList}
             itemTemplate={itemTemplate}
             layout="list"
@@ -354,7 +418,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             rowsPerPageOptions={[5, 10, 25]}
             paginator
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          />
+          /> */}
         </div>
       </div>
       <Dialog
