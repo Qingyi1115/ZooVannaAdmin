@@ -207,7 +207,7 @@ function AllPromotionDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink to={"/promotion/createpromotion"}>
+              <NavLink to={"/promotion/createnewpromotion"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
                 </Button>

@@ -100,7 +100,7 @@ function ViewPromotionDetails(props: PromotionDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Minimum Spending &#40;$&#41;
             </TableCell>
-            <TableCell>{curPromotion.description}</TableCell>
+            <TableCell>{curPromotion.minimumSpending}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
