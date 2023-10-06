@@ -35,6 +35,7 @@ import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAn
 import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
 import AnimalActivityHomePage from "./pages/animalManagement/AnimalActivityHomePage";
 import CreateAnimalActivityPage from "./pages/animalManagement/CreateAnimalActivityPage";
+import ViewAnimalActivityDetails from "./pages/animalManagement/ViewAnimalActivityDetails";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -307,6 +308,16 @@ function App() {
                   element={
                     user ? (
                       <CreateAnimalActivityPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/viewanimalactivitydetails/:animalActivityId"
+                  element={
+                    user ? (
+                      <ViewAnimalActivityDetails />
                     ) : (
                       <Navigate to="/login" />
                     )

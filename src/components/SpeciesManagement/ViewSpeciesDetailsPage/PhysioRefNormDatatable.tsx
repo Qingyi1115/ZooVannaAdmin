@@ -262,13 +262,13 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
         ></Column>
         <Column
           field="minWeightFemaleKg"
-          header="Average Weight Female (kg)"
+          header="Min Weight Female (kg)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>
         <Column
           field="maxWeightFemaleKg"
-          header="Average Weight Female (kg)"
+          header="Max Weight Female (kg)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>

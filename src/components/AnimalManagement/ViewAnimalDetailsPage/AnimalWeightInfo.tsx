@@ -146,14 +146,30 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
       "--text-color-secondary"
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
-    const weightMaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
-      { x: item.minAge, y: item.weightMaleKg },
-      { x: item.maxAge, y: item.weightMaleKg },
-    ]);
-    const weightFemaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
-      { x: item.minAge, y: item.weightFemaleKg },
-      { x: item.maxAge, y: item.weightFemaleKg },
-    ]);
+    const minWeightMaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.minWeightMaleKg },
+        { x: item.maxAge, y: item.minWeightMaleKg },
+      ]
+    );
+    const maxWeightMaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.maxWeightMaleKg },
+        { x: item.maxAge, y: item.maxWeightMaleKg },
+      ]
+    );
+    const minWeightFemaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.minWeightFemaleKg },
+        { x: item.maxAge, y: item.minWeightFemaleKg },
+      ]
+    );
+    const maxWeightFemaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.maxWeightFemaleKg },
+        { x: item.maxAge, y: item.maxWeightFemaleKg },
+      ]
+    );
     const weightRecordDataPoints = animalWeightList.map((record) => ({
       x: calculateAge(
         new Date(record.dateOfMeasure),
@@ -161,33 +177,63 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
       ), // Calculate age using the provided function
       y: record.weightInKg,
     }));
-    console.log("heheh");
-    console.log(weightRecordDataPoints);
+
+    const maleDataset = [
+      {
+        label: "Weight Records",
+        data: weightRecordDataPoints,
+        pointBackgroundColor: "rgba(255, 0, 0, 1)", // Customize the point color
+        pointRadius: 5, // Customize the point size
+        showLine: false, // Hide the line connecting the points
+      },
+      {
+        label: "Min Weight Male (kg)",
+        data: minWeightMaleDataPoints,
+        fill: { target: "+1", above: "#93C5FD", below: "#93C5FD" },
+        borderColor: "#3b82f6",
+        tension: 0.4,
+      },
+      {
+        label: "Max Weight Male (kg)",
+        data: maxWeightMaleDataPoints,
+        fill: { target: "-1", above: "#93C5FD", below: "#93C5FD" },
+        borderColor: "#3b82f6",
+        tension: 0.4,
+      },
+    ];
+
+    const femaleDataset = [
+      {
+        label: "Weight Records",
+        data: weightRecordDataPoints,
+        pointBackgroundColor: "rgba(255, 0, 0, 1)", // Customize the point color
+        pointRadius: 5, // Customize the point size
+        showLine: false, // Hide the line connecting the points
+      },
+      {
+        label: "Min Weight Female (kg)",
+        data: minWeightFemaleDataPoints,
+        fill: { target: "+1", below: "#F29FD4", above: "#F29FD4" },
+        borderColor: "#ec4899",
+        tension: 0.4,
+      },
+      {
+        label: "Max Weight Female (kg)",
+        data: maxWeightFemaleDataPoints,
+        fill: { target: "-1", below: "#F29FD4", above: "#F29FD4" },
+        borderColor: "#ec4899",
+        tension: 0.4,
+      },
+    ];
+
     const data = {
-      labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
-      datasets: [
-        {
-          label: "Male (kg)",
-          data: weightMaleDataPoints,
-          fill: false,
-          borderColor: "#3b82f6",
-          tension: 0.4,
-        },
-        {
-          label: "Female (kg)",
-          data: weightFemaleDataPoints,
-          fill: false,
-          borderColor: "#ec4899",
-          tension: 0.4,
-        },
-        {
-          label: "Weight Records",
-          data: weightRecordDataPoints,
-          pointBackgroundColor: "rgba(255, 0, 0, 1)", // Customize the point color
-          pointRadius: 5, // Customize the point size
-          showLine: false, // Hide the line connecting the points
-        },
-      ],
+      // labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
+      datasets:
+        curAnimal.sex == "MALE"
+          ? maleDataset
+          : curAnimal.sex == "FEMALE"
+          ? femaleDataset
+          : [...maleDataset, ...femaleDataset],
     };
     const options = {
       maintainAspectRatio: false,

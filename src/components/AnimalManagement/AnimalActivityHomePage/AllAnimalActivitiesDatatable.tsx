@@ -228,13 +228,13 @@ function AllAnimalActivitiesDatatable() {
               field="animalActivityId"
               header="ID"
               sortable
-              style={{ minWidth: "7rem" }}
+              style={{ minWidth: "4rem" }}
             ></Column>
             <Column
               field="title"
               header="Title"
               sortable
-              style={{ minWidth: "10rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
             <Column
               field="activityType"
@@ -252,25 +252,19 @@ function AllAnimalActivitiesDatatable() {
               // field="date"
               header="Date"
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "8rem" }}
             ></Column>
             <Column
               field="session"
               header="Session"
               sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="generalDietPreference"
-              header="General Diet Preference"
-              sortable
               style={{ minWidth: "10rem" }}
             ></Column>
             <Column
-              field="habitatOrExhibit"
-              header="Habitat or Exhibit"
+              field="durationInMinutes"
+              header="Duration (minutes)"
               sortable
-              style={{ minWidth: "10rem" }}
+              style={{ minWidth: "8rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}
