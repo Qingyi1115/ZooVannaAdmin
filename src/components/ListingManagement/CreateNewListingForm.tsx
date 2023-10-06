@@ -7,11 +7,13 @@ import FormFieldSelect from "../FormFieldSelect";
 import useApiJson from "../../hooks/useApiJson";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 // end field validations
 
 function CreateNewListingForm() {
   const apiJson = useApiJson();
+  const navigate = useNavigate();
 
   const toastShadcn = useToast().toast;
 
@@ -50,6 +52,7 @@ function CreateNewListingForm() {
       toastShadcn({
         description: "Successfully created new Listing!",
       });
+      navigate("/listing/viewalllistings");
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -183,10 +186,11 @@ function CreateNewListingForm() {
         placeholder="Select a listing type"
         valueLabelPair={[
           ["LOCAL_ADULT_ONETIME", "Local-Adult (1x)"],
+          ["LOCAL_CHILD_ONETIME", "Local-Child (1x)"],
           ["LOCAL_STUDENT_ONETIME", "Local-Student (1x)"],
           ["LOCAL_SENIOR_ONETIME", "Local-Senior (1x)"],
-          ["FOREIGNER_ONETIME", "Foreigner (1x)"],
-          ["ANNUALPASS", "Annual pass"],
+          ["FOREIGNER_ADULT_ONETIME", "Foreigner-Adult (1x)"],
+          ["FOREIGNER_CHILD_ONETIME", "Foreigner-Child (1x)"],
         ]}
         value={listingType}
         setValue={setListingType}
