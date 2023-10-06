@@ -247,13 +247,13 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         <h4 className="m-1">Manage Animal Observation Logs</h4>
-        <Dropdown
+        {/* <Dropdown
           options={sortOptions}
           value={sortKey}
           optionLabel="label"
           placeholder="Sort By"
           onChange={onSortChange}
-        />
+        /> */}
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
 
@@ -395,6 +395,8 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               header="Animals"
               sortable
               style={{ minWidth: "12rem" }}
+              filter
+              filterPlaceholder="Search by animal code"
             ></Column>
             <Column
               field="employee.employeeName"
