@@ -419,16 +419,28 @@ function ViewAnimalActivityDetails() {
             </div>
             <div className="flex w-full gap-20">
               <div className="w-full">
-                <div className="text-xl font-medium">Involved Animal(s):</div>
-                <InputText
-                  type="search"
-                  placeholder="Search..."
-                  onInput={(e) => {
-                    const target = e.target as HTMLInputElement;
-                    setInvolvedAnimalGlobalFilter(target.value);
-                  }}
-                  className="mb-2 h-min w-60"
-                />
+                <div className="mb-2 text-xl font-medium">
+                  Involved Animal(s):
+                </div>
+                <div className="flex justify-between">
+                  <InputText
+                    type="search"
+                    placeholder="Search..."
+                    onInput={(e) => {
+                      const target = e.target as HTMLInputElement;
+                      setInvolvedAnimalGlobalFilter(target.value);
+                    }}
+                    className="mb-2 h-full w-60"
+                  />
+                  <NavLink
+                    className="flex"
+                    to={"/animal/assignanimalstoactivity"}
+                  >
+                    <Button type="button" className="h-12 w-60">
+                      Assign Animal(s)
+                    </Button>
+                  </NavLink>
+                </div>
                 <DataTable
                   value={involvedAnimalList}
                   scrollable
@@ -491,16 +503,28 @@ function ViewAnimalActivityDetails() {
                 </Dialog>
               </div>
               <div className="w-full">
-                <div className="text-xl font-medium">Item(s) to be used:</div>
-                <InputText
-                  type="search"
-                  placeholder="Search..."
-                  onInput={(e) => {
-                    const target = e.target as HTMLInputElement;
-                    setInvolvedItemGlobalFilter(target.value);
-                  }}
-                  className="mb-2 h-min w-60"
-                />
+                <div className="mb-2 text-xl font-medium">
+                  Item(s) to be used:
+                </div>
+                <div className="flex justify-between">
+                  <InputText
+                    type="search"
+                    placeholder="Search..."
+                    onInput={(e) => {
+                      const target = e.target as HTMLInputElement;
+                      setInvolvedItemGlobalFilter(target.value);
+                    }}
+                    className="mb-2 h-min w-60"
+                  />
+                  <NavLink
+                    className="flex"
+                    to={"/animal/assignitemsstoactivity"}
+                  >
+                    <Button type="button" className="h-12 w-60">
+                      Assign Item(s)
+                    </Button>
+                  </NavLink>
+                </div>
                 <DataTable
                   value={involvedItemList}
                   scrollable
