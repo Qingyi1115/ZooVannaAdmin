@@ -49,7 +49,15 @@ function ViewPopulationDetailsPage() {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/animal/getAllAnimalsBySpeciesCode/${speciesCode}`
         );
-        setCurAnimalList(responseJson as Animal[]);
+        const animalListNoDeceasedOrReleased = (
+          responseJson as Animal[]
+        ).filter((animal) => {
+          let statuses = animal.animalStatus.split(",");
+          return (
+            !statuses.includes("DECEASED") || !statuses.includes("RELEASED")
+          );
+        });
+        setCurAnimalList(animalListNoDeceasedOrReleased);
       } catch (error: any) {
         console.log(error);
       }

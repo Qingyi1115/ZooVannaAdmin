@@ -111,7 +111,15 @@ function AllAnimalsDatatable() {
         const responseJson = await apiJson.get(
           "http://localhost:3000/api/animal/getAllAnimals"
         );
-        setAnimalList(responseJson as Animal[]);
+        const animalListNoDeceasedOrReleased = (
+          responseJson as Animal[]
+        ).filter((animal) => {
+          let statuses = animal.animalStatus.split(",");
+          return (
+            !statuses.includes("DECEASED") || !statuses.includes("RELEASED")
+          );
+        });
+        setAnimalList(animalListNoDeceasedOrReleased);
       } catch (error: any) {
         console.log(error);
       }
