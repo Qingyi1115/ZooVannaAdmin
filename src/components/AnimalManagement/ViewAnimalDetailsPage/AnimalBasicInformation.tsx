@@ -25,13 +25,16 @@ import EnclosureCard from "./EnclosureCard";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import AnimalParentsCard from "./AnimalParentsCard";
+import UpdateStatusFormDialog from "./UpdateStatusForm";
 
 interface AnimalBasicInformationProps {
   curAnimal: Animal;
+  refreshSeed: number;
+  setRefreshSeed: any;
 }
 
 function AnimalBasicInformation(props: AnimalBasicInformationProps) {
-  const { curAnimal } = props;
+  const { curAnimal, refreshSeed, setRefreshSeed } = props;
 
   const statusColorClass =
     curAnimal.animalStatus === "NORMAL"
@@ -64,30 +67,33 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
     return formattedAge;
   }
 
-  const updateStatusDialog = (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>Update Status</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">test</div>
-          <div className="grid grid-cols-4 items-center gap-4">input</div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Update Status</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+  // const updateStatusDialog = (
+  //   <Dialog>
+  //     <DialogTrigger asChild>
+  //       <Button>Update Status</Button>
+  //     </DialogTrigger>
+  //     <DialogContent className="sm:max-w-[425px]">
+  //       <DialogHeader>
+  //         <DialogTitle>Edit profile</DialogTitle>
+  //         <DialogDescription>
+  //           Make changes to your profile here. Click save when you're done.
+  //         </DialogDescription>
+  //       </DialogHeader>
+  //       <div>
+  //         <UpdateStatusForm
+  //           curAnimal={curAnimal}
+  //           refreshSeed={refreshSeed}
+  //           setRefreshSeed={setRefreshSeed}
+  //         />
+  //       </div>
+  //       <DialogFooter>
+  //         <Button type="submit">Update Status</Button>
+  //       </DialogFooter>
+  //     </DialogContent>
+  //   </Dialog>
+  // );
 
-  const declateDeathDialog = (
+  const declareDeathDialog = (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant={"destructive"}>Declare Death</Button>
@@ -109,6 +115,40 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
       </DialogContent>
     </Dialog>
   );
+
+  const statusTemplate = (statuses: string[]) => {
+    return (
+      <React.Fragment>
+        <div className="flex gap-2">
+          {statuses.map((status, index) => (
+            <div
+              key={index}
+              className={` flex w-max items-center justify-center rounded px-1 text-sm font-bold
+                ${
+                  status === "NORMAL"
+                    ? " bg-emerald-100  text-emerald-900"
+                    : status === "PREGNANT"
+                    ? " bg-orange-100 p-[0.1rem] text-orange-900"
+                    : status === "SICK"
+                    ? " bg-yellow-100 p-[0.1rem]  text-yellow-900"
+                    : status === "INJURED"
+                    ? "bg-red-100 p-[0.1rem] text-red-900"
+                    : status === "OFFSITE"
+                    ? " bg-blue-100 p-[0.1rem]  text-blue-900"
+                    : status === "RELEASED"
+                    ? " bg-fuchsia-100 p-[0.1rem]  text-fuchsia-900"
+                    : status === "DECEASED"
+                    ? " bg-slate-300 p-[0.1rem]  text-slate-900"
+                    : "bg-gray-100 text-black"
+                }`}
+            >
+              {status}
+            </div>
+          ))}
+        </div>
+      </React.Fragment>
+    );
+  };
 
   return (
     <div>
@@ -143,8 +183,12 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
         <NavLink to={`/animal/editanimal/${curAnimal.animalCode}`}>
           <Button>Edit Basic Information</Button>
         </NavLink>
-        {updateStatusDialog}
-        {declateDeathDialog}
+        <UpdateStatusFormDialog
+          curAnimal={curAnimal}
+          refreshSeed={refreshSeed}
+          setRefreshSeed={setRefreshSeed}
+        />
+        {declareDeathDialog}
       </div>
       <Table>
         {/* <TableHeader className=" bg-whiten">
@@ -161,11 +205,7 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
               Status
             </TableCell>
             <TableCell>
-              <div
-                className={`${statusColorClass} w-min rounded-sm p-2 font-bold text-whiter`}
-              >
-                {curAnimal.animalStatus}
-              </div>
+              {statusTemplate(curAnimal.animalStatus.split(","))}
             </TableCell>
           </TableRow>
           <TableRow>

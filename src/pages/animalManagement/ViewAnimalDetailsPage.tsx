@@ -25,6 +25,7 @@ function ViewAnimalDetailsPage() {
   const { tab } = useParams<{ tab: string }>();
 
   const [curAnimal, setCurAnimal] = useState<Animal | null>(null);
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   // useEffect to fetch animal
   useEffect(() => {
@@ -39,7 +40,7 @@ function ViewAnimalDetailsPage() {
       }
     };
     fetchAnimal();
-  }, []);
+  }, [refreshSeed]);
 
   return (
     <div className="p-10">
@@ -93,7 +94,11 @@ function ViewAnimalDetailsPage() {
               <TabsTrigger value="medical">Medical</TabsTrigger>
             </TabsList>
             <TabsContent value="basicinfo">
-              <AnimalBasicInformation curAnimal={curAnimal} />
+              <AnimalBasicInformation
+                curAnimal={curAnimal}
+                refreshSeed={refreshSeed}
+                setRefreshSeed={setRefreshSeed}
+              />
             </TabsContent>
             <TabsContent value="weight">
               <div>
@@ -112,7 +117,9 @@ function ViewAnimalDetailsPage() {
             </TabsContent>
             <TabsContent value="behaviour">
               <div>
-                <AllAnimalObservationLogsDatatable animalId={curAnimal.animalId} />
+                <AllAnimalObservationLogsDatatable
+                  animalId={curAnimal.animalId}
+                />
               </div>
             </TabsContent>
             <TabsContent value="medical">

@@ -245,6 +245,7 @@ export {
   AcquisitionMethod,
   AnimalGrowthStage,
   AnimalStatusType,
+  AnimalStatus,
   Biome,
   EventType,
   EventTimingType,
