@@ -182,14 +182,18 @@ function AllfacilityDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ?
                 <NavLink to={"/assetfacility/createfacility"}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
                     Add Facility
                   </Button>
                 </NavLink>
-              )}
+                :
+                <Button disabled className="invisible">
+                  Export to .csv
+                </Button>
+              }
               <span className=" self-center text-title-xl font-bold">
                 All Facilities
               </span>
