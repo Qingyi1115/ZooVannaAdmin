@@ -436,37 +436,36 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         }`}
                       >
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
-                          {(employee.planningStaff?.plannerType ==
-                            "OPERATIONS_MANAGER" ||
+
+                          {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
                             employee.generalStaff) && (
-                            <li>
-                              <NavLink
-                                to="/assetfacility/maintenance"
-                                className={({ isActive }) =>
-                                  "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                  (isActive && "!text-white")
-                                }
-                              >
-                                Facility Maintenance
-                              </NavLink>
-                            </li>
-                          )}
-                          {(employee.planningStaff?.plannerType ==
-                            "OPERATIONS_MANAGER" ||
+                              <li>
+                                <NavLink
+                                  to="/assetfacility/maintenance"
+                                  className={({ isActive }) =>
+                                    "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                    (isActive && "!text-white")
+                                  }
+                                >
+                                  Facility Maintenance
+                                </NavLink>
+                              </li>
+                            )}
+                          {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
                             employee.generalStaff) && (
-                            <li>
-                              <NavLink
-                                to="/assetfacility/viewallfacilities"
-                                className={({ isActive }) =>
-                                  "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                  (isActive && "!text-white")
-                                }
-                              >
-                                View All Customer Facilities
-                              </NavLink>
-                            </li>
-                          )}
-                          {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
+                              <li>
+                                <NavLink
+                                  to="/assetfacility/viewallfacilities"
+                                  className={({ isActive }) =>
+                                    "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                    (isActive && "!text-white")
+                                  }
+                                >
+                                  View All Customer Facilities
+                                </NavLink>
+                              </li>
+                            )} */}
+                          {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
                             <li>
                               <NavLink
                                 to="/assetfacility/createfacility"
@@ -479,7 +478,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               </NavLink>
                             </li>
                           )} */}
-                          {(employee.planningStaff?.plannerType ==
+                          {(employee.superAdmin || employee.planningStaff?.plannerType ==
                             "OPERATIONS_MANAGER" ||
                             employee.generalStaff) && (
                             <li>
@@ -505,7 +504,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               View All Animal Feed
                             </NavLink>
                           </li> */}
-                          {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
+                          {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
                             <li>
                               <NavLink
                                 to="/assetfacility/createanimalfeed"
@@ -529,7 +528,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               View All Enrichment Items
                             </NavLink>
                           </li> */}
-                          {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
+                          {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
                             <li>
                               <NavLink
                                 to="/assetfacility/createenrichmentitem"

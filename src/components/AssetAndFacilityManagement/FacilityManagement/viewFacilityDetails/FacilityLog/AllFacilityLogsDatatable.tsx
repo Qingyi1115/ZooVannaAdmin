@@ -232,7 +232,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           title={facilityLog.title}
           subTitle={facilityLog.dateTime ?
             "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}>
-          {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
+          {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
           <Button className="absolute top-5 right-5"
             variant={"destructive"}
             onClick={() => confirmDeletefacilityLog(facilityLog)}
@@ -275,7 +275,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+              {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
                 employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
                 <NavLink to={`/assetfacility/createfacilitylog/${facilityId}`}>
                   <Button className="mr-2">

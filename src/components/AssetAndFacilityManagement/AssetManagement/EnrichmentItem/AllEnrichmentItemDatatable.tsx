@@ -179,7 +179,7 @@ function AllEnrichmentItemDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {(employee.planningStaff?.plannerType == "CURATOR") ?
+              {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
                 <NavLink to={"/assetfacility/createenrichmentitem"}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
@@ -233,7 +233,7 @@ function AllEnrichmentItemDatatable() {
               header="Image"
               body={imageBodyTemplate}
             ></Column>
-            {(employee.planningStaff?.plannerType == "CURATOR") && (
+            {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && (
               <Column
                 body={actionBodyTemplate}
                 header="Actions"
