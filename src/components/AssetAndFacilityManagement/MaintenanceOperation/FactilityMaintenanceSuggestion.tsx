@@ -90,7 +90,7 @@ function FacilityMaintenanceSuggestion() {
         </NavLink>
         <NavLink to={`/assetfacility/viewFacilityMaintenanceChart/${objDetails.id}`}>
           <Button className="mb-1 mr-1">
-            <HiOutlinePresentationChartLine className="mr-1" />
+            <HiOutlinePresentationChartLine className="mx-auto" />
           </Button>
         </NavLink>
         {/* <Button
@@ -119,6 +119,7 @@ function FacilityMaintenanceSuggestion() {
           }}
         />
       </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -133,20 +134,8 @@ function FacilityMaintenanceSuggestion() {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button disabled className="invisible">
-                Back
-              </Button>
-              <span className=" self-center text-title-xl font-bold">
-                Facility Maintenance Suggestions
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
+
           <DataTable
             ref={dt}
             value={objectsList}

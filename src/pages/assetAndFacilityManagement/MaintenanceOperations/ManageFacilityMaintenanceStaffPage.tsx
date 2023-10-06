@@ -18,37 +18,37 @@ function ManageFacilityMaintenanceStaffPage() {
   const { tab } = useParams<{ tab: string }>();
 
   useEffect(() => {
-    let assignedStaffs : any = []
+    let assignedStaffs: any = []
+    apiJson.get(
+      `http://localhost:3000/api/assetFacility/getAssignedMaintenanceStaffOfFacility/${facilityId}`
+    ).catch(e => console.log(e)).then(res => {
+      setCurrEmpList(res["maintenanceStaffs"]);
+      assignedStaffs = res["maintenanceStaffs"];
+    }).then(() => {
       apiJson.get(
-        `http://localhost:3000/api/assetFacility/getAssignedMaintenanceStaffOfFacility/${facilityId}`
+        `http://localhost:3000/api/assetFacility/getAllMaintenanceStaff`
       ).catch(e => console.log(e)).then(res => {
-        setCurrEmpList(res["maintenanceStaffs"]);
-        assignedStaffs = res["maintenanceStaffs"];
-      }).then(()=>{
-        apiJson.get(
-          `http://localhost:3000/api/assetFacility/getAllMaintenanceStaff`
-        ).catch(e => console.log(e)).then(res => {
-          const allStaffs = res["maintenanceStaffs"];
-          const assignedStaffIds = []
-          for (const staff of assignedStaffs){
-            assignedStaffIds.push(staff.employeeId)
+        const allStaffs = res["maintenanceStaffs"];
+        const assignedStaffIds = []
+        for (const staff of assignedStaffs) {
+          assignedStaffIds.push(staff.employeeId)
+        }
+        const subset = []
+        for (const employee of allStaffs) {
+          if (!assignedStaffIds.includes(employee.employeeId)) {
+            subset.push(employee);
           }
-          const subset = []
-          for (const employee of allStaffs) {
-            if (!assignedStaffIds.includes(employee.employeeId)) {
-              subset.push(employee);
-            }
-          }
-      
-          setEmpList(subset)
-        });
+        }
+
+        setEmpList(subset)
       });
+    });
   }, [refreshSeed]);
 
 
   return (
 
-    <div className="flex w-full flex-col gap-6 rounded-lg bg-white p-5 text-black">
+    <div className="">
       <Tabs
         defaultValue={tab ? `${tab}` : "assignstaff"}
         className="w-full"

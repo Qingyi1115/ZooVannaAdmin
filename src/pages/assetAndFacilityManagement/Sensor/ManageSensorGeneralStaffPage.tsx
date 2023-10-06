@@ -48,7 +48,7 @@ function ManageSensorGeneralStaffPage() {
 
   return (
 
-    <div className="flex w-full flex-col gap-6 rounded-lg bg-white p-5 text-black">
+    <div className="">
       <AddSensorMaintenanceStaff sensorId={Number(sensorId)} />
       {/* <Tabs
         defaultValue={tab ? `${tab}` : "assignstaff"}
