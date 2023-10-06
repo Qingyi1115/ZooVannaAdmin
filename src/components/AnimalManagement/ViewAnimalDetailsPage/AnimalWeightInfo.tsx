@@ -189,14 +189,14 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
       {
         label: "Min Weight Male (kg)",
         data: minWeightMaleDataPoints,
-        fill: { target: "+1", above: "#93C5FD", below: "#93C5FD" },
+        fill: { target: "+1", above: "#93C5FD50", below: "#93C5FD50" },
         borderColor: "#3b82f6",
         tension: 0.4,
       },
       {
         label: "Max Weight Male (kg)",
         data: maxWeightMaleDataPoints,
-        fill: { target: "-1", above: "#93C5FD", below: "#93C5FD" },
+        fill: { target: "-1", above: "#93C5FD50", below: "#93C5FD50" },
         borderColor: "#3b82f6",
         tension: 0.4,
       },
@@ -213,14 +213,14 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
       {
         label: "Min Weight Female (kg)",
         data: minWeightFemaleDataPoints,
-        fill: { target: "+1", below: "#F29FD4", above: "#F29FD4" },
+        fill: { target: "+1", below: "#F29FD450", above: "#F29FD450" },
         borderColor: "#ec4899",
         tension: 0.4,
       },
       {
         label: "Max Weight Female (kg)",
         data: maxWeightFemaleDataPoints,
-        fill: { target: "-1", below: "#F29FD4", above: "#F29FD4" },
+        fill: { target: "-1", below: "#F29FD450", above: "#F29FD450" },
         borderColor: "#ec4899",
         tension: 0.4,
       },
