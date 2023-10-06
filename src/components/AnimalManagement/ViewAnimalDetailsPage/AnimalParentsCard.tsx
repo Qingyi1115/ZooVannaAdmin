@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Dialog as PrimeReactDialog } from "primereact/dialog";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -50,6 +51,7 @@ import { useToast } from "@/components/ui/use-toast";
 import OneParentCard from "./OneParentCard";
 interface AnimalParentsCardProps {
   curAnimal: Animal;
+  setCurAnimal: any;
   refreshSeed: number;
   setRefreshSeed: any;
 }
@@ -58,15 +60,25 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const { curAnimal, refreshSeed, setRefreshSeed } = props;
+  const { curAnimal, setCurAnimal, refreshSeed, setRefreshSeed } = props;
 
   const [animalParent1Code, setAnimalParent1Code] = useState<string>("");
   const [animalParent2Code, setAnimalParent2Code] = useState<string>("");
   const [animalParent1, setAnimalParent1] = useState<Animal | null>(null);
   const [animalParent2, setAnimalParent2] = useState<Animal | null>(null);
 
-  const [openDeleteParentDialog, setOpenDeleteParentDialog] =
+  const [openAddParentDialog, setOpenAddParentDialog] =
     useState<boolean>(false);
+
+  const [allAnimalsListToBecomeParent, setAllAnimalsListToBecomeParent] =
+    useState<Animal[]>([]);
+  const [selectedAnimalToBecomeParent, setSelectedAnimalToBecomeParent] =
+    useState<Animal | null>(null);
+  const [globalFilter, setGlobalFilter] = useState<string>(
+    curAnimal.species.commonName
+  );
+
+  const [addParentError, setAddParentError] = useState<string | null>(null);
 
   // useEffect to fetch parents
   useEffect(() => {
@@ -105,27 +117,59 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
     fetchParent2();
   }, [animalParent1Code, animalParent2Code, curAnimal]);
 
-  async function deleteParent(parentToDelete: Animal) {
-    let childAnimalCode = curAnimal.animalCode;
-    let parentAnimalCode = parentToDelete.animalCode;
+  // fetch animals for create/add
+  useEffect(() => {
+    const fetchAnimals = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          "http://localhost:3000/api/animal/getAllAnimals"
+        );
+        const animalListNoCurParent = (responseJson as Animal[]).filter(
+          (animal) => animal.animalCode !== curAnimal.animalCode
+        );
+        setAllAnimalsListToBecomeParent(animalListNoCurParent);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchAnimals();
+  }, []);
 
-    const deleteAnimalLineageObj = {
+  // Add parent stuff
+  const imageBodyTemplate = (rowData: Animal) => {
+    return (
+      <img
+        src={"http://localhost:3000/" + rowData.imageUrl}
+        alt={rowData.houseName}
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+      />
+    );
+  };
+
+  function handleAddParent() {
+    if (!selectedAnimalToBecomeParent) {
+      return;
+    }
+    let childAnimalCode = curAnimal.animalCode;
+    let parentAnimalCode = selectedAnimalToBecomeParent.animalCode;
+
+    const createAnimalLineageObj = {
       childAnimalCode,
       parentAnimalCode,
     };
 
-    const deleteParentApi = async () => {
+    const addParentApi = async () => {
       try {
-        const response = await apiJson.put(
-          "http://localhost:3000/api/animal/deleteAnimalLineage",
-          deleteAnimalLineageObj
+        const response = await apiJson.post(
+          "http://localhost:3000/api/animal/addAnimalLineage",
+          createAnimalLineageObj
         );
         // success
 
         toastShadcn({
-          description: "Successfully deleted parent!",
+          description: "Successfully updated parent!",
         });
-        setOpenDeleteParentDialog(false);
+        setOpenAddParentDialog(false);
         setAnimalParent1Code("");
         setAnimalParent2Code("");
         setAnimalParent1(null);
@@ -133,18 +177,102 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
         setRefreshSeed(refreshSeed + 1);
       } catch (error: any) {
         // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while deleting parents: \n" + error.message,
-        });
+        // toastShadcn({
+        //   variant: "destructive",
+        //   title: "Uh oh! Something went wrong.",
+        //   description:
+        //     "An error has occurred while updating parents: \n" + error.message,
+        // });
+        setAddParentError(error.message);
       }
     };
-    deleteParentApi();
+    addParentApi();
   }
 
-  // const deleteParentDialog = {}
+  const addParentsHeader = (
+    <React.Fragment>
+      <div className="flex justify-center text-2xl">Add Parent</div>
+    </React.Fragment>
+  );
+
+  const addParentsBody = (
+    <React.Fragment>
+      <PrimeReactDialog
+        visible={openAddParentDialog}
+        onHide={() => setOpenAddParentDialog(false)}
+        style={{ width: "64rem", height: "48rem" }}
+        header={addParentsHeader}
+      >
+        <div className="flex flex-col items-center">
+          <InputText
+            type="search"
+            placeholder="Search..."
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              setGlobalFilter(target.value);
+            }}
+            className="mb-2 h-min w-60"
+          />
+        </div>
+        <DataTable
+          value={allAnimalsListToBecomeParent}
+          scrollable
+          scrollHeight="100%"
+          selection={selectedAnimalToBecomeParent!}
+          selectionMode="single"
+          globalFilter={globalFilter}
+          onSelectionChange={(e) => setSelectedAnimalToBecomeParent(e.value)}
+          dataKey="animalCode"
+          className="h-3/4 overflow-hidden rounded border border-graydark/30"
+        >
+          <Column
+            field="imageUrl"
+            body={imageBodyTemplate}
+            style={{ minWidth: "3rem" }}
+          ></Column>
+          <Column
+            field="animalCode"
+            header="Code"
+            sortable
+            style={{ minWidth: "7rem" }}
+          ></Column>
+          <Column
+            field="houseName"
+            header="House Name"
+            sortable
+            style={{ minWidth: "5rem" }}
+          ></Column>
+          <Column
+            field="sex"
+            header="Sex"
+            sortable
+            style={{ minWidth: "7rem" }}
+          ></Column>
+          <Column
+            field="species.commonName"
+            header="Species"
+            sortable
+            style={{ minWidth: "7rem" }}
+          ></Column>
+        </DataTable>
+        <div className="mt-6 flex justify-center">
+          <Button
+            disabled={selectedAnimalToBecomeParent == null}
+            onClick={handleAddParent}
+          >
+            Add {selectedAnimalToBecomeParent?.houseName}
+          </Button>
+        </div>
+        <div>
+          {addParentError && (
+            <div className="mt-2 flex justify-center font-bold text-danger">
+              {addParentError}
+            </div>
+          )}
+        </div>
+      </PrimeReactDialog>
+    </React.Fragment>
+  );
 
   return (
     <div className="h-full">
@@ -153,10 +281,11 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
           <div className="self-center font-bold text-slate-700">
             Known Parents
           </div>
+          {addParentsBody}
           {!animalParent1 && (
             <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-lg">
               <div>There is no known parent</div>
-              <Button>
+              <Button onClick={() => setOpenAddParentDialog(true)}>
                 <HiPlus />
               </Button>
             </div>
@@ -166,6 +295,7 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
               {animalParent1 && (
                 <OneParentCard
                   curAnimal={curAnimal}
+                  setCurAnimal={setCurAnimal}
                   parent={animalParent1}
                   parentNum={1}
                   refreshSeed={refreshSeed}
@@ -292,6 +422,7 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
               {animalParent1 && animalParent2 ? (
                 <OneParentCard
                   curAnimal={curAnimal}
+                  setCurAnimal={setCurAnimal}
                   parent={animalParent2}
                   parentNum={2}
                   refreshSeed={refreshSeed}
@@ -306,7 +437,7 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
                   {animalParent1 && (
                     <div className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-md border border-strokedark/20 p-4 transition-all">
                       <div>There is no known second parent</div>
-                      <Button>
+                      <Button onClick={() => setOpenAddParentDialog(true)}>
                         <HiPlus />
                       </Button>
                     </div>

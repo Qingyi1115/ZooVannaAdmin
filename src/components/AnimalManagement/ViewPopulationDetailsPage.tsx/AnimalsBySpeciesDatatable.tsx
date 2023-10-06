@@ -113,6 +113,28 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
   const toastShadcn = useToast().toast;
 
   //
+  function calculateAge(dateOfBirth: Date): string {
+    const dob = dateOfBirth;
+    const todayDate = new Date();
+
+    // Calculate the difference in milliseconds between the two dates
+    const ageInMilliseconds = todayDate.getTime() - dob.getTime();
+
+    // Convert milliseconds to years (assuming an average year has 365.25 days)
+    const ageInYears = ageInMilliseconds / (365.25 * 24 * 60 * 60 * 1000);
+
+    // Calculate the remaining months
+    const ageInMonths = (ageInYears - Math.floor(ageInYears)) * 12;
+
+    // Format the result as "x years & y months"
+    const formattedAge = `${Math.floor(ageInYears)} years & ${Math.floor(
+      ageInMonths
+    )} months`;
+
+    return formattedAge;
+  }
+
+  //
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
@@ -350,19 +372,32 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
-              field="rfidTagNum"
-              header="RFID Tag Number"
+              field="identifierType"
+              header="Identifier Type"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
-              field="location"
+              field="identifierValue"
+              header="Identifier Value"
+              sortable
+              style={{ minWidth: "5rem" }}
+            ></Column>
+            <Column
+              body={(animal) => {
+                if (!animal.location || animal.location == "") {
+                  return "NA";
+                } else {
+                  return animal.location;
+                }
+              }}
+              // field="location"
               header="Current Location"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
-              field="age"
+              body={(animal) => calculateAge(new Date(animal.dateOfBirth))}
               header="Animal Age"
               sortable
               style={{ minWidth: "5rem" }}

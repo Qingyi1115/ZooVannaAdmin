@@ -111,7 +111,15 @@ function AllAnimalsDatatable() {
         const responseJson = await apiJson.get(
           "http://localhost:3000/api/animal/getAllAnimals"
         );
-        setAnimalList(responseJson as Animal[]);
+        const animalListNoDeceasedOrReleased = (
+          responseJson as Animal[]
+        ).filter((animal) => {
+          let statuses = animal.animalStatus.split(",");
+          return (
+            !statuses.includes("DECEASED") || !statuses.includes("RELEASED")
+          );
+        });
+        setAnimalList(animalListNoDeceasedOrReleased);
       } catch (error: any) {
         console.log(error);
       }
@@ -383,10 +391,10 @@ function AllAnimalsDatatable() {
             rowGroupFooterTemplate={rowGroupFooterTemplate}
             paginator
             // showGridlines
-            rows={10}
+            rows={25}
             scrollable
             selectionMode={"single"}
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[10, 25, 50, 100]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} individual/group animals"
             globalFilter={globalFilter}
