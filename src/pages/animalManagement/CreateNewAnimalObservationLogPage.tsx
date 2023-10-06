@@ -8,8 +8,8 @@ import Species from "../../models/Species";
 
 function CreateNewAnimalObservationLogPage() {
   const apiJson = useApiJson();
-  const { animalId } = useParams<{ animalId: string }>();
-  
+  const { speciesCode } = useParams<{ speciesCode: string }>();
+
   let emptySpecies: Species = {
     speciesId: -1,
     speciesCode: "",
@@ -38,42 +38,19 @@ function CreateNewAnimalObservationLogPage() {
     ageToElder: 3,
     lifeExpectancyYears: 0,
   };
-  let emptyAnimal: Animal = {
-    animalId: -1,
-    animalCode: "",
-    imageUrl: "",
-    isGroup: false,
-    houseName: "",
-    identifierType: "",
-    identifierValue: "",
-    sex: AnimalSex.MALE,
-    dateOfBirth: new Date(),
-    placeOfBirth: "",
-    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-    dateOfAcquisition: new Date(),
-    acquisitionRemarks: "",
-    physicalDefiningCharacteristics: "",
-    behavioralDefiningCharacteristics: "",
-    dateOfDeath: null,
-    locationOfDeath: null,
-    causeOfDeath: null,
-    growthStage: AnimalGrowthStage.ADOLESCENT,
-    animalStatus: "",
-    species: emptySpecies,
-  };
 
-  const [curAnimal, setCurAnimal] = useState<Animal>(emptyAnimal);
+  const [curAnimalList, setCurAnimalList] = useState<Animal[]>([]);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/assetAnimal/getAnimal/${animalId}`, { includes: [] }).then(res => {
-      setCurAnimal(res.animal as Animal);
+    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+      setCurAnimalList(res.allAnimals as Animal[]);
     });
   }, []);
 
 
   return (
     <div className="p-10">
-      <CreateNewAnimalObservationLogForm curAnimal={curAnimal} />
+      <CreateNewAnimalObservationLogForm />
     </div>
   );
 }

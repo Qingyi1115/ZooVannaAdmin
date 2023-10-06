@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import * as Form from "@radix-ui/react-form";
 import FormFieldRadioGroup from "../../FormFieldRadioGroup";
@@ -11,10 +11,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Animal from "../../../models/Animal";
+import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
-interface CreateNewAnimalObservationLogProps {
-  curAnimal: Animal;
-}
+// interface CreateNewAnimalObservationLogProps {
+//   speciesCode: string;
+// }
 
 function validateAnimalObservationLogName(props: ValidityState) {
   if (props != undefined) {
@@ -28,7 +30,7 @@ function validateAnimalObservationLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogProps) {
+function CreateNewAnimalObservationLogForm() {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
@@ -36,24 +38,39 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
   const [observationQuality, setObservationQuality] = useState<string | undefined>(
     undefined); // dropdown
   const [details, setDetails] = useState<string>(""); // text input
-  const { curAnimal } = props;
+  const [dateTime, setDateTime] = useState<
+    string | Date | Date[] | null
+  >(null);
+  // const { curAnimalList } = props;
   const [formError, setFormError] = useState<string | null>(null);
 
+
+  const [curAnimalList, setCurAnimalList] = useState<any>(null);
+  const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
+
+  useEffect(() => {
+    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+      setCurAnimalList(res as Animal[]);
+      console.log(res);
+    });
+  }, []);
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
     const newAnimalObservationLog = {
+      dateTime: dateTime,
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
-      details: details
+      details: details,
+      animals: selectedAnimals
     }
     console.log(newAnimalObservationLog);
 
     try {
       const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetAnimal/createAnimalObservationLog/${curAnimal.animalId}`,
+        `http://localhost:3000/api/animal/createAnimalObservationLog`,
         newAnimalObservationLog);
       // success
       toastShadcn({
@@ -93,6 +110,15 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
           </Button>
         </div>
         <Separator />
+      </div>
+      {/* DateTime */}
+      <div className="flex justify-content-center">
+        <label htmlFor="dateTimeCalendar" className="self-center mx-3 text-lg text-dark ">Date</label>
+        <Calendar id="dateTimeCalendar" showTime hourFormat="12" value={dateTime} minDate={new Date()} maxDate={new Date()} onChange={(e: CalendarChangeEvent) => {
+          if (e && e.value !== null) {
+            setDateTime(e.value as Date);
+          }
+        }} />
       </div>
 
       {/* Duration in Minutes */}
@@ -137,6 +163,16 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
         validateFunction={validateAnimalObservationLogName}
         pattern={undefined}
       />
+      {/* Animals */}
+      <MultiSelect
+        value={selectedAnimals}
+        onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
+        options={curAnimalList}
+        optionLabel="houseName"
+        filter
+        placeholder="Select Animals"
+        maxSelectedLabels={3}
+        className="w-full md:w-20rem" />
 
       <Form.Submit asChild>
         <Button
