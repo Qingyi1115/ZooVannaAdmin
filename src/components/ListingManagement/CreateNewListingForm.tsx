@@ -7,11 +7,13 @@ import FormFieldSelect from "../FormFieldSelect";
 import useApiJson from "../../hooks/useApiJson";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 // end field validations
 
 function CreateNewListingForm() {
   const apiJson = useApiJson();
+  const navigate = useNavigate();
 
   const toastShadcn = useToast().toast;
 
@@ -50,6 +52,7 @@ function CreateNewListingForm() {
       toastShadcn({
         description: "Successfully created new Listing!",
       });
+      navigate("/listing/viewalllistings");
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
