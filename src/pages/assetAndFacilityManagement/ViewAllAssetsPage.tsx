@@ -15,8 +15,8 @@ function ViewAllAssetsPage() {
           defaultValue={tab ? `${tab}` : "animalFeed"}
           className="w-full"
         ><TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <TabsTrigger value="animalFeed">Animal Feed</TabsTrigger>
-            <TabsTrigger value="enrichmentItem">Enrichment Item</TabsTrigger>
+            <TabsTrigger className="self-center text-xl" value="animalFeed">Animal Feed</TabsTrigger>
+            <TabsTrigger className="self-center text-xl" value="enrichmentItem">Enrichment Item</TabsTrigger>
           </TabsList>
           <TabsContent value="animalFeed">
             <AllAnimalFeedDatatable />
