@@ -136,7 +136,7 @@ function AllfacilityDatatable() {
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}>
             <Button className="mr-1">
               <HiPencil className="mr-1" />
@@ -144,7 +144,7 @@ function AllfacilityDatatable() {
             </Button>
           </NavLink>
         )}
-        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -182,7 +182,7 @@ function AllfacilityDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ?
+              {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ?
                 <NavLink to={"/assetfacility/createfacility"}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />

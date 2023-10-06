@@ -132,12 +132,12 @@ function ViewFacilityDetailsPage() {
           <TabsContent value="hubs">
             <AllHubDatatable curFacility={curFacility} />
           </TabsContent>
-          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <TabsContent value="manageMaintenance">
               <ManageFacilityMaintenanceStaffPage />
             </TabsContent>
           )}
-          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <TabsContent value="manageOperations">
               <ManageOperationStaffPage />
             </TabsContent>
