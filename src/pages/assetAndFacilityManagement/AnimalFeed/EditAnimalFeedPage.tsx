@@ -26,8 +26,8 @@ function EditAnimalFeedPage() {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/assetfacility/getAnimalFeedById/${animalFeedId}`
         );
-        setCurAnimalFeed(responseJson as AnimalFeed);
-        console.log(curAnimalFeed);
+        setCurAnimalFeed(responseJson.animalFeed as AnimalFeed);
+        console.log(responseJson);
       } catch (error: any) {
         console.log(error);
       }
