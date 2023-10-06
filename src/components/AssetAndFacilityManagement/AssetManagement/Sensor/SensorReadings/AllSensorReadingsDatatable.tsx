@@ -144,7 +144,7 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
 
   return (
     <div className="p-10">
-      <div className="rounded-lg bg-white p-4">
+      <div className="">
 
         {chartData ?
           <div>

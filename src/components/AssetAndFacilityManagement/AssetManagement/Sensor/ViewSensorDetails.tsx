@@ -34,21 +34,22 @@ function ViewSensorDetails(props: SensorDetailsProps) {
   return (
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
-      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <NavLink to={`/assetfacility/editsensor/${curSensor.sensorId}`}>
-          <Button className="mr-2">
-            <HiPencil className="mx-auto" />
-          </Button>
-        </NavLink>
-      )}
-      {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
-      <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
-        <Button className="mr-2">
-          <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
-          Complete maintenance
-        </Button>
-      </NavLink>
-      )}
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          <NavLink to={`/assetfacility/editsensor/${curSensor.sensorId}`}>
+            <Button className="mr-2">
+              <HiPencil className="mx-auto" />
+              Edit Sensor Details
+            </Button>
+          </NavLink>
+        )}
+        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+          <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
+            <Button className="mr-2">
+              <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+              Complete maintenance
+            </Button>
+          </NavLink>
+        )}
       </div>
       <Table>
         <TableBody>
@@ -68,13 +69,13 @@ function ViewSensorDetails(props: SensorDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Date of Activation
             </TableCell>
-            <TableCell>{curSensor.dateOfActivation? new Date(curSensor.dateOfActivation).toLocaleString() : "Unknown"}</TableCell>
+            <TableCell>{curSensor.dateOfActivation ? new Date(curSensor.dateOfActivation).toLocaleString() : "Unknown"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Last Maintained
             </TableCell>
-            <TableCell>{curSensor.dateOfLastMaintained? new Date(curSensor.dateOfLastMaintained).toLocaleString() : "Unknown"}</TableCell>
+            <TableCell>{curSensor.dateOfLastMaintained ? new Date(curSensor.dateOfLastMaintained).toLocaleString() : "Unknown"}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

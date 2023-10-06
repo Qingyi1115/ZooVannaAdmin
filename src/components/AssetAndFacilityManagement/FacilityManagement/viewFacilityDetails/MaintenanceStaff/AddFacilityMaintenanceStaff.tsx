@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator";
 interface AddFacilityMaintenanceStaffProps {
   facilityId: number;
   employeeList: Employee[];
-  setRefreshSeed:Function;
+  setRefreshSeed: Function;
 }
 
 function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
@@ -66,9 +66,9 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res=>{
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
           setRefreshSeed([]);
-        }).catch(err=>console.log("err",err));
+        }).catch(err => console.log("err", err));
 
       toastShadcn({
         // variant: "destructive",
@@ -159,6 +159,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
           }}
         />
       </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -214,21 +215,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button disabled className="invisible">
-                Back
-              </Button>
-              <span className=" self-center text-title font-bold">
-                Assign Maintenance Staff
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
-
+        <div className="">
 
           <DataTable
             ref={dt}
