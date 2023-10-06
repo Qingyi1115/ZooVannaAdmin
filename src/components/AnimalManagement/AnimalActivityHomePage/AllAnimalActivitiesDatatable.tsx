@@ -192,11 +192,11 @@ function AllAnimalActivitiesDatatable() {
               <NavLink to={"/animal/createanimalactivity"}>
                 <Button className="mr-2 flex items-center">
                   <HiPlus className="mr-2" />
-                  Add Animal Activity Plan Item
+                  Add Animal Activity
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">
-                All Animal Activities Plan
+                All Animal Activities
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
