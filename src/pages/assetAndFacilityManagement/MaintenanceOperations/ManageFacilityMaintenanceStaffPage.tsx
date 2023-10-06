@@ -49,7 +49,8 @@ function ManageFacilityMaintenanceStaffPage() {
   return (
 
     <div className="">
-      <Tabs
+      <AddFacilityMaintenanceStaff facilityId={Number(facilityId)} ></AddFacilityMaintenanceStaff>
+      {/* <Tabs
         defaultValue={tab ? `${tab}` : "assignstaff"}
         className="w-full"
       >
@@ -63,7 +64,7 @@ function ManageFacilityMaintenanceStaffPage() {
         <TabsContent value="removestaff">
           {facilityId && <RemoveFacilityMaintenanceStaff facilityId={Number(facilityId)} employeeList={currEmpList} setRefreshSeed={setRefreshSeed}></RemoveFacilityMaintenanceStaff>}
         </TabsContent>
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 }

@@ -6,7 +6,7 @@ import Employee from "../../../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiCheck, HiClipboard, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiClipboard, HiEye, HiMinus, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
@@ -16,14 +16,12 @@ import { Separator } from "@/components/ui/separator";
 
 interface AddFacilityMaintenanceStaffProps {
   facilityId: number;
-  employeeList: Employee[];
-  setRefreshSeed: Function;
 }
 
 function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
-  const { facilityId, employeeList, setRefreshSeed } = props;
+  const { facilityId } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -49,6 +47,28 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
+  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
+
+  useEffect(() => {
+    apiJson.post(
+      "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
+    ).catch(e => console.log(e)).then(res => {
+      const allStaffs: Employee[] = []
+      for (const staff of res["generalStaffs"]) {
+        if (staff.generalStaffType == "ZOO_MAINTENANCE") {
+          let emp = staff.employee;
+          staff.employee = undefined;
+          emp["generalStaff"] = staff
+          emp.currentlyAssigned = emp.generalStaff.maintainedFacilities?.facilityId == facilityId;
+          allStaffs.push(emp)
+        }
+      }
+      setEmployeeList(allStaffs);
+
+    });
+  }, [refreshSeed]);
+
   const hideEmployeeAssignmentDialog = () => {
     setAssignmentDialog(false);
   }
@@ -67,7 +87,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     try {
       const responseJson = await apiJson.put(
         `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-          setRefreshSeed([]);
+
         }).catch(err => console.log("err", err));
 
       toastShadcn({
@@ -190,19 +210,20 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
               <Button
                 name="assignButton"
                 variant={"default"}
+                // disabled={employee.generalStaff?.maintainedFacilities !== null || employee.currentlyAssigned}
                 className="mr-2"
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
               </Button>
-              {/* <Button
-                name="removeButton"
+              <Button
                 variant={"destructive"}
-                className="mx-auto"
+                className="mr-2"
+                // disabled={!employee.currentlyAssigned}
                 onClick={() => confirmEmployeeRemoval(employee)}
               >
-                <HiTrash className="mx-auto" />
-              </Button> */}
+                <HiMinus className="mx-auto" />
+              </Button>
             </div>
 
           }
@@ -267,7 +288,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "9rem" }}
+              style={{ minWidth: "14rem" }}
             ></Column>
           </DataTable>
         </div>
