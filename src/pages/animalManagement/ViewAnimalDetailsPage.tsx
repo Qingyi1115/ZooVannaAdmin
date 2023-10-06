@@ -80,6 +80,11 @@ function ViewAnimalDetailsPage() {
                 )}
               </div>
             </span>
+            <img
+              src={"http://localhost:3000/" + curAnimal.imageUrl}
+              alt="Current animal image"
+              className="my-4 aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
+            />
           </div>
           {/*  */}
           <Tabs defaultValue={tab ? `${tab}` : "basicinfo"} className="w-full">
