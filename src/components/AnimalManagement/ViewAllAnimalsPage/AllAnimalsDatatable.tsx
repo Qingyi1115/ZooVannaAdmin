@@ -31,11 +31,11 @@ import {
   AnimalSex,
 } from "../../../enums/Enumurated";
 
-let testPandaSpecies: Species = {
-  speciesId: 1,
-  speciesCode: "SPE001",
-  commonName: "Panda",
-  scientificName: "Ailuropoda Melanoleuca",
+let emptySpecies: Species = {
+  speciesId: -1,
+  speciesCode: "",
+  commonName: "",
+  scientificName: "",
   aliasName: "",
   conservationStatus: "",
   domain: "",
@@ -51,49 +51,28 @@ let testPandaSpecies: Species = {
   educationalFunFact: "",
   groupSexualDynamic: "",
   habitatOrExhibit: "habitat",
-  imageUrl: "img/species/panda.jpg",
+  imageUrl: "",
   generalDietPreference: "",
+  ageToJuvenile: 0,
+  ageToAdolescent: 1,
+  ageToAdult: 2,
+  ageToElder: 3,
   lifeExpectancyYears: 0,
 };
-
-let testElephantSpecies: Species = {
-  speciesId: 4,
-  speciesCode: "SPE004",
-  commonName: "African Elephant",
-  scientificName: "Loxodonta africana",
-  aliasName: "",
-  conservationStatus: "",
-  domain: "",
-  kingdom: "",
-  phylum: "",
-  speciesClass: "",
-  order: "",
-  family: "",
-  genus: "",
-  nativeContinent: "",
-  nativeBiomes: "",
-  educationalDescription: "",
-  educationalFunFact: "",
-  groupSexualDynamic: "",
-  habitatOrExhibit: "habitat",
-  imageUrl: "img/species/elephant.jpg",
-  generalDietPreference: "",
-  lifeExpectancyYears: 0,
-};
-
 let emptyAnimal: Animal = {
   animalId: -1,
   animalCode: "",
   imageUrl: "",
+  isGroup: false,
   houseName: "",
+  identifierType: "",
+  identifierValue: "",
   sex: AnimalSex.MALE,
   dateOfBirth: new Date(),
   placeOfBirth: "",
-  rfidTagNum: "",
   acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
   dateOfAcquisition: new Date(),
   acquisitionRemarks: "",
-  weight: -1,
   physicalDefiningCharacteristics: "",
   behavioralDefiningCharacteristics: "",
   dateOfDeath: null,
@@ -101,77 +80,8 @@ let emptyAnimal: Animal = {
   causeOfDeath: null,
   growthStage: AnimalGrowthStage.ADOLESCENT,
   animalStatus: "",
-  species: testPandaSpecies,
+  species: emptySpecies,
 };
-
-let testAnimalList: Animal[] = [
-  {
-    animalId: 1,
-    animalCode: "ANI001",
-    imageUrl: "",
-    houseName: "Kai Kai",
-    sex: AnimalSex.MALE,
-    dateOfBirth: new Date(),
-    placeOfBirth: "",
-    rfidTagNum: "RFID00001",
-    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-    dateOfAcquisition: new Date(),
-    acquisitionRemarks: "Acquisition Remarks blabla",
-    weight: -1,
-    physicalDefiningCharacteristics: "Big head",
-    behavioralDefiningCharacteristics: "Lazy",
-    dateOfDeath: null,
-    locationOfDeath: null,
-    causeOfDeath: null,
-    growthStage: AnimalGrowthStage.JUVENILE,
-    animalStatus: "NORMAL",
-    species: testPandaSpecies,
-  },
-  {
-    animalId: 2,
-    animalCode: "ANI002",
-    houseName: "Jia Jia",
-    imageUrl: "",
-    sex: AnimalSex.FEMALE,
-    dateOfBirth: new Date(),
-    placeOfBirth: "",
-    rfidTagNum: "RFID00002",
-    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-    dateOfAcquisition: new Date(),
-    acquisitionRemarks: "Acquisition Remarks blabla",
-    weight: -1,
-    physicalDefiningCharacteristics: "Bigger head",
-    behavioralDefiningCharacteristics: "Lazier",
-    dateOfDeath: null,
-    locationOfDeath: null,
-    causeOfDeath: null,
-    growthStage: AnimalGrowthStage.JUVENILE,
-    animalStatus: "NORMAL",
-    species: testPandaSpecies,
-  },
-  {
-    animalId: 3,
-    animalCode: "ANI003",
-    houseName: "Daisy",
-    imageUrl: "",
-    sex: AnimalSex.FEMALE,
-    dateOfBirth: new Date(),
-    placeOfBirth: "",
-    rfidTagNum: "RFID00003",
-    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-    dateOfAcquisition: new Date(),
-    acquisitionRemarks: "Acquisition Remarks blabla",
-    weight: -1,
-    physicalDefiningCharacteristics: "Grey spots on right side of torso",
-    behavioralDefiningCharacteristics: "Zany",
-    dateOfDeath: null,
-    locationOfDeath: null,
-    causeOfDeath: null,
-    growthStage: AnimalGrowthStage.JUVENILE,
-    animalStatus: "NORMAL",
-    species: testElephantSpecies,
-  },
-];
 
 function AllAnimalsDatatable() {
   const apiJson = useApiJson();
@@ -199,15 +109,44 @@ function AllAnimalsDatatable() {
     const fetchAnimals = async () => {
       try {
         const responseJson = await apiJson.get(
-          "http://localhost:3000/api/animal/getallanimals"
+          "http://localhost:3000/api/animal/getAllAnimals"
         );
-        setAnimalList(responseJson as Animal[]);
+        const animalListNoDeceasedOrReleased = (
+          responseJson as Animal[]
+        ).filter((animal) => {
+          let statuses = animal.animalStatus.split(",");
+          return (
+            !statuses.includes("DECEASED") || !statuses.includes("RELEASED")
+          );
+        });
+        setAnimalList(animalListNoDeceasedOrReleased);
       } catch (error: any) {
         console.log(error);
       }
     };
-    // fetchAnimals();
+    fetchAnimals();
   }, []);
+
+  function calculateAge(dateOfBirth: Date): string {
+    const dob = dateOfBirth;
+    const todayDate = new Date();
+
+    // Calculate the difference in milliseconds between the two dates
+    const ageInMilliseconds = todayDate.getTime() - dob.getTime();
+
+    // Convert milliseconds to years (assuming an average year has 365.25 days)
+    const ageInYears = ageInMilliseconds / (365.25 * 24 * 60 * 60 * 1000);
+
+    // Calculate the remaining months
+    const ageInMonths = (ageInYears - Math.floor(ageInYears)) * 12;
+
+    // Format the result as "x years & y months"
+    const formattedAge = `${Math.floor(ageInYears)} years & ${Math.floor(
+      ageInMonths
+    )} months`;
+
+    return formattedAge;
+  }
 
   //
   const exportCSV = () => {
@@ -240,10 +179,11 @@ function AllAnimalsDatatable() {
     );
 
     const deleteAnimalApi = async () => {
+      console.log(selectedAnimal.animalCode);
       try {
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/species/deleteanimal/" +
-          selectedAnimal.animalCode
+          "http://localhost:3000/api/animal/deleteAnimal/" +
+            selectedAnimal.animalCode
         );
 
         toastShadcn({
@@ -268,7 +208,7 @@ function AllAnimalsDatatable() {
         });
       }
     };
-    // deleteAnimalApi();
+    deleteAnimalApi();
   };
 
   const deleteAnimalDialogFooter = (
@@ -327,8 +267,8 @@ function AllAnimalsDatatable() {
   const calculateAnimalPerSpeciesTotal = (commonName: string) => {
     let total = 0;
 
-    if (testAnimalList) {
-      for (let animal of testAnimalList) {
+    if (animalList) {
+      for (let animal of animalList) {
         if (animal.species.commonName === commonName) {
           total++;
         }
@@ -366,12 +306,47 @@ function AllAnimalsDatatable() {
   const rowGroupFooterTemplate = (animal: Animal) => {
     return (
       <React.Fragment>
-        <td colSpan={5}>
+        <td colSpan={10}>
           <div className="justify-content-end flex w-full font-bold">
             Total {animal.species.commonName}:{" "}
             {calculateAnimalPerSpeciesTotal(animal.species.commonName)}
           </div>
         </td>
+      </React.Fragment>
+    );
+  };
+
+  const statusTemplate = (animal: Animal) => {
+    const statuses = animal.animalStatus.split(",");
+
+    return (
+      <React.Fragment>
+        <div className="flex flex-col gap-1">
+          {statuses.map((status, index) => (
+            <div
+              key={index}
+              className={
+                status === "NORMAL"
+                  ? "flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] text-sm font-bold text-emerald-900"
+                  : status === "PREGNANT"
+                  ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
+                  : status === "SICK"
+                  ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
+                  : status === "INJURED"
+                  ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
+                  : status === "OFFSITE"
+                  ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
+                  : status === "RELEASED"
+                  ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
+                  : status === "DECEASED"
+                  ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
+                  : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
+              }
+            >
+              {status}
+            </div>
+          ))}
+        </div>
       </React.Fragment>
     );
   };
@@ -399,7 +374,7 @@ function AllAnimalsDatatable() {
 
           <DataTable
             ref={dt}
-            value={testAnimalList}
+            value={animalList}
             selection={selectedAnimal}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
@@ -416,10 +391,10 @@ function AllAnimalsDatatable() {
             rowGroupFooterTemplate={rowGroupFooterTemplate}
             paginator
             // showGridlines
-            rows={10}
+            rows={25}
             scrollable
             selectionMode={"single"}
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[10, 25, 50, 100]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} individual/group animals"
             globalFilter={globalFilter}
@@ -445,36 +420,51 @@ function AllAnimalsDatatable() {
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
+              body={statusTemplate}
+              // field="animalStatus"
+              header="Animal Status"
+              sortable
+              style={{ minWidth: "5rem" }}
+            ></Column>
+            <Column
               field="sex"
               header="Sex"
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
-              field="rfidTagNum"
-              header="RFID Tag Number"
+              field="identifierType"
+              header="Identifier Type"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
-              field="animalStatus"
-              header="Animal Status"
+              field="identifierValue"
+              header="Identifier Value"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
+
             <Column
-              field="location"
+              body={(animal) => {
+                if (!animal.location || animal.location == "") {
+                  return "NA";
+                } else {
+                  return animal.location;
+                }
+              }}
+              // field="location"
               header="Current Location"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
-              field="age"
+              body={(animal) => calculateAge(new Date(animal.dateOfBirth))}
               header="Animal Age"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
-            <Column
+            {/* <Column
               body={(animal) => {
                 return new Date(animal.dateOfBirth).toLocaleDateString(
                   "en-SG",
@@ -485,13 +475,13 @@ function AllAnimalsDatatable() {
               header="Date of Birth"
               sortable
               style={{ minWidth: "7rem" }}
-            ></Column>
-            <Column
+            ></Column> */}
+            {/* <Column
               field="placeOfBirth"
               header="Place of Birth"
               sortable
               style={{ minWidth: "7rem" }}
-            ></Column>
+            ></Column> */}
             {/* below hidden columns is so that you can search by species name */}
             <Column
               field="species.commonName"

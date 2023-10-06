@@ -182,7 +182,7 @@ function AllAnimalFeedDatatable() {
                 <Button disabled className="invisible">
                   Export to .csv
                 </Button>}
-              <span className="self-center text-title-xl font-bold">
+              <span className="self-center text-title-l font-bold">
                 All Animal Feed
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>

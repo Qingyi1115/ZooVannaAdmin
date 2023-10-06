@@ -27,6 +27,12 @@ import CreateNewAnimalPage from "./pages/animalManagement/CreateNewAnimalPage";
 import ViewAllAnimalsPage from "./pages/animalManagement/ViewAllAnimalsPage";
 import ViewAnimalDetailsPage from "./pages/animalManagement/ViewAnimalDetailsPage";
 import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDetailsPage";
+import CreateNewWeightRecord from "./pages/animalManagement/CreateNewWeightRecord";
+import ViewAnimalFullLineage from "./pages/animalManagement/ViewAnimalFullLineage";
+import EditAnimalPage from "./pages/animalManagement/EditAnimalPage";
+import CreateNewAnimalObservationLogPage from "./pages/animalManagement/CreateNewAnimalObservationLogPage";
+import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
+import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -215,13 +221,23 @@ function App() {
                   }
                 />
                 <Route
+                  path="/animal/editanimal/:animalCode/"
+                  element={user ? <EditAnimalPage /> : <Navigate to="/login" />}
+                />
+                <Route
                   path="/animal/viewallanimals"
                   element={
                     user ? <ViewAllAnimalsPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
-                  path="/animal/viewanimaldetails/:animalCode"
+                  path="/animal/viewanimaldetails/:animalCode/:tab"
+                  element={
+                    user ? <ViewAnimalDetailsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewanimaldetails/:animalCode/"
                   element={
                     user ? <ViewAnimalDetailsPage /> : <Navigate to="/login" />
                   }
@@ -236,6 +252,49 @@ function App() {
                     )
                   }
                 />
+                <Route
+                  path="/animal/createweightrecord/:animalCode"
+                  element={
+                    user ? <CreateNewWeightRecord /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewfulllineage/:animalCode"
+                  element={
+                    user ? <ViewAnimalFullLineage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/createAnimalObservationLog/:animalId"
+                  element={
+                    user ? (
+                      <CreateNewAnimalObservationLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/viewAnimalObservationLogDetails/:animalObservationLogId"
+                  element={
+                    user ? (
+                      <ViewAnimalObservationLogDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/editAnimalObservationLog/:animalObservationLogId"
+                  element={
+                    user ? (
+                      <EditAnimalObservationLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
                 {/* Asset and Facility Management */}
                 <Route
                   path="/assetfacility/createfacility"

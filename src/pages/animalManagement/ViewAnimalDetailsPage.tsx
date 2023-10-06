@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,138 +16,127 @@ import {
   AnimalSex,
 } from "../../enums/Enumurated";
 import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
-
-let testPandaSpecies: Species = {
-  speciesId: 1,
-  speciesCode: "SPE001",
-  commonName: "Giant Panda",
-  scientificName: "Ailuropoda Melanoleuca",
-  aliasName: "",
-  conservationStatus: "",
-  domain: "",
-  kingdom: "",
-  phylum: "",
-  speciesClass: "",
-  order: "",
-  family: "",
-  genus: "",
-  nativeContinent: "",
-  nativeBiomes: "",
-  educationalDescription: "",
-  educationalFunFact: "",
-  groupSexualDynamic: "",
-  habitatOrExhibit: "habitat",
-  imageUrl: "img/species/panda.jpg",
-  generalDietPreference: "",
-  lifeExpectancyYears: 0,
-};
-
-let testPandaAnimal: Animal = {
-  animalId: 1,
-  animalCode: "ANI001",
-  imageUrl: "",
-  houseName: "Kai Kai",
-  sex: AnimalSex.MALE,
-  dateOfBirth: new Date(),
-  placeOfBirth: "Place of Birth haha",
-  rfidTagNum: "RFID00001",
-  acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-  dateOfAcquisition: new Date(),
-  acquisitionRemarks: "Acquisition Remarks blabla",
-  weight: -1,
-  physicalDefiningCharacteristics: "Big head",
-  behavioralDefiningCharacteristics: "Lazy",
-  dateOfDeath: null,
-  locationOfDeath: null,
-  causeOfDeath: null,
-  growthStage: AnimalGrowthStage.JUVENILE,
-  animalStatus: "NORMAL",
-  species: testPandaSpecies,
-};
+import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
+import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
 
 function ViewAnimalDetailsPage() {
+  const apiJson = useApiJson();
+  const location = useLocation();
+
   const { animalCode } = useParams<{ animalCode: string }>();
   const { tab } = useParams<{ tab: string }>();
 
-  const [curAnimal, setCurAnimal] = useState<Animal>(testPandaAnimal);
+  const [curAnimal, setCurAnimal] = useState<Animal | null>(null);
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+
+  // useEffect to fetch animal
+  useEffect(() => {
+    const fetchAnimal = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/animal/getAnimalByAnimalCode/${animalCode}`
+        );
+        console.log("test");
+        setCurAnimal(responseJson as Animal);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchAnimal();
+  }, [refreshSeed, location.pathname]);
 
   return (
     <div className="p-10">
-      <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
-        {/* header */}
-        <div className="flex flex-col">
-          <div className="mb-4 flex justify-between">
-            <NavLink className="flex" to={`/animal/viewallanimals/`}>
-              <Button variant={"outline"} type="button" className="">
+      {curAnimal && (
+        <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
+          {/* header */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <NavLink className="flex" to={`/animal/viewallanimals/`}>
+                <Button variant={"outline"} type="button" className="">
+                  Back
+                </Button>
+              </NavLink>
+              <span className="self-center text-lg text-graydark">
+                Animal Details
+              </span>
+              <Button disabled className="invisible">
                 Back
               </Button>
-            </NavLink>
-            <span className="self-center text-lg text-graydark">
-              Animal Details
+            </div>
+            <Separator />
+            <span className="mt-4 self-center text-title-xl font-bold">
+              {curAnimal.houseName}{" "}
+              {curAnimal.isGroup ? (
+                ""
+              ) : (
+                <span>the {curAnimal.species.commonName}</span>
+              )}
+              <div className="text-center text-lg">
+                {curAnimal.isGroup ? (
+                  <span>(Group)</span>
+                ) : (
+                  <span>(Individual)</span>
+                )}
+              </div>
             </span>
-            <Button disabled className="invisible">
-              Back
-            </Button>
+            <img
+              src={"http://localhost:3000/" + curAnimal.imageUrl}
+              alt="Current animal image"
+              className="my-4 aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
+            />
           </div>
-          <Separator />
-          <span className="mt-4 self-center text-title-xl font-bold">
-            {curAnimal.houseName} the {curAnimal.species.commonName}
-          </span>
+          {/*  */}
+          <Tabs defaultValue={tab ? `${tab}` : "basicinfo"} className="w-full">
+            <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
+              <span className="invisible">_____</span>
+              <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
+              <TabsTrigger value="weight">Weight</TabsTrigger>
+              <TabsTrigger value="feeding">Feeding</TabsTrigger>
+              <TabsTrigger value="trainingenrichment">
+                Training and Enrichment
+              </TabsTrigger>
+              <TabsTrigger value="behaviour">
+                Behaviour Observations
+              </TabsTrigger>
+              <TabsTrigger value="medical">Medical</TabsTrigger>
+            </TabsList>
+            <TabsContent value="basicinfo">
+              <AnimalBasicInformation
+                curAnimal={curAnimal}
+                setCurAnimal={setCurAnimal}
+                refreshSeed={refreshSeed}
+                setRefreshSeed={setRefreshSeed}
+              />
+            </TabsContent>
+            <TabsContent value="weight">
+              <div>
+                <AnimalWeightInfo curAnimal={curAnimal} />
+              </div>
+            </TabsContent>
+            <TabsContent value="feeding">
+              <div>
+                <span>Feeding Plan</span>
+              </div>
+            </TabsContent>
+            <TabsContent value="trainingenrichment">
+              <div>
+                <span>Training and Enrichment Plan</span>
+              </div>
+            </TabsContent>
+            <TabsContent value="behaviour">
+              <div>
+                <AllAnimalObservationLogsDatatable
+                  animalCode={curAnimal.animalCode}
+                />
+              </div>
+            </TabsContent>
+            <TabsContent value="medical">
+              Medical Logs and whatever else here
+            </TabsContent>
+          </Tabs>
         </div>
-        {/*  */}
-        <Tabs defaultValue={tab ? `${tab}` : "basicinfo"} className="w-full">
-          <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <span className="invisible">_____</span>
-            <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
-            <TabsTrigger value="feeding">Feeding</TabsTrigger>
-            <TabsTrigger value="trainingenrichment">
-              Training and Enrichment
-            </TabsTrigger>
-            <TabsTrigger value="behaviour">Behaviour Observations</TabsTrigger>
-            <TabsTrigger value="medical">Medical</TabsTrigger>
-          </TabsList>
-          <TabsContent value="basicinfo">
-            <div>
-              <span>Current Status and the edit status button here?</span>
-            </div>
-            <div>
-              <span>Basic table to show the basic details</span>
-            </div>
-            <div>
-              <span>
-                Show Species and Location (which Enclosure) it is inside as well
-              </span>
-            </div>
-            <div>
-              <span>Genealogy/Lineage</span>
-            </div>
-            <div>
-              <span>
-                Weight stuff??? Show historical weight-ins records on the graph
-              </span>
-            </div>
-            <AnimalBasicInformation curAnimal={curAnimal} />
-          </TabsContent>
-          <TabsContent value="feeding">
-            <div>
-              <span>Feeding Plan</span>
-            </div>
-          </TabsContent>
-          <TabsContent value="trainingenrichment">
-            <div>
-              <span>Training and Enrichment Plan</span>
-            </div>
-          </TabsContent>
-          <TabsContent value="behaviour">
-            <div>
-              <span>Behaviour Observation???</span>
-            </div>
-          </TabsContent>
-          <TabsContent value="medical">
-            Medical Logs and whatever else here
-          </TabsContent>
-        </Tabs>
-      </div>
+      )}
     </div>
   );
 }

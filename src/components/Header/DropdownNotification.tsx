@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import * as dotenv from "dotenv";
 import useApiJson from "../../hooks/useApiJson";
 import { BsBroadcast, BsFillHouseExclamationFill, BsHouseExclamation } from "react-icons/bs";
 import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";

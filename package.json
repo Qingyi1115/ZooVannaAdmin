@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@balkangraph/familytree.js": "^1.8.10",
     "@radix-ui/primitive": "^1.0.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -29,6 +30,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.3.1",
     "lucide-react": "^0.276.0",
     "moment-timezone": "^0.5.43",
     "primereact": "^9.6.2",

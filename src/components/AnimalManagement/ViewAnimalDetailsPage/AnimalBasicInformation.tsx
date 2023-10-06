@@ -10,27 +10,180 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import SpeciesCard from "./SpeciesCard";
+import EnclosureCard from "./EnclosureCard";
+import { NavLink } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import AnimalParentsCard from "./AnimalParentsCard";
+import UpdateStatusFormDialog from "./UpdateStatusFormDialog";
+import { Separator } from "@/components/ui/separator";
 
 interface AnimalBasicInformationProps {
   curAnimal: Animal;
+  setCurAnimal: any;
+  refreshSeed: number;
+  setRefreshSeed: any;
 }
 
 function AnimalBasicInformation(props: AnimalBasicInformationProps) {
-  const { curAnimal } = props;
+  const { curAnimal, setCurAnimal, refreshSeed, setRefreshSeed } = props;
+
+  const statusColorClass =
+    curAnimal.animalStatus === "NORMAL"
+      ? "bg-green-600"
+      : curAnimal.animalStatus === "PREGNANT"
+      ? "bg-warning"
+      : curAnimal.animalStatus === "SICK" ||
+        curAnimal.animalStatus === "INJURED"
+      ? "bg-destructive"
+      : "";
+
+  function calculateAge(dateOfBirth: Date): string {
+    const dob = dateOfBirth;
+    const todayDate = new Date();
+
+    // Calculate the difference in milliseconds between the two dates
+    const ageInMilliseconds = todayDate.getTime() - dob.getTime();
+
+    // Convert milliseconds to years (assuming an average year has 365.25 days)
+    const ageInYears = ageInMilliseconds / (365.25 * 24 * 60 * 60 * 1000);
+
+    // Calculate the remaining months
+    const ageInMonths = (ageInYears - Math.floor(ageInYears)) * 12;
+
+    // Format the result as "x years & y months"
+    const formattedAge = `${Math.floor(ageInYears)} years & ${Math.floor(
+      ageInMonths
+    )} months`;
+
+    return formattedAge;
+  }
+
+  // const updateStatusDialog = (
+  //   <Dialog>
+  //     <DialogTrigger asChild>
+  //       <Button>Update Status</Button>
+  //     </DialogTrigger>
+  //     <DialogContent className="sm:max-w-[425px]">
+  //       <DialogHeader>
+  //         <DialogTitle>Edit profile</DialogTitle>
+  //         <DialogDescription>
+  //           Make changes to your profile here. Click save when you're done.
+  //         </DialogDescription>
+  //       </DialogHeader>
+  //       <div>
+  //         <UpdateStatusForm
+  //           curAnimal={curAnimal}
+  //           refreshSeed={refreshSeed}
+  //           setRefreshSeed={setRefreshSeed}
+  //         />
+  //       </div>
+  //       <DialogFooter>
+  //         <Button type="submit">Update Status</Button>
+  //       </DialogFooter>
+  //     </DialogContent>
+  //   </Dialog>
+  // );
+
+  const declareDeathDialog = (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant={"destructive"}>Declare Death</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">test</div>
+          <div className="grid grid-cols-4 items-center gap-4">input</div>
+        </div>
+        <DialogFooter>
+          <Button type="submit">Save changes</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  const statusTemplate = (statuses: string[]) => {
+    return (
+      <React.Fragment>
+        <div className="flex gap-2">
+          {statuses.map((status, index) => (
+            <div
+              key={index}
+              className={` flex w-max items-center justify-center rounded px-1 text-sm font-bold
+                ${
+                  status === "NORMAL"
+                    ? " bg-emerald-100  text-emerald-900"
+                    : status === "PREGNANT"
+                    ? " bg-orange-100 p-[0.1rem] text-orange-900"
+                    : status === "SICK"
+                    ? " bg-yellow-100 p-[0.1rem]  text-yellow-900"
+                    : status === "INJURED"
+                    ? "bg-red-100 p-[0.1rem] text-red-900"
+                    : status === "OFFSITE"
+                    ? " bg-blue-100 p-[0.1rem]  text-blue-900"
+                    : status === "RELEASED"
+                    ? " bg-fuchsia-100 p-[0.1rem]  text-fuchsia-900"
+                    : status === "DECEASED"
+                    ? " bg-slate-300 p-[0.1rem]  text-slate-900"
+                    : "bg-gray-100 text-black"
+                }`}
+            >
+              {status}
+            </div>
+          ))}
+        </div>
+      </React.Fragment>
+    );
+  };
+
   return (
     <div>
-      <div>
-        {curAnimal.houseName} is a: <br />
-        <div>
-          <SpeciesCard curSpecies={curAnimal.species} />
+      <div className="flex h-80 w-full gap-6">
+        <div className="flex h-full w-2/5 flex-col justify-between">
+          <div className="w-full">
+            <SpeciesCard curSpecies={curAnimal.species} />
+          </div>
+          <div className="w-full">
+            <EnclosureCard />
+          </div>
+        </div>
+        <div className="flex h-full w-3/5 flex-col">
+          <AnimalParentsCard
+            curAnimal={curAnimal}
+            setCurAnimal={setCurAnimal}
+            refreshSeed={refreshSeed}
+            setRefreshSeed={setRefreshSeed}
+          />
         </div>
       </div>
-      <div>
-        Current Location: <br />
-        <div>
-          blabla enclosure card here, can navigate to view enclosure details
-        </div>
+      <Separator className="mb-10 mt-14" />
+      <span className="text-xl font-medium">Animal Details</span>
+      <div className="my-4 flex justify-start gap-4">
+        <NavLink to={`/animal/editanimal/${curAnimal.animalCode}`}>
+          <Button>Edit Basic Information</Button>
+        </NavLink>
+        <UpdateStatusFormDialog
+          curAnimal={curAnimal}
+          refreshSeed={refreshSeed}
+          setRefreshSeed={setRefreshSeed}
+        />
+        {declareDeathDialog}
       </div>
       <Table>
         {/* <TableHeader className=" bg-whiten">
@@ -42,6 +195,14 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
         </TableHeader> */}
         <TableBody>
+          <TableRow className="">
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Status
+            </TableCell>
+            <TableCell>
+              {statusTemplate(curAnimal.animalStatus.split(","))}
+            </TableCell>
+          </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Animal Code
@@ -61,23 +222,24 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             <TableCell>{curAnimal.sex}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              RFID Tag Number (if any)
+            <TableCell className="w-1/5 font-bold" rowSpan={3}>
+              Identifier
             </TableCell>
-            <TableCell>{curAnimal.rfidTagNum}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Current Weight
-            </TableCell>
-            <TableCell>{curAnimal.weight} kg</TableCell>
+            <TableCell className="w-1/6 font-bold">Type</TableCell>
+            <TableCell>{curAnimal.identifierType}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/6 font-bold">Value</TableCell>
+            <TableCell>{curAnimal.identifierValue}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Age
             </TableCell>
             <TableCell>
-              <span className="text-red-400">AGEEE AA DO SOMETHING</span>
+              {calculateAge(new Date(curAnimal.dateOfBirth))}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -93,7 +255,9 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Date</TableCell>
-            <TableCell>{curAnimal.dateOfBirth.toDateString()}</TableCell>
+            <TableCell>
+              {new Date(curAnimal.dateOfBirth).toDateString()}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Place</TableCell>
@@ -106,7 +270,9 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Date</TableCell>
-            <TableCell>{curAnimal.dateOfAcquisition.toDateString()}</TableCell>
+            <TableCell>
+              {new Date(curAnimal.dateOfAcquisition).toDateString()}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Method</TableCell>

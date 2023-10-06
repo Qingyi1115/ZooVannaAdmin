@@ -9,6 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import FormFieldSelect from "../FormFieldSelect";
 import Listing from "../../models/Listing";
 import { ListingStatus, ListingType } from "src/enums/Enumurated";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface EditListingFormProps {
   currListing: Listing;
@@ -19,6 +20,7 @@ interface EditListingFormProps {
 function EditListingForm(props: EditListingFormProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const { currListing, refreshSeed, setRefreshSeed } = props;
 
@@ -149,6 +151,7 @@ function EditListingForm(props: EditListingFormProps) {
         description: "Successfully edited listing",
       });
       setRefreshSeed(refreshSeed + 1);
+      navigate("/listing/viewalllistings");
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -240,10 +243,11 @@ function EditListingForm(props: EditListingFormProps) {
             placeholder="Select a listing type"
             valueLabelPair={[
               ["LOCAL_ADULT_ONETIME", "Local-Adult (1x)"],
+              ["LOCAL_CHILD_ONETIME", "Local-Child (1x)"],
               ["LOCAL_STUDENT_ONETIME", "Local-Student (1x)"],
               ["LOCAL_SENIOR_ONETIME", "Local-Senior (1x)"],
-              ["FOREIGNER_ONETIME", "Foreigner (1x)"],
-              ["ANNUALPASS", "Annual pass"],
+              ["FOREIGNER_ADULT_ONETIME", "Foreigner-Adult (1x)"],
+              ["FOREIGNER_CHILD_ONETIME", "Foreigner-Child (1x)"],
             ]}
             value={listingType}
             setValue={setListingType}

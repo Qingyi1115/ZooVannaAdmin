@@ -246,16 +246,23 @@ function AllListingsDatatable() {
 
   const actionBodyTemplate = (listing: Listing) => {
     return (
-      <React.Fragment>
-        <NavLink to={`/listing/viewlisting/${listing.listingId}`}>
-          <Button className="mb-1 mr-1">
+      <div className="flex justify-between">
+        <NavLink
+          to={`/listing/viewlisting/${listing.listingId}`}
+          className="mr-1"
+        >
+          <Button>
             <HiEye className="mr-1" />
-            <span>View Details</span>
+            <span>Details</span>
           </Button>
         </NavLink>
-        <NavLink to={`/listing/editlisting/${listing.listingId}`}>
-          <Button className="mr-2">
-            <HiEye className="mr-auto" />
+        <NavLink
+          to={`/listing/editlisting/${listing.listingId}`}
+          className="mr-1"
+        >
+          <Button>
+            <HiPencil className="mr-1" />
+            <span>Edit</span>
           </Button>
         </NavLink>
         {listing.listingStatus === "DISCONTINUED" ? (
@@ -271,11 +278,10 @@ function AllListingsDatatable() {
             className="mr-2"
             onClick={() => confirmlistingDisable(listing)}
           >
-            <HiTrash className="mr-1" />
             <span>Disable</span>
           </Button>
         )}
-      </React.Fragment>
+      </div>
     );
   };
 
