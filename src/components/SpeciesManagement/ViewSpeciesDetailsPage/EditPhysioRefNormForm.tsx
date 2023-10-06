@@ -45,17 +45,29 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
     curSpecies.speciesCode
   );
   const physiologicalRefId = curPhysioRefNorm.physiologicalRefId;
-  const [sizeMaleCm, setSizeMaleCm] = useState<number>(
-    curPhysioRefNorm.sizeMaleCm
+  const [minSizeMaleCm, setMinSizeMaleCm] = useState<number>(
+    curPhysioRefNorm.minSizeMaleCm
   );
-  const [sizeFemaleCm, setSizeFemaleCm] = useState<number>(
-    curPhysioRefNorm.sizeFemaleCm
+  const [maxSizeMaleCm, setMaxSizeMaleCm] = useState<number>(
+    curPhysioRefNorm.maxSizeMaleCm
   );
-  const [weightMaleKg, setWeightMaleKg] = useState<number>(
-    curPhysioRefNorm.weightMaleKg
+  const [minSizeFemaleCm, setMinSizeFemaleCm] = useState<number>(
+    curPhysioRefNorm.minSizeFemaleCm
   );
-  const [weightFemaleKg, setWeightFemaleKg] = useState<number>(
-    curPhysioRefNorm.weightFemaleKg
+  const [maxSizeFemaleCm, setMaxSizeFemaleCm] = useState<number>(
+    curPhysioRefNorm.maxSizeFemaleCm
+  );
+  const [minWeightMaleKg, setMinWeightMaleKg] = useState<number>(
+    curPhysioRefNorm.minWeightMaleKg
+  );
+  const [maxWeightMaleKg, setMaxWeightMaleKg] = useState<number>(
+    curPhysioRefNorm.maxWeightMaleKg
+  );
+  const [minWeightFemaleKg, setMinWeightFemaleKg] = useState<number>(
+    curPhysioRefNorm.minWeightFemaleKg
+  );
+  const [maxWeightFemaleKg, setMaxWeightFemaleKg] = useState<number>(
+    curPhysioRefNorm.maxWeightFemaleKg
   );
   const [minAge, setMinAge] = useState<number>(curPhysioRefNorm.minAge);
   const [maxAge, setMaxAge] = useState<number>(curPhysioRefNorm.maxAge);
@@ -122,12 +134,19 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
     return null;
   }
 
-  function validateSizeMaleCm(props: ValidityState) {
+  function validateMinSizeMaleCm(props: ValidityState) {
     // if (props != undefined) {
-    if (Number(sizeMaleCm) <= 0) {
+    if (Number(minSizeMaleCm) <= 0) {
       return (
         <div className="font-medium text-danger">
-          * Average size of male must be greater than 0
+          * Min size of male must be greater than 0
+        </div>
+      );
+    }
+    if (Number(minSizeMaleCm) >= Number(maxSizeMaleCm)) {
+      return (
+        <div className="font-medium text-danger">
+          * Min size of male must be smaller than max size of male
         </div>
       );
     }
@@ -136,12 +155,12 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
     return null;
   }
 
-  function validateSizeFemaleCm(props: ValidityState) {
+  function validateMaxSizeMaleCm(props: ValidityState) {
     // if (props != undefined) {
-    if (Number(sizeFemaleCm) <= 0) {
+    if (Number(minSizeMaleCm) >= Number(maxSizeMaleCm)) {
       return (
         <div className="font-medium text-danger">
-          * Average size of female must be greater than 0
+          * Max size of male must be greater than min size of male
         </div>
       );
     }
@@ -150,12 +169,19 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
     return null;
   }
 
-  function validateWeightMaleKg(props: ValidityState) {
+  function validateMinSizeFemaleCm(props: ValidityState) {
     // if (props != undefined) {
-    if (Number(weightMaleKg) <= 0) {
+    if (Number(minSizeFemaleCm) <= 0) {
       return (
         <div className="font-medium text-danger">
-          * Average weight of male must be greater than 0
+          * Min size of female must be greater than 0
+        </div>
+      );
+    }
+    if (Number(minSizeFemaleCm) >= Number(maxSizeFemaleCm)) {
+      return (
+        <div className="font-medium text-danger">
+          * Min size of female must be smaller than max size of female
         </div>
       );
     }
@@ -164,12 +190,96 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
     return null;
   }
 
-  function validateWeightFemaleKg(props: ValidityState) {
+  function validateMaxSizeFemaleCm(props: ValidityState) {
     // if (props != undefined) {
-    if (Number(weightFemaleKg) <= 0) {
+    if (Number(minSizeFemaleCm) >= Number(maxSizeFemaleCm)) {
       return (
         <div className="font-medium text-danger">
-          * Average weight of female must be greater than 0
+          * Max size of female must be greater than min size of female
+        </div>
+      );
+    }
+    // add any other cases here
+    // }
+    return null;
+  }
+
+  function validateMinWeightMaleKg(props: ValidityState) {
+    // if (props != undefined) {
+    if (Number(minWeightMaleKg) <= 0) {
+      return (
+        <div className="font-medium text-danger">
+          * Weight of male must be greater than 0
+        </div>
+      );
+    }
+    if (Number(minWeightMaleKg) >= Number(maxWeightMaleKg)) {
+      return (
+        <div className="font-medium text-danger">
+          * Min weight of male must be smaller than max weight of male
+        </div>
+      );
+    }
+    // add any other cases here
+    // }
+    return null;
+  }
+
+  function validateMaxWeightMaleKg(props: ValidityState) {
+    // if (props != undefined) {
+    if (Number(maxWeightMaleKg) <= 0) {
+      return (
+        <div className="font-medium text-danger">
+          * Weight of male must be greater than 0
+        </div>
+      );
+    }
+    if (Number(minWeightMaleKg) >= Number(maxWeightMaleKg)) {
+      return (
+        <div className="font-medium text-danger">
+          * Max weight of male must be greater than min weight of male
+        </div>
+      );
+    }
+    // add any other cases here
+    // }
+    return null;
+  }
+
+  function validateMinWeightFemaleKg(props: ValidityState) {
+    // if (props != undefined) {
+    if (Number(minWeightFemaleKg) <= 0) {
+      return (
+        <div className="font-medium text-danger">
+          * Weight of female must be greater than 0
+        </div>
+      );
+    }
+    if (Number(minWeightFemaleKg) >= Number(maxWeightFemaleKg)) {
+      return (
+        <div className="font-medium text-danger">
+          * Min weight of female must be smaller than max weight of female
+        </div>
+      );
+    }
+    // add any other cases here
+    // }
+    return null;
+  }
+
+  function validateMaxWeightFemaleKg(props: ValidityState) {
+    // if (props != undefined) {
+    if (Number(maxWeightFemaleKg) <= 0) {
+      return (
+        <div className="font-medium text-danger">
+          * Weight of female must be greater than 0
+        </div>
+      );
+    }
+    if (Number(minWeightFemaleKg) >= Number(maxWeightFemaleKg)) {
+      return (
+        <div className="font-medium text-danger">
+          * Max weight of female must be greater than min weight of female
         </div>
       );
     }
@@ -185,10 +295,14 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
     e.preventDefault();
     const toUpdatePhysioRefNorm = {
       physiologicalRefId,
-      sizeMaleCm,
-      sizeFemaleCm,
-      weightMaleKg,
-      weightFemaleKg,
+      minSizeMaleCm,
+      maxSizeMaleCm,
+      minSizeFemaleCm,
+      maxSizeFemaleCm,
+      minWeightMaleKg,
+      maxWeightMaleKg,
+      minWeightFemaleKg,
+      maxWeightFemaleKg,
       minAge,
       maxAge,
       growthStage,
@@ -295,57 +409,116 @@ function EditPhysioRefNormForm(props: EditPhysioRefNormFormProps) {
           />
         </div>
 
-        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Size Male cm */}
-          <FormFieldInput
-            type="number"
-            formFieldName="sizeMaleCm"
-            label={`Average Male Size (cm)`}
-            required={true}
-            pattern={undefined}
-            placeholder="e.g., 8"
-            value={sizeMaleCm}
-            setValue={setSizeMaleCm}
-            validateFunction={validateSizeMaleCm}
-          />
-          {/* Weight Male kg */}
-          <FormFieldInput
-            type="number"
-            formFieldName="weightMaleKg"
-            label={`Average Male Weight (kg)`}
-            required={true}
-            placeholder="e.g., 8"
-            pattern={undefined}
-            value={weightMaleKg}
-            setValue={setWeightMaleKg}
-            validateFunction={validateWeightMaleKg}
-          />
+        <div>
+          <div className="mb-2 text-lg font-bold text-[#3b82f6]">Male</div>
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+            {/* Min Size Male cm */}
+            <FormFieldInput
+              type="number"
+              formFieldName="minSizeMaleCm"
+              label={`Minimum Male Size (cm)`}
+              required={true}
+              pattern={undefined}
+              placeholder="e.g., 8"
+              value={minSizeMaleCm}
+              setValue={setMinSizeMaleCm}
+              validateFunction={validateMinSizeMaleCm}
+            />
+            {/* Max Size Male cm */}
+            <FormFieldInput
+              type="number"
+              formFieldName="maxSizeMaleCm"
+              label={`Maximum Male Size (cm)`}
+              required={true}
+              placeholder="e.g., 8"
+              pattern={undefined}
+              value={maxSizeMaleCm}
+              setValue={setMaxSizeMaleCm}
+              validateFunction={validateMaxSizeMaleCm}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Size Female cm */}
+          {/* Min Weight Male kg */}
           <FormFieldInput
             type="number"
-            formFieldName="sizeFemaleCm"
-            label={`Average Female Size (cm)`}
+            formFieldName="minWeightMaleKg"
+            label={`Minimum Male Weight (kg)`}
             required={true}
             pattern={undefined}
             placeholder="e.g., 8"
-            value={sizeFemaleCm}
-            setValue={setSizeFemaleCm}
-            validateFunction={validateSizeFemaleCm}
+            value={minWeightMaleKg}
+            setValue={setMinWeightMaleKg}
+            validateFunction={validateMinWeightMaleKg}
           />
-          {/* Weight Female kg */}
+          {/* Max Weight Male kg */}
           <FormFieldInput
             type="number"
-            formFieldName="weightFemaleKg"
-            label={`Average Female Weight (kg)`}
+            formFieldName="maxWeightMaleKg"
+            label={`Maximum Male Weight (kg)`}
             required={true}
             placeholder="e.g., 8"
             pattern={undefined}
-            value={weightFemaleKg}
-            setValue={setWeightFemaleKg}
-            validateFunction={validateWeightFemaleKg}
+            value={maxWeightMaleKg}
+            setValue={setMaxWeightMaleKg}
+            validateFunction={validateMaxWeightMaleKg}
+          />
+        </div>
+        <Separator />
+        <div>
+          <div className="mb-2 text-lg font-bold text-[#ec4899]">Female</div>
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+            {/* Min Size Female cm */}
+            <FormFieldInput
+              type="number"
+              formFieldName="minSizeFemaleCm"
+              label={`Minimum Female Size (cm)`}
+              required={true}
+              pattern={undefined}
+              placeholder="e.g., 8"
+              value={minSizeFemaleCm}
+              setValue={setMinSizeFemaleCm}
+              validateFunction={validateMinSizeFemaleCm}
+            />
+            {/* Max Size Female cm */}
+            <FormFieldInput
+              type="number"
+              formFieldName="maxSizeFemaleCm"
+              label={`Maximum Female Size (cm)`}
+              required={true}
+              placeholder="e.g., 8"
+              pattern={undefined}
+              value={maxSizeFemaleCm}
+              setValue={setMaxSizeFemaleCm}
+              validateFunction={validateMaxSizeFemaleCm}
+            />
+          </div>
+        </div>
+        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+          {/* Min Size Female cm */}
+          <FormFieldInput
+            type="number"
+            formFieldName="minWeightFemaleKg"
+            label={`Minimum Female Weight (kg)`}
+            required={true}
+            pattern={undefined}
+            placeholder="e.g., 8"
+            value={minWeightFemaleKg}
+            setValue={setMinWeightFemaleKg}
+            validateFunction={validateMinWeightFemaleKg}
+          />
+          {/* Max Size Female cm */}
+          <FormFieldInput
+            type="number"
+            formFieldName="maxSizeFemaleCm"
+            label={`Maximum Female Weight (kg)`}
+            required={true}
+            placeholder="e.g., 8"
+            pattern={undefined}
+            value={maxWeightFemaleKg}
+            setValue={setMaxWeightFemaleKg}
+            validateFunction={validateMaxWeightFemaleKg}
           />
         </div>
 
