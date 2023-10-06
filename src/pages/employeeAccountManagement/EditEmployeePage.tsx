@@ -5,7 +5,6 @@ import Employee from "src/models/Employee";
 import { Country } from "../../enums/Country";
 import EditEmployeeForm from "../../components/EmployeeAccountManagement/EditEmployeeForm";
 
-
 function EditEmployeePage() {
   const apiJson = useApiJson();
 
@@ -19,10 +18,8 @@ function EditEmployeePage() {
     employeeEducation: "",
     dateOfResignation: null,
     employeeDoorAccessCode: "",
-    employeePasswordhash: "",
-    employeeSalt: "",
     isAccountManager: false,
-    employeeProfileUrl: ""
+    employeeProfileUrl: "",
   };
 
   const { employeeId } = useParams<{ employeeId: string }>();
