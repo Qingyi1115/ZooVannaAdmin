@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import * as Form from "@radix-ui/react-form";
 import FormFieldRadioGroup from "../../FormFieldRadioGroup";
@@ -12,10 +12,11 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Animal from "../../../models/Animal";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
-interface CreateNewAnimalObservationLogProps {
-  curAnimalList: Animal[];
-}
+// interface CreateNewAnimalObservationLogProps {
+//   speciesCode: string;
+// }
 
 function validateAnimalObservationLogName(props: ValidityState) {
   if (props != undefined) {
@@ -29,7 +30,7 @@ function validateAnimalObservationLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogProps) {
+function CreateNewAnimalObservationLogForm() {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
@@ -40,9 +41,19 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
   const [dateTime, setDateTime] = useState<
     string | Date | Date[] | null
   >(null);
-  const { curAnimalList } = props;
+  // const { curAnimalList } = props;
   const [formError, setFormError] = useState<string | null>(null);
 
+
+  const [curAnimalList, setCurAnimalList] = useState<any>(null);
+  const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
+
+  useEffect(() => {
+    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+      setCurAnimalList(res as Animal[]);
+      console.log(res);
+    });
+  }, []);
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
@@ -53,7 +64,7 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details,
-      animals: curAnimalList
+      animals: selectedAnimals
     }
     console.log(newAnimalObservationLog);
 
@@ -152,6 +163,16 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
         validateFunction={validateAnimalObservationLogName}
         pattern={undefined}
       />
+      {/* Animals */}
+      <MultiSelect
+        value={selectedAnimals}
+        onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
+        options={curAnimalList}
+        optionLabel="houseName"
+        filter
+        placeholder="Select Animals"
+        maxSelectedLabels={3}
+        className="w-full md:w-20rem" />
 
       <Form.Submit asChild>
         <Button

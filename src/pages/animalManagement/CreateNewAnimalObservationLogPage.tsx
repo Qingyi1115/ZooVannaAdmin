@@ -38,34 +38,11 @@ function CreateNewAnimalObservationLogPage() {
     ageToElder: 3,
     lifeExpectancyYears: 0,
   };
-  let emptyAnimal: Animal = {
-    animalId: -1,
-    animalCode: "",
-    imageUrl: "",
-    isGroup: false,
-    houseName: "",
-    identifierType: "",
-    identifierValue: "",
-    sex: AnimalSex.MALE,
-    dateOfBirth: new Date(),
-    placeOfBirth: "",
-    acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
-    dateOfAcquisition: new Date(),
-    acquisitionRemarks: "",
-    physicalDefiningCharacteristics: "",
-    behavioralDefiningCharacteristics: "",
-    dateOfDeath: null,
-    locationOfDeath: null,
-    causeOfDeath: null,
-    growthStage: AnimalGrowthStage.ADOLESCENT,
-    animalStatus: "",
-    species: emptySpecies,
-  };
 
   const [curAnimalList, setCurAnimalList] = useState<Animal[]>([]);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimalsBySpeciesCode/${speciesCode}`).then(res => {
+    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
       setCurAnimalList(res.allAnimals as Animal[]);
     });
   }, []);
@@ -73,7 +50,7 @@ function CreateNewAnimalObservationLogPage() {
 
   return (
     <div className="p-10">
-      <CreateNewAnimalObservationLogForm curAnimalList={curAnimalList} />
+      <CreateNewAnimalObservationLogForm />
     </div>
   );
 }
