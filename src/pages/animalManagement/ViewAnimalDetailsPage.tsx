@@ -4,6 +4,7 @@ import useApiJson from "../../hooks/useApiJson";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,6 +21,7 @@ import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement
 
 function ViewAnimalDetailsPage() {
   const apiJson = useApiJson();
+  const location = useLocation();
 
   const { animalCode } = useParams<{ animalCode: string }>();
   const { tab } = useParams<{ tab: string }>();
@@ -41,7 +43,7 @@ function ViewAnimalDetailsPage() {
       }
     };
     fetchAnimal();
-  }, [refreshSeed]);
+  }, [refreshSeed, location.pathname]);
 
   return (
     <div className="p-10">
@@ -97,6 +99,7 @@ function ViewAnimalDetailsPage() {
             <TabsContent value="basicinfo">
               <AnimalBasicInformation
                 curAnimal={curAnimal}
+                setCurAnimal={setCurAnimal}
                 refreshSeed={refreshSeed}
                 setRefreshSeed={setRefreshSeed}
               />

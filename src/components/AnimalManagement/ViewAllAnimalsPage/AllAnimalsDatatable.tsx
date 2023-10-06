@@ -383,10 +383,10 @@ function AllAnimalsDatatable() {
             rowGroupFooterTemplate={rowGroupFooterTemplate}
             paginator
             // showGridlines
-            rows={10}
+            rows={25}
             scrollable
             selectionMode={"single"}
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[10, 25, 50, 100]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} individual/group animals"
             globalFilter={globalFilter}

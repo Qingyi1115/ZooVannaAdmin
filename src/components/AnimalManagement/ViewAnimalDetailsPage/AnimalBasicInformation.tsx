@@ -30,12 +30,13 @@ import { Separator } from "@/components/ui/separator";
 
 interface AnimalBasicInformationProps {
   curAnimal: Animal;
+  setCurAnimal: any;
   refreshSeed: number;
   setRefreshSeed: any;
 }
 
 function AnimalBasicInformation(props: AnimalBasicInformationProps) {
-  const { curAnimal, refreshSeed, setRefreshSeed } = props;
+  const { curAnimal, setCurAnimal, refreshSeed, setRefreshSeed } = props;
 
   const statusColorClass =
     curAnimal.animalStatus === "NORMAL"
@@ -165,6 +166,7 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
         <div className="flex h-full w-3/5 flex-col">
           <AnimalParentsCard
             curAnimal={curAnimal}
+            setCurAnimal={setCurAnimal}
             refreshSeed={refreshSeed}
             setRefreshSeed={setRefreshSeed}
           />
