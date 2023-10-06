@@ -6,12 +6,23 @@ import Listing from "src/models/Listing";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink } from "react-router-dom";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import {
+  HiBan,
+  HiCheck,
+  HiEye,
+  HiOutlinePlay,
+  HiPencil,
+  HiPlay,
+  HiPlus,
+  HiTrash,
+  HiX,
+} from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
 import { ListingStatus, ListingType } from "../../enums/Enumurated";
 import { Separator } from "@/components/ui/separator";
+import { FiPlay } from "react-icons/fi";
 
 {
   /*const toast = useRef<Toast>(null);*/
@@ -246,14 +257,13 @@ function AllListingsDatatable() {
 
   const actionBodyTemplate = (listing: Listing) => {
     return (
-      <div className="flex justify-between">
+      <div className="">
         <NavLink
           to={`/listing/viewlisting/${listing.listingId}`}
           className="mr-1"
         >
           <Button>
-            <HiEye className="mr-1" />
-            <span>Details</span>
+            <HiEye />
           </Button>
         </NavLink>
         <NavLink
@@ -261,24 +271,19 @@ function AllListingsDatatable() {
           className="mr-1"
         >
           <Button>
-            <HiPencil className="mr-1" />
-            <span>Edit</span>
+            <HiPencil />
           </Button>
         </NavLink>
         {listing.listingStatus === "DISCONTINUED" ? (
-          <Button
-            className="mr-2"
-            onClick={() => confirmlistingEnable(listing)}
-          >
-            <span>Enable</span>
+          <Button onClick={() => confirmlistingEnable(listing)}>
+            <FiPlay />
           </Button>
         ) : (
           <Button
             variant={"destructive"}
-            className="mr-2"
             onClick={() => confirmlistingDisable(listing)}
           >
-            <span>Disable</span>
+            <HiBan className="" />
           </Button>
         )}
       </div>
@@ -291,7 +296,7 @@ function AllListingsDatatable() {
         <Toast ref={toast} />
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            <NavLink to={"/employee/createNewEmployee"}>
+            <NavLink to={"/listing/createnewlisting"}>
               <Button className="mr-2">
                 <HiPlus className="mr-auto" />
                 Add Listing
@@ -356,6 +361,8 @@ function AllListingsDatatable() {
               header="Actions"
               exportable={false}
               style={{ minWidth: "18rem" }}
+              frozen
+              alignFrozen="right"
             ></Column>
           </DataTable>
         </div>
