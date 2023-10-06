@@ -159,6 +159,7 @@ function AllCustomerDatatable() {
               <NavLink to={"/customer/createnewcustomer"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
+                  Add Customer
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">

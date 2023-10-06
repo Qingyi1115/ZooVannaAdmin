@@ -46,7 +46,8 @@ function CreatePhysiologicalRefNormForm(
   const [sizeFemaleCm, setSizeFemaleCm] = useState<number>(0);
   const [weightMaleKg, setWeightMaleKg] = useState<number>(0);
   const [weightFemaleKg, setWeightFemaleKg] = useState<number>(0);
-  const [ageToGrowthAge, setAgeToGrowthAge] = useState<number>(0);
+  const [minAge, setMinAge] = useState<number>(0);
+  const [maxAge, setMaxAge] = useState<number>(0);
   const [growthStage, setGrowthStage] = useState<string | undefined>(undefined);
   const [newPhysioRefNormCreated, setNewPhysioRefNormCreated] =
     useState<boolean>(false);
@@ -67,12 +68,40 @@ function CreatePhysiologicalRefNormForm(
     return null;
   }
 
-  function validateAgeToGrowthAge(props: ValidityState) {
+  function validateMinAge(props: ValidityState) {
     // if (props != undefined) {
-    if (sizeMaleCm <= 0) {
+    if (Number(minAge) < 0) {
       return (
         <div className="font-medium text-danger">
-          * Age to reach growth age must be greater than 0
+          * Start age must be equal to or greater than 0
+        </div>
+      );
+    }
+
+    if (Number(minAge) > Number(maxAge)) {
+      return (
+        <div className="font-medium text-danger">
+          * Start age must be smaller than end age
+        </div>
+      );
+    }
+    // add any other cases here
+    // }
+    return null;
+  }
+
+  function validateMaxAge(props: ValidityState) {
+    // if (props != undefined) {
+    if (Number(maxAge) <= 0) {
+      return (
+        <div className="font-medium text-danger">
+          * End age must be greater than 0
+        </div>
+      );
+    } else if (Number(minAge) > Number(maxAge)) {
+      return (
+        <div className="font-medium text-danger">
+          * End age must be greater than start age
         </div>
       );
     }
@@ -83,7 +112,7 @@ function CreatePhysiologicalRefNormForm(
 
   function validateSizeMaleCm(props: ValidityState) {
     // if (props != undefined) {
-    if (sizeMaleCm <= 0) {
+    if (Number(sizeMaleCm) <= 0) {
       return (
         <div className="font-medium text-danger">
           * Average size of male must be greater than 0
@@ -97,7 +126,7 @@ function CreatePhysiologicalRefNormForm(
 
   function validateSizeFemaleCm(props: ValidityState) {
     // if (props != undefined) {
-    if (sizeFemaleCm <= 0) {
+    if (Number(sizeFemaleCm) <= 0) {
       return (
         <div className="font-medium text-danger">
           * Average size of female must be greater than 0
@@ -111,7 +140,7 @@ function CreatePhysiologicalRefNormForm(
 
   function validateWeightMaleKg(props: ValidityState) {
     // if (props != undefined) {
-    if (weightMaleKg <= 0) {
+    if (Number(weightMaleKg) <= 0) {
       return (
         <div className="font-medium text-danger">
           * Average weight of male must be greater than 0
@@ -125,7 +154,7 @@ function CreatePhysiologicalRefNormForm(
 
   function validateWeightFemaleKg(props: ValidityState) {
     // if (props != undefined) {
-    if (weightFemaleKg <= 0) {
+    if (Number(weightFemaleKg) <= 0) {
       return (
         <div className="font-medium text-danger">
           * Average weight of female must be greater than 0
@@ -148,14 +177,15 @@ function CreatePhysiologicalRefNormForm(
       sizeFemaleCm,
       weightMaleKg,
       weightFemaleKg,
-      ageToGrowthAge,
+      minAge,
+      maxAge,
       growthStage,
     };
 
     const createNewPhysioRefNormApi = async () => {
       try {
         const response = await apiJson.post(
-          "http://localhost:3000/api/species/createPhysiologicalReferenceNorms  ",
+          "http://localhost:3000/api/species/createPhysiologicalReferenceNorms",
           newPhysioRefNorm
         );
         // success
@@ -228,18 +258,32 @@ function CreatePhysiologicalRefNormForm(
           validateFunction={validateGrowthStage}
         />
 
-        {/* Age to Growth Stage */}
-        <FormFieldInput
-          type="number"
-          formFieldName="ageToGrowthAge"
-          label={`Age to Reach Growth Stage`}
-          required={true}
-          pattern={undefined}
-          placeholder="e.g., 8"
-          value={ageToGrowthAge}
-          setValue={setAgeToGrowthAge}
-          validateFunction={validateAgeToGrowthAge}
-        />
+        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+          {/* Min Age / Start Age */}
+          <FormFieldInput
+            type="number"
+            formFieldName="minAge"
+            label={`Start Age`}
+            required={true}
+            pattern={undefined}
+            placeholder="e.g., 8"
+            value={minAge}
+            setValue={setMinAge}
+            validateFunction={validateMinAge}
+          />
+          {/* Max Age / End Age */}
+          <FormFieldInput
+            type="number"
+            formFieldName="maxAge"
+            label={`End Age`}
+            required={true}
+            pattern={undefined}
+            placeholder="e.g., 8"
+            value={maxAge}
+            setValue={setMaxAge}
+            validateFunction={validateMaxAge}
+          />
+        </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
           {/* Size Male cm */}
@@ -301,11 +345,7 @@ function CreatePhysiologicalRefNormForm(
               disabled={apiJson.loading}
               className="h-12 w-2/3 self-center rounded-full text-lg"
             >
-              {!apiJson.loading ? (
-                <div>Submit</div>
-              ) : (
-                <div>Loading</div>
-              )}
+              {!apiJson.loading ? <div>Submit</div> : <div>Loading</div>}
             </Button>
           ) : (
             <Button

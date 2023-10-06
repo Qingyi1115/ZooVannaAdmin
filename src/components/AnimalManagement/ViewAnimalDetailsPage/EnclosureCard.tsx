@@ -26,7 +26,8 @@ function EnclosureCard() {
           <div className="flex items-center gap-4">
             <img
               alt={""}
-              src={"http://localhost:3000/"}
+              // src={"http://localhost:3000/"}
+              src="../../../../src/assets/enclosureIconPlaceholder.jpg"
               className="aspect-square w-20 rounded-full border border-white object-cover shadow-4"
             />
             <div>

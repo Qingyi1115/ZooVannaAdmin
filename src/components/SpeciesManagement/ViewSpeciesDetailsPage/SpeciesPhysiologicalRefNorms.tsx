@@ -83,16 +83,15 @@ function SpeciesPhysiologicalRefNorms(
       "--text-color-secondary"
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
-    const weightMaleDataPoints = physiologicalRefNormsList.map((item) => ({
-      x: item.ageToGrowthAge,
-      y: item.weightMaleKg,
-      growthStage: item.growthStage,
-    }));
-    const weightFemaleDataPoints = physiologicalRefNormsList.map((item) => ({
-      x: item.ageToGrowthAge,
-      y: item.weightFemaleKg,
-      growthStage: item.growthStage,
-    }));
+    const weightMaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
+      { x: item.minAge, y: item.weightMaleKg },
+      { x: item.maxAge, y: item.weightMaleKg },
+    ]);
+    const weightFemaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
+      { x: item.minAge, y: item.weightFemaleKg },
+      { x: item.maxAge, y: item.weightFemaleKg },
+    ]);
+
     const data = {
       labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
       datasets: [
@@ -140,6 +139,7 @@ function SpeciesPhysiologicalRefNorms(
       },
       scales: {
         x: {
+          display: true,
           ticks: {
             color: textColorSecondary,
           },
@@ -149,6 +149,10 @@ function SpeciesPhysiologicalRefNorms(
           type: "linear",
           min: 0,
           max: curSpecies.lifeExpectancyYears * 1.2,
+          title: {
+            display: true,
+            text: "Age (in years)",
+          },
         },
         y: {
           ticks: {
@@ -158,6 +162,10 @@ function SpeciesPhysiologicalRefNorms(
             color: surfaceBorder,
           },
           min: 0,
+          title: {
+            display: true,
+            text: "Weight (in kg)",
+          },
         },
       },
     };
@@ -172,16 +180,15 @@ function SpeciesPhysiologicalRefNorms(
       "--text-color-secondary"
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
-    const sizeMaleDataPoints = physiologicalRefNormsList.map((item) => ({
-      x: item.ageToGrowthAge,
-      y: item.sizeMaleCm,
-      growthStage: item.growthStage,
-    }));
-    const sizeFemaleDataPoints = physiologicalRefNormsList.map((item) => ({
-      x: item.ageToGrowthAge,
-      y: item.sizeFemaleCm,
-      growthStage: item.growthStage,
-    }));
+
+    const sizeMaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
+      { x: item.minAge, y: item.sizeMaleCm },
+      { x: item.maxAge, y: item.sizeMaleCm },
+    ]);
+    const sizeFemaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
+      { x: item.minAge, y: item.sizeFemaleCm },
+      { x: item.maxAge, y: item.sizeFemaleCm },
+    ]);
     const data = {
       labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
       datasets: [
@@ -239,6 +246,10 @@ function SpeciesPhysiologicalRefNorms(
           type: "linear",
           min: 0,
           max: curSpecies.lifeExpectancyYears * 1.2,
+          title: {
+            display: true,
+            text: "Age (in years)",
+          },
         },
         y: {
           ticks: {
@@ -248,6 +259,10 @@ function SpeciesPhysiologicalRefNorms(
             color: surfaceBorder,
           },
           min: 0,
+          title: {
+            display: true,
+            text: "Size (in cm)",
+          },
         },
       },
     };
@@ -283,7 +298,7 @@ function SpeciesPhysiologicalRefNorms(
       <br />
       <div>
         <span className="text-lg font-medium">
-          Average {curSpecies.commonName} Size (kg)
+          Average {curSpecies.commonName} Size (cm)
         </span>
         <Chart type="line" data={sizeChartData} options={sizeChartOptions} />
       </div>

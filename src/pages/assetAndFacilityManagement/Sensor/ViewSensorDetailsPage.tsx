@@ -13,13 +13,13 @@ import Sensor from "../../../models/Sensor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AllSensorReadingDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/SensorReadings/AllSensorReadingsDatatable";
 import AllMaintenanceLogsDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/AllMaintenanceLogsDatatable";
-
-
-
+import ManageSensorGeneralStaffPage from "./ManageSensorGeneralStaffPage";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 function ViewSensorDetailsPage() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptyFacility: Facility = {
     facilityId: -1,
@@ -65,9 +65,8 @@ function ViewSensorDetailsPage() {
   useEffect(() => {
     apiJson.post(
       `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
-      { includes: ["hubProcessor", "sensorReadings", "maintenanceLogs", "generalStaff"] }).then(res => {
+      { includes: ["hubProcessor", "maintenanceLogs", "generalStaff"] }).then(res => {
         setCurSensor(res.sensor as Sensor);
-        console.log(curSensor);
       }).catch(e => console.log(e));
   }, []);
 
@@ -94,22 +93,25 @@ function ViewSensorDetailsPage() {
           defaultValue={tab ? `${tab}` : "sensorDetails"}
           className="w-full"
         ><TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <TabsTrigger value="sensorDetails">Hub Details</TabsTrigger>
+            <TabsTrigger value="sensorDetails">Sensor Details</TabsTrigger>
             <TabsTrigger value="sensorReadings">Sensor Readings</TabsTrigger>
             <TabsTrigger value="maintenanceLogs">Maintenance Logs</TabsTrigger>
-            <TabsTrigger value="generalStaff">General Staff</TabsTrigger>
+            {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (<TabsTrigger value="generalStaff">Maintenance Staff</TabsTrigger>)}
           </TabsList>
           <TabsContent value="sensorDetails">
             <ViewSensorDetails curSensor={curSensor}></ViewSensorDetails>
           </TabsContent>
           <TabsContent value="sensorReadings">
-            <AllSensorReadingDatatable curSensor={curSensor}></AllSensorReadingDatatable>
+            <AllSensorReadingDatatable sensorId={sensorId || ""}></AllSensorReadingDatatable>
           </TabsContent>
           <TabsContent value="maintenanceLogs">
-            <AllMaintenanceLogsDatatable curSensor={curSensor} />
+            <AllMaintenanceLogsDatatable sensorId={Number(sensorId)} />
           </TabsContent>
+          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <TabsContent value="generalStaff">
+            <ManageSensorGeneralStaffPage />
           </TabsContent>
+          )}
         </Tabs>
 
       </div>

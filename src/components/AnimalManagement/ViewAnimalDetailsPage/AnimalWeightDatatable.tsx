@@ -70,19 +70,19 @@ function AnimalWeightDatatable(props: AnimalWeightDatatableProps) {
   const toastShadcn = useToast().toast;
 
   //
-  useEffect(() => {
-    const fetchAnimalWeight = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/animal/getanimalweight/"
-        );
-        setAnimalWeightList(responseJson as AnimalWeight[]);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    // fetchAnimalWeight();
-  }, []);
+  // useEffect(() => {
+  //   const fetchAnimalWeight = async () => {
+  //     try {
+  //       const responseJson = await apiJson.get(
+  //         `http://localhost:3000/api/animal//getAllAnimalWeightsByAnimalCode/${curAnimal.animalCode}`
+  //       );
+  //       setAnimalWeightList(responseJson as AnimalWeight[]);
+  //     } catch (error: any) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchAnimalWeight();
+  // }, []);
 
   //
   const exportCSV = () => {
@@ -107,8 +107,7 @@ function AnimalWeightDatatable(props: AnimalWeightDatatableProps) {
     const deleteAnimalWeightApi = async () => {
       try {
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/animal/deleteanimalweight/" +
-            selectedAnimalWeight.animalWeightId
+          `http://localhost:3000/api/animal/deleteAnimalWeight/${selectedAnimalWeight.animalWeightId}`
         );
 
         toastShadcn({
@@ -130,7 +129,7 @@ function AnimalWeightDatatable(props: AnimalWeightDatatableProps) {
         });
       }
     };
-    // deleteAnimalApi();
+    deleteAnimalWeightApi();
   };
 
   const deleteAnimalWeightDialogFooter = (

@@ -50,6 +50,10 @@ function AllSpeciesDatatable() {
     habitatOrExhibit: "habitat",
     imageUrl: "",
     generalDietPreference: "",
+    ageToJuvenile: 0,
+    ageToAdolescent: 1,
+    ageToAdult: 2,
+    ageToElder: 3,
     lifeExpectancyYears: 0,
   };
 
@@ -92,7 +96,7 @@ function AllSpeciesDatatable() {
     );
   };
 
-  const navigateEditProduct = (species: Species) => {};
+  const navigateEditProduct = (species: Species) => { };
 
   const confirmDeleteSpecies = (species: Species) => {
     setSelectedSpecies(species);
@@ -115,7 +119,7 @@ function AllSpeciesDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deletespecies/" +
-            selectedSpecies.speciesCode
+          selectedSpecies.speciesCode
         );
 
         toastShadcn({
@@ -202,6 +206,7 @@ function AllSpeciesDatatable() {
               <NavLink to={"/species/createspecies"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
+                  Add Species
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">

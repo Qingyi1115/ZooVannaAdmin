@@ -18,6 +18,7 @@ import Hub from "../../../../models/Hub";
 import { Separator } from "@radix-ui/react-select";
 import { NavLink, useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 interface HubDetailsProps {
   curHub: Hub;
@@ -26,18 +27,20 @@ interface HubDetailsProps {
 }
 function ViewHubDetails(props: HubDetailsProps) {
   const { curHub, refreshSeed, setRefreshSeed } = props;
-  console.log(props);
+  const employee = useAuthContext().state.user?.employeeData;
 
   const toastShadcn = useToast().toast;
 
   return (
     <div className="flex flex-col">
 
+      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
       <NavLink to={`/assetfacility/edithub/${curHub.hubProcessorId}`}>
         <Button className="mr-2">
           <HiPencil className="mx-auto" />
         </Button>
       </NavLink>
+      )}
 
       <Table>
         {/* <TableHeader className=" bg-whiten">

@@ -53,6 +53,10 @@ let emptySpecies: Species = {
   habitatOrExhibit: "habitat",
   imageUrl: "",
   generalDietPreference: "",
+  ageToJuvenile: 0,
+  ageToAdolescent: 1,
+  ageToAdult: 2,
+  ageToElder: 3,
   lifeExpectancyYears: 0,
 };
 let emptyAnimal: Animal = {
@@ -304,6 +308,41 @@ function AllAnimalsDatatable() {
     );
   };
 
+  const statusTemplate = (animal: Animal) => {
+    const statuses = animal.animalStatus.split(",");
+
+    return (
+      <React.Fragment>
+        <div className="flex flex-col gap-1">
+          {statuses.map((status, index) => (
+            <div
+              key={index}
+              className={
+                status === "NORMAL"
+                  ? "flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] text-sm font-bold text-emerald-900"
+                  : status === "PREGNANT"
+                  ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
+                  : status === "SICK"
+                  ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
+                  : status === "INJURED"
+                  ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
+                  : status === "OFFSITE"
+                  ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
+                  : status === "RELEASED"
+                  ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
+                  : status === "DECEASED"
+                  ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
+                  : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
+              }
+            >
+              {status}
+            </div>
+          ))}
+        </div>
+      </React.Fragment>
+    );
+  };
+
   return (
     <div>
       <div>
@@ -314,6 +353,7 @@ function AllAnimalsDatatable() {
               <NavLink to={"/animal/createanimal"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
+                  Add Animal
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">
@@ -372,6 +412,13 @@ function AllAnimalsDatatable() {
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
+              body={statusTemplate}
+              // field="animalStatus"
+              header="Animal Status"
+              sortable
+              style={{ minWidth: "5rem" }}
+            ></Column>
+            <Column
               field="sex"
               header="Sex"
               sortable
@@ -389,14 +436,16 @@ function AllAnimalsDatatable() {
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
+
             <Column
-              field="animalStatus"
-              header="Animal Status"
-              sortable
-              style={{ minWidth: "5rem" }}
-            ></Column>
-            <Column
-              field="location"
+              body={(animal) => {
+                if (!animal.location || animal.location == "") {
+                  return "NA";
+                } else {
+                  return animal.location;
+                }
+              }}
+              // field="location"
               header="Current Location"
               sortable
               style={{ minWidth: "5rem" }}

@@ -10,10 +10,12 @@ import { InputText } from "primereact/inputtext";
 
 import Sensor from "../../../models/Sensor";
 import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiOutlinePresentationChartLine, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { SensorType } from "../../../enums/SensorType";
+import { Separator } from "@/components/ui/separator";
+import { Tag } from "primereact/tag";
 
 export function compareDates(d1: Date, d2: Date): number {
   let date1 = d1.getTime();
@@ -30,11 +32,14 @@ interface MaintenanceDetails {
   id: number
 }
 
-function MaintenanceOperationSuggestion() {
+function rowColor(facility: any) {
+  return facility.predictedMaintenanceDate && (compareDates(new Date(facility.predictedMaintenanceDate), new Date()) <= 0) ? "text-red-700" : "text-red-700";
+}
+
+function FacilityMaintenanceSuggestion() {
   const apiJson = useApiJson();
 
   const [objectsList, setObjectsList] = useState<MaintenanceDetails[]>([]);
-  const [sensorList, setSensorList] = useState<any[]>([]);
   const [facilityList, setFacilityList] = useState<any[]>([]);
   const [selectedObject, setSelectedObject] = useState<MaintenanceDetails>({ name: "", description: "", lastMaintenance: "", suggestedMaintenance: "", type: "", id: -1 });
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -47,69 +52,45 @@ function MaintenanceOperationSuggestion() {
     ).catch(error => {
       console.log(error);
     }).then(responseJson => {
-      let facility = responseJson["facilities"]
-      console.log("facilities before", facility)
-      facility.filter((f: any) => {
-        f.predictedMaintenanceDate && (compareDates(new Date(f.predictedMaintenanceDate), new Date()) <= 0)
-      });
-      setFacilityList(facility);
-      console.log("facilities aft", facility)
-    }).then(() => {
-      apiJson.get(
-        "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
-      ).catch(error => {
-        console.log(error);
-      }).then(responseJson => {
-        let sensors = responseJson["sensors"]
-        console.log("sensors before", sensors)
-        sensors.filter((sensor: any) => {
-          sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
-        });
-        setSensorList(sensors);
-        console.log("sensors aft", sensors)
-      });
+      setFacilityList(responseJson["facilities"].sort((a: any, b: any) => {
+        if (!a.predictedMaintenanceDate) return 1;
+        if (!b.predictedMaintenanceDate) return -1;
+        return compareDates(new Date(a.predictedMaintenanceDate), new Date(b.predictedMaintenanceDate));
+      }));
     });
   }, []);
 
   useEffect(() => {
     let obj: any = []
-    sensorList.forEach((sensor: any) => {
-      obj.push({
-        name: sensor.sensorName,
-        description: "Sensor " + (sensor.sensorType as string).toLocaleLowerCase(),
-        lastMaintenance: new Date(sensor.dateOfLastMaintained).toLocaleString(),
-        suggestedMaintenance: new Date(sensor.predictedMaintenanceDate).toLocaleString(),
-        type: "Sensor",
-        id: sensor.sensorId
-      })
-    })
     facilityList.forEach((facility: any) => {
       obj.push({
         name: facility.facilityName,
         description: (facility.isSheltered ? "Sheltered " : "Unsheltered ") + (facility.facilityDetail as string).toLocaleLowerCase(),
         lastMaintenance: new Date(facility.facilityDetailJson["lastMaintained"]).toLocaleString(),
-        suggestedMaintenance: new Date(facility.predictedMaintenanceDate).toLocaleString(),
+        suggestedMaintenance: facility.predictedMaintenanceDate ?
+          new Date(facility.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Facility",
-        id: facility.facilityId
+        id: facility.facilityId,
       })
     })
     setObjectsList(obj)
-    console.log("dates", new Date().toLocaleString(), "dates", new Date().toDateString(), "dates", new Date().toLocaleDateString(), "dates", new Date())
-  }, [facilityList, sensorList]);
+  }, [facilityList]);
+
+  const exportCSV = () => {
+    dt.current?.exportCSV();
+  };
 
   const actionBodyTemplate = (objDetails: MaintenanceDetails) => {
     return (
       <React.Fragment>
-        <NavLink to={objDetails.type == "Sensor" ? `/assetfacility/editsensor/${objDetails.id}` : `/assetfacility/editsensor/${objDetails.id}`}>
-          <Button className="mb-1 mr-1">
+        <NavLink to={`/assetfacility/viewfacilitydetails/${objDetails.id}`}>
+          <Button variant="outline" className="mb-1 mr-1">
             <HiEye className="mx-auto" />
-            <span>View Details</span>
           </Button>
         </NavLink>
-        <NavLink to={objDetails.type == "Sensor" ? `/assetfacility/editsensor/${objDetails.id}` : `/assetfacility/editsensor/${objDetails.id}`}>
+        <NavLink to={`/assetfacility/viewFacilityMaintenanceChart/${objDetails.id}`}>
           <Button className="mb-1 mr-1">
-            <HiPencil className="mr-1" />
-            <span>Edit</span>
+            <HiOutlinePresentationChartLine className="mr-1" />
           </Button>
         </NavLink>
         {/* <Button
@@ -124,11 +105,48 @@ function MaintenanceOperationSuggestion() {
     );
   };
 
+  const header = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h4 className="m-1">Manage Facility Maintenance</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+    </div>
+  );
+
+  const statusBodyTemplate = (rowData: any) => {
+    return <Tag value={isNaN(Date.parse(rowData.suggestedMaintenance)) ? rowData.suggestedMaintenance : new Date(rowData.suggestedMaintenance).toLocaleString()}
+      severity={isNaN(Date.parse(rowData.suggestedMaintenance)) ? "info" :
+        (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ? "danger"
+          : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" : "success"} />;
+  };
+
   return (
     <div>
       <div>
         <Toast ref={toast} />
         <div className="rounded-lg bg-white p-4">
+          {/* Title Header and back button */}
+          <div className="flex flex-col">
+            <div className="mb-4 flex justify-between">
+              <Button disabled className="invisible">
+                Back
+              </Button>
+              <span className=" self-center text-title-xl font-bold">
+                Facility Maintenance Suggestions
+              </span>
+              <Button onClick={exportCSV}>Export to .csv</Button>
+            </div>
+            <Separator />
+          </div>
           <DataTable
             ref={dt}
             value={objectsList}
@@ -138,7 +156,8 @@ function MaintenanceOperationSuggestion() {
                 setSelectedObject(e.value);
               }
             }}
-            dataKey="objectId"
+            rowClassName={rowColor}
+            dataKey="id"
             paginator
             rows={10}
             scrollable
@@ -147,30 +166,32 @@ function MaintenanceOperationSuggestion() {
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensors"
             globalFilter={globalFilter}
+            header={header}
           >
             <Column
               field="name"
               header="Name"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "4rem" }}
             ></Column>
             <Column
               field="description"
               header="Description"
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "10rem" }}
             ></Column>
             <Column
               field="lastMaintenance"
               header="Last Maintained"
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "13rem" }}
             ></Column>
             <Column
               field="suggestedMaintenance"
               header="Suggested Date of Maintenance"
+              body={statusBodyTemplate}
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "13rem" }}
             ></Column>
             <Column
               body={actionBodyTemplate}
@@ -209,4 +230,4 @@ function MaintenanceOperationSuggestion() {
   );
 }
 
-export default MaintenanceOperationSuggestion;
+export default FacilityMaintenanceSuggestion;

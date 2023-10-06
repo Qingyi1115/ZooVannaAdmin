@@ -1,12 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import * as dotenv from "dotenv";
+import useApiJson from "../../hooks/useApiJson";
+import { BsBroadcast, BsFillHouseExclamationFill, BsHouseExclamation } from "react-icons/bs";
+import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { HiClipboardList } from "react-icons/hi";
+import Sensor from "../../models/Sensor";
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const apiJson = useApiJson();
+  const { state } = useAuthContext();
+  const employee = state.user?.employeeData;
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
+  const [facilityList, setFacilityList] = useState<any[]>([]);
+  const [sensorList, setSensorList] = useState<any[]>([]);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -32,6 +44,49 @@ const DropdownNotification = () => {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
+
+  useEffect(() => {
+    if (!(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
+    !employee.generalStaff) return;
+    apiJson.get(
+      "http://localhost:3000/api/assetFacility/getFacilityMaintenanceSuggestions"
+    ).catch(error => {
+      console.log(error);
+    }).then(responseJson => {
+      if (responseJson === undefined) return;
+      let facility = responseJson["facilities"]
+      facility = facility.filter((f: any) => {
+        return f.predictedMaintenanceDate && (compareDates(new Date(f.predictedMaintenanceDate), new Date()) <= 0)
+      });
+      setFacilityList(facility);
+    });
+  }, [refreshSeed]);
+
+  useEffect(() => {
+    if (!(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
+    !employee.generalStaff) return;
+    apiJson.get(
+      "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
+    ).catch(error => {
+      console.log(error);
+    }).then(responseJson => {
+      let sensors = responseJson["sensors"]
+      sensors= sensors.filter((sensor: any) => {
+        return sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
+      });
+      setSensorList(sensors);
+    });
+  }, [refreshSeed]);
+  
+  useEffect(() => {
+    const looper = () => {
+      setRefreshSeed([])
+      setTimeout(() => {
+        looper()
+      }, 5000)
+    };
+    looper();
+  }, [])
 
   return (
     <li className="relative">
@@ -69,74 +124,98 @@ const DropdownNotification = () => {
         }`}
       >
         <div className="px-4.5 py-3">
-          <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
+          <h5 className="text-sm font-medium text-bodydark2"><HiClipboardList size={20}></HiClipboardList>Notification </h5>
         </div>
 
-        <ul className="flex h-auto flex-col overflow-y-auto">
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  Edit your information in a swipe
-                </span>{" "}
-                Sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim.
-              </p>
+  {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
+    employee.generalStaff) ? (
+    <ul className="flex h-auto flex-col overflow-y-auto">
 
-              <p className="text-xs">12 May, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  It is a long established fact
-                </span>{" "}
-                that a reader will be distracted by the readable.
-              </p>
+    <li>
+      <Link
+        className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+        to="/assetfacility/maintenance/facilityMaintenance"
+      >
+        {facilityList.length ? <div className="text-amber-500"><p className="text-sm">
+          <BsHouseExclamation />
+          Facilities to maintain {facilityList.length}</p></div>
+        :<div className="text-green-700"><p className="text-sm">
+          <BsHouseExclamation />
+          Facilities are all maintained!</p></div>
+        }
 
-              <p className="text-xs">24 Feb, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  There are many variations
-                </span>{" "}
-                of passages of Lorem Ipsum available, but the majority have
-                suffered
-              </p>
+        <p className="text-xs">Today</p>
+      </Link>
+    </li>
 
-              <p className="text-xs">04 Jan, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  There are many variations
-                </span>{" "}
-                of passages of Lorem Ipsum available, but the majority have
-                suffered
-              </p>
 
-              <p className="text-xs">01 Dec, 2024</p>
-            </Link>
-          </li>
-        </ul>
+    {facilityList && facilityList.map((facility) => {
+      return (
+
+        <li key={facility.facilityId}>
+        <Link
+          className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+          to="/assetfacility/maintenance/facilityMaintenance"
+        >
+        <div className="text-red-700">
+          <BsHouseExclamation />
+          <p className="text-sm">
+            <span className="text-red-700">
+            {facility.facilityName}
+            </span>{" "}
+          </p>
+          <p className="text-xs">Suggested Date: {new Date(facility.predictedMaintenanceDate).toLocaleDateString()}</p>
+        </div>
+        </Link>
+      </li>
+      );
+    })}
+
+    <li>
+      <Link
+        className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+        to="/assetfacility/maintenance/sensorMaintenance"
+      >
+        {sensorList.length ? <div className="text-amber-500"><p className="text-sm">
+          <BsBroadcast />
+            Sensors to maintain {sensorList.length}
+        </p></div>:<div className="text-green-700"><p className="text-sm">
+          <BsBroadcast />
+            Sensors are all maintained!</p></div>
+        }
+        
+
+        <p className="text-xs">Today</p>
+
+      </Link>
+    </li>
+
+    {sensorList.map((sensor) => {
+      return (
+
+        <li key={sensor.sensorId}>
+        <Link
+          className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+          to="/assetfacility/maintenance/sensorMaintenance"
+        >
+          <div className="text-red-700">
+          <BsBroadcast />
+          <p className="text-sm">
+            <span className="text-red-700">
+            {sensor.sensorName}
+            </span>{" "}
+          </p>
+          <p className="text-xs">Suggested Date: {new Date(sensor.predictedMaintenanceDate).toLocaleDateString()}</p>
+          </div>
+        </Link>
+      </li>
+      );
+    })}
+    </ul>
+  ):
+  <div className="text-green-700"><p className="text-xs"><ul  className="px-3 py-2"><li>
+    You have no maintenance notifications!</li></ul></p></div>}
+        
       </div>
     </li>
   );

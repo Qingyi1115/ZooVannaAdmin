@@ -7,7 +7,7 @@ import { HubStatus } from "../../../../enums/HubStatus";
 import Facility from "../../../../models/Facility";
 import Hub from "../../../../models/Hub";
 
-function CreateNewMaintenanceLogPage() {
+function CreateNewSensorMaintenanceLogPage() {
   const apiJson = useApiJson();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
   const { sensorId } = useParams<{ sensorId: string }>();
@@ -64,4 +64,4 @@ function CreateNewMaintenanceLogPage() {
   );
 }
 
-export default CreateNewMaintenanceLogPage;
+export default CreateNewSensorMaintenanceLogPage;

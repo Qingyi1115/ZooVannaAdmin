@@ -123,7 +123,7 @@ function CreateNewHubForm() {
 
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Facility Id */}
-        <FormFieldInput
+        {/* <FormFieldInput
           type="number"
           formFieldName="facilityId"
           label="Facility ID"
@@ -133,7 +133,7 @@ function CreateNewHubForm() {
           value={pageFacilityId}
           setValue={setFacilityId}
           validateFunction={validateFacilityId}
-        />
+        /> */}
         {/* Hub Name */}
         <FormFieldInput
           type="text"

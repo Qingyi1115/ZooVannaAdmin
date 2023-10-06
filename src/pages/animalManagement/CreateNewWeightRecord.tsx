@@ -18,11 +18,11 @@ import {
 import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
 import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
 
-let testPandaSpecies: Species = {
-  speciesId: 1,
-  speciesCode: "SPE001",
-  commonName: "Giant Panda",
-  scientificName: "Ailuropoda Melanoleuca",
+let emptySpecies: Species = {
+  speciesId: -1,
+  speciesCode: "",
+  commonName: "",
+  scientificName: "",
   aliasName: "",
   conservationStatus: "",
   domain: "",
@@ -38,53 +38,56 @@ let testPandaSpecies: Species = {
   educationalFunFact: "",
   groupSexualDynamic: "",
   habitatOrExhibit: "habitat",
-  imageUrl: "img/species/panda.jpg",
-  generalDietPreference: "",
-  lifeExpectancyYears: 65,
-};
-
-let testPandaAnimal: Animal = {
-  animalId: 1,
-  animalCode: "ANI001",
   imageUrl: "",
-  houseName: "Kai Kai",
+  generalDietPreference: "",
+  ageToJuvenile: 0,
+  ageToAdolescent: 1,
+  ageToAdult: 2,
+  ageToElder: 3,
+  lifeExpectancyYears: 0,
+};
+let emptyAnimal: Animal = {
+  animalId: -1,
+  animalCode: "",
+  imageUrl: "",
+  isGroup: false,
+  houseName: "",
+  identifierType: "",
+  identifierValue: "",
   sex: AnimalSex.MALE,
-  dateOfBirth: new Date("1983-06-06"),
-  placeOfBirth: "Place of Birth haha",
-  rfidTagNum: "RFID00001",
+  dateOfBirth: new Date(),
+  placeOfBirth: "",
   acquisitionMethod: AcquisitionMethod.INHOUSE_CAPTIVE_BRED,
   dateOfAcquisition: new Date(),
-  acquisitionRemarks: "Acquisition Remarks blabla",
-  weight: -1,
-  physicalDefiningCharacteristics: "Big head",
-  behavioralDefiningCharacteristics: "Lazy",
+  acquisitionRemarks: "",
+  physicalDefiningCharacteristics: "",
+  behavioralDefiningCharacteristics: "",
   dateOfDeath: null,
   locationOfDeath: null,
   causeOfDeath: null,
-  growthStage: AnimalGrowthStage.JUVENILE,
-  animalStatus: "NORMAL",
-  species: testPandaSpecies,
+  growthStage: AnimalGrowthStage.ADOLESCENT,
+  animalStatus: "",
+  species: emptySpecies,
 };
 
 function CreateNewWeightRecord() {
   const apiJson = useApiJson();
 
   const { animalCode } = useParams<{ animalCode: string }>();
-  const [curAnimal, setCurAnimal] = useState<Animal | null>(testPandaAnimal);
+  const [curAnimal, setCurAnimal] = useState<Animal | null>(emptyAnimal);
 
   useEffect(() => {
-    const fetchCurAnimal = async () => {
+    const fetchAnimal = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/animal/getAnimal/${animalCode}`
+          `http://localhost:3000/api/animal/getAnimalByAnimalCode/${animalCode}`
         );
         setCurAnimal(responseJson as Animal);
       } catch (error: any) {
         console.log(error);
       }
     };
-
-    // fetchCurAnimal();
+    fetchAnimal();
   }, []);
 
   return (

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
 
@@ -10,10 +10,12 @@ import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagemen
 import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Employee from "../../../models/Employee";
-import ManageMaintenanceStaffPage from "../MaintenanceOperations/ManageMaintenanceStaffPage";
+import ManageFacilityMaintenanceStaffPage from "../MaintenanceOperations/ManageFacilityMaintenanceStaffPage";
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
 import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
 import AllFacilityLogsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/AllFacilityLogsDatatable";
+import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 
 
@@ -23,6 +25,8 @@ function ViewFacilityDetailsPage() {
   const [assignedStaffIds, setAssignedStaffIds] = useState<number[]>([]);
   const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
   const [empList, setEmpList] = useState<Employee[]>([]);
+  const employee = useAuthContext().state.user?.employeeData;
+  const navigate = useNavigate();
 
   // let emptyThirdParty: ThirdParty = {
   //   ownership: "",
@@ -81,11 +85,14 @@ function ViewFacilityDetailsPage() {
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         <div className="flex justify-between">
-          <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
+          {/* <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
             <Button variant={"outline"} type="button" className="">
               Back
             </Button>
-          </NavLink>
+          </NavLink> */}
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+            Back
+          </Button>
           <span className="self-center text-lg text-graydark">
             View Facility Details
           </span>
@@ -104,11 +111,13 @@ function ViewFacilityDetailsPage() {
           className="w-full"
         >
           <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <TabsTrigger value="facilityDetails">Facility Details</TabsTrigger>
+            <TabsTrigger value="facilityDetails">Details</TabsTrigger>
+
             <TabsTrigger value="hubs">Hubs</TabsTrigger>
-            {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="manageMaintenance">Manage Maintenance Staff</TabsTrigger>}
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
-            <TabsTrigger value="customerReport">Customer Report</TabsTrigger>
+            {curFacility.facilityDetail == "inHouse" && employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
+            {curFacility.facilityDetail == "inHouse" && employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
+            <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
           </TabsList>
           <TabsContent value="facilityDetails">
             <div className="relative flex flex-col">
@@ -118,14 +127,21 @@ function ViewFacilityDetailsPage() {
             </div>
           </TabsContent>
           <TabsContent value="facilityLog">
-            <AllFacilityLogsDatatable curFacility={curFacility} curInHouse={curInHouse} />
+            <AllFacilityLogsDatatable facilityId={Number(facilityId)} />
           </TabsContent>
           <TabsContent value="hubs">
             <AllHubDatatable curFacility={curFacility} />
           </TabsContent>
-          <TabsContent value="manageMaintenance">
-            <ManageMaintenanceStaffPage />
-          </TabsContent>
+          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+            <TabsContent value="manageMaintenance">
+              <ManageFacilityMaintenanceStaffPage />
+            </TabsContent>
+          )}
+          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+            <TabsContent value="manageOperations">
+              <ManageOperationStaffPage />
+            </TabsContent>
+          )}
           <TabsContent value="customerReport">
             <AllCustomerReportsDatatable curFacility={curFacility} />
           </TabsContent>

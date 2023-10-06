@@ -83,8 +83,9 @@ function CreateWeightRecordForm(props: CreateWeightRecordFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
-
+    const animalCode = curAnimal.animalCode;
     const newAnimalWeight = {
+      animalCode,
       dateOfMeasure,
       weightInKg,
     };
@@ -92,7 +93,7 @@ function CreateWeightRecordForm(props: CreateWeightRecordFormProps) {
     const createAnimalWeightRecordApi = async () => {
       try {
         const response = await apiJson.post(
-          "http://localhost:3000/api/animal/createAnimalWeight",
+          "http://localhost:3000/api/animal/addAnimalWeight",
           newAnimalWeight
         );
         // success
@@ -101,7 +102,7 @@ function CreateWeightRecordForm(props: CreateWeightRecordFormProps) {
             "Successfully created a new weight record for " +
             curAnimal.houseName,
         });
-        const redirectUrl = `/animal/viewanimaldetails/${curAnimal.animalId}`;
+        const redirectUrl = `/animal/viewanimaldetails/${curAnimal.animalCode}/weight`;
         navigate(redirectUrl);
       } catch (error: any) {
         // got error
@@ -114,7 +115,7 @@ function CreateWeightRecordForm(props: CreateWeightRecordFormProps) {
         });
       }
     };
-    // createAnimalWeightRecordApi();
+    createAnimalWeightRecordApi();
   }
 
   return (
@@ -128,7 +129,7 @@ function CreateWeightRecordForm(props: CreateWeightRecordFormProps) {
           <div className="mb-4 flex justify-between">
             <NavLink
               className="flex"
-              to={`/animal/viewanimaldetails/${curAnimal.animalId}`}
+              to={`/animal/viewanimaldetails/${curAnimal.animalCode}/weight`}
             >
               <Button variant={"outline"} type="button" className="">
                 Back
@@ -152,7 +153,7 @@ function CreateWeightRecordForm(props: CreateWeightRecordFormProps) {
           <FormFieldInput
             type="number"
             formFieldName="weightInKg"
-            label={`Weight Recorded (g)`}
+            label={`Weight Recorded (kg)`}
             required={true}
             pattern={undefined}
             placeholder="e.g., 8"
