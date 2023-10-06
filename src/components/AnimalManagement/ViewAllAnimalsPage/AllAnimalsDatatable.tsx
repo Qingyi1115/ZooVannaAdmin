@@ -399,6 +399,7 @@ function AllAnimalsDatatable() {
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} individual/group animals"
             globalFilter={globalFilter}
             header={header}
+            sortField={"species.commonName"}
           >
             {/* <Column
               field="imageUrl"

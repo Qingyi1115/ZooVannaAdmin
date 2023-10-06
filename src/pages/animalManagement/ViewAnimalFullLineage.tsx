@@ -164,6 +164,8 @@ function ViewAnimalFullLineage() {
   let tempNodesOutside: any[] = [];
   const [isLineageRetrieved, setIsLineageRetrieved] = useState<boolean>(false);
 
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+
   useEffect(() => {
     const fetchLineageByAnimalCode = async () => {
       try {
@@ -171,6 +173,7 @@ function ViewAnimalFullLineage() {
           `http://localhost:3000/api/animal/getLineageByAnimalCode/${animalCode}`
         );
         setCurAnimalLineage(responseJson as Animal);
+        setRefreshSeed(refreshSeed + 1);
       } catch (error: any) {
         console.log(error);
       }
@@ -231,12 +234,34 @@ function ViewAnimalFullLineage() {
     img: string;
   }
 
+  function removeAnimalFromParentsChildren(animal: Animal, parent: Animal) {
+    // Remove the current animal from the parent's children array
+    if (parent && parent.children) {
+      parent.children = parent.children.filter(
+        (child) => child.animalId !== animal.animalId
+      );
+    }
+  }
+
+  function removeAnimalFromChildrenParents(animal: Animal, child: Animal) {
+    // Remove the current animal from the child's parents array
+    if (child && child.parents) {
+      child.parents = child.parents.filter(
+        (parent) => parent.animalId !== animal.animalId
+      );
+    }
+  }
+
   function processAnimal(animal: Animal) {
+    if (!animal) {
+      return;
+    }
     console.log("HERE");
     console.log("animal houseName:" + animal.houseName);
     // Process the parents
     if (animal.parents) {
       for (const parent of animal.parents) {
+        removeAnimalFromParentsChildren(animal, parent);
         processAnimal(parent);
       }
     }
@@ -263,12 +288,16 @@ function ViewAnimalFullLineage() {
       addPidsBetweenParents(parent1.animalId, parent2.animalId, tempNodes);
       // add parent1's id to parent2's list of pids INSIDE THE NODE IN THE LIST, ONLY IF IT IS NOT IN ALREADY
       // add parent2's id to parent1's list of pids INSIDE THE NODE IN THE LIST, ONLY IF IT IS NOT IN ALREADY
-      parent1.sex == "FEMALE"
-        ? (curAnimalNode.mid = parent1.animalId)
-        : (curAnimalNode.fid = parent1.animalId);
-      parent2.sex == "FEMALE"
-        ? (curAnimalNode.mid = parent2.animalId)
-        : (curAnimalNode.fid = parent2.animalId);
+      // parent1.sex == "FEMALE"
+      //   ? (curAnimalNode.mid = parent1.animalId)
+      //   : (curAnimalNode.fid = parent1.animalId);
+      // parent2.sex == "FEMALE"
+      //   ? (curAnimalNode.mid = parent2.animalId)
+      //   : (curAnimalNode.fid = parent2.animalId);
+
+      // just dump the parent ids in
+      curAnimalNode.mid = parent1.animalId;
+      curAnimalNode.fid = parent2.animalId;
     } else if (animal.parents && animal.parents.length == 1) {
       const parent1 = animal.parents[0];
       parent1.sex == "FEMALE"
@@ -301,6 +330,7 @@ function ViewAnimalFullLineage() {
           updateOrAddNode(curChildNode, tempNodes);
           tempNodesOutside = [...tempNodes];
         }
+        removeAnimalFromChildrenParents(animal, child);
         processAnimal(child);
       }
     }
@@ -316,7 +346,7 @@ function ViewAnimalFullLineage() {
     console.log(tempNodesOutside);
 
     // fetchAnimalsBySpecies();
-  }, [curAnimalLineage]);
+  }, [refreshSeed]);
 
   // end family tree nodes stuff
 
