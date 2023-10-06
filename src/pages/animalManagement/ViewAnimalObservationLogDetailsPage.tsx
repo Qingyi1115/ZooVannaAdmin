@@ -103,9 +103,8 @@ function ViewAnimalObservationLogDetailsPage() {
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
-    apiJson.post(
-      `http://localhost:3000/api/animal/getAnimalObservationLog/${curAnimalObservationLog.animalObservationLogId}`,
-      { includes: ["animals", "employee"] })
+    apiJson.get(
+      `http://localhost:3000/api/animal/getAnimalObservationLogById/${curAnimalObservationLog.animalObservationLogId}`)
       .then(res => {
         setCurAnimalObservationLog(res.animalObservationLog as AnimalObservationLog);
       })

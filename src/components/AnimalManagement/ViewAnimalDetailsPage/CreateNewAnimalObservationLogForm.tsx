@@ -14,7 +14,7 @@ import Animal from "../../../models/Animal";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 
 interface CreateNewAnimalObservationLogProps {
-  curAnimal: Animal;
+  curAnimalList: Animal[];
 }
 
 function validateAnimalObservationLogName(props: ValidityState) {
@@ -40,7 +40,7 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
   const [dateTime, setDateTime] = useState<
     string | Date | Date[] | null
   >(null);
-  const { curAnimal } = props;
+  const { curAnimalList } = props;
   const [formError, setFormError] = useState<string | null>(null);
 
 
@@ -52,13 +52,14 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
       dateTime: dateTime,
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
-      details: details
+      details: details,
+      animals: curAnimalList
     }
     console.log(newAnimalObservationLog);
 
     try {
       const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetAnimal/createAnimalObservationLog/${curAnimal.animalCode}`,
+        `http://localhost:3000/api/animal/createAnimalObservationLog`,
         newAnimalObservationLog);
       // success
       toastShadcn({

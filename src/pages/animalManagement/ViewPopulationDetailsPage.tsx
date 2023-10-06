@@ -14,6 +14,7 @@ import {
   AnimalGrowthStage,
   AnimalSex,
 } from "../../enums/Enumurated";
+import { HiPlus } from "react-icons/hi";
 
 function ViewPopulationDetailsPage() {
   const apiJson = useApiJson();
@@ -249,6 +250,12 @@ function ViewPopulationDetailsPage() {
             setCurAnimalList={setCurAnimalList}
           />
         </div>
+        <NavLink to={`/animal/createAnimalObservationLog/${speciesCode}`}>
+          <Button className="mr-2">
+            <HiPlus className="mr-auto" />
+            Add Animal Observation Log
+          </Button>
+        </NavLink>
         <div>
           <span className="text-lg font-bold">Sex Distribution</span>
           <br />

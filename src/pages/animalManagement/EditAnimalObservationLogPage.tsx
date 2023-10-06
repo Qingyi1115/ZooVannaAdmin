@@ -96,7 +96,7 @@ function EditFacilityPage() {
   const [curAnimalObservationLog, setCurAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/animal/getAnimalObservationLog/${animalObservationLogId}`, { includes: ["animals", "employee"] }).then(res => {
+    apiJson.get(`http://localhost:3000/api/animal/getAnimalObservationLogById/${animalObservationLogId}`).then(res => {
       setCurAnimalObservationLog(res["animalObservationLog"]);
     });
   }, [0]);

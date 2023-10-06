@@ -53,7 +53,7 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
 
     try {
       const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/editAnimalObservationLog/${curAnimalObservationLog.animalObservationLogId}`,
+        `http://localhost:3000/api/animal/updateAnimalObservationLog/${curAnimalObservationLog.animalObservationLogId}`,
         newAnimalObservationLog);
       // success
       toastShadcn({

@@ -8,8 +8,8 @@ import Species from "../../models/Species";
 
 function CreateNewAnimalObservationLogPage() {
   const apiJson = useApiJson();
-  const { animalId } = useParams<{ animalId: string }>();
-  
+  const { speciesCode } = useParams<{ speciesCode: string }>();
+
   let emptySpecies: Species = {
     speciesId: -1,
     speciesCode: "",
@@ -62,18 +62,18 @@ function CreateNewAnimalObservationLogPage() {
     species: emptySpecies,
   };
 
-  const [curAnimal, setCurAnimal] = useState<Animal>(emptyAnimal);
+  const [curAnimalList, setCurAnimalList] = useState<Animal[]>([]);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/assetAnimal/getAnimal/${animalId}`, { includes: [] }).then(res => {
-      setCurAnimal(res.animal as Animal);
+    apiJson.get(`http://localhost:3000/api/animal/getAllAnimalsBySpeciesCode/${speciesCode}`).then(res => {
+      setCurAnimalList(res.allAnimals as Animal[]);
     });
   }, []);
 
 
   return (
     <div className="p-10">
-      <CreateNewAnimalObservationLogForm curAnimal={curAnimal} />
+      <CreateNewAnimalObservationLogForm curAnimalList={curAnimalList} />
     </div>
   );
 }

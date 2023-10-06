@@ -24,12 +24,12 @@ import Employee from "../../../models/Employee";
 import { Column } from "primereact/column";
 
 interface AllAnimalObservationLogsDatatableProps {
-  animalId: number;
+  animalCode: string;
 }
 
 function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatatableProps) {
   const apiJson = useApiJson();
-  const { animalId } = props;
+  const { animalCode } = props;
   const employee = useAuthContext().state.user?.employeeData;
 
   let emptySpecies: Species = {
@@ -118,9 +118,8 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    apiJson.post(
-      `http://localhost:3000/api/animal/getAnimalObservationLogs/${animalId}`,
-      { includes: ["animals", "employee"] })
+    apiJson.get(
+      `http://localhost:3000/api/animal/getAllAnimalObservationLogs/`)
       .then(res => {
         setAnimalObservationLogList(res.animalObservationLogs as AnimalObservationLog[]);
       })
@@ -331,7 +330,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             <div className="mb-4 flex justify-between">
               {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
                 employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") ?
-                <NavLink to={`/animal/createAnimalObservationLog/${animalId}`}>
+                <NavLink to={`/animal/createAnimalObservationLog/${animalCode}`}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
                     Add Log
