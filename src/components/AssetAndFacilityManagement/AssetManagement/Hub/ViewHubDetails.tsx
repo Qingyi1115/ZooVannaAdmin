@@ -34,7 +34,7 @@ function ViewHubDetails(props: HubDetailsProps) {
   return (
     <div className="flex flex-col">
 
-      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
       <NavLink to={`/assetfacility/edithub/${curHub.hubProcessorId}`}>
         <Button className="mr-2">
           <HiPencil className="mx-auto" />

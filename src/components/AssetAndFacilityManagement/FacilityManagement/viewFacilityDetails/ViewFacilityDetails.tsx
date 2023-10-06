@@ -35,7 +35,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
         
-      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <NavLink to={`/assetfacility/editfacility/${curFacility.facilityId}`}>
           <Button className="mr-2">
             <HiPencil className="mx-auto" ></HiPencil>
@@ -43,7 +43,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
           </Button>
         </NavLink>
       )}
-      {(employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+      {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
       <NavLink to={`/assetfacility/completefacilitymaintenance/${curFacility.facilityId}`}>
         <Button className="mr-2">
           <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
@@ -51,7 +51,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
         </Button>
       </NavLink>
       )}
-      {(employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
+      {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
       <NavLink to={`/assetfacility/createfacilitylog/${curFacility.facilityId}`}>
         <Button className="mr-2">
           <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>

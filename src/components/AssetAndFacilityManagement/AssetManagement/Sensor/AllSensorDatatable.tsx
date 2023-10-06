@@ -126,14 +126,14 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <NavLink to={`/assetFacility/editsensor/${sensor.sensorId}`}>
             <Button className="mr-2">
               <HiPencil className="mx-auto" />
             </Button>
           </NavLink>
         )}
-        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -172,7 +172,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
 
-              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+              {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
                 <NavLink to={`/assetfacility/createsensor/${curHub.hubProcessorId}`}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
