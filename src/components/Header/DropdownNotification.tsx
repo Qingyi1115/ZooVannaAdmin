@@ -45,7 +45,7 @@ const DropdownNotification = () => {
   });
 
   useEffect(() => {
-    if (!(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
+    if (!(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
     !employee.generalStaff) return;
     apiJson.get(
       "http://localhost:3000/api/assetFacility/getFacilityMaintenanceSuggestions"
@@ -62,7 +62,7 @@ const DropdownNotification = () => {
   }, [refreshSeed]);
 
   useEffect(() => {
-    if (!(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
+    if (!(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
     !employee.generalStaff) return;
     apiJson.get(
       "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
@@ -126,7 +126,7 @@ const DropdownNotification = () => {
           <h5 className="text-sm font-medium text-bodydark2"><HiClipboardList size={20}></HiClipboardList>Notification </h5>
         </div>
 
-  {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
+  {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
     employee.generalStaff) ? (
     <ul className="flex h-auto flex-col overflow-y-auto">
 

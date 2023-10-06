@@ -96,7 +96,7 @@ function ViewSensorDetailsPage() {
             <TabsTrigger value="sensorDetails">Sensor Details</TabsTrigger>
             <TabsTrigger value="sensorReadings">Sensor Readings</TabsTrigger>
             <TabsTrigger value="maintenanceLogs">Maintenance Logs</TabsTrigger>
-            {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (<TabsTrigger value="generalStaff">Maintenance Staff</TabsTrigger>)}
+            {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (<TabsTrigger value="generalStaff">Maintenance Staff</TabsTrigger>)}
           </TabsList>
           <TabsContent value="sensorDetails">
             <ViewSensorDetails curSensor={curSensor}></ViewSensorDetails>
@@ -107,7 +107,7 @@ function ViewSensorDetailsPage() {
           <TabsContent value="maintenanceLogs">
             <AllMaintenanceLogsDatatable sensorId={Number(sensorId)} />
           </TabsContent>
-          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <TabsContent value="generalStaff">
             <ManageSensorGeneralStaffPage />
           </TabsContent>

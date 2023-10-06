@@ -142,7 +142,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <NavLink
             to={`/assetfacility/edithub/${hub.hubProcessorId}`}
           >
@@ -151,7 +151,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
             </Button>
           </NavLink>
         )}
-        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -189,7 +189,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+              {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
                 <NavLink to={`/assetfacility/createhub/${curFacility.facilityId}`}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />

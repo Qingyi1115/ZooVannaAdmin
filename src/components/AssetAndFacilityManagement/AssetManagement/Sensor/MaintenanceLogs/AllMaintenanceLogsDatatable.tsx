@@ -211,7 +211,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           subTitle={maintenanceLog.dateTime ?
             "Date created: " + new Date(maintenanceLog.dateTime).toLocaleString() : ""}
         >
-          {/* {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <Button
+          {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <Button
               variant={"destructive"}
               className="absolute top-5 right-5"
               onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
@@ -250,7 +250,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+              {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
                 <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />

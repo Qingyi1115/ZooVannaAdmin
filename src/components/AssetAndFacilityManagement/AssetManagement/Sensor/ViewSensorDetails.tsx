@@ -34,14 +34,14 @@ function ViewSensorDetails(props: SensorDetailsProps) {
   return (
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
-      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <NavLink to={`/assetfacility/editsensor/${curSensor.sensorId}`}>
           <Button className="mr-2">
             <HiPencil className="mx-auto" />
           </Button>
         </NavLink>
       )}
-      {(employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+      {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
       <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
         <Button className="mr-2">
           <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
