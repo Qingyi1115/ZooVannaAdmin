@@ -25,7 +25,8 @@ import EnclosureCard from "./EnclosureCard";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import AnimalParentsCard from "./AnimalParentsCard";
-import UpdateStatusFormDialog from "./UpdateStatusForm";
+import UpdateStatusFormDialog from "./UpdateStatusFormDialog";
+import { Separator } from "@/components/ui/separator";
 
 interface AnimalBasicInformationProps {
   curAnimal: Animal;
@@ -152,33 +153,25 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
 
   return (
     <div>
-      <div className="flex w-full justify-between gap-10">
-        <div className="w-full">
-          <span className="text-xl font-medium">
-            {curAnimal.isGroup ? (
-              <span>{curAnimal.houseName} are a group of:</span>
-            ) : (
-              <span>{curAnimal.houseName} is a:</span>
-            )}
-          </span>{" "}
-          <br />
-          <SpeciesCard curSpecies={curAnimal.species} />
+      <div className="flex h-80 w-full gap-6">
+        <div className="flex h-full w-2/5 flex-col justify-between">
+          <div className="w-full">
+            <SpeciesCard curSpecies={curAnimal.species} />
+          </div>
+          <div className="w-full">
+            <EnclosureCard />
+          </div>
         </div>
-        <div className="w-full">
-          <span className="text-xl font-medium">Current Location: </span>
-          <br />
-          <EnclosureCard />
+        <div className="flex h-full w-3/5 flex-col">
+          <AnimalParentsCard
+            curAnimal={curAnimal}
+            refreshSeed={refreshSeed}
+            setRefreshSeed={setRefreshSeed}
+          />
         </div>
       </div>
-      <br />
-      <div>
-        <span className="text-xl font-medium">(Known) Parents:</span>
-        <AnimalParentsCard curAnimal={curAnimal} />
-      </div>
-      <br />
-      <span className="text-xl font-medium">
-        {curAnimal.houseName}'s Details:
-      </span>
+      <Separator className="mb-10 mt-14" />
+      <span className="text-xl font-medium">Animal Details</span>
       <div className="my-4 flex justify-start gap-4">
         <NavLink to={`/animal/editanimal/${curAnimal.animalCode}`}>
           <Button>Edit Basic Information</Button>
