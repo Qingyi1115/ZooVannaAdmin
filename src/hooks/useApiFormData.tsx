@@ -6,7 +6,7 @@ function useApiFormData<TData = any>() {
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { state } = useAuthContext();
+  const { state, dispatch } = useAuthContext();
   const { user } = state;
 
   const request = async (
@@ -27,6 +27,28 @@ function useApiFormData<TData = any>() {
       };
 
       const response = await fetch(url, options);
+      if (response.status == 401){
+        const errorObject = await response.json();
+        console.log("response", errorObject)
+
+        // toastShadcn({
+        //   variant: "destructive",
+        //   title: "Logged out!",
+        //   description:"Authorization failed! Please login again!"
+        // });
+
+        dispatch({ type: "LOGOUT" });
+      }
+      if (response.status == 403){
+        const errorObject = await response.json();
+        console.log("response", errorObject)
+      // toastShadcn({
+      //   variant: "destructive",
+      //   title: "Logged out!",
+      //   description:"Authorization failed! Please login again!"
+      // });
+        dispatch({ type: "LOGOUT" });
+      }
 
       if (!response.ok) {
         const errorObject = await response.json();
