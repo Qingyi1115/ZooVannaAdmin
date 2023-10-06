@@ -183,10 +183,11 @@ function CreateNewListingForm() {
         placeholder="Select a listing type"
         valueLabelPair={[
           ["LOCAL_ADULT_ONETIME", "Local-Adult (1x)"],
+          ["LOCAL_CHILD_ONETIME", "Local-Child (1x)"],
           ["LOCAL_STUDENT_ONETIME", "Local-Student (1x)"],
           ["LOCAL_SENIOR_ONETIME", "Local-Senior (1x)"],
-          ["FOREIGNER_ONETIME", "Foreigner (1x)"],
-          ["ANNUALPASS", "Annual pass"],
+          ["FOREIGNER_ADULT_ONETIME", "Foreigner-Adult (1x)"],
+          ["FOREIGNER_CHILD_ONETIME", "Foreigner-Child (1x)"],
         ]}
         value={listingType}
         setValue={setListingType}
