@@ -119,7 +119,7 @@ function ViewAnimalDetailsPage() {
             <TabsContent value="behaviour">
               <div>
                 <AllAnimalObservationLogsDatatable
-                  animalCode={curAnimal.animalCode}
+                  speciesCode={curAnimal.species.speciesCode}
                 />
               </div>
             </TabsContent>

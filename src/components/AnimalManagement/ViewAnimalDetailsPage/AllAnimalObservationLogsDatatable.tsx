@@ -24,12 +24,12 @@ import Employee from "../../../models/Employee";
 import { Column } from "primereact/column";
 
 interface AllAnimalObservationLogsDatatableProps {
-  animalCode: string;
+  speciesCode: string;
 }
 
 function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatatableProps) {
   const apiJson = useApiJson();
-  const { animalCode } = props;
+  const { speciesCode } = props;
   const employee = useAuthContext().state.user?.employeeData;
 
   let emptySpecies: Species = {
@@ -330,7 +330,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             <div className="mb-4 flex justify-between">
               {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
                 employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") ?
-                <NavLink to={`/animal/createAnimalObservationLog/${animalCode}`}>
+                <NavLink to={`/animal/createAnimalObservationLog/${speciesCode}`}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
                     Add Log
@@ -404,7 +404,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="animals.animalCode"
+              field="animals.houseName"
               header="Animals"
               sortable
               style={{ display: "none" }}

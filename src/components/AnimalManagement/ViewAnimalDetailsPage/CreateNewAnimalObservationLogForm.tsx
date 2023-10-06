@@ -13,6 +13,8 @@ import { Separator } from "@/components/ui/separator";
 import Animal from "../../../models/Animal";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
+import Employee from "../../../models/Employee";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 // interface CreateNewAnimalObservationLogProps {
 //   speciesCode: string;
@@ -41,7 +43,7 @@ function CreateNewAnimalObservationLogForm() {
   const [dateTime, setDateTime] = useState<
     string | Date | Date[] | null
   >(null);
-  // const { curAnimalList } = props;
+  const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
 
 
@@ -64,7 +66,8 @@ function CreateNewAnimalObservationLogForm() {
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details,
-      animals: selectedAnimals
+      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode),
+      employee: employee
     }
     console.log(newAnimalObservationLog);
 
@@ -114,7 +117,7 @@ function CreateNewAnimalObservationLogForm() {
       {/* DateTime */}
       <div className="flex justify-content-center">
         <label htmlFor="dateTimeCalendar" className="self-center mx-3 text-lg text-dark ">Date</label>
-        <Calendar id="dateTimeCalendar" showTime hourFormat="12" value={dateTime} minDate={new Date()} maxDate={new Date()} onChange={(e: CalendarChangeEvent) => {
+        <Calendar id="dateTimeCalendar" showTime hourFormat="12" value={dateTime} onChange={(e: CalendarChangeEvent) => {
           if (e && e.value !== null) {
             setDateTime(e.value as Date);
           }
