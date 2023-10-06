@@ -11,6 +11,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Animal from "../../../models/Animal";
+import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 
 interface CreateNewAnimalObservationLogProps {
   curAnimal: Animal;
@@ -36,6 +37,9 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
   const [observationQuality, setObservationQuality] = useState<string | undefined>(
     undefined); // dropdown
   const [details, setDetails] = useState<string>(""); // text input
+  const [dateTime, setDateTime] = useState<
+    string | Date | Date[] | null
+  >(null);
   const { curAnimal } = props;
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -45,6 +49,7 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
     e.preventDefault();
 
     const newAnimalObservationLog = {
+      dateTime: dateTime,
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details
@@ -93,6 +98,15 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
           </Button>
         </div>
         <Separator />
+      </div>
+      {/* DateTime */}
+      <div className="flex justify-content-center">
+        <label htmlFor="dateTimeCalendar" className="self-center mx-3 text-lg text-dark ">Date</label>
+        <Calendar id="dateTimeCalendar" showTime hourFormat="12" value={dateTime} minDate={new Date()} maxDate={new Date()} onChange={(e: CalendarChangeEvent) => {
+          if (e && e.value !== null) {
+            setDateTime(e.value as Date);
+          }
+        }} />
       </div>
 
       {/* Duration in Minutes */}
