@@ -130,7 +130,7 @@ function AllAnimalFeedDatatable() {
     return (
       <React.Fragment>
         <NavLink
-          to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}
+          to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedId}`}
         >
           <Button className="mr-2">
             <HiPencil className="mx-auto" />

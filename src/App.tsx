@@ -382,7 +382,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editanimalfeed/:animalFeedName"
+                  path="/assetfacility/editanimalfeed/:animalFeedId"
                   element={
                     user ? <EditAnimalFeedPage /> : <Navigate to="/login" />
                   }

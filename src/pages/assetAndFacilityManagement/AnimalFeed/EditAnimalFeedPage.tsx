@@ -16,17 +16,18 @@ function EditAnimalFeedPage() {
     animalFeedCategory: AnimalFeedCategory.OTHERS
   };
 
-  const { animalFeedName } = useParams<{ animalFeedName: string }>();
+  const { animalFeedId } = useParams<{ animalFeedId: string }>();
   const [curAnimalFeed, setCurAnimalFeed] = useState<AnimalFeed>(emptyAnimalFeed);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
- 
+
   useEffect(() => {
     const fetchAnimalFeed = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/assetfacility/getAnimalFeed/${animalFeedName}`
+          `http://localhost:3000/api/assetfacility/getAnimalFeedById/${animalFeedId}`
         );
         setCurAnimalFeed(responseJson as AnimalFeed);
+        console.log(curAnimalFeed);
       } catch (error: any) {
         console.log(error);
       }
@@ -35,14 +36,14 @@ function EditAnimalFeedPage() {
     fetchAnimalFeed();
   }, [refreshSeed]);
 
-  
+
   return (
     <div className="p-10">
       {curAnimalFeed && curAnimalFeed.animalFeedId != -1 && (
-        <EditAnimalFeedForm 
-        curAnimalFeed={curAnimalFeed} 
-        refreshSeed={refreshSeed} 
-        setRefreshSeed={setRefreshSeed} />
+        <EditAnimalFeedForm
+          curAnimalFeed={curAnimalFeed}
+          refreshSeed={refreshSeed}
+          setRefreshSeed={setRefreshSeed} />
       )}
     </div>
   );
