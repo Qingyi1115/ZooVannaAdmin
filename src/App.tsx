@@ -33,6 +33,7 @@ import EditAnimalPage from "./pages/animalManagement/EditAnimalPage";
 import CreateNewAnimalObservationLogPage from "./pages/animalManagement/CreateNewAnimalObservationLogPage";
 import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
 import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
+import AnimalActivityHomePage from "./pages/animalManagement/AnimalActivityHomePage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -292,6 +293,12 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/animal/trainingenrichment"
+                  element={
+                    user ? <AnimalActivityHomePage /> : <Navigate to="/login" />
                   }
                 />
 

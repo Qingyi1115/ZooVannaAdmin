@@ -3,6 +3,11 @@ enum KeeperType {
   KEEPER = "KEEPER",
 }
 
+enum ActivityType {
+  TRAINING = "TRAINING",
+  ENRICHMENT = "ENRICHMENT",
+}
+
 enum PlannerType {
   CURATOR = "CURATOR",
   SALES = "SALES",
@@ -232,6 +237,7 @@ export {
   PlannerType,
   GeneralStaffType,
   Specialization,
+  ActivityType,
   MedicalSupplyType,
   ConservationStatus,
   Continent,
