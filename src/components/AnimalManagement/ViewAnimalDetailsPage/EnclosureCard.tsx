@@ -21,8 +21,9 @@ function EnclosureCard() {
   //   const { curEnclosure } = props;
   return (
     <NavLink to={`/enclosure/viewenclosuredetails/`}>
-      <Card className=" w-full transition-all hover:bg-muted/50">
-        <CardContent className="p-4">
+      <Card className="w-full transition-all hover:bg-muted/50">
+        <CardContent className="h-full px-4 pb-4 pt-3">
+          <div className="mb-2 text-sm font-bold text-slate-700">Enclosure</div>
           <div className="flex items-center gap-4">
             <img
               alt={""}
@@ -36,7 +37,7 @@ function EnclosureCard() {
               Enclosure Name
             </div>
             <div className="ml-auto flex items-center">
-              Click to view details <HiChevronRight className="h-6 w-6" />
+              View details <HiChevronRight className="h-6 w-6" />
             </div>
           </div>
         </CardContent>

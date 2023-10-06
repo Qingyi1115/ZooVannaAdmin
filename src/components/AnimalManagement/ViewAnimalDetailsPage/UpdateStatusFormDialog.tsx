@@ -106,9 +106,18 @@ function UpdateStatusFormDialog(props: UpdateStatusFormDialogProps) {
     // console.log("----------");
     if (
       selectedStatuses.includes("NORMAL") &&
-      (selectedStatuses.includes("PREGNANT") ||
-        selectedStatuses.includes("SICK") ||
+      (selectedStatuses.includes("SICK") ||
         selectedStatuses.includes("INJURED"))
+    ) {
+      return (
+        <div className="font-medium text-danger">
+          * Animal that is pregnant, sick or injured cannot be "normal" as well!
+        </div>
+      );
+    }
+    if (
+      selectedStatuses.includes("OFFSITE") &&
+      selectedStatuses.includes("RELEASED")
     ) {
       return (
         <div className="font-medium text-danger">
@@ -158,7 +167,7 @@ function UpdateStatusFormDialog(props: UpdateStatusFormDialogProps) {
   };
 
   //
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let animalStatus = selectedStatuses?.toString();
     const updatedStatuses = {

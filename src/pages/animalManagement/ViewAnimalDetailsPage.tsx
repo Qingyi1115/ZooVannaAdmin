@@ -34,6 +34,7 @@ function ViewAnimalDetailsPage() {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/animal/getAnimalByAnimalCode/${animalCode}`
         );
+        console.log("test");
         setCurAnimal(responseJson as Animal);
       } catch (error: any) {
         console.log(error);
@@ -80,7 +81,7 @@ function ViewAnimalDetailsPage() {
           </div>
           {/*  */}
           <Tabs defaultValue={tab ? `${tab}` : "basicinfo"} className="w-full">
-            <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
+            <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
               <span className="invisible">_____</span>
               <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
               <TabsTrigger value="weight">Weight</TabsTrigger>
