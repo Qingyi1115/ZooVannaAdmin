@@ -123,6 +123,27 @@ function SpeciesBasicInfoDetails(props: SpeciesBasicInfoDetailsProps) {
             <TableCell>{curSpecies.generalDietPreference}</TableCell>
           </TableRow>
           <TableRow>
+            <TableCell className="w-1/5 font-bold" rowSpan={5}>
+              Age to Reach Growth Stages
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/6 font-bold">Juvenile</TableCell>
+            <TableCell>{curSpecies.ageToJuvenile}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/6 font-bold">Adolescent</TableCell>
+            <TableCell>{curSpecies.ageToAdolescent}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/6 font-bold">Adult</TableCell>
+            <TableCell>{curSpecies.ageToAdult}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/6 font-bold">Elder</TableCell>
+            <TableCell>{curSpecies.ageToElder}</TableCell>
+          </TableRow>
+          <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Life Expectancy &#40;in Years&#41;
             </TableCell>

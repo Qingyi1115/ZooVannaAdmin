@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import * as Form from "@radix-ui/react-form";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import * as Checkbox from "@radix-ui/react-checkbox";
@@ -7,16 +6,23 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
 import useApiFormData from "../../../hooks/useApiFormData";
+import useApiJson from "../../../hooks/useApiJson";
+
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
+import { ContinentEnum } from "../../../enums/ContinentEnum";
 import { HiCheck } from "react-icons/hi";
+import { BiomeEnum } from "../../../enums/BiomeEnum";
+import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 
-import useApiJson from "../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
 import { NavLink } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
+
+import { useNavigate } from "react-router-dom";
+import Animal from "../../../models/Animal";
+
 import {
   AcquisitionMethod,
   AnimalGrowthStage,
@@ -24,72 +30,65 @@ import {
   AnimalStatusType,
   IdentifierType,
 } from "../../../enums/Enumurated";
+
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import Species from "../../../models/Species";
 
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
-function CreateNewAnimalForm() {
+interface EditAnimalFormProps {
+  curAnimal: Animal;
+  refreshSeed: number;
+  setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function EditAnimalForm(props: EditAnimalFormProps) {
+  const { curAnimal, refreshSeed, setRefreshSeed } = props;
+
   const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
   // fields
-  /*
-    -animalId: Long
-    -animalCode: String
-    -houseName: String
-    -sex: AnimalSex 
-    -dateOfBirth: Date
-    -placeOfBirth: String
-    -rfidTagNum: String
-    -acquisitionMethod: AcquisitionMethod
-    -dateOfAcquisition: Date
-    -acquisitionRemarks: String
-    -currentWeight: double
-    -physicalDefiningCharacteristics: String
-    -behavioralDefiningCharacteristics: String
-    -dateOfDeath: Date
-    -locationOfDeath: String
-    -causeOfDeath: String
-    -growthStage: AnimalGrowthStage
-    -animalStatus: List<AnimalStatus>
-
-    -species
-    -parent1 (if any), leave blank if unknown
-    -parent2 (if any)
-  */
   const [speciesList, setSpeciesList] = useState<Species[]>([]);
 
-  const [houseName, setHouseName] = useState<string>("");
-  const [sex, setSex] = useState<string | undefined>(undefined);
+  const animalCode = curAnimal.animalCode;
+  const [houseName, setHouseName] = useState<string>(curAnimal.houseName);
+  const [sex, setSex] = useState<string | undefined>(curAnimal.sex);
   const [dateOfBirth, setDateOfBirth] = useState<string | Date | Date[] | null>(
-    null
+    new Date(curAnimal.dateOfBirth)
   );
-  const [placeOfBirth, setPlaceOfBirth] = useState<string>("");
+  const [placeOfBirth, setPlaceOfBirth] = useState<string>(
+    curAnimal.placeOfBirth
+  );
   // const [rfidTagNum, setRfidTagNum] = useState<string>("");
   const [identifierType, setIdentifierType] = useState<string | undefined>(
-    undefined
+    curAnimal.identifierType
   );
-  const [identifierValue, setIdentifierValue] = useState<string>("");
+  const [identifierValue, setIdentifierValue] = useState<string>(
+    curAnimal.identifierValue
+  );
   const [acquisitionMethod, setAcquisitionMethod] = useState<
     string | undefined
-  >(undefined);
+  >(curAnimal.acquisitionMethod);
   const [dateOfAcquisition, setDateOfAcquisition] = useState<
     string | Date | Date[] | null
-  >(null);
-  const [acquisitionRemarks, setAcquisitionRemarks] = useState<string>("");
+  >(new Date(curAnimal.dateOfAcquisition));
+  const [acquisitionRemarks, setAcquisitionRemarks] = useState<string>(
+    curAnimal.acquisitionRemarks
+  );
+
   const [physicalDefiningCharacteristics, setPhysicalDefiningCharacteristics] =
-    useState<string>("");
+    useState<string>(curAnimal.physicalDefiningCharacteristics);
   const [
     behavioralDefiningCharacteristics,
     setBehavioralDefiningCharacteristics,
-  ] = useState<string>("");
+  ] = useState<string>(curAnimal.behavioralDefiningCharacteristics);
   const [isGroupString, setIsGroupString] = useState<string | undefined>(
-    undefined
+    curAnimal.isGroup.toString()
   );
-  const [isGroup, setIsGroup] = useState<boolean>();
+  const [isGroup, setIsGroup] = useState<boolean>(curAnimal.isGroup);
   // const [dateOfDeath, setDateOfDeath] = useState<string | Date | Date[] | null>(
   //   null
 
@@ -101,7 +100,7 @@ function CreateNewAnimalForm() {
   const [selectedSpecies, setSelectedSpecies] = useState<Species | undefined>(
     undefined
   );
-
+  const [imageUrl, setImageUrl] = useState<string | null>(curAnimal.imageUrl);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   // get list of all species
@@ -118,6 +117,15 @@ function CreateNewAnimalForm() {
     };
     fetchSpecies();
   }, []);
+
+  useEffect(() => {
+    if (speciesList.length > 0 && curAnimal) {
+      const foundSpecies = speciesList.find(
+        (species) => species.speciesCode === curAnimal.species.speciesCode
+      );
+      setSelectedSpecies(foundSpecies);
+    }
+  }, [speciesList]);
 
   // validate functions
   function validateImage(props: ValidityState) {
@@ -272,63 +280,112 @@ function CreateNewAnimalForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
-    console.log(selectedSpecies);
 
-    const formData = new FormData();
-    formData.append("speciesCode", selectedSpecies?.speciesCode || "");
-    formData.append("houseName", houseName);
-    formData.append("isGroup", isGroup?.toString() || "false");
-    formData.append("sex", sex?.toString() || "");
-    formData.append("dateOfBirth", dateOfBirth?.toString() || "");
-    formData.append("placeOfBirth", placeOfBirth);
-    // formData.append("rfidTagNum", rfidTagNum);
-    formData.append("identifierType", identifierType || "");
-    formData.append("identifierValue", identifierValue);
-    formData.append("acquisitionMethod", acquisitionMethod?.toString() || "");
-    formData.append("acquisitionRemarks", acquisitionRemarks);
-    formData.append("dateOfAcquisition", dateOfAcquisition?.toString() || "");
-    formData.append(
-      "physicalDefiningCharacteristics",
-      physicalDefiningCharacteristics
-    );
-    formData.append(
-      "behavioralDefiningCharacteristics",
-      behavioralDefiningCharacteristics
-    );
-    formData.append("growthStage", "UNKNOWN");
-    formData.append("animalStatus", "NORMAL");
-    formData.append("file", imageFile || "");
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("animalCode", animalCode);
+      formData.append("speciesCode", selectedSpecies?.speciesCode || "");
+      formData.append("houseName", houseName);
+      formData.append("isGroup", isGroup?.toString() || "false");
+      formData.append("sex", sex?.toString() || "");
+      formData.append("dateOfBirth", dateOfBirth?.toString() || "");
+      formData.append("placeOfBirth", placeOfBirth);
+      // formData.append("rfidTagNum", rfidTagNum);
+      formData.append("identifierType", identifierType || "");
+      formData.append("identifierValue", identifierValue);
+      formData.append("acquisitionMethod", acquisitionMethod?.toString() || "");
+      formData.append("acquisitionRemarks", acquisitionRemarks);
+      formData.append("dateOfAcquisition", dateOfAcquisition?.toString() || "");
+      formData.append(
+        "physicalDefiningCharacteristics",
+        physicalDefiningCharacteristics
+      );
+      formData.append(
+        "behavioralDefiningCharacteristics",
+        behavioralDefiningCharacteristics
+      );
+      formData.append("growthStage", "UNKNOWN");
+      formData.append("animalStatus", "NORMAL");
+      formData.append("file", imageFile || "");
 
-    // formData.append("dateOfDeath", "");
-    // formData.append("locationOfDeath", "");
-    // formData.append("causeOfDeath", "");
+      formData.append("dateOfDeath", "");
+      formData.append("locationOfDeath", "");
+      formData.append("causeOfDeath", "");
 
-    const createAnimal = async () => {
       try {
-        const response = await apiFormData.post(
-          "http://localhost:3000/api/animal/createNewAnimal",
+        const response = await apiFormData.put(
+          "http://localhost:3000/api/animal/updateAnimal",
           formData
         );
         // success
-        console.log("succes?");
         toastShadcn({
-          description: "Successfully created a new animal",
+          description: "Successfully edited animal",
         });
 
-        // clearForm();
-        navigate("/animal/viewallanimals");
+        setRefreshSeed(refreshSeed + 1);
+        const redirectUrl = `/animal/viewanimaldetails/${curAnimal.animalCode}/basicinfo`;
+        navigate(redirectUrl);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while creating a new animal: " +
-            error.message,
+            "An error has occurred while editing animal: " + error.message,
         });
       }
-    };
-    createAnimal();
+    } else {
+      // no image upload
+      const growthStage = curAnimal.growthStage;
+      const animalStatus = curAnimal.animalStatus;
+      const dateOfDeath = "";
+      const locationOfDeath = "";
+      const causeOfDeath = "";
+
+      const updatedAnimal = {
+        animalCode,
+        houseName,
+        sex,
+        dateOfBirth,
+        placeOfBirth,
+        identifierType,
+        identifierValue,
+        acquisitionMethod,
+        dateOfAcquisition,
+        acquisitionRemarks,
+        physicalDefiningCharacteristics,
+        behavioralDefiningCharacteristics,
+        dateOfDeath,
+        locationOfDeath,
+        causeOfDeath,
+        growthStage,
+        animalStatus,
+        imageUrl,
+      };
+
+      console.log(updatedAnimal);
+
+      try {
+        const responseJson = await apiJson.put(
+          "http://localhost:3000/api/animal/updateAnimal",
+          updatedAnimal
+        );
+        // success
+        toastShadcn({
+          description: "Successfully edited animal",
+        });
+        setRefreshSeed(refreshSeed + 1);
+        const redirectUrl = `/animal/viewanimaldetails/${curAnimal.animalCode}/basicinfo`;
+        navigate(redirectUrl);
+      } catch (error: any) {
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while editing animal: \n" + error.message,
+        });
+      }
+    }
   }
 
   // species dropdown
@@ -372,19 +429,39 @@ function CreateNewAnimalForm() {
         {/* Title Header and back button */}
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            <NavLink className="flex" to={`/animal/viewallanimals`}>
-              <Button variant={"outline"} type="button" className="">
-                Back
-              </Button>
-            </NavLink>
-            <span className="self-center text-title-xl font-bold">
-              Create Individual/Group Animal
+            {/* <NavLink className="flex" to={`/animal/viewallanimals`}> */}
+            <Button
+              variant={"outline"}
+              onClick={() => navigate(-1)}
+              type="button"
+              className=""
+            >
+              Back
+            </Button>
+            {/* </NavLink> */}
+            <span className="self-center text-lg text-graydark">
+              Edit Individual/Group Animal Basic Information
             </span>
             <Button disabled className="invisible">
               Back
             </Button>
           </div>
           <Separator />
+          <span className="mt-4 self-center text-title-xl font-bold">
+            {curAnimal.houseName}{" "}
+            {curAnimal.isGroup ? (
+              ""
+            ) : (
+              <span>the {curAnimal.species.commonName}</span>
+            )}
+            <div className="text-center text-lg">
+              {curAnimal.isGroup ? (
+                <span>(Group)</span>
+              ) : (
+                <span>(Individual)</span>
+              )}
+            </div>
+          </span>
         </div>
 
         {/* Animal Picture */}
@@ -392,23 +469,24 @@ function CreateNewAnimalForm() {
           name="speciesImage"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
-          <Form.Label className="font-medium">Animal Image</Form.Label>
+          <Form.Label className="font-medium">Current Image</Form.Label>
+          <img
+            src={"http://localhost:3000/" + curAnimal.imageUrl}
+            alt="Current animal image"
+            className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"
+          />
+          <Form.Label className="font-medium">
+            Upload A New Image &#40;Do not upload if no changes&#41;
+          </Form.Label>
           <Form.Control
             type="file"
-            required
-            asChild
-            // accept=".png, .jpg, .jpeg, .webp"
-            // onChange={handleFileChange}
+            placeholder="Change image"
+            required={false}
+            accept=".png, .jpg, .jpeg, .webp"
+            onChange={handleFileChange}
             className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
-          >
-            <input
-              type="file"
-              id="speciesImage"
-              accept=".jpeg, .png, .jpg ,.webp"
-              onChange={handleFileChange}
-            />
-          </Form.Control>
-          <Form.ValidityState>{validateImage}</Form.ValidityState>
+          />
+          {/* <Form.ValidityState>{validateImage}</Form.ValidityState> */}
         </Form.Field>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -425,7 +503,7 @@ function CreateNewAnimalForm() {
             validateFunction={validateHouseName}
           />
 
-          <FormFieldSelect
+          {/* <FormFieldSelect
             formFieldName="isGroupString"
             label="Is Group Animal?"
             required={true}
@@ -446,7 +524,7 @@ function CreateNewAnimalForm() {
               }
             }}
             validateFunction={validateIsGroup}
-          />
+          /> */}
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -499,7 +577,7 @@ function CreateNewAnimalForm() {
             validateFunction={validateAnimalSex}
           />
 
-          {/* Date of Birth */}
+          {/* Select Species*/}
           <Form.Field
             name="species"
             id="speciesField"
@@ -655,8 +733,8 @@ function CreateNewAnimalForm() {
             />
           </Form.Control>
           {/* <Form.ValidityState>
-                {validateEducationalDescription}
-              </Form.ValidityState> */}
+                  {validateEducationalDescription}
+                </Form.ValidityState> */}
         </Form.Field>
 
         {/* Physical Defining Characteristics */}
@@ -726,4 +804,4 @@ function CreateNewAnimalForm() {
   );
 }
 
-export default CreateNewAnimalForm;
+export default EditAnimalForm;

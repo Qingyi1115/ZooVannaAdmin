@@ -29,6 +29,10 @@ function EditSpeciesPage() {
     habitatOrExhibit: "habitat",
     imageUrl: "",
     generalDietPreference: "",
+    ageToJuvenile: 0,
+    ageToAdolescent: 1,
+    ageToAdult: 2,
+    ageToElder: 3,
     lifeExpectancyYears: 0,
   };
 

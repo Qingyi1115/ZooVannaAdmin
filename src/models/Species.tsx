@@ -24,6 +24,10 @@ interface Species {
   imageUrl: string;
   generalDietPreference: string;
   lifeExpectancyYears: number;
+  ageToJuvenile: number;
+  ageToAdolescent: number;
+  ageToAdult: number;
+  ageToElder: number;
 
   createdAt?: string;
   updateTimestamp?: string;

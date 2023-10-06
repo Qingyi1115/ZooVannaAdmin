@@ -43,11 +43,16 @@ interface PhysioRefNormDatatableProps {
 
 const emptyPhysioRefNorm: PhysiologicalReferenceNorms = {
   physiologicalRefId: -1,
-  sizeMaleCm: 100,
-  sizeFemaleCm: 90,
-  weightMaleKg: 200,
-  weightFemaleKg: 190,
-  ageToGrowthAge: 15,
+  minSizeMaleCm: 100,
+  minSizeFemaleCm: 90,
+  minWeightMaleKg: 200,
+  minWeightFemaleKg: 190,
+  maxSizeMaleCm: 100,
+  maxSizeFemaleCm: 90,
+  maxWeightMaleKg: 200,
+  maxWeightFemaleKg: 190,
+  minAge: 10,
+  maxAge: 15,
   growthStage: AnimalGrowthStage.JUVENILE,
 };
 
@@ -205,34 +210,64 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
           field="growthStage"
           header="Growth Stage"
           sortable
-          style={{ minWidth: "12rem" }}
+          style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="ageToGrowthAge"
-          header="Age to Reach Growth Stage"
+          field="minAge"
+          header="Start Age (years)"
+          sortable
+          style={{ minWidth: "6rem" }}
+        ></Column>
+        <Column
+          field="maxAge"
+          header="End Age (years)"
+          sortable
+          style={{ minWidth: "6rem" }}
+        ></Column>
+        <Column
+          field="minSizeMaleCm"
+          header="Min Size Male (cm)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>
         <Column
-          field="sizeMaleCm"
-          header="Average Size Male (cm)"
+          field="maxSizeMaleCm"
+          header="Max Size Male (cm)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>
         <Column
-          field="weightMaleKg"
-          header="Average Weight Male (kg)"
+          field="minWeightMaleKg"
+          header="Min Weight Male (kg)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>
         <Column
-          field="sizeFemaleCm"
-          header="Average Size Female (cm)"
+          field="maxWeightMaleKg"
+          header="Max Weight Male (kg)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>
         <Column
-          field="weightFemaleKg"
+          field="minSizeFemaleCm"
+          header="Min Size Female (cm)"
+          sortable
+          style={{ minWidth: "12rem" }}
+        ></Column>
+        <Column
+          field="maxSizeFemaleCm"
+          header="Max Size Female (cm)"
+          sortable
+          style={{ minWidth: "12rem" }}
+        ></Column>
+        <Column
+          field="minWeightFemaleKg"
+          header="Average Weight Female (kg)"
+          sortable
+          style={{ minWidth: "12rem" }}
+        ></Column>
+        <Column
+          field="maxWeightFemaleKg"
           header="Average Weight Female (kg)"
           sortable
           style={{ minWidth: "12rem" }}
