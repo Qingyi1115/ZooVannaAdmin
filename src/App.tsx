@@ -263,7 +263,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/createAnimalObservationLog/:animalId"
+                  path="/animal/createAnimalObservationLog/:animalId"
                   element={
                     user ? (
                       <CreateNewAnimalObservationLogPage />
