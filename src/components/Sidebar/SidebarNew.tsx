@@ -426,7 +426,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       >
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
 
-                          {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
+                          {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ||
                             employee.generalStaff) && (
                               <li>
                                 <NavLink
@@ -453,7 +453,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                   View All Customer Facilities
                                 </NavLink>
                               </li>
-                            )} */}
+                            )}
                           {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
                             <li>
                               <NavLink
