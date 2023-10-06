@@ -22,22 +22,22 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
   const { sensorId } = props;
   const apiJson = useApiJson();
 
-  const [timeLimit, setTimeLimit] = useState<number>(1000 * 60 * 60 * 3);
-  const [intervalDurationInMilliseconds, setIntervalDurationInMilliseconds] = useState<any>(60 * 100);
-  const [intervalFrequency, setIntervalFrequency] = useState<any>(100);
-  const [startDate, setStartDate] = useState<any>(new Date(Date.now() - timeLimit));
-  const [endDate, setEndDate] = useState<any>(new Date());
+  const [intervalDurationInMilliseconds, setIntervalDurationInMilliseconds] = useState<any>(60 * 1000);
+  const [intervalFrequency, setIntervalFrequency] = useState<any>(80);
+  const [startDate, setStartDate] = useState<Date>(new Date(Date.now() - 1000 * 60 * 60 * 3));
+  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [minDate, setMinDate] = useState<Date>(new Date(Date.now() - 1000 * 60 * 60 * 3));
   const [refresh, setRefresh] = useState<any>(0);
 
   useEffect(() => {
+    setIntervalDurationInMilliseconds((endDate.getTime() - startDate.getTime()) / 500);
     apiJson.post(
       `http://localhost:3000/api/assetFacility/getSensorReading/${sensorId}`,
       { startDate: startDate, endDate: endDate }
     ).then(res => {
+      setMinDate(new Date(res.earlestDate));
       const curSensor = res.sensor;
       const sensorReadings = (res.sensorReadings as SensorReading[]);
-
-      console.log("Updated chart!")
       const documentStyle = getComputedStyle(document.documentElement);
       const textColor = documentStyle.getPropertyValue('--text-color');
       const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
@@ -129,14 +129,14 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
       setChartData(data);
       setChartOptions(options);
     }).catch(e => console.log(e));
-  }, [refresh, timeLimit, intervalDurationInMilliseconds, intervalFrequency, startDate, endDate, refresh]);
+  }, [refresh, intervalDurationInMilliseconds, intervalFrequency, startDate, endDate]);
 
   useEffect(() => {
     const looper = () => {
       setRefresh([])
       setTimeout(() => {
         looper()
-      }, 10000)
+      }, 5000)
     };
     looper();
   }, [])
@@ -152,18 +152,18 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
               {/* Start Date */}
               <div className="flex justify-content-center">
                 <label htmlFor="startDateCalendar" className="self-center mx-3 text-lg text-graydark">Start Date</label>
-                <Calendar id="startDateCalendar" value={startDate} onChange={(e: CalendarChangeEvent) => {
-                  if (e && e.value !== undefined) {
-                    setStartDate(e.value);
+                <Calendar id="startDateCalendar" showTime hourFormat="12" value={startDate} minDate={minDate} maxDate={endDate} onChange={(e: CalendarChangeEvent) => {
+                  if (e && e.value !== null) {
+                    setStartDate(e.value as Date);
                   }
                 }} />
               </div>
               {/* End Date */}
               <div className=" flex justify-content-center">
-                <label htmlFor="startDateCalendar" className="self-center mx-3 text-lg text-graydark">End Date</label>
-                <Calendar value={endDate} onChange={(e: CalendarChangeEvent) => {
-                  if (e && e.value !== undefined) {
-                    setEndDate(e.value);
+                <label htmlFor="startDateCalendar"  className="self-center mx-3 text-lg text-graydark">End Date</label>
+                <Calendar value={endDate} showTime hourFormat="12" maxDate={new Date()} minDate={startDate} onChange={(e: CalendarChangeEvent) => {
+                  if (e && e.value !== null) {
+                    setEndDate(e.value as Date);
                   }
                 }} />
               </div>

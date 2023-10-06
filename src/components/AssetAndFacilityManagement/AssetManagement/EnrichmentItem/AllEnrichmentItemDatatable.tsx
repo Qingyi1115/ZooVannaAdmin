@@ -60,7 +60,7 @@ function AllEnrichmentItemDatatable() {
     dt.current?.exportCSV();
   };
 
- 
+
   const imageBodyTemplate = (rowData: EnrichmentItem) => {
     return (
       <img
@@ -179,13 +179,15 @@ function AllEnrichmentItemDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-            {(employee.planningStaff?.plannerType == "CURATOR") && (
-              <NavLink to={"/assetfacility/createenrichmentitem"}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
-            )}
+              {(employee.planningStaff?.plannerType == "CURATOR") ?
+                <NavLink to={"/assetfacility/createenrichmentitem"}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                    Add Enrichment Item
+                  </Button>
+                </NavLink> : <Button disabled className="invisible">
+                  Export to .csv
+                </Button>}
               <span className="self-center text-title-xl font-bold">
                 All Enrichment Items
               </span>

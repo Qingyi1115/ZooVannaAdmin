@@ -58,6 +58,7 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
       toastShadcn({
         description: "Successfully created facility maintenance log",
       });
+      navigate("/assetfacility/maintenance");
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",

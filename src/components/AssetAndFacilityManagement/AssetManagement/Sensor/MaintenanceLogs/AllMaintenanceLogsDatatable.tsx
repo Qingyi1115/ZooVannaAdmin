@@ -25,14 +25,23 @@ import { DataTable } from "primereact/datatable";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
 interface AllMaintenanceLogsDatatableProps {
-  curSensor: Sensor;
+  sensorId: number;
 }
 
 function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   const apiJson = useApiJson();
-  const { curSensor } = props;
+  const { sensorId } = props;
   const employee = useAuthContext().state.user?.employeeData;
+  const [curSensor, setCurSensor] = useState<any>({});
 
+  useEffect(() => {
+    apiJson.post(
+      `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
+      { includes: ["hubProcessor", "maintenanceLogs", "generalStaff"] }).then(res => {
+        setCurSensor(res.sensor as Sensor);
+        setMaintenanceLogList(res.sensor.maintenanceLogs)
+      }).catch(e => console.log(e));
+  }, []);
 
   let emptyMaintenanceLog: MaintenanceLog = {
     logId: 0,
@@ -242,9 +251,10 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-                <NavLink to={`/assetfacility/createmaintenancelog/${curSensor.sensorId}`}>
+                <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
+                    Add Maintenance Log
                   </Button>
                 </NavLink>
               )}
@@ -252,7 +262,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
                 All Maintenance Logs
               </span>
               <Button disabled className="invisible">
-                Back
+                Add Maintenance Log
               </Button>
             </div>
             <Separator />

@@ -127,7 +127,7 @@ function ViewFacilityDetailsPage() {
             </div>
           </TabsContent>
           <TabsContent value="facilityLog">
-            <AllFacilityLogsDatatable curFacility={curFacility} curInHouse={curInHouse} />
+            <AllFacilityLogsDatatable facilityId={Number(facilityId)} />
           </TabsContent>
           <TabsContent value="hubs">
             <AllHubDatatable curFacility={curFacility} />

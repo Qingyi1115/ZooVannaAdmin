@@ -24,13 +24,12 @@ import { ScrollPanel } from "primereact/scrollpanel";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
 interface AllFacilityLogsDatatableProps {
-  curFacility: Facility;
-  curInHouse: InHouse;
+  facilityId: number;
 }
 
 function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const apiJson = useApiJson();
-  const { curFacility, curInHouse } = props;
+  const { facilityId } = props;
   const employee = useAuthContext().state.user?.employeeData;
   let emptyInHouse: InHouse = {
     isPaid: false,
@@ -73,8 +72,10 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
 
   useEffect(() => {
     apiJson.get(
-      `http://localhost:3000/api/assetfacility/getFacilityLogs/${curFacility.facilityId}`)
-      .then(res => { setFacilityLogList(res.facilityLogs as FacilityLog[]); })
+      `http://localhost:3000/api/assetfacility/getFacilityLogs/${facilityId}`)
+      .then(res => {
+        setFacilityLogList(res.facilityLogs as FacilityLog[]);
+      })
       .catch(e => console.log(e));
   }, []);
 
@@ -229,7 +230,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
       <div>
         <Card className="my-4 relative"
           title={facilityLog.title}
-          subTitle={ facilityLog.dateTime ? 
+          subTitle={facilityLog.dateTime ?
             "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}>
           {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
           <Button className="absolute top-5 right-5"
@@ -248,6 +249,9 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             <div>
               <div className="text-xl font-bold text-900">Remarks</div>
               <p>{facilityLog.remarks}</p>
+            </div>
+            <div className="italic  indent-px ">
+              {(facilityLog.isMaintenance ? "Maintenance Log" : "Operation Log")}
             </div>
           </div>
 
@@ -272,18 +276,19 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-              employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && 
-              <NavLink to={`/assetfacility/createfacilitylog/${curFacility.facilityId}`}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
+                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
+                <NavLink to={`/assetfacility/createfacilitylog/${facilityId}`}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                    Add Facility Log
+                  </Button>
+                </NavLink>
               )}
               <span className=" self-center text-title-xl font-bold">
                 All Facility Logs
               </span>
               <Button disabled className="invisible">
-                Back
+                Add Facility Log
               </Button>
             </div>
             <Separator />

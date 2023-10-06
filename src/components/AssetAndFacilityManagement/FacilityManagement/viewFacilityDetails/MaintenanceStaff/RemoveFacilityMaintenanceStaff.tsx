@@ -6,7 +6,7 @@ import Employee from "../../../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiMinus, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
@@ -65,11 +65,10 @@ function RemoveFacilityMaintenanceStaff(props: RemoveFacilityMaintenanceStaffPro
 
     try {
       const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res=>{
-          console.log("ih",res["inHouse"]["maintenanceStaffs"])
+        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
           setRefreshSeed([])
-        }).catch(err=>console.log("err",err));
-        
+        }).catch(err => console.log("err", err));
+
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
@@ -144,7 +143,7 @@ function RemoveFacilityMaintenanceStaff(props: RemoveFacilityMaintenanceStaffPro
             className="mr-2"
             onClick={() => confirmEmployeeRemoval(employee)}
           >
-            <HiTrash className="mx-auto" />
+            <HiMinus className="mx-auto" />
           </Button>
         }
       </React.Fragment>
@@ -217,12 +216,6 @@ function RemoveFacilityMaintenanceStaff(props: RemoveFacilityMaintenanceStaffPro
             <Column
               field="employeeEducation"
               header="Education"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="employeeBirthDate"
-              header="Birthday"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>

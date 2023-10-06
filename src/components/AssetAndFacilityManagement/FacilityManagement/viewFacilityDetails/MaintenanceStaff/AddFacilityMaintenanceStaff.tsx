@@ -67,7 +67,6 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     try {
       const responseJson = await apiJson.put(
         `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res=>{
-          console.log("ih",res["inHouse"]);
           setRefreshSeed([]);
         }).catch(err=>console.log("err",err));
 
@@ -252,12 +251,6 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
             header={header}
           >
             <Column
-              field="employeeId"
-              header="ID"
-              sortable
-              style={{ minWidth: "4rem" }}
-            ></Column>
-            <Column
               field="employeeName"
               header="Name"
               sortable
@@ -287,7 +280,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "9rem" }}
             ></Column>
           </DataTable>
         </div>

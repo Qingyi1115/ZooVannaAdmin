@@ -50,7 +50,7 @@ import ViewHubDetailsPage from "./pages/assetAndFacilityManagement/Hub/ViewHubDe
 import ViewSensorDetailsPage from "./pages/assetAndFacilityManagement/Sensor/ViewSensorDetailsPage";
 import CreateNewHubForm from "./components/AssetAndFacilityManagement/AssetManagement/Hub/CreateNewHubForm";
 import CreateNewSensorForm from "./components/AssetAndFacilityManagement/AssetManagement/Sensor/CreateNewSensorForm";
-import CreateNewMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/CreateNewMaintenanceLogPage";
+import CreateNewSensorMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/CreateSensorNewMaintenanceLogPage";
 import EditMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/EditMaintenanceLogPage";
 import ViewMaintenanceLogDetailsPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/ViewMaintenanceLogDetailsPage";
 import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
@@ -458,10 +458,10 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/createmaintenancelog/:sensorId"
+                  path="/assetfacility/createsensormaintenancelog/:sensorId"
                   element={
                     user ? (
-                      <CreateNewMaintenanceLogPage />
+                      <CreateNewSensorMaintenanceLogPage />
                     ) : (
                       <Navigate to="/login" />
                     )

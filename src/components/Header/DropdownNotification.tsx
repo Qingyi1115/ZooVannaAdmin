@@ -5,6 +5,7 @@ import { BsBroadcast, BsFillHouseExclamationFill, BsHouseExclamation } from "rea
 import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { HiClipboardList } from "react-icons/hi";
+import Sensor from "../../models/Sensor";
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -16,6 +17,7 @@ const DropdownNotification = () => {
   const dropdown = useRef<any>(null);
   const [facilityList, setFacilityList] = useState<any[]>([]);
   const [sensorList, setSensorList] = useState<any[]>([]);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -52,14 +54,12 @@ const DropdownNotification = () => {
     }).then(responseJson => {
       if (responseJson === undefined) return;
       let facility = responseJson["facilities"]
-      // console.log("facilities", responseJson)
       facility = facility.filter((f: any) => {
-        f.predictedMaintenanceDate && (compareDates(new Date(f.predictedMaintenanceDate), new Date()) <= 0)
+        return f.predictedMaintenanceDate && (compareDates(new Date(f.predictedMaintenanceDate), new Date()) <= 0)
       });
       setFacilityList(facility);
-      // console.log("facilities aft", facility)
     });
-  }, []);
+  }, [refreshSeed]);
 
   useEffect(() => {
     if (!(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
@@ -70,15 +70,22 @@ const DropdownNotification = () => {
       console.log(error);
     }).then(responseJson => {
       let sensors = responseJson["sensors"]
-      // console.log("sensors before", sensors)
-      // sensors = 
       sensors= sensors.filter((sensor: any) => {
-        sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
+        return sensor.predictedMaintenanceDate && (compareDates(new Date(sensor.predictedMaintenanceDate), new Date()) <= 0)
       });
       setSensorList(sensors);
-      // console.log("sensors aft", sensors)
     });
-  }, []);
+  }, [refreshSeed]);
+  
+  useEffect(() => {
+    const looper = () => {
+      setRefreshSeed([])
+      setTimeout(() => {
+        looper()
+      }, 5000)
+    };
+    looper();
+  }, [])
 
   return (
     <li className="relative">
@@ -126,9 +133,9 @@ const DropdownNotification = () => {
     <li>
       <Link
         className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-        to="/assetfacility/maintenance"
+        to="/assetfacility/maintenance/facilityMaintenance"
       >
-        {facilityList.length ? <div className="text-red-600"><p className="text-sm">
+        {facilityList.length ? <div className="text-amber-500"><p className="text-sm">
           <BsHouseExclamation />
           Facilities to maintain {facilityList.length}</p></div>
         :<div className="text-green-700"><p className="text-sm">
@@ -144,19 +151,20 @@ const DropdownNotification = () => {
     {facilityList && facilityList.map((facility) => {
       return (
 
-        <li>
+        <li key={facility.facilityId}>
         <Link
           className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-          to="/assetfacility/maintenance"
+          to="/assetfacility/maintenance/facilityMaintenance"
         >
+        <div className="text-red-700">
           <BsHouseExclamation />
           <p className="text-sm">
-            <span className="text-black dark:text-white">
+            <span className="text-red-700">
             {facility.facilityName}
             </span>{" "}
           </p>
           <p className="text-xs">Suggested Date: {new Date(facility.predictedMaintenanceDate).toLocaleDateString()}</p>
-
+        </div>
         </Link>
       </li>
       );
@@ -165,9 +173,9 @@ const DropdownNotification = () => {
     <li>
       <Link
         className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-        to="/assetfacility/maintenance"
+        to="/assetfacility/maintenance/sensorMaintenance"
       >
-        {sensorList.length ? <div className="text-red-600"><p className="text-sm">
+        {sensorList.length ? <div className="text-amber-500"><p className="text-sm">
           <BsBroadcast />
             Sensors to maintain {sensorList.length}
         </p></div>:<div className="text-green-700"><p className="text-sm">
@@ -184,19 +192,20 @@ const DropdownNotification = () => {
     {sensorList.map((sensor) => {
       return (
 
-        <li>
+        <li key={sensor.sensorId}>
         <Link
           className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-          to="/assetfacility/maintenance"
+          to="/assetfacility/maintenance/sensorMaintenance"
         >
+          <div className="text-red-700">
           <BsBroadcast />
           <p className="text-sm">
-            <span className="text-black dark:text-white">
+            <span className="text-red-700">
             {sensor.sensorName}
             </span>{" "}
           </p>
           <p className="text-xs">Suggested Date: {new Date(sensor.predictedMaintenanceDate).toLocaleDateString()}</p>
-
+          </div>
         </Link>
       </li>
       );

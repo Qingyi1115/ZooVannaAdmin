@@ -22,7 +22,7 @@ import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 interface AllSensorDatatableProps {
   curHub: Hub,
-  refreshSeed:any;
+  refreshSeed: any;
 }
 
 function AllSensorDatatable(props: AllSensorDatatableProps) {
@@ -126,22 +126,22 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <NavLink to={`/assetFacility/editsensor/${sensor.sensorId}`}>
-          <Button className="mr-2">
-            <HiPencil className="mx-auto" />
+        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          <NavLink to={`/assetFacility/editsensor/${sensor.sensorId}`}>
+            <Button className="mr-2">
+              <HiPencil className="mx-auto" />
+            </Button>
+          </NavLink>
+        )}
+        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmDeleteSensor(sensor)}
+          >
+            <HiTrash className="mx-auto" />
           </Button>
-        </NavLink>
-      )}
-      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteSensor(sensor)}
-        >
-          <HiTrash className="mx-auto" />
-        </Button>
-      )}
+        )}
       </React.Fragment>
     );
   };
@@ -171,13 +171,14 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              
+
               {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-              <NavLink to={`/assetfacility/createsensor/${curHub.hubProcessorId}`}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
+                <NavLink to={`/assetfacility/createsensor/${curHub.hubProcessorId}`}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                    Add Sensor
+                  </Button>
+                </NavLink>
               )}
               <span className=" self-center text-title-xl font-bold">
                 All Sensors

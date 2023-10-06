@@ -62,7 +62,6 @@ function AllfacilityDatatable() {
     apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", { includes: ["facilityDetail"] }).catch(e => {
       console.log(e);
     }).then(res => {
-      console.log("res", res)
       setFacilityList(res["facilities"]);
     })
   }, []);
@@ -91,7 +90,7 @@ function AllfacilityDatatable() {
     const responseJson = await apiJson.del(
       "http://localhost:3000/api/assetFacility/deleteFacility/" +
       selectedFacility.facilityId
-    ).then(()=>{
+    ).then(() => {
 
       toastShadcn({
         // variant: "destructive",
@@ -101,7 +100,7 @@ function AllfacilityDatatable() {
       });
       setFacilityList(_facility);
       setSelectedFacility(emptyFacility);
-    }).catch(error=>{
+    }).catch(error => {
       toastShadcn({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
@@ -117,9 +116,9 @@ function AllfacilityDatatable() {
         <HiX />
         No
       </Button>
-      <Button 
-      variant={"destructive"} 
-      onClick={deleteFacility} 
+      <Button
+        variant={"destructive"}
+        onClick={deleteFacility}
       // disabled={}
       >
         <HiCheck />
@@ -138,21 +137,21 @@ function AllfacilityDatatable() {
           </Button>
         </NavLink>
         {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}>
-          <Button className="mr-1">
-            <HiPencil className="mr-1" />
+          <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}>
+            <Button className="mr-1">
+              <HiPencil className="mr-1" />
 
-          </Button>
-        </NavLink>
+            </Button>
+          </NavLink>
         )}
         {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeletefacility(facility)}
-        >
-          <HiTrash className="mx-auto" />
-        </Button>
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmDeletefacility(facility)}
+          >
+            <HiTrash className="mx-auto" />
+          </Button>
         )}
       </React.Fragment>
     );
@@ -183,13 +182,18 @@ function AllfacilityDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-              <NavLink to={"/assetfacility/createfacility"}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
+              {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ?
+                <NavLink to={"/assetfacility/createfacility"}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                    Add Facility
+                  </Button>
+                </NavLink>
+                :
+                <Button disabled className="invisible">
+                  Export to .csv
                 </Button>
-              </NavLink>
-              )}
+              }
               <span className=" self-center text-title-xl font-bold">
                 All Facilities
               </span>
