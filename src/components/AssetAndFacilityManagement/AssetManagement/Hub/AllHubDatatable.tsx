@@ -178,6 +178,15 @@ function AllHubDatatable(props: AllHubDatatableProps) {
           }}
         />
       </span>
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        <NavLink to={`/assetfacility/createhub/${curFacility.facilityId}`}>
+          <Button className="mr-2">
+            <HiPlus className="mr-auto" />
+            Add Hub
+          </Button>
+        </NavLink>
+      )}
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -185,26 +194,8 @@ function AllHubDatatable(props: AllHubDatatableProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-                <NavLink to={`/assetfacility/createhub/${curFacility.facilityId}`}>
-                  <Button className="mr-2">
-                    <HiPlus className="mr-auto" />
-                    Add Hub
-                  </Button>
-                </NavLink>
-              )}
-              <span className=" self-center text-title-xl font-bold">
-                All Hubs
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
-
+        <div className="">
+         
           <DataTable
             ref={dt}
             value={hubList}

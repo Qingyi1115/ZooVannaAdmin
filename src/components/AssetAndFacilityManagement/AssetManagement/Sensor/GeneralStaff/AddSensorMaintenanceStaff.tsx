@@ -181,6 +181,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
           }}
         />
       </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -238,22 +239,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button disabled className="invisible">
-                Back
-              </Button>
-              <span className=" self-center text-title font-bold">
-                Manage Sensor Maintenance Staff
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
-
-
+        <div className="">
           <DataTable
             ref={dt}
             value={employeeList}

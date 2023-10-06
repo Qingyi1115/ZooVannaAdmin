@@ -6,24 +6,23 @@ import Employee from "../../../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiCheck, HiClipboard, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiClipboard, HiEye, HiMinus, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
 import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
+import Facility from "../../../../../models/Facility";
 
 interface AddFacilityMaintenanceStaffProps {
   facilityId: number;
-  employeeList: Employee[];
-  setRefreshSeed:Function;
 }
 
 function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
-  const { facilityId, employeeList, setRefreshSeed } = props;
+  const { facilityId } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -49,6 +48,33 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
+  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
+
+  useEffect(() => {
+    apiJson.post(
+      "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
+    ).catch(e => console.log(e)).then(res => {
+      const allStaffs: Employee[] = []
+      for (const staff of res["generalStaffs"]) {
+        // console.log(staff);
+        if (staff.generalStaffType == "ZOO_MAINTENANCE") {
+          let emp = staff.employee;
+          staff.employee = undefined;
+          emp["generalStaff"] = staff
+          const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
+          console.log(maintainedFacility);
+          emp.currentlyAssigned = (maintainedFacility !== undefined);
+          allStaffs.push(emp)
+        }
+
+      }
+      console.log(allStaffs);
+      setEmployeeList(allStaffs);
+
+    });
+  }, [refreshSeed]);
+
   const hideEmployeeAssignmentDialog = () => {
     setAssignmentDialog(false);
   }
@@ -66,9 +92,9 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res=>{
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
           setRefreshSeed([]);
-        }).catch(err=>console.log("err",err));
+        }).catch(err => console.log("err", err));
 
       toastShadcn({
         // variant: "destructive",
@@ -110,7 +136,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     try {
       const responseJson = await apiJson.del(
         `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
-
+      setRefreshSeed([]);
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
@@ -159,6 +185,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
           }}
         />
       </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -172,7 +199,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     setEmployeeRemovalDialog(true);
   };
 
-  const actionBodyTemplate = (employee: Employee) => {
+  const actionBodyTemplate = (employee: any) => {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
@@ -189,19 +216,20 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
               <Button
                 name="assignButton"
                 variant={"default"}
+                disabled={employee.currentlyAssigned}
                 className="mr-2"
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
               </Button>
-              {/* <Button
-                name="removeButton"
+              <Button
                 variant={"destructive"}
-                className="mx-auto"
+                className="mr-2"
+                disabled={!employee.currentlyAssigned}
                 onClick={() => confirmEmployeeRemoval(employee)}
               >
-                <HiTrash className="mx-auto" />
-              </Button> */}
+                <HiMinus className="mx-auto" />
+              </Button>
             </div>
 
           }
@@ -214,21 +242,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button disabled className="invisible">
-                Back
-              </Button>
-              <span className=" self-center text-title font-bold">
-                Assign Maintenance Staff
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
-
+        <div className="">
 
           <DataTable
             ref={dt}
@@ -280,7 +294,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "9rem" }}
+              style={{ minWidth: "14rem" }}
             ></Column>
           </DataTable>
         </div>

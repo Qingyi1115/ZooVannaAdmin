@@ -39,7 +39,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
         <NavLink to={`/assetfacility/editfacility/${curFacility.facilityId}`}>
           <Button className="mr-2">
             <HiPencil className="mx-auto" ></HiPencil>
-            Edit Facility details
+            Edit Facility Details
           </Button>
         </NavLink>
       )}

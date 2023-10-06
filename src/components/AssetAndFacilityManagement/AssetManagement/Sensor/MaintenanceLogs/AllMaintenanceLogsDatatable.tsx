@@ -200,6 +200,14 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           }}
         />
       </span>
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
+          <Button className="mr-2">
+            <HiPlus className="mr-auto" />
+            Add Maintenance Log
+          </Button>
+        </NavLink>
+      )}
     </div>
   );
 
@@ -246,27 +254,8 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-                <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
-                  <Button className="mr-2">
-                    <HiPlus className="mr-auto" />
-                    Add Maintenance Log
-                  </Button>
-                </NavLink>
-              )}
-              <span className=" self-center text-title-xl font-bold">
-                All Maintenance Logs
-              </span>
-              <Button disabled className="invisible">
-                Add Maintenance Log
-              </Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
+
           <DataView
             value={maintenanceLogList}
             itemTemplate={itemTemplate}

@@ -48,7 +48,7 @@ function SensorMaintenanceSuggestion() {
       "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
     ).catch(error => {
     }).then(responseJson => {
-      let sortedList = responseJson["sensors"].sort((a:any,b:any) => {
+      let sortedList = responseJson["sensors"].sort((a: any, b: any) => {
         if (!a.predictedMaintenanceDate) return 1;
         if (!b.predictedMaintenanceDate) return -1;
         return compareDates(new Date(a.predictedMaintenanceDate), new Date(b.predictedMaintenanceDate))
@@ -64,8 +64,8 @@ function SensorMaintenanceSuggestion() {
         name: sensor.sensorName,
         description: "Sensor " + (sensor.sensorType as string).toLocaleLowerCase(),
         lastMaintenance: new Date(sensor.dateOfLastMaintained).toLocaleString(),
-        suggestedMaintenance: sensor.predictedMaintenanceDate?
-        new Date(sensor.predictedMaintenanceDate).toString():"No suggested date",
+        suggestedMaintenance: sensor.predictedMaintenanceDate ?
+          new Date(sensor.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Sensor",
         id: sensor.sensorId
       })
@@ -83,7 +83,7 @@ function SensorMaintenanceSuggestion() {
         </NavLink>
         <NavLink to={`/assetfacility/viewSensorMaintenanceChart/${objDetails.id}`}>
           <Button className="mb-1 mr-1">
-            <HiOutlinePresentationChartLine className="mr-1" />
+            <HiOutlinePresentationChartLine className="mx-auto" />
           </Button>
         </NavLink>
         {/* <Button
@@ -116,34 +116,22 @@ function SensorMaintenanceSuggestion() {
           }}
         />
       </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
   const statusBodyTemplate = (rowData: any) => {
-    return <Tag value={isNaN(Date.parse(rowData.suggestedMaintenance)) ? rowData.suggestedMaintenance : new Date(rowData.suggestedMaintenance).toLocaleString()} 
-    severity={isNaN(Date.parse(rowData.suggestedMaintenance)) ? "info":  
-      (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ? "danger" 
-      : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" :"success"} />;
+    return <Tag value={isNaN(Date.parse(rowData.suggestedMaintenance)) ? rowData.suggestedMaintenance : new Date(rowData.suggestedMaintenance).toLocaleString()}
+      severity={isNaN(Date.parse(rowData.suggestedMaintenance)) ? "info" :
+        (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ? "danger"
+          : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" : "success"} />;
   };
 
   return (
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button disabled className="invisible">
-                Back
-              </Button>
-              <span className=" self-center text-title-xl font-bold">
-                Sensor Maintenance Suggestions
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
           <DataTable
             ref={dt}
             value={objectsList}

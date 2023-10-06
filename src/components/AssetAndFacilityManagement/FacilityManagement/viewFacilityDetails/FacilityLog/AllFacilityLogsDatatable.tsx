@@ -221,6 +221,15 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             }}
           />
         </span>
+        {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
+          <NavLink to={`/assetfacility/createfacilitylog/${facilityId}`}>
+            <Button className="mr-2">
+              <HiPlus className="mr-auto" />
+              Add Facility Log
+            </Button>
+          </NavLink>
+        )}
       </div>
     </div>
   );
@@ -271,28 +280,8 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
-                <NavLink to={`/assetfacility/createfacilitylog/${facilityId}`}>
-                  <Button className="mr-2">
-                    <HiPlus className="mr-auto" />
-                    Add Facility Log
-                  </Button>
-                </NavLink>
-              )}
-              <span className=" self-center text-title-xl font-bold">
-                All Facility Logs
-              </span>
-              <Button disabled className="invisible">
-                Add Facility Log
-              </Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
+         
           <DataView
             value={facilityLogList}
             itemTemplate={itemTemplate}

@@ -175,7 +175,7 @@ function AllEnrichmentItemDatatable() {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
+        <div className="">
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
@@ -188,9 +188,6 @@ function AllEnrichmentItemDatatable() {
                 </NavLink> : <Button disabled className="invisible">
                   Export to .csv
                 </Button>}
-              <span className="self-center text-title-l font-bold">
-                All Enrichment Items
-              </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
             <Separator />
