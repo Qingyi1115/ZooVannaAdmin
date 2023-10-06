@@ -118,8 +118,9 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalObservationLogs/${animalId}`)
+    apiJson.post(
+      `http://localhost:3000/api/animal/getAnimalObservationLogs/${animalId}`,
+      { includes: ["animals", "employee"] })
       .then(res => {
         setAnimalObservationLogList(res.animalObservationLogs as AnimalObservationLog[]);
       })
@@ -192,13 +193,13 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const actionBodyTemplate = (animalObservationLog: AnimalObservationLog) => {
     return (
       <React.Fragment>
-        <NavLink to={`/animal/viewanimalObservationLogdetails/${animalObservationLog.animalObservationLogId}`}>
+        <NavLink to={`/animal/viewAnimalObservationLogDetails/${animalObservationLog.animalObservationLogId}`}>
           <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mx-auto" />
 
           </Button>
         </NavLink>
-        <NavLink to={`/animal/editanimalObservationLog/${animalObservationLog.animalObservationLogId}`}>
+        <NavLink to={`/animal/editAnimalObservationLog/${animalObservationLog.animalObservationLogId}`}>
           <Button className="mr-1">
             <HiPencil className="mr-1" />
 
@@ -241,6 +242,12 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
       setSortField(value);
       setSortKey(value);
     }
+  };
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
   };
 
   const header = (
@@ -323,20 +330,21 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
+                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") ?
                 <NavLink to={`/animal/createAnimalObservationLog/${animalId}`}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
                     Add Log
                   </Button>
                 </NavLink>
+                : <Button disabled className="invisible">
+                  Add Log
+                </Button>
               )}
               <span className=" self-center text-title-l font-bold">
                 All Animal Observation Logs
               </span>
-              <Button disabled className="invisible">
-                Add Log
-              </Button>
+              <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
             <Separator />
           </div>
@@ -367,6 +375,12 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
+              body={(animalObservationLog) => {
+                return new Date(animalObservationLog.dateTime).toLocaleDateString(
+                  "en-SG",
+                  dateOptions
+                );
+              }}
               field="dateTime"
               header="Date"
               sortable
@@ -394,7 +408,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               field="animals.animalCode"
               header="Animals"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{ display: "none" }}
               filter
               filterPlaceholder="Search by animal code"
             ></Column>
@@ -402,6 +416,14 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               field="employee.employeeName"
               header="Employee"
               sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              body={actionBodyTemplate}
+              header="Actions"
+              frozen
+              alignFrozen="right"
+              exportable={false}
               style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>

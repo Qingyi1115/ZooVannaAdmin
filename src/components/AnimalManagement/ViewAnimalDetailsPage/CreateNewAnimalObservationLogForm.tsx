@@ -53,7 +53,7 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
 
     try {
       const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetAnimal/createAnimalObservationLog/${curAnimal.animalId}`,
+        `http://localhost:3000/api/assetAnimal/createAnimalObservationLog/${curAnimal.animalCode}`,
         newAnimalObservationLog);
       // success
       toastShadcn({

@@ -31,6 +31,8 @@ import CreateNewWeightRecord from "./pages/animalManagement/CreateNewWeightRecor
 import ViewAnimalFullLineage from "./pages/animalManagement/ViewAnimalFullLineage";
 import EditAnimalPage from "./pages/animalManagement/EditAnimalPage";
 import CreateNewAnimalObservationLogPage from "./pages/animalManagement/CreateNewAnimalObservationLogPage";
+import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
+import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -267,6 +269,26 @@ function App() {
                   element={
                     user ? (
                       <CreateNewAnimalObservationLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/viewAnimalObservationLogDetails/:animalObservationLogId"
+                  element={
+                    user ? (
+                      <ViewAnimalObservationLogDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/editAnimalObservationLog/:animalObservationLogId"
+                  element={
+                    user ? (
+                      <EditAnimalObservationLogPage />
                     ) : (
                       <Navigate to="/login" />
                     )
