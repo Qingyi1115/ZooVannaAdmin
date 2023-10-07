@@ -196,7 +196,7 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
   return (
     <div>
       <div className="flex w-full justify-center">
-        <div className="w-[90%]">
+        <div className="w-full">
           <div className="mb-2 flex justify-end gap-2">
             {/* Month selection control */}
             <Select
@@ -265,7 +265,7 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
             }}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
-            editable
+            editable={false}
             selectable
             selectMirror
             dayMaxEvents

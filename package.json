@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@balkangraph/familytree.js": "^1.8.10",
-    "@fullcalendar/common": "^5.11.5",
     "@fullcalendar/core": "^6.1.9",
     "@fullcalendar/daygrid": "^6.1.9",
     "@fullcalendar/interaction": "^6.1.9",
@@ -42,6 +41,7 @@
     "dotenv": "^16.3.1",
     "lucide-react": "^0.276.0",
     "moment-timezone": "^0.5.43",
+    "primeicons": "^6.0.1",
     "primereact": "^9.6.2",
     "react": "^18.2.0",
     "react-day-picker": "^8.8.2",

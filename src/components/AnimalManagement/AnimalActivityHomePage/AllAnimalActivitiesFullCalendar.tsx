@@ -244,7 +244,7 @@ function AllAnimalActivitiesFullCalendar(
             }}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
-            editable
+            editable={false}
             selectable
             selectMirror
             dayMaxEvents

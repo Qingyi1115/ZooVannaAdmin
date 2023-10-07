@@ -8,6 +8,7 @@
 @import "primereact/resources/primereact.min.css";
 /* @import "primereact/resources/themes/lara-light-indigo/theme.css"; */
 @import "./assets/capstonePrimeReactTheme.css";
+@import "primeicons/primeicons.css";
 
 /* Full calendar */
 
@@ -65,6 +66,7 @@
 .fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event:hover {
   background: #84985a95;
   color: #24341c;
+  cursor: pointer;
 }
 
 .p-rowgroup-header > :first-child {
