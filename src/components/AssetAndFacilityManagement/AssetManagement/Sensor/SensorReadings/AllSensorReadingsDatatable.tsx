@@ -49,7 +49,7 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
       let currMin = getInterval(new Date(sorted[0].readingDate))
       let previousReading = sorted[0].value
       const points: number[] = [previousReading]
-      const labels: string[] = [new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()]
+      const labels: string[] = [new Date(currMin * intervalDurationInMilliseconds).toLocaleString()]
 
       for (const reading of sorted) {
         let readingDate = new Date(reading.readingDate);
@@ -60,16 +60,16 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
         } else {
           currMin = currMin + 1
           while (currMin != readingMin) {
-            currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()) : labels.push("")
+            currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleString()) : labels.push("")
             points.push(previousReading)
             currMin = currMin + 1
           }
-          currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()) : labels.push("")
+          currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleString()) : labels.push("")
           points.push(reading.value)
           previousReading = reading.value
         }
       }
-      labels[labels.length - 1] = new Date(sorted[sorted.length - 1].readingDate).toLocaleTimeString()
+      labels[labels.length - 1] = new Date(sorted[sorted.length - 1].readingDate).toLocaleString()
 
       const data = {
         labels: labels,
