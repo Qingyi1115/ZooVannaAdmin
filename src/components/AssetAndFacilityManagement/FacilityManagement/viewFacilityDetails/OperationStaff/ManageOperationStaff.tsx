@@ -276,6 +276,12 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
+              field="generalStaff.operatedFacilityName"
+              header="Current Facility Name"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
               field="employeeEmail"
               header="Email"
               sortable
@@ -290,12 +296,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             <Column
               field="employeeEducation"
               header="Education"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="generalStaff.operatedFacilityName"
-              header="Current Facility ID"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
