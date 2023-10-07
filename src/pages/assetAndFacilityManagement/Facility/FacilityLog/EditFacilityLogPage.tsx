@@ -7,7 +7,7 @@ import FacilityLog from "../../../../models/FacilityLog";
 
 function EditFacilityLogPage() {
   const apiJson = useApiJson();
-  const { logId } = useParams<{ logId: string }>();
+  const { facilityLogId } = useParams<{ facilityLogId: string }>();
   let emptyFacility: Facility = {
     facilityId: -1,
     facilityName: "",
@@ -33,7 +33,7 @@ function EditFacilityLogPage() {
   const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/assetFacility/getFacilityLog/${logId}`).then(res => {
+    apiJson.get(`http://localhost:3000/api/assetFacility/getFacilityLog/${facilityLogId}`).then(res => {
       setCurFacilityLog(res.facilityLog as FacilityLog);
     });
   }, []);

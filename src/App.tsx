@@ -526,13 +526,13 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editmaintenancelog/:logId"
+                  path="/assetfacility/editmaintenancelog/:maintenanceLogId"
                   element={
                     user ? <EditMaintenanceLogPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
-                  path="/assetfacility/viewmaintenancelogdetails/:logId"
+                  path="/assetfacility/viewmaintenancelogdetails/:maintenanceLogId"
                   element={
                     user ? (
                       <ViewMaintenanceLogDetailsPage />
@@ -552,7 +552,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editfacilitylog/:logId"
+                  path="/assetfacility/editfacilitylog/:facilityLogId"
                   element={
                     user ? <EditFacilityLogPage /> : <Navigate to="/login" />
                   }

@@ -64,7 +64,7 @@ function EditMaintenanceLogPage() {
   const [curMaintenanceLog, setCurMaintenanceLog] = useState<MaintenanceLog>(emptyMaintenanceLog);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/assetFacility/getSensorMaintenanceLog/${maintenanceLogId}`, { includes: [] }).then(res => {
+    apiJson.get(`http://localhost:3000/api/assetFacility/getSensorMaintenanceLog/${maintenanceLogId}`).then(res => {
       setCurMaintenanceLog(res.maintenanceLog as MaintenanceLog);
     });
   }, [refreshSeed]);

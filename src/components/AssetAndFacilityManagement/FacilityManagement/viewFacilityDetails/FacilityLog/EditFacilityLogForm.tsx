@@ -18,7 +18,7 @@ interface EditFacilityLogFormProps {
   curFacilityLog: FacilityLog
 }
 
-function EditFacilityForm(props: EditFacilityLogFormProps) {
+function EditFacilityLogForm(props: EditFacilityLogFormProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ function EditFacilityForm(props: EditFacilityLogFormProps) {
         newFacilityLog);
       // success
       toastShadcn({
-        description: "Successfully created facility log",
+        description: "Successfully edited facility log",
       });
       navigate(-1);
     } catch (error: any) {
@@ -165,4 +165,4 @@ function EditFacilityForm(props: EditFacilityLogFormProps) {
   );
 }
 
-export default EditFacilityForm;
+export default EditFacilityLogForm;
