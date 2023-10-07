@@ -12,7 +12,7 @@ import Sensor from "../../../models/Sensor";
 import useApiJson from "../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiOutlinePresentationChartLine, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { SensorType } from "../../../enums/SensorType";
 import { Separator } from "@/components/ui/separator";
 import { Tag } from "primereact/tag";
@@ -34,6 +34,7 @@ interface MaintenanceDetails {
 
 function SensorMaintenanceSuggestion() {
   const apiJson = useApiJson();
+  const navigate = useNavigate();
 
   const [objectsList, setObjectsList] = useState<MaintenanceDetails[]>([]);
   const [sensorList, setSensorList] = useState<any[]>([]);
@@ -76,18 +77,18 @@ function SensorMaintenanceSuggestion() {
   const actionBodyTemplate = (objDetails: MaintenanceDetails) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewsensordetails/${objDetails.id}`}
-        state={{prev:`/assetfacility/maintenance/sensorMaintenance`}}>
-          <Button variant="outline" className="mb-1 mr-1">
+          <Button variant="outline" className="mb-1 mr-1" onClick={()=>{ 
+                navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
+                navigate(`/assetfacility/viewsensordetails/${objDetails.id}`);
+              }}>
             <HiEye className="mx-auto" />
           </Button>
-        </NavLink>
-        <NavLink to={`/assetfacility/viewSensorMaintenanceChart/${objDetails.id}`}
-        state={{prev:`/assetfacility/maintenance/sensorMaintenance`}}>
-          <Button className="mb-1 mr-1">
+          <Button className="mb-1 mr-1" onClick={()=>{ 
+                navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
+                navigate(`/assetfacility/viewSensorMaintenanceChart/${objDetails.id}`);
+              }}>
             <HiOutlinePresentationChartLine className="mx-auto" />
           </Button>
-        </NavLink>
         {/* <Button
           variant={"destructive"}
           className="mr-2"
