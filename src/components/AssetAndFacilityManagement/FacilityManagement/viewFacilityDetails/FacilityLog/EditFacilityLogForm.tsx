@@ -40,6 +40,12 @@ function EditFacilityForm(props: EditFacilityLogFormProps) {
     return null;
   }
 
+  useEffect(() => {
+    setTitle(curFacilityLog.title);
+    setDetails(curFacilityLog.details);
+    setRemarks(curFacilityLog.remarks);
+  }, [curFacilityLog]);
+
 
   // end field validations
 
@@ -51,16 +57,16 @@ function EditFacilityForm(props: EditFacilityLogFormProps) {
       details: details,
       remarks: remarks
     }
-    console.log(newFacilityLog);
 
     try {
-      const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/editFacilityLog/${curFacilityLog.logId}`,
+      const responseJson = await apiJson.put(
+        `http://localhost:3000/api/assetFacility/updateFacilityLog/${curFacilityLog.facilityLogId}`,
         newFacilityLog);
       // success
       toastShadcn({
         description: "Successfully created facility log",
       });
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -70,7 +76,6 @@ function EditFacilityForm(props: EditFacilityLogFormProps) {
           error.message,
       });
     }
-    console.log(apiJson.result);
   }
 
 
