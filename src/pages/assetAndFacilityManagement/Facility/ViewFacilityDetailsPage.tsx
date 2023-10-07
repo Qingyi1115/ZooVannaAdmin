@@ -115,8 +115,8 @@ function ViewFacilityDetailsPage() {
 
             <TabsTrigger value="hubs">Hubs</TabsTrigger>
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
-            {curFacility.facilityDetail == "inHouse" && employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
-            {curFacility.facilityDetail == "inHouse" && employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
+            {curFacility.facilityDetail == "inHouse" && (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
+            {curFacility.facilityDetail == "inHouse" && (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
             <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
           </TabsList>
           <TabsContent value="facilityDetails">
@@ -137,7 +137,7 @@ function ViewFacilityDetailsPage() {
               <AddFacilityMaintenanceStaff facilityId={Number(facilityId)} />
             </TabsContent>
           )}
-          {employee.superAdmin || (employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <TabsContent value="manageOperations">
               <ManageOperationStaffPage />
             </TabsContent>

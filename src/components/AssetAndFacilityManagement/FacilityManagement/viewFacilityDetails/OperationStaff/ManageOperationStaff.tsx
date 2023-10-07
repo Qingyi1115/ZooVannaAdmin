@@ -53,7 +53,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   useEffect(() => {
     apiJson.post(
       "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-    ).catch(e => console.log(e)).then(res => {
+    ).catch(e => console.log("err", e)).then(res => {
       const allStaffs: Employee[] = []
       for (const staff of res["generalStaffs"]) {
         if (staff.generalStaffType == "ZOO_OPERATIONS") {
