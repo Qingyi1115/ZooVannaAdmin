@@ -57,8 +57,8 @@ function ViewPopulationDetailsPage() {
           responseJson as Animal[]
         ).filter((animal) => {
           let statuses = animal.animalStatus.split(",");
-          return (
-            !statuses.includes("DECEASED") || !statuses.includes("RELEASED")
+          return !(
+            statuses.includes("DECEASED") || statuses.includes("RELEASED")
           );
         });
         setCurAnimalList(animalListNoDeceasedOrReleased);
@@ -336,8 +336,10 @@ function ViewPopulationDetailsPage() {
             cm) of all individuals as data points
           </span>
         </div> */}
-        <div>
-          <span className="font-bold">Previously Owned Individuals/Groups</span>
+        <div className="mt-10">
+          <span className=" text-lg font-bold">
+            Previously Owned Individuals/Groups
+          </span>
           <br />
           <span>
             The following individuals/groups have been released from the zoo

@@ -115,8 +115,8 @@ function AllAnimalsDatatable() {
           responseJson as Animal[]
         ).filter((animal) => {
           let statuses = animal.animalStatus.split(",");
-          return (
-            !statuses.includes("DECEASED") || !statuses.includes("RELEASED")
+          return !(
+            statuses.includes("DECEASED") || statuses.includes("RELEASED")
           );
         });
         setAnimalList(animalListNoDeceasedOrReleased);
