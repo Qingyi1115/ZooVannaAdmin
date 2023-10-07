@@ -8,11 +8,13 @@ import { HubStatus } from "../../../../enums/HubStatus";
 import { SensorType } from "../../../../enums/SensorType";
 import Hub from "../../../../models/Hub";
 import Sensor from "../../../../models/Sensor";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 function EditMaintenanceLogPage() {
   const apiJson = useApiJson();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
   const { logId } = useParams<{ logId: string }>();
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptyFacility: Facility = {
     facilityId: -1,
@@ -33,7 +35,8 @@ function EditMaintenanceLogPage() {
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
     facility: emptyFacility,
-    sensors: []
+    sensors: [],
+    radioGroup: null
   };
 
   let emptySensor: Sensor = {
@@ -54,7 +57,8 @@ function EditMaintenanceLogPage() {
     title: "",
     details: "",
     remarks: "",
-    sensor: emptySensor
+    sensor: emptySensor,
+    staffName: employee.staffName
   };
 
   const [curMaintenanceLog, setCurMaintenanceLog] = useState<MaintenanceLog>(emptyMaintenanceLog);

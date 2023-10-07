@@ -9,6 +9,7 @@ interface FacilityLog {
   details: string;
   remarks: string;
   facility: Facility;
+  staffName: string;
 }
 
 export default FacilityLog;

@@ -45,7 +45,8 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
     title: "",
     details: "",
     remarks: "",
-    sensor: curSensor
+    sensor: curSensor,
+    staffName: ""
   };
 
   const [maintenanceLogList, setMaintenanceLogList] = useState<MaintenanceLog[]>(curSensor.maintenanceLogs);
@@ -216,13 +217,22 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           subTitle={maintenanceLog.dateTime ?
             "Date created: " + new Date(maintenanceLog.dateTime).toLocaleString() : ""}
         >
-          {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <Button
-              variant={"destructive"}
-              className="absolute top-5 right-5"
-              onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
+          {(maintenanceLog.staffName == employee.staffName) &&
+            <Button
+
+              className="absolute top-5 right-20"
+              onClick={() => navigate(`/assetfacility/editmaintenanceLog/${maintenanceLog.logId}`)}
             >
-              <HiTrash className="mx-auto" />
-            </Button>} */}
+              <HiPencil className="mx-auto" />
+            </Button>}
+          {(maintenanceLog.staffName == employee.staffName) && <Button
+            variant={"destructive"}
+            className="absolute top-5 right-5"
+            onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
+          >
+            <HiTrash className="mx-auto" />
+          </Button>}
+
           <div className="flex flex-col left gap-6 lg:flex-row lg:gap-12">
             <div>
               <div className="text-xl font-bold text-900">Details</div>

@@ -27,7 +27,8 @@ function EditFacilityLogPage() {
     title: "",
     details: "",
     remarks: "",
-    facility: emptyFacility
+    facility: emptyFacility,
+    staffName: ""
   }
 
   const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);

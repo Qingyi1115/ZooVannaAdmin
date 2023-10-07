@@ -11,7 +11,7 @@ import useApiJson from "../../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import FacilityLog from "../../../../../models/FacilityLog";
@@ -58,7 +58,8 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     title: "",
     details: "",
     remarks: "",
-    facility: emptyFacility
+    facility: emptyFacility,
+    staffName: ""
   };
 
   const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([]);
@@ -69,6 +70,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<FacilityLog[]>>(null);
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   useEffect(() => {
     apiJson.get(
@@ -102,7 +104,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
       try {
         setDeleteFacilityLogDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deleteFacilityLog/" +
+          `http://localhost:3000/api/assetFacility/deleteFacilityLog/${selectedFacilityLog.logId}` +
           selectedFacilityLog.logId
         );
 
@@ -237,20 +239,30 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   );
 
   const listItem = (facilityLog: FacilityLog) => {
+
     return (
       <div>
         <Card className="my-4 relative"
           title={facilityLog.title}
           subTitle={facilityLog.dateTime ?
             "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}>
-          {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
-          <Button className="absolute top-5 right-5"
-            variant={"destructive"}
-            onClick={() => confirmDeletefacilityLog(facilityLog)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
-          )} */}
+          {(facilityLog.staffName == employee.employeeName) &&
+            <Button
+
+              className="absolute top-5 right-20"
+              onClick={() => navigate(`/assetfacility/editfacilityLog/${facilityLog.logId}`)}
+            >
+              <HiPencil className="mx-auto" />
+            </Button>}
+          {((facilityLog.staffName == employee.employeeName) &&
+            <Button className="absolute top-5 right-5"
+              variant={"destructive"}
+              onClick={() => confirmDeletefacilityLog(facilityLog)}
+            >
+              <HiTrash className="mx-auto" />
+            </Button>
+          )}
+
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>
               <div className="text-xl font-bold text-900">Details</div>

@@ -7,6 +7,7 @@ interface MaintenanceLog {
   details: string;
   remarks: string;
   sensor: Sensor;
+  staffName: string;
 }
 
 export default MaintenanceLog;

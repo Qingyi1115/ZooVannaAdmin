@@ -552,6 +552,12 @@ function App() {
                   }
                 />
                 <Route
+                  path="/assetfacility/editfacilitylog/:logId"
+                  element={
+                    user ? <EditFacilityLogPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
                   path="/assetfacility/completefacilitymaintenance/:facilityId"
                   element={
                     user ? (
