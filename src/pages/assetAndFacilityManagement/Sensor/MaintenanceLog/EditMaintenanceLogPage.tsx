@@ -13,7 +13,7 @@ import { useAuthContext } from "../../../../hooks/useAuthContext";
 function EditMaintenanceLogPage() {
   const apiJson = useApiJson();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
-  const { logId } = useParams<{ logId: string }>();
+  const { maintenanceLogId } = useParams<{ maintenanceLogId: string }>();
   const employee = useAuthContext().state.user?.employeeData;
 
   let emptyFacility: Facility = {
@@ -52,7 +52,7 @@ function EditMaintenanceLogPage() {
   };
 
   let emptyMaintenanceLog: MaintenanceLog = {
-    logId: 0,
+    maintenanceLogId: 0,
     dateTime: new Date(),
     title: "",
     details: "",
@@ -64,14 +64,14 @@ function EditMaintenanceLogPage() {
   const [curMaintenanceLog, setCurMaintenanceLog] = useState<MaintenanceLog>(emptyMaintenanceLog);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/assetFacility/getSensorMaintenanceLog/${logId}`, { includes: [] }).then(res => {
+    apiJson.post(`http://localhost:3000/api/assetFacility/getSensorMaintenanceLog/${maintenanceLogId}`, { includes: [] }).then(res => {
       setCurMaintenanceLog(res.maintenanceLog as MaintenanceLog);
     });
   }, [refreshSeed]);
 
   return (
     <div className="p-10">
-      {curMaintenanceLog && curMaintenanceLog.logId != -1 && (
+      {curMaintenanceLog && curMaintenanceLog.maintenanceLogId != -1 && (
         <EditMaintenanceLogForm curMaintenanceLog={curMaintenanceLog} />
       )}
     </div>

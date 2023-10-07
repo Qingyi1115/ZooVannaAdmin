@@ -55,7 +55,7 @@ function EditFacilityForm(props: EditFacilityLogFormProps) {
 
     try {
       const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/editFacilityLog/${curFacilityLog.logId}`,
+        `http://localhost:3000/api/assetFacility/editFacilityLog/${curFacilityLog.facilityLogId}`,
         newFacilityLog);
       // success
       toastShadcn({
