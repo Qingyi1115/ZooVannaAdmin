@@ -8,7 +8,6 @@ import useApiJson from "../../../../hooks/useApiJson";
 import { HubStatus } from "../../../../enums/HubStatus";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
@@ -27,6 +26,7 @@ function CreateNewHubForm(prop:any) {
 
   const [processorName, setProcessorName] = useState<string>(""); // text input
   const [formError, setFormError] = useState<string | null>(null);
+  console.log("location",location);
 
   // Field validations
   function validateName(props: ValidityState) {
@@ -110,7 +110,7 @@ function CreateNewHubForm(prop:any) {
       {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">

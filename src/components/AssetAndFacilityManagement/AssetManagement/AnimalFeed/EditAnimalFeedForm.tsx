@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import FormFieldSelect from "../../../FormFieldSelect";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 
 interface EditAnimalFeedFormProps {
   curAnimalFeed: AnimalFeed;
@@ -130,7 +129,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
           description: "Successfully edited animal feed",
         });
         setRefreshSeed(refreshSeed + 1);
-        const redirectUrl = `/assetfacility/viewallanimalfeed`;
+        const redirectUrl = `/assetfacility/viewallassets/animalFeed`;
         navigate(redirectUrl);
       } catch (error: any) {
         toastShadcn({
@@ -161,7 +160,7 @@ function EditAnimalFeedForm(props: EditAnimalFeedFormProps) {
         description: "Successfully edited animal feed",
       });
       setRefreshSeed(refreshSeed + 1);
-      const redirectUrl = `/assetfacility/viewallanimalfeed`;
+      const redirectUrl = `/assetfacility/viewallassets/animalFeed`;
       navigate(redirectUrl);
     } catch (error: any) {
       toastShadcn({

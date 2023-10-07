@@ -10,12 +10,12 @@ import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagemen
 import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Employee from "../../../models/Employee";
-import ManageFacilityMaintenanceStaffPage from "../MaintenanceOperations/ManageFacilityMaintenanceStaffPage";
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
 import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
 import AllFacilityLogsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/AllFacilityLogsDatatable";
 import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import AddFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/AddFacilityMaintenanceStaff";
 
 
 
@@ -71,7 +71,7 @@ function ViewFacilityDetailsPage() {
           `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
           { includes: ["hubProcessors"] }
         );
-        console.log(responseJson);
+        console.log("viewFacilityPage getFacility",responseJson);
         setCurFacility(responseJson.facility as Facility);
       } catch (error: any) {
         console.log(error);
@@ -90,7 +90,7 @@ function ViewFacilityDetailsPage() {
               Back
             </Button>
           </NavLink> */}
-          <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
           <span className="self-center text-lg text-graydark">
@@ -134,7 +134,7 @@ function ViewFacilityDetailsPage() {
           </TabsContent>
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <TabsContent value="manageMaintenance">
-              <ManageFacilityMaintenanceStaffPage />
+              <AddFacilityMaintenanceStaff facilityId={Number(facilityId)} />
             </TabsContent>
           )}
           {employee.superAdmin || (employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (

@@ -13,11 +13,11 @@ import useApiJson from "../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
 import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 
 function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();
@@ -129,13 +129,12 @@ function AllAnimalFeedDatatable() {
   const actionBodyTemplate = (animalFeed: AnimalFeed) => {
     return (
       <React.Fragment>
-        <NavLink
-          to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedId}`}
-        >
-          <Button className="mr-2">
+          <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewallassets/animalFeed`, { replace: true });
+                navigate(`/assetfacility/editanimalfeed/${animalFeed.animalFeedId}`);
+              }}>
             <HiPencil className="mx-auto" />
           </Button>
-        </NavLink>
         <Button
           variant={"destructive"}
           className="mr-2"
@@ -162,12 +161,13 @@ function AllAnimalFeedDatatable() {
         />
       </span>
       {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
-        <NavLink to={"/assetfacility/createanimalfeed"}>
-          <Button className="mr-2">
+          <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewallassets/animalFeed`, { replace: true });
+                navigate(`/assetfacility/createanimalfeed`);
+              }}>
             <HiPlus className="mr-auto" />
             Add Animal Feed
-          </Button>
-        </NavLink> :
+          </Button>:
         <Button disabled className="invisible">
           Export to .csv
         </Button>}

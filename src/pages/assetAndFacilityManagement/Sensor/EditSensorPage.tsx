@@ -51,7 +51,7 @@ function EditSensorPage() {
   useEffect(() => {
     apiJson.post(
       `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
-      { includes: ["hubProcessor", "sensorReadings", "maintenanceLogs", "generalStaff"] }).then(res => {
+      { includes: ["hubProcessor", "generalStaff"] }).then(res => {
         setCurSensor(res.sensor as Sensor);
       }).catch(e => console.log(e));
   }, []);

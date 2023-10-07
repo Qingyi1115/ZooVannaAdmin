@@ -13,12 +13,12 @@ import useApiJson from "../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { SensorType } from "../../../../enums/SensorType";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Hub from "../../../../models/Hub";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface AllSensorDatatableProps {
   curHub: Hub,
@@ -50,10 +50,11 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<Sensor[]>>(null);
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSensorList(curHub.sensors);
-  }, [refreshSeed]);
+  }, [curHub.sensors]);
 
   const exportCSV = () => {
     dt.current?.exportCSV();
@@ -121,17 +122,19 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
   const actionBodyTemplate = (sensor: Sensor) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewsensordetails/${sensor.sensorId}`}>
-          <Button variant={"outline"} className="mb-1 mr-1">
+          <Button variant={"outline"} className="mb-1 mr-1" onClick={()=>{ 
+                navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
+                navigate(`/assetfacility/viewsensordetails/${sensor.sensorId}`);
+              }}>
             <HiEye className="mx-auto" />
           </Button>
-        </NavLink>
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <NavLink to={`/assetFacility/editsensor/${sensor.sensorId}`}>
-            <Button className="mr-2">
+            <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
+                navigate(`/assetfacility/editsensor/${sensor.sensorId}`);
+              }}>
               <HiPencil className="mx-auto" />
             </Button>
-          </NavLink>
         )}
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
@@ -161,12 +164,13 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
         />
       </span>
       {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <NavLink to={`/assetfacility/createsensor/${curHub.hubProcessorId}`}>
-          <Button className="mr-2">
+          <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
+                navigate(`/assetfacility/createsensor/${curHub.hubProcessorId}`);
+              }}>
             <HiPlus className="mr-auto" />
             Add Sensor
           </Button>
-        </NavLink>
       )}
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>

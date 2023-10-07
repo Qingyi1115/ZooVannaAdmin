@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import { DataView } from "primereact/dataview";
-import { Column } from "primereact/column";
 // import { ProductService } from './service/ProductService';
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
@@ -11,15 +10,12 @@ import useApiJson from "../../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import MaintenanceLog from "../../../../../models/MaintenanceLog";
 import Sensor from "../../../../../models/Sensor";
-import InHouse from "../../../../../models/InHouse";
-import { SensorType } from "../../../../../enums/SensorType";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import { ScrollPanel } from "primereact/scrollpanel";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
@@ -60,6 +56,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<MaintenanceLog[]>>(null);
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const exportCSV = () => {
     dt.current?.exportCSV();
@@ -123,32 +120,31 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   );
   // end delete maintenanceLog stuff
 
-  const actionBodyTemplate = (maintenanceLog: MaintenanceLog) => {
-    return (
-      <React.Fragment>
-        <NavLink to={`/assetfacility/viewmaintenanceLogdetails/${maintenanceLog.logId}`}>
-          <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
+  // const actionBodyTemplate = (maintenanceLog: MaintenanceLog) => {
+  //   return (
+  //     <React.Fragment>
+  //       <NavLink to={`/assetfacility/viewmaintenanceLogdetails/${maintenanceLog.logId}`}>
+  //         <Button variant={"outline"} className="mb-1 mr-1">
+  //           <HiEye className="mx-auto" />
+  //         </Button>
+  //       </NavLink>
+  //       <NavLink to={`/assetfacility/editmaintenanceLog/${maintenanceLog.logId}`}>
+  //         <Button className="mr-1">
+  //           <HiPencil className="mr-1" />
 
-          </Button>
-        </NavLink>
-        <NavLink to={`/assetfacility/editmaintenanceLog/${maintenanceLog.logId}`}>
-          <Button className="mr-1">
-            <HiPencil className="mr-1" />
+  //         </Button>
+  //       </NavLink>
+  //       <Button
+  //         variant={"destructive"}
+  //         className="mr-2"
+  //         onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
+  //       >
+  //         <HiTrash className="mx-auto" />
 
-          </Button>
-        </NavLink>
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
-        >
-          <HiTrash className="mx-auto" />
-
-        </Button>
-      </React.Fragment>
-    );
-  };
+  //       </Button>
+  //     </React.Fragment>
+  //   );
+  // };
 
   //Sort results
   interface SortOption {
@@ -201,12 +197,13 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
         />
       </span>
       {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
-          <Button className="mr-2">
+          <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/maintenanceLogs`, { replace: true });
+                navigate(`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`);
+              }}>
             <HiPlus className="mr-auto" />
             Add Maintenance Log
           </Button>
-        </NavLink>
       )}
     </div>
   );

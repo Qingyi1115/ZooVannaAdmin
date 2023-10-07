@@ -21,7 +21,7 @@ import { Row } from "primereact/row";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Animal from "../../../models/Animal";
@@ -96,6 +96,7 @@ function AllAnimalsDatatable() {
   const [selectedAnimal, setSelectedAnimal] = useState<Animal>(emptyAnimal);
   const [deleteAnimalDialog, setDeleteAnimalDialog] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
+  const navigate = useNavigate();
 
   const [expandedRows, setExpandedRows] = useState<
     DataTableExpandedRows | Animal[]
@@ -229,11 +230,12 @@ function AllAnimalsDatatable() {
     return (
       <React.Fragment>
         <div className="mx-auto">
-          <NavLink to={`/animal/viewanimaldetails/${animal.animalCode}`}>
-            <Button className="mr-2">
+            <Button className="mr-2" onClick={()=>{ 
+                // navigate(`/animal/viewallanimals`, { replace: true });
+                navigate(`/animal/viewanimaldetails/${animal.animalCode}`);
+              }}>
               <HiEye className="mr-auto" />
             </Button>
-          </NavLink>
           <Button
             variant={"destructive"}
             className="mr-2"

@@ -82,7 +82,7 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
       {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">
