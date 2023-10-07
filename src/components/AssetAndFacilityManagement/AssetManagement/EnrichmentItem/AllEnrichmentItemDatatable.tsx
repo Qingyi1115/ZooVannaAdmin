@@ -136,12 +136,12 @@ function AllEnrichmentItemDatatable() {
   const actionBodyTemplate = (enrichmentItem: EnrichmentItem) => {
     return (
       <React.Fragment>
-          <Button className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewallassets/enrichmentItem`, { replace: true });
-                navigate(`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemId}`);
-              }}>
-            <HiPencil className="mx-auto" />
-          </Button>
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewallassets/enrichmentItem`, { replace: true });
+          navigate(`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemId}`);
+        }}>
+          <HiPencil className="mx-auto" />
+        </Button>
         <Button
           variant={"destructive"}
           className="mr-2"
@@ -168,13 +168,13 @@ function AllEnrichmentItemDatatable() {
         />
       </span>
       {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
-          <Button className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewallassets/enrichmentItem`, { replace: true });
-                navigate("/assetfacility/createenrichmentitem");
-              }}>
-            <HiPlus className="mr-auto" />
-            Add Enrichment Item
-          </Button>: <Button disabled className="invisible">
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewallassets/enrichmentItem`, { replace: true });
+          navigate("/assetfacility/createenrichmentitem");
+        }}>
+          <HiPlus className="mr-auto" />
+          Add Enrichment Item
+        </Button> : <Button disabled className="invisible">
           Export to .csv
         </Button>}
       <Button onClick={exportCSV}>Export to .csv</Button>
@@ -208,6 +208,11 @@ function AllEnrichmentItemDatatable() {
             header={header}
           >
             <Column
+              field="enrichmentItemImageUrl"
+              header="Image"
+              body={imageBodyTemplate}
+            ></Column>
+            <Column
               field="enrichmentItemId"
               header="ID"
               sortable
@@ -218,11 +223,6 @@ function AllEnrichmentItemDatatable() {
               header="Name"
               sortable
               style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="enrichmentItemImageUrl"
-              header="Image"
-              body={imageBodyTemplate}
             ></Column>
             {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && (
               <Column

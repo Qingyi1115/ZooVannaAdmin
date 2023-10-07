@@ -129,12 +129,12 @@ function AllAnimalFeedDatatable() {
   const actionBodyTemplate = (animalFeed: AnimalFeed) => {
     return (
       <React.Fragment>
-          <Button className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewallassets/animalFeed`, { replace: true });
-                navigate(`/assetfacility/editanimalfeed/${animalFeed.animalFeedId}`);
-              }}>
-            <HiPencil className="mx-auto" />
-          </Button>
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewallassets/animalFeed`, { replace: true });
+          navigate(`/assetfacility/editanimalfeed/${animalFeed.animalFeedId}`);
+        }}>
+          <HiPencil className="mx-auto" />
+        </Button>
         <Button
           variant={"destructive"}
           className="mr-2"
@@ -161,13 +161,13 @@ function AllAnimalFeedDatatable() {
         />
       </span>
       {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
-          <Button className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewallassets/animalFeed`, { replace: true });
-                navigate(`/assetfacility/createanimalfeed`);
-              }}>
-            <HiPlus className="mr-auto" />
-            Add Animal Feed
-          </Button>:
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewallassets/animalFeed`, { replace: true });
+          navigate(`/assetfacility/createanimalfeed`);
+        }}>
+          <HiPlus className="mr-auto" />
+          Add Animal Feed
+        </Button> :
         <Button disabled className="invisible">
           Export to .csv
         </Button>}
@@ -202,6 +202,11 @@ function AllAnimalFeedDatatable() {
             header={header}
           >
             <Column
+              field="animalFeedImageUrl"
+              header="Image"
+              body={imageBodyTemplate}
+            ></Column>
+            <Column
               field="animalFeedId"
               header="ID"
               sortable
@@ -213,11 +218,7 @@ function AllAnimalFeedDatatable() {
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
-            <Column
-              field="animalFeedImageUrl"
-              header="Image"
-              body={imageBodyTemplate}
-            ></Column>
+
             <Column
               field="animalFeedCategory"
               header="Animal Feed Category"
