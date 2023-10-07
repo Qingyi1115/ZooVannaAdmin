@@ -55,6 +55,23 @@
   /* width: 100%; */
 }
 
+.p-picklist-source-controls,
+.p-picklist-target-controls {
+  background-color: #ffffff; /* Set desired background color */
+  color: #f5f9f1; /* Set text color */
+}
+
+/* Style the buttons */
+.p-picklist-buttons button {
+  background-color: #84985a; /* Set desired button background color */
+  color: #f7fdf5; /* Set button text color */
+
+  transition: background-color 0.2s;
+}
+.p-picklist-buttons button:hover {
+  background-color: #ff000080; /* Set desired hover background color */
+}
+
 /* animations */
 @keyframes slideDown {
   from {

@@ -432,14 +432,17 @@ function ViewAnimalActivityDetails() {
                     }}
                     className="mb-2 h-full w-60"
                   />
-                  <NavLink
-                    className="flex"
-                    to={"/animal/assignanimalstoactivity"}
+                  <Button
+                    onClick={() =>
+                      navigate(
+                        `/animal/assignanimalstoactivity/${curAnimalActivity.animalActivityId}`
+                      )
+                    }
+                    type="button"
+                    className="h-12 w-60"
                   >
-                    <Button type="button" className="h-12 w-60">
-                      Assign Animal(s)
-                    </Button>
-                  </NavLink>
+                    Assign Animal(s)
+                  </Button>
                 </div>
                 <DataTable
                   value={involvedAnimalList}
@@ -516,14 +519,17 @@ function ViewAnimalActivityDetails() {
                     }}
                     className="mb-2 h-min w-60"
                   />
-                  <NavLink
-                    className="flex"
-                    to={"/animal/assignitemsstoactivity"}
+                  <Button
+                    onClick={() =>
+                      navigate(
+                        `/animal/assignitemstoactivity/${curAnimalActivity.animalActivityId}`
+                      )
+                    }
+                    type="button"
+                    className="h-12 w-60"
                   >
-                    <Button type="button" className="h-12 w-60">
-                      Assign Item(s)
-                    </Button>
-                  </NavLink>
+                    Assign Item(s)
+                  </Button>
                 </div>
                 <DataTable
                   value={involvedItemList}

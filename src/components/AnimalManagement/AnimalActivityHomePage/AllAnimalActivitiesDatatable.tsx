@@ -32,6 +32,7 @@ import {
   AnimalSex,
   EventTimingType,
 } from "../../../enums/Enumurated";
+import { useNavigate } from "react-router-dom";
 import AnimalActivity from "../../../models/AnimalActivity";
 
 let emptyAnimalActivity: AnimalActivity = {
@@ -46,6 +47,7 @@ let emptyAnimalActivity: AnimalActivity = {
 
 function AllAnimalActivitiesDatatable() {
   const apiJson = useApiJson();
+  const navigate = useNavigate();
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -146,13 +148,16 @@ function AllAnimalActivitiesDatatable() {
     return (
       <React.Fragment>
         <div className="mx-auto">
-          <NavLink
-            to={`/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`}
+          <Button
+            className="mr-2"
+            onClick={() =>
+              navigate(
+                `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`
+              )
+            }
           >
-            <Button className="mr-2">
-              <HiEye className="mr-auto" />
-            </Button>
-          </NavLink>
+            <HiEye className="mr-auto" />
+          </Button>
           <Button
             variant={"destructive"}
             className="mr-2"

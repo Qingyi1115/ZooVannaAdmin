@@ -37,6 +37,8 @@ import AnimalActivityHomePage from "./pages/animalManagement/AnimalActivityHomeP
 import CreateAnimalActivityPage from "./pages/animalManagement/CreateAnimalActivityPage";
 import ViewAnimalActivityDetails from "./pages/animalManagement/ViewAnimalActivityDetails";
 import EditAnimalActivityPage from "./pages/animalManagement/EditAnimalActivityPage";
+import AddAnimalToActivityPage from "./pages/animalManagement/AddAnimalToActivityPage";
+import AddItemToActivityPage from "./pages/animalManagement/AddItemToActivityPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -328,6 +330,22 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/animal/assignanimalstoactivity/:animalActivityId"
+                  element={
+                    user ? (
+                      <AddAnimalToActivityPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/assignitemstoactivity/:animalActivityId"
+                  element={
+                    user ? <AddItemToActivityPage /> : <Navigate to="/login" />
                   }
                 />
 
