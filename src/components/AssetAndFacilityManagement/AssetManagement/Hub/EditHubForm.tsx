@@ -32,6 +32,16 @@ function EditHubForm(props: EditHubFormProps) {
   const [processorName, setProcessorName] = useState<string>(
     curHub.processorName
   );
+  const [radioGroup, setRadioGroup] = useState<number>(
+    curHub.radioGroup || 0
+  );
+
+  useEffect(()=>{
+    setProcessorName(curHub.processorName);
+    setRadioGroup(curHub.radioGroup || 0);
+    console.log("changed ", curHub)
+  },[curHub])
+  
   const [formError, setFormError] = useState<string | null>(null);
 
   function validateHubName(props: ValidityState) {
@@ -76,6 +86,7 @@ function EditHubForm(props: EditHubFormProps) {
 
     const updatedHub = {
       processorName: processorName,
+      radioGroup: radioGroup
     }
     console.log(updatedHub);
 
@@ -141,6 +152,26 @@ function EditHubForm(props: EditHubFormProps) {
               setValue={setProcessorName}
               validateFunction={validateHubName}
             />
+            {curHub.hubStatus != "PENDING" && (
+              <div>
+              <Form.Field
+                name={"radioGroup"}
+                className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+              >
+                <Form.Label className="font-medium">{"Radio Group"}</Form.Label>
+                <Form.Control
+                  type={"number"}
+                  required={true}
+                  placeholder={"0-254"}
+                  value={radioGroup}
+                  step={1}
+                  onChange={(e) => setRadioGroup(parseInt(e.target.value))}
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+                />
+                <Form.ValidityState>{validateHubName}</Form.ValidityState>
+              </Form.Field>
+              </div>
+            )}
           </div>
 
           <Form.Submit asChild>

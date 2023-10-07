@@ -4,7 +4,6 @@ import { Chart } from 'primereact/chart';
 import { addQuarters } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { NavLink } from 'react-router-dom';
 import Sensor from '../../../../../models/Sensor';
 import { render } from 'react-dom';
 import { compareDates } from '../../../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion';

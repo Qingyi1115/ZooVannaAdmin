@@ -32,6 +32,7 @@ function EditHubPage() {
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
     facility: emptyFacility,
+    radioGroup: 0,
     sensors: []
   };
 
@@ -44,7 +45,6 @@ function EditHubPage() {
       `http://localhost:3000/api/assetFacility/getHub/${hubProcessorId}`,
       { includes: ["sensors", "facility"] }).then(res => {
         setCurHub(res.hubProcessor as Hub);
-        console.log(curHub);
       }).catch(e => console.log(e));
   }, [refreshSeed]);
 

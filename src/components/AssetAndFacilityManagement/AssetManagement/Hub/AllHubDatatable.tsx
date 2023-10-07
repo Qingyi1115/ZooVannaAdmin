@@ -31,6 +31,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
 
   const { curFacility } = props;
   let emptyHub: Hub = {
+    radioGroup: null,
     hubProcessorId: -1,
     processorName: "",
     ipAddressName: "",

@@ -88,8 +88,7 @@ function CreateNewHubForm(prop:any) {
       toastShadcn({
         description: "Successfully created hub",
       });
-      const redirectUrl = `/assetfacility/viewfacilitydetails/${facilityId}`;
-      navigate(redirectUrl);
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",

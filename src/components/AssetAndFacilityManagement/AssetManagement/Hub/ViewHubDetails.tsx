@@ -69,18 +69,30 @@ function ViewHubDetails(props: HubDetailsProps) {
             </TableCell>
             <TableCell>{curHub.processorName}</TableCell>
           </TableRow>
+          {curHub.hubStatus != "PENDING" && (
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               IP Address Name
             </TableCell>
             <TableCell>{curHub.ipAddressName}</TableCell>
           </TableRow>
+          )}
+          {curHub.hubStatus != "PENDING" && (
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Last Data Update
             </TableCell>
             <TableCell>{String(curHub.lastDataUpdate)}</TableCell>
           </TableRow>
+          )}
+          {curHub.hubStatus != "PENDING" && (
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Radio Group
+            </TableCell>
+            <TableCell>{String(curHub.radioGroup)}</TableCell>
+          </TableRow>
+          )}
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Hub Status
