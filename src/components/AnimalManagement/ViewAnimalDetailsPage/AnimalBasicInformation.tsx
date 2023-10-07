@@ -287,7 +287,12 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
               Age
             </TableCell>
             <TableCell>
-              {calculateAge(new Date(curAnimal.dateOfBirth))}
+              {curAnimal.dateOfBirth?.toString() == "" ||
+              curAnimal.dateOfBirth == null ? (
+                <span className="">—</span>
+              ) : (
+                calculateAge(new Date(curAnimal.dateOfBirth))
+              )}
             </TableCell>
           </TableRow>
           <TableRow>

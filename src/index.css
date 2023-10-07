@@ -51,8 +51,20 @@
   }
 }
 
-.p-datepicker-panel {
-  z-index: 10000; /* Set a higher z-index value */
+.fc-event,
+.fc-v-event {
+  background-color: #84985a;
+  border: 1px solid #84985a;
+  transition: background-color 0.3s ease;
+}
+/* 
+.fc-event:hover,
+.fc-v-event:hover {
+  background-color: rgba(132, 152, 90, 0.9);
+} */
+.fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event:hover {
+  background: #84985a95;
+  color: #24341c;
 }
 
 .p-rowgroup-header > :first-child {

@@ -43,6 +43,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 import AnimalActivity from "../../../models/AnimalActivity";
 import { HiChevronLeft } from "react-icons/hi";
+import { EventContentArg, EventInput } from "@fullcalendar/core";
 
 interface AnimalActivityInfoProps {
   curAnimal: Animal;
@@ -138,9 +139,59 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
       // url: `http://localhost:5173/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
       extendedProps: {
         animalActivityUrl: `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+        activityType: animalActivity.activityType,
+        details: animalActivity.details,
+        durationInMinutes: animalActivity.durationInMinutes,
       },
     };
   });
+
+  interface CustomEventProps {
+    event: EventInput;
+  }
+  function CustomEventContent({ event }: CustomEventProps) {
+    // Customize the event pill content here
+    return (
+      <div>
+        <strong>{event.title}</strong>
+        <p>Type: {event.extendedProps?.activityType}</p>
+        <p>Duration: {event.extendedProps?.durationInMinutes}</p>
+        <p>Details: {event.extendedProps?.details}</p>
+      </div>
+    );
+  }
+
+  const handleEventContent = ({ event, view }: EventContentArg) => {
+    // Check if it's in Week view
+    if (view.type === "timeGridWeek" || view.type === "timeGridDay") {
+      // Apply custom style for Week view
+
+      return (
+        <div className="p-2">
+          <strong>{event.title}</strong>
+          <p>
+            <span className="font-medium">Type:</span>{" "}
+            {event.extendedProps?.activityType}
+          </p>
+          <p>
+            <span className="font-medium">Duration:</span>{" "}
+            {event.extendedProps?.durationInMinutes} minutes
+          </p>
+          <p>
+            <span className="font-medium">Details</span>: <br />
+            {event.extendedProps?.details}
+          </p>
+        </div>
+      );
+    }
+
+    // Default styling for other views (e.g., month view)
+    return (
+      <div>
+        <div className="px-2 text-primary-foreground">{event.title}</div>
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -223,6 +274,7 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
             eventClick={(clickInfo) =>
               navigate(clickInfo.event.extendedProps.animalActivityUrl)
             }
+            eventContent={handleEventContent}
           />
         </div>
       </div>

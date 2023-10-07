@@ -156,37 +156,37 @@ function ViewPopulationDetailsPage() {
   // age distribution chart
   useEffect(() => {
     const numInfant = curAnimalList.reduce((count, animal) => {
-      if (animal.growthStage === "INFANT") {
+      if (animal.growthStage == "INFANT") {
         return count + 1;
       }
       return count;
     }, 0);
     const numJuvenile = curAnimalList.reduce((count, animal) => {
-      if (animal.growthStage === "JUVENILE") {
+      if (animal.growthStage == "JUVENILE") {
         return count + 1;
       }
       return count;
     }, 0);
     const numAdolescent = curAnimalList.reduce((count, animal) => {
-      if (animal.growthStage === "ADOLESCENT") {
+      if (animal.growthStage == "ADOLESCENT") {
         return count + 1;
       }
       return count;
     }, 0);
     const numAdult = curAnimalList.reduce((count, animal) => {
-      if (animal.growthStage === "ADULT") {
+      if (animal.growthStage == "ADULT") {
         return count + 1;
       }
       return count;
     }, 0);
     const numElder = curAnimalList.reduce((count, animal) => {
-      if (animal.growthStage === "ELDER") {
+      if (animal.growthStage == "ELDER") {
         return count + 1;
       }
       return count;
     }, 0);
     const numUnknown = curAnimalList.reduce((count, animal) => {
-      if (animal.growthStage === "UNKNOWN") {
+      if (animal.growthStage == "UNKNOWN") {
         return count + 1;
       }
       return count;
@@ -291,7 +291,7 @@ function ViewPopulationDetailsPage() {
 
         <div className="flex h-max gap-2">
           <div className="w-full">
-            <div className="mb-1">
+            <div className="mb-2">
               <span className="text-lg font-bold">Sex Distribution</span>
               <br />
               <span>
@@ -307,9 +307,14 @@ function ViewPopulationDetailsPage() {
             />
           </div>
           <div className="w-full">
-            <span className="text-lg font-bold">Age Distribution</span>
-            <br />
-            <span>(Number of individuals)</span>
+            <div className="mb-2">
+              <span className="text-lg font-bold">Age Distribution</span>
+              <br />
+              <span>
+                (Number of individuals, animal groups are{" "}
+                <span className="underline">not</span> included)
+              </span>
+            </div>
             <Chart type="bar" data={ageChartData} options={ageChartOptions} />
           </div>
         </div>

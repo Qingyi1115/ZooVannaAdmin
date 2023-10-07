@@ -62,14 +62,26 @@ function AddAnimalToActivityForm(props: AddAnimalToActivityFormProps) {
         const responseJson = await apiJson.get(
           "http://localhost:3000/api/animal/getAllAnimals"
         );
-        const animalListNotAlreadyInvolved = (responseJson as Animal[]).filter(
-          (animal) => !targetAnimalCodesSet.has(animal.animalCode)
-        );
+        // Also no DECEASED or RELEASED
+        const animalListNotAlreadyInvolved = (responseJson as Animal[])
+          .filter((animal) => !targetAnimalCodesSet.has(animal.animalCode))
+          .filter((animal) => {
+            let statuses = animal.animalStatus.split(",");
+            return !(
+              statuses.includes("DECEASED") || statuses.includes("RELEASED")
+            );
+          });
         setAnimalSourceList(animalListNotAlreadyInvolved);
         // repopulate target list to include species details
-        const animalListAlreadyInvolved = (responseJson as Animal[]).filter(
-          (animal) => targetAnimalCodesSet.has(animal.animalCode)
-        );
+        // Also no DECEASED or RELEASED
+        const animalListAlreadyInvolved = (responseJson as Animal[])
+          .filter((animal) => targetAnimalCodesSet.has(animal.animalCode))
+          .filter((animal) => {
+            let statuses = animal.animalStatus.split(",");
+            return !(
+              statuses.includes("DECEASED") || statuses.includes("RELEASED")
+            );
+          });
         setAnimalTargetList(animalListAlreadyInvolved);
       } catch (error: any) {
         console.log(error);
