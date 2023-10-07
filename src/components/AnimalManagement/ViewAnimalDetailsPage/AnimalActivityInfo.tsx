@@ -135,8 +135,10 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
       start: startTime, // Convert dateInMilliseconds to a Date object
       end: endTime, // Convert dateInMilliseconds to a Date object
       allDay: false,
-      url: `http://localhost:5173/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
-      extendedProps: {},
+      // url: `http://localhost:5173/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+      extendedProps: {
+        animalActivityUrl: `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+      },
     };
   });
 
@@ -218,9 +220,9 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
             dayMaxEvents
             events={events}
             height={"70vh"}
-            // eventClick={(clickInfo) =>
-            //   navigate(clickInfo.event.extendedProps.animalActivityUrl)
-            // }
+            eventClick={(clickInfo) =>
+              navigate(clickInfo.event.extendedProps.animalActivityUrl)
+            }
           />
         </div>
       </div>
