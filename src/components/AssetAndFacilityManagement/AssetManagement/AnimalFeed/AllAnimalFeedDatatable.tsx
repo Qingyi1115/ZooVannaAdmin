@@ -204,7 +204,9 @@ function AllAnimalFeedDatatable() {
             <Column
               field="animalFeedImageUrl"
               header="Image"
+              frozen
               body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
             ></Column>
             <Column
               field="animalFeedId"

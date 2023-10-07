@@ -210,7 +210,9 @@ function AllEnrichmentItemDatatable() {
             <Column
               field="enrichmentItemImageUrl"
               header="Image"
+              frozen
               body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
             ></Column>
             <Column
               field="enrichmentItemId"
