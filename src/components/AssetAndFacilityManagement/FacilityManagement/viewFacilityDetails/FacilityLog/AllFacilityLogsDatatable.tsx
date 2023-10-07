@@ -104,8 +104,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
       try {
         setDeleteFacilityLogDialog(false);
         const responseJson = await apiJson.del(
-          `http://localhost:3000/api/assetFacility/deleteFacilityLog/${selectedFacilityLog.facilityLogId}` +
-          selectedFacilityLog.facilityLogId
+          `http://localhost:3000/api/assetFacility/deleteFacilityLog/${selectedFacilityLog.facilityLogId}`
         );
 
         toastShadcn({
@@ -249,7 +248,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
 
               className="absolute top-5 right-20"
               onClick={() => {
-                navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, {replace:true})
+                navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
                 navigate(`/assetfacility/editfacilityLog/${facilityLog.facilityLogId}`)
               }}
             >
@@ -302,7 +301,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             value={facilityLogList}
             itemTemplate={itemTemplate}
             layout="list"
-            dataKey="logId"
+            dataKey="facilityLogId"
             header={header}
             sortField={sortField}
             sortOrder={sortOrder}

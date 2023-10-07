@@ -21,7 +21,7 @@ function EditFacilityLogPage() {
   };
 
   let emptyFacilityLog: FacilityLog = {
-    logId: -1,
+    facilityLogId: -1,
     dateTime: new Date(),
     isMaintenance: false,
     title: "",
@@ -42,7 +42,7 @@ function EditFacilityLogPage() {
 
   return (
     <div className="p-10">
-      {curFacilityLog && curFacilityLog.logId != -1 && (
+      {curFacilityLog && curFacilityLog.facilityLogId != -1 && (
         <EditFacilityLogForm curFacilityLog={curFacilityLog} />
       )}
     </div>
