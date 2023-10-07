@@ -132,12 +132,14 @@ function AllfacilityDatatable() {
     return (
       <React.Fragment>
         <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
-          state={{prev:`/assetfacility/viewallfacilities`}}>
-          <Button variant={"outline"} className="mb-1 mr-1">
+          state={{ prev: `/assetfacility/viewallfacilities` }}>
+          <Button
+            // variant={"outline"}
+            className="mb-1 mr-1">
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}
           state={{prev:`/assetfacility/viewallfacilities`}}>
             <Button className="mr-1">
@@ -145,7 +147,7 @@ function AllfacilityDatatable() {
 
             </Button>
           </NavLink>
-        )}
+        )} */}
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
             variant={"destructive"}

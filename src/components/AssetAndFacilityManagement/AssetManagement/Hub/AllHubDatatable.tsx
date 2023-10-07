@@ -18,7 +18,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../models/Facility";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-import { useNavigate  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface AllHubDatatableProps {
   curFacility: Facility;
@@ -123,15 +123,15 @@ function AllHubDatatable(props: AllHubDatatableProps) {
   const actionBodyTemplate = (hub: Hub) => {
     return (
       <React.Fragment>
-          <Button
-            variant={"outline"}
-            className="mb-1 mr-1" onClick={()=>{ 
-              navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
-              navigate(`/assetfacility/viewhubdetails/${hub.hubProcessorId}`);
-            }}>
-            <HiEye className="mx-auto" />
-          </Button>
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        <Button
+          // variant={"outline"}
+          className="mb-1 mr-1" onClick={() => {
+            navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
+            navigate(`/assetfacility/viewhubdetails/${hub.hubProcessorId}`);
+          }}>
+          <HiEye className="mx-auto" />
+        </Button>
+        {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
 
             <Button className="mr-2" onClick={()=>{ 
                 navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
@@ -140,7 +140,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
               <HiPencil className="mx-auto" />
             </Button>
 
-        )}
+        )} */}
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
             variant={"destructive"}
@@ -170,13 +170,13 @@ function AllHubDatatable(props: AllHubDatatableProps) {
       </span>
       {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
 
-          <Button className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
-                navigate(`/assetfacility/createhub/${curFacility.facilityId}`);
-              }}>
-            <HiPlus className="mr-auto" />
-            Add Hub
-          </Button>
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
+          navigate(`/assetfacility/createhub/${curFacility.facilityId}`);
+        }}>
+          <HiPlus className="mr-auto" />
+          Add Hub
+        </Button>
 
       )}
       <Button onClick={exportCSV}>Export to .csv</Button>
@@ -188,7 +188,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
       <div>
         <Toast ref={toast} />
         <div className="">
-         
+
           <DataTable
             ref={dt}
             value={hubList}
