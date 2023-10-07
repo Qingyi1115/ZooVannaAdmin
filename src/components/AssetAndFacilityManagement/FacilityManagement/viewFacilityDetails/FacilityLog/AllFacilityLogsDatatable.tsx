@@ -276,7 +276,8 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <div className="text-xl font-bold text-900">Remarks</div>
               <p>{facilityLog.remarks}</p>
             </div>
-            <div className="italic  indent-px ">
+            <div className="indent-px ">
+              <div className="text-xl font-bold text-900">Log Type </div>
               {(facilityLog.isMaintenance ? "Maintenance Log" : "Operation Log")}
             </div>
           </div>
