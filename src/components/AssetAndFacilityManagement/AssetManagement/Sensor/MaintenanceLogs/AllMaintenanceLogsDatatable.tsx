@@ -152,8 +152,8 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
     value: string;
   }
   const [sortKey, setSortKey] = useState<string>('');
-  const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(0);
-  const [sortField, setSortField] = useState<string>('!dateTime');
+  const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(-1);
+  const [sortField, setSortField] = useState<string>('dateTime');
   const sortOptions: SortOption[] = [
     { label: 'Latest log', value: '!dateTime' },
     { label: 'Earliest log', value: 'dateTime' },
