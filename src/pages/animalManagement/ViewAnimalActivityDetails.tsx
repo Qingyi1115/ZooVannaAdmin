@@ -134,11 +134,21 @@ function ViewAnimalActivityDetails() {
     }
   }, [curAnimalActivity]);
 
-  const imageBodyTemplate = (rowData: Animal) => {
+  const animalImageBodyTemplate = (rowData: Animal) => {
     return (
       <img
         src={"http://localhost:3000/" + rowData.imageUrl}
         alt={rowData.houseName}
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+      />
+    );
+  };
+
+  const enrichmentItemImageBodyTemplate = (rowData: EnrichmentItem) => {
+    return (
+      <img
+        src={"http://localhost:3000/" + rowData.enrichmentItemImageUrl}
+        alt={rowData.enrichmentItemName}
         className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
       />
     );
@@ -460,7 +470,7 @@ function ViewAnimalActivityDetails() {
                 >
                   <Column
                     field="imageUrl"
-                    body={imageBodyTemplate}
+                    body={animalImageBodyTemplate}
                     style={{ minWidth: "3rem" }}
                   ></Column>
                   <Column
@@ -552,7 +562,7 @@ function ViewAnimalActivityDetails() {
                 >
                   <Column
                     field="enrichmentItemImageUrl"
-                    body={imageBodyTemplate}
+                    body={enrichmentItemImageBodyTemplate}
                     style={{ minWidth: "3rem" }}
                   ></Column>
                   <Column
