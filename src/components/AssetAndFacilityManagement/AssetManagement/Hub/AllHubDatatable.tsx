@@ -228,7 +228,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
               style={{ minWidth: "16rem" }}
             ></Column>
             <Column
-              field="lastDataUpdate"
+              field="lastDataUpdateString"
               header="Last Data Update"
               sortable
               style={{ minWidth: "16rem" }}

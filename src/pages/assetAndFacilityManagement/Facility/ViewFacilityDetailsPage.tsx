@@ -71,7 +71,13 @@ function ViewFacilityDetailsPage() {
           `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
           { includes: ["hubProcessors"] }
         );
-        console.log("viewFacilityPage getFacility",responseJson);
+        for (const processor of responseJson.facility.hubProcessors){
+          if (processor.lastDataUpdate){
+            processor.lastDataUpdateString = new Date(processor.lastDataUpdate).toLocaleString();
+          }else{
+            processor.lastDataUpdateString = "No last update!";
+          }
+        }
         setCurFacility(responseJson.facility as Facility);
       } catch (error: any) {
         console.log(error);

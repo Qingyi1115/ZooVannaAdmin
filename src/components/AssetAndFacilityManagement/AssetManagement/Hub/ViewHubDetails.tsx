@@ -82,7 +82,7 @@ function ViewHubDetails(props: HubDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Last Data Update
             </TableCell>
-            <TableCell>{String(curHub.lastDataUpdate)}</TableCell>
+            <TableCell>{new Date((curHub.lastDataUpdate as any)).toLocaleString()}</TableCell>
           </TableRow>
           )}
           {curHub.hubStatus != "PENDING" && (
