@@ -176,7 +176,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   }
   const [sortKey, setSortKey] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(0);
-  const [sortField, setSortField] = useState<string>('');
+  const [sortField, setSortField] = useState<string>('!dateTime');
   const sortOptions: SortOption[] = [
     { label: 'Latest log', value: '!dateTime' },
     { label: 'Earliest log', value: 'dateTime' },
@@ -281,7 +281,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
       <div>
         <Toast ref={toast} />
         <div className="">
-         
+
           <DataView
             value={facilityLogList}
             itemTemplate={itemTemplate}
