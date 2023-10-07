@@ -116,8 +116,8 @@ function AllAnimalsDatatable() {
           responseJson as Animal[]
         ).filter((animal) => {
           let statuses = animal.animalStatus.split(",");
-          return (
-            !statuses.includes("DECEASED") || !statuses.includes("RELEASED")
+          return !(
+            statuses.includes("DECEASED") || statuses.includes("RELEASED")
           );
         });
         setAnimalList(animalListNoDeceasedOrReleased);
@@ -401,6 +401,7 @@ function AllAnimalsDatatable() {
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} individual/group animals"
             globalFilter={globalFilter}
             header={header}
+            sortField={"species.commonName"}
           >
             {/* <Column
               field="imageUrl"
@@ -429,18 +430,41 @@ function AllAnimalsDatatable() {
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
+              body={(animal) => {
+                return animal.sex == "" || animal.sex == null ? (
+                  <span className="flex justify-center ">—</span>
+                ) : (
+                  animal.sex
+                );
+              }}
               field="sex"
               header="Sex"
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
+              body={(animal) => {
+                return animal.identifierType == "" ||
+                  animal.identifierType == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  animal.identifierType
+                );
+              }}
               field="identifierType"
               header="Identifier Type"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
+              body={(animal) => {
+                return animal.identifierValue == "" ||
+                  animal.identifierValue == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  animal.identifierValue
+                );
+              }}
               field="identifierValue"
               header="Identifier Value"
               sortable
@@ -450,7 +474,7 @@ function AllAnimalsDatatable() {
             <Column
               body={(animal) => {
                 if (!animal.location || animal.location == "") {
-                  return "NA";
+                  <span className="flex justify-center">—</span>;
                 } else {
                   return animal.location;
                 }
@@ -461,12 +485,29 @@ function AllAnimalsDatatable() {
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
-              body={(animal) => calculateAge(new Date(animal.dateOfBirth))}
+              body={(animal) => {
+                return animal.dateOfBirth == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  new Date(animal.dateOfBirth).toLocaleDateString(
+                    "en-SG",
+                    dateOptions
+                  )
+                );
+              }}
+              field="age"
               header="Animal Age"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
-            {/* <Column
+            {/* hidden columns so they still appear in exported excel sheet */}
+            <Column
+              field="growthStage"
+              header="Growth Stage"
+              sortable
+              style={{ minWidth: "7rem", display: "none" }}
+            ></Column>
+            <Column
               body={(animal) => {
                 return new Date(animal.dateOfBirth).toLocaleDateString(
                   "en-SG",
@@ -476,14 +517,50 @@ function AllAnimalsDatatable() {
               field="dateOfBirth"
               header="Date of Birth"
               sortable
-              style={{ minWidth: "7rem" }}
-            ></Column> */}
-            {/* <Column
+              style={{ minWidth: "7rem", display: "none" }}
+            ></Column>
+            <Column
               field="placeOfBirth"
               header="Place of Birth"
               sortable
-              style={{ minWidth: "7rem" }}
-            ></Column> */}
+              style={{ minWidth: "7rem", display: "none" }}
+            ></Column>
+            <Column
+              body={(animal) => {
+                return new Date(animal.dateOfAcquisition).toLocaleDateString(
+                  "en-SG",
+                  dateOptions
+                );
+              }}
+              field="dateOfAcquisition"
+              header="Date of Acquisition"
+              sortable
+              style={{ minWidth: "7rem", display: "none" }}
+            ></Column>
+            <Column
+              field="acquisitionMethod"
+              header="Acquisition Method"
+              sortable
+              style={{ minWidth: "7rem", display: "none" }}
+            ></Column>
+            <Column
+              field="acquisitionRemarks"
+              header="Acquisition Remarks"
+              sortable
+              style={{ minWidth: "7rem", display: "none" }}
+            ></Column>
+            <Column
+              field="physicalDefiningCharacteristics"
+              header="Physical Defining Characteristics"
+              sortable
+              style={{ minWidth: "7rem", display: "none" }}
+            ></Column>
+            <Column
+              field="behavioralDefiningCharacteristics"
+              header="Behavioral Defining Characteristics"
+              sortable
+              style={{ minWidth: "7rem", display: "none" }}
+            ></Column>
             {/* below hidden columns is so that you can search by species name */}
             <Column
               field="species.commonName"

@@ -18,6 +18,7 @@ import {
 import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
 import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
 import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
+import AnimalActivityInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalActivityInfo";
 
 function ViewAnimalDetailsPage() {
   const apiJson = useApiJson();
@@ -93,8 +94,8 @@ function ViewAnimalDetailsPage() {
               <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
               <TabsTrigger value="weight">Weight</TabsTrigger>
               <TabsTrigger value="feeding">Feeding</TabsTrigger>
-              <TabsTrigger value="trainingenrichment">
-                Training and Enrichment
+              <TabsTrigger value="trainingenrichmentactivity">
+                Training and Enrichment Activity
               </TabsTrigger>
               <TabsTrigger value="behaviour">
                 Behaviour Observations
@@ -119,9 +120,9 @@ function ViewAnimalDetailsPage() {
                 <span>Feeding Plan</span>
               </div>
             </TabsContent>
-            <TabsContent value="trainingenrichment">
+            <TabsContent value="trainingenrichmentactivity">
               <div>
-                <span>Training and Enrichment Plan</span>
+                <AnimalActivityInfo curAnimal={curAnimal} />
               </div>
             </TabsContent>
             <TabsContent value="behaviour">

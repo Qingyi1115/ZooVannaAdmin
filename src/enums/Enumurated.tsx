@@ -3,6 +3,11 @@ enum KeeperType {
   KEEPER = "KEEPER",
 }
 
+enum ActivityType {
+  TRAINING = "TRAINING",
+  ENRICHMENT = "ENRICHMENT",
+}
+
 enum PlannerType {
   CURATOR = "CURATOR",
   SALES = "SALES",
@@ -100,6 +105,7 @@ enum AnimalSex {
   FEMALE = "FEMALE",
   UNKNOWN = "UNKNOWN",
   ASEXUAL = "ASEXUAL",
+  NOT_APPLICABLE = "NOT APPLICABLE",
 }
 
 enum AcquisitionMethod {
@@ -232,6 +238,7 @@ export {
   PlannerType,
   GeneralStaffType,
   Specialization,
+  ActivityType,
   MedicalSupplyType,
   ConservationStatus,
   Continent,

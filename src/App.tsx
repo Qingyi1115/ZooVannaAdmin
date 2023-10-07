@@ -3,6 +3,7 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import { useState } from "react";
 
 import { PrimeReactProvider } from "primereact/api";
+// import "@fullcalendar/daygrid/main.css";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -33,6 +34,13 @@ import EditAnimalPage from "./pages/animalManagement/EditAnimalPage";
 import CreateNewAnimalObservationLogPage from "./pages/animalManagement/CreateNewAnimalObservationLogPage";
 import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
 import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
+import AnimalActivityHomePage from "./pages/animalManagement/AnimalActivityHomePage";
+import CreateAnimalActivityPage from "./pages/animalManagement/CreateAnimalActivityPage";
+import ViewAnimalActivityDetails from "./pages/animalManagement/ViewAnimalActivityDetails";
+import EditAnimalActivityPage from "./pages/animalManagement/EditAnimalActivityPage";
+import AddAnimalToActivityPage from "./pages/animalManagement/AddAnimalToActivityPage";
+import AddItemToActivityPage from "./pages/animalManagement/AddItemToActivityPage";
+import DeclareDeathPage from "./pages/animalManagement/DeclareDeathPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -93,6 +101,7 @@ import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
 import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
+import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -291,6 +300,66 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/animal/animalactivities"
+                  element={
+                    user ? <AnimalActivityHomePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/createanimalactivity"
+                  element={
+                    user ? (
+                      <CreateAnimalActivityPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/editanimalactivity/:animalActivityId"
+                  element={
+                    user ? <EditAnimalActivityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewanimalactivitydetails/:animalActivityId"
+                  element={
+                    user ? (
+                      <ViewAnimalActivityDetails />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/assignanimalstoactivity/:animalActivityId"
+                  element={
+                    user ? (
+                      <AddAnimalToActivityPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/assignitemstoactivity/:animalActivityId"
+                  element={
+                    user ? <AddItemToActivityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/declaredeath/:animalCode"
+                  element={
+                    user ? <DeclareDeathPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/checkisinbreeding/:speciesCode"
+                  element={
+                    user ? <CheckIsInbreedingPage /> : <Navigate to="/login" />
                   }
                 />
 
