@@ -45,7 +45,14 @@ let emptyAnimalActivity: AnimalActivity = {
   durationInMinutes: -1,
 };
 
-function AllAnimalActivitiesDatatable() {
+interface AllAnimalActivitiesDatatableProps {
+  animalActivitiesList: AnimalActivity[];
+  setAnimalActivitiesList: any;
+}
+
+function AllAnimalActivitiesDatatable(
+  props: AllAnimalActivitiesDatatableProps
+) {
   const apiJson = useApiJson();
   const navigate = useNavigate();
 
@@ -55,9 +62,7 @@ function AllAnimalActivitiesDatatable() {
     day: "2-digit",
   };
 
-  const [animalActivitiesList, setAnimalActivitiesList] = useState<
-    AnimalActivity[]
-  >([]);
+  const { animalActivitiesList, setAnimalActivitiesList } = props;
   const [selectedAnimalActivity, setSelectedAnimalActivity] =
     useState<AnimalActivity>(emptyAnimalActivity);
 
