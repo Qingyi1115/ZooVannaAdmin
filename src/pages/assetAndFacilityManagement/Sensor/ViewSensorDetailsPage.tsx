@@ -41,7 +41,8 @@ function ViewSensorDetailsPage() {
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
     facility: emptyFacility,
-    sensors: []
+    sensors: [],
+    radioGroup: null
   };
 
   let emptySensor: Sensor = {
