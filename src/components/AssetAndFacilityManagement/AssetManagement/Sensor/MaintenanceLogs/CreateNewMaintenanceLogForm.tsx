@@ -59,7 +59,7 @@ function CreateNewMaintenanceLogForm(props: CreateNewMaintenanceLogProps) {
         description: "Successfully created sensor maintenance log",
       });
       console.log(responseJson);
-      navigate("/assetfacility/maintenance");
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",

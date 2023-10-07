@@ -99,7 +99,7 @@ function EditSensorForm(props: EditSensorFormProps) {
         toastShadcn({
           description: "Successfully edited sensor",
         });
-
+        navigate(-1);
       } catch (error: any) {
         toastShadcn({
           variant: "destructive",
@@ -127,6 +127,7 @@ function EditSensorForm(props: EditSensorFormProps) {
           description: "Successfully edited sensor",
         });
 
+        navigate(-1);
       } catch (error: any) {
         toastShadcn({
           variant: "destructive",
