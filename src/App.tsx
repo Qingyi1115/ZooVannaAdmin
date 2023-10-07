@@ -40,6 +40,7 @@ import ViewAnimalActivityDetails from "./pages/animalManagement/ViewAnimalActivi
 import EditAnimalActivityPage from "./pages/animalManagement/EditAnimalActivityPage";
 import AddAnimalToActivityPage from "./pages/animalManagement/AddAnimalToActivityPage";
 import AddItemToActivityPage from "./pages/animalManagement/AddItemToActivityPage";
+import DeclareDeathPage from "./pages/animalManagement/DeclareDeathPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -347,6 +348,12 @@ function App() {
                   path="/animal/assignitemstoactivity/:animalActivityId"
                   element={
                     user ? <AddItemToActivityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/declaredeath/:animalCode"
+                  element={
+                    user ? <DeclareDeathPage /> : <Navigate to="/login" />
                   }
                 />
 

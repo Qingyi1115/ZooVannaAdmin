@@ -15,6 +15,7 @@ import {
   AnimalSex,
 } from "../../enums/Enumurated";
 import { HiPlus } from "react-icons/hi";
+import DeceasedReleasedAnimalsBySpeciesDatatable from "../../components/AnimalManagement/ViewPopulationDetailsPage.tsx/DeceasedReleasedAnimalsBySpeciesDatatable";
 
 function ViewPopulationDetailsPage() {
   const apiJson = useApiJson();
@@ -23,6 +24,8 @@ function ViewPopulationDetailsPage() {
 
   const [curSpecies, setCurSpecies] = useState<Species>();
   const [curAnimalList, setCurAnimalList] = useState<Animal[]>([]);
+  const [deceasedOrRelasedAnimalList, setDeceasedOrRelasedAnimalList] =
+    useState<Animal[]>([]);
 
   const [sexChartData, setSexChartData] = useState({});
   const [sexChartOptions, setSexChartOptions] = useState({});
@@ -59,6 +62,15 @@ function ViewPopulationDetailsPage() {
           );
         });
         setCurAnimalList(animalListNoDeceasedOrReleased);
+
+        // deceased animals
+        const animalListAllDeceasedOrReleased = (
+          responseJson as Animal[]
+        ).filter((animal) => {
+          let statuses = animal.animalStatus.split(",");
+          return statuses.includes("DECEASED") || statuses.includes("RELEASED");
+        });
+        setDeceasedOrRelasedAnimalList(animalListAllDeceasedOrReleased);
       } catch (error: any) {
         console.log(error);
       }
@@ -130,7 +142,7 @@ function ViewPopulationDetailsPage() {
           labels: {
             usePointStyle: true,
           },
-          position: "right",
+          position: "top",
         },
       },
     };
@@ -258,35 +270,38 @@ function ViewPopulationDetailsPage() {
             setCurAnimalList={setCurAnimalList}
           />
         </div>
-        <NavLink to={`/animal/createAnimalObservationLog/${speciesCode}`}>
+        {/* <NavLink to={`/animal/createAnimalObservationLog/${speciesCode}`}>
           <Button className="mr-2">
             <HiPlus className="mr-auto" />
             Add Animal Observation Log
           </Button>
-        </NavLink>
-        <div>
-          <span className="text-lg font-bold">Sex Distribution</span>
-          <br />
-          <span>(Number of individuals)</span>
-          <Chart
-            type="pie"
-            data={sexChartData}
-            options={sexChartOptions}
-            className="w-1/3"
-          />
+        </NavLink> */}
+
+        <div className="flex h-max gap-2">
+          <div className="w-full">
+            <div className="mb-1">
+              <span className="text-lg font-bold">Sex Distribution</span>
+              <br />
+              <span>
+                (Number of individuals, animal groups are{" "}
+                <span className="underline">not</span> included)
+              </span>
+            </div>
+            <Chart
+              type="pie"
+              data={sexChartData}
+              options={sexChartOptions}
+              className="w-2/3"
+            />
+          </div>
+          <div className="w-full">
+            <span className="text-lg font-bold">Age Distribution</span>
+            <br />
+            <span>(Number of individuals)</span>
+            <Chart type="bar" data={ageChartData} options={ageChartOptions} />
+          </div>
         </div>
-        <div>
-          <span className="text-lg font-bold">Age Distribution</span>
-          <br />
-          <span>(Number of individuals)</span>
-          <Chart
-            type="bar"
-            data={ageChartData}
-            options={ageChartOptions}
-            className="w-1/2"
-          />
-        </div>
-        <div>
+        {/* <div>
           <span className="font-bold">Feeding Plan</span>
           <br />
           <span>
@@ -304,7 +319,7 @@ function ViewPopulationDetailsPage() {
             <br />
             Feeding plans can be accessed from animal details page too of course
           </span>
-        </div>
+        </div> */}
         {/* <div>
           <span className="font-bold">Weight Information</span>
           <br />
@@ -322,12 +337,18 @@ function ViewPopulationDetailsPage() {
           </span>
         </div> */}
         <div>
-          <span className="font-bold">Previously Owned Individuals</span>
+          <span className="font-bold">Previously Owned Individuals/Groups</span>
           <br />
           <span>
-            Datatable for individuals that used to stay in the zoo, but are not
-            here because they were transferred out or dieded
+            The following individuals/groups have been released from the zoo
+            (into the wild, transferred to another) or is deceased
           </span>
+          <div>
+            <DeceasedReleasedAnimalsBySpeciesDatatable
+              curAnimalList={deceasedOrRelasedAnimalList}
+              setCurAnimalList={setDeceasedOrRelasedAnimalList}
+            />
+          </div>
         </div>
       </div>
     </div>

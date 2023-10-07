@@ -83,12 +83,13 @@ let emptyAnimal: Animal = {
   species: emptySpecies,
 };
 
-interface AnimalsBySpeciesDatatableProps {
+interface DeceasedAnimalsBySpeciesDatatableProps {
   curAnimalList: Animal[];
   setCurAnimalList: any;
 }
-
-function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
+function DeceasedReleasedAnimalsBySpeciesDatatable(
+  props: DeceasedAnimalsBySpeciesDatatableProps
+) {
   const apiJson = useApiJson();
 
   const { curAnimalList, setCurAnimalList } = props;
@@ -304,19 +305,19 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
         <div className="rounded-lg bg-white p-4">
           {/* Title Header and back button */}
           {/* <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <NavLink to={"/animal/createanimal"}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
-              <span className=" self-center text-title-xl font-bold">
-                All Individual/Group Animals
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div> */}
+              <div className="mb-4 flex justify-between">
+                <NavLink to={"/animal/createanimal"}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                  </Button>
+                </NavLink>
+                <span className=" self-center text-title-xl font-bold">
+                  All Individual/Group Animals
+                </span>
+                <Button onClick={exportCSV}>Export to .csv</Button>
+              </div>
+              <Separator />
+            </div> */}
 
           <DataTable
             ref={dt}
@@ -340,12 +341,12 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
             header={header}
           >
             {/* <Column
-              field="imageUrl"
-              header="Image"
-              frozen
-              body={imageBodyTemplate}
-              style={{ minWidth: "6rem" }}
-            ></Column> */}
+                field="imageUrl"
+                header="Image"
+                frozen
+                body={imageBodyTemplate}
+                style={{ minWidth: "6rem" }}
+              ></Column> */}
             <Column
               field="animalCode"
               header="Code"
@@ -378,81 +379,54 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
+
             <Column
               body={(animal) => {
-                return animal.identifierType == "" ||
-                  animal.identifierType == null ? (
+                return animal.dateOfDeath == null ? (
                   <span className="flex justify-center">—</span>
                 ) : (
-                  animal.identifierType
-                );
-              }}
-              field="identifierType"
-              header="Identifier Type"
-              sortable
-              style={{ minWidth: "5rem" }}
-            ></Column>
-            <Column
-              body={(animal) => {
-                return animal.identifierValue == "" ||
-                  animal.identifierValue == null ? (
-                  <span className="flex justify-center">—</span>
-                ) : (
-                  animal.identifierValue
-                );
-              }}
-              field="identifierValue"
-              header="Identifier Value"
-              sortable
-              style={{ minWidth: "5rem" }}
-            ></Column>
-            <Column
-              body={(animal) => {
-                if (!animal.location || animal.location == "") {
-                  return <span className="flex justify-center">—</span>;
-                } else {
-                  return animal.location;
-                }
-              }}
-              // field="location"
-              header="Current Location"
-              sortable
-              style={{ minWidth: "5rem" }}
-            ></Column>
-            <Column
-              body={(animal) => {
-                let calculatedAge = calculateAge(new Date(animal.dateOfBirth));
-                return animal.dateOfBirth == null ? (
-                  <span className="flex justify-center">—</span>
-                ) : (
-                  calculatedAge
-                );
-              }}
-              header="Animal Age"
-              sortable
-              style={{ minWidth: "5rem" }}
-            ></Column>
-            <Column
-              body={(animal) => {
-                return animal.dateOfBirth == null ? (
-                  <span className="flex justify-center">—</span>
-                ) : (
-                  new Date(animal.dateOfBirth).toLocaleDateString(
+                  new Date(animal.dateOfDeath).toLocaleDateString(
                     "en-SG",
                     dateOptions
                   )
                 );
               }}
-              field="dateOfBirth"
-              header="Date of Birth"
+              field="dateOfDeath"
+              header="Date of Death"
               sortable
               style={{ minWidth: "7rem" }}
             ></Column>
             <Column
-              field="placeOfBirth"
-              header="Place of Birth"
+              body={(animal) => {
+                return animal.locationOfDeath == "" ||
+                  animal.locationOfDeath == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  animal.locationOfDeath
+                );
+              }}
+              field="locationOfDeath"
+              header="Location Of Death"
               sortable
-              style={{ minWidth: "7rem" }}
+              style={{ minWidth: "5rem" }}
+            ></Column>
+            <Column
+              body={(animal) => {
+                return animal.causeOfDeath == "" ||
+                  animal.causeOfDeath == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  animal.causeOfDeath
+                );
+              }}
+              field="causeOfDeath"
+              header="Cause of Death"
+              sortable
+              style={{
+                minWidth: "10rem",
+                overflow: "hidden",
+                maxWidth: "12rem",
+              }}
             ></Column>
             {/* below hidden columns is so that you can search by species name */}
             <Column
@@ -509,4 +483,4 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
   );
 }
 
-export default AnimalsBySpeciesDatatable;
+export default DeceasedReleasedAnimalsBySpeciesDatatable;

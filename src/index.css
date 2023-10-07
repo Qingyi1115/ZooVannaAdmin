@@ -51,6 +51,10 @@
   }
 }
 
+.p-datepicker-panel {
+  z-index: 10000; /* Set a higher z-index value */
+}
+
 .p-rowgroup-header > :first-child {
   /* display: inline-block; */
   /* flex: 1; */
