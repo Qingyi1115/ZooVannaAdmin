@@ -29,6 +29,7 @@ import UpdateStatusFormDialog from "./UpdateStatusFormDialog";
 import { Separator } from "@/components/ui/separator";
 import DeclareDeathFormDialog from "./DeclareDeathFormDialog";
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface AnimalBasicInformationProps {
   curAnimal: Animal;
@@ -169,12 +170,22 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </div>
         </div>
         <div className="flex h-full w-3/5 flex-col">
-          <AnimalParentsCard
-            curAnimal={curAnimal}
-            setCurAnimal={setCurAnimal}
-            refreshSeed={refreshSeed}
-            setRefreshSeed={setRefreshSeed}
-          />
+          {!curAnimal.isGroup ? (
+            <AnimalParentsCard
+              curAnimal={curAnimal}
+              setCurAnimal={setCurAnimal}
+              refreshSeed={refreshSeed}
+              setRefreshSeed={setRefreshSeed}
+            />
+          ) : (
+            <div>
+              <Card className="h-full">
+                <CardContent className="flex h-full justify-center gap-2 p-4">
+                  Lineage information not available for animal groups
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
       <Separator className="mb-10 mt-14" />
@@ -236,7 +247,13 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Sex
             </TableCell>
-            <TableCell>{curAnimal.sex}</TableCell>
+            <TableCell>
+              {curAnimal.sex == null || curAnimal.sex.toString() == "" ? (
+                <span className="">—</span>
+              ) : (
+                curAnimal.sex
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/5 font-bold" rowSpan={3}>
@@ -245,15 +262,23 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Type</TableCell>
-            <TableCell>{curAnimal.identifierType}</TableCell>
+            <TableCell>
+              {curAnimal.identifierType == "" ||
+              curAnimal.identifierType == null ? (
+                <span className="">—</span>
+              ) : (
+                curAnimal.identifierType
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Value</TableCell>
             <TableCell>
-              {curAnimal.identifierValue == "" ? (
-                curAnimal.identifierValue
-              ) : (
+              {curAnimal.identifierValue == "" ||
+              curAnimal.identifierValue == null ? (
                 <span className="">—</span>
+              ) : (
+                curAnimal.identifierValue
               )}
             </TableCell>
           </TableRow>
@@ -318,7 +343,8 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           <TableRow>
             <TableCell className="w-1/6 font-bold">Remarks</TableCell>
             <TableCell>
-              {curAnimal.acquisitionRemarks == "" ? (
+              {curAnimal.acquisitionRemarks == "" ||
+              curAnimal.acquisitionRemarks == null ? (
                 <span className="">—</span>
               ) : (
                 curAnimal.acquisitionRemarks
