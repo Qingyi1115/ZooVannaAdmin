@@ -153,7 +153,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   }
   const [sortKey, setSortKey] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(0);
-  const [sortField, setSortField] = useState<string>('');
+  const [sortField, setSortField] = useState<string>('!dateTime');
   const sortOptions: SortOption[] = [
     { label: 'Latest log', value: '!dateTime' },
     { label: 'Earliest log', value: 'dateTime' },
@@ -197,13 +197,13 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
         />
       </span>
       {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <Button className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/maintenanceLogs`, { replace: true });
-                navigate(`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`);
-              }}>
-            <HiPlus className="mr-auto" />
-            Add Maintenance Log
-          </Button>
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/maintenanceLogs`, { replace: true });
+          navigate(`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`);
+        }}>
+          <HiPlus className="mr-auto" />
+          Add Maintenance Log
+        </Button>
       )}
     </div>
   );

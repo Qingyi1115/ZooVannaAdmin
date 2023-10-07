@@ -59,6 +59,7 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
       toastShadcn({
         description: "Successfully created facility log",
       });
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
