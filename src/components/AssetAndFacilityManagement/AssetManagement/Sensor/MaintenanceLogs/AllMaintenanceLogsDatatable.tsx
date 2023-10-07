@@ -214,8 +214,10 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
       <div>
         <Card className="my-4 relative"
           title={maintenanceLog.title}
-          subTitle={maintenanceLog.dateTime ?
-            "Date created: " + new Date(maintenanceLog.dateTime).toLocaleString() : ""}
+          subTitle={<div>
+            {maintenanceLog.dateTime ? "Date created: " + new Date(maintenanceLog.dateTime).toLocaleString() : ""}
+            <p></p>{maintenanceLog.staffName ? "Created by: " + maintenanceLog.staffName : ""}
+          </div>}
         >
           {(maintenanceLog.staffName == employee.employeeName) &&
             <Button
