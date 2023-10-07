@@ -102,6 +102,7 @@ import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
 import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
+import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -354,6 +355,12 @@ function App() {
                   path="/animal/declaredeath/:animalCode"
                   element={
                     user ? <DeclareDeathPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/checkisinbreeding/:speciesCode"
+                  element={
+                    user ? <CheckIsInbreedingPage /> : <Navigate to="/login" />
                   }
                 />
 

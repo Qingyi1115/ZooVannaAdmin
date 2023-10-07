@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import useApiJson from "../../hooks/useApiJson";
 import Species from "../../models/Species";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -19,6 +20,7 @@ import DeceasedReleasedAnimalsBySpeciesDatatable from "../../components/AnimalMa
 
 function ViewPopulationDetailsPage() {
   const apiJson = useApiJson();
+  const navigate = useNavigate();
 
   const { speciesCode } = useParams<{ speciesCode: string }>();
 
@@ -258,6 +260,16 @@ function ViewPopulationDetailsPage() {
           <span className="mt-4 self-center text-title-xl font-bold">
             {curSpecies?.commonName}
           </span>
+        </div>
+        <div>
+          <Button
+            onClick={() =>
+              navigate(`/animal/checkisinbreeding/${curSpecies?.speciesCode}`)
+            }
+            className="mr-2"
+          >
+            Check Possible Inbreeding
+          </Button>
         </div>
         <div>
           <span className="text-xl font-bold">
