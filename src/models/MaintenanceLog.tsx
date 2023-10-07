@@ -1,7 +1,7 @@
 import Sensor from "./Sensor";
 
 interface MaintenanceLog {
-  logId: number;
+  maintenanceLogId: number;
   dateTime: Date;
   title: string;
   details: string;

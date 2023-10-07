@@ -40,7 +40,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   }, []);
 
   let emptyMaintenanceLog: MaintenanceLog = {
-    logId: 0,
+    maintenanceLogId: 0,
     dateTime: new Date(),
     title: "",
     details: "",
@@ -75,22 +75,22 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   // delete maintenanceLog stuff
   const deleteMaintenanceLog = async () => {
     let _maintenanceLog = maintenanceLogList.filter(
-      (val) => val.logId !== selectedMaintenanceLog?.logId
+      (val) => val.maintenanceLogId !== selectedMaintenanceLog?.maintenanceLogId
     );
 
     const deleteMaintenanceLog = async () => {
       try {
         setDeleteMaintenanceLogDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetSensor/deleteMaintenanceLog/" +
-          selectedMaintenanceLog.logId
+          "http://localhost:3000/api/assetFacility/deleteSensorMaintenanceLog/" +
+          selectedMaintenanceLog.maintenanceLogId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted maintenanceLog: " + selectedMaintenanceLog.logId,
+            "Successfully deleted maintenanceLog: " + selectedMaintenanceLog.title,
         });
         setMaintenanceLogList(_maintenanceLog);
         setSelectedMaintenanceLog(emptyMaintenanceLog);
@@ -124,12 +124,12 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   // const actionBodyTemplate = (maintenanceLog: MaintenanceLog) => {
   //   return (
   //     <React.Fragment>
-  //       <NavLink to={`/assetfacility/viewmaintenanceLogdetails/${maintenanceLog.logId}`}>
+  //       <NavLink to={`/assetfacility/viewmaintenanceLogdetails/${maintenanceLog.maintenanceLogId}`}>
   //         <Button variant={"outline"} className="mb-1 mr-1">
   //           <HiEye className="mx-auto" />
   //         </Button>
   //       </NavLink>
-  //       <NavLink to={`/assetfacility/editmaintenanceLog/${maintenanceLog.logId}`}>
+  //       <NavLink to={`/assetfacility/editmaintenanceLog/${maintenanceLog.maintenanceLogId}`}>
   //         <Button className="mr-1">
   //           <HiPencil className="mr-1" />
 
@@ -221,7 +221,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
             <Button
 
               className="absolute top-5 right-20"
-              onClick={() => navigate(`/assetfacility/editmaintenanceLog/${maintenanceLog.logId}`)}
+              onClick={() => navigate(`/assetfacility/editmaintenanceLog/${maintenanceLog.maintenanceLogId}`)}
             >
               <HiPencil className="mx-auto" />
             </Button>}
@@ -267,7 +267,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
             value={maintenanceLogList}
             itemTemplate={itemTemplate}
             layout="list"
-            dataKey="logId"
+            dataKey="maintenanceLogId"
             header={header}
             sortField={sortField}
             sortOrder={sortOrder}
@@ -296,7 +296,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           {selectedMaintenanceLog && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedMaintenanceLog.logId}</b>?
+              <b>{selectedMaintenanceLog.title}</b>?
             </span>
           )}
         </div>
