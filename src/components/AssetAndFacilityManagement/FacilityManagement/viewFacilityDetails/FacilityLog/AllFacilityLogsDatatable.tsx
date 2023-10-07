@@ -224,12 +224,15 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
         </span>
         {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
           employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
-          <NavLink to={`/assetfacility/createfacilitylog/${facilityId}`}>
-            <Button className="mr-2">
+            <Button className="mr-2"
+              onClick={() => {
+                navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, {replace:true})
+                navigate(`/assetfacility/createfacilitylog/${facilityId}`)
+              }}
+            >
               <HiPlus className="mr-auto" />
               Add Facility Log
             </Button>
-          </NavLink>
         )}
       </div>
     </div>
