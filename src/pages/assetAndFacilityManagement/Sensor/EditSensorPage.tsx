@@ -30,7 +30,8 @@ function EditSensorPage() {
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
     facility: emptyFacility,
-    sensors: []
+    sensors: [],
+    radioGroup: null
   };
 
   let emptySensor: Sensor = {
