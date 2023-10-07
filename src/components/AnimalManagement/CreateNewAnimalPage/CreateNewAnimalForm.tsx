@@ -148,20 +148,20 @@ function CreateNewAnimalForm() {
     return null;
   }
 
-  function validateIdentifierType(props: ValidityState) {
-    if (props != undefined) {
-      if (identifierType == undefined) {
-        return (
-          <div className="font-medium text-danger">
-            * Please select an identifier type! Select "None" if no non-natural
-            identifier is used
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
+  // function validateIdentifierType(props: ValidityState) {
+  //   if (props != undefined) {
+  //     if (identifierType == undefined) {
+  //       return (
+  //         <div className="font-medium text-danger">
+  //           * Please select an identifier type! Select "None" if no non-natural
+  //           identifier is used
+  //         </div>
+  //       );
+  //     }
+  //     // add any other cases here
+  //   }
+  //   return null;
+  // }
 
   function validateHouseName(props: ValidityState) {
     if (props != undefined) {
@@ -180,7 +180,7 @@ function CreateNewAnimalForm() {
   function validateAnimalSex(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
-      if (sex == undefined) {
+      if (isGroup != undefined && !isGroup && sex == undefined) {
         return (
           <div className="font-medium text-danger">* Please select a sex</div>
         );
@@ -208,7 +208,7 @@ function CreateNewAnimalForm() {
   function validateAcquisitionMethod(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
-      if (sex == undefined) {
+      if (acquisitionMethod == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please select an acquisition method
@@ -274,15 +274,25 @@ function CreateNewAnimalForm() {
     e.preventDefault();
     console.log(selectedSpecies);
 
+    let finalSex = sex;
+    if (sex == undefined && isGroup != undefined && isGroup) {
+      finalSex = "NOT APPLICABLE";
+    }
+
+    let finalIdentifierType = identifierType;
+    if (identifierType == undefined && isGroup != undefined && isGroup) {
+      finalIdentifierType = "None";
+    }
+
     const formData = new FormData();
     formData.append("speciesCode", selectedSpecies?.speciesCode || "");
     formData.append("houseName", houseName);
     formData.append("isGroup", isGroup?.toString() || "false");
-    formData.append("sex", sex?.toString() || "");
+    formData.append("sex", finalSex?.toString() || "");
     formData.append("dateOfBirth", dateOfBirth?.toString() || "");
     formData.append("placeOfBirth", placeOfBirth);
     // formData.append("rfidTagNum", rfidTagNum);
-    formData.append("identifierType", identifierType || "");
+    formData.append("identifierType", finalIdentifierType || "");
     formData.append("identifierValue", identifierValue);
     formData.append("acquisitionMethod", acquisitionMethod?.toString() || "");
     formData.append("acquisitionRemarks", acquisitionRemarks);
@@ -449,55 +459,59 @@ function CreateNewAnimalForm() {
           />
         </div>
 
-        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          <FormFieldSelect
-            formFieldName="identifierType"
-            label="Identifier Type"
-            required={true}
-            placeholder="Select an identifier type..."
-            valueLabelPair={Object.keys(IdentifierType).map(
-              (identifierTypeKey) => [
-                IdentifierType[
-                  identifierTypeKey as keyof typeof IdentifierType
-                ].toString(),
-                IdentifierType[
-                  identifierTypeKey as keyof typeof IdentifierType
-                ].toString(),
-              ]
-            )}
-            value={identifierType}
-            setValue={setIdentifierType}
-            validateFunction={validateIdentifierType}
-          />
-          {/* RFID Tag Number */}
-          <FormFieldInput
-            type="text"
-            formFieldName="identifierValue"
-            label="Identifier Value (if any)"
-            required={false}
-            placeholder="e.g., RFID12345, YELLOW..."
-            pattern={undefined}
-            value={identifierValue}
-            setValue={setIdentifierValue}
-            validateFunction={() => null}
-          />
-        </div>
+        {isGroup != undefined && !isGroup && (
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+            <FormFieldSelect
+              formFieldName="identifierType"
+              label="Identifier Type"
+              required={false}
+              placeholder="Select an identifier type..."
+              valueLabelPair={Object.keys(IdentifierType).map(
+                (identifierTypeKey) => [
+                  IdentifierType[
+                    identifierTypeKey as keyof typeof IdentifierType
+                  ].toString(),
+                  IdentifierType[
+                    identifierTypeKey as keyof typeof IdentifierType
+                  ].toString(),
+                ]
+              )}
+              value={identifierType}
+              setValue={setIdentifierType}
+              validateFunction={() => null}
+            />
+            {/* RFID Tag Number */}
+            <FormFieldInput
+              type="text"
+              formFieldName="identifierValue"
+              label="Identifier Value (if any)"
+              required={false}
+              placeholder="e.g., RFID12345, YELLOW..."
+              pattern={undefined}
+              value={identifierValue}
+              setValue={setIdentifierValue}
+              validateFunction={() => null}
+            />
+          </div>
+        )}
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
           {/* Animal Sex */}
-          <FormFieldSelect
-            formFieldName="sex"
-            label="Animal Sex"
-            required={true}
-            placeholder="Select a sex..."
-            valueLabelPair={Object.keys(AnimalSex).map((animalSexKey) => [
-              animalSexKey.toString(),
-              AnimalSex[animalSexKey as keyof typeof AnimalSex].toString(),
-            ])}
-            value={sex}
-            setValue={setSex}
-            validateFunction={validateAnimalSex}
-          />
+          {isGroup != undefined && !isGroup && (
+            <FormFieldSelect
+              formFieldName="sex"
+              label="Animal Sex"
+              required={!isGroup}
+              placeholder="Select a sex..."
+              valueLabelPair={Object.keys(AnimalSex).map((animalSexKey) => [
+                animalSexKey.toString(),
+                AnimalSex[animalSexKey as keyof typeof AnimalSex].toString(),
+              ])}
+              value={sex}
+              setValue={setSex}
+              validateFunction={validateAnimalSex}
+            />
+          )}
 
           {/* Date of Birth */}
           <Form.Field
@@ -636,7 +650,7 @@ function CreateNewAnimalForm() {
 
         {/* Acquisition Remarks */}
         <Form.Field
-          name="physicalDefiningCharacteristics"
+          name="acquisitionRemarks"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
           <Form.Label className="font-medium">
