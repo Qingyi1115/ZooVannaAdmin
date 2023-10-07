@@ -217,7 +217,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           subTitle={maintenanceLog.dateTime ?
             "Date created: " + new Date(maintenanceLog.dateTime).toLocaleString() : ""}
         >
-          {(maintenanceLog.staffName == employee.staffName) &&
+          {(maintenanceLog.staffName == employee.employeeName) &&
             <Button
 
               className="absolute top-5 right-20"
@@ -225,7 +225,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
             >
               <HiPencil className="mx-auto" />
             </Button>}
-          {(maintenanceLog.staffName == employee.staffName) && <Button
+          {(maintenanceLog.staffName == employee.employeeName) && <Button
             variant={"destructive"}
             className="absolute top-5 right-5"
             onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
