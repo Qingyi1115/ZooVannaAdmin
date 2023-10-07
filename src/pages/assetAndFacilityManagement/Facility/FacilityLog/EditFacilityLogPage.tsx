@@ -34,6 +34,7 @@ function EditFacilityLogPage() {
   const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);
 
   useEffect(() => {
+    console.log("logId", logId)
     apiJson.post(`http://localhost:3000/api/assetFacility/getFacilityLog/${logId}`, { includes: [] }).then(res => {
       setCurFacilityLog(res.facilityLog as FacilityLog);
     });

@@ -52,7 +52,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   };
 
   let emptyFacilityLog: FacilityLog = {
-    logId: 0,
+    facilityLogId: 0,
     dateTime: new Date(),
     isMaintenance: false,
     title: "",
@@ -97,15 +97,15 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   // delete facilityLog stuff
   const deleteFacilityLog = async () => {
     let _facilityLog = facilityLogList.filter(
-      (val) => val.logId !== selectedFacilityLog?.logId
+      (val) => val.facilityLogId !== selectedFacilityLog?.facilityLogId
     );
 
     const deleteFacilityLog = async () => {
       try {
         setDeleteFacilityLogDialog(false);
         const responseJson = await apiJson.del(
-          `http://localhost:3000/api/assetFacility/deleteFacilityLog/${selectedFacilityLog.logId}` +
-          selectedFacilityLog.logId
+          `http://localhost:3000/api/assetFacility/deleteFacilityLog/${selectedFacilityLog.facilityLogId}` +
+          selectedFacilityLog.facilityLogId
         );
 
         toastShadcn({
@@ -147,13 +147,13 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const actionBodyTemplate = (facilityLog: FacilityLog) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewfacilityLogdetails/${facilityLog.logId}`} >
+        <NavLink to={`/assetfacility/viewfacilityLogdetails/${facilityLog.facilityLogId}`} >
           <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mx-auto" />
 
           </Button>
         </NavLink>
-        <NavLink to={`/assetfacility/editfacilityLog/${facilityLog.logId}`}>
+        <NavLink to={`/assetfacility/editfacilityLog/${facilityLog.facilityLogId}`}>
           <Button className="mr-1">
             <HiPencil className="mr-1" />
 
@@ -250,7 +250,10 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             <Button
 
               className="absolute top-5 right-20"
-              onClick={() => navigate(`/assetfacility/editfacilityLog/${facilityLog.logId}`)}
+              onClick={() => {
+                navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, {replace:true})
+                navigate(`/assetfacility/editfacilityLog/${facilityLog.facilityLogId}`)
+              }}
             >
               <HiPencil className="mx-auto" />
             </Button>}
