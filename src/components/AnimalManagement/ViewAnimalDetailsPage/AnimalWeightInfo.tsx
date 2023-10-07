@@ -81,10 +81,18 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  };
+
   const [animalWeightList, setAnimalWeightList] = useState<AnimalWeight[]>([]);
   const [physiologicalRefNormsList, setPhysiologicalRefNormsList] = useState<
     PhysiologicalReferenceNorms[]
   >([]);
+  const [stringIsAnimalAbnormalWeight, setStringIsAnimalAbnormalWeight] =
+    useState<string>("");
 
   const [weightChartData, setWeightChartData] = useState({});
   const [weightChartOptions, setWeightChartOptions] = useState({});
@@ -102,6 +110,22 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
       }
     };
     fetchAnimalWeight();
+  }, []);
+
+  // get abnormal weight or not
+  useEffect(() => {
+    const fetchIsAbnormalWeight = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/animal/checkIfAbnormalWeight/${curAnimal.animalCode}`
+        );
+        setStringIsAnimalAbnormalWeight(responseJson as string);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    fetchIsAbnormalWeight();
   }, []);
 
   // Weight chart
@@ -174,8 +198,12 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
       x: calculateAge(
         new Date(record.dateOfMeasure),
         new Date(curAnimal.dateOfBirth)
-      ), // Calculate age using the provided function
+      ).toFixed(2), // Calculate age using the provided function
       y: record.weightInKg,
+      dateOfMeasure: new Date(record.dateOfMeasure).toLocaleDateString(
+        "en-SG",
+        dateOptions
+      ),
     }));
 
     const maleDataset = [
@@ -252,7 +280,7 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
             // Customize the tooltip label
             title: (context: any) => {
               const dataPoint = context[0].raw; // Assuming you want to use the first data point
-              return `Growth Stage: ${dataPoint.growthStage}, Age: ${dataPoint.x}`;
+              return `Date: ${dataPoint.dateOfMeasure}, Age: ${dataPoint.x} years`;
               // Modify the title content as needed
             },
             label: (context: any) => {
@@ -292,6 +320,21 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
 
   return (
     <div>
+      {!["Data Not Available", "Normal"].includes(
+        stringIsAnimalAbnormalWeight
+      ) && (
+        <div className="w-full rounded bg-destructive py-2 text-center text-lg font-medium text-destructive-foreground">
+          Warning: According to latest weight record, this animal is{" "}
+          <span className="text-xl font-bold">
+            {stringIsAnimalAbnormalWeight == "Overweight"
+              ? "OVERWEIGHT"
+              : stringIsAnimalAbnormalWeight == "Underweight"
+              ? "UNDERWEIGHT"
+              : "Abnormal"}
+          </span>
+          !
+        </div>
+      )}
       <div className="my-4 flex justify-start gap-6">
         <NavLink to={`/animal/createweightrecord/${curAnimal.animalCode}`}>
           <Button>Create New Weight Record</Button>

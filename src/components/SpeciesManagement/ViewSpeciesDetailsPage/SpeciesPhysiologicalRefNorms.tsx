@@ -156,7 +156,7 @@ function SpeciesPhysiologicalRefNorms(
             // Customize the tooltip label
             title: (context: any) => {
               const dataPoint = context[0].raw; // Assuming you want to use the first data point
-              return `Growth Stage: ${dataPoint.growthStage}, Age: ${dataPoint.x}`;
+              return `Age: ${dataPoint.x} years`;
               // Modify the title content as needed
             },
             label: (context: any) => {
