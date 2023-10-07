@@ -194,15 +194,8 @@ function AllAnimalActivitiesDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink to={"/animal/createanimalactivity"}>
-                <Button className="mr-2 flex items-center">
-                  <HiPlus className="mr-2" />
-                  Add Animal Activity
-                </Button>
-              </NavLink>
-              <span className=" self-center text-title-xl font-bold">
-                All Animal Activities
-              </span>
+              <Button className="invisible"></Button>
+              <span className="invisible">All Animal Activities</span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
             <Separator />
