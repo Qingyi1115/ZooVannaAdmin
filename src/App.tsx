@@ -3,6 +3,7 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import { useState } from "react";
 
 import { PrimeReactProvider } from "primereact/api";
+// import "@fullcalendar/daygrid/main.css";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";

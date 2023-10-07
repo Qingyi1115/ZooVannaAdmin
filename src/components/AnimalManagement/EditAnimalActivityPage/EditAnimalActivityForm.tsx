@@ -39,6 +39,7 @@ import Species from "../../../models/Species";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
 import AnimalActivity from "../../../models/AnimalActivity";
+import { Nullable } from "primereact/ts-helpers";
 
 interface EditAnimalActivityFormProps {
   curAnimalActivity: AnimalActivity;
@@ -60,7 +61,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
   );
   const [title, setTitle] = useState<string>(curAnimalActivity.title);
   const [details, setDetails] = useState<string>(curAnimalActivity.details);
-  const [date, setDate] = useState<string | Date | Date[] | null>(
+  const [date, setDate] = useState<Nullable<Date>>(
     new Date(curAnimalActivity.date)
   );
   const [session, setSession] = useState<string | undefined>(
@@ -165,12 +166,14 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    let dateInMilliseconds = date?.getTime();
+
     const updatedAnimalActivity = {
       animalActivityId,
       activityType,
       title,
       details,
-      date,
+      date: dateInMilliseconds,
       session,
       durationInMinutes,
     };
@@ -325,7 +328,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             <Calendar
               value={date}
               className="w-fit"
-              onChange={(e: CalendarChangeEvent) => {
+              onChange={(e: any) => {
                 if (e && e.value !== undefined) {
                   setDate(e.value);
 

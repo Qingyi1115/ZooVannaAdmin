@@ -30,6 +30,7 @@ import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import Species from "../../../models/Species";
 
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { Nullable } from "primereact/ts-helpers";
 
 function CreateAnimalActivityForm() {
   const apiFormData = useApiFormData();
@@ -42,7 +43,7 @@ function CreateAnimalActivityForm() {
   );
   const [title, setTitle] = useState<string>("");
   const [details, setDetails] = useState<string>("");
-  const [date, setDate] = useState<string | Date | Date[] | null>(null);
+  const [date, setDate] = useState<Nullable<Date>>(null);
   const [session, setSession] = useState<string | undefined>(undefined);
   const [durationInMinutes, setDurationInMinutes] = useState<
     number | undefined
@@ -143,11 +144,20 @@ function CreateAnimalActivityForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    let dateInMilliseconds = date?.getTime();
+
+    // if (date instanceof Date) {
+    //   const milliseconds = date.getTime(); // Convert to Unix epoch
+    //   console.log(milliseconds); // This will print the number of milliseconds
+    // } else {
+    //   console.error('Invalid date format.');
+    // }
+
     const newAnimalActivity = {
       activityType,
       title,
       details,
-      date,
+      date: dateInMilliseconds,
       session,
       durationInMinutes,
     };
@@ -302,7 +312,7 @@ function CreateAnimalActivityForm() {
             <Calendar
               value={date}
               className="w-fit"
-              onChange={(e: CalendarChangeEvent) => {
+              onChange={(e: any) => {
                 if (e && e.value !== undefined) {
                   setDate(e.value);
 
