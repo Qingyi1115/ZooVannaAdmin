@@ -8,24 +8,25 @@ import useApiJson from "../../../../hooks/useApiJson";
 import { HubStatus } from "../../../../enums/HubStatus";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import Facility from "../../../../models/Facility";
 
+import { useLocation } from 'react-router-dom';
 
-
-function CreateNewHubForm() {
+function CreateNewHubForm(prop:any) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { facilityId } = useParams<{ facilityId: string }>();
   const [pageFacilityId, setFacilityId] = useState<string | undefined>(facilityId); // text input
 
   const [processorName, setProcessorName] = useState<string>(""); // text input
   const [formError, setFormError] = useState<string | null>(null);
+  console.log("location",location);
 
   // Field validations
   function validateName(props: ValidityState) {
@@ -87,8 +88,7 @@ function CreateNewHubForm() {
       toastShadcn({
         description: "Successfully created hub",
       });
-      const redirectUrl = `/assetfacility/viewfacilitydetails/${facilityId}`;
-      navigate(redirectUrl);
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",

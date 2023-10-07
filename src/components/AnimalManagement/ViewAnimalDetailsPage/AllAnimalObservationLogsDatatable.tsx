@@ -222,8 +222,8 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     value: string;
   }
   const [sortKey, setSortKey] = useState<string>('');
-  const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(0);
-  const [sortField, setSortField] = useState<string>('');
+  const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(-1);
+  const [sortField, setSortField] = useState<string>('dateTime');
   const sortOptions: SortOption[] = [
     { label: 'Latest log', value: '!dateTime' },
     { label: 'Earliest log', value: 'dateTime' }
@@ -324,7 +324,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
+        <div className="">
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
@@ -340,9 +340,6 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
                   Add Log
                 </Button>
               )}
-              <span className=" self-center text-title-l font-bold">
-                All Animal Observation Logs
-              </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
             <Separator />

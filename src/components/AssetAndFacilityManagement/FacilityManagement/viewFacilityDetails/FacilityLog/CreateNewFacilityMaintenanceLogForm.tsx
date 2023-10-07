@@ -7,10 +7,11 @@ import FormFieldSelect from "../../../../FormFieldSelect";
 import useApiJson from "../../../../../hooks/useApiJson";
 import useApiFormData from "../../../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../../models/Facility";
+import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
 interface CreateNewFacilityMaintenanceLogFormProps {
   curFacility: Facility;
@@ -37,16 +38,19 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
   const [remarks, setRemarks] = useState<string>(""); // text input
   const { curFacility } = props;
   const [formError, setFormError] = useState<string | null>(null);
-
+  const location = useLocation();
+  const employee = useAuthContext().state.user?.employeeData;
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
     const newFacilityLog = {
+      facilityId: curFacility.facilityId,
       title: title,
       details: details,
-      remarks: remarks
+      remarks: remarks,
+      staffName: employee.employeeName
     }
     console.log(newFacilityLog);
 

@@ -155,6 +155,7 @@ function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
           }}
         />
       </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -162,23 +163,7 @@ function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <NavLink to={"/assetcustomerReport/createsensor"}>
-
-                <Button disabled className="invisible">
-                  Back
-                </Button>
-              </NavLink>
-              <span className=" self-center text-title-xl font-bold">
-                All Customer Reports
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
 
           <DataTable
             ref={dt}

@@ -53,7 +53,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   useEffect(() => {
     apiJson.post(
       "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-    ).catch(e => console.log(e)).then(res => {
+    ).catch(e => console.log("err", e)).then(res => {
       const allStaffs: Employee[] = []
       for (const staff of res["generalStaffs"]) {
         if (staff.generalStaffType == "ZOO_OPERATIONS") {
@@ -180,6 +180,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           }}
         />
       </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -197,13 +198,15 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
-          <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
-            <Button
-              variant={"outline"}
-              className="mr-2">
-              <HiEye className="mx-auto" />
-            </Button>
-          </NavLink>
+          <Button
+            variant={"outline"}
+            className="mr-2"
+            onClick={() => {
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageOperations`, { replace: true });
+              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+            }}>
+            <HiEye className="mx-auto" />
+          </Button>
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>
@@ -240,21 +243,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button disabled className="invisible">
-                Back
-              </Button>
-              <span className=" self-center text-title font-bold">
-                Manage Operations Staff
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
-
+        <div className="">
 
           <DataTable
             ref={dt}
@@ -289,6 +278,12 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
+              field="generalStaff.operatedFacilityName"
+              header="Current Facility Name"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
               field="employeeEmail"
               header="Email"
               sortable
@@ -303,12 +298,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             <Column
               field="employeeEducation"
               header="Education"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="generalStaff.operatedFacilityName"
-              header="Current Facility ID"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>

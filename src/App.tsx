@@ -55,7 +55,6 @@ import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFe
 import CreateNewEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/CreateNewEnrichmentItemPage";
 import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/EditAnimalFeedPage";
 import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/EditEnrichmentItemPage";
-import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/ViewAllAnimalFeedPage";
 import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/EnrichmentItem/ViewAllEnrichmentItemsPage";
 import EditSensorPage from "./pages/assetAndFacilityManagement/Sensor/EditSensorPage";
 import EditHubPage from "./pages/assetAndFacilityManagement/Hub/EditHubPage";
@@ -441,6 +440,12 @@ function App() {
                   }
                 />
                 <Route
+                  path="/assetfacility/viewallassets/:tab"
+                  element={
+                    user ? <ViewAllAssetsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
                   path="/assetfacility/createanimalfeed"
                   element={
                     user ? (
@@ -451,15 +456,9 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editanimalfeed/:animalFeedName"
+                  path="/assetfacility/editanimalfeed/:animalFeedId"
                   element={
                     user ? <EditAnimalFeedPage /> : <Navigate to="/login" />
-                  }
-                />
-                <Route
-                  path="/assetfacility/viewallanimalfeed"
-                  element={
-                    user ? <ViewAllAnimalFeedPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -596,13 +595,13 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editmaintenancelog/:logId"
+                  path="/assetfacility/editmaintenancelog/:maintenanceLogId"
                   element={
                     user ? <EditMaintenanceLogPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
-                  path="/assetfacility/viewmaintenancelogdetails/:logId"
+                  path="/assetfacility/viewmaintenancelogdetails/:maintenanceLogId"
                   element={
                     user ? (
                       <ViewMaintenanceLogDetailsPage />
@@ -619,6 +618,12 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/assetfacility/editfacilitylog/:facilityLogId"
+                  element={
+                    user ? <EditFacilityLogPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route

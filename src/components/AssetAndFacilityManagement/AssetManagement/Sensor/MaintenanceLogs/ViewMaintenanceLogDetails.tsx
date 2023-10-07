@@ -15,7 +15,7 @@ interface ViewMaintenanceLogDetailsProps {
   curMaintenanceLog: MaintenanceLog
 }
 
-function ViewHubDetails(props: ViewMaintenanceLogDetailsProps) {
+function ViewMaintenanceLogDetails(props: ViewMaintenanceLogDetailsProps) {
   const { curMaintenanceLog } = props;
   console.log(props);
 
@@ -68,4 +68,4 @@ function ViewHubDetails(props: ViewMaintenanceLogDetailsProps) {
   )
 }
 
-export default ViewHubDetails;
+export default ViewMaintenanceLogDetails;

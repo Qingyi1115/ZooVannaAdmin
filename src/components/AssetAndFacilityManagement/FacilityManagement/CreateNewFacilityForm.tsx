@@ -82,6 +82,7 @@ function CreateNewFacilityForm() {
       toastShadcn({
         description: "Successfully created facility",
       });
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",

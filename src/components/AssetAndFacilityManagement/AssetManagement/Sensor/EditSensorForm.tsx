@@ -9,7 +9,7 @@ import Sensor from "../../../../models/Sensor";
 import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 import FormFieldSelect from "../../../FormFieldSelect";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -99,7 +99,7 @@ function EditSensorForm(props: EditSensorFormProps) {
         toastShadcn({
           description: "Successfully edited sensor",
         });
-
+        navigate(-1);
       } catch (error: any) {
         toastShadcn({
           variant: "destructive",
@@ -127,6 +127,7 @@ function EditSensorForm(props: EditSensorFormProps) {
           description: "Successfully edited sensor",
         });
 
+        navigate(-1);
       } catch (error: any) {
         toastShadcn({
           variant: "destructive",

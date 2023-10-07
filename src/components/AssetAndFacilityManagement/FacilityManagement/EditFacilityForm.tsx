@@ -9,7 +9,7 @@ import Facility from "../../../models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 import FormFieldSelect from "../../../components/FormFieldSelect";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -20,6 +20,7 @@ interface EditFacilityFormProps {
 }
 
 function EditFacilityForm(props: EditFacilityFormProps) {
+  const location = useLocation();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
@@ -154,7 +155,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               validateFunction={validateFacilityName} pattern={undefined}
             />
             {/* X Coordinate */}
-            <FormFieldInput
+            {/* <FormFieldInput
               type="number"
               formFieldName="xCoordinate"
               label="X Coordinate"
@@ -162,9 +163,9 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               placeholder="1-1000"
               value={xCoordinate}
               setValue={setXCoordinate}
-              validateFunction={validateFacilityName} pattern={undefined} />
+              validateFunction={validateFacilityName} pattern={undefined} /> */}
             {/* Y Coordinate */}
-            <FormFieldInput
+            {/* <FormFieldInput
               type="number"
               formFieldName="yCoordinate"
               label="Y Coordinate"
@@ -172,7 +173,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               placeholder="1-1000"
               value={yCoordinate}
               setValue={setYCoordinate}
-              validateFunction={validateFacilityName} pattern={undefined} />
+              validateFunction={validateFacilityName} pattern={undefined} /> */}
           </div>
           {/* Maximum Accomodation Size */}
           <FormFieldInput

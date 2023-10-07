@@ -21,7 +21,7 @@ import { Row } from "primereact/row";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Animal from "../../../models/Animal";
@@ -96,6 +96,7 @@ function AllAnimalsDatatable() {
   const [selectedAnimal, setSelectedAnimal] = useState<Animal>(emptyAnimal);
   const [deleteAnimalDialog, setDeleteAnimalDialog] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
+  const navigate = useNavigate();
 
   const [expandedRows, setExpandedRows] = useState<
     DataTableExpandedRows | Animal[]
@@ -183,7 +184,7 @@ function AllAnimalsDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteAnimal/" +
-            selectedAnimal.animalCode
+          selectedAnimal.animalCode
         );
 
         toastShadcn({
@@ -229,11 +230,12 @@ function AllAnimalsDatatable() {
     return (
       <React.Fragment>
         <div className="mx-auto">
-          <NavLink to={`/animal/viewanimaldetails/${animal.animalCode}`}>
-            <Button className="mr-2">
+            <Button className="mr-2" onClick={()=>{ 
+                // navigate(`/animal/viewallanimals`, { replace: true });
+                navigate(`/animal/viewanimaldetails/${animal.animalCode}`);
+              }}>
               <HiEye className="mr-auto" />
             </Button>
-          </NavLink>
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -329,18 +331,18 @@ function AllAnimalsDatatable() {
                 status === "NORMAL"
                   ? "flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] text-sm font-bold text-emerald-900"
                   : status === "PREGNANT"
-                  ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
-                  : status === "SICK"
-                  ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
-                  : status === "INJURED"
-                  ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
-                  : status === "OFFSITE"
-                  ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
-                  : status === "RELEASED"
-                  ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
-                  : status === "DECEASED"
-                  ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
-                  : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
+                    ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
+                    : status === "SICK"
+                      ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
+                      : status === "INJURED"
+                        ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
+                        : status === "OFFSITE"
+                          ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
+                          : status === "RELEASED"
+                            ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
+                            : status === "DECEASED"
+                              ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
+                              : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
               }
             >
               {status}

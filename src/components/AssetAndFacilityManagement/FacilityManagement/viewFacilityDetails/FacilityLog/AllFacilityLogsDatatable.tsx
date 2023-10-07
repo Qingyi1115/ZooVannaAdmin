@@ -11,7 +11,7 @@ import useApiJson from "../../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import FacilityLog from "../../../../../models/FacilityLog";
@@ -52,13 +52,14 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   };
 
   let emptyFacilityLog: FacilityLog = {
-    logId: 0,
+    facilityLogId: 0,
     dateTime: new Date(),
     isMaintenance: false,
     title: "",
     details: "",
     remarks: "",
-    facility: emptyFacility
+    facility: emptyFacility,
+    staffName: ""
   };
 
   const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([]);
@@ -69,6 +70,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<FacilityLog[]>>(null);
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   useEffect(() => {
     apiJson.get(
@@ -95,15 +97,14 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   // delete facilityLog stuff
   const deleteFacilityLog = async () => {
     let _facilityLog = facilityLogList.filter(
-      (val) => val.logId !== selectedFacilityLog?.logId
+      (val) => val.facilityLogId !== selectedFacilityLog?.facilityLogId
     );
 
     const deleteFacilityLog = async () => {
       try {
         setDeleteFacilityLogDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deleteFacilityLog/" +
-          selectedFacilityLog.logId
+          `http://localhost:3000/api/assetFacility/deleteFacilityLog/${selectedFacilityLog.facilityLogId}`
         );
 
         toastShadcn({
@@ -142,32 +143,32 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   );
   // end delete facilityLog stuff
 
-  const actionBodyTemplate = (facilityLog: FacilityLog) => {
-    return (
-      <React.Fragment>
-        <NavLink to={`/assetfacility/viewfacilityLogdetails/${facilityLog.logId}`}>
-          <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
+  // const actionBodyTemplate = (facilityLog: FacilityLog) => {
+  //   return (
+  //     <React.Fragment>
+  //       <NavLink to={`/assetfacility/viewfacilityLogdetails/${facilityLog.facilityLogId}`} >
+  //         <Button variant={"outline"} className="mb-1 mr-1">
+  //           <HiEye className="mx-auto" />
 
-          </Button>
-        </NavLink>
-        <NavLink to={`/assetfacility/editfacilityLog/${facilityLog.logId}`}>
-          <Button className="mr-1">
-            <HiPencil className="mr-1" />
+  //         </Button>
+  //       </NavLink>
+  //       <NavLink to={`/assetfacility/editfacilityLog/${facilityLog.facilityLogId}`}>
+  //         <Button className="mr-1">
+  //           <HiPencil className="mr-1" />
 
-          </Button>
-        </NavLink>
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeletefacilityLog(facilityLog)}
-        >
-          <HiTrash className="mx-auto" />
+  //         </Button>
+  //       </NavLink>
+  //       <Button
+  //         variant={"destructive"}
+  //         className="mr-2"
+  //         onClick={() => confirmDeletefacilityLog(facilityLog)}
+  //       >
+  //         <HiTrash className="mx-auto" />
 
-        </Button>
-      </React.Fragment>
-    );
-  };
+  //       </Button>
+  //     </React.Fragment>
+  //   );
+  // };
 
   //Sort results
   interface SortOption {
@@ -175,8 +176,8 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     value: string;
   }
   const [sortKey, setSortKey] = useState<string>('');
-  const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(0);
-  const [sortField, setSortField] = useState<string>('');
+  const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(-1);
+  const [sortField, setSortField] = useState<string>('dateTime');
   const sortOptions: SortOption[] = [
     { label: 'Latest log', value: '!dateTime' },
     { label: 'Earliest log', value: 'dateTime' },
@@ -221,42 +222,72 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             }}
           />
         </span>
+        {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
+          <Button className="mr-2"
+            onClick={() => {
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
+              navigate(`/assetfacility/createfacilitylog/${facilityId}`)
+            }}
+          >
+            <HiPlus className="mr-auto" />
+            Add Facility Log
+          </Button>
+        )}
       </div>
     </div>
   );
 
   const listItem = (facilityLog: FacilityLog) => {
+
     return (
       <div>
         <Card className="my-4 relative"
           title={facilityLog.title}
-          subTitle={facilityLog.dateTime ?
-            "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}>
-          {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
-          <Button className="absolute top-5 right-5"
-            variant={"destructive"}
-            onClick={() => confirmDeletefacilityLog(facilityLog)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
-          )} */}
+          subTitle={<div>
+            {facilityLog.dateTime ? "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}
+            <p></p>{facilityLog.staffName ? "Created by: " + facilityLog.staffName : ""}
+          </div>
+
+          }>
+          {(facilityLog.staffName == employee.employeeName) &&
+            <Button
+
+              className="absolute top-5 right-20"
+              onClick={() => {
+                navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
+                navigate(`/assetfacility/editfacilityLog/${facilityLog.facilityLogId}`)
+              }}
+            >
+              <HiPencil className="mx-auto" />
+            </Button>}
+          {((facilityLog.staffName == employee.employeeName) &&
+            <Button className="absolute top-5 right-5"
+              variant={"destructive"}
+              onClick={() => confirmDeletefacilityLog(facilityLog)}
+            >
+              <HiTrash className="mx-auto" />
+            </Button>
+          )}
+
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>
-              <div className="text-xl font-bold text-900">Details</div>
+              <div className="text-xl font-bold text-900 indent-px">Details</div>
               <p>{facilityLog.details}</p>
             </div>
             <Separator orientation="vertical" />
             <div>
-              <div className="text-xl font-bold text-900">Remarks</div>
+              <div className="text-xl font-bold text-900 indent-px">Remarks</div>
               <p>{facilityLog.remarks}</p>
             </div>
-            <div className="italic  indent-px ">
+            <div>
+              <div className="text-xl font-bold text-900 indent-px">Log Type </div>
               {(facilityLog.isMaintenance ? "Maintenance Log" : "Operation Log")}
             </div>
           </div>
 
         </Card>
-      </div>
+      </div >
     )
   }
 
@@ -271,33 +302,13 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
-                <NavLink to={`/assetfacility/createfacilitylog/${facilityId}`}>
-                  <Button className="mr-2">
-                    <HiPlus className="mr-auto" />
-                    Add Facility Log
-                  </Button>
-                </NavLink>
-              )}
-              <span className=" self-center text-title-xl font-bold">
-                All Facility Logs
-              </span>
-              <Button disabled className="invisible">
-                Add Facility Log
-              </Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
+
           <DataView
             value={facilityLogList}
             itemTemplate={itemTemplate}
             layout="list"
-            dataKey="logId"
+            dataKey="facilityLogId"
             header={header}
             sortField={sortField}
             sortOrder={sortOrder}

@@ -17,7 +17,6 @@ import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 
 import { useNavigate } from "react-router-dom";
@@ -439,7 +438,6 @@ function EditAnimalForm(props: EditAnimalFormProps) {
         {/* Title Header and back button */}
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            {/* <NavLink className="flex" to={`/animal/viewallanimals`}> */}
             <Button
               variant={"outline"}
               onClick={() => navigate(-1)}
@@ -448,7 +446,6 @@ function EditAnimalForm(props: EditAnimalFormProps) {
             >
               Back
             </Button>
-            {/* </NavLink> */}
             <span className="self-center text-lg text-graydark">
               Edit Individual/Group Animal Basic Information
             </span>
