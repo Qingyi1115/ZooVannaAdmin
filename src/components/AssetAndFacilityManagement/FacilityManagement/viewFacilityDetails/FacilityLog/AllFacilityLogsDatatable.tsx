@@ -11,7 +11,7 @@ import useApiJson from "../../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import FacilityLog from "../../../../../models/FacilityLog";
@@ -143,32 +143,32 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   );
   // end delete facilityLog stuff
 
-  const actionBodyTemplate = (facilityLog: FacilityLog) => {
-    return (
-      <React.Fragment>
-        <NavLink to={`/assetfacility/viewfacilityLogdetails/${facilityLog.facilityLogId}`} >
-          <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
+  // const actionBodyTemplate = (facilityLog: FacilityLog) => {
+  //   return (
+  //     <React.Fragment>
+  //       <NavLink to={`/assetfacility/viewfacilityLogdetails/${facilityLog.facilityLogId}`} >
+  //         <Button variant={"outline"} className="mb-1 mr-1">
+  //           <HiEye className="mx-auto" />
 
-          </Button>
-        </NavLink>
-        <NavLink to={`/assetfacility/editfacilityLog/${facilityLog.facilityLogId}`}>
-          <Button className="mr-1">
-            <HiPencil className="mr-1" />
+  //         </Button>
+  //       </NavLink>
+  //       <NavLink to={`/assetfacility/editfacilityLog/${facilityLog.facilityLogId}`}>
+  //         <Button className="mr-1">
+  //           <HiPencil className="mr-1" />
 
-          </Button>
-        </NavLink>
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeletefacilityLog(facilityLog)}
-        >
-          <HiTrash className="mx-auto" />
+  //         </Button>
+  //       </NavLink>
+  //       <Button
+  //         variant={"destructive"}
+  //         className="mr-2"
+  //         onClick={() => confirmDeletefacilityLog(facilityLog)}
+  //       >
+  //         <HiTrash className="mx-auto" />
 
-        </Button>
-      </React.Fragment>
-    );
-  };
+  //       </Button>
+  //     </React.Fragment>
+  //   );
+  // };
 
   //Sort results
   interface SortOption {
