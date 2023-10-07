@@ -198,13 +198,15 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
-          <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
-            <Button
-              variant={"outline"}
-              className="mr-2">
-              <HiEye className="mx-auto" />
-            </Button>
-          </NavLink>
+          <Button
+            variant={"outline"}
+            className="mr-2"
+            onClick={() => {
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageOperations`, { replace: true });
+              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+            }}>
+            <HiEye className="mx-auto" />
+          </Button>
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>
