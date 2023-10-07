@@ -249,7 +249,13 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Value</TableCell>
-            <TableCell>{curAnimal.identifierValue}</TableCell>
+            <TableCell>
+              {curAnimal.identifierValue == "" ? (
+                curAnimal.identifierValue
+              ) : (
+                <span className="">—</span>
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -273,12 +279,22 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           <TableRow>
             <TableCell className="w-1/6 font-bold">Date</TableCell>
             <TableCell>
-              {new Date(curAnimal.dateOfBirth).toDateString()}
+              {curAnimal.dateOfBirth == null ? (
+                <span className="">—</span>
+              ) : (
+                new Date(curAnimal.dateOfBirth).toDateString()
+              )}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Place</TableCell>
-            <TableCell>{curAnimal.placeOfBirth}</TableCell>
+            <TableCell>
+              {curAnimal.placeOfBirth == "" ? (
+                <span className="">—</span>
+              ) : (
+                curAnimal.placeOfBirth
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/5 font-bold" rowSpan={4}>
@@ -288,7 +304,11 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           <TableRow>
             <TableCell className="w-1/6 font-bold">Date</TableCell>
             <TableCell>
-              {new Date(curAnimal.dateOfAcquisition).toDateString()}
+              {curAnimal.dateOfAcquisition == null ? (
+                <span className="">—</span>
+              ) : (
+                new Date(curAnimal.dateOfAcquisition).toDateString()
+              )}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -297,7 +317,13 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Remarks</TableCell>
-            <TableCell>{curAnimal.acquisitionRemarks}</TableCell>
+            <TableCell>
+              {curAnimal.acquisitionRemarks == "" ? (
+                <span className="">—</span>
+              ) : (
+                curAnimal.acquisitionRemarks
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -311,6 +337,33 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             </TableCell>
             <TableCell>{curAnimal.behavioralDefiningCharacteristics}</TableCell>
           </TableRow>
+          {curAnimal.animalStatus.split(",").includes("DECEASED") && (
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Death Location
+              </TableCell>
+              <TableCell>{curAnimal.locationOfDeath}</TableCell>
+            </TableRow>
+          )}
+          {curAnimal.animalStatus.split(",").includes("DECEASED") && (
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Date of Death
+              </TableCell>
+              <TableCell>
+                {curAnimal.dateOfDeath &&
+                  new Date(curAnimal.dateOfDeath).toDateString()}
+              </TableCell>
+            </TableRow>
+          )}
+          {curAnimal.animalStatus.split(",").includes("DECEASED") && (
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Cause of Death
+              </TableCell>
+              <TableCell>{curAnimal.causeOfDeath}</TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>
