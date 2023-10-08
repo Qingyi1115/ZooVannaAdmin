@@ -43,9 +43,8 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
     apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
       setCurAnimalList(res as Animal[]);
       setSelectedAnimals(res.filter((animal: Animal) => curAnimalObservationLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
-      console.log(res.filter((animal: Animal) => curAnimalObservationLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
     });
-  }, []);
+  }, [curAnimalObservationLog]);
 
   useEffect(() => {
     setDurationInMinutes(String(curAnimalObservationLog.durationInMinutes));
