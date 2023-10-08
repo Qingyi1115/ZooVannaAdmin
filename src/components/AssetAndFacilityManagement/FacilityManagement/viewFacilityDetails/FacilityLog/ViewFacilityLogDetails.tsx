@@ -24,7 +24,7 @@ function ViewFacilityLogDetails(props: ViewFacilityLogDetailsProps) {
   return (
     <div className="flex flex-col">
 
-      <NavLink to={`/assetfacility/editfacilitylog/${curFacilityLog.logId}`}>
+      <NavLink to={`/assetfacility/editfacilitylog/${curFacilityLog.facilityLogId}`}>
         <Button className="mr-2">
           <HiPencil className="mx-auto" />
         </Button>
@@ -36,7 +36,7 @@ function ViewFacilityLogDetails(props: ViewFacilityLogDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Facility Log ID
             </TableCell>
-            <TableCell>{curFacilityLog.logId}</TableCell>
+            <TableCell>{curFacilityLog.facilityLogId}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
