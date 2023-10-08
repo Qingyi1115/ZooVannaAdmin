@@ -103,6 +103,8 @@ import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
 
+import Testpage from "./pages/test";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -117,6 +119,10 @@ function App() {
               <Route
                 path="/login"
                 element={!user ? <LoginPage /> : <Navigate to={"/"} />}
+              />
+              <Route
+                path="/test"
+                element={!user ? <Testpage /> : <Navigate to={"/"} />}
               />
               <Route>
                 {/* Home page */}
