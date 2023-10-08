@@ -286,7 +286,12 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
           {!animalParent1 && (
             <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-lg">
               <div>There is no known parent</div>
-              <Button onClick={() => setOpenAddParentDialog(true)}>
+              <Button
+                onClick={() => {
+                  setOpenAddParentDialog(true);
+                  setGlobalFilter(curAnimal.species.commonName);
+                }}
+              >
                 <HiPlus />
               </Button>
             </div>
@@ -438,7 +443,12 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
                   {animalParent1 && (
                     <div className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-md border border-strokedark/20 p-4 transition-all">
                       <div>There is no known second parent</div>
-                      <Button onClick={() => setOpenAddParentDialog(true)}>
+                      <Button
+                        onClick={() => {
+                          setOpenAddParentDialog(true);
+                          setGlobalFilter(curAnimal.species.commonName);
+                        }}
+                      >
                         <HiPlus />
                       </Button>
                     </div>
