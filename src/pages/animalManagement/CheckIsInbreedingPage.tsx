@@ -46,8 +46,8 @@ let emptySpecies: Species = {
 };
 
 function simulateRandomLoadingTime() {
-  const minDelay = 800; // Minimum delay in milliseconds
-  const maxDelay = 1500; // Maximum delay in milliseconds
+  const minDelay = 600; // Minimum delay in milliseconds
+  const maxDelay = 1200; // Maximum delay in milliseconds
   const randomDelay =
     Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
 
