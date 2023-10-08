@@ -184,7 +184,7 @@ function AllAnimalsDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteAnimal/" +
-          selectedAnimal.animalCode
+            selectedAnimal.animalCode
         );
 
         toastShadcn({
@@ -230,12 +230,15 @@ function AllAnimalsDatatable() {
     return (
       <React.Fragment>
         <div className="mx-auto">
-            <Button className="mr-2" onClick={()=>{ 
-                // navigate(`/animal/viewallanimals`, { replace: true });
-                navigate(`/animal/viewanimaldetails/${animal.animalCode}`);
-              }}>
-              <HiEye className="mr-auto" />
-            </Button>
+          <Button
+            className="mr-2"
+            onClick={() => {
+              // navigate(`/animal/viewallanimals`, { replace: true });
+              navigate(`/animal/viewanimaldetails/${animal.animalCode}`);
+            }}
+          >
+            <HiEye className="mr-auto" />
+          </Button>
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -294,12 +297,33 @@ function AllAnimalsDatatable() {
               {animal.species.commonName} ({animal.species.speciesCode})
             </span>
           </span>
-
-          <NavLink
-            to={`/animal/viewpopulationdetails/${animal.species.speciesCode}`}
-          >
-            <Button>View Population Details</Button>
-          </NavLink>
+          <div>
+            <Button
+              onClick={() =>
+                navigate(
+                  `/animal/checkisinbreeding/${animal.species.speciesCode}`
+                )
+              }
+              className="mr-2"
+            >
+              Check Possible Inbreeding
+            </Button>
+            <Button
+              onClick={() =>
+                navigate(
+                  `/animal/viewpopulationdetails/${animal.species.speciesCode}`
+                )
+              }
+              className="mr-2"
+            >
+              View Population Details
+            </Button>
+            {/* <NavLink
+              to={`/animal/viewpopulationdetails/${animal.species.speciesCode}`}
+            >
+              <Button>View Population Details</Button>
+            </NavLink> */}
+          </div>
         </span>
       </React.Fragment>
     );
@@ -331,18 +355,18 @@ function AllAnimalsDatatable() {
                 status === "NORMAL"
                   ? "flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] text-sm font-bold text-emerald-900"
                   : status === "PREGNANT"
-                    ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
-                    : status === "SICK"
-                      ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
-                      : status === "INJURED"
-                        ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
-                        : status === "OFFSITE"
-                          ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
-                          : status === "RELEASED"
-                            ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
-                            : status === "DECEASED"
-                              ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
-                              : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
+                  ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
+                  : status === "SICK"
+                  ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
+                  : status === "INJURED"
+                  ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
+                  : status === "OFFSITE"
+                  ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
+                  : status === "RELEASED"
+                  ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
+                  : status === "DECEASED"
+                  ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
+                  : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
               }
             >
               {status}

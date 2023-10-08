@@ -271,7 +271,7 @@ function ViewPopulationDetailsPage() {
             {curSpecies?.commonName}
           </span>
         </div>
-        <div>
+        {/* <div>
           <Button
             onClick={() =>
               navigate(`/animal/checkisinbreeding/${curSpecies?.speciesCode}`)
@@ -280,7 +280,7 @@ function ViewPopulationDetailsPage() {
           >
             Check Possible Inbreeding
           </Button>
-        </div>
+        </div> */}
         <div>
           <span className="text-xl font-bold">
             Total Current Population: {curAnimalList.length}
