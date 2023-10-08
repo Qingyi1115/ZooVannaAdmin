@@ -5,7 +5,7 @@ import useApiJson from "../../../../../hooks/useApiJson";
 import Employee from "../../../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HiCheck, HiClipboard, HiEye, HiMinus, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -203,13 +203,14 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
-          <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
             <Button
               variant={"outline"}
-              className="mr-2">
+              className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageMaintenance`, { replace: true });
+                navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+              }}>
               <HiEye className="mx-auto" />
             </Button>
-          </NavLink>
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>

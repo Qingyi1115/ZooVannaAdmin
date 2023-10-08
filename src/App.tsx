@@ -3,6 +3,7 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import { useState } from "react";
 
 import { PrimeReactProvider } from "primereact/api";
+// import "@fullcalendar/daygrid/main.css";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -33,6 +34,13 @@ import EditAnimalPage from "./pages/animalManagement/EditAnimalPage";
 import CreateNewAnimalObservationLogPage from "./pages/animalManagement/CreateNewAnimalObservationLogPage";
 import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
 import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
+import AnimalActivityHomePage from "./pages/animalManagement/AnimalActivityHomePage";
+import CreateAnimalActivityPage from "./pages/animalManagement/CreateAnimalActivityPage";
+import ViewAnimalActivityDetails from "./pages/animalManagement/ViewAnimalActivityDetails";
+import EditAnimalActivityPage from "./pages/animalManagement/EditAnimalActivityPage";
+import AddAnimalToActivityPage from "./pages/animalManagement/AddAnimalToActivityPage";
+import AddItemToActivityPage from "./pages/animalManagement/AddItemToActivityPage";
+import DeclareDeathPage from "./pages/animalManagement/DeclareDeathPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -47,7 +55,6 @@ import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFe
 import CreateNewEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/CreateNewEnrichmentItemPage";
 import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/EditAnimalFeedPage";
 import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/EditEnrichmentItemPage";
-import ViewAllAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/ViewAllAnimalFeedPage";
 import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/EnrichmentItem/ViewAllEnrichmentItemsPage";
 import EditSensorPage from "./pages/assetAndFacilityManagement/Sensor/EditSensorPage";
 import EditHubPage from "./pages/assetAndFacilityManagement/Hub/EditHubPage";
@@ -94,6 +101,7 @@ import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
 import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
+import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -294,6 +302,66 @@ function App() {
                     )
                   }
                 />
+                <Route
+                  path="/animal/animalactivities"
+                  element={
+                    user ? <AnimalActivityHomePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/createanimalactivity"
+                  element={
+                    user ? (
+                      <CreateAnimalActivityPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/editanimalactivity/:animalActivityId"
+                  element={
+                    user ? <EditAnimalActivityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewanimalactivitydetails/:animalActivityId"
+                  element={
+                    user ? (
+                      <ViewAnimalActivityDetails />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/assignanimalstoactivity/:animalActivityId"
+                  element={
+                    user ? (
+                      <AddAnimalToActivityPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/assignitemstoactivity/:animalActivityId"
+                  element={
+                    user ? <AddItemToActivityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/declaredeath/:animalCode"
+                  element={
+                    user ? <DeclareDeathPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/checkisinbreeding/:speciesCode"
+                  element={
+                    user ? <CheckIsInbreedingPage /> : <Navigate to="/login" />
+                  }
+                />
 
                 {/* Asset and Facility Management */}
                 <Route
@@ -372,6 +440,12 @@ function App() {
                   }
                 />
                 <Route
+                  path="/assetfacility/viewallassets/:tab"
+                  element={
+                    user ? <ViewAllAssetsPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
                   path="/assetfacility/createanimalfeed"
                   element={
                     user ? (
@@ -385,12 +459,6 @@ function App() {
                   path="/assetfacility/editanimalfeed/:animalFeedId"
                   element={
                     user ? <EditAnimalFeedPage /> : <Navigate to="/login" />
-                  }
-                />
-                <Route
-                  path="/assetfacility/viewallanimalfeed"
-                  element={
-                    user ? <ViewAllAnimalFeedPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
@@ -527,13 +595,13 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/editmaintenancelog/:logId"
+                  path="/assetfacility/editmaintenancelog/:maintenanceLogId"
                   element={
                     user ? <EditMaintenanceLogPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
-                  path="/assetfacility/viewmaintenancelogdetails/:logId"
+                  path="/assetfacility/viewmaintenancelogdetails/:maintenanceLogId"
                   element={
                     user ? (
                       <ViewMaintenanceLogDetailsPage />
@@ -550,6 +618,12 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/assetfacility/editfacilitylog/:facilityLogId"
+                  element={
+                    user ? <EditFacilityLogPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route

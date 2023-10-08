@@ -125,7 +125,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
         >
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
+              <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
                 Back
               </Button>
               <span className="self-center text-lg text-graydark">
@@ -155,7 +155,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               validateFunction={validateFacilityName} pattern={undefined}
             />
             {/* X Coordinate */}
-            <FormFieldInput
+            {/* <FormFieldInput
               type="number"
               formFieldName="xCoordinate"
               label="X Coordinate"
@@ -163,9 +163,9 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               placeholder="1-1000"
               value={xCoordinate}
               setValue={setXCoordinate}
-              validateFunction={validateFacilityName} pattern={undefined} />
+              validateFunction={validateFacilityName} pattern={undefined} /> */}
             {/* Y Coordinate */}
-            <FormFieldInput
+            {/* <FormFieldInput
               type="number"
               formFieldName="yCoordinate"
               label="Y Coordinate"
@@ -173,7 +173,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               placeholder="1-1000"
               value={yCoordinate}
               setValue={setYCoordinate}
-              validateFunction={validateFacilityName} pattern={undefined} />
+              validateFunction={validateFacilityName} pattern={undefined} /> */}
           </div>
           {/* Maximum Accomodation Size */}
           <FormFieldInput

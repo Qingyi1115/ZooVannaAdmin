@@ -30,7 +30,7 @@ export default function FacilityMaintenanceChart(props: FacilityMaintenanceChart
             const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
             const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
             const data = {
-                labels: value.newDateResults.map((datestr: string) => new Date(datestr).toLocaleDateString()).concat(value.dateResults.map((datestr: string) => new Date(datestr).toLocaleDateString())),
+                labels: value.newDateResults.map((datestr: string) => new Date(datestr).toLocaleDateString()).concat(value.dateResults.map((datestr: string) => new Date(datestr).toLocaleDateString())).reverse(),
                 datasets: [
                     {
                         label: 'Maintenance cycle length',

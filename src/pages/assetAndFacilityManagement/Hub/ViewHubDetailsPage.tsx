@@ -36,7 +36,8 @@ function ViewHubDetailsPage() {
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
     facility: emptyFacility,
-    sensors: []
+    sensors: [],
+    radioGroup:null,
   };
 
 

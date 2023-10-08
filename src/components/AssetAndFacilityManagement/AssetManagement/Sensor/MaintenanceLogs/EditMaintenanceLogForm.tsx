@@ -18,14 +18,15 @@ interface EditMaintenanceLogFormProps {
   curMaintenanceLog: MaintenanceLog
 }
 
-function EditFacilityForm(props: EditMaintenanceLogFormProps) {
+function EditMaintenanceLogForm(props: EditMaintenanceLogFormProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+  const { curMaintenanceLog } = props;
   const [title, setTitle] = useState<string>(""); // text input
   const [details, setDetails] = useState<string>(""); // text input
   const [remarks, setRemarks] = useState<string>(""); // text input
-  const { curMaintenanceLog } = props;
+
   const [formError, setFormError] = useState<string | null>(null);
 
   function validateMaintenanceLogName(props: ValidityState) {
@@ -39,6 +40,12 @@ function EditFacilityForm(props: EditMaintenanceLogFormProps) {
     }
     return null;
   }
+
+  useEffect(() => {
+    setTitle(curMaintenanceLog.title);
+    setDetails(curMaintenanceLog.details);
+    setRemarks(curMaintenanceLog.remarks);
+  }, [curMaintenanceLog]);
 
 
   // end field validations
@@ -54,13 +61,14 @@ function EditFacilityForm(props: EditMaintenanceLogFormProps) {
     console.log(newMaintenanceLog);
 
     try {
-      const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/editMaintenanceLog/${curMaintenanceLog.logId}`,
+      const responseJson = await apiJson.put(
+        `http://localhost:3000/api/assetFacility/updateSensorMaintenanceLog/${curMaintenanceLog.maintenanceLogId}`,
         newMaintenanceLog);
       // success
       toastShadcn({
-        description: "Successfully created sensor maintenance log",
+        description: "Successfully edited sensor maintenance log",
       });
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -160,4 +168,4 @@ function EditFacilityForm(props: EditMaintenanceLogFormProps) {
   );
 }
 
-export default EditFacilityForm;
+export default EditMaintenanceLogForm;

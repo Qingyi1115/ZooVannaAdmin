@@ -13,8 +13,8 @@ import Sensor from "../../../models/Sensor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AllSensorReadingDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/SensorReadings/AllSensorReadingsDatatable";
 import AllMaintenanceLogsDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/AllMaintenanceLogsDatatable";
-import ManageSensorGeneralStaffPage from "./ManageSensorGeneralStaffPage";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import AddSensorMaintenanceStaff from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/GeneralStaff/AddSensorMaintenanceStaff";
 
 function ViewSensorDetailsPage() {
   const apiJson = useApiJson();
@@ -41,7 +41,8 @@ function ViewSensorDetailsPage() {
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
     facility: emptyFacility,
-    sensors: []
+    sensors: [],
+    radioGroup: null
   };
 
   let emptySensor: Sensor = {
@@ -75,7 +76,7 @@ function ViewSensorDetailsPage() {
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         <div className="flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(location.state.prev)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
           <span className="self-center text-lg text-graydark">
@@ -110,7 +111,7 @@ function ViewSensorDetailsPage() {
           </TabsContent>
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <TabsContent value="generalStaff">
-            <ManageSensorGeneralStaffPage />
+            <AddSensorMaintenanceStaff sensorId={Number(sensorId)}/>
           </TabsContent>
           )}
         </Tabs>

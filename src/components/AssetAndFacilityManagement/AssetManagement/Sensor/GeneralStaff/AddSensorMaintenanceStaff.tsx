@@ -199,13 +199,14 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
-          <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
             <Button
               variant={"outline"}
-              className="mr-2">
+              className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewsensordetails/${sensorId}/generalStaff`, { replace: true });
+                navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+              }}>
               <HiEye className="mx-auto" />
             </Button>
-          </NavLink>
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>

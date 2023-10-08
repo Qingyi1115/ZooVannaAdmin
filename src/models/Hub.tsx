@@ -11,5 +11,6 @@ interface Hub {
     hubStatus: HubStatus;
     sensors: Sensor[];
     facility: Facility;
+    radioGroup: number | null;
 }
 export default Hub;

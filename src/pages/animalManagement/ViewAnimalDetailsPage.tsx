@@ -3,7 +3,7 @@ import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
@@ -18,10 +18,12 @@ import {
 import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
 import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
 import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
+import AnimalActivityInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalActivityInfo";
 
 function ViewAnimalDetailsPage() {
   const apiJson = useApiJson();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const { animalCode } = useParams<{ animalCode: string }>();
   const { tab } = useParams<{ tab: string }>();
@@ -53,7 +55,12 @@ function ViewAnimalDetailsPage() {
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               <NavLink className="flex" to={`/animal/viewallanimals/`}>
-                <Button variant={"outline"} type="button" className="">
+                <Button
+                  variant={"outline"}
+                  type="button"
+                  className=""
+                  onClick={() => navigate(-1)}
+                >
                   Back
                 </Button>
               </NavLink>
@@ -93,8 +100,8 @@ function ViewAnimalDetailsPage() {
               <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
               <TabsTrigger value="weight">Weight</TabsTrigger>
               <TabsTrigger value="feeding">Feeding</TabsTrigger>
-              <TabsTrigger value="trainingenrichment">
-                Training and Enrichment
+              <TabsTrigger value="trainingenrichmentactivity">
+                Training and Enrichment Activity
               </TabsTrigger>
               <TabsTrigger value="behaviour">
                 Behaviour Observations
@@ -119,9 +126,9 @@ function ViewAnimalDetailsPage() {
                 <span>Feeding Plan</span>
               </div>
             </TabsContent>
-            <TabsContent value="trainingenrichment">
+            <TabsContent value="trainingenrichmentactivity">
               <div>
-                <span>Training and Enrichment Plan</span>
+                <AnimalActivityInfo curAnimal={curAnimal} />
               </div>
             </TabsContent>
             <TabsContent value="behaviour">

@@ -4,7 +4,6 @@ import { Chart } from 'primereact/chart';
 import { addQuarters } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { NavLink } from 'react-router-dom';
 import Sensor from '../../../../../models/Sensor';
 import { render } from 'react-dom';
 import { compareDates } from '../../../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion';
@@ -50,7 +49,7 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
       let currMin = getInterval(new Date(sorted[0].readingDate))
       let previousReading = sorted[0].value
       const points: number[] = [previousReading]
-      const labels: string[] = [new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()]
+      const labels: string[] = [new Date(currMin * intervalDurationInMilliseconds).toLocaleString()]
 
       for (const reading of sorted) {
         let readingDate = new Date(reading.readingDate);
@@ -61,16 +60,16 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
         } else {
           currMin = currMin + 1
           while (currMin != readingMin) {
-            currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()) : labels.push("")
+            currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleString()) : labels.push("")
             points.push(previousReading)
             currMin = currMin + 1
           }
-          currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleTimeString()) : labels.push("")
+          currMin % intervalFrequency == 0 ? labels.push(new Date(currMin * intervalDurationInMilliseconds).toLocaleString()) : labels.push("")
           points.push(reading.value)
           previousReading = reading.value
         }
       }
-      labels[labels.length - 1] = new Date(sorted[sorted.length - 1].readingDate).toLocaleTimeString()
+      labels[labels.length - 1] = new Date(sorted[sorted.length - 1].readingDate).toLocaleString()
 
       const data = {
         labels: labels,
@@ -129,7 +128,7 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
       setChartData(data);
       setChartOptions(options);
     }).catch(e => console.log(e));
-  }, [refresh, intervalDurationInMilliseconds, intervalFrequency, startDate, endDate]);
+  }, [refresh, intervalDurationInMilliseconds, intervalFrequency]);
 
   useEffect(() => {
     const looper = () => {
@@ -154,7 +153,12 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
                 <label htmlFor="startDateCalendar" className="self-center mx-3 text-lg text-graydark">Start Date</label>
                 <Calendar id="startDateCalendar" showTime hourFormat="12" value={startDate} minDate={minDate} maxDate={endDate} onChange={(e: CalendarChangeEvent) => {
                   if (e && e.value !== null) {
-                    setStartDate(e.value as Date);
+                    let selStartDate:Date = e.value as Date;
+                    setStartDate(selStartDate);
+                    if (compareDates(endDate, selStartDate) > 1000 * 60 * 60 * 24 * 7){
+                      setEndDate(new Date(selStartDate.getTime() + 1000 * 60 * 60 * 24 * 7))
+                    }
+                    setRefresh([])
                   }
                 }} />
               </div>
@@ -163,7 +167,12 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
                 <label htmlFor="startDateCalendar"  className="self-center mx-3 text-lg text-graydark">End Date</label>
                 <Calendar value={endDate} showTime hourFormat="12" maxDate={new Date()} minDate={startDate} onChange={(e: CalendarChangeEvent) => {
                   if (e && e.value !== null) {
-                    setEndDate(e.value as Date);
+                    let selEndDate:Date = e.value as Date;
+                    setEndDate(selEndDate);
+                    if (compareDates(selEndDate, startDate) > 1000 * 60 * 60 * 24 * 7){
+                      setStartDate(new Date(selEndDate.getTime() - 1000 * 60 * 60 * 24 * 7))
+                    }
+                    setRefresh([])
                   }
                 }} />
               </div>

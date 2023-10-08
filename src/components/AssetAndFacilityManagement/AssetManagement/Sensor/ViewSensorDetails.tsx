@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table";
 import Sensor from "src/models/Sensor";
 import { Separator } from "@radix-ui/react-select";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { BsWrenchAdjustable } from "react-icons/bs";
@@ -28,6 +28,7 @@ function ViewSensorDetails(props: SensorDetailsProps) {
   const apiJson = useApiJson();
   const { curSensor } = props;
   const employee = useAuthContext().state.user?.employeeData;
+  const navigate = useNavigate();
 
   const toastShadcn = useToast().toast;
 
@@ -35,20 +36,22 @@ function ViewSensorDetails(props: SensorDetailsProps) {
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <NavLink to={`/assetfacility/editsensor/${curSensor.sensorId}`}>
-            <Button className="mr-2">
+            <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
+                navigate(`/assetfacility/editsensor/${curSensor.sensorId}`);
+              }}>
               <HiPencil className="mx-auto" />
               Edit Sensor Details
             </Button>
-          </NavLink>
         )}
         {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
-          <NavLink to={`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`}>
-            <Button className="mr-2">
+            <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
+                navigate(`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`);
+              }}>
               <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
               Complete maintenance
             </Button>
-          </NavLink>
         )}
       </div>
       <Table>

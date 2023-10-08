@@ -27,6 +27,9 @@ import { Button } from "@/components/ui/button";
 import AnimalParentsCard from "./AnimalParentsCard";
 import UpdateStatusFormDialog from "./UpdateStatusFormDialog";
 import { Separator } from "@/components/ui/separator";
+import DeclareDeathFormDialog from "./DeclareDeathFormDialog";
+import { useNavigate } from "react-router-dom";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface AnimalBasicInformationProps {
   curAnimal: Animal;
@@ -37,6 +40,8 @@ interface AnimalBasicInformationProps {
 
 function AnimalBasicInformation(props: AnimalBasicInformationProps) {
   const { curAnimal, setCurAnimal, refreshSeed, setRefreshSeed } = props;
+
+  const navigate = useNavigate();
 
   const statusColorClass =
     curAnimal.animalStatus === "NORMAL"
@@ -95,28 +100,29 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
   //   </Dialog>
   // );
 
-  const declareDeathDialog = (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant={"destructive"}>Declare Death</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">test</div>
-          <div className="grid grid-cols-4 items-center gap-4">input</div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+  // const declareDeathDialog = (
+  //   <Dialog>
+  //     <DialogTrigger asChild>
+  //       <Button variant={"destructive"}>Declare Death</Button>
+  //     </DialogTrigger>
+  //     <DialogContent className="sm:max-w-[425px]">
+  //       <DialogHeader>
+  //         <DialogTitle>Declare Death</DialogTitle>
+  //         <DialogDescription>
+  //           Enter information and declare the passing of an animal
+  //         </DialogDescription>
+  //       </DialogHeader>
+  //       <DeclareDeathForm
+  //         curAnimal={curAnimal}
+  //         refreshSeed={refreshSeed}
+  //         setRefreshSeed={setRefreshSeed}
+  //       />
+  //       <DialogFooter>
+  //         <Button type="submit">Save changes</Button>
+  //       </DialogFooter>
+  //     </DialogContent>
+  //   </Dialog>
+  // );
 
   const statusTemplate = (statuses: string[]) => {
     return (
@@ -164,12 +170,22 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </div>
         </div>
         <div className="flex h-full w-3/5 flex-col">
-          <AnimalParentsCard
-            curAnimal={curAnimal}
-            setCurAnimal={setCurAnimal}
-            refreshSeed={refreshSeed}
-            setRefreshSeed={setRefreshSeed}
-          />
+          {!curAnimal.isGroup ? (
+            <AnimalParentsCard
+              curAnimal={curAnimal}
+              setCurAnimal={setCurAnimal}
+              refreshSeed={refreshSeed}
+              setRefreshSeed={setRefreshSeed}
+            />
+          ) : (
+            <div>
+              <Card className="h-full">
+                <CardContent className="flex h-full justify-center gap-2 p-4">
+                  Lineage information not available for animal groups
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
       <Separator className="mb-10 mt-14" />
@@ -183,7 +199,19 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           refreshSeed={refreshSeed}
           setRefreshSeed={setRefreshSeed}
         />
-        {declareDeathDialog}
+        {/* <DeclareDeathFormDialog
+          curAnimal={curAnimal}
+          refreshSeed={refreshSeed}
+          setRefreshSeed={setRefreshSeed}
+        /> */}
+        <Button
+          variant={"destructive"}
+          onClick={() =>
+            navigate(`/animal/declaredeath/${curAnimal.animalCode}`)
+          }
+        >
+          Declare Death
+        </Button>
       </div>
       <Table>
         {/* <TableHeader className=" bg-whiten">
@@ -219,7 +247,13 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Sex
             </TableCell>
-            <TableCell>{curAnimal.sex}</TableCell>
+            <TableCell>
+              {curAnimal.sex == null || curAnimal.sex.toString() == "" ? (
+                <span className="">—</span>
+              ) : (
+                curAnimal.sex
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/5 font-bold" rowSpan={3}>
@@ -228,18 +262,37 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Type</TableCell>
-            <TableCell>{curAnimal.identifierType}</TableCell>
+            <TableCell>
+              {curAnimal.identifierType == "" ||
+              curAnimal.identifierType == null ? (
+                <span className="">—</span>
+              ) : (
+                curAnimal.identifierType
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Value</TableCell>
-            <TableCell>{curAnimal.identifierValue}</TableCell>
+            <TableCell>
+              {curAnimal.identifierValue == "" ||
+              curAnimal.identifierValue == null ? (
+                <span className="">—</span>
+              ) : (
+                curAnimal.identifierValue
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Age
             </TableCell>
             <TableCell>
-              {calculateAge(new Date(curAnimal.dateOfBirth))}
+              {curAnimal.dateOfBirth?.toString() == "" ||
+              curAnimal.dateOfBirth == null ? (
+                <span className="">—</span>
+              ) : (
+                calculateAge(new Date(curAnimal.dateOfBirth))
+              )}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -256,12 +309,22 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           <TableRow>
             <TableCell className="w-1/6 font-bold">Date</TableCell>
             <TableCell>
-              {new Date(curAnimal.dateOfBirth).toDateString()}
+              {curAnimal.dateOfBirth == null ? (
+                <span className="">—</span>
+              ) : (
+                new Date(curAnimal.dateOfBirth).toDateString()
+              )}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Place</TableCell>
-            <TableCell>{curAnimal.placeOfBirth}</TableCell>
+            <TableCell>
+              {curAnimal.placeOfBirth == "" ? (
+                <span className="">—</span>
+              ) : (
+                curAnimal.placeOfBirth
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/5 font-bold" rowSpan={4}>
@@ -271,7 +334,11 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           <TableRow>
             <TableCell className="w-1/6 font-bold">Date</TableCell>
             <TableCell>
-              {new Date(curAnimal.dateOfAcquisition).toDateString()}
+              {curAnimal.dateOfAcquisition == null ? (
+                <span className="">—</span>
+              ) : (
+                new Date(curAnimal.dateOfAcquisition).toDateString()
+              )}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -280,7 +347,14 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Remarks</TableCell>
-            <TableCell>{curAnimal.acquisitionRemarks}</TableCell>
+            <TableCell>
+              {curAnimal.acquisitionRemarks == "" ||
+              curAnimal.acquisitionRemarks == null ? (
+                <span className="">—</span>
+              ) : (
+                curAnimal.acquisitionRemarks
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -294,6 +368,33 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             </TableCell>
             <TableCell>{curAnimal.behavioralDefiningCharacteristics}</TableCell>
           </TableRow>
+          {curAnimal.animalStatus.split(",").includes("DECEASED") && (
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Death Location
+              </TableCell>
+              <TableCell>{curAnimal.locationOfDeath}</TableCell>
+            </TableRow>
+          )}
+          {curAnimal.animalStatus.split(",").includes("DECEASED") && (
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Date of Death
+              </TableCell>
+              <TableCell>
+                {curAnimal.dateOfDeath &&
+                  new Date(curAnimal.dateOfDeath).toDateString()}
+              </TableCell>
+            </TableRow>
+          )}
+          {curAnimal.animalStatus.split(",").includes("DECEASED") && (
+            <TableRow>
+              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                Cause of Death
+              </TableCell>
+              <TableCell>{curAnimal.causeOfDeath}</TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>
