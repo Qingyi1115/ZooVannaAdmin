@@ -74,14 +74,8 @@ function ViewListingDetailsPage() {
                 {curListing.name}
               </span>
             </div>
-            <Accordion type="multiple">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>Information</AccordionTrigger>
-                <AccordionContent>
-                  <ViewListingDetails curListing={curListing} />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+
+            <ViewListingDetails curListing={curListing} />
           </div>
         )}
       </div>
