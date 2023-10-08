@@ -10,6 +10,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 import AnimalObservationLog from "../../../models/AnimalObservationLog";
+import Animal from "../../../models/Animal";
 
 interface ViewAnimalObservationLogDetailsProps {
   curAnimalObservationLog: AnimalObservationLog
@@ -34,7 +35,7 @@ function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsP
         <TableBody>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Animal Observation Log ID
+              ID
             </TableCell>
             <TableCell>{curAnimalObservationLog.animalObservationLogId}</TableCell>
           </TableRow>
@@ -42,7 +43,7 @@ function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsP
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Date
             </TableCell>
-            <TableCell>{String(curAnimalObservationLog.dateTime)}</TableCell>
+            <TableCell>{new Date(curAnimalObservationLog.dateTime).toLocaleString()}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -66,13 +67,13 @@ function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsP
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Animals
             </TableCell>
-            <TableCell>{curAnimalObservationLog.animals.toString()}</TableCell>
+            <TableCell>{curAnimalObservationLog.animals.map((animal: Animal) => animal.houseName).join(", ")}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Employee
+              Keeper
             </TableCell>
-            <TableCell>{curAnimalObservationLog.employee.employeeName}</TableCell>
+            <TableCell>{curAnimalObservationLog.keeper.employee.employeeName}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

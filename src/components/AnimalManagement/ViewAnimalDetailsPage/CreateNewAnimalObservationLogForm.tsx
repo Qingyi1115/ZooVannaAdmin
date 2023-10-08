@@ -66,8 +66,7 @@ function CreateNewAnimalObservationLogForm() {
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details,
-      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode),
-      employee: employee
+      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalObservationLog);
 

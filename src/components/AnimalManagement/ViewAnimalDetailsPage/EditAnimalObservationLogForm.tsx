@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
 
 
@@ -10,6 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import AnimalObservationLog from "../../../models/AnimalObservationLog";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import Animal from "../../../models/Animal";
+import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
+import { set } from "date-fns";
 
 interface EditAnimalObservationLogFormProps {
   curAnimalObservationLog: AnimalObservationLog
@@ -24,7 +29,32 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
     undefined); // dropdown
   const [details, setDetails] = useState<string>(""); // text input
   const { curAnimalObservationLog } = props;
+  const [dateTime, setDateTime] = useState<
+    string | Date | Date[] | null
+  >(null);
+  const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
+
+
+  const [curAnimalList, setCurAnimalList] = useState<any>(null);
+  const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
+
+  useEffect(() => {
+    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+      setCurAnimalList(res as Animal[]);
+      setSelectedAnimals(res.filter((animal: Animal) => curAnimalObservationLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
+      console.log(res.filter((animal: Animal) => curAnimalObservationLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
+    });
+  }, []);
+
+  useEffect(() => {
+    setDurationInMinutes(String(curAnimalObservationLog.durationInMinutes));
+    setObservationQuality(curAnimalObservationLog.observationQuality);
+    setDetails(curAnimalObservationLog.details);
+    setDateTime(new Date(curAnimalObservationLog.dateTime))
+    console.log(curAnimalObservationLog.animals);
+
+  }, [curAnimalObservationLog]);
 
   function validateAnimalObservationLogName(props: ValidityState) {
     if (props != undefined) {
@@ -45,26 +75,28 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
     e.preventDefault();
 
     const newAnimalObservationLog = {
+      dateTime: dateTime,
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
-      details: details
+      details: details,
+      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalObservationLog);
 
     try {
-      const responseJson = await apiJson.post(
+      const responseJson = await apiJson.put(
         `http://localhost:3000/api/animal/updateAnimalObservationLog/${curAnimalObservationLog.animalObservationLogId}`,
         newAnimalObservationLog);
       // success
       toastShadcn({
-        description: "Successfully created animal observation log",
+        description: "Successfully edited animal observation log",
       });
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while creating animal observation log details: \n" +
+          "An error has occurred while editing animal observation log details: \n" +
           error.message,
       });
     }
@@ -98,6 +130,16 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
           <span className="mt-4 self-center text-title-xl font-bold">
             {curAnimalObservationLog.animalObservationLogId}
           </span>
+        </div>
+
+        {/* DateTime */}
+        <div className="flex justify-content-center">
+          <label htmlFor="dateTimeCalendar" className="self-center mx-3 text-lg text-dark ">Date</label>
+          <Calendar id="dateTimeCalendar" showTime hourFormat="12" value={dateTime} onChange={(e: CalendarChangeEvent) => {
+            if (e && e.value !== null) {
+              setDateTime(e.value as Date);
+            }
+          }} />
         </div>
 
         {/* Duration in Minutes */}
@@ -142,6 +184,15 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
           validateFunction={validateAnimalObservationLogName}
           pattern={undefined}
         />
+        {/* Animals */}
+        <MultiSelect
+          value={selectedAnimals}
+          onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
+          options={curAnimalList}
+          optionLabel="houseName"
+          filter
+          placeholder="Select Animals"
+          className="w-full md:w-20rem" />
         <Form.Submit asChild>
           <Button
             disabled={apiJson.loading}

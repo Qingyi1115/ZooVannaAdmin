@@ -18,10 +18,11 @@ import { Card } from "primereact/card";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import Animal from "../../../models/Animal";
 import Species from "../../../models/Species";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage } from "../../../enums/Enumurated";
+import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../../enums/Enumurated";
 import { Rating } from "../../../enums/Rating";
 import Employee from "../../../models/Employee";
 import { Column } from "primereact/column";
+import Keeper from "../../../models/Keeper";
 
 interface AllAnimalObservationLogsDatatableProps {
   speciesCode: string;
@@ -98,6 +99,14 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     employeeProfileUrl: "",
   };
 
+  let emptyKeeper: Keeper = {
+    id: 0,
+    keeperType: KeeperType.SENIOR_KEEPER,
+    specialization: Specialization.MAMMAL,
+    isDisabled: false,
+    employee: emptyEmployee
+  }
+
   let emptyAnimalObservationLog: AnimalObservationLog = {
     animalObservationLogId: 0,
     dateTime: new Date(),
@@ -105,8 +114,9 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     observationQuality: Rating.NOT_RECORDED,
     details: "",
     animals: [],
-    employee: emptyEmployee
+    keeper: emptyKeeper
   };
+
 
   const [animalObservationLogList, setAnimalObservationLogList] = useState<AnimalObservationLog[]>([]);
   const [selectedAnimalObservationLog, setSelectedAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
@@ -149,7 +159,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
       try {
         setDeleteAnimalObservationLogDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/animal/deleteAnimalObservationLog/" +
+          "http://localhost:3000/api/animal/deleteAnimalObservationLogById/" +
           selectedAnimalObservationLog.animalObservationLogId
         );
 
@@ -353,7 +363,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
                 setSelectedAnimalObservationLog(e.value);
               }
             }}
-            dataKey="facilityId"
+            dataKey="animalObservationLogId"
             paginator
             rows={10}
             scrollable
@@ -409,7 +419,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               filterPlaceholder="Search by animal code"
             ></Column>
             <Column
-              field="employee.employeeName"
+              field="keeper.employee.employeeName"
               header="Employee"
               sortable
               style={{ minWidth: "12rem" }}
