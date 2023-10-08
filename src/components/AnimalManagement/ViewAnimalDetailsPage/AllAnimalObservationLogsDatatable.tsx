@@ -9,7 +9,7 @@ import useApiJson from "../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import AnimalObservationLog from "../../../models/AnimalObservationLog";
@@ -26,13 +26,13 @@ import Keeper from "../../../models/Keeper";
 
 interface AllAnimalObservationLogsDatatableProps {
   speciesCode: string;
+  animalCode: string;
 }
 
 function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatatableProps) {
   const apiJson = useApiJson();
-  const { speciesCode } = props;
+  const { speciesCode, animalCode } = props;
   const employee = useAuthContext().state.user?.employeeData;
-
   let emptySpecies: Species = {
     speciesId: -1,
     speciesCode: "",
@@ -126,15 +126,17 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<AnimalObservationLog[]>>(null);
   const toastShadcn = useToast().toast;
-
+  const navigate = useNavigate();
   useEffect(() => {
+    console.log(speciesCode);
     apiJson.get(
-      `http://localhost:3000/api/animal/getAllAnimalObservationLogs/`)
+      `http://localhost:3000/api/animal/getAnimalObservationLogsBySpeciesCode/${speciesCode}`)
       .then(res => {
         setAnimalObservationLogList(res.animalObservationLogs as AnimalObservationLog[]);
       })
       .catch(e => console.log(e));
   }, []);
+  console.log(animalObservationLogList);
 
   const exportCSV = () => {
     dt.current?.exportCSV();
@@ -202,18 +204,23 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const actionBodyTemplate = (animalObservationLog: AnimalObservationLog) => {
     return (
       <React.Fragment>
-        <NavLink to={`/animal/viewAnimalObservationLogDetails/${animalObservationLog.animalObservationLogId}`}>
-          <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
-
-          </Button>
-        </NavLink>
-        <NavLink to={`/animal/editAnimalObservationLog/${animalObservationLog.animalObservationLogId}`}>
-          <Button className="mr-1">
-            <HiPencil className="mr-1" />
-
-          </Button>
-        </NavLink>
+        <Button
+          // variant={"outline"}
+          className="mb-1 mr-1"
+          onClick={() => {
+            navigate(`/animal/viewAnimalDetails/${animalCode}/behaviour`, { replace: true })
+            navigate(`/animal/viewAnimalObservationLogDetails/${animalObservationLog.animalObservationLogId}`)
+          }}>
+          <HiEye className="mx-auto" />
+        </Button>
+        {/* <Button
+          className="mr-1"
+          onClick={() => {
+            navigate(`/animal/viewAnimalDetails/${animalCode}/behaviour`, { replace: true })
+            navigate(`/animal/editAnimalObservationLog/${animalObservationLog.animalObservationLogId}`)
+          }}>
+          <HiPencil className="mr-1" />
+        </Button> */}
         <Button
           variant={"destructive"}
           className="mr-2"
@@ -340,12 +347,14 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             <div className="mb-4 flex justify-between">
               {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
                 employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") ?
-                <NavLink to={`/animal/createAnimalObservationLog/${speciesCode}`}>
-                  <Button className="mr-2">
-                    <HiPlus className="mr-auto" />
-                    Add Log
-                  </Button>
-                </NavLink>
+                <Button className="mr-2"
+                  onClick={() => {
+                    navigate(`/animal/viewAnimalDetails/${animalCode}/behaviour`, { replace: true })
+                    navigate(`/animal/createAnimalObservationLog/${speciesCode}`)
+                  }}>
+                  <HiPlus className="mr-auto" />
+                  Add Animal Observation Log
+                </Button>
                 : <Button disabled className="invisible">
                   Add Log
                 </Button>
@@ -410,7 +419,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
-            <Column
+            {/* <Column
               field="animals.houseName"
               header="Animals"
               sortable
@@ -419,11 +428,14 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               filterPlaceholder="Search by animal code"
             ></Column>
             <Column
+              // body={(animalObservationLog) => {
+              //   return animalObservationLog.keeper.employeeId;
+              // }}
               field="keeper.employee.employeeName"
-              header="Employee"
+              header="Keeper"
               sortable
               style={{ minWidth: "12rem" }}
-            ></Column>
+            ></Column> */}
             <Column
               body={actionBodyTemplate}
               header="Actions"

@@ -7,7 +7,7 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 import AnimalObservationLog from "../../../models/AnimalObservationLog";
 import Animal from "../../../models/Animal";
@@ -18,18 +18,22 @@ interface ViewAnimalObservationLogDetailsProps {
 
 function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsProps) {
   const { curAnimalObservationLog } = props;
-  console.log(props);
-
+  const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
   return (
     <div className="flex flex-col">
-
-      <NavLink to={`/animal/editAnimalObservationLog/${curAnimalObservationLog.animalObservationLogId}`}>
-        <Button className="mr-2">
+      <div>
+        <Button className="mr-2"
+          onClick={() => {
+            navigate(`/animal/viewAnimalObservationLogDetails/${curAnimalObservationLog.animalObservationLogId}`, { replace: true })
+            navigate(`/animal/editAnimalObservationLog/${curAnimalObservationLog.animalObservationLogId}`)
+          }}>
           <HiPencil className="mx-auto" />
+          Edit Animal Observation Log Details
         </Button>
-      </NavLink>
+      </div>
+
 
       <Table>
         <TableBody>
@@ -49,7 +53,7 @@ function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsP
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Duration In Minutes
             </TableCell>
-            <TableCell>{curAnimalObservationLog.durationInMinutes ? "Yes" : "No"}</TableCell>
+            <TableCell>{curAnimalObservationLog.durationInMinutes}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
