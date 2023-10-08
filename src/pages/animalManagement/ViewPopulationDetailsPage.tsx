@@ -226,8 +226,18 @@ function ViewPopulationDetailsPage() {
     };
     const options = {
       scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Growth Stage",
+          },
+        },
         y: {
           beginAtZero: true,
+          title: {
+            display: true,
+            text: "Number of Individuals",
+          },
         },
       },
       ticks: {
@@ -295,8 +305,8 @@ function ViewPopulationDetailsPage() {
               <span className="text-lg font-bold">Sex Distribution</span>
               <br />
               <span>
-                (Number of individuals, animal groups are{" "}
-                <span className="underline">not</span> included)
+                (Animal groups are <span className="underline">not</span>{" "}
+                included)
               </span>
             </div>
             <Chart
@@ -311,8 +321,8 @@ function ViewPopulationDetailsPage() {
               <span className="text-lg font-bold">Age Distribution</span>
               <br />
               <span>
-                (Number of individuals, animal groups are{" "}
-                <span className="underline">not</span> included)
+                (Animal groups are <span className="underline">not</span>{" "}
+                included)
               </span>
             </div>
             <Chart type="bar" data={ageChartData} options={ageChartOptions} />

@@ -302,6 +302,10 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
           type: "linear",
           min: 0,
           max: curAnimal.species.lifeExpectancyYears * 1.2,
+          title: {
+            display: true,
+            text: "Age (in years)",
+          },
         },
         y: {
           ticks: {
@@ -311,6 +315,10 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
             color: surfaceBorder,
           },
           min: 0,
+          title: {
+            display: true,
+            text: "Weight (in kg)",
+          },
         },
       },
     };
