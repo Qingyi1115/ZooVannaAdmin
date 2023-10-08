@@ -198,6 +198,8 @@ function AnimalWeightDatatable(props: AnimalWeightDatatableProps) {
               }
             }}
             dataKey="animalWeightId"
+            sortField={"dateOfMeasure"} // Set the default sort field here
+            sortOrder={-1}
             paginator
             // showGridlines
             rows={10}
