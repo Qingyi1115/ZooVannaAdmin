@@ -21,7 +21,7 @@ import { Row } from "primereact/row";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Animal from "../../../models/Animal";
@@ -83,8 +83,16 @@ let emptyAnimal: Animal = {
   species: emptySpecies,
 };
 
-function AllAnimalsDatatable() {
+interface DeceasedAnimalsBySpeciesDatatableProps {
+  curAnimalList: Animal[];
+  setCurAnimalList: any;
+}
+function DeceasedReleasedAnimalsBySpeciesDatatable(
+  props: DeceasedAnimalsBySpeciesDatatableProps
+) {
   const apiJson = useApiJson();
+
+  const { curAnimalList, setCurAnimalList } = props;
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -92,11 +100,10 @@ function AllAnimalsDatatable() {
     day: "2-digit",
   };
 
-  const [animalList, setAnimalList] = useState<Animal[]>([]);
+  //   const [animalList, setAnimalList] = useState<Animal[]>([]);
   const [selectedAnimal, setSelectedAnimal] = useState<Animal>(emptyAnimal);
   const [deleteAnimalDialog, setDeleteAnimalDialog] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const navigate = useNavigate();
 
   const [expandedRows, setExpandedRows] = useState<
     DataTableExpandedRows | Animal[]
@@ -106,28 +113,7 @@ function AllAnimalsDatatable() {
 
   const toastShadcn = useToast().toast;
 
-  useEffect(() => {
-    const fetchAnimals = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/animal/getAllAnimals"
-        );
-        const animalListNoDeceasedOrReleased = (
-          responseJson as Animal[]
-        ).filter((animal) => {
-          let statuses = animal.animalStatus.split(",");
-          return !(
-            statuses.includes("DECEASED") || statuses.includes("RELEASED")
-          );
-        });
-        setAnimalList(animalListNoDeceasedOrReleased);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    fetchAnimals();
-  }, []);
-
+  //
   function calculateAge(dateOfBirth: Date): string {
     const dob = dateOfBirth;
     const todayDate = new Date();
@@ -175,12 +161,11 @@ function AllAnimalsDatatable() {
   };
 
   const deleteAnimal = async () => {
-    let _animals = animalList.filter(
+    let _animals = curAnimalList.filter(
       (val) => val.animalId !== selectedAnimal?.animalId
     );
 
     const deleteAnimalApi = async () => {
-      console.log(selectedAnimal.animalCode);
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteAnimal/" +
@@ -196,7 +181,7 @@ function AllAnimalsDatatable() {
             " the " +
             selectedAnimal.species?.commonName,
         });
-        setAnimalList(_animals);
+        setCurAnimalList(_animals);
         setDeleteAnimalDialog(false);
         setSelectedAnimal(emptyAnimal);
       } catch (error: any) {
@@ -230,15 +215,11 @@ function AllAnimalsDatatable() {
     return (
       <React.Fragment>
         <div className="mx-auto">
-          <Button
-            className="mr-2"
-            onClick={() => {
-              // navigate(`/animal/viewallanimals`, { replace: true });
-              navigate(`/animal/viewanimaldetails/${animal.animalCode}`);
-            }}
-          >
-            <HiEye className="mr-auto" />
-          </Button>
+          <NavLink to={`/animal/viewanimaldetails/${animal.animalCode}`}>
+            <Button className="mr-2">
+              <HiEye className="mr-auto" />
+            </Button>
+          </NavLink>
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -272,8 +253,8 @@ function AllAnimalsDatatable() {
   const calculateAnimalPerSpeciesTotal = (commonName: string) => {
     let total = 0;
 
-    if (animalList) {
-      for (let animal of animalList) {
+    if (curAnimalList) {
+      for (let animal of curAnimalList) {
         if (animal.species.commonName === commonName) {
           total++;
         }
@@ -281,65 +262,6 @@ function AllAnimalsDatatable() {
     }
 
     return total;
-  };
-
-  const rowGroupHeaderTemplate = (animal: Animal) => {
-    return (
-      <React.Fragment>
-        <span className="flex justify-between">
-          <span className="flex items-center gap-4 ">
-            <img
-              alt={animal.species?.commonName}
-              src={"http://localhost:3000/" + animal.species?.imageUrl}
-              className="aspect-square w-10 rounded-full border border-white object-cover shadow-4"
-            />
-            <span className="text-lg font-bold">
-              {animal.species.commonName} ({animal.species.speciesCode})
-            </span>
-          </span>
-          <div>
-            <Button
-              onClick={() =>
-                navigate(
-                  `/animal/checkisinbreeding/${animal.species.speciesCode}`
-                )
-              }
-              className="mr-2"
-            >
-              Check Possible Inbreeding
-            </Button>
-            <Button
-              onClick={() =>
-                navigate(
-                  `/animal/viewpopulationdetails/${animal.species.speciesCode}`
-                )
-              }
-              className="mr-2"
-            >
-              View Population Details
-            </Button>
-            {/* <NavLink
-              to={`/animal/viewpopulationdetails/${animal.species.speciesCode}`}
-            >
-              <Button>View Population Details</Button>
-            </NavLink> */}
-          </div>
-        </span>
-      </React.Fragment>
-    );
-  };
-
-  const rowGroupFooterTemplate = (animal: Animal) => {
-    return (
-      <React.Fragment>
-        <td colSpan={10}>
-          <div className="justify-content-end flex w-full font-bold">
-            Total {animal.species.commonName}:{" "}
-            {calculateAnimalPerSpeciesTotal(animal.species.commonName)}
-          </div>
-        </td>
-      </React.Fragment>
-    );
   };
 
   const statusTemplate = (animal: Animal) => {
@@ -382,25 +304,24 @@ function AllAnimalsDatatable() {
       <div>
         <div className="rounded-lg bg-white p-4">
           {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <NavLink to={"/animal/createanimal"}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                  Add Animal
-                </Button>
-              </NavLink>
-              <span className=" self-center text-title-xl font-bold">
-                All Individual/Group Animals
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
+          {/* <div className="flex flex-col">
+              <div className="mb-4 flex justify-between">
+                <NavLink to={"/animal/createanimal"}>
+                  <Button className="mr-2">
+                    <HiPlus className="mr-auto" />
+                  </Button>
+                </NavLink>
+                <span className=" self-center text-title-xl font-bold">
+                  All Individual/Group Animals
+                </span>
+                <Button onClick={exportCSV}>Export to .csv</Button>
+              </div>
+              <Separator />
+            </div> */}
 
           <DataTable
             ref={dt}
-            value={animalList}
+            value={curAnimalList}
             selection={selectedAnimal}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
@@ -408,32 +329,24 @@ function AllAnimalsDatatable() {
               }
             }}
             dataKey="animalId"
-            rowGroupMode="subheader"
-            // expandableRowGroups
-            // expandedRows={expandedRows}
-            // onRowToggle={(e) => setExpandedRows(e.data)}
-            groupRowsBy="species.commonName"
-            rowGroupHeaderTemplate={rowGroupHeaderTemplate}
-            rowGroupFooterTemplate={rowGroupFooterTemplate}
             paginator
             // showGridlines
-            rows={25}
+            rows={5}
             scrollable
             selectionMode={"single"}
-            rowsPerPageOptions={[10, 25, 50, 100]}
+            rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} individual/group animals"
             globalFilter={globalFilter}
             header={header}
-            sortField={"species.commonName"}
           >
             {/* <Column
-              field="imageUrl"
-              header="Image"
-              frozen
-              body={imageBodyTemplate}
-              style={{ minWidth: "6rem" }}
-            ></Column> */}
+                field="imageUrl"
+                header="Image"
+                frozen
+                body={imageBodyTemplate}
+                style={{ minWidth: "6rem" }}
+              ></Column> */}
             <Column
               field="animalCode"
               header="Code"
@@ -466,124 +379,54 @@ function AllAnimalsDatatable() {
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
-            <Column
-              body={(animal) => {
-                return animal.identifierType == "" ||
-                  animal.identifierType == null ? (
-                  <span className="flex justify-center">—</span>
-                ) : (
-                  animal.identifierType
-                );
-              }}
-              field="identifierType"
-              header="Identifier Type"
-              sortable
-              style={{ minWidth: "5rem" }}
-            ></Column>
-            <Column
-              body={(animal) => {
-                return animal.identifierValue == "" ||
-                  animal.identifierValue == null ? (
-                  <span className="flex justify-center">—</span>
-                ) : (
-                  animal.identifierValue
-                );
-              }}
-              field="identifierValue"
-              header="Identifier Value"
-              sortable
-              style={{ minWidth: "5rem" }}
-            ></Column>
 
             <Column
               body={(animal) => {
-                if (!animal.location || animal.location == "") {
-                  <span className="flex justify-center">—</span>;
-                } else {
-                  return animal.location;
-                }
-              }}
-              // field="location"
-              header="Current Location"
-              sortable
-              style={{ minWidth: "5rem" }}
-            ></Column>
-            <Column
-              body={(animal) => {
-                return animal.dateOfBirth == null ? (
+                return animal.dateOfDeath == null ? (
                   <span className="flex justify-center">—</span>
                 ) : (
-                  new Date(animal.dateOfBirth).toLocaleDateString(
+                  new Date(animal.dateOfDeath).toLocaleDateString(
                     "en-SG",
                     dateOptions
                   )
                 );
               }}
-              field="age"
-              header="Animal Age"
+              field="dateOfDeath"
+              header="Date of Death"
+              sortable
+              style={{ minWidth: "7rem" }}
+            ></Column>
+            <Column
+              body={(animal) => {
+                return animal.locationOfDeath == "" ||
+                  animal.locationOfDeath == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  animal.locationOfDeath
+                );
+              }}
+              field="locationOfDeath"
+              header="Location Of Death"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
-            {/* hidden columns so they still appear in exported excel sheet */}
-            <Column
-              field="growthStage"
-              header="Growth Stage"
-              sortable
-              style={{ minWidth: "7rem", display: "none" }}
-            ></Column>
             <Column
               body={(animal) => {
-                return new Date(animal.dateOfBirth).toLocaleDateString(
-                  "en-SG",
-                  dateOptions
+                return animal.causeOfDeath == "" ||
+                  animal.causeOfDeath == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  animal.causeOfDeath
                 );
               }}
-              field="dateOfBirth"
-              header="Date of Birth"
+              field="causeOfDeath"
+              header="Cause of Death"
               sortable
-              style={{ minWidth: "7rem", display: "none" }}
-            ></Column>
-            <Column
-              field="placeOfBirth"
-              header="Place of Birth"
-              sortable
-              style={{ minWidth: "7rem", display: "none" }}
-            ></Column>
-            <Column
-              body={(animal) => {
-                return new Date(animal.dateOfAcquisition).toLocaleDateString(
-                  "en-SG",
-                  dateOptions
-                );
+              style={{
+                minWidth: "10rem",
+                overflow: "hidden",
+                maxWidth: "12rem",
               }}
-              field="dateOfAcquisition"
-              header="Date of Acquisition"
-              sortable
-              style={{ minWidth: "7rem", display: "none" }}
-            ></Column>
-            <Column
-              field="acquisitionMethod"
-              header="Acquisition Method"
-              sortable
-              style={{ minWidth: "7rem", display: "none" }}
-            ></Column>
-            <Column
-              field="acquisitionRemarks"
-              header="Acquisition Remarks"
-              sortable
-              style={{ minWidth: "7rem", display: "none" }}
-            ></Column>
-            <Column
-              field="physicalDefiningCharacteristics"
-              header="Physical Defining Characteristics"
-              sortable
-              style={{ minWidth: "7rem", display: "none" }}
-            ></Column>
-            <Column
-              field="behavioralDefiningCharacteristics"
-              header="Behavioral Defining Characteristics"
-              sortable
-              style={{ minWidth: "7rem", display: "none" }}
             ></Column>
             {/* below hidden columns is so that you can search by species name */}
             <Column
@@ -640,4 +483,4 @@ function AllAnimalsDatatable() {
   );
 }
 
-export default AllAnimalsDatatable;
+export default DeceasedReleasedAnimalsBySpeciesDatatable;

@@ -79,7 +79,7 @@ module.exports = {
         primary: "#84985A", // changed
         secondary: "#c3de8f", // changed
         stroke: "#e8f0e2", // changed
-        gray: "#f4fbef", // changed
+        gray: "#dbe1d7", // changed
         graydark: "#3a4833", // changed
         "gray-2": "#f9fcf7", // changed
         "gray-3": "#FAFAFA",

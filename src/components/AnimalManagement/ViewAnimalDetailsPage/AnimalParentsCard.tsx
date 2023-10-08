@@ -175,15 +175,16 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
         setAnimalParent1(null);
         setAnimalParent2(null);
         setRefreshSeed(refreshSeed + 1);
+        setGlobalFilter(curAnimal.species.commonName);
       } catch (error: any) {
         // got error
-        // toastShadcn({
-        //   variant: "destructive",
-        //   title: "Uh oh! Something went wrong.",
-        //   description:
-        //     "An error has occurred while updating parents: \n" + error.message,
-        // });
-        setAddParentError(error.message);
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while adding parents: \n" + error.message,
+        });
+        // setAddParentError(error.message);
       }
     };
     addParentApi();
@@ -285,7 +286,12 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
           {!animalParent1 && (
             <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-lg">
               <div>There is no known parent</div>
-              <Button onClick={() => setOpenAddParentDialog(true)}>
+              <Button
+                onClick={() => {
+                  setOpenAddParentDialog(true);
+                  setGlobalFilter(curAnimal.species.commonName);
+                }}
+              >
                 <HiPlus />
               </Button>
             </div>
@@ -437,7 +443,12 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
                   {animalParent1 && (
                     <div className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-md border border-strokedark/20 p-4 transition-all">
                       <div>There is no known second parent</div>
-                      <Button onClick={() => setOpenAddParentDialog(true)}>
+                      <Button
+                        onClick={() => {
+                          setOpenAddParentDialog(true);
+                          setGlobalFilter(curAnimal.species.commonName);
+                        }}
+                      >
                         <HiPlus />
                       </Button>
                     </div>

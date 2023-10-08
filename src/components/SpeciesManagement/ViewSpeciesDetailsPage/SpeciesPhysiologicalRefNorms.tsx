@@ -83,29 +83,59 @@ function SpeciesPhysiologicalRefNorms(
       "--text-color-secondary"
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
-    const weightMaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
-      { x: item.minAge, y: item.weightMaleKg },
-      { x: item.maxAge, y: item.weightMaleKg },
-    ]);
-    const weightFemaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
-      { x: item.minAge, y: item.weightFemaleKg },
-      { x: item.maxAge, y: item.weightFemaleKg },
-    ]);
+    const minWeightMaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.minWeightMaleKg },
+        { x: item.maxAge, y: item.minWeightMaleKg },
+      ]
+    );
+    const maxWeightMaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.maxWeightMaleKg },
+        { x: item.maxAge, y: item.maxWeightMaleKg },
+      ]
+    );
+    const minWeightFemaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.minWeightFemaleKg },
+        { x: item.maxAge, y: item.minWeightFemaleKg },
+      ]
+    );
+    const maxWeightFemaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.maxWeightFemaleKg },
+        { x: item.maxAge, y: item.maxWeightFemaleKg },
+      ]
+    );
 
     const data = {
-      labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
+      // labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
       datasets: [
         {
-          label: "Male (kg)",
-          data: weightMaleDataPoints,
-          fill: false,
+          label: "Min Weight Male (kg)",
+          data: minWeightMaleDataPoints,
+          fill: { target: "+1", above: "#93C5FD50", below: "#93C5FD50" },
           borderColor: "#3b82f6",
           tension: 0.4,
         },
         {
-          label: "Female (kg)",
-          data: weightFemaleDataPoints,
-          fill: false,
+          label: "Max Weight Male (kg)",
+          data: maxWeightMaleDataPoints,
+          fill: { target: "-1", above: "#93C5FD50", below: "#93C5FD50" },
+          borderColor: "#3b82f6",
+          tension: 0.4,
+        },
+        {
+          label: "Min Weight Female (kg)",
+          data: minWeightFemaleDataPoints,
+          fill: { target: "+1", below: "#F29FD450", above: "#F29FD450" },
+          borderColor: "#ec4899",
+          tension: 0.4,
+        },
+        {
+          label: "Max Weight Female (kg)",
+          data: maxWeightFemaleDataPoints,
+          fill: { target: "-1", below: "#F29FD450", above: "#F29FD450" },
           borderColor: "#ec4899",
           tension: 0.4,
         },
@@ -126,7 +156,7 @@ function SpeciesPhysiologicalRefNorms(
             // Customize the tooltip label
             title: (context: any) => {
               const dataPoint = context[0].raw; // Assuming you want to use the first data point
-              return `Growth Stage: ${dataPoint.growthStage}, Age: ${dataPoint.x}`;
+              return `Age: ${dataPoint.x} years`;
               // Modify the title content as needed
             },
             label: (context: any) => {
@@ -181,28 +211,57 @@ function SpeciesPhysiologicalRefNorms(
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
-    const sizeMaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
-      { x: item.minAge, y: item.sizeMaleCm },
-      { x: item.maxAge, y: item.sizeMaleCm },
+    const minSizeMaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
+      { x: item.minAge, y: item.minSizeMaleCm },
+      { x: item.maxAge, y: item.minSizeMaleCm },
     ]);
-    const sizeFemaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
-      { x: item.minAge, y: item.sizeFemaleCm },
-      { x: item.maxAge, y: item.sizeFemaleCm },
+
+    const maxSizeMaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
+      { x: item.minAge, y: item.maxSizeMaleCm },
+      { x: item.maxAge, y: item.maxSizeMaleCm },
     ]);
+
+    const minSizeFemaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.minSizeFemaleCm },
+        { x: item.maxAge, y: item.minSizeFemaleCm },
+      ]
+    );
+
+    const maxSizeFemaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.maxSizeFemaleCm },
+        { x: item.maxAge, y: item.maxSizeFemaleCm },
+      ]
+    );
     const data = {
       labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
       datasets: [
         {
           label: "Male (cm)",
-          data: sizeMaleDataPoints,
-          fill: false,
+          data: minSizeMaleDataPoints,
+          fill: { target: "+1", above: "#93C5FD50", below: "#93C5FD50" },
+          borderColor: "#3b82f6",
+          tension: 0.4,
+        },
+        {
+          label: "Male (cm)",
+          data: maxSizeMaleDataPoints,
+          fill: { target: "-1", above: "#93C5FD50", below: "#93C5FD50" },
           borderColor: "#3b82f6",
           tension: 0.4,
         },
         {
           label: "Female (cm)",
-          data: sizeFemaleDataPoints,
-          fill: false,
+          data: minSizeFemaleDataPoints,
+          fill: { target: "+1", below: "#F29FD450", above: "#F29FD450" },
+          borderColor: "#ec4899",
+          tension: 0.4,
+        },
+        {
+          label: "Female (cm)",
+          data: maxSizeFemaleDataPoints,
+          fill: { target: "-1", below: "#F29FD450", above: "#F29FD450" },
           borderColor: "#ec4899",
           tension: 0.4,
         },
@@ -287,7 +346,7 @@ function SpeciesPhysiologicalRefNorms(
       )}
       <div>
         <span className="text-lg font-medium">
-          Average {curSpecies.commonName} Weight (kg)
+          {curSpecies.commonName} Weight Range (kg)
         </span>
         <Chart
           type="line"
@@ -298,7 +357,7 @@ function SpeciesPhysiologicalRefNorms(
       <br />
       <div>
         <span className="text-lg font-medium">
-          Average {curSpecies.commonName} Size (cm)
+          {curSpecies.commonName} Size Range (cm)
         </span>
         <Chart type="line" data={sizeChartData} options={sizeChartOptions} />
       </div>

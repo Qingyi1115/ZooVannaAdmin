@@ -81,10 +81,18 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  };
+
   const [animalWeightList, setAnimalWeightList] = useState<AnimalWeight[]>([]);
   const [physiologicalRefNormsList, setPhysiologicalRefNormsList] = useState<
     PhysiologicalReferenceNorms[]
   >([]);
+  const [stringIsAnimalAbnormalWeight, setStringIsAnimalAbnormalWeight] =
+    useState<string>("");
 
   const [weightChartData, setWeightChartData] = useState({});
   const [weightChartOptions, setWeightChartOptions] = useState({});
@@ -102,6 +110,22 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
       }
     };
     fetchAnimalWeight();
+  }, []);
+
+  // get abnormal weight or not
+  useEffect(() => {
+    const fetchIsAbnormalWeight = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/animal/checkIfAbnormalWeight/${curAnimal.animalCode}`
+        );
+        setStringIsAnimalAbnormalWeight(responseJson as string);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    fetchIsAbnormalWeight();
   }, []);
 
   // Weight chart
@@ -146,48 +170,98 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
       "--text-color-secondary"
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
-    const weightMaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
-      { x: item.minAge, y: item.weightMaleKg },
-      { x: item.maxAge, y: item.weightMaleKg },
-    ]);
-    const weightFemaleDataPoints = physiologicalRefNormsList.flatMap((item) => [
-      { x: item.minAge, y: item.weightFemaleKg },
-      { x: item.maxAge, y: item.weightFemaleKg },
-    ]);
+    const minWeightMaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.minWeightMaleKg },
+        { x: item.maxAge, y: item.minWeightMaleKg },
+      ]
+    );
+    const maxWeightMaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.maxWeightMaleKg },
+        { x: item.maxAge, y: item.maxWeightMaleKg },
+      ]
+    );
+    const minWeightFemaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.minWeightFemaleKg },
+        { x: item.maxAge, y: item.minWeightFemaleKg },
+      ]
+    );
+    const maxWeightFemaleDataPoints = physiologicalRefNormsList.flatMap(
+      (item) => [
+        { x: item.minAge, y: item.maxWeightFemaleKg },
+        { x: item.maxAge, y: item.maxWeightFemaleKg },
+      ]
+    );
     const weightRecordDataPoints = animalWeightList.map((record) => ({
       x: calculateAge(
         new Date(record.dateOfMeasure),
         new Date(curAnimal.dateOfBirth)
-      ), // Calculate age using the provided function
+      ).toFixed(2), // Calculate age using the provided function
       y: record.weightInKg,
+      dateOfMeasure: new Date(record.dateOfMeasure).toLocaleDateString(
+        "en-SG",
+        dateOptions
+      ),
     }));
-    console.log("heheh");
-    console.log(weightRecordDataPoints);
+
+    const maleDataset = [
+      {
+        label: "Weight Records",
+        data: weightRecordDataPoints,
+        pointBackgroundColor: "rgba(255, 0, 0, 1)", // Customize the point color
+        pointRadius: 5, // Customize the point size
+        showLine: false, // Hide the line connecting the points
+      },
+      {
+        label: "Min Weight Male (kg)",
+        data: minWeightMaleDataPoints,
+        fill: { target: "+1", above: "#93C5FD50", below: "#93C5FD50" },
+        borderColor: "#3b82f6",
+        tension: 0.4,
+      },
+      {
+        label: "Max Weight Male (kg)",
+        data: maxWeightMaleDataPoints,
+        fill: { target: "-1", above: "#93C5FD50", below: "#93C5FD50" },
+        borderColor: "#3b82f6",
+        tension: 0.4,
+      },
+    ];
+
+    const femaleDataset = [
+      {
+        label: "Weight Records",
+        data: weightRecordDataPoints,
+        pointBackgroundColor: "rgba(255, 0, 0, 1)", // Customize the point color
+        pointRadius: 5, // Customize the point size
+        showLine: false, // Hide the line connecting the points
+      },
+      {
+        label: "Min Weight Female (kg)",
+        data: minWeightFemaleDataPoints,
+        fill: { target: "+1", below: "#F29FD450", above: "#F29FD450" },
+        borderColor: "#ec4899",
+        tension: 0.4,
+      },
+      {
+        label: "Max Weight Female (kg)",
+        data: maxWeightFemaleDataPoints,
+        fill: { target: "-1", below: "#F29FD450", above: "#F29FD450" },
+        borderColor: "#ec4899",
+        tension: 0.4,
+      },
+    ];
+
     const data = {
-      labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
-      datasets: [
-        {
-          label: "Male (kg)",
-          data: weightMaleDataPoints,
-          fill: false,
-          borderColor: "#3b82f6",
-          tension: 0.4,
-        },
-        {
-          label: "Female (kg)",
-          data: weightFemaleDataPoints,
-          fill: false,
-          borderColor: "#ec4899",
-          tension: 0.4,
-        },
-        {
-          label: "Weight Records",
-          data: weightRecordDataPoints,
-          pointBackgroundColor: "rgba(255, 0, 0, 1)", // Customize the point color
-          pointRadius: 5, // Customize the point size
-          showLine: false, // Hide the line connecting the points
-        },
-      ],
+      // labels: ["INFANT", "JUVENILE", "ADOLESCENT", "ADULT", "ELDER"],
+      datasets:
+        curAnimal.sex == "MALE"
+          ? maleDataset
+          : curAnimal.sex == "FEMALE"
+          ? femaleDataset
+          : [...maleDataset, ...femaleDataset],
     };
     const options = {
       maintainAspectRatio: false,
@@ -206,7 +280,7 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
             // Customize the tooltip label
             title: (context: any) => {
               const dataPoint = context[0].raw; // Assuming you want to use the first data point
-              return `Growth Stage: ${dataPoint.growthStage}, Age: ${dataPoint.x}`;
+              return `Date: ${dataPoint.dateOfMeasure}, Age: ${dataPoint.x} years`;
               // Modify the title content as needed
             },
             label: (context: any) => {
@@ -228,6 +302,10 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
           type: "linear",
           min: 0,
           max: curAnimal.species.lifeExpectancyYears * 1.2,
+          title: {
+            display: true,
+            text: "Age (in years)",
+          },
         },
         y: {
           ticks: {
@@ -237,6 +315,10 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
             color: surfaceBorder,
           },
           min: 0,
+          title: {
+            display: true,
+            text: "Weight (in kg)",
+          },
         },
       },
     };
@@ -246,6 +328,21 @@ function AnimalWeightInfo(props: AnimalWeightInfoProps) {
 
   return (
     <div>
+      {!["Data Not Available", "Normal"].includes(
+        stringIsAnimalAbnormalWeight
+      ) && (
+        <div className="w-full rounded bg-destructive py-2 text-center text-lg font-medium text-destructive-foreground">
+          Warning: According to latest weight record, this animal is{" "}
+          <span className="text-xl font-bold">
+            {stringIsAnimalAbnormalWeight == "Overweight"
+              ? "OVERWEIGHT"
+              : stringIsAnimalAbnormalWeight == "Underweight"
+              ? "UNDERWEIGHT"
+              : "Abnormal"}
+          </span>
+          !
+        </div>
+      )}
       <div className="my-4 flex justify-start gap-6">
         <NavLink to={`/animal/createweightrecord/${curAnimal.animalCode}`}>
           <Button>Create New Weight Record</Button>

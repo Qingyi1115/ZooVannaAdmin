@@ -49,8 +49,7 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
       facilityId: curFacility.facilityId,
       title: title,
       details: details,
-      remarks: remarks,
-      staffName: employee.employeeName
+      remarks: remarks
     }
     console.log(newFacilityLog);
 
