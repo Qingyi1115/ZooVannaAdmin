@@ -304,10 +304,7 @@ function ViewPopulationDetailsPage() {
             <div className="mb-2">
               <span className="text-lg font-bold">Sex Distribution</span>
               <br />
-              <span>
-                (Animal groups are <span className="underline">not</span>{" "}
-                included)
-              </span>
+              <span>(Only applicable to individual animals)</span>
             </div>
             <Chart
               type="pie"
@@ -320,10 +317,7 @@ function ViewPopulationDetailsPage() {
             <div className="mb-2">
               <span className="text-lg font-bold">Age Distribution</span>
               <br />
-              <span>
-                (Animal groups are <span className="underline">not</span>{" "}
-                included)
-              </span>
+              <span>(Only applicable to individual animals)</span>
             </div>
             <Chart type="bar" data={ageChartData} options={ageChartOptions} />
           </div>
