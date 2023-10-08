@@ -175,6 +175,7 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
         setAnimalParent1(null);
         setAnimalParent2(null);
         setRefreshSeed(refreshSeed + 1);
+        setGlobalFilter(curAnimal.species.commonName);
       } catch (error: any) {
         // got error
         toastShadcn({
