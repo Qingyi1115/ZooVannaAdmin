@@ -122,7 +122,7 @@ function App() {
               />
               <Route
                 path="/test"
-                element={!user ? <Testpage /> : <Navigate to={"/"} />}
+                element={user ? <Testpage /> : <Navigate to={"/"} />}
               />
               <Route>
                 {/* Home page */}

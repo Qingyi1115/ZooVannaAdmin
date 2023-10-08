@@ -34,21 +34,35 @@ import useApiJson from "../hooks/useApiJson";
 
 function TestPage() {
     const [imgSrc, setImgSrc] = React.useState<any>(0);
-    useApiJson()
+    const useApi = useApiJson();
 
     useEffect(()=>{
         console.log("test1")
 
-        fetch('http://localhost:8000/detected.jpeg', {
-            method: "GET",
-            headers: { Authorization: 'Bearer eyJhbGciOiJIU' }
-       }).then((response:any) => {
-        console.log("test2")
-           const data = `data:${response.headers['content-type']};base64,${new Buffer(response.data).toString('base64')}`;
-           console.log("data",data);
-           setImgSrc(data );
+        const options: RequestInit = {
+            method : "GET",
+            headers: { 
+                Authorization: 'Bearer eyJhbGciOiJIU', 
+                "Content-Type": "application/json", 
+            },
+            
+          };
+
+
+    //     fetch('http://localhost:8000/detected.jpeg', options).then((response:any) => {
+    //     console.log("test2", response.headers,response.data)
+    //        const data = `data:${response.headers['content-type']};base64,${new Buffer(response.data).toString('base64')}`;
+    //        console.log("data",data);
+    //        setImgSrc(data );
    
-       });
+    //    });
+          useApi.get("http://localhost:8000/detected.jpeg").then((response:any) => {
+                console.log("test2", response.headers,response.data)
+                   const data = `data:${response.headers['content-type']};base64,${new Buffer(response.data).toString('base64')}`;
+                   console.log("data",data);
+                   setImgSrc(data );
+           
+               });
 
     }, [])
 
@@ -56,7 +70,7 @@ function TestPage() {
   return (
     <div>
     <div>Hello world</div>
-    <img src={imgSrc} alt="love is gone" />
+    {/* <img src={imgSrc} alt="love is gone" /> */}
     </div>
 );
 }
