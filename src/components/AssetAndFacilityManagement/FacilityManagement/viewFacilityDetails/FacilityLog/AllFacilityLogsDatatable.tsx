@@ -250,7 +250,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           </div>
 
           }>
-          {(facilityLog.staffName == employee.employeeName) &&
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || facilityLog.staffName == employee.employeeName) &&
             <Button
 
               className="absolute top-5 right-20"
@@ -261,7 +261,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             >
               <HiPencil className="mx-auto" />
             </Button>}
-          {((facilityLog.staffName == employee.employeeName) &&
+          {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || facilityLog.staffName == employee.employeeName) &&
             <Button className="absolute top-5 right-5"
               variant={"destructive"}
               onClick={() => confirmDeletefacilityLog(facilityLog)}
