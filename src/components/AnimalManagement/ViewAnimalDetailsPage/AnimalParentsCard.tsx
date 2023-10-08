@@ -177,13 +177,13 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
         setRefreshSeed(refreshSeed + 1);
       } catch (error: any) {
         // got error
-        // toastShadcn({
-        //   variant: "destructive",
-        //   title: "Uh oh! Something went wrong.",
-        //   description:
-        //     "An error has occurred while updating parents: \n" + error.message,
-        // });
-        setAddParentError(error.message);
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while adding parents: \n" + error.message,
+        });
+        // setAddParentError(error.message);
       }
     };
     addParentApi();

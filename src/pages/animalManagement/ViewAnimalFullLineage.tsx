@@ -235,7 +235,7 @@ function ViewAnimalFullLineage() {
   }
 
   function removeAnimalFromParentsChildren(animal: Animal, parent: Animal) {
-    // Remove the current animal from the parent's children array
+    // // Remove the current animal from the parent's children array
     if (parent && parent.children) {
       parent.children = parent.children.filter(
         (child) => child.animalId !== animal.animalId
@@ -244,11 +244,38 @@ function ViewAnimalFullLineage() {
   }
 
   function removeAnimalFromChildrenParents(animal: Animal, child: Animal) {
-    // Remove the current animal from the child's parents array
-    if (child && child.parents) {
-      child.parents = child.parents.filter(
-        (parent) => parent.animalId !== animal.animalId
-      );
+    // // Remove the current animal from the child's parents array
+    // if (child && child.parents) {
+    //   child.parents = child.parents.filter(
+    //     (parent) => parent.animalId !== animal.animalId
+    //   );
+    // }
+
+    if (child && child.parents && child.parents.length === 2) {
+      const parent1Id = child.parents[0].animalId;
+      const parent2Id = child.parents[1].animalId;
+
+      // Check if both parent IDs are inside each other's pids
+      const parent1 = tempNodesOutside.find((node) => node.id === parent1Id);
+      const parent2 = tempNodesOutside.find((node) => node.id === parent2Id);
+
+      if (
+        parent1 &&
+        parent2 &&
+        parent1.pids.includes(parent2Id) &&
+        parent2.pids.includes(parent1Id)
+      ) {
+        // Both parents are inside each other's pids, remove the current animal from the child's parents array
+        child.parents = child.parents.filter(
+          (parent) => parent.animalId !== animal.animalId
+        );
+      }
+    } else if (child && child.parents && child.parents.length === 1) {
+      // If child has only one parent, remove it if it is already inside tempNodesOutside
+      const parent1Id = child.parents[0].animalId;
+      if (tempNodesOutside.some((node) => node.id === parent1Id)) {
+        child.parents = [];
+      }
     }
   }
 
@@ -330,7 +357,7 @@ function ViewAnimalFullLineage() {
           updateOrAddNode(curChildNode, tempNodes);
           tempNodesOutside = [...tempNodes];
         }
-        removeAnimalFromChildrenParents(animal, child);
+        // removeAnimalFromChildrenParents(animal, child);
         processAnimal(child);
       }
     }
@@ -339,8 +366,10 @@ function ViewAnimalFullLineage() {
   useEffect(() => {
     if (curAnimalLineage) {
       processAnimal(curAnimalLineage);
-      setFamilyTreeNodes(tempNodesOutside);
-      setIsLineageRetrieved(true);
+      if (tempNodesOutside.length != 0) {
+        setFamilyTreeNodes(tempNodesOutside);
+        setIsLineageRetrieved(true);
+      }
     }
     console.log("family tree!");
     console.log(tempNodesOutside);

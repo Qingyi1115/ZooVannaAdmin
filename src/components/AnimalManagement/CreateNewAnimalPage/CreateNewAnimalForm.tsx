@@ -504,7 +504,7 @@ function CreateNewAnimalForm() {
               required={!isGroup}
               placeholder="Select a sex..."
               valueLabelPair={Object.keys(AnimalSex).map((animalSexKey) => [
-                animalSexKey.toString(),
+                AnimalSex[animalSexKey as keyof typeof AnimalSex].toString(),
                 AnimalSex[animalSexKey as keyof typeof AnimalSex].toString(),
               ])}
               value={sex}
