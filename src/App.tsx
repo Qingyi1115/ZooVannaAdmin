@@ -103,6 +103,12 @@ import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
 
+//Event management page
+import CreateZooEventPage from "./pages/eventManagement/CreateZooEventPage";
+import EditZooEventPage from "./pages/eventManagement/EditZooEventPage";
+import ViewZooEventDetails from "./pages/eventManagement/ViewZooEventDetails";
+import ZooEventHomePage from "./pages/eventManagement/ZooEventHomePage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -799,6 +805,31 @@ function App() {
                   path="/listing/viewlisting/:listingId"
                   element={
                     user ? <ViewListingDetailsPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* Event Management */}
+                <Route
+                  path="/zooevent/createnewzooevent"
+                  element={
+                    user ? <CreateZooEventPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/viewallzooevents"
+                  element={
+                    user ? <ZooEventHomePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/editzooevent/:zooeventId"
+                  element={
+                    user ? <EditZooEventPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/viewzooevent/:zooeventId"
+                  element={
+                    user ? <ViewZooEventDetails /> : <Navigate to="/login" />
                   }
                 />
               </Route>
