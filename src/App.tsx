@@ -302,6 +302,66 @@ function App() {
                     )
                   }
                 />
+                {/* <Route
+                  path="/animal/createAnimalActivityLog/:animalId"
+                  element={
+                    user ? (
+                      <CreateNewAnimalActivityLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/viewAnimalActivityLogDetails/:animalActivityLogId"
+                  element={
+                    user ? (
+                      <ViewAnimalActivityLogDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/editAnimalActivityLog/:animalActivityLogId"
+                  element={
+                    user ? (
+                      <EditAnimalActivityLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                /> */}
+                {/* <Route
+                  path="/animal/createAnimalFeedingLog/:animalId"
+                  element={
+                    user ? (
+                      <CreateNewAnimalFeedingLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/viewAnimalFeedingLogDetails/:animalFeedingLogId"
+                  element={
+                    user ? (
+                      <ViewAnimalFeedingLogDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/editAnimalFeedingLog/:animalFeedingLogId"
+                  element={
+                    user ? (
+                      <EditAnimalFeedingLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                /> */}
                 <Route
                   path="/animal/animalactivities"
                   element={
