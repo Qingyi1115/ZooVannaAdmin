@@ -15,11 +15,11 @@ import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../../models/Facility";
 
-interface AddFacilityMaintenanceStaffProps {
+interface ViewAllFacilityMaintenanceStaffProps {
   facilityId: number;
 }
 
-function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
+function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
   const { facilityId } = props;
@@ -64,10 +64,11 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
           emp["generalStaff"] = staff
           const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
           console.log(maintainedFacility);
-          emp.currentlyAssigned = (maintainedFacility !== undefined);
-          allStaffs.push(emp)
+          if (maintainedFacility !== undefined) {
+            emp.currentlyAssigned = true
+            allStaffs.push(emp)
+          }
         }
-
       }
       console.log(allStaffs);
       setEmployeeList(allStaffs);
@@ -214,7 +215,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>
-              <Button
+              {/* <Button
                 name="assignButton"
                 variant={"default"}
                 disabled={employee.currentlyAssigned}
@@ -222,7 +223,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
-              </Button>
+              </Button> */}
               <Button
                 variant={"destructive"}
                 className="mr-2"
@@ -244,6 +245,16 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
       <div>
         <Toast ref={toast} />
         <div className="">
+
+          <Button
+            variant={"outline"}
+            className="mr-2" onClick={()=>{ 
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageMaintenance`, { replace: true });
+              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+            }}>
+            <HiPlus className="mx-auto" />
+              Add Maintenance staff
+          </Button>
 
           <DataTable
             ref={dt}
@@ -348,4 +359,4 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
   );
 }
 
-export default AddFacilityMaintenanceStaff;
+export default ViewAllFacilityMaintenanceStaff;

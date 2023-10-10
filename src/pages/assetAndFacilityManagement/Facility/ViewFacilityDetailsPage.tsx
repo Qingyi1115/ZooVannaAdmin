@@ -15,7 +15,7 @@ import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityMan
 import AllFacilityLogsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/AllFacilityLogsDatatable";
 import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
 import { useAuthContext } from "../../../hooks/useAuthContext";
-import AddFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/AddFacilityMaintenanceStaff";
+import ViewAllFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ViewAllFacilityMaintenanceStaff";
 
 
 
@@ -140,7 +140,7 @@ function ViewFacilityDetailsPage() {
           </TabsContent>
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <TabsContent value="manageMaintenance">
-              <AddFacilityMaintenanceStaff facilityId={Number(facilityId)} />
+              <ViewAllFacilityMaintenanceStaff facilityId={Number(facilityId)} />
             </TabsContent>
           )}
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
