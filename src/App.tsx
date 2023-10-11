@@ -102,6 +102,7 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
+import ViewCameraPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -524,6 +525,18 @@ function App() {
                     user ? <ViewSensorDetailsPage /> : <Navigate to="/login" />
                   }
                 />
+
+                <Route
+                  path="/assetfacility/viewcamera/:sensorId"
+                  element={
+                    user ? (
+                      <ViewCameraPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
                 <Route
                   path="/assetfacility/createhub"
                   element={

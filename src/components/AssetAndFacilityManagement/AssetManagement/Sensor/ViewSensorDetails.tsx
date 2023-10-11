@@ -17,7 +17,7 @@ import {
 import Sensor from "src/models/Sensor";
 import { Separator } from "@radix-ui/react-select";
 import { useNavigate } from "react-router-dom";
-import { HiPencil } from "react-icons/hi";
+import { HiCamera, HiPencil } from "react-icons/hi";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { BsWrenchAdjustable } from "react-icons/bs";
 
@@ -53,6 +53,17 @@ function ViewSensorDetails(props: SensorDetailsProps) {
               Complete maintenance
             </Button>
         )}
+        {curSensor.sensorType == "CAMERA" && (
+
+          <Button className="mr-2" onClick={()=>{ 
+            navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
+            navigate(`/assetfacility/viewcamera/${curSensor.sensorId}`);
+          }}>
+          <HiCamera className="mx-auto" />
+          View Camera
+          </Button>
+        )}
+
       </div>
       <Table>
         <TableBody>
