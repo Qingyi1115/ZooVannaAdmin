@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import FatAnimalsCard from "../components/HomePage/FatAnimalsCard";
 
 function HomePage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -18,6 +19,7 @@ function HomePage() {
   return (
     <div className="h-screen w-full p-10">
       <div className="flex h-5/6 w-full gap-10">
+        <FatAnimalsCard />
         <div className="flex flex-col gap-10">
           <Card className="h-1/2 w-full flex-grow p-10">
             <Skeleton className="h-[20px] w-[100px] rounded-full" />

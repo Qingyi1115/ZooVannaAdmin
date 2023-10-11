@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
+import { DataView } from "primereact/dataview";
 // import { ProductService } from './service/ProductService';
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
@@ -11,31 +10,43 @@ import useApiJson from "../../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import MaintenanceLog from "../../../../../models/MaintenanceLog";
 import Sensor from "../../../../../models/Sensor";
-import InHouse from "../../../../../models/InHouse";
-import { SensorType } from "../../../../../enums/SensorType";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { Card } from "primereact/card";
+import { DataTable } from "primereact/datatable";
+import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
 interface AllMaintenanceLogsDatatableProps {
-  curSensor: Sensor;
+  sensorId: number;
 }
 
 function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   const apiJson = useApiJson();
-  const { curSensor } = props;
-  console.log(curSensor);
+  const { sensorId } = props;
+  const employee = useAuthContext().state.user?.employeeData;
+  const [curSensor, setCurSensor] = useState<any>({});
 
+  useEffect(() => {
+    apiJson.post(
+      `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
+      { includes: ["hubProcessor", "maintenanceLogs", "generalStaff"] }).then(res => {
+        setCurSensor(res.sensor as Sensor);
+        setMaintenanceLogList(res.sensor.maintenanceLogs)
+      }).catch(e => console.log(e));
+  }, []);
 
   let emptyMaintenanceLog: MaintenanceLog = {
-    logId: 0,
+    maintenanceLogId: 0,
     dateTime: new Date(),
     title: "",
     details: "",
     remarks: "",
-    sensor: curSensor
+    sensor: curSensor,
+    staffName: ""
   };
 
   const [maintenanceLogList, setMaintenanceLogList] = useState<MaintenanceLog[]>(curSensor.maintenanceLogs);
@@ -46,6 +57,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<MaintenanceLog[]>>(null);
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   const exportCSV = () => {
     dt.current?.exportCSV();
@@ -63,22 +75,22 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   // delete maintenanceLog stuff
   const deleteMaintenanceLog = async () => {
     let _maintenanceLog = maintenanceLogList.filter(
-      (val) => val.logId !== selectedMaintenanceLog?.logId
+      (val) => val.maintenanceLogId !== selectedMaintenanceLog?.maintenanceLogId
     );
 
     const deleteMaintenanceLog = async () => {
       try {
         setDeleteMaintenanceLogDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetSensor/deleteMaintenanceLog/" +
-          selectedMaintenanceLog.logId
+          "http://localhost:3000/api/assetFacility/deleteSensorMaintenanceLog/" +
+          selectedMaintenanceLog.maintenanceLogId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted maintenanceLog: " + selectedMaintenanceLog.logId,
+            "Successfully deleted maintenanceLog: " + selectedMaintenanceLog.title,
         });
         setMaintenanceLogList(_maintenanceLog);
         setSelectedMaintenanceLog(emptyMaintenanceLog);
@@ -109,36 +121,71 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
   );
   // end delete maintenanceLog stuff
 
-  const actionBodyTemplate = (maintenanceLog: MaintenanceLog) => {
-    return (
-      <React.Fragment>
-        <NavLink to={`/assetfacility/viewmaintenanceLogdetails/${maintenanceLog.logId}`}>
-          <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
+  // const actionBodyTemplate = (maintenanceLog: MaintenanceLog) => {
+  //   return (
+  //     <React.Fragment>
+  //       <NavLink to={`/assetfacility/viewmaintenanceLogdetails/${maintenanceLog.maintenanceLogId}`}>
+  //         <Button variant={"outline"} className="mb-1 mr-1">
+  //           <HiEye className="mx-auto" />
+  //         </Button>
+  //       </NavLink>
+  //       <NavLink to={`/assetfacility/editmaintenanceLog/${maintenanceLog.maintenanceLogId}`}>
+  //         <Button className="mr-1">
+  //           <HiPencil className="mr-1" />
 
-          </Button>
-        </NavLink>
-        <NavLink to={`/assetfacility/editmaintenanceLog/${maintenanceLog.logId}`}>
-          <Button className="mr-1">
-            <HiPencil className="mr-1" />
+  //         </Button>
+  //       </NavLink>
+  //       <Button
+  //         variant={"destructive"}
+  //         className="mr-2"
+  //         onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
+  //       >
+  //         <HiTrash className="mx-auto" />
 
-          </Button>
-        </NavLink>
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
-        >
-          <HiTrash className="mx-auto" />
+  //       </Button>
+  //     </React.Fragment>
+  //   );
+  // };
 
-        </Button>
-      </React.Fragment>
-    );
+  //Sort results
+  interface SortOption {
+    label: string;
+    value: string;
+  }
+  const [sortKey, setSortKey] = useState<string>('');
+  const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(-1);
+  const [sortField, setSortField] = useState<string>('dateTime');
+  const sortOptions: SortOption[] = [
+    { label: 'Latest log', value: '!dateTime' },
+    { label: 'Earliest log', value: 'dateTime' },
+    { label: 'Title (A-Z)', value: 'title' },
+    { label: 'Title (Z-A)', value: '!title' }
+  ]
+
+  const onSortChange = (event: DropdownChangeEvent) => {
+    const value = event.value;
+
+    if (value.indexOf('!') === 0) {
+      setSortOrder(-1);
+      setSortField(value.substring(1, value.length));
+      setSortKey(value);
+    } else {
+      setSortOrder(1);
+      setSortField(value);
+      setSortKey(value);
+    }
   };
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h4 className="m-1">Manage Maintenance Logs</h4>
+      <Dropdown
+        options={sortOptions}
+        value={sortKey}
+        optionLabel="label"
+        placeholder="Sort By"
+        onChange={onSortChange}
+      />
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -150,89 +197,88 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           }}
         />
       </span>
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/maintenanceLogs`, { replace: true });
+          navigate(`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`);
+        }}>
+          <HiPlus className="mr-auto" />
+          Add Maintenance Log
+        </Button>
+      )}
     </div>
   );
+
+  const listItem = (maintenanceLog: MaintenanceLog) => {
+    return (
+      <div>
+        <Card className="my-4 relative"
+          title={maintenanceLog.title}
+          subTitle={<div>
+            {maintenanceLog.dateTime ? "Date created: " + new Date(maintenanceLog.dateTime).toLocaleString() : ""}
+            <p></p>{maintenanceLog.staffName ? "Created by: " + maintenanceLog.staffName : ""}
+          </div>}
+        >
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || maintenanceLog.staffName == employee.employeeName) &&
+            <Button
+
+              className="absolute top-5 right-20"
+              onClick={() => navigate(`/assetfacility/editmaintenanceLog/${maintenanceLog.maintenanceLogId}`)}
+            >
+              <HiPencil className="mx-auto" />
+            </Button>}
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || maintenanceLog.staffName == employee.employeeName) && <Button
+            variant={"destructive"}
+            className="absolute top-5 right-5"
+            onClick={() => confirmDeletemaintenanceLog(maintenanceLog)}
+          >
+            <HiTrash className="mx-auto" />
+          </Button>}
+
+          <div className="flex flex-col left gap-6 lg:flex-row lg:gap-12">
+            <div>
+              <div className="text-xl font-bold text-900">Details</div>
+              <p>{maintenanceLog.details}</p>
+            </div>
+            <Separator orientation="vertical" />
+            <div>
+              <div className="text-xl font-bold text-900">Remarks</div>
+              <p>{maintenanceLog.remarks}</p>
+            </div>
+          </div>
+
+        </Card>
+      </div>
+    )
+  }
+
+  const itemTemplate = (maintenanceLog: MaintenanceLog) => {
+    if (!maintenanceLog) {
+      return;
+    }
+    return listItem(maintenanceLog);
+  };
 
   return (
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <NavLink to={`/assetfacility/createmaintenancelog/${curSensor.sensorId}`}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
-              <span className=" self-center text-title-xl font-bold">
-                All Maintenance Logs
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
 
-          <DataTable
-            ref={dt}
+          <DataView
             value={maintenanceLogList}
-            selection={selectedMaintenanceLog}
-            onSelectionChange={(e) => {
-              if (Array.isArray(e.value)) {
-                setSelectedMaintenanceLog(e.value);
-              }
-            }}
-            dataKey="logId"
-            paginator
-            rows={10}
-            scrollable
-            selectionMode={"single"}
-            rowsPerPageOptions={[5, 10, 25]}
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sensor maintenance logs"
-            globalFilter={globalFilter}
+            itemTemplate={itemTemplate}
+            layout="list"
+            dataKey="maintenanceLogId"
             header={header}
-          >
-            <Column
-              field="logId"
-              header="ID"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="dateTime"
-              header="Date"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="title"
-              header="Title"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="remarks"
-              header="Remarks"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="viewed"
-              header="Viewed?"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              body={actionBodyTemplate}
-              header="Actions"
-              frozen
-              alignFrozen="right"
-              exportable={false}
-              style={{ minWidth: "9rem" }}
-            ></Column>
-          </DataTable>
+            sortField={sortField}
+            sortOrder={sortOrder}
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facility logs"
+            rows={10}
+            rowsPerPageOptions={[5, 10, 25]}
+            paginator
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          />
         </div>
       </div>
       <Dialog
@@ -252,7 +298,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
           {selectedMaintenanceLog && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedMaintenanceLog.logId}</b>?
+              <b>{selectedMaintenanceLog.title}</b>?
             </span>
           )}
         </div>

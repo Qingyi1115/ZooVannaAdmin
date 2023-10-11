@@ -37,7 +37,7 @@ interface DietNeedDatatableProps {
 }
 
 const emptyDietNeeds: SpeciesDietNeed = {
-  speciesDietNeedId: 1,
+  speciesDietNeedId: -1,
   animalFeedCategory: AnimalFeedCategory.FISH,
   amountPerMealGram: 100,
   amountPerWeekGram: 1000,
@@ -65,7 +65,6 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
     dt.current?.exportCSV();
   };
 
-
   // Delete stuff
   const confirmDeleteDietaryReq = (speciesDietNeed: SpeciesDietNeed) => {
     setSelectedDietNeeds(speciesDietNeed);
@@ -86,7 +85,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deleteDietNeed/" +
-          selectedDietNeeds?.speciesDietNeedId
+            selectedDietNeeds?.speciesDietNeedId
         );
 
         toastShadcn({
@@ -132,7 +131,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
           to={`/species/editdietaryrequirements/${curSpecies.speciesCode}/${speciesDietNeed.speciesDietNeedId}`}
         >
           <Button className="mr-2">
-            <HiEye className="mr-auto" />
+            <HiPencil className="mr-auto" />
             {/* <span>View Details</span> */}
           </Button>
         </NavLink>
@@ -176,7 +175,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
             setDietNeedsList(e.value);
           }
         }}
-        dataKey="speciesId"
+        dataKey="speciesDietNeedId"
         paginator
         // showGridlines
         rows={10}

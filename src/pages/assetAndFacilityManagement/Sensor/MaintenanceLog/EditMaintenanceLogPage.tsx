@@ -8,11 +8,13 @@ import { HubStatus } from "../../../../enums/HubStatus";
 import { SensorType } from "../../../../enums/SensorType";
 import Hub from "../../../../models/Hub";
 import Sensor from "../../../../models/Sensor";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 function EditMaintenanceLogPage() {
   const apiJson = useApiJson();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
-  const { logId } = useParams<{ logId: string }>();
+  const { maintenanceLogId } = useParams<{ maintenanceLogId: string }>();
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptyFacility: Facility = {
     facilityId: -1,
@@ -33,7 +35,8 @@ function EditMaintenanceLogPage() {
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
     facility: emptyFacility,
-    sensors: []
+    sensors: [],
+    radioGroup: null
   };
 
   let emptySensor: Sensor = {
@@ -49,25 +52,26 @@ function EditMaintenanceLogPage() {
   };
 
   let emptyMaintenanceLog: MaintenanceLog = {
-    logId: 0,
+    maintenanceLogId: 0,
     dateTime: new Date(),
     title: "",
     details: "",
     remarks: "",
-    sensor: emptySensor
+    sensor: emptySensor,
+    staffName: employee.staffName
   };
 
   const [curMaintenanceLog, setCurMaintenanceLog] = useState<MaintenanceLog>(emptyMaintenanceLog);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/assetFacility/getSensorMaintenanceLog/${logId}`, { includes: [] }).then(res => {
+    apiJson.get(`http://localhost:3000/api/assetFacility/getSensorMaintenanceLog/${maintenanceLogId}`).then(res => {
       setCurMaintenanceLog(res.maintenanceLog as MaintenanceLog);
     });
   }, [refreshSeed]);
 
   return (
     <div className="p-10">
-      {curMaintenanceLog && curMaintenanceLog.logId != -1 && (
+      {curMaintenanceLog && curMaintenanceLog.maintenanceLogId != -1 && (
         <EditMaintenanceLogForm curMaintenanceLog={curMaintenanceLog} />
       )}
     </div>

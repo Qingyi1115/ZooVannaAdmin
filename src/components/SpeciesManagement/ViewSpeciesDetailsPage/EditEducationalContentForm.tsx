@@ -122,7 +122,7 @@ function EditEducationalContentForm(props: EditEducationalContentForm) {
             asChild
             value={educationalDescription}
             onChange={(e) => setEducationalDescription(e.target.value)}
-            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
           >
             <textarea
               rows={6}
@@ -151,11 +151,7 @@ function EditEducationalContentForm(props: EditEducationalContentForm) {
             disabled={apiJson.loading}
             className="h-12 w-2/3 self-center rounded-full text-lg"
           >
-            {!apiJson.loading ? (
-              <div>Submit</div>
-            ) : (
-              <div>Loading</div>
-            )}
+            {!apiJson.loading ? <div>Submit</div> : <div>Loading</div>}
           </Button>
         </Form.Submit>
         {/* {formError && (

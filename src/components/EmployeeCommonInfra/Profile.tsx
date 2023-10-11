@@ -58,7 +58,6 @@ function Profile() {
         const responseJson = await apiJson.get(
           "http://localhost:3000/api/employee/getEmployee"
         );
-        console.log("responseJson", responseJson["employee"]);
         setCurEmployee(responseJson["employee"]);
       } catch (error: any) {
         console.log(error);

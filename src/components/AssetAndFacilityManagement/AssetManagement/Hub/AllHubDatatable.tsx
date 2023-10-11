@@ -13,11 +13,12 @@ import useApiJson from "../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { HubStatus } from "../../../../enums/HubStatus";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../models/Facility";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
+import { useNavigate  } from "react-router-dom";
 
 interface AllHubDatatableProps {
   curFacility: Facility;
@@ -25,9 +26,12 @@ interface AllHubDatatableProps {
 
 function AllHubDatatable(props: AllHubDatatableProps) {
   const apiJson = useApiJson();
+  const employee = useAuthContext().state.user?.employeeData;
+  const navigate = useNavigate();
 
   const { curFacility } = props;
   let emptyHub: Hub = {
+    radioGroup: null,
     hubProcessorId: -1,
     processorName: "",
     ipAddressName: "",
@@ -37,23 +41,6 @@ function AllHubDatatable(props: AllHubDatatableProps) {
     facility: curFacility,
     sensors: []
   };
-
-  // Get all hubs in system
-  // useEffect(() => {
-  //   const fetchHub = async () => {
-  //     try {
-  //       const responseJson = await apiJson.get(
-  //         "http://localhost:3000/api/assetfacility/getAllHubs"
-  //       );
-  //       setHubList(responseJson["hubs"] as Hub[]);
-  //     } catch (error: any) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchHub();
-  // }, []);
-
-  //
 
   const [hubList, setHubList] = useState<Hub[]>(curFacility.hubProcessors);
   const [selectedHub, setSelectedHub] =
@@ -69,6 +56,9 @@ function AllHubDatatable(props: AllHubDatatableProps) {
     dt.current?.exportCSV();
   };
 
+  useEffect(() => {
+    setHubList(curFacility.hubProcessors)
+  }, [curFacility.hubProcessors]);
 
   const confirmDeleteHub = (hub: Hub) => {
     setSelectedHub(hub);
@@ -133,27 +123,33 @@ function AllHubDatatable(props: AllHubDatatableProps) {
   const actionBodyTemplate = (hub: Hub) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewhubdetails/${hub.hubProcessorId}`}>
           <Button
             variant={"outline"}
-            className="mb-1 mr-1">
+            className="mb-1 mr-1" onClick={()=>{ 
+              navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
+              navigate(`/assetfacility/viewhubdetails/${hub.hubProcessorId}`);
+            }}>
             <HiEye className="mx-auto" />
           </Button>
-        </NavLink>
-        <NavLink
-          to={`/assetfacility/edithub/${hub.hubProcessorId}`}
-        >
-          <Button className="mr-2">
-            <HiPencil className="mx-auto" />
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+
+            <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
+                navigate(`/assetfacility/edithub/${hub.hubProcessorId}`);
+              }}>
+              <HiPencil className="mx-auto" />
+            </Button>
+
+        )}
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmDeleteHub(hub)}
+          >
+            <HiTrash className="mx-auto" />
           </Button>
-        </NavLink>
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteHub(hub)}
-        >
-          <HiTrash className="mx-auto" />
-        </Button>
+        )}
       </React.Fragment>
     );
   };
@@ -172,6 +168,18 @@ function AllHubDatatable(props: AllHubDatatableProps) {
           }}
         />
       </span>
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+
+          <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
+                navigate(`/assetfacility/createhub/${curFacility.facilityId}`);
+              }}>
+            <HiPlus className="mr-auto" />
+            Add Hub
+          </Button>
+
+      )}
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -179,23 +187,8 @@ function AllHubDatatable(props: AllHubDatatableProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <NavLink to={`/assetfacility/createhub/${curFacility.facilityId}`}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
-              <span className=" self-center text-title-xl font-bold">
-                All Hubs
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
-
+        <div className="">
+         
           <DataTable
             ref={dt}
             value={hubList}
@@ -235,7 +228,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
               style={{ minWidth: "16rem" }}
             ></Column>
             <Column
-              field="lastDataUpdate"
+              field="lastDataUpdateString"
               header="Last Data Update"
               sortable
               style={{ minWidth: "16rem" }}

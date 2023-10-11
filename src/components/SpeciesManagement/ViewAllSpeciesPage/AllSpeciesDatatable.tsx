@@ -50,6 +50,10 @@ function AllSpeciesDatatable() {
     habitatOrExhibit: "habitat",
     imageUrl: "",
     generalDietPreference: "",
+    ageToJuvenile: 0,
+    ageToAdolescent: 1,
+    ageToAdult: 2,
+    ageToElder: 3,
     lifeExpectancyYears: 0,
   };
 
@@ -202,6 +206,7 @@ function AllSpeciesDatatable() {
               <NavLink to={"/species/createspecies"}>
                 <Button className="mr-2">
                   <HiPlus className="mr-auto" />
+                  Add Species
                 </Button>
               </NavLink>
               <span className=" self-center text-title-xl font-bold">

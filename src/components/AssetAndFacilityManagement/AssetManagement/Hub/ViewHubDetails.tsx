@@ -16,8 +16,9 @@ import {
 } from "@/components/ui/table";
 import Hub from "../../../../models/Hub";
 import { Separator } from "@radix-ui/react-select";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 interface HubDetailsProps {
   curHub: Hub;
@@ -26,18 +27,25 @@ interface HubDetailsProps {
 }
 function ViewHubDetails(props: HubDetailsProps) {
   const { curHub, refreshSeed, setRefreshSeed } = props;
-  console.log(props);
+  const employee = useAuthContext().state.user?.employeeData;
+  const navigate = useNavigate();
 
   const toastShadcn = useToast().toast;
 
   return (
     <div className="flex flex-col">
 
-      <NavLink to={`/assetfacility/edithub/${curHub.hubProcessorId}`}>
-        <Button className="mr-2">
-          <HiPencil className="mx-auto" />
-        </Button>
-      </NavLink>
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        <div>
+          <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/hubDetails`, { replace: true });
+                navigate(`/assetfacility/edithub/${curHub.hubProcessorId}`);
+              }}>
+            <HiPencil className="mx-auto" />
+            Edit Hub Details
+          </Button>
+          </div>
+      )}
 
       <Table>
         {/* <TableHeader className=" bg-whiten">
@@ -61,18 +69,30 @@ function ViewHubDetails(props: HubDetailsProps) {
             </TableCell>
             <TableCell>{curHub.processorName}</TableCell>
           </TableRow>
+          {curHub.hubStatus != "PENDING" && (
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               IP Address Name
             </TableCell>
             <TableCell>{curHub.ipAddressName}</TableCell>
           </TableRow>
+          )}
+          {curHub.hubStatus != "PENDING" && (
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Last Data Update
             </TableCell>
-            <TableCell>{String(curHub.lastDataUpdate)}</TableCell>
+            <TableCell>{new Date((curHub.lastDataUpdate as any)).toLocaleString()}</TableCell>
           </TableRow>
+          )}
+          {curHub.hubStatus != "PENDING" && (
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Radio Group
+            </TableCell>
+            <TableCell>{String(curHub.radioGroup)}</TableCell>
+          </TableRow>
+          )}
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Hub Status

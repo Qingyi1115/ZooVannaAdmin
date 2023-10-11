@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
+import { useToast } from "@/components/ui/use-toast";
 
 // in functional component, example:
 /*
@@ -45,6 +46,7 @@ function useApiJson<TData = any>() {
     setError(null);
     setResult(null);
     try {
+      // const toastShadcn = useToast().toast;
       const options: RequestInit = {
         method,
         headers: {
@@ -60,6 +62,23 @@ function useApiJson<TData = any>() {
       if (!response.ok) {
         const errorObject = await response.json();
         if (response.status == 401){
+          console.log("response", errorObject)
+
+          // toastShadcn({
+          //   variant: "destructive",
+          //   title: "Logged out!",
+          //   description:"Authorization failed! Please login again!"
+          // });
+
+          dispatch({ type: "LOGOUT" });
+        }
+        if (response.status == 403){
+          console.log("response", errorObject)
+        // toastShadcn({
+        //   variant: "destructive",
+        //   title: "Logged out!",
+        //   description:"Authorization failed! Please login again!"
+        // });
           dispatch({ type: "LOGOUT" });
         }
 
@@ -92,7 +111,7 @@ function useApiJson<TData = any>() {
   };
 
   const del = async (url: string, body: any = null) => {
-    return request(url, "DELETE");
+    return request(url, "DELETE", body);
   };
 
   return {

@@ -15,7 +15,7 @@ interface ViewFacilityLogDetailsProps {
   curFacilityLog: FacilityLog
 }
 
-function ViewHubDetails(props: ViewFacilityLogDetailsProps) {
+function ViewFacilityLogDetails(props: ViewFacilityLogDetailsProps) {
   const { curFacilityLog } = props;
   console.log(props);
 
@@ -24,7 +24,7 @@ function ViewHubDetails(props: ViewFacilityLogDetailsProps) {
   return (
     <div className="flex flex-col">
 
-      <NavLink to={`/assetfacility/editfacilitylog/${curFacilityLog.logId}`}>
+      <NavLink to={`/assetfacility/editfacilitylog/${curFacilityLog.facilityLogId}`}>
         <Button className="mr-2">
           <HiPencil className="mx-auto" />
         </Button>
@@ -36,7 +36,7 @@ function ViewHubDetails(props: ViewFacilityLogDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Facility Log ID
             </TableCell>
-            <TableCell>{curFacilityLog.logId}</TableCell>
+            <TableCell>{curFacilityLog.facilityLogId}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -74,4 +74,4 @@ function ViewHubDetails(props: ViewFacilityLogDetailsProps) {
   )
 }
 
-export default ViewHubDetails;
+export default ViewFacilityLogDetails;

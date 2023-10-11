@@ -11,8 +11,8 @@ interface ErrorResponse {
 }
 
 interface LoginResponse extends User {
-  email: string;
   token: string;
+  employeeData: any;
 }
 
 function useLogin() {

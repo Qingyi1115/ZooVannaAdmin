@@ -24,13 +24,14 @@ function ViewFacilityLogDetailsPage() {
   };
 
   let emptyFacilityLog: FacilityLog = {
-    logId: -1,
+    facilityLogId: -1,
     dateTime: new Date(),
     isMaintenance: false,
     title: "",
     details: "",
     remarks: "",
-    facility: emptyFacility
+    facility: emptyFacility,
+    staffName: ""
   }
 
   const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);
@@ -43,7 +44,7 @@ function ViewFacilityLogDetailsPage() {
 
   return (
     <div className="p-10">
-      {curFacilityLog && curFacilityLog.logId != -1 && (
+      {curFacilityLog && curFacilityLog.facilityLogId != -1 && (
         <ViewFacilityLogDetails curFacilityLog={curFacilityLog} />
       )}
     </div>

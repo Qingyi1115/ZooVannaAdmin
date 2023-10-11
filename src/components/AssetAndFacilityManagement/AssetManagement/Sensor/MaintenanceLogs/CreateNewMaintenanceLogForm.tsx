@@ -11,6 +11,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Sensor from "../../../../../models/Sensor";
+import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
 interface CreateNewMaintenanceLogProps {
   curSensor: Sensor;
@@ -37,7 +38,7 @@ function CreateNewMaintenanceLogForm(props: CreateNewMaintenanceLogProps) {
   const [remarks, setRemarks] = useState<string>(""); // text input
   const { curSensor } = props;
   const [formError, setFormError] = useState<string | null>(null);
-
+  const employee = useAuthContext().state.user?.employeeData;
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
@@ -58,6 +59,10 @@ function CreateNewMaintenanceLogForm(props: CreateNewMaintenanceLogProps) {
       toastShadcn({
         description: "Successfully created sensor maintenance log",
       });
+      (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")
+        ? navigate(-1)
+        : navigate("/assetfacility/maintenance/sensorMaintenance");
+      console.log(responseJson);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -67,7 +72,6 @@ function CreateNewMaintenanceLogForm(props: CreateNewMaintenanceLogProps) {
           error.message,
       });
     }
-    console.log(apiJson.result);
 
     // handle success case or failurecase using apiJson
   }

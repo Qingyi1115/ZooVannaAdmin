@@ -13,14 +13,16 @@ import useApiJson from "../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
 import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 
 function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptyAnimalFeed: AnimalFeed = {
     animalFeedId: -1,
@@ -127,13 +129,12 @@ function AllAnimalFeedDatatable() {
   const actionBodyTemplate = (animalFeed: AnimalFeed) => {
     return (
       <React.Fragment>
-        <NavLink
-          to={`/assetfacility/editanimalfeed/${animalFeed.animalFeedName}`}
-        >
-          <Button className="mr-2">
+          <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewallassets/animalFeed`, { replace: true });
+                navigate(`/assetfacility/editanimalfeed/${animalFeed.animalFeedId}`);
+              }}>
             <HiPencil className="mx-auto" />
           </Button>
-        </NavLink>
         <Button
           variant={"destructive"}
           className="mr-2"
@@ -159,6 +160,18 @@ function AllAnimalFeedDatatable() {
           }}
         />
       </span>
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
+          <Button className="mr-2" onClick={()=>{ 
+                navigate(`/assetfacility/viewallassets/animalFeed`, { replace: true });
+                navigate(`/assetfacility/createanimalfeed`);
+              }}>
+            <HiPlus className="mr-auto" />
+            Add Animal Feed
+          </Button>:
+        <Button disabled className="invisible">
+          Export to .csv
+        </Button>}
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -166,22 +179,7 @@ function AllAnimalFeedDatatable() {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <NavLink to={"/assetfacility/createanimalfeed"}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
-              <span className="self-center text-title-xl font-bold">
-                All Animal Feed
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
 
           <DataTable
             ref={dt}
@@ -226,14 +224,17 @@ function AllAnimalFeedDatatable() {
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
-            <Column
-              body={actionBodyTemplate}
-              header="Actions"
-              frozen
-              alignFrozen="right"
-              exportable={false}
-              style={{ minWidth: "9rem" }}
-            ></Column>
+
+            {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && (
+              <Column
+                body={actionBodyTemplate}
+                header="Actions"
+                frozen
+                alignFrozen="right"
+                exportable={false}
+                style={{ minWidth: "9rem" }}
+              ></Column>
+            )}
           </DataTable>
         </div>
       </div>

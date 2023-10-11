@@ -42,12 +42,17 @@ interface PhysioRefNormDatatableProps {
 }
 
 const emptyPhysioRefNorm: PhysiologicalReferenceNorms = {
-  physiologicalRefId: 1,
-  sizeMaleCm: 100,
-  sizeFemaleCm: 90,
-  weightMaleKg: 200,
-  weightFemaleKg: 190,
-  ageToGrowthAge: 15,
+  physiologicalRefId: -1,
+  minSizeMaleCm: 100,
+  minSizeFemaleCm: 90,
+  minWeightMaleKg: 200,
+  minWeightFemaleKg: 190,
+  maxSizeMaleCm: 100,
+  maxSizeFemaleCm: 90,
+  maxWeightMaleKg: 200,
+  maxWeightFemaleKg: 190,
+  minAge: 10,
+  maxAge: 15,
   growthStage: AnimalGrowthStage.JUVENILE,
 };
 
@@ -92,7 +97,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deletePhysiologicalReferenceNorms/" +
-          selectedPhysioRefNorm?.physiologicalRefId
+            selectedPhysioRefNorm?.physiologicalRefId
         );
 
         toastShadcn({
@@ -139,7 +144,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
           to={`/species/editphysiorefnorm/${curSpecies.speciesCode}/${physioRefNorm.physiologicalRefId}`}
         >
           <Button className="mr-2">
-            <HiEye className="mr-auto" />
+            <HiPencil className="mr-auto" />
             {/* <span>View Details</span> */}
           </Button>
         </NavLink>
@@ -183,7 +188,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
             setPhysiologicalRefNormsList(e.value);
           }
         }}
-        dataKey="speciesId"
+        dataKey="physiologicalRefId"
         paginator
         // showGridlines
         rows={10}
@@ -205,35 +210,65 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
           field="growthStage"
           header="Growth Stage"
           sortable
-          style={{ minWidth: "12rem" }}
+          style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="ageToGrowthAge"
-          header="Age to Reach Growth Stage"
+          field="minAge"
+          header="Start Age (years)"
+          sortable
+          style={{ minWidth: "6rem" }}
+        ></Column>
+        <Column
+          field="maxAge"
+          header="End Age (years)"
+          sortable
+          style={{ minWidth: "6rem" }}
+        ></Column>
+        <Column
+          field="minSizeMaleCm"
+          header="Min Size Male (cm)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>
         <Column
-          field="sizeMaleCm"
-          header="Average Size Male (cm)"
+          field="maxSizeMaleCm"
+          header="Max Size Male (cm)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>
         <Column
-          field="weightMaleKg"
-          header="Average Weight Male (kg)"
+          field="minWeightMaleKg"
+          header="Min Weight Male (kg)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>
         <Column
-          field="sizeFemaleCm"
-          header="Average Size Female (cm)"
+          field="maxWeightMaleKg"
+          header="Max Weight Male (kg)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>
         <Column
-          field="weightFemaleKg"
-          header="Average Weight Female (kg)"
+          field="minSizeFemaleCm"
+          header="Min Size Female (cm)"
+          sortable
+          style={{ minWidth: "12rem" }}
+        ></Column>
+        <Column
+          field="maxSizeFemaleCm"
+          header="Max Size Female (cm)"
+          sortable
+          style={{ minWidth: "12rem" }}
+        ></Column>
+        <Column
+          field="minWeightFemaleKg"
+          header="Min Weight Female (kg)"
+          sortable
+          style={{ minWidth: "12rem" }}
+        ></Column>
+        <Column
+          field="maxWeightFemaleKg"
+          header="Max Weight Female (kg)"
           sortable
           style={{ minWidth: "12rem" }}
         ></Column>
