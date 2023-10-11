@@ -36,41 +36,44 @@ function TestPage() {
     const [imgSrc, setImgSrc] = React.useState<any>(0);
     const useApi = useApiJson();
 
-    useEffect(()=>{
-        console.log("test1")
+    useEffect(() => {
+        const streamImage = async () => {
+            const response = await fetch('http://localhost:8000/detected.jpeg');
+            const reader = response.body?.getReader();
+            let chunks: Uint8Array[] = [];
+            let boundary = new TextEncoder().encode('--FRAME\r\n');
 
-        const options: RequestInit = {
-            method : "GET",
-            headers: { 
-                Authorization: 'Bearer eyJhbGciOiJIU', 
-                "Content-Type": "application/json", 
-            },
-            
-          };
+            while (true) {
+                const { done, value } = await reader?.read() as any;
+                if (done) break;
 
+                for (const chunk of value) {
+                    chunks.push(chunk);
 
-    //     fetch('http://localhost:8000/detected.jpeg', options).then((response:any) => {
-    //     console.log("test2", response.headers,response.data)
-    //        const data = `data:${response.headers['content-type']};base64,${new Buffer(response.data).toString('base64')}`;
-    //        console.log("data",data);
-    //        setImgSrc(data );
-   
-    //    });
-          useApi.get("http://localhost:8000/detected.jpeg").then((response:any) => {
-                console.log("test2", response.headers,response.data)
-                   const data = `data:${response.headers['content-type']};base64,${new Buffer(response.data).toString('base64')}`;
-                   console.log("data",data);
-                   setImgSrc(data );
-           
-               });
+                    if (chunks.length >= boundary.length) {
+                        const isBoundary = chunks.slice(-boundary.length).every((byte:any, i) => byte === boundary[i]);
+                        if (isBoundary) {
+                            chunks = chunks.slice(0, -boundary.length); // Remove the boundary
 
-    }, [])
+                            const blob = new Blob(chunks, { type: 'image/jpeg' });
+                            console.log("blob",blob)
+                            const objectURL = URL.createObjectURL(blob);
+                            setImgSrc(objectURL);
+                            chunks = [];
+                        }
+                    }
+                }
+            }
+        };
+
+        streamImage();
+    }, []);
 
 
   return (
-    <div>
-    <div>Hello world</div>
-    {/* <img src={imgSrc} alt="love is gone" /> */}
+    <div className="w-[100vw] h-[100vh] bg-blue-200">
+    <img src={imgSrc} alt="love is gone" />
+    <iframe src={imgSrc}  className="w-full h-full bg-red-200 aspect-video"></iframe>
     </div>
 );
 }
