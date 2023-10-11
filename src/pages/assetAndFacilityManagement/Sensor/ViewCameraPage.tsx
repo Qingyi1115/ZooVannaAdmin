@@ -3,12 +3,6 @@ import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import EditSensorForm from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/EditSensorForm";
 import useApiJson from "../../../hooks/useApiJson";
-import Sensor from "../../../models/Sensor";
-import { SensorType } from "../../../enums/SensorType";
-import Hub from "../../../models/Hub";
-import Facility from "../../../models/Facility";
-import { HubStatus } from "../../../enums/HubStatus";
-import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { HiPencil } from "react-icons/hi";
 import ViewCamera from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/ViewCamera";
@@ -28,6 +22,7 @@ const navigate = useNavigate();
             date: res.date,
             ipAddressName: res.ipAddressName,
             signature: res.signature,
+            sensorName: res.sensorName
         }
         setAuthorization(newAuth);
       }).catch(e => console.log(e));
@@ -39,7 +34,7 @@ const navigate = useNavigate();
         <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
-
+        <h1>{authorization?.sensorName}</h1>
       {authorization && (
         <ViewCamera authorization={authorization} />
       )}

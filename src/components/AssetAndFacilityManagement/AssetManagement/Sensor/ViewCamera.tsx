@@ -21,7 +21,6 @@ function ViewCamera(props: Authorization) {
 
     const [pageContent, setPageContent] = useState<any>(undefined);
     const { authorization } = props;
-    console.log(authorization)
     const url = "http://" + authorization.ipAddressName + ":8000";
 
 
@@ -61,63 +60,10 @@ function ViewCamera(props: Authorization) {
    
     return (
 
-      <div>
-      <iframe src={url}></iframe>
+      <div className="w-[100vw] h-[100vh]">
+      <iframe className="w-[100vw] h-[100vh]" src={url}></iframe>
     </div>
     );
-//   const ref : any= useRef();
-//   useEffect(() => {
-//      const iframe: any = ref.current;
-//      iframe.addEventListener('load', () => {
-//          iframe.contentWindow.postMessage('message', authorization.ipAddressName + ":8000");
-//      });
-//   }, [ref]);
-    
-//     return (
-//         <iframe
-//             ref={ref}
-//             autoFocus={true}
-//             title='test'
-//             //@ts-ignore
-//             minLength={100}
-//             width={"100%"}
-//             height={1000}
-//             src={authorization.ipAddressName + ":8000"}
-//          />
-//     );
-    
-    // useEffect(() => {
-    //     const options: RequestInit = {
-    //         method:"GET",
-    //         headers: {
-    //         "Content-Type": "application/json",
-    //         ...authorization,
-    //         }
-    //     };
-
-    //     fetch(authorization.ipAddressName + ":8000", options).then(response=>{
-    //         if (!response.ok) {
-    //             console.log(response);
-    //         }
-    //         // const json = await response.json();
-            
-    //         setPageContent(response.blob)
-    //     });
-    // });
-
-
-//   userId: string;
-//   hubId: string;
-//   date: string;
-//   ipAddressName: string;
-//   signature: string;
-
-  return (
-    <div>
-      <iframe src={authorization.ipAddressName + ":8000"}></iframe>
-    </div>
-  );
 }
-
 
 export default ViewCamera;
