@@ -53,13 +53,17 @@ function ViewSensorDetails(props: SensorDetailsProps) {
               Complete maintenance
             </Button>
         )}
-        <Button className="mr-2" onClick={()=>{ 
+        {curSensor.sensorType == "CAMERA" && (
+
+          <Button className="mr-2" onClick={()=>{ 
             navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
             navigate(`/assetfacility/viewcamera/${curSensor.sensorId}`);
           }}>
           <HiCamera className="mx-auto" />
           View Camera
-        </Button>
+          </Button>
+        )}
+
       </div>
       <Table>
         <TableBody>

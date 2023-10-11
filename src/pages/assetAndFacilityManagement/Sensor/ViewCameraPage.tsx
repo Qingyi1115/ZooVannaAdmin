@@ -20,9 +20,8 @@ const navigate = useNavigate();
   const [authorization, setAuthorization] = useState<any>(undefined);
 
   useEffect(() => {
-    apiJson.post(
-      `http://localhost:3000/api/assetFacility/getAuthorizationForCamera`,
-      { sensorId:sensorId }).then(res => {
+    apiJson.get(
+      `http://localhost:3000/api/assetFacility/getAuthorizationForCamera/${sensorId}`).then(res => {
         const newAuth = {
             userId: res.userId,
             hubId: res.hubId,
@@ -40,7 +39,7 @@ const navigate = useNavigate();
         <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
-    
+
       {authorization && (
         <ViewCamera authorization={authorization} />
       )}

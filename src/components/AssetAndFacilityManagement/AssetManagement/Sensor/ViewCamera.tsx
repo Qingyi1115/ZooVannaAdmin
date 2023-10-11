@@ -21,7 +21,8 @@ function ViewCamera(props: Authorization) {
 
     const [pageContent, setPageContent] = useState<any>(undefined);
     const { authorization } = props;
-    const url = authorization.ipAddressName + ":8000";
+    console.log(authorization)
+    const url = "http://" + authorization.ipAddressName + ":8000";
 
 
     const [data, setData] = useState('');
@@ -59,9 +60,10 @@ function ViewCamera(props: Authorization) {
     }, []);
    
     return (
+
       <div>
-        <div><b>Request Response: {loading && <i>Fetching data...</i>}</b>{data}</div>
-      </div>
+      <iframe src={url}></iframe>
+    </div>
     );
 //   const ref : any= useRef();
 //   useEffect(() => {
@@ -112,6 +114,7 @@ function ViewCamera(props: Authorization) {
 
   return (
     <div>
+      <iframe src={authorization.ipAddressName + ":8000"}></iframe>
     </div>
   );
 }
