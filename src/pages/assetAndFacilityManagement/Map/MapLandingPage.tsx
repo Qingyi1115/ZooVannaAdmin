@@ -22,10 +22,39 @@ import L, {
   LatLngBoundsLiteral,
   LatLngExpression,
 } from "leaflet";
+import Facility from "../../../models/Facility";
+import useApiJson from "../../../hooks/useApiJson";
 // import geolocation from "geolocation";
 
 function MapLandingPage() {
   const navigate = useNavigate();
+  const apiJson = useApiJson();
+
+  const [facilityList, setFacilityList] = useState<Facility[]>([]);
+
+  useEffect(() => {
+    const fetchNoLocationFacilities = async () => {
+      try {
+        const responseJson = await apiJson.post(
+          "http://localhost:3000/api/assetFacility/getAllFacility",
+          { includes: ["facilityDetail"] }
+        );
+        const facilityListWithLocation = (
+          responseJson.facilities as Facility[]
+        ).filter((facility) => {
+          console.log(facility);
+          return !(
+            facility.xCoordinate == null || facility.yCoordinate == null
+          );
+        });
+        setFacilityList(facilityListWithLocation);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    fetchNoLocationFacilities();
+  }, []);
 
   return (
     <div className="p-10">
@@ -52,8 +81,8 @@ function MapLandingPage() {
           <Card className="w-1/5">
             <CardContent></CardContent>
           </Card>
-          <div className="w-full rounded-md border border-stroke shadow-md">
-            <LandingPageMap />
+          <div className="w-full overflow-hidden rounded-md border border-stroke shadow-md">
+            <LandingPageMap facilityList={facilityList} />
           </div>
         </div>
         <div className="h-[60vh] w-[70vw]"></div>

@@ -16,6 +16,7 @@ import {
   ImageOverlay,
   TileLayer,
 } from "react-leaflet";
+import Facility from "../../../../models/Facility";
 
 const merlioncenter: LatLngExpression = [1.295, 103.775887811];
 const merliontopleft: LatLng = new LatLng(1.3, 103.766998922);
@@ -31,24 +32,17 @@ const backgroundbounds: LatLngBounds = new LatLngBounds(
   backgroundbottomright
 );
 
-function LandingPageMap() {
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
-    null
-  );
+interface LandingPageMapProps {
+  facilityList: Facility[];
+}
 
-  function MyComponent() {
-    const map = useMapEvents({
-      click: () => {
-        map.locate();
-      },
-      locationfound: (location) => {
-        console.log("location found:", location);
-        const { lat, lng } = location.latlng;
-        setLocation({ lat, lng });
-      },
-    });
-    return null;
-  }
+function LandingPageMap(props: LandingPageMapProps) {
+  const [curRealLocation, setCurRealLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+
+  const { facilityList } = props;
 
   return (
     <div>
@@ -99,15 +93,13 @@ function LandingPageMap() {
             url={"../../../../src/assets/merlionzootest.png"}
             bounds={bounds}
           />
-          <Marker position={[100, -180]}></Marker> {/* Top left */}
-          <Marker position={[-10, -180]}></Marker> {/* Bottom left */}
-          <Marker position={[-10, 157]}></Marker> {/* Bottom right */}
-          <Marker position={[100, 157]}></Marker> {/* Top right */}
-          <Marker position={[1.3, 103.773813]}>test</Marker> {/* Utown */}
-          <Marker position={[100, 157]}></Marker> {/* Top right */}
-          <Marker draggable position={[1.29, 103.7827767]}>
-            test
-          </Marker>{" "}
+          {facilityList.map((facility, idx) => (
+            <Marker
+              key={`marker-${idx}`}
+              position={[facility.yCoordinate, facility.xCoordinate]}
+            ></Marker>
+          ))}
+          <Marker draggable position={[1.29, 103.7827767]}></Marker>{" "}
           {/* <MyComponent /> */}
         </MapContainer>
       </div>
