@@ -1,9 +1,10 @@
 import React from "react";
+import CreateNewAnimalActivityLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/CreateNewAnimalActivityLogForm";
 
 function CreateAnimalActivityLogPage() {
   return (
     <div className="p-10">
-      {/* <CreateAnimalActivityLogForm /> */}
+      <CreateNewAnimalActivityLogForm />
     </div>
   );
 }

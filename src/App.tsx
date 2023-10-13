@@ -31,9 +31,6 @@ import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDe
 import CreateNewWeightRecord from "./pages/animalManagement/CreateNewWeightRecord";
 import ViewAnimalFullLineage from "./pages/animalManagement/ViewAnimalFullLineage";
 import EditAnimalPage from "./pages/animalManagement/EditAnimalPage";
-import CreateNewAnimalObservationLogPage from "./pages/animalManagement/CreateNewAnimalObservationLogPage";
-import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
-import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
 import AnimalActivityHomePage from "./pages/animalManagement/AnimalActivityHomePage";
 import CreateAnimalActivityPage from "./pages/animalManagement/CreateAnimalActivityPage";
 import ViewAnimalActivityDetails from "./pages/animalManagement/ViewAnimalActivityDetails";
@@ -41,6 +38,16 @@ import EditAnimalActivityPage from "./pages/animalManagement/EditAnimalActivityP
 import AddAnimalToActivityPage from "./pages/animalManagement/AddAnimalToActivityPage";
 import AddItemToActivityPage from "./pages/animalManagement/AddItemToActivityPage";
 import DeclareDeathPage from "./pages/animalManagement/DeclareDeathPage";
+import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
+import CreateNewAnimalObservationLogPage from "./pages/animalManagement/CreateNewAnimalObservationLogPage";
+import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
+import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
+import CreateNewAnimalActivityLogPage from "./pages/animalManagement/CreateNewAnimalActivityLogPage";
+import CreateNewAnimalFeedingLogPage from "./pages/animalManagement/CreateNewAnimalFeedingLogPage";
+import EditAnimalActivityLogPage from "./pages/animalManagement/EditAnimalActivityLogPage";
+import EditAnimalFeedingLogPage from "./pages/animalManagement/EditAnimalFeedingLogPage";
+import ViewAnimalActivityLogDetailsPage from "./pages/animalManagement/ViewAnimalActivityLogDetailsPage";
+import ViewAnimalFeedingLogDetailsPage from "./pages/animalManagement/ViewAnimalFeedingLogDetailsPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -101,7 +108,7 @@ import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
 import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
-import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
+
 
 function App() {
   const { state } = useAuthContext();
@@ -302,7 +309,7 @@ function App() {
                     )
                   }
                 />
-                {/* <Route
+                <Route
                   path="/animal/createAnimalActivityLog/:animalId"
                   element={
                     user ? (
@@ -331,8 +338,8 @@ function App() {
                       <Navigate to="/login" />
                     )
                   }
-                /> */}
-                {/* <Route
+                />
+                <Route
                   path="/animal/createAnimalFeedingLog/:animalId"
                   element={
                     user ? (
@@ -361,7 +368,7 @@ function App() {
                       <Navigate to="/login" />
                     )
                   }
-                /> */}
+                />
                 <Route
                   path="/animal/animalactivities"
                   element={

@@ -1,6 +1,6 @@
 import { Rating } from "../enums/Rating";
 import Animal from "./Animal";
-import Employee from "./Employee";
+import Keeper from "./Keeper";
 import { ActivityType } from "../enums/ActivityType";
 import { Reaction } from "../enums/Reaction";
 
@@ -13,7 +13,7 @@ interface AnimalActivityLog {
   animalReaction: Reaction;
   details: string;
   animals: Animal[];
-  employee: Employee;
+  keeper: Keeper;
 }
 
 export default AnimalActivityLog;

@@ -20,6 +20,9 @@ import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetail
 import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
 import AnimalActivityInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalActivityInfo";
 
+import AllAnimalFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalFeedingLogsDatatable";
+import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalActivityLogsDatatable";
+
 function ViewAnimalDetailsPage() {
   const apiJson = useApiJson();
   const location = useLocation();
@@ -106,6 +109,8 @@ function ViewAnimalDetailsPage() {
               <TabsTrigger value="behaviour">
                 Behaviour Observations
               </TabsTrigger>
+              <TabsTrigger value="activitylogs">Activity Logs</TabsTrigger>
+              <TabsTrigger value="feedinglogs">Feeding Logs</TabsTrigger>
               <TabsTrigger value="medical">Medical</TabsTrigger>
             </TabsList>
             <TabsContent value="basicinfo">
@@ -134,6 +139,22 @@ function ViewAnimalDetailsPage() {
             <TabsContent value="behaviour">
               <div>
                 <AllAnimalObservationLogsDatatable
+                  speciesCode={curAnimal.species.speciesCode}
+                  animalCode={curAnimal.animalCode}
+                />
+              </div>
+            </TabsContent>
+            <TabsContent value="feedinglogs">
+              <div>
+                <AllAnimalFeedingLogsDatatable
+                  speciesCode={curAnimal.species.speciesCode}
+                  animalCode={curAnimal.animalCode}
+                />
+              </div>
+            </TabsContent>
+            <TabsContent value="activitylogs">
+              <div>
+                <AllAnimalActivityLogsDatatable
                   speciesCode={curAnimal.species.speciesCode}
                   animalCode={curAnimal.animalCode}
                 />
