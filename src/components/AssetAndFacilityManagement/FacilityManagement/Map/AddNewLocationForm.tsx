@@ -30,17 +30,27 @@ import L, {
   LatLngExpression,
 } from "leaflet";
 
-const facilityDetailJson = {
-  ownership: "",
-  ownerContact: "",
-  maxAccommodationSize: "",
-  hasAirCon: "",
-  facilityType: "",
-};
+const facilityDetail = "thirdParty";
+const facilityDetailJson =
+  facilityDetail == "thirdParty"
+    ? {
+        ownership: "",
+        ownerContact: "",
+        maxAccommodationSize: "",
+        hasAirCon: "",
+        facilityType: "",
+      }
+    : {
+        isPaid: "",
+        maxAccommodationSize: "",
+        hasAirCon: "",
+        facilityType: "",
+      };
 
 let emptyFacility: Facility = {
   facilityId: -1,
   facilityName: "",
+  showOnMap: false,
   xCoordinate: 0,
   yCoordinate: 0,
   facilityDetail: "",
@@ -122,6 +132,7 @@ function AddNewLocationForm() {
       facilityName: selectedFacility.facilityName,
       xCoordinate: xCoordinate,
       yCoordinate: yCoordinate,
+      showOnMap: false,
       facilityDetail: selectedFacility.facilityDetail,
       isSheltered: selectedFacility.isSheltered,
       facilityDetailJson: selectedFacility.facilityDetailJson,
@@ -153,46 +164,51 @@ function AddNewLocationForm() {
       <div className="mb-2 text-xl font-medium">
         {/* <div className="mb-4">Selected First Animal:</div> */}
 
-        <div className="flex h-max w-full flex-wrap items-center gap-4 rounded-md border border-strokedark/70 p-4">
-          <div className="flex flex-1 flex-col justify-center gap-1 text-base">
-            <span>Selected facility: </span>
-            {selectedFacility ? (
-              <div className="w-max rounded border border-stroke px-8 py-2">
-                <div className="font-bold">{selectedFacility.facilityName}</div>
-                <div className="flex flex-col items-start gap-1">
-                  <span>{selectedFacility.facilityDetail}</span>
+        <div className="flex h-max w-full rounded-md border border-strokedark/70 p-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 text-lg">
+            <span className="font-bold">Selected facility: </span>
+            <div className="w-max rounded border border-stroke px-8 py-2">
+              {selectedFacility ? (
+                <div className="">
+                  <div className="font-bold text-primary">
+                    {selectedFacility.facilityName}
+                  </div>
+                  {/* <div className="flex flex-col items-start gap-1">
+                    <span>{selectedFacility.facilityDetail}</span>
+                  </div> */}
                 </div>
-              </div>
-            ) : (
-              <div className="text-base text-destructive">
-                Please select a facility below
-              </div>
-            )}
-            <span>
-              X-Coordinate:{" "}
-              {xCoordinate ? (
-                <span>{xCoordinate.toFixed(4)}</span>
               ) : (
-                <span className="text-base text-destructive">
-                  Click on the map below to select a location
-                </span>
+                <div className="text-destructive">
+                  Please select a facility below
+                </div>
               )}
-            </span>
-            <span>
-              Y-Coordinate:{" "}
-              {yCoordinate ? (
-                <span>{yCoordinate.toFixed(4)}</span>
+            </div>
+            <div className="font-bold">Location Coordinates:</div>
+            <div className="rounded border border-stroke px-8 py-2">
+              {xCoordinate && yCoordinate ? (
+                <div className="flex w-max gap-8">
+                  <span>
+                    X-Coordinate: <span>{xCoordinate.toFixed(4)}</span>
+                  </span>
+                  <span>
+                    Y-Coordinate: <span>{yCoordinate.toFixed(4)}</span>
+                  </span>
+                </div>
               ) : (
-                <span className="text-base text-destructive">
+                <div className="text-destructive">
                   Click on the map below to select a location
-                </span>
+                </div>
               )}
-            </span>
+            </div>
             <div>
-              <Button onClick={handleSubmit}>Submit</Button>
+              <Button
+                onClick={handleSubmit}
+                disabled={!(selectedFacility && xCoordinate && yCoordinate)}
+              >
+                Submit
+              </Button>
             </div>
           </div>
-          {/* <span className="font-bold text-900">${item.price}</span> */}
         </div>
       </div>
       <Separator className="mx-auto my-8 w-1/2" />
@@ -267,7 +283,6 @@ function AddNewLocationForm() {
           </MapContainer>
         </div>
       </div>
-      Select Facility (that has not been added). Select location. Submit button
     </div>
   );
 }

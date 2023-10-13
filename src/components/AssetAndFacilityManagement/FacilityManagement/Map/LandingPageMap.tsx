@@ -34,6 +34,9 @@ const backgroundbounds: LatLngBounds = new LatLngBounds(
 
 interface LandingPageMapProps {
   facilityList: Facility[];
+  selectedFacility: Facility | null;
+  setSelectedFacility: any;
+  setIsShownOnMap: any;
 }
 
 function LandingPageMap(props: LandingPageMapProps) {
@@ -42,11 +45,16 @@ function LandingPageMap(props: LandingPageMapProps) {
     lng: number;
   } | null>(null);
 
-  const { facilityList } = props;
+  const { facilityList, setSelectedFacility, setIsShownOnMap } = props;
+
+  function handleMarkerClick(facility: Facility) {
+    setSelectedFacility(facility);
+    setIsShownOnMap(facility.showOnMap);
+  }
 
   return (
     <div>
-      <div className="h-[65vh] w-full">
+      <div className="h-[50vh] w-full">
         {/* 
             OLD MAP
         <MapContainer
@@ -96,6 +104,11 @@ function LandingPageMap(props: LandingPageMapProps) {
           {facilityList.map((facility, idx) => (
             <Marker
               key={`marker-${idx}`}
+              eventHandlers={{
+                click: () => handleMarkerClick(facility),
+                // mouseover: onHoverMarker,
+                // mouseout: onStopHoverMarker,
+              }}
               position={[facility.yCoordinate, facility.xCoordinate]}
             ></Marker>
           ))}

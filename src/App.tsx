@@ -104,6 +104,7 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
+import ChangeFacilityLocationPage from "./pages/assetAndFacilityManagement/Map/ChangeFacilityLocationPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -672,6 +673,16 @@ function App() {
                   path="/assetfacility/addlocation/"
                   element={
                     user ? <AddNewLocationPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/changelocation/:facilityId"
+                  element={
+                    user ? (
+                      <ChangeFacilityLocationPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
 
