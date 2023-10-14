@@ -102,6 +102,7 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
+import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -685,6 +686,10 @@ function App() {
                     )
                   }
                 />
+                <Route
+                  path="employeeAccount/setPassword/:token"
+                  element={<ResetPasswordPage />}
+                />
                 {/* <Route
                   path="/employeeAccount/editemployee"
                   element={
@@ -712,7 +717,7 @@ function App() {
                     user ? <EditCustomerPage /> : <Navigate to="/login" />
                   }
                 />
-                {/* Employee Account Management */}
+                {/* Employee Account Management
                 <Route
                   path="/employee/viewallemployees"
                   element={
@@ -724,7 +729,7 @@ function App() {
                   element={
                     user ? <CreateNewEmployeePage /> : <Navigate to="/login" />
                   }
-                />
+                />*/}
                 {/* <Route
                   path="/employee/editemployee"
                   element={
