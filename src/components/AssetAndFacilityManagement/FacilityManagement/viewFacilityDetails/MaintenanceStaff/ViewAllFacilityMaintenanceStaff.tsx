@@ -113,23 +113,6 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
 
   }
 
-  const hideEmployeeAssignmentDialog = () => {
-    setAssignmentDialog(false);
-  }
-
-  const employeeAssignmentDialogFooter = (
-    <React.Fragment>
-      <Button variant={"destructive"} onClick={hideEmployeeAssignmentDialog}>
-        <HiX />
-        No
-      </Button>
-      <Button onClick={assignEmployee}>
-        <HiCheck />
-        Yes
-      </Button>
-    </React.Fragment>
-  );
-
   const removeMaintenanceStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
@@ -158,24 +141,8 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
 
   }
 
-  const hideEmployeeRemovalDialog = () => {
-    setEmployeeRemovalDialog(false);
-  }
-
-  const employeeRemovalDialogFooter = (
-    <React.Fragment>
-      <Button onClick={hideEmployeeRemovalDialog}>
-        <HiX />
-        No
-      </Button>
-      <Button variant={"destructive"} onClick={removeMaintenanceStaff}>
-        <HiCheck />
-        Yes
-      </Button>
-    </React.Fragment>
-  );
-
   const showBulkAssignment = () => {
+    setSelectedEmployees([]);
     setBulkAssignmentDialog(true);
   };
 
@@ -202,15 +169,14 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
     </div>
   );
 
-  const confirmAssignment = (employee: Employee) => {
-    setSelectedEmployee(employee);
+  const confirmAssignment = () => {
     setAssignmentDialog(true);
   };
 
-  const confirmEmployeeRemoval = (employee: Employee) => {
-    setSelectedEmployee(employee);
+  const confirmEmployeeRemoval = () => {
     setEmployeeRemovalDialog(true);
   };
+
 
   const actionBodyTemplate = (employee: any) => {
     return (
@@ -236,14 +202,14 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
               >
                 <HiPlus className="mx-auto" />
               </Button> */}
-              <Button
+              {/* <Button
                 variant={"destructive"}
                 className="mr-2"
                 disabled={!employee.currentlyAssigned}
                 onClick={() => confirmEmployeeRemoval(employee)}
               >
                 <HiMinus className="mx-auto" />
-              </Button>
+              </Button> */}
             </div>
 
           }
@@ -303,6 +269,10 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
     );
   };
 
+  const hideEmployeeAssignmentDialog = () => {
+    setAssignmentDialog(false);
+  }
+
   const bulkAssignEmployees = async () => {
     selectedEmployees.forEach(async (employeeId) => {
       try {
@@ -317,7 +287,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           description:
             "Successfully assigned maintenance staff with IDs: " + selectedEmployees,
         });
-        setSelectedEmployee(employee);
+        setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
         setSelectedEmployees([]);
       } catch (error: any) {
@@ -331,6 +301,65 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
       }
     });
   }
+
+  const employeeAssignmentDialogFooter = (
+    <React.Fragment>
+      <Button variant={"destructive"} onClick={hideEmployeeAssignmentDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button onClick={bulkAssignEmployees}>
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
+
+  const bulkRemoveMaintenanceStaff = async () => {
+    selectedEmployees.forEach(async (employeeId) => {
+      try {
+        const responseJson = await apiJson.del(
+          `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
+            setRefreshSeed([]);
+          }).catch(err => console.log("err", err));
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Removal Successful",
+          description:
+            "Successfully removed maintenance staff: " + selectedEmployees,
+        });
+        setEmployeeRemovalDialog(false);
+        setBulkAssignmentDialog(false);
+        setSelectedEmployees([]);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while removing maintenance staff: \n" + apiJson.error,
+        });
+      }
+    });
+  }
+
+  const hideEmployeeRemovalDialog = () => {
+    setEmployeeRemovalDialog(false);
+  }
+
+  const employeeRemovalDialogFooter = (
+    <React.Fragment>
+      <Button onClick={hideEmployeeRemovalDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button variant={"destructive"} onClick={bulkRemoveMaintenanceStaff}>
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
 
 
   return (
@@ -370,6 +399,9 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
             header={header}
           >
             <Column
+              body={checkboxTemplate}
+            ></Column>
+            <Column
               field="employeeId"
               header="ID"
               sortable
@@ -406,6 +438,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
               exportable={false}
             ></Column>
           </DataTable>
+          <Button variant={"destructive"} onClick={confirmEmployeeRemoval}>Remove Selected Staff</Button>
         </div>
         <Dialog
           visible={employeeAssignmentDialog}
@@ -424,7 +457,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
             {selectedEmployee && (
               <span>
                 Are you sure you want to assign this facility to{" "}
-                <b>{selectedEmployee.employeeName}?</b>
+                <b>{selectedEmployees.toString()}?</b>
               </span>
             )}
           </div>
@@ -446,7 +479,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
             {selectedEmployee && (
               <span>
                 Are you sure you want to remove{" "}
-                <b>{selectedEmployee.employeeName}</b>?
+                <b>{selectedEmployees.toString()}</b>?
               </span>
             )}
           </div>
@@ -457,7 +490,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           breakpoints={{ "960px": "75vw", "641px": "90vw" }}
           header="Assign Maintenance Staff"
           position={"right"}
-          footer={<Button onClick={bulkAssignEmployees}>Assign Staff</Button>}
+          footer={<Button onClick={confirmAssignment}>Assign Selected Staff</Button>}
           onHide={hideEmployeeBulkAssignmentDialog}
         >
           <div className="confirmation-content">
