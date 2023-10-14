@@ -438,7 +438,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
               exportable={false}
             ></Column>
           </DataTable>
-          <Button variant={"destructive"} onClick={confirmEmployeeRemoval}>Remove Selected Staff</Button>
+          <Button variant={"destructive"} onClick={confirmEmployeeRemoval}><HiMinus />Remove Selected Staff</Button>
         </div>
         <Dialog
           visible={employeeAssignmentDialog}
