@@ -10,12 +10,15 @@ import { InputText } from "primereact/inputtext";
 
 import Sensor from "../../../models/Sensor";
 import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiOutlinePresentationChartLine, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiOutlinePresentationChartLine, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { NavLink, useNavigate } from "react-router-dom";
 import { SensorType } from "../../../enums/SensorType";
 import { Separator } from "@/components/ui/separator";
 import { Tag } from "primereact/tag";
+import ManageSensorMaintenanceStaff from "../AssetManagement/Sensor/GeneralStaff/ManageSensorMaintenanceStaff";
+import Employee from "../../../models/Employee";
+import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
 
 export function compareDates(d1: Date, d2: Date): number {
   let date1 = d1.getTime();
@@ -43,6 +46,30 @@ function SensorMaintenanceSuggestion() {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<MaintenanceDetails[]>>(null);
+
+  let emptyEmployee: Employee = {
+    employeeId: -1,
+    employeeName: "",
+    employeeEmail: "",
+    employeeAddress: "",
+    employeePhoneNumber: "",
+    employeeDoorAccessCode: "",
+    employeeEducation: "",
+    employeeBirthDate: new Date(),
+    isAccountManager: false,
+    dateOfResignation: new Date(),
+    employeeProfileUrl: "",
+  };
+
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee>(emptyEmployee);
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [employeeAssignmentDialog, setAssignmentDialog] = useState<boolean>(false);
+  const [employeeRemovalDialog, setEmployeeRemovalDialog] = useState<boolean>(false);
+  const [assignedEmployees, setAssignedEmployees] = useState<Employee[]>([]);
+  const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
+  const [employeeBulkAssignmentDialog, setBulkAssignmentDialog] = useState<boolean>(false);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
+
 
   useEffect(() => {
     apiJson.get(
@@ -105,9 +132,56 @@ function SensorMaintenanceSuggestion() {
     dt.current?.exportCSV();
   };
 
-  const header = (
+  const statusBodyTemplate = (rowData: any) => {
+    return <Tag value={isNaN(Date.parse(rowData.suggestedMaintenance)) ? rowData.suggestedMaintenance : new Date(rowData.suggestedMaintenance).toLocaleString()}
+      severity={isNaN(Date.parse(rowData.suggestedMaintenance)) ? "info" :
+        (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ? "danger"
+          : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" : "success"} />;
+  };
+
+  // useEffect(() => {
+  //   apiJson.post(
+  //     "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
+  //   ).catch(e => console.log(e)).then(res => {
+  //     const assignedStaff: Employee[] = [];
+  //     const availableStaff: Employee[] = [];
+  //     for (const staff of res["generalStaffs"]) {
+  //       if (staff.generalStaffType == "ZOO_MAINTENANCE") {
+  //         let emp = staff.employee;
+  //         staff.employee = undefined;
+  //         emp["generalStaff"] = staff
+  //         emp.currentlyAssigned = (emp.generalStaff.sensors as Sensor[]).find(sensor => Number(sensor.sensorId) == sensorId);
+  //         if (emp.currentlyAssigned) {
+  //           assignedStaff.push(emp);
+  //         }
+  //         else {
+  //           availableStaff.push(emp);
+  //         }
+  //       }
+  //     }
+  //     setAssignedEmployees(assignedStaff);
+  //     setAvailableEmployees(availableStaff);
+  //   });
+  // }, [refreshSeed]);
+
+  const showBulkAssignment = () => {
+    setSelectedEmployees([]);
+    setBulkAssignmentDialog(true);
+  };
+
+  const confirmAssignment = () => {
+    setAssignmentDialog(true);
+  };
+
+  const confirmEmployeeRemoval = () => {
+    if (selectedEmployees.length != 0) {
+      setEmployeeRemovalDialog(true);
+    }
+  };
+
+  const bulkAssignmentHeader = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Sensor Maintenance</h4>
+      <h4 className="m-1">Manage Maintenance Staff</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -123,12 +197,93 @@ function SensorMaintenanceSuggestion() {
     </div>
   );
 
-  const statusBodyTemplate = (rowData: any) => {
-    return <Tag value={isNaN(Date.parse(rowData.suggestedMaintenance)) ? rowData.suggestedMaintenance : new Date(rowData.suggestedMaintenance).toLocaleString()}
-      severity={isNaN(Date.parse(rowData.suggestedMaintenance)) ? "info" :
-        (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ? "danger"
-          : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" : "success"} />;
+  const header = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h4 className="m-1">Manage Sensor Maintenance</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+      <Button onClick={showBulkAssignment}><HiPlus />Assign Maintenance Staff</Button>
+      <Button onClick={exportCSV}>Export to .csv</Button>
+    </div>
+  );
+
+
+  const hideEmployeeBulkAssignmentDialog = () => {
+    setBulkAssignmentDialog(false);
+  }
+
+  const onSelectedEmployeesChange = (e: CheckboxChangeEvent) => {
+    let _selectedEmployees = [...selectedEmployees];
+    if (e.checked) {
+      _selectedEmployees.push(e.value);
+    }
+    else {
+      _selectedEmployees.splice(_selectedEmployees.indexOf(e.value), 1);
+    }
+    setSelectedEmployees(_selectedEmployees);
+  }
+
+  const checkboxTemplate = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssign"
+            value={employee.employeeId}
+            onChange={onSelectedEmployeesChange}
+            checked={selectedEmployees.includes(employee.employeeId)}>
+          </Checkbox>
+        </div>
+      </React.Fragment>
+    );
   };
+
+  const hideEmployeeAssignmentDialog = () => {
+    setAssignmentDialog(false);
+  }
+
+  const employeeAssignmentDialogFooter = (
+    <React.Fragment>
+      <Button variant={"destructive"} onClick={hideEmployeeAssignmentDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button
+      // onClick={bulkAssignEmployees}
+      >
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
+
+  const hideEmployeeRemovalDialog = () => {
+    setEmployeeRemovalDialog(false);
+  }
+
+  const employeeRemovalDialogFooter = (
+    <React.Fragment>
+      <Button onClick={hideEmployeeRemovalDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button variant={"destructive"}
+      // onClick={bulkRemoveEmployees}
+      >
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
 
   return (
     <div>
@@ -155,6 +310,9 @@ function SensorMaintenanceSuggestion() {
             globalFilter={globalFilter}
             header={header}
           >
+            <Column
+              body={checkboxTemplate}
+            ></Column>
             <Column
               field="name"
               header="Name"
@@ -191,28 +349,16 @@ function SensorMaintenanceSuggestion() {
           </DataTable>
         </div>
       </div>
-      {/* <Dialog
-        visible={deleteSensorDialog}
-        style={{ width: "32rem" }}
+      <Dialog
+        visible={employeeBulkAssignmentDialog}
+        style={{ width: "50rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header="Confirm"
-        modal
-        footer={deleteSensorDialogFooter}
-        onHide={hideDeleteSensorDialog}
-      > */}
-      {/* <div className="confirmation-content">
-          <i
-            className="pi pi-exclamation-triangle mr-3"
-            style={{ fontSize: "2rem" }}
-          /> */}
-      {/* {selectedSensor && (
-            <span>
-              Are you sure you want to delete{" "}
-              <b>{selectedSensor.sensorName}</b>?
-            </span>
-          )} */}
-      {/* </div> */}
-      {/* </Dialog> */}
+        header="Assign Maintenance Staff"
+        position={"right"}
+        footer={<Button onClick={confirmAssignment}>Assign Selected Staff</Button>}
+        onHide={hideEmployeeBulkAssignmentDialog}>
+        <ManageSensorMaintenanceStaff sensorId={selectedObject.id} />
+      </Dialog>
     </div>
   );
 }
