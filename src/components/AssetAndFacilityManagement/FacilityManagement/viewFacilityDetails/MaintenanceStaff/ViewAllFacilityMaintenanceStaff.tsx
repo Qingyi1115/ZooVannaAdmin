@@ -175,7 +175,9 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
   };
 
   const confirmEmployeeRemoval = () => {
-    setEmployeeRemovalDialog(true);
+    if (selectedEmployees.length != 0) {
+      setEmployeeRemovalDialog(true);
+    }
   };
 
 
@@ -250,7 +252,6 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
       _selectedEmployees.splice(_selectedEmployees.indexOf(e.value), 1);
     }
     setSelectedEmployees(_selectedEmployees);
-    console.log(e.checked, "After: ", selectedEmployees)
   }
 
   const checkboxTemplate = (employee: any) => {
@@ -493,58 +494,58 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           onHide={hideEmployeeBulkAssignmentDialog}
         >
           <div className="confirmation-content">
-              <DataTable
-                ref={dt}
-                value={availableEmployees}
-                selection={selectedEmployee}
-                onSelectionChange={(e) => {
-                  if (Array.isArray(e.value)) {
-                    setSelectedEmployee(e.value);
-                  }
-                }}
-                dataKey="employeeId"
-                paginator
-                rows={10}
-                scrollable
-                selectionMode={"single"}
-                rowsPerPageOptions={[5, 10, 25]}
-                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employees"
-                globalFilter={globalFilter}
-                header={bulkAssignmentHeader}
-              >
-                <Column
-                  body={checkboxTemplate}
-                ></Column>
-                <Column
-                  field="employeeId"
-                  header="ID"
-                ></Column>
-                <Column
-                  field="employeeName"
-                  header="Name"
-                  sortable
-                  style={{ minWidth: "12rem" }}
-                ></Column>
-                <Column
-                  field="employeeEmail"
-                  header="Email"
-                  sortable
-                  style={{ minWidth: "12rem" }}
-                ></Column>
-                <Column
-                  field="employeePhoneNumber"
-                  header="Phone Number"
-                  sortable
-                  style={{ minWidth: "12rem" }}
-                ></Column>
-                <Column
-                  field="employeeEducation"
-                  header="Education"
-                  sortable
-                  style={{ minWidth: "12rem" }}
-                ></Column>
-              </DataTable>
+            <DataTable
+              ref={dt}
+              value={availableEmployees}
+              selection={selectedEmployee}
+              onSelectionChange={(e) => {
+                if (Array.isArray(e.value)) {
+                  setSelectedEmployee(e.value);
+                }
+              }}
+              dataKey="employeeId"
+              paginator
+              rows={10}
+              scrollable
+              selectionMode={"single"}
+              rowsPerPageOptions={[5, 10, 25]}
+              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employees"
+              globalFilter={globalFilter}
+              header={bulkAssignmentHeader}
+            >
+              <Column
+                body={checkboxTemplate}
+              ></Column>
+              <Column
+                field="employeeId"
+                header="ID"
+              ></Column>
+              <Column
+                field="employeeName"
+                header="Name"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="employeeEmail"
+                header="Email"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="employeePhoneNumber"
+                header="Phone Number"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="employeeEducation"
+                header="Education"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+            </DataTable>
           </div>
         </Dialog >
       </div >

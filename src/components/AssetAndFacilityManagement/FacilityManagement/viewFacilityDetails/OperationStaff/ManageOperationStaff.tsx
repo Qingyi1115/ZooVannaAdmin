@@ -58,8 +58,8 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     apiJson.post(
       "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
     ).catch(e => console.log("err", e)).then(res => {
-      const assignedStaff: Employee[] = []
-      const availableStaff: Employee[] = []
+      const assignedStaff: Employee[] = [];
+      const availableStaff: Employee[] = [];
       for (const staff of res["generalStaffs"]) {
         if (staff.generalStaffType == "ZOO_OPERATIONS") {
           let emp = staff.employee;
@@ -72,7 +72,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           else {
             availableStaff.push(emp);
           }
-
         }
       }
       setAssignedEmployees(assignedStaff);
@@ -171,7 +170,9 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   };
 
   const confirmEmployeeRemoval = () => {
-    setEmployeeRemovalDialog(true);
+    if (selectedEmployees.length != 0) {
+      setEmployeeRemovalDialog(true);
+    }
   };
 
   const actionBodyTemplate = (employee: any) => {
@@ -250,7 +251,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
       _selectedEmployees.splice(_selectedEmployees.indexOf(e.value), 1);
     }
     setSelectedEmployees(_selectedEmployees);
-    console.log(e.checked, "After: ", selectedEmployees)
   }
 
   const checkboxTemplate = (employee: any) => {
@@ -337,7 +337,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while removing maintenance staff: \n" + apiJson.error,
+            "An error has occurred while removing operation staff: \n" + apiJson.error,
         });
       }
     });
