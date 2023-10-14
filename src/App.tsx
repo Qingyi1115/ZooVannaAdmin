@@ -68,6 +68,9 @@ import EditMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/Ma
 import ViewMaintenanceLogDetailsPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/ViewMaintenanceLogDetailsPage";
 import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
 import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
+import MapLandingPage from "./pages/assetAndFacilityManagement/Map/MapLandingPage";
+import AddNewLocationPage from "./pages/assetAndFacilityManagement/Map/AddNewLocationPage";
+import ChangeFacilityLocationPage from "./pages/assetAndFacilityManagement/Map/ChangeFacilityLocationPage";
 
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
@@ -663,6 +666,27 @@ function App() {
                     )
                   }
                 /> */}
+                <Route
+                  path="/assetfacility/maplanding/"
+                  element={user ? <MapLandingPage /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/assetfacility/addlocation/"
+                  element={
+                    user ? <AddNewLocationPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/changelocation/:facilityId"
+                  element={
+                    user ? (
+                      <ChangeFacilityLocationPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
                 {/*Employee Account Management */}
                 <Route
                   path="/employeeAccount/viewEmployees"
