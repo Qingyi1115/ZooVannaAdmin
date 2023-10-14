@@ -49,6 +49,7 @@ function FacilityMaintenanceSuggestion() {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<MaintenanceDetails[]>>(null);
+  const dt2 = useRef<DataTable<Employee[]>>(null);
 
   let emptyEmployee: Employee = {
     employeeId: -1,
@@ -141,34 +142,35 @@ function FacilityMaintenanceSuggestion() {
           : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" : "success"} />;
   };
 
-  // useEffect(() => {
-  //   apiJson.post(
-  //     "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-  //   ).catch(e => console.log(e)).then(res => {
-  //     const assignedStaff: Employee[] = []
-  //     const availableStaff: Employee[] = []
-  //     for (const staff of res["generalStaffs"]) {
-  //       // console.log(staff);
-  //       if (staff.generalStaffType == "ZOO_MAINTENANCE") {
-  //         let emp = staff.employee;
-  //         staff.employee = undefined;
-  //         emp["generalStaff"] = staff
-  //         const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
-  //         console.log(maintainedFacility);
-  //         if (maintainedFacility !== undefined) {
-  //           emp.currentlyAssigned = true;
-  //           assignedStaff.push(emp);
-  //         }
-  //         else {
-  //           emp.currentlyAssigned = false;
-  //           availableStaff.push(emp);
-  //         }
-  //       }
-  //     }
-  //     setAssignedEmployees(assignedStaff);
-  //     setAvailableEmployees(availableStaff);
-  //   });
-  // }, [refreshSeed]);
+  useEffect(() => {
+    apiJson.post(
+      "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
+    ).catch(e => console.log(e)).then(res => {
+      const assignedStaff: Employee[] = []
+      const availableStaff: Employee[] = []
+      for (const staff of res["generalStaffs"]) {
+        // console.log(staff);
+        if (staff.generalStaffType == "ZOO_MAINTENANCE") {
+          let emp = staff.employee;
+          staff.employee = undefined;
+          emp["generalStaff"] = staff;
+          availableStaff.push(emp);
+          // const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
+          // console.log(maintainedFacility);
+          // if (maintainedFacility !== undefined) {
+          //   emp.currentlyAssigned = true;
+          //   assignedStaff.push(emp);
+          // }
+          // else {
+          //   emp.currentlyAssigned = false;
+          //   availableStaff.push(emp);
+          // }
+        }
+      }
+      // setAssignedEmployees(assignedStaff);
+      setAvailableEmployees(availableStaff);
+    });
+  }, [refreshSeed]);
 
   const showBulkAssignment = () => {
     setSelectedEmployees([]);
@@ -362,7 +364,60 @@ function FacilityMaintenanceSuggestion() {
             position={"right"}
             footer={<Button onClick={confirmAssignment}>Assign Selected Staff</Button>}
             onHide={hideEmployeeBulkAssignmentDialog}>
-            <ViewAllFacilityMaintenanceStaff facilityId={selectedObject.id} />
+            <div className="confirmation-content">
+              <DataTable
+                ref={dt2}
+                value={availableEmployees}
+                selection={selectedEmployee}
+                onSelectionChange={(e) => {
+                  if (Array.isArray(e.value)) {
+                    setSelectedEmployee(e.value);
+                  }
+                }}
+                dataKey="employeeId"
+                paginator
+                rows={10}
+                scrollable
+                selectionMode={"single"}
+                rowsPerPageOptions={[5, 10, 25]}
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employees"
+                globalFilter={globalFilter}
+                header={bulkAssignmentHeader}
+              >
+                <Column
+                  body={checkboxTemplate}
+                ></Column>
+                <Column
+                  field="employeeId"
+                  header="ID"
+                ></Column>
+                <Column
+                  field="employeeName"
+                  header="Name"
+                  sortable
+                  style={{ minWidth: "12rem" }}
+                ></Column>
+                <Column
+                  field="employeeEmail"
+                  header="Email"
+                  sortable
+                  style={{ minWidth: "12rem" }}
+                ></Column>
+                <Column
+                  field="employeePhoneNumber"
+                  header="Phone Number"
+                  sortable
+                  style={{ minWidth: "12rem" }}
+                ></Column>
+                <Column
+                  field="employeeEducation"
+                  header="Education"
+                  sortable
+                  style={{ minWidth: "12rem" }}
+                ></Column>
+              </DataTable>
+            </div>
           </Dialog>
         </div>
       </div>

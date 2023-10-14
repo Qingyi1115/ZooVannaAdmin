@@ -46,6 +46,7 @@ function SensorMaintenanceSuggestion() {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<MaintenanceDetails[]>>(null);
+  const dt2 = useRef<DataTable<Employee[]>>(null);
 
   let emptyEmployee: Employee = {
     employeeId: -1,
@@ -139,30 +140,31 @@ function SensorMaintenanceSuggestion() {
           : (compareDates(new Date(rowData.suggestedMaintenance), new Date()) <= 0) ? "warning" : "success"} />;
   };
 
-  // useEffect(() => {
-  //   apiJson.post(
-  //     "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-  //   ).catch(e => console.log(e)).then(res => {
-  //     const assignedStaff: Employee[] = [];
-  //     const availableStaff: Employee[] = [];
-  //     for (const staff of res["generalStaffs"]) {
-  //       if (staff.generalStaffType == "ZOO_MAINTENANCE") {
-  //         let emp = staff.employee;
-  //         staff.employee = undefined;
-  //         emp["generalStaff"] = staff
-  //         emp.currentlyAssigned = (emp.generalStaff.sensors as Sensor[]).find(sensor => Number(sensor.sensorId) == sensorId);
-  //         if (emp.currentlyAssigned) {
-  //           assignedStaff.push(emp);
-  //         }
-  //         else {
-  //           availableStaff.push(emp);
-  //         }
-  //       }
-  //     }
-  //     setAssignedEmployees(assignedStaff);
-  //     setAvailableEmployees(availableStaff);
-  //   });
-  // }, [refreshSeed]);
+  useEffect(() => {
+    apiJson.post(
+      "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
+    ).catch(e => console.log(e)).then(res => {
+      const assignedStaff: Employee[] = [];
+      const availableStaff: Employee[] = [];
+      for (const staff of res["generalStaffs"]) {
+        if (staff.generalStaffType == "ZOO_MAINTENANCE") {
+          let emp = staff.employee;
+          staff.employee = undefined;
+          emp["generalStaff"] = staff;
+          availableStaff.push(emp);
+          // emp.currentlyAssigned = (emp.generalStaff.sensors as Sensor[]).find(sensor => Number(sensor.sensorId) == sensorId);
+          // if (emp.currentlyAssigned) {
+          //   assignedStaff.push(emp);
+          // }
+          // else {
+          //   availableStaff.push(emp);
+          // }
+        }
+      }
+      // setAssignedEmployees(assignedStaff);
+      setAvailableEmployees(availableStaff);
+    });
+  }, [refreshSeed]);
 
   const showBulkAssignment = () => {
     setSelectedEmployees([]);
@@ -357,7 +359,60 @@ function SensorMaintenanceSuggestion() {
         position={"right"}
         footer={<Button onClick={confirmAssignment}>Assign Selected Staff</Button>}
         onHide={hideEmployeeBulkAssignmentDialog}>
-        <ManageSensorMaintenanceStaff sensorId={selectedObject.id} />
+        <DataTable
+          ref={dt2}
+          value={availableEmployees}
+          selection={selectedEmployee}
+          onSelectionChange={(e) => {
+            if (Array.isArray(e.value)) {
+              setSelectedEmployee(e.value);
+            }
+          }}
+          dataKey="employeeId"
+          paginator
+          rows={10}
+          scrollable
+          selectionMode={"single"}
+          rowsPerPageOptions={[5, 10, 25]}
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employees"
+          globalFilter={globalFilter}
+          header={bulkAssignmentHeader}
+        >
+          <Column
+            body={checkboxTemplate}
+          ></Column>
+          <Column
+            field="employeeId"
+            header="ID"
+            sortable
+            style={{ minWidth: "4rem" }}
+          ></Column>
+          <Column
+            field="employeeName"
+            header="Name"
+            sortable
+            style={{ minWidth: "12rem" }}
+          ></Column>
+          <Column
+            field="employeeEmail"
+            header="Email"
+            sortable
+            style={{ minWidth: "12rem" }}
+          ></Column>
+          <Column
+            field="employeePhoneNumber"
+            header="Phone Number"
+            sortable
+            style={{ minWidth: "12rem" }}
+          ></Column>
+          <Column
+            field="employeeEducation"
+            header="Education"
+            sortable
+            style={{ minWidth: "12rem" }}
+          ></Column>
+        </DataTable>
       </Dialog>
     </div>
   );
