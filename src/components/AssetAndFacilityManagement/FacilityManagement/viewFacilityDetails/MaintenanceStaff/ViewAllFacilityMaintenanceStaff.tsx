@@ -42,6 +42,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
   const toast = useRef<Toast>(null);
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeAssignmentDialog, setAssignmentDialog] = useState<boolean>(false);
@@ -240,8 +241,6 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
     setBulkAssignmentDialog(false);
   }
 
-  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
-
   const onSelectedEmployeesChange = (e: CheckboxChangeEvent) => {
     let _selectedEmployees = [...selectedEmployees];
     if (e.checked) {
@@ -327,7 +326,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           // variant: "destructive",
           title: "Removal Successful",
           description:
-            "Successfully removed maintenance staff: " + selectedEmployees,
+            "Successfully removed maintenance staff: " + selectedEmployees.toString(),
         });
         setEmployeeRemovalDialog(false);
         setBulkAssignmentDialog(false);
@@ -494,7 +493,6 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           onHide={hideEmployeeBulkAssignmentDialog}
         >
           <div className="confirmation-content">
-            <div>
               <DataTable
                 ref={dt}
                 value={availableEmployees}
@@ -547,7 +545,6 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
                   style={{ minWidth: "12rem" }}
                 ></Column>
               </DataTable>
-            </div>
           </div>
         </Dialog >
       </div >

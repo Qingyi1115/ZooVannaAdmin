@@ -13,6 +13,7 @@ import { Dialog } from "primereact/dialog";
 import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
+import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
 
 interface ManageOperationStaffProps {
   facilityId: number;
@@ -40,46 +41,44 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   const toast = useRef<Toast>(null);
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeAssignmentDialog, setAssignmentDialog] = useState<boolean>(false);
   const [employeeRemovalDialog, setEmployeeRemovalDialog] = useState<boolean>(false);
+  const [employeeBulkAssignmentDialog, setBulkAssignmentDialog] = useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
-  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
+  const [assignedEmployees, setAssignedEmployees] = useState<Employee[]>([]);
+  const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   useEffect(() => {
     apiJson.post(
       "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
     ).catch(e => console.log("err", e)).then(res => {
-      const allStaffs: Employee[] = []
+      const assignedStaff: Employee[] = []
+      const availableStaff: Employee[] = []
       for (const staff of res["generalStaffs"]) {
         if (staff.generalStaffType == "ZOO_OPERATIONS") {
           let emp = staff.employee;
           staff.employee = undefined;
           emp["generalStaff"] = staff
           emp.currentlyAssigned = emp.generalStaff.operatedFacility?.facilityId == facilityId;
-          allStaffs.push(emp)
+          if (emp.currentlyAssigned) {
+            assignedStaff.push(emp);
+          }
+          else {
+            availableStaff.push(emp);
+          }
+
         }
       }
-      setEmployeeList(allStaffs);
-
+      setAssignedEmployees(assignedStaff);
+      setAvailableEmployees(availableStaff);
     });
   }, [refreshSeed]);
-
-  const hideEmployeeAssignmentDialog = () => {
-    setAssignmentDialog(false);
-  }
-
-  const hideEmployeeRemovalDialog = () => {
-    setEmployeeRemovalDialog(false);
-  }
-
-  const exportCSV = () => {
-    dt.current?.exportCSV();
-  };
 
   const assignEmployee = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
@@ -111,19 +110,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
   }
 
-  const employeeAssignmentDialogFooter = (
-    <React.Fragment>
-      <Button variant={"destructive"} onClick={hideEmployeeAssignmentDialog}>
-        <HiX />
-        No
-      </Button>
-      <Button onClick={assignEmployee}>
-        <HiCheck />
-        Yes
-      </Button>
-    </React.Fragment>
-  );
-
   const removeOperationStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
@@ -150,21 +136,16 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           "An error has occurred while removing operation staff: \n" + apiJson.error,
       });
     }
-
   }
 
-  const employeeRemovalDialogFooter = (
-    <React.Fragment>
-      <Button onClick={hideEmployeeRemovalDialog}>
-        <HiX />
-        No
-      </Button>
-      <Button variant={"destructive"} onClick={removeOperationStaff}>
-        <HiCheck />
-        Yes
-      </Button>
-    </React.Fragment>
-  );
+  const showBulkAssignment = () => {
+    setSelectedEmployees([]);
+    setBulkAssignmentDialog(true);
+  };
+
+  const exportCSV = () => {
+    dt.current?.exportCSV();
+  };
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -180,17 +161,16 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           }}
         />
       </span>
+      <Button onClick={showBulkAssignment}><HiPlus />Assign Operation Staff</Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
-  const confirmAssignment = (employee: Employee) => {
-    setSelectedEmployee(employee);
+  const confirmAssignment = () => {
     setAssignmentDialog(true);
   };
 
-  const confirmEmployeeRemoval = (employee: Employee) => {
-    setSelectedEmployee(employee);
+  const confirmEmployeeRemoval = () => {
     setEmployeeRemovalDialog(true);
   };
 
@@ -210,7 +190,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>
-              <Button
+              {/* <Button
                 name="assignButton"
                 variant={"default"}
                 className="mr-2"
@@ -218,8 +198,8 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
-              </Button>
-              {employee.dateOfResignation ?
+              </Button> */}
+              {/* {employee.dateOfResignation ?
                 <span>Removed</span>
                 :
                 <Button
@@ -230,7 +210,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 >
                   <HiMinus className="mx-auto" />
                 </Button>
-              }
+              } */}
             </div>
 
           }
@@ -238,6 +218,147 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
       </React.Fragment>
     );
   };
+
+  const bulkAssignmentHeader = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h4 className="m-1">Manage Operation Staff</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
+    </div>
+  );
+
+  const hideEmployeeBulkAssignmentDialog = () => {
+    setBulkAssignmentDialog(false);
+  }
+
+  const onSelectedEmployeesChange = (e: CheckboxChangeEvent) => {
+    let _selectedEmployees = [...selectedEmployees];
+    if (e.checked) {
+      _selectedEmployees.push(e.value);
+    }
+    else {
+      _selectedEmployees.splice(_selectedEmployees.indexOf(e.value), 1);
+    }
+    setSelectedEmployees(_selectedEmployees);
+    console.log(e.checked, "After: ", selectedEmployees)
+  }
+
+  const checkboxTemplate = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssign"
+            value={employee.employeeId}
+            onChange={onSelectedEmployeesChange}
+            checked={selectedEmployees.includes(employee.employeeId)}>
+          </Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const hideEmployeeAssignmentDialog = () => {
+    setAssignmentDialog(false);
+  }
+
+  const bulkAssignEmployees = async () => {
+    selectedEmployees.forEach(async (employeeId) => {
+      try {
+        const responseJson = await apiJson.put(
+          `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
+            setRefreshSeed([]);
+          }).catch(err => console.log("err", err));
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Assignment Successful",
+          description:
+            "Successfully assigned operation staff with IDs: " + selectedEmployees,
+        });
+        setAssignmentDialog(false);
+        setBulkAssignmentDialog(false);
+        setSelectedEmployees([]);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while assigning operation staff: \n" + apiJson.error,
+        });
+      }
+    });
+  }
+
+  const employeeAssignmentDialogFooter = (
+    <React.Fragment>
+      <Button variant={"destructive"} onClick={hideEmployeeAssignmentDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button onClick={bulkAssignEmployees}>
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
+
+  const bulkRemoveEmployees = async () => {
+    selectedEmployees.forEach(async (employeeId) => {
+      try {
+        const responseJson = await apiJson.del(
+          `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
+            setRefreshSeed([]);
+          }).catch(err => console.log("err", err));
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Removal Successful",
+          description:
+            "Successfully removed operation staff: " + selectedEmployees.toString(),
+        });
+        setEmployeeRemovalDialog(false);
+        setBulkAssignmentDialog(false);
+        setSelectedEmployees([]);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while removing maintenance staff: \n" + apiJson.error,
+        });
+      }
+    });
+  }
+
+  const hideEmployeeRemovalDialog = () => {
+    setEmployeeRemovalDialog(false);
+  }
+
+  const employeeRemovalDialogFooter = (
+    <React.Fragment>
+      <Button onClick={hideEmployeeRemovalDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button variant={"destructive"} onClick={bulkRemoveEmployees}>
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
 
   return (
     <div>
@@ -247,7 +368,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
           <DataTable
             ref={dt}
-            value={employeeList}
+            value={assignedEmployees}
             selection={selectedEmployee}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
@@ -265,6 +386,9 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             globalFilter={globalFilter}
             header={header}
           >
+            <Column
+              body={checkboxTemplate}
+            ></Column>
             <Column
               field="employeeId"
               header="ID"
@@ -307,9 +431,9 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "13rem" }}
             ></Column>
           </DataTable>
+          <Button variant={"destructive"} onClick={confirmEmployeeRemoval}><HiMinus />Remove Selected Staff</Button>
         </div>
         <Dialog
           visible={employeeAssignmentDialog}
@@ -328,7 +452,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             {selectedEmployee && (
               <span>
                 Are you sure you want to assign this facility to{" "}
-                <b>{selectedEmployee.employeeName}?</b>
+                <b>{selectedEmployees.toString()}?</b>
               </span>
             )}
           </div>
@@ -350,9 +474,80 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             {selectedEmployee && (
               <span>
                 Are you sure you want to remove{" "}
-                <b>{selectedEmployee.employeeName}</b>?
+                <b>{selectedEmployees.toString()}</b>?
               </span>
             )}
+          </div>
+        </Dialog>
+        <Dialog
+          visible={employeeBulkAssignmentDialog}
+          style={{ width: "50rem" }}
+          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+          header="Assign Operation Staff"
+          position={"right"}
+          footer={<Button onClick={confirmAssignment}>Assign Selected Staff</Button>}
+          onHide={hideEmployeeBulkAssignmentDialog}>
+          <div className="confirmation-content">
+            <DataTable
+              ref={dt}
+              value={availableEmployees}
+              selection={selectedEmployee}
+              onSelectionChange={(e) => {
+                if (Array.isArray(e.value)) {
+                  setSelectedEmployee(e.value);
+                }
+              }}
+              dataKey="employeeId"
+              paginator
+              rows={10}
+              scrollable
+              selectionMode={"single"}
+              rowsPerPageOptions={[5, 10, 25]}
+              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employees"
+              globalFilter={globalFilter}
+              header={bulkAssignmentHeader}
+            >
+              <Column
+                body={checkboxTemplate}
+              ></Column>
+              <Column
+                field="employeeId"
+                header="ID"
+                sortable
+                style={{ minWidth: "4rem" }}
+              ></Column>
+              <Column
+                field="employeeName"
+                header="Name"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="generalStaff.operatedFacilityName"
+                header="Current Facility Name"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="employeeEmail"
+                header="Email"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="employeePhoneNumber"
+                header="Phone Number"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="employeeEducation"
+                header="Education"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+            </DataTable>
           </div>
         </Dialog>
       </div>
