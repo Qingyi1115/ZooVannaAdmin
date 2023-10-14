@@ -54,8 +54,6 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
   const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
-  const [checked, setChecked] = useState<any>(false);
-
   useEffect(() => {
     apiJson.post(
       "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
@@ -80,35 +78,17 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           }
         }
       }
-      console.log(assignedStaff);
-      console.log(availableStaff);
       setAssignedEmployees(assignedStaff);
       setAvailableEmployees(availableStaff);
     });
   }, [refreshSeed]);
-
-  const hideEmployeeAssignmentDialog = () => {
-    setAssignmentDialog(false);
-  }
-
-  const hideEmployeeBulkAssignmentDialog = () => {
-    setBulkAssignmentDialog(false);
-  }
-
-  const hideEmployeeRemovalDialog = () => {
-    setEmployeeRemovalDialog(false);
-  }
-
-  const exportCSV = () => {
-    dt.current?.exportCSV();
-  };
 
   const assignEmployee = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId] }).then(res => {
           setRefreshSeed([]);
         }).catch(err => console.log("err", err));
 
@@ -131,6 +111,10 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
       });
     }
 
+  }
+
+  const hideEmployeeAssignmentDialog = () => {
+    setAssignmentDialog(false);
   }
 
   const employeeAssignmentDialogFooter = (
@@ -174,6 +158,10 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
 
   }
 
+  const hideEmployeeRemovalDialog = () => {
+    setEmployeeRemovalDialog(false);
+  }
+
   const employeeRemovalDialogFooter = (
     <React.Fragment>
       <Button onClick={hideEmployeeRemovalDialog}>
@@ -191,16 +179,9 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
     setBulkAssignmentDialog(true);
   };
 
-  const [selectedEmployees, setSelectedEmployees] = useState<Employee[]>([]);
-
-  const onSelectedEmployeesChange = (e: CheckboxChangeEvent) => {
-    let _selectedEmployees = [...selectedEmployees];
-    if (e.checked)
-      _selectedEmployees.push(e.value);
-    else
-      _selectedEmployees.splice(_selectedEmployees.indexOf(e.value), 1);
-    setSelectedEmployees(_selectedEmployees);
-  }
+  const exportCSV = () => {
+    dt.current?.exportCSV();
+  };
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -220,28 +201,6 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
-
-  const bulkAssignmentHeader = (
-    <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Maintenance Staff</h4>
-      <span className="p-input-icon-left">
-        <i className="pi pi-search" />
-        <InputText
-          type="search"
-          placeholder="Search..."
-          onInput={(e) => {
-            const target = e.target as HTMLInputElement;
-            setGlobalFilter(target.value);
-          }}
-        />
-      </span>
-      <Button onClick={exportCSV}>Export to .csv</Button>
-    </div>
-  );
-
-  const selectEmployeeToAssign = (employee: Employee) => {
-    setSelectedEmployee(employee);
-  }
 
   const confirmAssignment = (employee: Employee) => {
     setSelectedEmployee(employee);
@@ -293,6 +252,87 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
     );
   };
 
+  const bulkAssignmentHeader = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h4 className="m-1">Manage Maintenance Staff</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
+    </div>
+  );
+
+  const hideEmployeeBulkAssignmentDialog = () => {
+    setBulkAssignmentDialog(false);
+  }
+
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+
+  const onSelectedEmployeesChange = (e: CheckboxChangeEvent) => {
+    let _selectedEmployees = [...selectedEmployees];
+    if (e.checked) {
+      _selectedEmployees.push(e.value);
+    }
+    else {
+      _selectedEmployees.splice(_selectedEmployees.indexOf(e.value), 1);
+    }
+    setSelectedEmployees(_selectedEmployees);
+    console.log(e.checked, "After: ", selectedEmployees)
+  }
+
+  const checkboxTemplate = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssign"
+            value={employee.employeeId}
+            onChange={onSelectedEmployeesChange}
+            checked={selectedEmployees.includes(employee.employeeId)}>
+          </Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const bulkAssignEmployees = async () => {
+    selectedEmployees.forEach(async (employeeId) => {
+      try {
+        const responseJson = await apiJson.put(
+          `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
+            setRefreshSeed([]);
+          }).catch(err => console.log("err", err));
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Assignment Successful",
+          description:
+            "Successfully assigned maintenance staff with IDs: " + selectedEmployees,
+        });
+        setSelectedEmployee(employee);
+        setBulkAssignmentDialog(false);
+        setSelectedEmployees([]);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
+        });
+      }
+    });
+  }
+
+
   return (
     <div>
       <div>
@@ -330,6 +370,11 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
             header={header}
           >
             <Column
+              field="employeeId"
+              header="ID"
+              sortable
+            ></Column>
+            <Column
               field="employeeName"
               header="Name"
               sortable
@@ -359,7 +404,6 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "14rem" }}
             ></Column>
           </DataTable>
         </div>
@@ -412,9 +456,8 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           style={{ width: "50rem" }}
           breakpoints={{ "960px": "75vw", "641px": "90vw" }}
           header="Assign Maintenance Staff"
-          maximizable
           position={"right"}
-          footer={<Button>Assign Staff</Button>}
+          footer={<Button onClick={bulkAssignEmployees}>Assign Staff</Button>}
           onHide={hideEmployeeBulkAssignmentDialog}
         >
           <div className="confirmation-content">
@@ -441,13 +484,11 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
                   header={bulkAssignmentHeader}
                 >
                   <Column
-                    body={<Checkbox
-                      onChange={() => {
-                        onSelectedEmployeesChange;
-                        // console.log(selectedEmployees);
-                      }}
-                      checked={selectedEmployees.includes(selectedEmployee)}>
-                    </Checkbox>}
+                    body={checkboxTemplate}
+                  ></Column>
+                  <Column
+                    field="employeeId"
+                    header="ID"
                   ></Column>
                   <Column
                     field="employeeName"
