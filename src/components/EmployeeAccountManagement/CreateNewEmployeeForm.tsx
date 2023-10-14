@@ -5,13 +5,11 @@ import FormFieldRadioGroup from "../FormFieldRadioGroup";
 import FormFieldInput from "../FormFieldInput";
 import FormFieldSelect from "../FormFieldSelect";
 import useApiJson from "../../hooks/useApiJson";
-import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
+import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
-
-
 
 // end field validations
 
@@ -28,9 +26,13 @@ function CreateNewEmployeeForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const [role, setRole] = useState<string | undefined>(undefined);
   const [roleType, setRoleType] = useState<string | undefined>(undefined);
-  const [specializationType, setSpecializationType] = useState<string | undefined>(undefined);
+  const [specializationType, setSpecializationType] = useState<
+    string | undefined
+  >(undefined);
   const [education, setEducation] = useState<string>("");
-  const [accountManager, setAccountManager] = useState<string | undefined>(undefined);
+  const [accountManager, setAccountManager] = useState<string | undefined>(
+    undefined
+  );
   const [isAccountManager, setIsAccountManager] = useState<Boolean>();
 
   function clearForm() {
@@ -53,29 +55,25 @@ function CreateNewEmployeeForm() {
     console.log("Name:");
     console.log(fullName);
 
-
     let roleJson;
 
     if (role === "keeper") {
       roleJson = {
         keeperType: roleType,
         isDisabled: false,
-        specialization: specializationType
-      }
-    }
-    else if (role === "generalStaff") {
+        specialization: specializationType,
+      };
+    } else if (role === "generalStaff") {
       roleJson = {
         generalStaffType: roleType,
         isDisabled: false,
-      }
-    }
-
-    else if (role === "planningStaff") {
+      };
+    } else if (role === "planningStaff") {
       roleJson = {
         plannerType: roleType,
         isDisabled: false,
         specialization: specializationType,
-      }
+      };
     }
 
     const newEmployee = {
@@ -88,7 +86,7 @@ function CreateNewEmployeeForm() {
       isAccountManager: isAccountManager,
       role: role,
       roleJson: roleJson,
-    }
+    };
 
     try {
       const responseJson = await apiJson.post(
@@ -116,7 +114,9 @@ function CreateNewEmployeeForm() {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="font-medium text-danger">* Please enter a valid name!</div>
+          <div className="font-medium text-danger">
+            * Please enter a valid name!
+          </div>
         );
       }
       // add any other cases here
@@ -128,7 +128,9 @@ function CreateNewEmployeeForm() {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="font-medium text-danger">* Please enter a valid address!</div>
+          <div className="font-medium text-danger">
+            * Please enter a valid address!
+          </div>
         );
       }
       // add any other cases here
@@ -140,7 +142,9 @@ function CreateNewEmployeeForm() {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="font-medium text-danger">* Please enter a valid email!</div>
+          <div className="font-medium text-danger">
+            * Please enter a valid email!
+          </div>
         );
       }
       // add any other cases here
@@ -152,13 +156,16 @@ function CreateNewEmployeeForm() {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="font-medium text-danger">* Please enter a valid phone number!</div>
+          <div className="font-medium text-danger">
+            * Please enter a valid phone number!
+          </div>
         );
-      }
-      else if (props.patternMismatch) {
+      } else if (props.patternMismatch) {
         return (
-          <div className="font-medium text-danger">* Please enter 8-digit phone number</div>
-        )
+          <div className="font-medium text-danger">
+            * Please enter 8-digit phone number
+          </div>
+        );
       }
       // add any other cases here
     }
@@ -169,9 +176,7 @@ function CreateNewEmployeeForm() {
     if (props != undefined) {
       if (role == undefined) {
         return (
-          <div className="font-medium text-danger">
-            * Please select a role
-          </div>
+          <div className="font-medium text-danger">* Please select a role</div>
         );
       }
       // add any other cases here
@@ -244,7 +249,12 @@ function CreateNewEmployeeForm() {
       {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+          <Button
+            variant={"outline"}
+            type="button"
+            onClick={() => navigate(-1)}
+            className=""
+          >
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">
@@ -320,13 +330,17 @@ function CreateNewEmployeeForm() {
         validateFunction={validateEducation}
       />
       {/* Birthday */}
-      <div className="card flex justify-content-center">
-        <div>Birthday</div>
-        <Calendar value={birthday} onChange={(e: CalendarChangeEvent) => {
-          if (e && e.value !== undefined) {
-            setBirthday(e.value);
-          }
-        }} />
+      <div className="card justify-content-center block ">
+        <div className="mb-1 block font-medium">Birthday</div>
+        <Calendar
+          value={birthday}
+          onChange={(e: CalendarChangeEvent) => {
+            if (e && e.value !== undefined) {
+              setBirthday(e.value);
+            }
+          }}
+          className="border-100 bg-white "
+        />
       </div>
       <FormFieldSelect
         formFieldName="isAccountManager"
@@ -365,7 +379,7 @@ function CreateNewEmployeeForm() {
         validateFunction={validateRole}
       />
 
-      {role === "keeper" &&
+      {role === "keeper" && (
         <FormFieldSelect
           formFieldName="keeperType"
           label="Keeper Type"
@@ -379,9 +393,9 @@ function CreateNewEmployeeForm() {
           setValue={setRoleType}
           validateFunction={validateRoleType}
         />
-      }
+      )}
 
-      {role === "keeper" &&
+      {role === "keeper" && (
         <FormFieldSelect
           formFieldName="specializationType"
           label="Specialization Type"
@@ -392,15 +406,15 @@ function CreateNewEmployeeForm() {
             ["BIRD", "Bird"],
             ["FISH", "Fish"],
             ["REPTILE", "Reptile"],
-            ["AMPHIBIAN", "Amphibian"]
+            ["AMPHIBIAN", "Amphibian"],
           ]}
           value={specializationType}
           setValue={setSpecializationType}
           validateFunction={validateSpecializationType}
         />
-      }
+      )}
 
-      {role === "generalStaff" &&
+      {role === "generalStaff" && (
         <FormFieldSelect
           formFieldName="generalStaffType"
           label="General Staff Type"
@@ -414,9 +428,9 @@ function CreateNewEmployeeForm() {
           setValue={setRoleType}
           validateFunction={validateRoleType}
         />
-      }
+      )}
 
-      {role === "planningStaff" &&
+      {role === "planningStaff" && (
         <FormFieldSelect
           formFieldName="planningStaffType"
           label="Planning Staff Type"
@@ -433,9 +447,9 @@ function CreateNewEmployeeForm() {
           setValue={setRoleType}
           validateFunction={validateRoleType}
         />
-      }
+      )}
 
-      {role === "planningStaff" &&
+      {role === "planningStaff" && (
         <FormFieldSelect
           formFieldName="specializationType"
           label="Specialization Type"
@@ -446,23 +460,19 @@ function CreateNewEmployeeForm() {
             ["BIRD", "Bird"],
             ["FISH", "Fish"],
             ["REPTILE", "Reptile"],
-            ["AMPHIBIAN", "Amphibian"]
+            ["AMPHIBIAN", "Amphibian"],
           ]}
           value={specializationType}
           setValue={setSpecializationType}
           validateFunction={validateSpecializationType}
         />
-      }
+      )}
       <Form.Submit asChild>
         <Button
           disabled={apiJson.loading}
           className="h-12 w-2/3 self-center rounded-full text-lg"
         >
-          {!apiJson.loading ? (
-            <div>Submit</div>
-          ) : (
-            <div>Loading</div>
-          )}
+          {!apiJson.loading ? <div>Submit</div> : <div>Loading</div>}
         </Button>
       </Form.Submit>
       {formError && (
