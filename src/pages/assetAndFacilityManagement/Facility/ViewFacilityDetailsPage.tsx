@@ -54,7 +54,8 @@ function ViewFacilityDetailsPage() {
     facilityDetail: "",
     facilityDetailJson: undefined,
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
+    showOnMap: false
   };
 
   const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
