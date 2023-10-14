@@ -15,7 +15,7 @@ import { Reaction } from "../../enums/Reaction";
 
 function EditAnimalActivityLogPage() {
   const apiJson = useApiJson();
-  const { animalTrainingLogId } = useParams<{ animalTrainingLogId: string }>();
+  const { animalActivityLogId } = useParams<{ animalActivityLogId: string }>();
   const employee = useAuthContext().state.user?.employeeData;
 
   let emptySpecies: Species = {
@@ -93,7 +93,7 @@ function EditAnimalActivityLogPage() {
   }
 
   let emptyAnimalActivityLog: AnimalActivityLog = {
-    animalTrainingLogId: 0,
+    animalActivityLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
     sessionRating: Rating.NOT_RECORDED,
@@ -107,14 +107,14 @@ function EditAnimalActivityLogPage() {
   const [curAnimalActivityLog, setCurAnimalActivityLog] = useState<AnimalActivityLog>(emptyAnimalActivityLog);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAnimalActivityLogById/${animalTrainingLogId}`).then(res => {
+    apiJson.get(`http://localhost:3000/api/animal/getAnimalActivityLogById/${animalActivityLogId}`).then(res => {
       setCurAnimalActivityLog(res["animalActivityLog"]);
     });
   }, [0]);
 
   return (
     <div className="p-10">
-      {curAnimalActivityLog && curAnimalActivityLog.animalTrainingLogId != -1 && (
+      {curAnimalActivityLog && curAnimalActivityLog.animalActivityLogId != -1 && (
         <EditAnimalActivityLogForm curAnimalActivityLog={curAnimalActivityLog} />
       )}
     </div>

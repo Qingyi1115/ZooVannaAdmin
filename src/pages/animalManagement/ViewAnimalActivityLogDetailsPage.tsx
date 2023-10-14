@@ -19,7 +19,7 @@ import { ActivityType } from "../../enums/ActivityType";
 
 function ViewAnimalActivityLogDetailsPage() {
   const apiJson = useApiJson();
-  const { animalTrainingLogId } = useParams<{ animalTrainingLogId: string }>();
+  const { animalActivityLogId } = useParams<{ animalActivityLogId: string }>();
   const [assignedStaffIds, setAssignedStaffIds] = useState<number[]>([]);
   const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
   const [empList, setEmpList] = useState<Employee[]>([]);
@@ -101,7 +101,7 @@ function ViewAnimalActivityLogDetailsPage() {
   }
 
   let emptyAnimalActivityLog: AnimalActivityLog = {
-    animalTrainingLogId: 0,
+    animalActivityLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
     sessionRating: Rating.NOT_RECORDED,
@@ -117,7 +117,7 @@ function ViewAnimalActivityLogDetailsPage() {
 
   useEffect(() => {
     apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalActivityLogById/${animalTrainingLogId}`)
+      `http://localhost:3000/api/animal/getAnimalActivityLogById/${animalActivityLogId}`)
       .then(res => {
         setCurAnimalActivityLog(res.animalActivityLog as AnimalActivityLog);
       })
@@ -143,7 +143,7 @@ function ViewAnimalActivityLogDetailsPage() {
 
         <hr className="bg-stroke opacity-20" />
         <span className=" self-center text-title-xl font-bold">
-          {curAnimalActivityLog.animalTrainingLogId}
+          {curAnimalActivityLog.activityType}
         </span>
         <ViewAnimalActivityLogDetails curAnimalActivityLog={curAnimalActivityLog} />
 

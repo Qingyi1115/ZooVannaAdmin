@@ -5,7 +5,7 @@ import { ActivityType } from "../enums/ActivityType";
 import { Reaction } from "../enums/Reaction";
 
 interface AnimalActivityLog {
-  animalTrainingLogId: number;
+  animalActivityLogId: number;
   activityType: ActivityType;
   dateTime: Date;
   durationInMinutes: number;

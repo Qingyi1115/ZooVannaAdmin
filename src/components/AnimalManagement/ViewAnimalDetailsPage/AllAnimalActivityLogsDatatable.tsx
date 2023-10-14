@@ -111,7 +111,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
   }
 
   let emptyAnimalActivityLog: AnimalActivityLog = {
-    animalTrainingLogId: 0,
+    animalActivityLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
     sessionRating: Rating.NOT_RECORDED,
@@ -137,11 +137,11 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
     apiJson.get(
       `http://localhost:3000/api/animal/getAnimalActivityLogsBySpeciesCode/${speciesCode}`)
       .then(res => {
+        console.log("animalActivityLogList",res.animalActivityLogs);
         setAnimalActivityLogList(res.animalActivityLogs as AnimalActivityLog[]);
       })
       .catch(e => console.log(e));
   }, []);
-  console.log(animalActivityLogList);
 
   const exportCSV = () => {
     dt.current?.exportCSV();
@@ -159,7 +159,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
   // delete animalActivityLog stuff
   const deleteAnimalActivityLog = async () => {
     let _animalActivityLog = animalActivityLogList.filter(
-      (val) => val.animalTrainingLogId !== selectedAnimalActivityLog?.animalTrainingLogId
+      (val) => val.animalActivityLogId !== selectedAnimalActivityLog?.animalActivityLogId
     );
 
     const deleteAnimalActivityLog = async () => {
@@ -167,14 +167,14 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
         setDeleteAnimalActivityLogDialog(false);
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteAnimalActivityLogById/" +
-          selectedAnimalActivityLog.animalTrainingLogId
+          selectedAnimalActivityLog.animalActivityLogId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted animal activity log: " + selectedAnimalActivityLog.animalTrainingLogId,
+            "Successfully deleted animal activity log: " + selectedAnimalActivityLog.animalActivityLogId,
         });
         setAnimalActivityLogList(_animalActivityLog);
         setSelectedAnimalActivityLog(emptyAnimalActivityLog);
@@ -214,7 +214,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
           className="mb-1 mr-1"
           onClick={() => {
             navigate(`/animal/viewAnimalDetails/${animalCode}/activitylogs`, { replace: true })
-            navigate(`/animal/viewAnimalActivityLogDetails/${animalActivityLog.animalTrainingLogId}`)
+            navigate(`/animal/viewAnimalActivityLogDetails/${animalActivityLog.animalActivityLogId}`)
           }}>
           <HiEye className="mx-auto" />
         </Button>
@@ -302,7 +302,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
     return (
       <div>
         <Card className="my-4 relative"
-          title={animalActivityLog.animalTrainingLogId}
+          title={animalActivityLog.animalActivityLogId}
           subTitle={animalActivityLog.dateTime ?
             "Date created: " + new Date(animalActivityLog.dateTime).toLocaleString() : ""}>
           {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
@@ -377,7 +377,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
                 setSelectedAnimalActivityLog(e.value);
               }
             }}
-            dataKey="animalTrainingLogId"
+            dataKey="animalActivityLogId"
             paginator
             rows={10}
             scrollable
@@ -495,7 +495,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
           {selectedAnimalActivityLog && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedAnimalActivityLog.animalTrainingLogId}</b>?
+              <b>{selectedAnimalActivityLog.animalActivityLogId}</b>?
             </span>
           )}
         </div>

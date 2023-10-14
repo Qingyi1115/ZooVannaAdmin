@@ -49,11 +49,12 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
   }, [curAnimalActivityLog]);
 
   useEffect(() => {
+    setActivityType(String(curAnimalActivityLog.activityType))
     setDurationInMinutes(String(curAnimalActivityLog.durationInMinutes));
     setSessionRating(curAnimalActivityLog.sessionRating);
     setDetails(curAnimalActivityLog.details);
     setDateTime(new Date(curAnimalActivityLog.dateTime))
-    console.log(curAnimalActivityLog.animals);
+    console.log("curAnimalActivityLog22",curAnimalActivityLog);
 
   }, [curAnimalActivityLog]);
 
@@ -87,7 +88,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/animal/updateAnimalActivityLog/${curAnimalActivityLog.animalTrainingLogId}`,
+        `http://localhost:3000/api/animal/updateAnimalActivityLog/${curAnimalActivityLog.animalActivityLogId}`,
         newAnimalActivityLog);
       // success
       toastShadcn({
@@ -130,7 +131,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           </div>
           <Separator />
           <span className="mt-4 self-center text-title-xl font-bold">
-            {curAnimalActivityLog.animalTrainingLogId}
+            {curAnimalActivityLog.animalActivityLogId}
           </span>
         </div>
         {/* Activity Type */}

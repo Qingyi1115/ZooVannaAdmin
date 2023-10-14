@@ -26,8 +26,8 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
       <div>
         <Button className="mr-2"
           onClick={() => {
-            navigate(`/animal/viewAnimalActivityLogDetails/${curAnimalActivityLog.animalTrainingLogId}`, { replace: true })
-            navigate(`/animal/editAnimalActivityLog/${curAnimalActivityLog.animalTrainingLogId}`)
+            navigate(`/animal/viewAnimalActivityLogDetails/${curAnimalActivityLog.animalActivityLogId}`, { replace: true })
+            navigate(`/animal/editAnimalActivityLog/${curAnimalActivityLog.animalActivityLogId}`)
           }}>
           <HiPencil className="mx-auto" />
           Edit Animal Activity Log Details
@@ -41,7 +41,7 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               ID
             </TableCell>
-            <TableCell>{curAnimalActivityLog.animalTrainingLogId}</TableCell>
+            <TableCell>{curAnimalActivityLog.animalActivityLogId}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

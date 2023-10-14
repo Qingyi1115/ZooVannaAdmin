@@ -43,9 +43,8 @@ function CreateNewAnimalActivityLogForm() {
   const [sessionRating, setSessionRating] = useState<string | undefined>(
     undefined); // dropdown
   const [details, setDetails] = useState<string>(""); // text input
-  const [dateTime, setDateTime] = useState<
-    string | Date | Date[] | null
-  >(null);
+  const [animalReaction, setAnimalReaction] = useState<string | undefined>(undefined); // text input
+  const [dateTime, setDateTime] = useState<Date | null>(null);
   const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -63,12 +62,12 @@ function CreateNewAnimalActivityLogForm() {
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
-
     const newAnimalActivityLog = {
       activityType: activityType,
-      dateTime: dateTime,
+      dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
       sessionRating: sessionRating,
+      animalReaction: animalReaction,
       details: details,
       animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
@@ -82,6 +81,7 @@ function CreateNewAnimalActivityLogForm() {
       toastShadcn({
         description: "Successfully created animal activity log",
       });
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -169,6 +169,38 @@ function CreateNewAnimalActivityLogForm() {
         ]}
         value={sessionRating}
         setValue={setSessionRating}
+        validateFunction={validateAnimalActivityLogName}
+      />
+      {/* Animal Reaction */}
+      <FormFieldSelect
+        formFieldName="animalReaction"
+        label="Animal Reaction"
+        required={true}
+        placeholder="Select a reaction"
+        valueLabelPair={[
+          ["POSITIVE_RESPONSE", "Positive response",],
+          ["RESPONSIVE", "Resoonsive"],
+          ["ENTHUSIASTIC", "Eenthusiastic"],
+          ["ENGAGED", "Enraged",],
+          ["PLAYFUL", "Playful",],
+          ["CONTENT", "Content",],
+          ["NEUTRAL_RESPONSE", "Neutral response",],
+          ["OBSERVANT", "Obesrvant",],
+          ["CAUTIOUS", "Cautious",],
+          ["NEGATIVE_RESPONSE", "Negative response",],
+          ["STRESSED", "Stressed",],
+          ["AVOIDANT", "Avoidant",],
+          ["RESISTANT", "Resistant",],
+          ["AGGRESSIVE", "Aggresive",],
+          ["FEARFUL", "Fearful",],
+          ['OTHER_RESPONSE', "Other response",],
+          ["ENERGETIC", "Energetic",],
+          ["RELAXED", "Relaxed",],
+          ["INDETERMINATE", "Indeterminate",],
+          ["UNDETERMINED", "Undetermined"],
+        ]}
+        value={animalReaction}
+        setValue={setAnimalReaction}
         validateFunction={validateAnimalActivityLogName}
       />
       {/* Details */}
