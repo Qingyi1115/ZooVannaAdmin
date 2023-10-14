@@ -102,6 +102,12 @@
   background-color: #f7fdf5;
   /* background-color: red; */
 }
+.leaflet-control {
+  z-index: 0 !important;
+}
+.leaflet-pane {
+  z-index: 0 !important;
+}
 
 /* animations */
 @keyframes slideDown {

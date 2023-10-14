@@ -9,6 +9,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import {
   MapContainer,
   Marker,
   useMap,
@@ -29,6 +39,7 @@ import useApiJson from "../../../hooks/useApiJson";
 import { FacilityType } from "../../../enums/FacilityType";
 import { Dialog } from "primereact/dialog";
 import { HiCheck, HiX } from "react-icons/hi";
+import { IdentifierType } from "../../../enums/Enumurated";
 // import geolocation from "geolocation";
 
 function MapLandingPage() {
@@ -47,6 +58,16 @@ function MapLandingPage() {
 
   const [isShownOnMap, setIsShownOnMap] = useState<boolean>(false);
 
+  const [filteredFacilityList, setFilteredFacilityList] = useState<Facility[]>(
+    []
+  );
+  const [facilityTypeFilterValue, setFacilityTypeFilterValue] = useState<
+    string | null
+  >(null);
+  const [isShownOnMapFilterValue, setIsShownOnMapFilterValue] = useState<
+    string | null
+  >(null);
+
   useEffect(() => {
     const fetchNoLocationFacilities = async () => {
       try {
@@ -63,6 +84,13 @@ function MapLandingPage() {
           );
         });
         setFacilityList(facilityListWithLocation);
+        setFilteredFacilityList(facilityListWithLocation);
+        if (selectedFacility) {
+          const updatedFacility = facilityListWithLocation.find(
+            (facility) => facility.facilityId === selectedFacility.facilityId
+          );
+          setSelectedFacility(updatedFacility || null);
+        }
       } catch (error: any) {
         console.log(error);
       }
@@ -70,6 +98,50 @@ function MapLandingPage() {
 
     fetchNoLocationFacilities();
   }, [refreshSeed]);
+
+  function handleFacilTypeFilterMap(value: string) {
+    const tempFacilityList = [...facilityList].filter((facility) => {
+      // console.log(
+      //   "facil type: " +
+      //     FacilityType[
+      //       facility.facilityDetailJson
+      //         .facilityType as keyof typeof FacilityType
+      //     ].toString()
+      // );
+      // console.log("facil filter value: " + value);
+      if (value == "All") {
+        return true;
+      } else {
+        return (
+          // FacilityType[
+          //   facility.facilityDetailJson
+          //     .facilityType as keyof typeof FacilityType
+          // ].toString() == value
+          facility.facilityDetailJson.facilityType == value
+        );
+      }
+    });
+
+    setFilteredFacilityList(tempFacilityList);
+  }
+
+  function handleCustMapVisibilityFilterMap(value: string) {
+    const tempFacilityList = [...facilityList].filter((facility) => {
+      if (value == "All") {
+        return true;
+      } else {
+        return facility.showOnMap.toString() == value;
+      }
+    });
+
+    setFilteredFacilityList(tempFacilityList);
+  }
+
+  function clearMapFilters() {
+    setIsShownOnMapFilterValue("All");
+    setFacilityTypeFilterValue("All");
+    setFilteredFacilityList(facilityList);
+  }
 
   // Delete stuff
   const confirmDeleteLocationFromMap = () => {
@@ -229,7 +301,7 @@ function MapLandingPage() {
           {/* <Button onClick={testGetLocation}>Test get location</Button> */}
         </div>
         <div className="flex gap-8">
-          <Card className="h-[50vh] w-1/4">
+          <Card className="h-[55vh] w-1/4">
             <CardContent className="flex h-full flex-col justify-between">
               <div className="pb-4 pt-8">
                 {!selectedFacility ? (
@@ -312,13 +384,72 @@ function MapLandingPage() {
               </div>
             </CardContent>
           </Card>
-          <div className="w-full overflow-hidden rounded-md border border-stroke shadow-md">
-            <LandingPageMap
-              facilityList={facilityList}
-              selectedFacility={selectedFacility}
-              setSelectedFacility={setSelectedFacility}
-              setIsShownOnMap={setIsShownOnMap}
-            />
+          <div className="w-full">
+            <div className="flex h-[5vh] items-center gap-4">
+              <div>Filters: </div>
+              {/* Facility Type Filter */}
+              <Select
+                value={facilityTypeFilterValue?.toString()}
+                onValueChange={(value) => {
+                  setFacilityTypeFilterValue(value);
+                  handleFacilTypeFilterMap(value);
+                }}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Facility type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup id="facilityTypeFilterSelect">
+                    <SelectLabel>Facility Type</SelectLabel>
+                    <SelectItem key={"all"} value="All">
+                      All
+                    </SelectItem>
+                    {Object.keys(FacilityType).map((facilityTypeKey) => (
+                      <SelectItem key={facilityTypeKey} value={facilityTypeKey}>
+                        {FacilityType[
+                          facilityTypeKey as keyof typeof FacilityType
+                        ].toString()}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {/* Facility Type Filter */}
+              <Select
+                value={isShownOnMapFilterValue?.toString()}
+                onValueChange={(value) => {
+                  setIsShownOnMapFilterValue(value);
+                  handleCustMapVisibilityFilterMap(value);
+                }}
+              >
+                <SelectTrigger className="w-56">
+                  <SelectValue placeholder="Customer map visibility" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup id="shownOnMapFilterSelect">
+                    <SelectLabel>Is Shown on Customer Map</SelectLabel>
+                    <SelectItem key={"all"} value="All">
+                      All
+                    </SelectItem>
+                    <SelectItem key={"true"} value="true">
+                      Only Yes
+                    </SelectItem>
+                    <SelectItem key={"false"} value="false">
+                      Only No
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Button onClick={clearMapFilters}>Clear Filter</Button>
+            </div>
+            <div className="w-full overflow-hidden rounded-md border border-stroke shadow-md">
+              <LandingPageMap
+                facilityList={filteredFacilityList}
+                selectedFacility={selectedFacility}
+                setSelectedFacility={setSelectedFacility}
+                setIsShownOnMap={setIsShownOnMap}
+              />
+            </div>
           </div>
         </div>
       </div>

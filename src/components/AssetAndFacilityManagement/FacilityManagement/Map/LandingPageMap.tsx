@@ -32,6 +32,30 @@ const backgroundbounds: LatLngBounds = new LatLngBounds(
   backgroundbottomright
 );
 
+// map icons
+function iconFunction(facilityType: string) {
+  console.log("facil type icon: " + facilityType);
+  switch (facilityType) {
+    case "PARKING":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/terrain/rock.jpg",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    default:
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/terrain/snow.jpg",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+  }
+  // return new L.Icon({
+  //   iconUrl: "../../../../src/assets/terrain/rock.jpg",
+  //   iconSize: [31, 40],
+  //   iconAnchor: [15, 40],
+  // });
+}
+
 interface LandingPageMapProps {
   facilityList: Facility[];
   selectedFacility: Facility | null;
@@ -104,6 +128,7 @@ function LandingPageMap(props: LandingPageMapProps) {
           {facilityList.map((facility, idx) => (
             <Marker
               key={`marker-${idx}`}
+              icon={iconFunction(facility.facilityDetailJson.facilityType)}
               eventHandlers={{
                 click: () => handleMarkerClick(facility),
                 // mouseover: onHoverMarker,
