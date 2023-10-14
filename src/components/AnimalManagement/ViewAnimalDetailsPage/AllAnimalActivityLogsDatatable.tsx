@@ -137,7 +137,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
     apiJson.get(
       `http://localhost:3000/api/animal/getAnimalActivityLogsBySpeciesCode/${speciesCode}`)
       .then(res => {
-        console.log("animalActivityLogList",res.animalActivityLogs);
+        console.log("animalActivityLogList", res.animalActivityLogs);
         setAnimalActivityLogList(res.animalActivityLogs as AnimalActivityLog[]);
       })
       .catch(e => console.log(e));
@@ -389,7 +389,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
             header={header}
           >
             <Column
-              field="animalTrainingLogId"
+              field="animalActivityLogId"
               header="ID"
               sortable
               style={{ minWidth: "4rem" }}

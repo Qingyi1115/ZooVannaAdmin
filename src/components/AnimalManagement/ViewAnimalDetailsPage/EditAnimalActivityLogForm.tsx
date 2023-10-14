@@ -29,11 +29,10 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
   const [sessionRating, setSessionRating] = useState<string | undefined>(
     undefined); // dropdown
+  const [animalReaction, setAnimalReaction] = useState<string | undefined>(undefined); // text input
   const [details, setDetails] = useState<string>(""); // text input
   const { curAnimalActivityLog } = props;
-  const [dateTime, setDateTime] = useState<
-    string | Date | Date[] | null
-  >(null);
+  const [dateTime, setDateTime] = useState<Date | null>(null);
   const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -54,7 +53,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
     setSessionRating(curAnimalActivityLog.sessionRating);
     setDetails(curAnimalActivityLog.details);
     setDateTime(new Date(curAnimalActivityLog.dateTime))
-    console.log("curAnimalActivityLog22",curAnimalActivityLog);
+    console.log("curAnimalActivityLog22", curAnimalActivityLog);
 
   }, [curAnimalActivityLog]);
 
@@ -78,7 +77,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
 
     const newAnimalActivityLog = {
       activityType: activityType,
-      dateTime: dateTime,
+      dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
       sessionRating: sessionRating,
       details: details,
@@ -187,6 +186,38 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           ]}
           value={sessionRating}
           setValue={setSessionRating}
+          validateFunction={validateAnimalActivityLogName}
+        />
+        {/* Animal Reaction */}
+        <FormFieldSelect
+          formFieldName="animalReaction"
+          label="Animal Reaction"
+          required={true}
+          placeholder="Select a reaction"
+          valueLabelPair={[
+            ["POSITIVE_RESPONSE", "Positive response",],
+            ["RESPONSIVE", "Resoonsive"],
+            ["ENTHUSIASTIC", "Eenthusiastic"],
+            ["ENGAGED", "Enraged",],
+            ["PLAYFUL", "Playful",],
+            ["CONTENT", "Content",],
+            ["NEUTRAL_RESPONSE", "Neutral response",],
+            ["OBSERVANT", "Obesrvant",],
+            ["CAUTIOUS", "Cautious",],
+            ["NEGATIVE_RESPONSE", "Negative response",],
+            ["STRESSED", "Stressed",],
+            ["AVOIDANT", "Avoidant",],
+            ["RESISTANT", "Resistant",],
+            ["AGGRESSIVE", "Aggresive",],
+            ["FEARFUL", "Fearful",],
+            ['OTHER_RESPONSE', "Other response",],
+            ["ENERGETIC", "Energetic",],
+            ["RELAXED", "Relaxed",],
+            ["INDETERMINATE", "Indeterminate",],
+            ["UNDETERMINED", "Undetermined"],
+          ]}
+          value={animalReaction}
+          setValue={setAnimalReaction}
           validateFunction={validateAnimalActivityLogName}
         />
         {/* Details */}

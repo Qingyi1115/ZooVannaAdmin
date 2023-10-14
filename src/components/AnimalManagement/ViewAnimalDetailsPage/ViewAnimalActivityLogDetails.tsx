@@ -69,6 +69,12 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Animal Reaction
+            </TableCell>
+            <TableCell>{curAnimalActivityLog.animalReaction}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
               Details
             </TableCell>
             <TableCell>{curAnimalActivityLog.details}</TableCell>
