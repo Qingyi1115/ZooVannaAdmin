@@ -77,18 +77,18 @@ function SensorMaintenanceSuggestion() {
   const actionBodyTemplate = (objDetails: MaintenanceDetails) => {
     return (
       <React.Fragment>
-          <Button variant="outline" className="mb-1 mr-1" onClick={()=>{ 
-                navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
-                navigate(`/assetfacility/viewsensordetails/${objDetails.id}`);
-              }}>
-            <HiEye className="mx-auto" />
-          </Button>
-          <Button className="mb-1 mr-1" onClick={()=>{ 
-                navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
-                navigate(`/assetfacility/viewSensorMaintenanceChart/${objDetails.id}`);
-              }}>
-            <HiOutlinePresentationChartLine className="mx-auto" />
-          </Button>
+        <Button variant="outline" className="mb-1 mr-1" onClick={() => {
+          navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
+          navigate(`/assetfacility/viewsensordetails/${objDetails.id}`);
+        }}>
+          <HiEye className="mx-auto" />
+        </Button>
+        <Button className="mb-1 mr-1" onClick={() => {
+          navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
+          navigate(`/assetfacility/viewSensorMaintenanceChart/${objDetails.id}`);
+        }}>
+          <HiOutlinePresentationChartLine className="mx-auto" />
+        </Button>
         {/* <Button
           variant={"destructive"}
           className="mr-2"

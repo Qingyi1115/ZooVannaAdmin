@@ -36,22 +36,22 @@ function ViewSensorDetails(props: SensorDetailsProps) {
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-            <Button className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
-                navigate(`/assetfacility/editsensor/${curSensor.sensorId}`);
-              }}>
-              <HiPencil className="mx-auto" />
-              Edit Sensor Details
-            </Button>
+          <Button className="mr-2" onClick={() => {
+            navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
+            navigate(`/assetfacility/editsensor/${curSensor.sensorId}`);
+          }}>
+            <HiPencil className="mx-auto" />
+            Edit Sensor Details
+          </Button>
         )}
         {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
-            <Button className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
-                navigate(`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`);
-              }}>
-              <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
-              Complete maintenance
-            </Button>
+          <Button className="mr-2" onClick={() => {
+            navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
+            navigate(`/assetfacility/createsensormaintenancelog/${curSensor.sensorId}`);
+          }}>
+            <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+            Complete Maintenance
+          </Button>
         )}
         {curSensor.sensorType == "CAMERA" && (
 

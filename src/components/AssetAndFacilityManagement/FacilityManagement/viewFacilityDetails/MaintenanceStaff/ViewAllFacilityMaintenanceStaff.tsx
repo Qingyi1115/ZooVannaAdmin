@@ -14,6 +14,7 @@ import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../../models/Facility";
+import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
 
 interface ViewAllFacilityMaintenanceStaffProps {
   facilityId: number;
@@ -45,17 +46,22 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeAssignmentDialog, setAssignmentDialog] = useState<boolean>(false);
   const [employeeRemovalDialog, setEmployeeRemovalDialog] = useState<boolean>(false);
+  const [employeeBulkAssignmentDialog, setBulkAssignmentDialog] = useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
-  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
+  const [assignedEmployees, setAssignedEmployees] = useState<Employee[]>([]);
+  const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
+
+  const [checked, setChecked] = useState<any>(false);
 
   useEffect(() => {
     apiJson.post(
       "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
     ).catch(e => console.log(e)).then(res => {
-      const allStaffs: Employee[] = []
+      const assignedStaff: Employee[] = []
+      const availableStaff: Employee[] = []
       for (const staff of res["generalStaffs"]) {
         // console.log(staff);
         if (staff.generalStaffType == "ZOO_MAINTENANCE") {
@@ -65,19 +71,28 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
           console.log(maintainedFacility);
           if (maintainedFacility !== undefined) {
-            emp.currentlyAssigned = true
-            allStaffs.push(emp)
+            emp.currentlyAssigned = true;
+            assignedStaff.push(emp);
+          }
+          else {
+            emp.currentlyAssigned = false;
+            availableStaff.push(emp);
           }
         }
       }
-      console.log(allStaffs);
-      setEmployeeList(allStaffs);
-
+      console.log(assignedStaff);
+      console.log(availableStaff);
+      setAssignedEmployees(assignedStaff);
+      setAvailableEmployees(availableStaff);
     });
   }, [refreshSeed]);
 
   const hideEmployeeAssignmentDialog = () => {
     setAssignmentDialog(false);
+  }
+
+  const hideEmployeeBulkAssignmentDialog = () => {
+    setBulkAssignmentDialog(false);
   }
 
   const hideEmployeeRemovalDialog = () => {
@@ -172,7 +187,41 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
     </React.Fragment>
   );
 
+  const showBulkAssignment = () => {
+    setBulkAssignmentDialog(true);
+  };
+
+  const [selectedEmployees, setSelectedEmployees] = useState<Employee[]>([]);
+
+  const onSelectedEmployeesChange = (e: CheckboxChangeEvent) => {
+    let _selectedEmployees = [...selectedEmployees];
+    if (e.checked)
+      _selectedEmployees.push(e.value);
+    else
+      _selectedEmployees.splice(_selectedEmployees.indexOf(e.value), 1);
+    setSelectedEmployees(_selectedEmployees);
+  }
+
   const header = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h4 className="m-1">Manage Maintenance Staff</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+      <Button onClick={showBulkAssignment}><HiPlus />Assign Maintenance Staff</Button>
+      <Button onClick={exportCSV}>Export to .csv</Button>
+    </div>
+  );
+
+  const bulkAssignmentHeader = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h4 className="m-1">Manage Maintenance Staff</h4>
       <span className="p-input-icon-left">
@@ -190,6 +239,10 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
     </div>
   );
 
+  const selectEmployeeToAssign = (employee: Employee) => {
+    setSelectedEmployee(employee);
+  }
+
   const confirmAssignment = (employee: Employee) => {
     setSelectedEmployee(employee);
     setAssignmentDialog(true);
@@ -204,14 +257,14 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
     return (
       <React.Fragment>
         <div className="mb-4 flex">
-            <Button
-              variant={"outline"}
-              className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageMaintenance`, { replace: true });
-                navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
-              }}>
-              <HiEye className="mx-auto" />
-            </Button>
+          <Button
+            variant={"outline"}
+            className="mr-2" onClick={() => {
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageMaintenance`, { replace: true });
+              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+            }}>
+            <HiEye className="mx-auto" />
+          </Button>
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>
@@ -246,7 +299,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
         <Toast ref={toast} />
         <div className="">
 
-          <Button
+          {/* <Button
             variant={"outline"}
             className="mr-2" onClick={()=>{ 
               navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageMaintenance`, { replace: true });
@@ -254,11 +307,11 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
             }}>
             <HiPlus className="mx-auto" />
               Add Maintenance staff
-          </Button>
+          </Button> */}
 
           <DataTable
             ref={dt}
-            value={employeeList}
+            value={assignedEmployees}
             selection={selectedEmployee}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
@@ -354,8 +407,79 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
             )}
           </div>
         </Dialog>
-      </div>
-    </div>
+        <Dialog
+          visible={employeeBulkAssignmentDialog}
+          style={{ width: "50rem" }}
+          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+          header="Assign Maintenance Staff"
+          maximizable
+          position={"right"}
+          footer={<Button>Assign Staff</Button>}
+          onHide={hideEmployeeBulkAssignmentDialog}
+        >
+          <div className="confirmation-content">
+            {selectedEmployee && (
+              <div>
+                <DataTable
+                  ref={dt}
+                  value={availableEmployees}
+                  selection={selectedEmployee}
+                  onSelectionChange={(e) => {
+                    if (Array.isArray(e.value)) {
+                      setSelectedEmployee(e.value);
+                    }
+                  }}
+                  dataKey="employeeId"
+                  paginator
+                  rows={10}
+                  scrollable
+                  selectionMode={"single"}
+                  rowsPerPageOptions={[5, 10, 25]}
+                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employees"
+                  globalFilter={globalFilter}
+                  header={bulkAssignmentHeader}
+                >
+                  <Column
+                    body={<Checkbox
+                      onChange={() => {
+                        onSelectedEmployeesChange;
+                        // console.log(selectedEmployees);
+                      }}
+                      checked={selectedEmployees.includes(selectedEmployee)}>
+                    </Checkbox>}
+                  ></Column>
+                  <Column
+                    field="employeeName"
+                    header="Name"
+                    sortable
+                    style={{ minWidth: "12rem" }}
+                  ></Column>
+                  <Column
+                    field="employeeEmail"
+                    header="Email"
+                    sortable
+                    style={{ minWidth: "12rem" }}
+                  ></Column>
+                  <Column
+                    field="employeePhoneNumber"
+                    header="Phone Number"
+                    sortable
+                    style={{ minWidth: "12rem" }}
+                  ></Column>
+                  <Column
+                    field="employeeEducation"
+                    header="Education"
+                    sortable
+                    style={{ minWidth: "12rem" }}
+                  ></Column>
+                </DataTable>
+              </div>
+            )}
+          </div>
+        </Dialog >
+      </div >
+    </div >
   );
 }
 
