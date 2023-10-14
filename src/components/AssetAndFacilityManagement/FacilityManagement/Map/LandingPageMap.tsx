@@ -36,21 +36,99 @@ const backgroundbounds: LatLngBounds = new LatLngBounds(
 function iconFunction(facilityType: string) {
   console.log("facil type icon: " + facilityType);
   switch (facilityType) {
+    case "INFORMATION_CENTRE":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "ZOO_DIRECTORY":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "AMPHITHEATRE":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "GAZEBO":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "AED":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "RESTROOM":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "NURSERY":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "FIRST_AID":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "BENCHES":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "PLAYGROUND":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "TRAMSTOP":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
     case "PARKING":
       return new L.Icon({
-        iconUrl: "../../../../src/assets/terrain/rock.jpg",
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "RESTAURANT":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
+        iconSize: [31, 40],
+        iconAnchor: [15, 40],
+      });
+    case "SHOP_SOUVENIR":
+      return new L.Icon({
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
         iconSize: [31, 40],
         iconAnchor: [15, 40],
       });
     default:
       return new L.Icon({
-        iconUrl: "../../../../src/assets/terrain/snow.jpg",
+        iconUrl: "../../../../src/assets/mapicons/parking.png",
         iconSize: [31, 40],
         iconAnchor: [15, 40],
       });
   }
   // return new L.Icon({
-  //   iconUrl: "../../../../src/assets/terrain/rock.jpg",
+  //   iconUrl: "../../../../src/assets/mapicons/parking.png",
   //   iconSize: [31, 40],
   //   iconAnchor: [15, 40],
   // });
