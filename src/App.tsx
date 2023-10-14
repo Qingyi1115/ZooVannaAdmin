@@ -70,6 +70,7 @@ import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManageme
 import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
 import MapLandingPage from "./pages/assetAndFacilityManagement/Map/MapLandingPage";
 import AddNewLocationPage from "./pages/assetAndFacilityManagement/Map/AddNewLocationPage";
+import ChangeFacilityLocationPage from "./pages/assetAndFacilityManagement/Map/ChangeFacilityLocationPage";
 
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
@@ -104,7 +105,6 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
-import ChangeFacilityLocationPage from "./pages/assetAndFacilityManagement/Map/ChangeFacilityLocationPage";
 import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
 
 function App() {
