@@ -11,46 +11,55 @@ function EditFacilityPage() {
   const { facilityDetail } = useParams<{ facilityDetail: string }>();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
-  const facilityDetailJson = (facilityDetail == "thirdParty" ?
-    {
-      ownership: "",
-      ownerContact: "",
-      maxAccommodationSize: "",
-      hasAirCon: "",
-      facilityType: ""
-    } :
-    {
-      isPaid: "",
-      maxAccommodationSize: "",
-      hasAirCon: "",
-      facilityType: ""
-    })
+  const facilityDetailJson =
+    facilityDetail == "thirdParty"
+      ? {
+          ownership: "",
+          ownerContact: "",
+          maxAccommodationSize: "",
+          hasAirCon: "",
+          facilityType: "",
+        }
+      : {
+          isPaid: "",
+          maxAccommodationSize: "",
+          hasAirCon: "",
+          facilityType: "",
+        };
 
   let emptyFacility: Facility = {
     facilityId: -1,
     facilityName: "",
+    showOnMap: false,
     xCoordinate: 0,
     yCoordinate: 0,
     facilityDetail: "",
     facilityDetailJson: facilityDetailJson,
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
   };
 
   const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/assetFacility/getFacility/${facilityId}`, { includes: [] }).then(res => {
-      setCurFacility(res["facility"]);
-    });
+    apiJson
+      .post(
+        `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
+        { includes: [] }
+      )
+      .then((res) => {
+        setCurFacility(res["facility"]);
+      });
   }, [refreshSeed]);
 
   return (
     <div className="p-10">
       {curFacility && curFacility.facilityId != -1 && (
-        <EditFacilityForm curFacility={curFacility}
+        <EditFacilityForm
+          curFacility={curFacility}
           refreshSeed={refreshSeed}
-          setRefreshSeed={setRefreshSeed} />
+          setRefreshSeed={setRefreshSeed}
+        />
       )}
     </div>
   );
