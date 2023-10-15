@@ -29,9 +29,7 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
     undefined); // dropdown
   const [details, setDetails] = useState<string>(""); // text input
   const { curAnimalObservationLog } = props;
-  const [dateTime, setDateTime] = useState<
-    string | Date | Date[] | null
-  >(null);
+  const [dateTime, setDateTime] = useState<Date | null>(null);
   const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -74,7 +72,7 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
     e.preventDefault();
 
     const newAnimalObservationLog = {
-      dateTime: dateTime,
+      dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details,

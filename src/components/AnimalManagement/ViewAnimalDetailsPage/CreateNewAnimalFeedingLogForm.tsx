@@ -38,9 +38,7 @@ function CreateNewAnimalFeedingLogForm() {
   const navigate = useNavigate();
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
   const [details, setDetails] = useState<string>(""); // text input
-  const [dateTime, setDateTime] = useState<
-    string | Date | Date[] | null
-  >(null);
+  const [dateTime, setDateTime] = useState< Date | null >(null);
   const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -60,7 +58,7 @@ function CreateNewAnimalFeedingLogForm() {
     e.preventDefault();
 
     const newAnimalFeedingLog = {
-      dateTime: dateTime,
+      dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
       details: details,
       animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
@@ -75,6 +73,7 @@ function CreateNewAnimalFeedingLogForm() {
       toastShadcn({
         description: "Successfully created animal feeding log",
       });
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",

@@ -53,6 +53,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
     setSessionRating(curAnimalActivityLog.sessionRating);
     setDetails(curAnimalActivityLog.details);
     setDateTime(new Date(curAnimalActivityLog.dateTime))
+    setAnimalReaction(curAnimalActivityLog.animalReaction)
     console.log("curAnimalActivityLog22", curAnimalActivityLog);
 
   }, [curAnimalActivityLog]);
@@ -81,28 +82,29 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
       durationInMinutes: durationInMinutes,
       sessionRating: sessionRating,
       details: details,
+      animalReaction: animalReaction,
       animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalActivityLog);
 
-    try {
-      const responseJson = await apiJson.put(
-        `http://localhost:3000/api/animal/updateAnimalActivityLog/${curAnimalActivityLog.animalActivityLogId}`,
-        newAnimalActivityLog);
-      // success
-      toastShadcn({
-        description: "Successfully edited animal activity log",
+    apiJson.put(
+      `http://localhost:3000/api/animal/updateAnimalActivityLog/${curAnimalActivityLog.animalActivityLogId}`,
+      newAnimalActivityLog).then(res=>{
+        // success
+        toastShadcn({
+          description: "Successfully edited animal activity log",
+        });
+        navigate(-1);
+      }).catch(err=>{
+        console.log(err);
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while editing animal activity log details: \n" +
+            err.message,
+        });
       });
-    } catch (error: any) {
-      toastShadcn({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description:
-          "An error has occurred while editing animal activity log details: \n" +
-          error.message,
-      });
-    }
-    console.log(apiJson.result);
   }
 
 
@@ -196,8 +198,8 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           placeholder="Select a reaction"
           valueLabelPair={[
             ["POSITIVE_RESPONSE", "Positive response",],
-            ["RESPONSIVE", "Resoonsive"],
-            ["ENTHUSIASTIC", "Eenthusiastic"],
+            ["RESPONSIVE", "Responsive"],
+            ["ENTHUSIASTIC", "Enthusiastic"],
             ["ENGAGED", "Enraged",],
             ["PLAYFUL", "Playful",],
             ["CONTENT", "Content",],

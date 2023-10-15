@@ -86,6 +86,7 @@ function EditAnimalFeedingLogForm(props: EditAnimalFeedingLogFormProps) {
       toastShadcn({
         description: "Successfully edited animal feeding log",
       });
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
