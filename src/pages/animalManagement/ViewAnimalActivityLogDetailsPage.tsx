@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
-import AnimalObservationLog from "../../models/AnimalObservationLog";
+import AnimalActivityLog from "../../models/AnimalActivityLog";
 
 import { Button } from "@/components/ui/button";
 import Employee from "../../models/Employee";
@@ -10,14 +10,16 @@ import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specializa
 import Animal from "../../models/Animal";
 import Species from "../../models/Species";
 import { Rating } from "../../enums/Rating";
-import ViewAnimalObservationLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalObservationLogDetails";
+import ViewAnimalActivityLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalActivityLogDetails";
 import Keeper from "../../models/Keeper";
+import { Reaction } from "../../enums/Reaction";
+import { ActivityType } from "../../enums/ActivityType";
 
 
 
-function ViewAnimalObservationLogDetailsPage() {
+function ViewAnimalActivityLogDetailsPage() {
   const apiJson = useApiJson();
-  const { animalObservationLogId } = useParams<{ animalObservationLogId: string }>();
+  const { animalActivityLogId } = useParams<{ animalActivityLogId: string }>();
   const [assignedStaffIds, setAssignedStaffIds] = useState<number[]>([]);
   const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
   const [empList, setEmpList] = useState<Employee[]>([]);
@@ -98,27 +100,29 @@ function ViewAnimalObservationLogDetailsPage() {
     employee: emptyEmployee
   }
 
-  let emptyAnimalObservationLog: AnimalObservationLog = {
-    animalObservationLogId: 0,
+  let emptyAnimalActivityLog: AnimalActivityLog = {
+    animalActivityLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    observationQuality: Rating.NOT_RECORDED,
+    sessionRating: Rating.NOT_RECORDED,
     details: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
+    activityType: ActivityType.TRAINING,
+    animalReaction: Reaction.POSITIVE_RESPONSE
   };
 
-  const [curAnimalObservationLog, setCurAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
+  const [curAnimalActivityLog, setCurAnimalActivityLog] = useState<AnimalActivityLog>(emptyAnimalActivityLog);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
     apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalObservationLogById/${animalObservationLogId}`)
+      `http://localhost:3000/api/animal/getAnimalActivityLogById/${animalActivityLogId}`)
       .then(res => {
-        setCurAnimalObservationLog(res.animalObservationLog as AnimalObservationLog);
+        setCurAnimalActivityLog(res.animalActivityLog as AnimalActivityLog);
       })
       .catch(e => console.log(e));
-    console.log(curAnimalObservationLog);
+    console.log(curAnimalActivityLog);
   }, []);
 
 
@@ -130,7 +134,7 @@ function ViewAnimalObservationLogDetailsPage() {
             Back
           </Button>
           <span className="self-center text-lg text-graydark">
-            View Animal Observation Log Details
+            View Animal Activity Log Details
           </span>
           <Button disabled className="invisible">
             Back
@@ -139,9 +143,9 @@ function ViewAnimalObservationLogDetailsPage() {
 
         <hr className="bg-stroke opacity-20" />
         <span className=" self-center text-title-xl font-bold">
-          {curAnimalObservationLog.animalObservationLogId}
+          {curAnimalActivityLog.activityType}
         </span>
-        <ViewAnimalObservationLogDetails curAnimalObservationLog={curAnimalObservationLog} />
+        <ViewAnimalActivityLogDetails curAnimalActivityLog={curAnimalActivityLog} />
 
       </div>
     </div>
@@ -164,4 +168,4 @@ function ViewAnimalObservationLogDetailsPage() {
 
 
 
-export default ViewAnimalObservationLogDetailsPage;
+export default ViewAnimalActivityLogDetailsPage;

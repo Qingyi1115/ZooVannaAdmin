@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
-import AnimalObservationLog from "../../../models/AnimalObservationLog";
+import AnimalActivityLog from "../../../models/AnimalActivityLog";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { Card } from "primereact/card";
 import { useAuthContext } from "../../../hooks/useAuthContext";
@@ -23,13 +23,15 @@ import { Rating } from "../../../enums/Rating";
 import Employee from "../../../models/Employee";
 import { Column } from "primereact/column";
 import Keeper from "../../../models/Keeper";
+import { ActivityType } from "../../../enums/ActivityType";
+import { Reaction } from "../../../enums/Reaction";
 
-interface AllAnimalObservationLogsDatatableProps {
+interface AllAnimalActivityLogsDatatableProps {
   speciesCode: string;
   animalCode: string;
 }
 
-function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatatableProps) {
+function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatableProps) {
   const apiJson = useApiJson();
   const { speciesCode, animalCode } = props;
   const employee = useAuthContext().state.user?.employeeData;
@@ -61,6 +63,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     ageToElder: 3,
     lifeExpectancyYears: 0,
   };
+
   let emptyAnimal: Animal = {
     animalId: -1,
     animalCode: "",
@@ -107,124 +110,126 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     employee: emptyEmployee
   }
 
-  let emptyAnimalObservationLog: AnimalObservationLog = {
-    animalObservationLogId: 0,
+  let emptyAnimalActivityLog: AnimalActivityLog = {
+    animalActivityLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    observationQuality: Rating.NOT_RECORDED,
+    sessionRating: Rating.NOT_RECORDED,
     details: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
+    activityType: ActivityType.TRAINING,
+    animalReaction: Reaction.POSITIVE_RESPONSE
   };
 
 
-  const [animalObservationLogList, setAnimalObservationLogList] = useState<AnimalObservationLog[]>([]);
-  const [selectedAnimalObservationLog, setSelectedAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
-  const [deleteanimalObservationLogDialog, setDeleteAnimalObservationLogDialog] =
+  const [animalActivityLogList, setAnimalActivityLogList] = useState<AnimalActivityLog[]>([]);
+  const [selectedAnimalActivityLog, setSelectedAnimalActivityLog] = useState<AnimalActivityLog>(emptyAnimalActivityLog);
+  const [deleteanimalActivityLogDialog, setDeleteAnimalActivityLogDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<AnimalObservationLog[]>>(null);
+  const dt = useRef<DataTable<AnimalActivityLog[]>>(null);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
   useEffect(() => {
     console.log(speciesCode);
     apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalObservationLogsBySpeciesCode/${speciesCode}`)
+      `http://localhost:3000/api/animal/getAnimalActivityLogsBySpeciesCode/${speciesCode}`)
       .then(res => {
-        setAnimalObservationLogList(res.animalObservationLogs as AnimalObservationLog[]);
+        console.log("animalActivityLogList", res.animalActivityLogs);
+        setAnimalActivityLogList(res.animalActivityLogs as AnimalActivityLog[]);
       })
       .catch(e => console.log(e));
   }, []);
-  console.log(animalObservationLogList);
 
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
 
-  const confirmDeleteanimalObservationLog = (animalObservationLog: AnimalObservationLog) => {
-    setSelectedAnimalObservationLog(animalObservationLog);
-    setDeleteAnimalObservationLogDialog(true);
+  const confirmDeleteanimalActivityLog = (animalActivityLog: AnimalActivityLog) => {
+    setSelectedAnimalActivityLog(animalActivityLog);
+    setDeleteAnimalActivityLogDialog(true);
   };
 
-  const hideDeleteAnimalObservationLogDialog = () => {
-    setDeleteAnimalObservationLogDialog(false);
+  const hideDeleteAnimalActivityLogDialog = () => {
+    setDeleteAnimalActivityLogDialog(false);
   };
 
-  // delete animalObservationLog stuff
-  const deleteAnimalObservationLog = async () => {
-    let _animalObservationLog = animalObservationLogList.filter(
-      (val) => val.animalObservationLogId !== selectedAnimalObservationLog?.animalObservationLogId
+  // delete animalActivityLog stuff
+  const deleteAnimalActivityLog = async () => {
+    let _animalActivityLog = animalActivityLogList.filter(
+      (val) => val.animalActivityLogId !== selectedAnimalActivityLog?.animalActivityLogId
     );
 
-    const deleteAnimalObservationLog = async () => {
+    const deleteAnimalActivityLog = async () => {
       try {
-        setDeleteAnimalObservationLogDialog(false);
+        setDeleteAnimalActivityLogDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/animal/deleteAnimalObservationLogById/" +
-          selectedAnimalObservationLog.animalObservationLogId
+          "http://localhost:3000/api/animal/deleteAnimalActivityLogById/" +
+          selectedAnimalActivityLog.animalActivityLogId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted animal observation log: " + selectedAnimalObservationLog.animalObservationLogId,
+            "Successfully deleted animal activity log: " + selectedAnimalActivityLog.animalActivityLogId,
         });
-        setAnimalObservationLogList(_animalObservationLog);
-        setSelectedAnimalObservationLog(emptyAnimalObservationLog);
+        setAnimalActivityLogList(_animalActivityLog);
+        setSelectedAnimalActivityLog(emptyAnimalActivityLog);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting animal observation log: \n" + apiJson.error,
+            "An error has occurred while deleting animal activity log: \n" + apiJson.error,
         });
       }
     };
-    deleteAnimalObservationLog();
+    deleteAnimalActivityLog();
   };
 
-  const deleteAnimalObservationLogDialogFooter = (
+  const deleteAnimalActivityLogDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteAnimalObservationLogDialog}>
+      <Button onClick={hideDeleteAnimalActivityLogDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteAnimalObservationLog}>
+      <Button variant={"destructive"} onClick={deleteAnimalActivityLog}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
 
   );
-  // end delete animalObservationLog stuff
+  // end delete animalActivityLog stuff
 
-  const actionBodyTemplate = (animalObservationLog: AnimalObservationLog) => {
+  const actionBodyTemplate = (animalActivityLog: AnimalActivityLog) => {
     return (
       <React.Fragment>
         <Button
           // variant={"outline"}
           className="mb-1 mr-1"
           onClick={() => {
-            navigate(`/animal/viewAnimalDetails/${animalCode}/behaviour`, { replace: true })
-            navigate(`/animal/viewAnimalObservationLogDetails/${animalObservationLog.animalObservationLogId}`)
+            navigate(`/animal/viewAnimalDetails/${animalCode}/activitylogs`, { replace: true })
+            navigate(`/animal/viewAnimalActivityLogDetails/${animalActivityLog.animalActivityLogId}`)
           }}>
           <HiEye className="mx-auto" />
         </Button>
         {/* <Button
           className="mr-1"
           onClick={() => {
-            navigate(`/animal/viewAnimalDetails/${animalCode}/behaviour`, { replace: true })
-            navigate(`/animal/editAnimalObservationLog/${animalObservationLog.animalObservationLogId}`)
+            navigate(`/animal/viewAnimalDetails/${animalCode}/activitylogs`, { replace: true })
+            navigate(`/animal/editAnimalActivityLog/${animalActivityLog.animalTrainingLogId}`)
           }}>
           <HiPencil className="mr-1" />
         </Button> */}
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeleteanimalObservationLog(animalObservationLog)}
+          onClick={() => confirmDeleteanimalActivityLog(animalActivityLog)}
         >
           <HiTrash className="mx-auto" />
 
@@ -269,7 +274,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        <h4 className="m-1">Manage Animal Observation Logs</h4>
+        <h4 className="m-1">Manage Animal Activity Logs</h4>
         {/* <Dropdown
           options={sortOptions}
           value={sortKey}
@@ -293,17 +298,17 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     </div>
   );
 
-  const listItem = (animalObservationLog: AnimalObservationLog) => {
+  const listItem = (animalActivityLog: AnimalActivityLog) => {
     return (
       <div>
         <Card className="my-4 relative"
-          title={animalObservationLog.animalObservationLogId}
-          subTitle={animalObservationLog.dateTime ?
-            "Date created: " + new Date(animalObservationLog.dateTime).toLocaleString() : ""}>
+          title={animalActivityLog.animalActivityLogId}
+          subTitle={animalActivityLog.dateTime ?
+            "Date created: " + new Date(animalActivityLog.dateTime).toLocaleString() : ""}>
           {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
           <Button className="absolute top-5 right-5"
             variant={"destructive"}
-            onClick={() => confirmDeleteanimalObservationLog(animalObservationLog)}
+            onClick={() => confirmDeleteanimalActivityLog(animalActivityLog)}
           >
             <HiTrash className="mx-auto" />
           </Button>
@@ -311,17 +316,17 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>
               <div className="text-xl font-bold text-900">Duration In Minutes</div>
-              <p>{animalObservationLog.durationInMinutes}</p>
+              <p>{animalActivityLog.durationInMinutes}</p>
             </div>
             <Separator orientation="vertical" />
             <div>
-              <div className="text-xl font-bold text-900">Observation Quality</div>
-              <p>{animalObservationLog.observationQuality}</p>
+              <div className="text-xl font-bold text-900">Session Rating</div>
+              <p>{animalActivityLog.sessionRating}</p>
             </div>
             <Separator orientation="vertical" />
             <div>
               <div className="text-xl font-bold text-900">Details</div>
-              <p>{animalObservationLog.details}</p>
+              <p>{animalActivityLog.details}</p>
             </div>
           </div>
 
@@ -330,11 +335,11 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     )
   }
 
-  const itemTemplate = (animalObservationLog: AnimalObservationLog) => {
-    if (!animalObservationLog) {
+  const itemTemplate = (animalActivityLog: AnimalActivityLog) => {
+    if (!animalActivityLog) {
       return;
     }
-    return listItem(animalObservationLog);
+    return listItem(animalActivityLog);
   };
 
   return (
@@ -349,11 +354,11 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
                 employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") ?
                 <Button className="mr-2"
                   onClick={() => {
-                    navigate(`/animal/viewAnimalDetails/${animalCode}/behaviour`, { replace: true })
-                    navigate(`/animal/createAnimalObservationLog/${speciesCode}`)
+                    navigate(`/animal/viewAnimalDetails/${animalCode}/activitylogs`, { replace: true })
+                    navigate(`/animal/createAnimalActivityLog/${speciesCode}`)
                   }}>
                   <HiPlus className="mr-auto" />
-                  Add Animal Observation Log
+                  Add Animal Activity Log
                 </Button>
                 : <Button disabled className="invisible">
                   Add Log
@@ -365,14 +370,14 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
           </div>
           <DataTable
             ref={dt}
-            value={animalObservationLogList}
-            selection={selectedAnimalObservationLog}
+            value={animalActivityLogList}
+            selection={selectedAnimalActivityLog}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedAnimalObservationLog(e.value);
+                setSelectedAnimalActivityLog(e.value);
               }
             }}
-            dataKey="animalObservationLogId"
+            dataKey="animalActivityLogId"
             paginator
             rows={10}
             scrollable
@@ -384,14 +389,20 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             header={header}
           >
             <Column
-              field="animalObservationLogId"
+              field="animalActivityLogId"
               header="ID"
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
-              body={(animalObservationLog) => {
-                return new Date(animalObservationLog.dateTime).toLocaleDateString(
+              field="activityType"
+              header="Activity Type"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              body={(animalActivityLog) => {
+                return new Date(animalActivityLog.dateTime).toLocaleDateString(
                   "en-SG",
                   dateOptions
                 );
@@ -408,8 +419,14 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="observationQuality"
-              header="Observation Quality"
+              field="sessionRating"
+              header="Session Rating"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="animalReaction"
+              header="Animal Reaction"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -428,8 +445,8 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               filterPlaceholder="Search by animal code"
             ></Column>
             <Column
-              // body={(animalObservationLog) => {
-              //   return animalObservationLog.keeper.employeeId;
+              // body={(animalActivityLog) => {
+              //   return animalActivityLog.keeper.employeeId;
               // }}
               field="keeper.employee.employeeName"
               header="Keeper"
@@ -446,14 +463,14 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             ></Column>
           </DataTable>
           {/* <DataView
-            value={animalObservationLogList}
+            value={animalActivityLogList}
             itemTemplate={itemTemplate}
             layout="list"
-            dataKey="animalObservationLogId"
+            dataKey="animalTrainingLogId"
             header={header}
             sortField={sortField}
             sortOrder={sortOrder}
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal observation logs"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal activity logs"
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
             paginator
@@ -462,23 +479,23 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
         </div>
       </div>
       <Dialog
-        visible={deleteanimalObservationLogDialog}
+        visible={deleteanimalActivityLogDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteAnimalObservationLogDialogFooter}
-        onHide={hideDeleteAnimalObservationLogDialog}
+        footer={deleteAnimalActivityLogDialogFooter}
+        onHide={hideDeleteAnimalActivityLogDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedAnimalObservationLog && (
+          {selectedAnimalActivityLog && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedAnimalObservationLog.animalObservationLogId}</b>?
+              <b>{selectedAnimalActivityLog.animalActivityLogId}</b>?
             </span>
           )}
         </div>
@@ -487,4 +504,4 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   );
 }
 
-export default AllAnimalObservationLogsDatatable;
+export default AllAnimalActivityLogsDatatable;

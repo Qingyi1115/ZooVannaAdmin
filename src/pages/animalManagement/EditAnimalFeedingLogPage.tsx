@@ -2,18 +2,18 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import useApiJson from "../../hooks/useApiJson";
 import { Rating } from "../../enums/Rating";
-import EditAnimalObservationLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalObservationLogForm";
+import EditAnimalFeedingLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalFeedingLogForm";
 import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
-import AnimalObservationLog from "../../models/AnimalObservationLog";
+import AnimalFeedingLog from "../../models/AnimalFeedingLog";
 import Employee from "../../models/Employee";
 import Species from "../../models/Species";
 import Keeper from "../../models/Keeper";
 
-function EditAnimalObservationLogPage() {
+function EditAnimalFeedingLogPage() {
   const apiJson = useApiJson();
-  const { animalObservationLogId } = useParams<{ animalObservationLogId: string }>();
+  const { animalFeedingLogId } = useParams<{ animalFeedingLogId: string }>();
   const employee = useAuthContext().state.user?.employeeData;
 
   let emptySpecies: Species = {
@@ -90,31 +90,30 @@ function EditAnimalObservationLogPage() {
     employee: emptyEmployee
   }
 
-  let emptyAnimalObservationLog: AnimalObservationLog = {
-    animalObservationLogId: 0,
+  let emptyAnimalFeedingLog: AnimalFeedingLog = {
+    animalFeedingLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    observationQuality: Rating.NOT_RECORDED,
     details: "",
     animals: [],
     keeper: emptyKeeper
   };
 
-  const [curAnimalObservationLog, setCurAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
+  const [curAnimalFeedingLog, setCurAnimalFeedingLog] = useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAnimalObservationLogById/${animalObservationLogId}`).then(res => {
-      setCurAnimalObservationLog(res["animalObservationLog"]);
+    apiJson.get(`http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`).then(res => {
+      setCurAnimalFeedingLog(res["animalFeedingLog"]);
     });
   }, [0]);
 
   return (
     <div className="p-10">
-      {curAnimalObservationLog && curAnimalObservationLog.animalObservationLogId != -1 && (
-        <EditAnimalObservationLogForm curAnimalObservationLog={curAnimalObservationLog} />
+      {curAnimalFeedingLog && curAnimalFeedingLog.animalFeedingLogId != -1 && (
+        <EditAnimalFeedingLogForm curAnimalFeedingLog={curAnimalFeedingLog} />
       )}
     </div>
   );
 }
 
-export default EditAnimalObservationLogPage;
+export default EditAnimalFeedingLogPage;

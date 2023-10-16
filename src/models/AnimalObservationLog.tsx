@@ -1,6 +1,6 @@
 import { Rating } from "../enums/Rating";
 import Animal from "./Animal";
-import Employee from "./Employee";
+import Keeper from "./Keeper";
 
 interface AnimalObservationLog {
   animalObservationLogId: number;
@@ -9,7 +9,7 @@ interface AnimalObservationLog {
   observationQuality: Rating;
   details: string;
   animals: Animal[];
-  employee: Employee;
+  keeper: Keeper;
 }
 
 export default AnimalObservationLog;

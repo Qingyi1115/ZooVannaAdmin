@@ -9,15 +9,15 @@ import {
 } from "@/components/ui/table";
 import { NavLink, useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
-import AnimalObservationLog from "../../../models/AnimalObservationLog";
+import AnimalFeedingLog from "../../../models/AnimalFeedingLog";
 import Animal from "../../../models/Animal";
 
-interface ViewAnimalObservationLogDetailsProps {
-  curAnimalObservationLog: AnimalObservationLog
+interface ViewAnimalFeedingLogDetailsProps {
+  curAnimalFeedingLog: AnimalFeedingLog
 }
 
-function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsProps) {
-  const { curAnimalObservationLog } = props;
+function ViewAnimalFeedingLogDetails(props: ViewAnimalFeedingLogDetailsProps) {
+  const { curAnimalFeedingLog } = props;
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
@@ -26,11 +26,11 @@ function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsP
       <div>
         <Button className="mr-2"
           onClick={() => {
-            navigate(`/animal/viewAnimalObservationLogDetails/${curAnimalObservationLog.animalObservationLogId}`, { replace: true })
-            navigate(`/animal/editAnimalObservationLog/${curAnimalObservationLog.animalObservationLogId}`)
+            navigate(`/animal/viewAnimalFeedingLogDetails/${curAnimalFeedingLog.animalFeedingLogId}`, { replace: true })
+            navigate(`/animal/editAnimalFeedingLog/${curAnimalFeedingLog.animalFeedingLogId}`)
           }}>
           <HiPencil className="mx-auto" />
-          Edit Animal Observation Log Details
+          Edit Animal Feeding Log Details
         </Button>
       </div>
 
@@ -41,43 +41,37 @@ function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsP
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               ID
             </TableCell>
-            <TableCell>{curAnimalObservationLog.animalObservationLogId}</TableCell>
+            <TableCell>{curAnimalFeedingLog.animalFeedingLogId}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Date
             </TableCell>
-            <TableCell>{new Date(curAnimalObservationLog.dateTime).toLocaleString()}</TableCell>
+            <TableCell>{new Date(curAnimalFeedingLog.dateTime).toLocaleString()}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Duration In Minutes
             </TableCell>
-            <TableCell>{curAnimalObservationLog.durationInMinutes}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Observation Quality
-            </TableCell>
-            <TableCell>{curAnimalObservationLog.observationQuality}</TableCell>
+            <TableCell>{curAnimalFeedingLog.durationInMinutes}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Details
             </TableCell>
-            <TableCell>{curAnimalObservationLog.details}</TableCell>
+            <TableCell>{curAnimalFeedingLog.details}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Animals
             </TableCell>
-            <TableCell>{curAnimalObservationLog.animals.map((animal: Animal) => animal.houseName).join(", ")}</TableCell>
+            <TableCell>{curAnimalFeedingLog.animals.map((animal: Animal) => animal.houseName).join(", ")}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Keeper
             </TableCell>
-            <TableCell>{curAnimalObservationLog.keeper.employee.employeeName}</TableCell>
+            <TableCell>{curAnimalFeedingLog.keeper.employee.employeeName}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -85,4 +79,4 @@ function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsP
   )
 }
 
-export default ViewAnimalObservationLogDetails;
+export default ViewAnimalFeedingLogDetails;

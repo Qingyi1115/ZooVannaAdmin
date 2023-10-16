@@ -2,18 +2,20 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import useApiJson from "../../hooks/useApiJson";
 import { Rating } from "../../enums/Rating";
-import EditAnimalObservationLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalObservationLogForm";
+import EditAnimalActivityLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalActivityLogForm";
 import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
-import AnimalObservationLog from "../../models/AnimalObservationLog";
+import AnimalActivityLog from "../../models/AnimalActivityLog";
 import Employee from "../../models/Employee";
 import Species from "../../models/Species";
 import Keeper from "../../models/Keeper";
+import { ActivityType } from "../../enums/ActivityType";
+import { Reaction } from "../../enums/Reaction";
 
-function EditAnimalObservationLogPage() {
+function EditAnimalActivityLogPage() {
   const apiJson = useApiJson();
-  const { animalObservationLogId } = useParams<{ animalObservationLogId: string }>();
+  const { animalActivityLogId } = useParams<{ animalActivityLogId: string }>();
   const employee = useAuthContext().state.user?.employeeData;
 
   let emptySpecies: Species = {
@@ -90,31 +92,33 @@ function EditAnimalObservationLogPage() {
     employee: emptyEmployee
   }
 
-  let emptyAnimalObservationLog: AnimalObservationLog = {
-    animalObservationLogId: 0,
+  let emptyAnimalActivityLog: AnimalActivityLog = {
+    animalActivityLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    observationQuality: Rating.NOT_RECORDED,
+    sessionRating: Rating.NOT_RECORDED,
     details: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
+    activityType: ActivityType.TRAINING,
+    animalReaction: Reaction.POSITIVE_RESPONSE
   };
 
-  const [curAnimalObservationLog, setCurAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
+  const [curAnimalActivityLog, setCurAnimalActivityLog] = useState<AnimalActivityLog>(emptyAnimalActivityLog);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAnimalObservationLogById/${animalObservationLogId}`).then(res => {
-      setCurAnimalObservationLog(res["animalObservationLog"]);
+    apiJson.get(`http://localhost:3000/api/animal/getAnimalActivityLogById/${animalActivityLogId}`).then(res => {
+      setCurAnimalActivityLog(res["animalActivityLog"]);
     });
   }, [0]);
 
   return (
     <div className="p-10">
-      {curAnimalObservationLog && curAnimalObservationLog.animalObservationLogId != -1 && (
-        <EditAnimalObservationLogForm curAnimalObservationLog={curAnimalObservationLog} />
+      {curAnimalActivityLog && curAnimalActivityLog.animalActivityLogId != -1 && (
+        <EditAnimalActivityLogForm curAnimalActivityLog={curAnimalActivityLog} />
       )}
     </div>
   );
 }
 
-export default EditAnimalObservationLogPage;
+export default EditAnimalActivityLogPage;

@@ -15,12 +15,13 @@ import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import Employee from "../../../models/Employee";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import { set } from "date-fns";
 
-// interface CreateNewAnimalObservationLogProps {
+// interface CreateNewAnimalActivityLogProps {
 //   speciesCode: string;
 // }
 
-function validateAnimalObservationLogName(props: ValidityState) {
+function validateAnimalActivityLogName(props: ValidityState) {
   if (props != undefined) {
     if (props.valueMissing) {
       return (
@@ -32,14 +33,17 @@ function validateAnimalObservationLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalObservationLogForm() {
+function CreateNewAnimalActivityLogForm() {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+  const [activityType, setActivityType] = useState<string | undefined>(
+    undefined); // dropdown
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
-  const [observationQuality, setObservationQuality] = useState<string | undefined>(
+  const [sessionRating, setSessionRating] = useState<string | undefined>(
     undefined); // dropdown
   const [details, setDetails] = useState<string>(""); // text input
+  const [animalReaction, setAnimalReaction] = useState<string | undefined>(undefined); // text input
   const [dateTime, setDateTime] = useState<Date | null>(null);
   const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
@@ -58,23 +62,24 @@ function CreateNewAnimalObservationLogForm() {
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
-
-    const newAnimalObservationLog = {
+    const newAnimalActivityLog = {
+      activityType: activityType,
       dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
-      observationQuality: observationQuality,
+      sessionRating: sessionRating,
+      animalReaction: animalReaction,
       details: details,
       animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
-    console.log(newAnimalObservationLog);
+    console.log(newAnimalActivityLog);
 
     try {
       const responseJson = await apiJson.post(
-        `http://localhost:3000/api/animal/createAnimalObservationLog`,
-        newAnimalObservationLog);
+        `http://localhost:3000/api/animal/createAnimalActivityLog`,
+        newAnimalActivityLog);
       // success
       toastShadcn({
-        description: "Successfully created animal observation log",
+        description: "Successfully created animal activity log",
       });
       navigate(-1);
     } catch (error: any) {
@@ -82,7 +87,7 @@ function CreateNewAnimalObservationLogForm() {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while creating animal observation log details: \n" +
+          "An error has occurred while creating animal activity log details: \n" +
           error.message,
       });
     }
@@ -112,6 +117,20 @@ function CreateNewAnimalObservationLogForm() {
         </div>
         <Separator />
       </div>
+      {/* Activity Type */}
+      <FormFieldSelect
+        formFieldName="activityType"
+        label="Activity Type"
+        required={true}
+        placeholder="Select an activity type..."
+        valueLabelPair={[
+          ["TRAINING", "Training"],
+          ["ENRICHMENT", "Enrichment"]
+        ]}
+        value={activityType}
+        setValue={setActivityType}
+        validateFunction={validateAnimalActivityLogName}
+      />
       {/* DateTime */}
       <div className="flex justify-content-center">
         <label htmlFor="dateTimeCalendar" className="self-center mx-3 text-lg text-dark ">Date</label>
@@ -131,14 +150,14 @@ function CreateNewAnimalObservationLogForm() {
         placeholder=""
         value={durationInMinutes}
         setValue={setDurationInMinutes}
-        validateFunction={validateAnimalObservationLogName}
+        validateFunction={validateAnimalActivityLogName}
         pattern={undefined}
       />
 
-      {/* Observation Quality */}
+      {/* Session Rating */}
       <FormFieldSelect
-        formFieldName="observationQuality"
-        label="Observation Quality"
+        formFieldName="sessionRating"
+        label="Session Rating"
         required={true}
         placeholder="Select a rating..."
         valueLabelPair={[
@@ -148,9 +167,41 @@ function CreateNewAnimalObservationLogForm() {
           ["POOR", "Poor"],
           ["NOT_RECORDED", "Not Recorded"]
         ]}
-        value={observationQuality}
-        setValue={setObservationQuality}
-        validateFunction={validateAnimalObservationLogName}
+        value={sessionRating}
+        setValue={setSessionRating}
+        validateFunction={validateAnimalActivityLogName}
+      />
+      {/* Animal Reaction */}
+      <FormFieldSelect
+        formFieldName="animalReaction"
+        label="Animal Reaction"
+        required={true}
+        placeholder="Select a reaction"
+        valueLabelPair={[
+          ["POSITIVE_RESPONSE", "Positive response",],
+          ["RESPONSIVE", "Resoonsive"],
+          ["ENTHUSIASTIC", "Eenthusiastic"],
+          ["ENGAGED", "Enraged",],
+          ["PLAYFUL", "Playful",],
+          ["CONTENT", "Content",],
+          ["NEUTRAL_RESPONSE", "Neutral response",],
+          ["OBSERVANT", "Obesrvant",],
+          ["CAUTIOUS", "Cautious",],
+          ["NEGATIVE_RESPONSE", "Negative response",],
+          ["STRESSED", "Stressed",],
+          ["AVOIDANT", "Avoidant",],
+          ["RESISTANT", "Resistant",],
+          ["AGGRESSIVE", "Aggresive",],
+          ["FEARFUL", "Fearful",],
+          ['OTHER_RESPONSE', "Other response",],
+          ["ENERGETIC", "Energetic",],
+          ["RELAXED", "Relaxed",],
+          ["INDETERMINATE", "Indeterminate",],
+          ["UNDETERMINED", "Undetermined"],
+        ]}
+        value={animalReaction}
+        setValue={setAnimalReaction}
+        validateFunction={validateAnimalActivityLogName}
       />
       {/* Details */}
       <FormFieldInput
@@ -161,7 +212,7 @@ function CreateNewAnimalObservationLogForm() {
         placeholder=""
         value={details}
         setValue={setDetails}
-        validateFunction={validateAnimalObservationLogName}
+        validateFunction={validateAnimalActivityLogName}
         pattern={undefined}
       />
       {/* Animals */}
@@ -194,4 +245,4 @@ function CreateNewAnimalObservationLogForm() {
   );
 }
 
-export default CreateNewAnimalObservationLogForm;
+export default CreateNewAnimalActivityLogForm;

@@ -16,11 +16,11 @@ import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import Employee from "../../../models/Employee";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 
-// interface CreateNewAnimalObservationLogProps {
+// interface CreateNewAnimalFeedingLogProps {
 //   speciesCode: string;
 // }
 
-function validateAnimalObservationLogName(props: ValidityState) {
+function validateAnimalFeedingLogName(props: ValidityState) {
   if (props != undefined) {
     if (props.valueMissing) {
       return (
@@ -32,15 +32,13 @@ function validateAnimalObservationLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalObservationLogForm() {
+function CreateNewAnimalFeedingLogForm() {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
-  const [observationQuality, setObservationQuality] = useState<string | undefined>(
-    undefined); // dropdown
   const [details, setDetails] = useState<string>(""); // text input
-  const [dateTime, setDateTime] = useState<Date | null>(null);
+  const [dateTime, setDateTime] = useState< Date | null >(null);
   const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -59,22 +57,21 @@ function CreateNewAnimalObservationLogForm() {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
-    const newAnimalObservationLog = {
+    const newAnimalFeedingLog = {
       dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
-      observationQuality: observationQuality,
       details: details,
       animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
-    console.log(newAnimalObservationLog);
+    console.log(newAnimalFeedingLog);
 
     try {
       const responseJson = await apiJson.post(
-        `http://localhost:3000/api/animal/createAnimalObservationLog`,
-        newAnimalObservationLog);
+        `http://localhost:3000/api/animal/createAnimalFeedingLog`,
+        newAnimalFeedingLog);
       // success
       toastShadcn({
-        description: "Successfully created animal observation log",
+        description: "Successfully created animal feeding log",
       });
       navigate(-1);
     } catch (error: any) {
@@ -82,7 +79,7 @@ function CreateNewAnimalObservationLogForm() {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while creating animal observation log details: \n" +
+          "An error has occurred while creating animal feeding log details: \n" +
           error.message,
       });
     }
@@ -104,7 +101,7 @@ function CreateNewAnimalObservationLogForm() {
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">
-            Create Animal Observation Log
+            Create Animal Feeding Log
           </span>
           <Button disabled className="invisible">
             Back
@@ -131,27 +128,10 @@ function CreateNewAnimalObservationLogForm() {
         placeholder=""
         value={durationInMinutes}
         setValue={setDurationInMinutes}
-        validateFunction={validateAnimalObservationLogName}
+        validateFunction={validateAnimalFeedingLogName}
         pattern={undefined}
       />
 
-      {/* Observation Quality */}
-      <FormFieldSelect
-        formFieldName="observationQuality"
-        label="Observation Quality"
-        required={true}
-        placeholder="Select a rating..."
-        valueLabelPair={[
-          ["EXCELLENT", "Excellent"],
-          ["GOOD", "Good"],
-          ["FAIR", "Fair"],
-          ["POOR", "Poor"],
-          ["NOT_RECORDED", "Not Recorded"]
-        ]}
-        value={observationQuality}
-        setValue={setObservationQuality}
-        validateFunction={validateAnimalObservationLogName}
-      />
       {/* Details */}
       <FormFieldInput
         type="text"
@@ -161,7 +141,7 @@ function CreateNewAnimalObservationLogForm() {
         placeholder=""
         value={details}
         setValue={setDetails}
-        validateFunction={validateAnimalObservationLogName}
+        validateFunction={validateAnimalFeedingLogName}
         pattern={undefined}
       />
       {/* Animals */}
@@ -194,4 +174,4 @@ function CreateNewAnimalObservationLogForm() {
   );
 }
 
-export default CreateNewAnimalObservationLogForm;
+export default CreateNewAnimalFeedingLogForm;

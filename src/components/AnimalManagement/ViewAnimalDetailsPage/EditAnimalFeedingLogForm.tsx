@@ -9,27 +9,27 @@ import FormFieldSelect from "../../FormFieldSelect";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import AnimalObservationLog from "../../../models/AnimalObservationLog";
+import AnimalFeedingLog from "../../../models/AnimalFeedingLog";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import Animal from "../../../models/Animal";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import { set } from "date-fns";
 
-interface EditAnimalObservationLogFormProps {
-  curAnimalObservationLog: AnimalObservationLog
+interface EditAnimalFeedingLogFormProps {
+  curAnimalFeedingLog: AnimalFeedingLog
 }
 
-function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) {
+function EditAnimalFeedingLogForm(props: EditAnimalFeedingLogFormProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
-  const [observationQuality, setObservationQuality] = useState<string | undefined>(
-    undefined); // dropdown
   const [details, setDetails] = useState<string>(""); // text input
-  const { curAnimalObservationLog } = props;
-  const [dateTime, setDateTime] = useState<Date | null>(null);
+  const { curAnimalFeedingLog } = props;
+  const [dateTime, setDateTime] = useState<
+    string | Date | Date[] | null
+  >(null);
   const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -40,20 +40,19 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
   useEffect(() => {
     apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
       setCurAnimalList(res as Animal[]);
-      setSelectedAnimals(res.filter((animal: Animal) => curAnimalObservationLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
+      setSelectedAnimals(res.filter((animal: Animal) => curAnimalFeedingLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
     });
-  }, [curAnimalObservationLog]);
+  }, [curAnimalFeedingLog]);
 
   useEffect(() => {
-    setDurationInMinutes(String(curAnimalObservationLog.durationInMinutes));
-    setObservationQuality(curAnimalObservationLog.observationQuality);
-    setDetails(curAnimalObservationLog.details);
-    setDateTime(new Date(curAnimalObservationLog.dateTime))
-    console.log(curAnimalObservationLog.animals);
+    setDurationInMinutes(String(curAnimalFeedingLog.durationInMinutes))
+    setDetails(curAnimalFeedingLog.details);
+    setDateTime(new Date(curAnimalFeedingLog.dateTime))
+    console.log(curAnimalFeedingLog.animals);
 
-  }, [curAnimalObservationLog]);
+  }, [curAnimalFeedingLog]);
 
-  function validateAnimalObservationLogName(props: ValidityState) {
+  function validateAnimalFeedingLogName(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
@@ -71,29 +70,29 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const newAnimalObservationLog = {
-      dateTime: dateTime?.getTime(),
+    const newAnimalFeedingLog = {
+      dateTime: dateTime,
       durationInMinutes: durationInMinutes,
-      observationQuality: observationQuality,
       details: details,
       animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
-    console.log(newAnimalObservationLog);
+    console.log(newAnimalFeedingLog);
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/animal/updateAnimalObservationLog/${curAnimalObservationLog.animalObservationLogId}`,
-        newAnimalObservationLog);
+        `http://localhost:3000/api/animal/updateAnimalFeedingLog/${curAnimalFeedingLog.animalFeedingLogId}`,
+        newAnimalFeedingLog);
       // success
       toastShadcn({
-        description: "Successfully edited animal observation log",
+        description: "Successfully edited animal feeding log",
       });
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while editing animal observation log details: \n" +
+          "An error has occurred while editing animal feeding log details: \n" +
           error.message,
       });
     }
@@ -117,7 +116,7 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
               Back
             </Button>
             <span className="self-center text-lg text-graydark">
-              Edit Animal Observation Log
+              Edit Animal Feeding Log
             </span>
             <Button disabled className="invisible">
               Back
@@ -125,7 +124,7 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
           </div>
           <Separator />
           <span className="mt-4 self-center text-title-xl font-bold">
-            {curAnimalObservationLog.animalObservationLogId}
+            {curAnimalFeedingLog.animalFeedingLogId}
           </span>
         </div>
 
@@ -148,27 +147,10 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
           placeholder=""
           value={durationInMinutes}
           setValue={setDurationInMinutes}
-          validateFunction={validateAnimalObservationLogName}
+          validateFunction={validateAnimalFeedingLogName}
           pattern={undefined}
         />
 
-        {/* Observation Quality */}
-        <FormFieldSelect
-          formFieldName="observationQuality"
-          label="Observation Quality"
-          required={true}
-          placeholder="Select a rating..."
-          valueLabelPair={[
-            ["EXCELLENT", "Excellent"],
-            ["GOOD", "Good"],
-            ["FAIR", "Fair"],
-            ["POOR", "Poor"],
-            ["NOT_RECORDED", "Not Recorded"]
-          ]}
-          value={observationQuality}
-          setValue={setObservationQuality}
-          validateFunction={validateAnimalObservationLogName}
-        />
         {/* Details */}
         <FormFieldInput
           type="text"
@@ -178,7 +160,7 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
           placeholder=""
           value={details}
           setValue={setDetails}
-          validateFunction={validateAnimalObservationLogName}
+          validateFunction={validateAnimalFeedingLogName}
           pattern={undefined}
         />
         {/* Animals */}
@@ -212,4 +194,4 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
   );
 }
 
-export default EditAnimalObservationLogForm;
+export default EditAnimalFeedingLogForm;
