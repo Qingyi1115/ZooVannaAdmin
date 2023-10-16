@@ -215,7 +215,7 @@ function LandingPageMap(props: LandingPageMapProps) {
               position={[facility.yCoordinate, facility.xCoordinate]}
             ></Marker>
           ))}
-          <Marker draggable position={[1.29, 103.7827767]}></Marker>{" "}
+          {/* <Marker draggable position={[1.29, 103.7827767]}></Marker>{" "} */}
           {/* <MyComponent /> */}
         </MapContainer>
       </div>
