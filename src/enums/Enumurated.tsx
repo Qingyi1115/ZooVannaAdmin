@@ -187,6 +187,7 @@ enum EventType {
 }
 
 enum EventTimingType {
+  NON_RECURRING = "NON-RECURRING",
   MORNING = "MORNING",
   AFTERNOON = "AFTERNOON",
   EVENING = "EVENING",
@@ -233,6 +234,30 @@ enum HubStatus {
   CONNECTED = "CONNECTED",
 }
 
+enum DayOfWeek {
+  MONDAY = "MONDAY",
+  TUESDAY = "TUESDAY",
+  WEDNESDAY = "WEDNESDAY",
+  THURSDAY = "THURSDAY",
+  FRIDAY = "FRIDAY",
+  SATURDAY = "SATURDAY",
+  SUNDAY = "SUNDAY",
+}
+
+enum RepeatPattern {
+  DAILY = "DAILY",
+  WEEKLY = "WEEKLY",
+  MONTHLY = "MONTHLY",
+  ANUALLY = "ANUALLY",
+}
+
+enum RecurringPattern {
+  NON_RECURRING = "NON-RECURRING",
+  DAILY = "DAILY",
+  WEEKLY = "WEEKLY",
+  MONTHLY = "MONTHLY",
+}
+
 export {
   KeeperType,
   PlannerType,
@@ -263,5 +288,8 @@ export {
   OrderStatus,
   EnclosureStatus,
   HubStatus,
+  DayOfWeek,
+  RepeatPattern,
+  RecurringPattern,
   IdentifierType,
 };
