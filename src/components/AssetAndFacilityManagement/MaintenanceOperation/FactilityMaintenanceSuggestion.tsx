@@ -109,7 +109,7 @@ function FacilityMaintenanceSuggestion() {
     dt.current?.exportCSV();
   };
 
-  const actionBodyTemplate = (objDetails: MaintenanceDetails) => {
+  const facilityActionBodyTemplate = (objDetails: MaintenanceDetails) => {
     return (
       <React.Fragment>
         <Button variant="outline" className="mb-1 mr-1" onClick={() => {
@@ -124,14 +124,27 @@ function FacilityMaintenanceSuggestion() {
         }}>
           <HiOutlinePresentationChartLine className="mx-auto" />
         </Button>
-        {/* <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteSpecies(species)}
-        >
-          <HiTrash className="mx-auto" />
-          <span>Delete</span>
-        </Button> */}
+      </React.Fragment>
+    );
+  };
+
+  const employeeActionBodyTemplate = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Button
+            variant={"outline"}
+            className="mr-2" onClick={() => {
+              navigate(`/assetfacility/maintenance/facilityMaintenance`, { replace: true });
+              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+            }}>
+            <HiEye className="mx-auto" />
+          </Button>
+          {employee.dateOfResignation ?
+            <span>Removed</span>
+            : <div />
+          }
+        </div>
       </React.Fragment>
     );
   };
@@ -438,7 +451,7 @@ function FacilityMaintenanceSuggestion() {
               style={{ minWidth: "13rem" }}
             ></Column>
             <Column
-              body={actionBodyTemplate}
+              body={facilityActionBodyTemplate}
               header="Actions"
               frozen
               alignFrozen="right"
@@ -506,6 +519,13 @@ function FacilityMaintenanceSuggestion() {
                   header="Education"
                   sortable
                   style={{ minWidth: "12rem" }}
+                ></Column>
+                <Column
+                  body={employeeActionBodyTemplate}
+                  header="Actions"
+                  frozen
+                  alignFrozen="right"
+                  exportable={false}
                 ></Column>
               </DataTable>
             </div>

@@ -103,7 +103,7 @@ function SensorMaintenanceSuggestion() {
     setObjectsList(obj)
   }, [facilityList, sensorList]);
 
-  const actionBodyTemplate = (objDetails: MaintenanceDetails) => {
+  const sensorActionBodyTemplate = (objDetails: MaintenanceDetails) => {
     return (
       <React.Fragment>
         <Button variant="outline" className="mb-1 mr-1" onClick={() => {
@@ -118,14 +118,37 @@ function SensorMaintenanceSuggestion() {
         }}>
           <HiOutlinePresentationChartLine className="mx-auto" />
         </Button>
-        {/* <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteSpecies(species)}
-        >
-          <HiTrash className="mx-auto" />
-          <span>Delete</span>
-        </Button> */}
+      </React.Fragment>
+    );
+  };
+
+  const employeeActionBodyTemplate = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Button
+            variant={"outline"}
+            className="mr-2" onClick={() => {
+              navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
+              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+            }}>
+            <HiEye className="mx-auto" />
+          </Button>
+          {employee.dateOfResignation ?
+            <span>Removed</span>
+            : <div>
+              <Button
+                name="assignButton"
+                variant={"default"}
+                className="mr-2"
+                disabled={employee.currentlyAssigned}
+                onClick={() => confirmAssignment(employee)}
+              >
+                <HiPlus className="mx-auto" />
+              </Button>
+            </div>
+          }
+        </div>
       </React.Fragment>
     );
   };
@@ -172,7 +195,8 @@ function SensorMaintenanceSuggestion() {
     setBulkAssignmentDialog(true);
   };
 
-  const confirmAssignment = () => {
+  const confirmAssignment = (employee: Employee) => {
+    setSelectedEmployee(employee);
     setAssignmentDialog(true);
   };
 
@@ -325,34 +349,32 @@ function SensorMaintenanceSuggestion() {
     setAssignmentDialog(false);
   }
 
-  const bulkAssignEmployees = async () => {
+  const assignEmployee = async () => {
     selectedMaintenanceDetails.forEach(async (sensorId) => {
-      selectedEmployees.forEach(async (employeeId) => {
-        try {
-          const responseJson = await apiJson.put(
-            `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToSensor/${sensorId}`, { employeeId: employeeId }).then(res => {
-              setRefreshSeed([]);
-            }).catch(err => console.log("err", err));
+      try {
+        const responseJson = await apiJson.put(
+          `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToSensor/${sensorId}`, { employeeId: selectedEmployee.employeeId }).then(res => {
+            setRefreshSeed([]);
+          }).catch(err => console.log("err", err));
 
-          toastShadcn({
-            // variant: "destructive",
-            title: "Assignment Successful",
-            description:
-              "Successfully assigned maintenance staff: " + selectedEmployees.toString() + " to sensor: " + selectedMaintenanceDetails.toString(),
-          });
-          setAssignmentDialog(false);
-          setBulkAssignmentDialog(false);
-          setSelectedEmployees([]);
-        } catch (error: any) {
-          // got error
-          toastShadcn({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description:
-              "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
-          });
-        }
-      });
+        toastShadcn({
+          // variant: "destructive",
+          title: "Assignment Successful",
+          description:
+            "Successfully assigned maintenance staff " + selectedEmployee.employeeName + " to sensor: " + selectedMaintenanceDetails.toString(),
+        });
+        setAssignmentDialog(false);
+        setBulkAssignmentDialog(false);
+        setSelectedEmployees([]);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
+        });
+      }
     });
   }
 
@@ -363,7 +385,7 @@ function SensorMaintenanceSuggestion() {
         No
       </Button>
       <Button
-        onClick={bulkAssignEmployees}
+        onClick={assignEmployee}
       >
         <HiCheck />
         Yes
@@ -431,7 +453,7 @@ function SensorMaintenanceSuggestion() {
               style={{ minWidth: "13rem" }}
             ></Column>
             <Column
-              body={actionBodyTemplate}
+              body={sensorActionBodyTemplate}
               header="Actions"
               frozen
               alignFrozen="right"
@@ -447,7 +469,7 @@ function SensorMaintenanceSuggestion() {
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Assign Maintenance Staff"
         position={"right"}
-        footer={<Button onClick={confirmAssignment} disabled={selectedEmployees.length == 0}>Assign Selected Staff</Button>}
+        // footer={<Button onClick={confirmAssignment} disabled={selectedEmployees.length == 0}>Assign Selected Staff</Button>}
         onHide={hideEmployeeBulkAssignmentDialog}>
         <DataTable
           ref={dt2}
@@ -469,10 +491,10 @@ function SensorMaintenanceSuggestion() {
           globalFilter={globalFilter}
           header={bulkAssignmentHeader}
         >
-          <Column
+          {/* <Column
             body={employeeCheckbox}
             header={allEmployeesCheckbox}
-          ></Column>
+          ></Column> */}
           <Column
             field="employeeId"
             header="ID"
@@ -503,6 +525,13 @@ function SensorMaintenanceSuggestion() {
             sortable
             style={{ minWidth: "12rem" }}
           ></Column>
+          <Column
+            body={employeeActionBodyTemplate}
+            header="Actions"
+            frozen
+            alignFrozen="right"
+            exportable={false}
+          ></Column>
         </DataTable>
       </Dialog>
       <Dialog
@@ -522,7 +551,7 @@ function SensorMaintenanceSuggestion() {
           {selectedEmployee && (
             <span>
               Are you sure you want to assign employee {" "}
-              <b>{selectedEmployees.toString()}?</b> to facility {" "}
+              <b>{selectedEmployee.employeeName}?</b> to facility {" "}
               <b>{selectedMaintenanceDetails.toString()}?</b>
             </span>
           )}
