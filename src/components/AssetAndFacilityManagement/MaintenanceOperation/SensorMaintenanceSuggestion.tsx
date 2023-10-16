@@ -218,7 +218,7 @@ function SensorMaintenanceSuggestion() {
     setBulkAssignmentDialog(false);
   }
 
-  const onSelectedEmployeesChange = (e: CheckboxChangeEvent) => {
+  const onSelectedEmployeesOnClick = (e: CheckboxClickEvent) => {
     let _selectedEmployees = [...selectedEmployees];
     if (e.checked) {
       _selectedEmployees.push(e.value);
@@ -236,7 +236,7 @@ function SensorMaintenanceSuggestion() {
           <Checkbox
             name="toAssignEmployees"
             value={employee.employeeId}
-            onChange={onSelectedEmployeesChange}
+            onChange={onSelectedEmployeesOnClick}
             checked={selectedEmployees.includes(employee.employeeId)}>
           </Checkbox>
         </div>
@@ -245,7 +245,7 @@ function SensorMaintenanceSuggestion() {
   };
 
   const onAllEmployeesOnClick = (e: CheckboxClickEvent) => {
-    console.log("b", e.originalEvent)
+
     if (e.checked) {
       setSelectedEmployees(availableEmployees.map((employee: Employee) => employee.employeeId));
     }
@@ -297,7 +297,7 @@ function SensorMaintenanceSuggestion() {
   };
 
   const onAllMaintenanceDetailsOnClick = (e: CheckboxClickEvent) => {
-    console.log("b", e.originalEvent)
+
     if (e.checked) {
       setSelectedMaintenanceDetails(objectsList.map((maintenanceDetails: MaintenanceDetails) => maintenanceDetails.id));
     }

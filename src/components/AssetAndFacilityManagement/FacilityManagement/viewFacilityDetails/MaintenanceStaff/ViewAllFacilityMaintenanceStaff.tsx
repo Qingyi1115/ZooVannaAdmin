@@ -14,7 +14,7 @@ import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../../models/Facility";
-import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
+import { Checkbox, CheckboxChangeEvent, CheckboxClickEvent } from "primereact/checkbox";
 
 interface ViewAllFacilityMaintenanceStaffProps {
   facilityId: number;
@@ -42,7 +42,8 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
   const toast = useRef<Toast>(null);
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
-  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [selectedAssignedEmployees, setSelectedAssignedEmployees] = useState<number[]>([]);
+  const [selectedAvailableEmployees, setSelectedAvailableEmployees] = useState<number[]>([]);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeAssignmentDialog, setAssignmentDialog] = useState<boolean>(false);
@@ -143,7 +144,6 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
   }
 
   const showBulkAssignment = () => {
-    setSelectedEmployees([]);
     setBulkAssignmentDialog(true);
   };
 
@@ -165,7 +165,11 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           }}
         />
       </span>
-      <Button onClick={showBulkAssignment}><HiPlus />Assign Maintenance Staff</Button>
+      <Button
+        onClick={showBulkAssignment}
+        disabled={availableEmployees.length == 0}>
+        <HiPlus />Assign Maintenance Staff
+      </Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
@@ -175,7 +179,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
   };
 
   const confirmEmployeeRemoval = () => {
-    if (selectedEmployees.length != 0) {
+    if (selectedAssignedEmployees.length != 0) {
       setEmployeeRemovalDialog(true);
     }
   };
@@ -243,26 +247,102 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
     setBulkAssignmentDialog(false);
   }
 
-  const onSelectedEmployeesChange = (e: CheckboxChangeEvent) => {
-    let _selectedEmployees = [...selectedEmployees];
+  const onSelectedAssignedEmployeesOnClick = (e: CheckboxClickEvent) => {
+    let _selectedAssignedEmployees = [...selectedAssignedEmployees];
     if (e.checked) {
-      _selectedEmployees.push(e.value);
+      _selectedAssignedEmployees.push(e.value);
     }
     else {
-      _selectedEmployees.splice(_selectedEmployees.indexOf(e.value), 1);
+      _selectedAssignedEmployees.splice(_selectedAssignedEmployees.indexOf(e.value), 1);
     }
-    setSelectedEmployees(_selectedEmployees);
+    setSelectedAssignedEmployees(_selectedAssignedEmployees);
   }
 
-  const checkboxTemplate = (employee: any) => {
+  const assignedEmployeeCheckbox = (employee: any) => {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
           <Checkbox
-            name="toAssign"
+            name="toAssignEmployees"
             value={employee.employeeId}
-            onChange={onSelectedEmployeesChange}
-            checked={selectedEmployees.includes(employee.employeeId)}>
+            onChange={onSelectedAssignedEmployeesOnClick}
+            checked={selectedAssignedEmployees.includes(employee.employeeId)}>
+          </Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const onAllAssignedEmployeesOnClick = (e: CheckboxClickEvent) => {
+
+    if (e.checked) {
+      setSelectedAssignedEmployees(assignedEmployees.map((employee: Employee) => employee.employeeId));
+    }
+    else {
+      setSelectedAssignedEmployees([]);
+    }
+    console.log(selectedAssignedEmployees);
+  }
+
+  const allAssignedEmployeesCheckbox = (employees: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignEmployees"
+            onClick={onAllAssignedEmployeesOnClick}
+            checked={selectedAssignedEmployees.length > 0 && selectedAssignedEmployees.length == assignedEmployees.length}>
+          </Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const onSelectedAvailableEmployeesOnClick = (e: CheckboxClickEvent) => {
+    let _selectedAvailableEmployees = [...selectedAvailableEmployees];
+    if (e.checked) {
+      _selectedAvailableEmployees.push(e.value);
+    }
+    else {
+      _selectedAvailableEmployees.splice(_selectedAvailableEmployees.indexOf(e.value), 1);
+    }
+    setSelectedAvailableEmployees(_selectedAvailableEmployees);
+  }
+
+  const availableEmployeeCheckbox = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignEmployees"
+            value={employee.employeeId}
+            onChange={onSelectedAvailableEmployeesOnClick}
+            checked={selectedAvailableEmployees.includes(employee.employeeId)}>
+          </Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const onAllAvailableEmployeesOnClick = (e: CheckboxClickEvent) => {
+
+    if (e.checked) {
+      setSelectedAvailableEmployees(availableEmployees.map((employee: Employee) => employee.employeeId));
+    }
+    else {
+      setSelectedAvailableEmployees([]);
+    }
+    console.log(selectedAvailableEmployees);
+  }
+
+  const allAvailableEmployeesCheckbox = (employees: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignEmployees"
+            onClick={onAllAvailableEmployeesOnClick}
+            checked={selectedAvailableEmployees.length > 0 && selectedAvailableEmployees.length == availableEmployees.length}>
           </Checkbox>
         </div>
       </React.Fragment>
@@ -274,7 +354,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
   }
 
   const bulkAssignEmployees = async () => {
-    selectedEmployees.forEach(async (employeeId) => {
+    selectedAvailableEmployees.forEach(async (employeeId) => {
       try {
         const responseJson = await apiJson.put(
           `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
@@ -285,11 +365,11 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           // variant: "destructive",
           title: "Assignment Successful",
           description:
-            "Successfully assigned maintenance staff with IDs: " + selectedEmployees,
+            "Successfully assigned maintenance staff: " + selectedAvailableEmployees.toString(),
         });
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
-        setSelectedEmployees([]);
+        setSelectedAvailableEmployees([]);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -316,7 +396,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
   );
 
   const bulkRemoveMaintenanceStaff = async () => {
-    selectedEmployees.forEach(async (employeeId) => {
+    selectedAssignedEmployees.forEach(async (employeeId) => {
       try {
         const responseJson = await apiJson.del(
           `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
@@ -327,11 +407,11 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           // variant: "destructive",
           title: "Removal Successful",
           description:
-            "Successfully removed maintenance staff: " + selectedEmployees.toString(),
+            "Successfully removed maintenance staff: " + selectedAssignedEmployees.toString(),
         });
         setEmployeeRemovalDialog(false);
         setBulkAssignmentDialog(false);
-        setSelectedEmployees([]);
+        setSelectedAssignedEmployees([]);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -399,7 +479,8 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
             header={header}
           >
             <Column
-              body={checkboxTemplate}
+              body={assignedEmployeeCheckbox}
+              header={allAssignedEmployeesCheckbox}
             ></Column>
             <Column
               field="employeeId"
@@ -438,7 +519,12 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
               exportable={false}
             ></Column>
           </DataTable>
-          <Button variant={"destructive"} onClick={confirmEmployeeRemoval}><HiMinus />Remove Selected Staff</Button>
+          <Button
+            variant={"destructive"}
+            onClick={confirmEmployeeRemoval}
+            disabled={selectedAssignedEmployees.length == 0}>
+            <HiMinus />Remove Selected Staff
+          </Button>
         </div>
         <Dialog
           visible={employeeAssignmentDialog}
@@ -457,7 +543,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
             {selectedEmployee && (
               <span>
                 Are you sure you want to assign this facility to{" "}
-                <b>{selectedEmployees.toString()}?</b>
+                <b>{selectedAvailableEmployees.toString()}?</b>
               </span>
             )}
           </div>
@@ -479,7 +565,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
             {selectedEmployee && (
               <span>
                 Are you sure you want to remove{" "}
-                <b>{selectedEmployees.toString()}</b>?
+                <b>{selectedAssignedEmployees.toString()}</b>?
               </span>
             )}
           </div>
@@ -490,9 +576,13 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           breakpoints={{ "960px": "75vw", "641px": "90vw" }}
           header="Assign Maintenance Staff"
           position={"right"}
-          footer={<Button onClick={confirmAssignment}>Assign Selected Staff</Button>}
-          onHide={hideEmployeeBulkAssignmentDialog}
-        >
+          footer={
+            <Button
+              onClick={confirmAssignment}
+              disabled={selectedAvailableEmployees.length == 0}>
+              Assign Selected Staff
+            </Button>}
+          onHide={hideEmployeeBulkAssignmentDialog}>
           <div className="confirmation-content">
             <DataTable
               ref={dt}
@@ -515,7 +605,8 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
               header={bulkAssignmentHeader}
             >
               <Column
-                body={checkboxTemplate}
+                body={availableEmployeeCheckbox}
+                header={allAvailableEmployeesCheckbox}
               ></Column>
               <Column
                 field="employeeId"
@@ -544,6 +635,13 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
                 header="Education"
                 sortable
                 style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                body={actionBodyTemplate}
+                header="Actions"
+                frozen
+                alignFrozen="right"
+                exportable={false}
               ></Column>
             </DataTable>
           </div>

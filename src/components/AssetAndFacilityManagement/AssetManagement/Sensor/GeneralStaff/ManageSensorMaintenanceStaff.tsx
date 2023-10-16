@@ -14,7 +14,7 @@ import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
 import Sensor from "../../../../../models/Sensor";
-import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
+import { Checkbox, CheckboxClickEvent, CheckboxChangeEvent } from "primereact/checkbox";
 
 interface ManageSensorMaintenanceStaffProps {
   sensorId: number;
@@ -42,7 +42,8 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
   const toast = useRef<Toast>(null);
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
-  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [selectedAssignedEmployees, setSelectedAssignedEmployees] = useState<number[]>([]);
+  const [selectedAvailableEmployees, setSelectedAvailableEmployees] = useState<number[]>([]);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeAssignmentDialog, setAssignmentDialog] = useState<boolean>(false);
@@ -97,6 +98,7 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
       });
       setSelectedEmployee(employee);
       setAssignmentDialog(false);
+      setBulkAssignmentDialog(false);
       // window.location.reload();
     } catch (error: any) {
       // got error
@@ -140,7 +142,6 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
   }
 
   const showBulkAssignment = () => {
-    setSelectedEmployees([]);
     setBulkAssignmentDialog(true);
   };
 
@@ -162,22 +163,26 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
           }}
         />
       </span>
-      <Button onClick={showBulkAssignment}><HiPlus />Assign Maintenance Staff</Button>
+      <Button
+        onClick={showBulkAssignment}
+        disabled={availableEmployees.length == 0}>
+        <HiPlus />Assign Maintenance Staff
+      </Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
-  const confirmAssignment = () => {
+  const confirmAssignment = (employee: Employee) => {
+    setSelectedEmployee(employee);
     setAssignmentDialog(true);
   };
 
-  const confirmEmployeeRemoval = () => {
-    if (selectedEmployees.length != 0) {
-      setEmployeeRemovalDialog(true);
-    }
+  const confirmEmployeeRemoval = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setEmployeeRemovalDialog(true);
   };
 
-  const actionBodyTemplate = (employee: any) => {
+  const assignedActionBodyTemplate = (employee: any) => {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
@@ -192,15 +197,6 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>
-              {/* <Button
-                name="assignButton"
-                variant={"default"}
-                className="mr-2"
-                disabled={employee.currentlyAssigned}
-                onClick={() => confirmAssignment(employee)}
-              >
-                <HiPlus className="mx-auto" />
-              </Button>
               <Button
                 name="removeButton"
                 variant={"destructive"}
@@ -209,7 +205,39 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
                 onClick={() => confirmEmployeeRemoval(employee)}
               >
                 <HiMinus className="mx-auto" />
-              </Button> */}
+              </Button>
+            </div>
+
+          }
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const availableActionBodyTemplate = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Button
+            variant={"outline"}
+            className="mr-2" onClick={() => {
+              navigate(`/assetfacility/viewsensordetails/${sensorId}/generalStaff`, { replace: true });
+              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+            }}>
+            <HiEye className="mx-auto" />
+          </Button>
+          {employee.dateOfResignation ?
+            <span>Removed</span>
+            : <div>
+              <Button
+                name="assignButton"
+                variant={"default"}
+                className="mr-2"
+                disabled={employee.currentlyAssigned}
+                onClick={() => confirmAssignment(employee)}
+              >
+                <HiPlus className="mx-auto" />
+              </Button>
             </div>
 
           }
@@ -240,26 +268,102 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
     setBulkAssignmentDialog(false);
   }
 
-  const onSelectedEmployeesChange = (e: CheckboxChangeEvent) => {
-    let _selectedEmployees = [...selectedEmployees];
+  const onSelectedAssignedEmployeesOnClick = (e: CheckboxClickEvent) => {
+    let _selectedAssignedEmployees = [...selectedAssignedEmployees];
     if (e.checked) {
-      _selectedEmployees.push(e.value);
+      _selectedAssignedEmployees.push(e.value);
     }
     else {
-      _selectedEmployees.splice(_selectedEmployees.indexOf(e.value), 1);
+      _selectedAssignedEmployees.splice(_selectedAssignedEmployees.indexOf(e.value), 1);
     }
-    setSelectedEmployees(_selectedEmployees);
+    setSelectedAssignedEmployees(_selectedAssignedEmployees);
   }
 
-  const checkboxTemplate = (employee: any) => {
+  const assignedEmployeeCheckbox = (employee: any) => {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
           <Checkbox
-            name="toAssign"
+            name="toAssignEmployees"
             value={employee.employeeId}
-            onChange={onSelectedEmployeesChange}
-            checked={selectedEmployees.includes(employee.employeeId)}>
+            onChange={onSelectedAssignedEmployeesOnClick}
+            checked={selectedAssignedEmployees.includes(employee.employeeId)}>
+          </Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const onAllAssignedEmployeesOnClick = (e: CheckboxClickEvent) => {
+
+    if (e.checked) {
+      setSelectedAssignedEmployees(assignedEmployees.map((employee: Employee) => employee.employeeId));
+    }
+    else {
+      setSelectedAssignedEmployees([]);
+    }
+    console.log(selectedAssignedEmployees);
+  }
+
+  const allAssignedEmployeesCheckbox = (employees: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignEmployees"
+            onClick={onAllAssignedEmployeesOnClick}
+            checked={selectedAssignedEmployees.length > 0 && selectedAssignedEmployees.length == assignedEmployees.length}>
+          </Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const onSelectedAvailableEmployeesOnClick = (e: CheckboxClickEvent) => {
+    let _selectedAvailableEmployees = [...selectedAvailableEmployees];
+    if (e.checked) {
+      _selectedAvailableEmployees.push(e.value);
+    }
+    else {
+      _selectedAvailableEmployees.splice(_selectedAvailableEmployees.indexOf(e.value), 1);
+    }
+    setSelectedAvailableEmployees(_selectedAvailableEmployees);
+  }
+
+  const availableEmployeeCheckbox = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignEmployees"
+            value={employee.employeeId}
+            onChange={onSelectedAvailableEmployeesOnClick}
+            checked={selectedAvailableEmployees.includes(employee.employeeId)}>
+          </Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const onAllAvailableEmployeesOnClick = (e: CheckboxClickEvent) => {
+
+    if (e.checked) {
+      setSelectedAvailableEmployees(availableEmployees.map((employee: Employee) => employee.employeeId));
+    }
+    else {
+      setSelectedAvailableEmployees([]);
+    }
+    console.log(selectedAvailableEmployees);
+  }
+
+  const allAvailableEmployeesCheckbox = (employees: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignEmployees"
+            onClick={onAllAvailableEmployeesOnClick}
+            checked={selectedAvailableEmployees.length > 0 && selectedAvailableEmployees.length == availableEmployees.length}>
           </Checkbox>
         </div>
       </React.Fragment>
@@ -271,7 +375,7 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
   }
 
   const bulkAssignEmployees = async () => {
-    selectedEmployees.forEach(async (employeeId) => {
+    selectedAvailableEmployees.forEach(async (employeeId) => {
       try {
         const responseJson = await apiJson.put(
           `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToSensor/${sensorId}`, { employeeId: employeeId }).then(res => {
@@ -282,11 +386,11 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
           // variant: "destructive",
           title: "Assignment Successful",
           description:
-            "Successfully assigned maintenance staff with IDs: " + selectedEmployees,
+            "Successfully assigned maintenance staff: " + selectedAvailableEmployees.toString(),
         });
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
-        setSelectedEmployees([]);
+        setSelectedAvailableEmployees([]);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -305,15 +409,15 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
         <HiX />
         No
       </Button>
-      <Button onClick={bulkAssignEmployees}>
+      <Button onClick={assignEmployee}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
 
-  const bulkRemoveEmployees = async () => {
-    selectedEmployees.forEach(async (employeeId) => {
+  const bulkRemoveMaintenanceStaff = async () => {
+    selectedAssignedEmployees.forEach(async (employeeId) => {
       try {
         const responseJson = await apiJson.put(
           `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromSensor/${sensorId}`, { employeeId: employeeId }).then(res => {
@@ -323,11 +427,11 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
           // variant: "destructive",
           title: "Removal Successful",
           description:
-            "Successfully removed maintenance staff: " + selectedEmployees.toString(),
+            "Successfully removed maintenance staff: " + selectedAssignedEmployees.toString(),
         });
         setEmployeeRemovalDialog(false);
         setBulkAssignmentDialog(false);
-        setSelectedEmployees([]);
+        setSelectedAssignedEmployees([]);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -350,7 +454,7 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={bulkRemoveEmployees}>
+      <Button variant={"destructive"} onClick={removeGeneralStaff}>
         <HiCheck />
         Yes
       </Button>
@@ -383,9 +487,10 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
             globalFilter={globalFilter}
             header={header}
           >
-            <Column
-              body={checkboxTemplate}
-            ></Column>
+            {/* <Column
+              body={assignedEmployeeCheckbox}
+            header={allAssignedEmployeesCheckbox}
+            ></Column> */}
             <Column
               field="employeeId"
               header="ID"
@@ -417,18 +522,19 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              body={actionBodyTemplate}
+              body={assignedActionBodyTemplate}
               header="Actions"
               frozen
               alignFrozen="right"
               exportable={false}
             ></Column>
           </DataTable>
-          <Button
+          {/* <Button
             variant={"destructive"}
-            onClick={confirmEmployeeRemoval} >
-            <HiMinus />Remove Selected Staff
-          </Button>
+            onClick={() => confirmEmployeeRemoval(selectedEmployee)}
+            disabled={assignedEmployees.length == 0}>
+            <HiMinus />Remove Maintenance Staff
+          </Button> */}
         </div>
         <Dialog
           visible={employeeAssignmentDialog}
@@ -446,8 +552,8 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
             />
             {selectedEmployee && (
               <span>
-                Are you sure you want to assign this facility to{" "}
-                <b>{selectedEmployees.toString()}?</b>
+                Are you sure you want to assign this sensor to{" "}
+                <b>{selectedEmployee.employeeName}?</b>
               </span>
             )}
           </div>
@@ -469,7 +575,7 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
             {selectedEmployee && (
               <span>
                 Are you sure you want to remove{" "}
-                <b>{selectedEmployees.toString()}</b>?
+                <b>{selectedAssignedEmployees.toString()}</b>?
               </span>
             )}
           </div>
@@ -480,7 +586,12 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
           breakpoints={{ "960px": "75vw", "641px": "90vw" }}
           header="Assign Maintenance Staff"
           position={"right"}
-          footer={<Button onClick={confirmAssignment}>Assign Selected Staff</Button>}
+          // footer={
+          //   <Button
+          //     onClick={() => confirmAssignment(selectedEmployee)}
+          //     disabled={selectedAvailableEmployees.length == 0}>
+          //     Assign Selected Staff
+          //   </Button>}
           onHide={hideEmployeeBulkAssignmentDialog}>
           <div className="confirmation-content">
             <DataTable
@@ -503,9 +614,10 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
               globalFilter={globalFilter}
               header={bulkAssignmentHeader}
             >
-              <Column
-                body={checkboxTemplate}
-              ></Column>
+              {/* <Column
+                body={availableEmployeeCheckbox}
+              header={allAvailableEmployeesCheckbox}
+              ></Column> */}
               <Column
                 field="employeeId"
                 header="ID"
@@ -535,6 +647,13 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
                 header="Education"
                 sortable
                 style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                body={availableActionBodyTemplate}
+                header="Actions"
+                frozen
+                alignFrozen="right"
+                exportable={false}
               ></Column>
             </DataTable>
           </div>

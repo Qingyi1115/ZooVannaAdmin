@@ -12,7 +12,7 @@ import Sensor from "../../../models/Sensor";
 import useApiJson from "../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiOutlinePresentationChartLine, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { SensorType } from "../../../enums/SensorType";
 import { Separator } from "@/components/ui/separator";
 import { Tag } from "primereact/tag";
@@ -43,7 +43,7 @@ function rowColor(facility: any) {
 
 function FacilityMaintenanceSuggestion() {
   const apiJson = useApiJson();
-
+  const navigate = useNavigate();
   const [objectsList, setObjectsList] = useState<MaintenanceDetails[]>([]);
   const [facilityList, setFacilityList] = useState<any[]>([]);
   const [selectedObject, setSelectedObject] = useState<MaintenanceDetails>({ name: "", description: "", lastMaintenance: "", suggestedMaintenance: "", type: "", id: -1 });
@@ -112,18 +112,18 @@ function FacilityMaintenanceSuggestion() {
   const actionBodyTemplate = (objDetails: MaintenanceDetails) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewfacilitydetails/${objDetails.id}`}
-          state={{ prev: `/assetfacility/maintenance/facilityMaintenance` }}>
-          <Button variant="outline" className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
-          </Button>
-        </NavLink>
-        <NavLink to={`/assetfacility/viewFacilityMaintenanceChart/${objDetails.id}`}
-          state={{ prev: `/assetfacility/maintenance/facilityMaintenance` }}>
-          <Button className="mb-1 mr-1">
-            <HiOutlinePresentationChartLine className="mx-auto" />
-          </Button>
-        </NavLink>
+        <Button variant="outline" className="mb-1 mr-1" onClick={() => {
+          navigate(`/assetfacility/maintenance/facilityMaintenance`, { replace: true });
+          navigate(`/assetfacility/viewfacilitydetails/${objDetails.id}`);
+        }}>
+          <HiEye className="mx-auto" />
+        </Button>
+        <Button className="mb-1 mr-1" onClick={() => {
+          navigate(`/assetfacility/maintenance/facilityMaintenance`, { replace: true });
+          navigate(`/assetfacility/viewFacilityMaintenanceChart/${objDetails.id}`);
+        }}>
+          <HiOutlinePresentationChartLine className="mx-auto" />
+        </Button>
         {/* <Button
           variant={"destructive"}
           className="mr-2"
@@ -223,7 +223,7 @@ function FacilityMaintenanceSuggestion() {
     setBulkAssignmentDialog(false);
   }
 
-  const onSelectedEmployeesChange = (e: CheckboxChangeEvent) => {
+  const onSelectedEmployeesOnClick = (e: CheckboxClickEvent) => {
     let _selectedEmployees = [...selectedEmployees];
     if (e.checked) {
       _selectedEmployees.push(e.value);
@@ -241,7 +241,7 @@ function FacilityMaintenanceSuggestion() {
           <Checkbox
             name="toAssignEmployees"
             value={employee.employeeId}
-            onChange={onSelectedEmployeesChange}
+            onChange={onSelectedEmployeesOnClick}
             checked={selectedEmployees.includes(employee.employeeId)}>
           </Checkbox>
         </div>
@@ -250,7 +250,7 @@ function FacilityMaintenanceSuggestion() {
   };
 
   const onAllEmployeesOnClick = (e: CheckboxClickEvent) => {
-    console.log("b", e.originalEvent)
+
     if (e.checked) {
       setSelectedEmployees(availableEmployees.map((employee: Employee) => employee.employeeId));
     }
@@ -302,7 +302,7 @@ function FacilityMaintenanceSuggestion() {
   };
 
   const onAllMaintenanceDetailsOnClick = (e: CheckboxClickEvent) => {
-    console.log("b", e.originalEvent)
+
     if (e.checked) {
       setSelectedMaintenanceDetails(objectsList.map((maintenanceDetails: MaintenanceDetails) => maintenanceDetails.id));
     }
