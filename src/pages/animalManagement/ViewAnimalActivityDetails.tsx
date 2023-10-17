@@ -119,7 +119,7 @@ function ViewAnimalActivityDetails() {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/animal/getAnimalActivityById/${animalActivityId}`
         );
-        setCurAnimalActivity(responseJson as AnimalActivity);
+        setCurAnimalActivity(responseJson.animalActivity as AnimalActivity);
       } catch (error: any) {
         console.log(error);
       }

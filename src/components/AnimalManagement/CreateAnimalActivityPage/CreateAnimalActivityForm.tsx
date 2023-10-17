@@ -282,7 +282,7 @@ function CreateAnimalActivityForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    let dateInMilliseconds = date?.getTime();
+    // let dateInMilliseconds = date?.getTime();
 
     if (validateDurationInMinutes(dummyValidityState) != null) {
       return;
@@ -311,8 +311,8 @@ function CreateAnimalActivityForm() {
       activityType,
       title,
       details,
-      startDate,
-      endDate,
+      startDate: startDate?.getTime(),
+      endDate: endDate?.getTime(),
       recurringPattern,
       dayOfWeek,
       dayOfMonth,
