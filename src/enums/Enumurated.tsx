@@ -187,7 +187,6 @@ enum EventType {
 }
 
 enum EventTimingType {
-  NON_RECURRING = "NON-RECURRING",
   MORNING = "MORNING",
   AFTERNOON = "AFTERNOON",
   EVENING = "EVENING",

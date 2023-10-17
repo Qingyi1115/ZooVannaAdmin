@@ -46,7 +46,9 @@ function CreateAnimalActivityForm() {
   const [title, setTitle] = useState<string>("");
   const [details, setDetails] = useState<string>("");
   const [date, setDate] = useState<Nullable<Date>>(null);
-  const [session, setSession] = useState<string | undefined>(undefined);
+  const [eventTimingType, setEventTimingType] = useState<string | undefined>(
+    undefined
+  );
   const [durationInMinutes, setDurationInMinutes] = useState<
     number | undefined
   >(undefined);
@@ -113,9 +115,9 @@ function CreateAnimalActivityForm() {
     return null;
   }
 
-  function validateSession(props: ValidityState) {
+  function validateEventTimingType(props: ValidityState) {
     if (props != undefined) {
-      if (session == undefined) {
+      if (eventTimingType == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please select a session timing!
@@ -147,13 +149,156 @@ function CreateAnimalActivityForm() {
     return null;
   }
 
+  function validateRecurringPattern(props: ValidityState) {
+    if (props != undefined) {
+      if (recurringPattern == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select a recurring pattern!
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateOneOffDate(props: ValidityState) {
+    if (props != undefined) {
+      if (startDate == null) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the date for the activity
+          </div>
+        );
+      }
+    }
+    // add any other cases here
+    return null;
+  }
+
+  function validateStartDate(props: ValidityState) {
+    if (props != undefined) {
+      if (startDate == null) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the start date of the period for the recurring
+            activity
+          </div>
+        );
+      }
+    }
+
+    if (
+      startDate != null &&
+      endDate != null &&
+      new Date(startDate) > new Date(endDate)
+    ) {
+      return (
+        <div className="font-medium text-danger">
+          * Start Date must not be after End Date
+        </div>
+      );
+    }
+    // add any other cases here
+    return null;
+  }
+
+  function validateEndDate(props: ValidityState) {
+    if (props != undefined) {
+      if (endDate == null) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the end date of the period for the recurring activity
+          </div>
+        );
+      }
+    }
+
+    if (
+      endDate != null &&
+      startDate != null &&
+      new Date(startDate) > new Date(endDate)
+    ) {
+      return (
+        <div className="font-medium text-danger">
+          * End Date must not be before Start Date
+        </div>
+      );
+    }
+    // add any other cases here
+    return null;
+  }
+
+  function validateDayOfWeek(props: ValidityState) {
+    if (recurringPattern == "WEEKLY") {
+      if (props != undefined) {
+        if (dayOfWeek == undefined) {
+          return (
+            <div className="font-medium text-danger">
+              * Please select a day of week for recurring activity!
+            </div>
+          );
+        }
+        // add any other cases here
+      }
+    }
+    return null;
+  }
+
+  function validateDayOfMonth(props: ValidityState) {
+    if (recurringPattern == "MONTHLY") {
+      if (props != undefined) {
+        if (dayOfMonth == undefined) {
+          return (
+            <div className="font-medium text-danger">
+              * Please select a day of month for recurring activity!
+            </div>
+          );
+        }
+        // add any other cases here
+      }
+    }
+    return null;
+  }
+
   // end validate functions
 
   // handle submit
+  const dummyValidityState: ValidityState = {
+    customError: false,
+    patternMismatch: false,
+    rangeOverflow: false,
+    rangeUnderflow: false,
+    stepMismatch: false,
+    tooLong: false,
+    tooShort: false,
+    typeMismatch: false,
+    valid: true,
+    valueMissing: false,
+    badInput: false,
+  };
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     let dateInMilliseconds = date?.getTime();
+
+    if (validateDurationInMinutes(dummyValidityState) != null) {
+      return;
+    } else if (
+      (recurringPattern != "NON-RECURRING" &&
+        validateEndDate(dummyValidityState) != null &&
+        validateStartDate(dummyValidityState) != null) ||
+      (recurringPattern == "NON-RECURRING" &&
+        validateOneOffDate(dummyValidityState) != null) ||
+      (recurringPattern == "WEEKLY" &&
+        validateDayOfWeek(dummyValidityState) != null) ||
+      (recurringPattern == "MONTHLY" &&
+        validateDayOfMonth(dummyValidityState) != null)
+    ) {
+      return;
+    }
 
     // if (date instanceof Date) {
     //   const milliseconds = date.getTime(); // Convert to Unix epoch
@@ -166,8 +311,12 @@ function CreateAnimalActivityForm() {
       activityType,
       title,
       details,
-      date: dateInMilliseconds,
-      session,
+      startDate,
+      endDate,
+      recurringPattern,
+      dayOfWeek,
+      dayOfMonth,
+      eventTimingType,
       durationInMinutes,
     };
 
@@ -299,9 +448,9 @@ function CreateAnimalActivityForm() {
                 ].toString(),
               ]
             )}
-            value={session}
-            setValue={setSession}
-            validateFunction={validateSession}
+            value={eventTimingType}
+            setValue={setEventTimingType}
+            validateFunction={validateEventTimingType}
           />
 
           {/* Duration in minutes */}
@@ -321,7 +470,7 @@ function CreateAnimalActivityForm() {
         {/* Recurring Pattern */}
         <FormFieldSelect
           formFieldName="recurringPattern"
-          label="Session Timing"
+          label="Recurring Pattern"
           required={true}
           placeholder="Select a recurring pattern. Select NON-RECURRING if this is a one-off event. "
           valueLabelPair={Object.keys(RecurringPattern).map(
@@ -336,7 +485,7 @@ function CreateAnimalActivityForm() {
           )}
           value={recurringPattern}
           setValue={setRecurringPattern}
-          validateFunction={() => null}
+          validateFunction={validateRecurringPattern}
         />
 
         {recurringPattern != undefined &&
@@ -378,7 +527,7 @@ function CreateAnimalActivityForm() {
                     }
                   }}
                 />
-                <Form.ValidityState>{validateDate}</Form.ValidityState>
+                <Form.ValidityState>{validateOneOffDate}</Form.ValidityState>
               </Form.Field>
             </div>
           )}
@@ -415,17 +564,23 @@ function CreateAnimalActivityForm() {
                         const element =
                           document.getElementById("startDateField");
                         if (element) {
-                          const isDataInvalid =
-                            element.getAttribute("data-invalid");
-                          if (isDataInvalid == "true") {
-                            element.setAttribute("data-valid", "true");
-                            element.removeAttribute("data-invalid");
+                          if (
+                            startDate != null &&
+                            endDate != null &&
+                            new Date(startDate) > new Date(endDate)
+                          ) {
+                            const isDataInvalid =
+                              element.getAttribute("data-invalid");
+                            if (isDataInvalid == "true") {
+                              element.setAttribute("data-valid", "true");
+                              element.removeAttribute("data-invalid");
+                            }
                           }
                         }
                       }
                     }}
                   />
-                  <Form.ValidityState>{validateDate}</Form.ValidityState>
+                  <Form.ValidityState>{validateStartDate}</Form.ValidityState>
                 </Form.Field>
 
                 {/* End Date */}
@@ -450,19 +605,26 @@ function CreateAnimalActivityForm() {
                     onChange={(e: any) => {
                       if (e && e.value !== undefined) {
                         setEndDate(e.value);
-                        const element = document.getElementById("endDateField");
-                        if (element) {
-                          const isDataInvalid =
-                            element.getAttribute("data-invalid");
-                          if (isDataInvalid == "true") {
-                            element.setAttribute("data-valid", "true");
-                            element.removeAttribute("data-invalid");
+                        if (
+                          startDate != null &&
+                          endDate != null &&
+                          new Date(startDate) > new Date(endDate)
+                        ) {
+                          const element =
+                            document.getElementById("endDateField");
+                          if (element) {
+                            const isDataInvalid =
+                              element.getAttribute("data-invalid");
+                            if (isDataInvalid == "true") {
+                              element.setAttribute("data-valid", "true");
+                              element.removeAttribute("data-invalid");
+                            }
                           }
                         }
                       }
                     }}
                   />
-                  <Form.ValidityState>{validateDate}</Form.ValidityState>
+                  <Form.ValidityState>{validateEndDate}</Form.ValidityState>
                 </Form.Field>
               </div>
             </div>
@@ -482,7 +644,7 @@ function CreateAnimalActivityForm() {
               ])}
               value={dayOfWeek}
               setValue={setDayOfWeek}
-              validateFunction={() => null}
+              validateFunction={validateDayOfWeek}
             />
           </div>
         )}
@@ -509,7 +671,7 @@ function CreateAnimalActivityForm() {
               }
               value={dayOfMonth}
               setValue={setDayOfMonth}
-              validateFunction={() => null}
+              validateFunction={validateDayOfMonth}
             />
           </div>
         )}
