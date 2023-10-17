@@ -291,7 +291,7 @@ function AllAnimalActivitiesFullCalendar(
             selectMirror
             dayMaxEvents
             events={zooEvents}
-            height={"70vh"}
+            height={"80vh"}
             eventClick={(clickInfo) =>
               navigate(clickInfo.event.extendedProps.animalActivityUrl)
             }
