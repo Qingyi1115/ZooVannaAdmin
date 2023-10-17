@@ -41,6 +41,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import AnimalActivity from "../../../models/AnimalActivity";
 import { HiChevronLeft } from "react-icons/hi";
 import { EventContentArg, EventInput } from "@fullcalendar/core";
+import ZooEvent from "../../../models/ZooEvent";
 
 interface AllAnimalActivitiesFullCalendarProps {
   animalActivitiesList: AnimalActivity[];
@@ -58,6 +59,8 @@ function AllAnimalActivitiesFullCalendar(
   const [animalActivities, setAnimalActivities] = useState<AnimalActivity[]>(
     []
   );
+
+  const [zooEvents, setZooEvents] = useState<any[]>([]);
 
   // Full Calendar stuff
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -104,26 +107,65 @@ function AllAnimalActivitiesFullCalendar(
     return { startTime, endTime };
   }
 
-  const events = animalActivitiesList.map((animalActivity) => {
-    const { startTime, endTime } = calculateSessionTimes(
-      animalActivity.session,
-      new Date(animalActivity.date)
-    );
+  // const events = animalActivitiesList.map((animalActivity) => {
+  //   const curZooEvents = animalActivity.zooEvents;
 
-    return {
-      title: animalActivity.title,
-      start: startTime, // Convert dateInMilliseconds to a Date object
-      end: endTime, // Convert dateInMilliseconds to a Date object
-      allDay: false,
-      // url: `http://localhost:5173/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
-      extendedProps: {
-        animalActivityUrl: `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
-        activityType: animalActivity.activityType,
-        details: animalActivity.details,
-        durationInMinutes: animalActivity.durationInMinutes,
-      },
-    };
-  });
+  //   const eventsToReturn = curZooEvents!.map((zooEvent) => {
+  //     const { startTime, endTime } = calculateSessionTimes(
+  //       animalActivity.eventTimingType,
+  //       new Date(zooEvent.eventStartDateTime)
+  //     );
+
+  //     return {
+  //       title: animalActivity.title,
+  //       start: startTime, // Convert dateInMilliseconds to a Date object
+  //       end: endTime, // Convert dateInMilliseconds to a Date object
+  //       allDay: false,
+  //       // url: `http://localhost:5173/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+  //       extendedProps: {
+  //         animalActivityUrl: `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+  //         activityType: animalActivity.activityType,
+  //         details: animalActivity.details,
+  //         durationInMinutes: animalActivity.durationInMinutes,
+  //       },
+  //     };
+  //   });
+  //   console.log(eventsToReturn);
+  //   return eventsToReturn;
+  // });
+
+  useEffect(() => {
+    // const allZooEvents = animalActivitiesList.map(
+    //   (activity) => activity.zooEvents
+    // );
+    const combinedZooEvents = animalActivitiesList.map((animalActivity) => {
+      const curZooEvents = animalActivity.zooEvents;
+
+      const eventsToReturn = curZooEvents!.map((zooEvent) => {
+        const { startTime, endTime } = calculateSessionTimes(
+          animalActivity.eventTimingType,
+          new Date(zooEvent.eventStartDateTime)
+        );
+
+        return {
+          title: animalActivity.title,
+          start: startTime, // Convert dateInMilliseconds to a Date object
+          end: endTime, // Convert dateInMilliseconds to a Date object
+          allDay: false,
+          // url: `http://localhost:5173/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+          extendedProps: {
+            animalActivityUrl: `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+            activityType: animalActivity.activityType,
+            details: animalActivity.details,
+            durationInMinutes: animalActivity.durationInMinutes,
+          },
+        };
+      });
+      return eventsToReturn;
+    });
+
+    setZooEvents(combinedZooEvents.flat(1));
+  }, []);
 
   interface CustomEventProps {
     event: EventInput;
@@ -248,7 +290,7 @@ function AllAnimalActivitiesFullCalendar(
             selectable
             selectMirror
             dayMaxEvents
-            events={events}
+            events={zooEvents}
             height={"70vh"}
             eventClick={(clickInfo) =>
               navigate(clickInfo.event.extendedProps.animalActivityUrl)

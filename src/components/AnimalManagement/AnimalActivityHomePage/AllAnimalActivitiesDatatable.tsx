@@ -31,6 +31,7 @@ import {
   AnimalGrowthStage,
   AnimalSex,
   EventTimingType,
+  RecurringPattern,
 } from "../../../enums/Enumurated";
 import { useNavigate } from "react-router-dom";
 import AnimalActivity from "../../../models/AnimalActivity";
@@ -40,8 +41,12 @@ let emptyAnimalActivity: AnimalActivity = {
   activityType: ActivityType.ENRICHMENT,
   title: "",
   details: "",
-  date: new Date(),
-  session: EventTimingType.AFTERNOON,
+  recurringPattern: RecurringPattern.DAILY,
+  dayOfMonth: null,
+  dayOfWeek: null,
+  startDate: new Date(),
+  endDate: new Date(),
+  eventTimingType: EventTimingType.AFTERNOON,
   durationInMinutes: -1,
 };
 
@@ -246,20 +251,38 @@ function AllAnimalActivitiesDatatable(
               style={{ minWidth: "10rem" }}
             ></Column>
             <Column
+              field="recurringPattern"
+              header="Type"
+              sortable
+              style={{ minWidth: "10rem" }}
+            ></Column>
+            <Column
               body={(animalActivity) => {
-                return new Date(animalActivity.date).toLocaleDateString(
+                return new Date(animalActivity.startDate).toLocaleDateString(
                   "en-SG",
                   dateOptions
                 );
               }}
               // field="date"
-              header="Date"
+              header="Start Date"
               sortable
               style={{ minWidth: "8rem" }}
             ></Column>
             <Column
-              field="session"
-              header="Session"
+              body={(animalActivity) => {
+                return new Date(animalActivity.endDate).toLocaleDateString(
+                  "en-SG",
+                  dateOptions
+                );
+              }}
+              // field="date"
+              header="End Date"
+              sortable
+              style={{ minWidth: "8rem" }}
+            ></Column>
+            <Column
+              field="eventTimingType"
+              header="Session Timing"
               sortable
               style={{ minWidth: "10rem" }}
             ></Column>
