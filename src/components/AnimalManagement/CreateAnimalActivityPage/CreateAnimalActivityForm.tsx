@@ -23,8 +23,10 @@ import {
   AnimalGrowthStage,
   AnimalSex,
   AnimalStatusType,
+  DayOfWeek,
   EventTimingType,
   IdentifierType,
+  RecurringPattern,
 } from "../../../enums/Enumurated";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import Species from "../../../models/Species";
@@ -44,10 +46,19 @@ function CreateAnimalActivityForm() {
   const [title, setTitle] = useState<string>("");
   const [details, setDetails] = useState<string>("");
   const [date, setDate] = useState<Nullable<Date>>(null);
-  const [session, setSession] = useState<string | undefined>(undefined);
+  const [eventTimingType, setEventTimingType] = useState<string | undefined>(
+    undefined
+  );
   const [durationInMinutes, setDurationInMinutes] = useState<
     number | undefined
   >(undefined);
+  const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
+    undefined
+  );
+  const [startDate, setStartDate] = useState<Nullable<Date>>(null);
+  const [endDate, setEndDate] = useState<Nullable<Date>>(null);
+  const [dayOfWeek, setDayOfWeek] = useState<string | undefined>(undefined);
+  const [dayOfMonth, setDayOfMonth] = useState<string | undefined>(undefined);
 
   // validate functions
   function validateIdentifierType(props: ValidityState) {
@@ -104,9 +115,9 @@ function CreateAnimalActivityForm() {
     return null;
   }
 
-  function validateSession(props: ValidityState) {
+  function validateEventTimingType(props: ValidityState) {
     if (props != undefined) {
-      if (session == undefined) {
+      if (eventTimingType == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please select a session timing!
@@ -138,13 +149,156 @@ function CreateAnimalActivityForm() {
     return null;
   }
 
+  function validateRecurringPattern(props: ValidityState) {
+    if (props != undefined) {
+      if (recurringPattern == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select a recurring pattern!
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateOneOffDate(props: ValidityState) {
+    if (props != undefined) {
+      if (startDate == null) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the date for the activity
+          </div>
+        );
+      }
+    }
+    // add any other cases here
+    return null;
+  }
+
+  function validateStartDate(props: ValidityState) {
+    if (props != undefined) {
+      if (startDate == null) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the start date of the period for the recurring
+            activity
+          </div>
+        );
+      }
+    }
+
+    if (
+      startDate != null &&
+      endDate != null &&
+      new Date(startDate) > new Date(endDate)
+    ) {
+      return (
+        <div className="font-medium text-danger">
+          * Start Date must not be after End Date
+        </div>
+      );
+    }
+    // add any other cases here
+    return null;
+  }
+
+  function validateEndDate(props: ValidityState) {
+    if (props != undefined) {
+      if (endDate == null) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the end date of the period for the recurring activity
+          </div>
+        );
+      }
+    }
+
+    if (
+      endDate != null &&
+      startDate != null &&
+      new Date(startDate) > new Date(endDate)
+    ) {
+      return (
+        <div className="font-medium text-danger">
+          * End Date must not be before Start Date
+        </div>
+      );
+    }
+    // add any other cases here
+    return null;
+  }
+
+  function validateDayOfWeek(props: ValidityState) {
+    if (recurringPattern == "WEEKLY") {
+      if (props != undefined) {
+        if (dayOfWeek == undefined) {
+          return (
+            <div className="font-medium text-danger">
+              * Please select a day of week for recurring activity!
+            </div>
+          );
+        }
+        // add any other cases here
+      }
+    }
+    return null;
+  }
+
+  function validateDayOfMonth(props: ValidityState) {
+    if (recurringPattern == "MONTHLY") {
+      if (props != undefined) {
+        if (dayOfMonth == undefined) {
+          return (
+            <div className="font-medium text-danger">
+              * Please select a day of month for recurring activity!
+            </div>
+          );
+        }
+        // add any other cases here
+      }
+    }
+    return null;
+  }
+
   // end validate functions
 
   // handle submit
+  const dummyValidityState: ValidityState = {
+    customError: false,
+    patternMismatch: false,
+    rangeOverflow: false,
+    rangeUnderflow: false,
+    stepMismatch: false,
+    tooLong: false,
+    tooShort: false,
+    typeMismatch: false,
+    valid: true,
+    valueMissing: false,
+    badInput: false,
+  };
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    let dateInMilliseconds = date?.getTime();
+    // let dateInMilliseconds = date?.getTime();
+
+    if (validateDurationInMinutes(dummyValidityState) != null) {
+      return;
+    } else if (
+      (recurringPattern != "NON-RECURRING" &&
+        validateEndDate(dummyValidityState) != null &&
+        validateStartDate(dummyValidityState) != null) ||
+      (recurringPattern == "NON-RECURRING" &&
+        validateOneOffDate(dummyValidityState) != null) ||
+      (recurringPattern == "WEEKLY" &&
+        validateDayOfWeek(dummyValidityState) != null) ||
+      (recurringPattern == "MONTHLY" &&
+        validateDayOfMonth(dummyValidityState) != null)
+    ) {
+      return;
+    }
 
     // if (date instanceof Date) {
     //   const milliseconds = date.getTime(); // Convert to Unix epoch
@@ -157,8 +311,12 @@ function CreateAnimalActivityForm() {
       activityType,
       title,
       details,
-      date: dateInMilliseconds,
-      session,
+      startDate: startDate?.getTime(),
+      endDate: endDate?.getTime(),
+      recurringPattern,
+      dayOfWeek,
+      dayOfMonth,
+      eventTimingType,
       durationInMinutes,
     };
 
@@ -277,7 +435,7 @@ function CreateAnimalActivityForm() {
           {/* Session */}
           <FormFieldSelect
             formFieldName="session"
-            label="Session"
+            label="Session Timing"
             required={true}
             placeholder="Select a session timing..."
             valueLabelPair={Object.keys(EventTimingType).map(
@@ -290,59 +448,233 @@ function CreateAnimalActivityForm() {
                 ].toString(),
               ]
             )}
-            value={session}
-            setValue={setSession}
-            validateFunction={validateSession}
+            value={eventTimingType}
+            setValue={setEventTimingType}
+            validateFunction={validateEventTimingType}
           />
 
-          {/* Date */}
-          <Form.Field
-            name="dateOfMeasure"
-            id="dateField"
-            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-          >
-            <Form.Label className="font-medium">Date</Form.Label>
-            <Form.Control
-              className="hidden"
-              type="text"
-              value={date?.toString()}
-              required={true}
-              onChange={() => null}
-            ></Form.Control>
-            <Calendar
-              value={date}
-              className="w-fit"
-              onChange={(e: any) => {
-                if (e && e.value !== undefined) {
-                  setDate(e.value);
-
-                  const element = document.getElementById("dateField");
-                  if (element) {
-                    const isDataInvalid = element.getAttribute("data-invalid");
-                    if (isDataInvalid == "true") {
-                      element.setAttribute("data-valid", "true");
-                      element.removeAttribute("data-invalid");
-                    }
-                  }
-                }
-              }}
-            />
-            <Form.ValidityState>{validateDate}</Form.ValidityState>
-          </Form.Field>
+          {/* Duration in minutes */}
+          <FormFieldInput
+            type="number"
+            formFieldName="durationInMinutes"
+            label={`Duration (minutes)`}
+            required={true}
+            pattern={undefined}
+            placeholder="e.g., 8"
+            value={durationInMinutes}
+            setValue={setDurationInMinutes}
+            validateFunction={validateDurationInMinutes}
+          />
         </div>
 
-        {/* Duration in minutes */}
-        <FormFieldInput
-          type="number"
-          formFieldName="durationInMinutes"
-          label={`Duration (minutes)`}
+        {/* Recurring Pattern */}
+        <FormFieldSelect
+          formFieldName="recurringPattern"
+          label="Recurring Pattern"
           required={true}
-          pattern={undefined}
-          placeholder="e.g., 8"
-          value={durationInMinutes}
-          setValue={setDurationInMinutes}
-          validateFunction={validateDurationInMinutes}
+          placeholder="Select a recurring pattern. Select NON-RECURRING if this is a one-off event. "
+          valueLabelPair={Object.keys(RecurringPattern).map(
+            (recurringPatternKey) => [
+              RecurringPattern[
+                recurringPatternKey as keyof typeof RecurringPattern
+              ].toString(),
+              RecurringPattern[
+                recurringPatternKey as keyof typeof RecurringPattern
+              ].toString(),
+            ]
+          )}
+          value={recurringPattern}
+          setValue={setRecurringPattern}
+          validateFunction={validateRecurringPattern}
         />
+
+        {recurringPattern != undefined &&
+          recurringPattern == "NON-RECURRING" && (
+            <div>
+              {/* Specific Date for One Off Event */}
+              <Form.Field
+                name="startDate"
+                id="oneoffDateField"
+                className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+              >
+                <Form.Label className="font-medium">
+                  One-off Activity Date
+                </Form.Label>
+                <Form.Control
+                  className="hidden"
+                  type="text"
+                  value={startDate?.toString()}
+                  required={true}
+                  onChange={() => null}
+                ></Form.Control>
+                <Calendar
+                  value={startDate}
+                  className="w-full"
+                  onChange={(e: any) => {
+                    if (e && e.value !== undefined) {
+                      setStartDate(e.value);
+                      setEndDate(e.value);
+                      const element =
+                        document.getElementById("oneoffDateField");
+                      if (element) {
+                        const isDataInvalid =
+                          element.getAttribute("data-invalid");
+                        if (isDataInvalid == "true") {
+                          element.setAttribute("data-valid", "true");
+                          element.removeAttribute("data-invalid");
+                        }
+                      }
+                    }
+                  }}
+                />
+                <Form.ValidityState>{validateOneOffDate}</Form.ValidityState>
+              </Form.Field>
+            </div>
+          )}
+
+        {recurringPattern != undefined &&
+          (recurringPattern == "DAILY" ||
+            recurringPattern == "WEEKLY" ||
+            recurringPattern == "MONTHLY") && (
+            <div>
+              {" "}
+              <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+                {/* Start Date */}
+                <Form.Field
+                  name="startDate"
+                  id="startDateField"
+                  className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+                >
+                  <Form.Label className="font-medium">
+                    Period Start Date
+                  </Form.Label>
+                  <Form.Control
+                    className="hidden"
+                    type="text"
+                    value={startDate?.toString()}
+                    required={true}
+                    onChange={() => null}
+                  ></Form.Control>
+                  <Calendar
+                    value={startDate}
+                    className="w-full"
+                    onChange={(e: any) => {
+                      if (e && e.value !== undefined) {
+                        setStartDate(e.value);
+                        const element =
+                          document.getElementById("startDateField");
+                        if (element) {
+                          if (
+                            startDate != null &&
+                            endDate != null &&
+                            new Date(startDate) > new Date(endDate)
+                          ) {
+                            const isDataInvalid =
+                              element.getAttribute("data-invalid");
+                            if (isDataInvalid == "true") {
+                              element.setAttribute("data-valid", "true");
+                              element.removeAttribute("data-invalid");
+                            }
+                          }
+                        }
+                      }
+                    }}
+                  />
+                  <Form.ValidityState>{validateStartDate}</Form.ValidityState>
+                </Form.Field>
+
+                {/* End Date */}
+                <Form.Field
+                  name="endDate"
+                  id="endDateField"
+                  className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+                >
+                  <Form.Label className="font-medium">
+                    Period End Date
+                  </Form.Label>
+                  <Form.Control
+                    className="hidden"
+                    type="text"
+                    value={endDate?.toString()}
+                    required={true}
+                    onChange={() => null}
+                  ></Form.Control>
+                  <Calendar
+                    value={endDate}
+                    className="w-full"
+                    onChange={(e: any) => {
+                      if (e && e.value !== undefined) {
+                        setEndDate(e.value);
+                        if (
+                          startDate != null &&
+                          endDate != null &&
+                          new Date(startDate) > new Date(endDate)
+                        ) {
+                          const element =
+                            document.getElementById("endDateField");
+                          if (element) {
+                            const isDataInvalid =
+                              element.getAttribute("data-invalid");
+                            if (isDataInvalid == "true") {
+                              element.setAttribute("data-valid", "true");
+                              element.removeAttribute("data-invalid");
+                            }
+                          }
+                        }
+                      }
+                    }}
+                  />
+                  <Form.ValidityState>{validateEndDate}</Form.ValidityState>
+                </Form.Field>
+              </div>
+            </div>
+          )}
+
+        {recurringPattern != undefined && recurringPattern == "WEEKLY" && (
+          <div>
+            {/* Day of Week */}
+            <FormFieldSelect
+              formFieldName="dayOfWeek"
+              label="Day of Week"
+              required={true}
+              placeholder="Select a day of the week for recurring event..."
+              valueLabelPair={Object.keys(DayOfWeek).map((dayOfWeekKey) => [
+                DayOfWeek[dayOfWeekKey as keyof typeof DayOfWeek].toString(),
+                DayOfWeek[dayOfWeekKey as keyof typeof DayOfWeek].toString(),
+              ])}
+              value={dayOfWeek}
+              setValue={setDayOfWeek}
+              validateFunction={validateDayOfWeek}
+            />
+          </div>
+        )}
+
+        {recurringPattern != undefined && recurringPattern == "MONTHLY" && (
+          <div>
+            {" "}
+            {/* Day of Month */}
+            <FormFieldSelect
+              formFieldName="dayOfMonth"
+              label="Day of Month"
+              required={true}
+              placeholder="Select a day of the month for recurring event..."
+              valueLabelPair={
+                Array.from({ length: 31 }, (_, i) => [
+                  (i + 1).toString(),
+                  (i + 1).toString(),
+                ])
+
+                //   Object.keys(DayOfWeek).map((dayOfWeekKey) => [
+                //   DayOfWeek[dayOfWeekKey as keyof typeof DayOfWeek].toString(),
+                //   DayOfWeek[dayOfWeekKey as keyof typeof DayOfWeek].toString(),
+                // ])
+              }
+              value={dayOfMonth}
+              setValue={setDayOfMonth}
+              validateFunction={validateDayOfMonth}
+            />
+          </div>
+        )}
 
         <Form.Submit asChild>
           <Button

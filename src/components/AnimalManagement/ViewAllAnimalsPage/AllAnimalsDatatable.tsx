@@ -301,6 +301,16 @@ function AllAnimalsDatatable() {
             <Button
               onClick={() =>
                 navigate(
+                  `/animal/feedingplanhome/${animal.species.speciesCode}`
+                )
+              }
+              className="mr-2"
+            >
+              Feeding Plans
+            </Button>
+            <Button
+              onClick={() =>
+                navigate(
                   `/animal/checkisinbreeding/${animal.species.speciesCode}`
                 )
               }

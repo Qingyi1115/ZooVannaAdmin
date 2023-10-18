@@ -112,6 +112,7 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
+import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
 
 function App() {
   const { state } = useAuthContext();
@@ -430,6 +431,16 @@ function App() {
                   path="/animal/checkisinbreeding/:speciesCode"
                   element={
                     user ? <CheckIsInbreedingPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/feedingplanhome/:speciesCode"
+                  element={
+                    user ? (
+                      <AnimalFeedingPlanHomePage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
 

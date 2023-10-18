@@ -60,6 +60,8 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
     []
   );
 
+  const [zooEvents, setZooEvents] = useState<any[]>([]);
+
   useEffect(() => {
     const fetchAnimalActivities = async () => {
       try {
@@ -125,26 +127,59 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
     return { startTime, endTime };
   }
 
-  const events = animalActivities.map((animalActivity) => {
-    const { startTime, endTime } = calculateSessionTimes(
-      animalActivity.session,
-      new Date(animalActivity.date)
-    );
+  // const events = animalActivities.map((animalActivity) => {
+  //   const { startTime, endTime } = calculateSessionTimes(
+  //     animalActivity.session,
+  //     new Date(animalActivity.date)
+  //   );
 
-    return {
-      title: animalActivity.title,
-      start: startTime, // Convert dateInMilliseconds to a Date object
-      end: endTime, // Convert dateInMilliseconds to a Date object
-      allDay: false,
-      // url: `http://localhost:5173/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
-      extendedProps: {
-        animalActivityUrl: `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
-        activityType: animalActivity.activityType,
-        details: animalActivity.details,
-        durationInMinutes: animalActivity.durationInMinutes,
-      },
-    };
-  });
+  //   return {
+  //     title: animalActivity.title,
+  //     start: startTime, // Convert dateInMilliseconds to a Date object
+  //     end: endTime, // Convert dateInMilliseconds to a Date object
+  //     allDay: false,
+  //     // url: `http://localhost:5173/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+  //     extendedProps: {
+  //       animalActivityUrl: `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+  //       activityType: animalActivity.activityType,
+  //       details: animalActivity.details,
+  //       durationInMinutes: animalActivity.durationInMinutes,
+  //     },
+  //   };
+  // });
+
+  useEffect(() => {
+    // const allZooEvents = animalActivitiesList.map(
+    //   (activity) => activity.zooEvents
+    // );
+    const combinedZooEvents = animalActivities.map((animalActivity) => {
+      const curZooEvents = animalActivity.zooEvents;
+
+      const eventsToReturn = curZooEvents!.map((zooEvent) => {
+        const { startTime, endTime } = calculateSessionTimes(
+          animalActivity.eventTimingType,
+          new Date(zooEvent.eventStartDateTime)
+        );
+
+        return {
+          title: animalActivity.title,
+          start: startTime, // Convert dateInMilliseconds to a Date object
+          end: endTime, // Convert dateInMilliseconds to a Date object
+          allDay: false,
+          // url: `http://localhost:5173/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+          extendedProps: {
+            animalActivityUrl: `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+            activityType: animalActivity.activityType,
+            details: animalActivity.details,
+            durationInMinutes: animalActivity.durationInMinutes,
+          },
+        };
+      });
+      return eventsToReturn;
+    });
+
+    setZooEvents(combinedZooEvents.flat(1));
+  }, [animalActivities]);
 
   interface CustomEventProps {
     event: EventInput;
@@ -269,7 +304,7 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
             selectable
             selectMirror
             dayMaxEvents
-            events={events}
+            events={zooEvents}
             height={"70vh"}
             eventClick={(clickInfo) =>
               navigate(clickInfo.event.extendedProps.animalActivityUrl)

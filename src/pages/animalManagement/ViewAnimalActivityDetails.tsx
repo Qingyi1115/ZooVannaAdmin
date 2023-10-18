@@ -119,7 +119,7 @@ function ViewAnimalActivityDetails() {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/animal/getAnimalActivityById/${animalActivityId}`
         );
-        setCurAnimalActivity(responseJson as AnimalActivity);
+        setCurAnimalActivity(responseJson.animalActivity as AnimalActivity);
       } catch (error: any) {
         console.log(error);
       }
@@ -400,17 +400,48 @@ function ViewAnimalActivityDetails() {
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Date
+                      Period Start Date
                     </TableCell>
                     <TableCell>
-                      {new Date(curAnimalActivity.date).toDateString()}
+                      {new Date(curAnimalActivity.startDate).toDateString()}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
+                      Period End Date
+                    </TableCell>
+                    <TableCell>
+                      {new Date(curAnimalActivity.endDate).toDateString()}
+                    </TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell className="w-1/3 font-bold" colSpan={2}>
+                      Recurring Pattern
+                    </TableCell>
+                    <TableCell>{curAnimalActivity.recurringPattern}</TableCell>
+                  </TableRow>
+                  {curAnimalActivity.recurringPattern == "WEEKLY" && (
+                    <TableRow>
+                      <TableCell className="w-1/3 font-bold" colSpan={2}>
+                        Day Of Week
+                      </TableCell>
+                      <TableCell>{curAnimalActivity.dayOfWeek}</TableCell>
+                    </TableRow>
+                  )}
+                  {curAnimalActivity.recurringPattern == "MONTHLY" && (
+                    <TableRow>
+                      <TableCell className="w-1/3 font-bold" colSpan={2}>
+                        Day Of Month
+                      </TableCell>
+                      <TableCell>{curAnimalActivity.dayOfMonth}</TableCell>
+                    </TableRow>
+                  )}
+                  <TableRow>
+                    <TableCell className="w-1/3 font-bold" colSpan={2}>
                       Session Timing
                     </TableCell>
-                    <TableCell>{curAnimalActivity.session}</TableCell>
+                    <TableCell>{curAnimalActivity.eventTimingType}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
