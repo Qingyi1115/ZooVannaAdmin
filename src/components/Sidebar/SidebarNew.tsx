@@ -501,8 +501,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               </NavLink>
                             </li>
                           )}
-<<<<<<< HEAD
-=======
                           {(employee.superAdmin ||
                             employee.planningStaff?.plannerType ==
                               "OPERATIONS_MANAGER" ||
@@ -520,7 +518,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             </li>
                           )}
 
->>>>>>> e29e4c02698130a931e2becf48e1f17184f8005a
                           {/* <li>
                             <NavLink
                               to="/assetfacility/viewallassets/animalFeed"
