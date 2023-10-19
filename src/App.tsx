@@ -94,6 +94,9 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 
+//customer order management page
+import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -684,6 +687,17 @@ function App() {
                     )
                   }
                 />
+                <Route
+                  path="/customerOrder/viewAllCustomerOrders"
+                  element={
+                    user ? (
+                      <ViewAllCustomerOrdersPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                
                 <Route
                   path="/promotion/editpromotion/:promotionId"
                   element={
