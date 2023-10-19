@@ -55,7 +55,7 @@ function AllListingsDatatable() {
     useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const [disable, setDisable] = useState<boolean>();
-  let [count, setCount] = useState<number>(0);
+  let [count, setCount] = useState<number | null>(null);
   const isInitialRender = useRef(true);
 
   const fetchlistings = async () => {
@@ -83,14 +83,14 @@ function AllListingsDatatable() {
   const disableListing = () => {
     setDisable(true);
     console.log(disable);
-    setCount((count += 1));
+    setCount(count == null ? 0 : (count += 1));
     console.log(count);
   };
 
   const enableListing = () => {
     setDisable(false);
     console.log("hereee");
-    setCount((count += 1));
+    setCount(count == null ? 0 : (count += 1));
     console.log(count);
   };
 
@@ -319,6 +319,7 @@ function AllListingsDatatable() {
             dataKey="listingId"
             paginator
             rows={10}
+            scrollable
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -360,9 +361,9 @@ function AllListingsDatatable() {
               body={actionBodyTemplate}
               header="Actions"
               exportable={false}
-              style={{ minWidth: "18rem" }}
               frozen
               alignFrozen="right"
+              style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>
         </div>

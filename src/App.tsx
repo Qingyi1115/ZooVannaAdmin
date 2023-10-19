@@ -3,6 +3,7 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import { useState } from "react";
 
 import { PrimeReactProvider } from "primereact/api";
+// import "@fullcalendar/daygrid/main.css";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -30,9 +31,23 @@ import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDe
 import CreateNewWeightRecord from "./pages/animalManagement/CreateNewWeightRecord";
 import ViewAnimalFullLineage from "./pages/animalManagement/ViewAnimalFullLineage";
 import EditAnimalPage from "./pages/animalManagement/EditAnimalPage";
+import AnimalActivityHomePage from "./pages/animalManagement/AnimalActivityHomePage";
+import CreateAnimalActivityPage from "./pages/animalManagement/CreateAnimalActivityPage";
+import ViewAnimalActivityDetails from "./pages/animalManagement/ViewAnimalActivityDetails";
+import EditAnimalActivityPage from "./pages/animalManagement/EditAnimalActivityPage";
+import AddAnimalToActivityPage from "./pages/animalManagement/AddAnimalToActivityPage";
+import AddItemToActivityPage from "./pages/animalManagement/AddItemToActivityPage";
+import DeclareDeathPage from "./pages/animalManagement/DeclareDeathPage";
+import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
 import CreateNewAnimalObservationLogPage from "./pages/animalManagement/CreateNewAnimalObservationLogPage";
 import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
 import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
+import CreateNewAnimalActivityLogPage from "./pages/animalManagement/CreateNewAnimalActivityLogPage";
+import CreateNewAnimalFeedingLogPage from "./pages/animalManagement/CreateNewAnimalFeedingLogPage";
+import EditAnimalActivityLogPage from "./pages/animalManagement/EditAnimalActivityLogPage";
+import EditAnimalFeedingLogPage from "./pages/animalManagement/EditAnimalFeedingLogPage";
+import ViewAnimalActivityLogDetailsPage from "./pages/animalManagement/ViewAnimalActivityLogDetailsPage";
+import ViewAnimalFeedingLogDetailsPage from "./pages/animalManagement/ViewAnimalFeedingLogDetailsPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -60,6 +75,9 @@ import EditMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/Ma
 import ViewMaintenanceLogDetailsPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/ViewMaintenanceLogDetailsPage";
 import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
 import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
+import MapLandingPage from "./pages/assetAndFacilityManagement/Map/MapLandingPage";
+import AddNewLocationPage from "./pages/assetAndFacilityManagement/Map/AddNewLocationPage";
+import ChangeFacilityLocationPage from "./pages/assetAndFacilityManagement/Map/ChangeFacilityLocationPage";
 
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
@@ -93,6 +111,8 @@ import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
 import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
+import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
+import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
 
 //customer order management page
 import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
@@ -291,6 +311,136 @@ function App() {
                   element={
                     user ? (
                       <EditAnimalObservationLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/createAnimalActivityLog/:animalId"
+                  element={
+                    user ? (
+                      <CreateNewAnimalActivityLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/viewAnimalActivityLogDetails/:animalActivityLogId"
+                  element={
+                    user ? (
+                      <ViewAnimalActivityLogDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/editAnimalActivityLog/:animalActivityLogId"
+                  element={
+                    user ? (
+                      <EditAnimalActivityLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/createAnimalFeedingLog/:animalId"
+                  element={
+                    user ? (
+                      <CreateNewAnimalFeedingLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/viewAnimalFeedingLogDetails/:animalFeedingLogId"
+                  element={
+                    user ? (
+                      <ViewAnimalFeedingLogDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/editAnimalFeedingLog/:animalFeedingLogId"
+                  element={
+                    user ? (
+                      <EditAnimalFeedingLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/animalactivities"
+                  element={
+                    user ? <AnimalActivityHomePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/createanimalactivity"
+                  element={
+                    user ? (
+                      <CreateAnimalActivityPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/editanimalactivity/:animalActivityId"
+                  element={
+                    user ? <EditAnimalActivityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewanimalactivitydetails/:animalActivityId"
+                  element={
+                    user ? (
+                      <ViewAnimalActivityDetails />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/assignanimalstoactivity/:animalActivityId"
+                  element={
+                    user ? (
+                      <AddAnimalToActivityPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/assignitemstoactivity/:animalActivityId"
+                  element={
+                    user ? <AddItemToActivityPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/declaredeath/:animalCode"
+                  element={
+                    user ? <DeclareDeathPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/checkisinbreeding/:speciesCode"
+                  element={
+                    user ? <CheckIsInbreedingPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/feedingplanhome/:speciesCode"
+                  element={
+                    user ? (
+                      <AnimalFeedingPlanHomePage />
                     ) : (
                       <Navigate to="/login" />
                     )
@@ -596,6 +746,27 @@ function App() {
                     )
                   }
                 /> */}
+                <Route
+                  path="/assetfacility/maplanding/"
+                  element={user ? <MapLandingPage /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/assetfacility/addlocation/"
+                  element={
+                    user ? <AddNewLocationPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/assetfacility/changelocation/:facilityId"
+                  element={
+                    user ? (
+                      <ChangeFacilityLocationPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
                 {/*Employee Account Management */}
                 <Route
                   path="/employeeAccount/viewEmployees"
@@ -618,6 +789,10 @@ function App() {
                       <Navigate to="/login" />
                     )
                   }
+                />
+                <Route
+                  path="employeeAccount/setPassword/:token"
+                  element={<ResetPasswordPage />}
                 />
                 {/* <Route
                   path="/employeeAccount/editemployee"
@@ -646,7 +821,7 @@ function App() {
                     user ? <EditCustomerPage /> : <Navigate to="/login" />
                   }
                 />
-                {/* Employee Account Management */}
+                {/* Employee Account Management
                 <Route
                   path="/employee/viewallemployees"
                   element={
@@ -658,7 +833,7 @@ function App() {
                   element={
                     user ? <CreateNewEmployeePage /> : <Navigate to="/login" />
                   }
-                />
+                />*/}
                 {/* <Route
                   path="/employee/editemployee"
                   element={

@@ -224,15 +224,15 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
         </span>
         {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
           employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
-            <Button className="mr-2"
-              onClick={() => {
-                navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, {replace:true})
-                navigate(`/assetfacility/createfacilitylog/${facilityId}`)
-              }}
-            >
-              <HiPlus className="mr-auto" />
-              Add Facility Log
-            </Button>
+          <Button className="mr-2"
+            onClick={() => {
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
+              navigate(`/assetfacility/createfacilitylog/${facilityId}`)
+            }}
+          >
+            <HiPlus className="mr-auto" />
+            Add Facility Log
+          </Button>
         )}
       </div>
     </div>
@@ -244,9 +244,13 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
       <div>
         <Card className="my-4 relative"
           title={facilityLog.title}
-          subTitle={facilityLog.dateTime ?
-            "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}>
-          {(facilityLog.staffName == employee.employeeName) &&
+          subTitle={<div>
+            {facilityLog.dateTime ? "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}
+            <p></p>{facilityLog.staffName ? "Created by: " + facilityLog.staffName : ""}
+          </div>
+
+          }>
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || facilityLog.staffName == employee.employeeName) &&
             <Button
 
               className="absolute top-5 right-20"
@@ -257,7 +261,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             >
               <HiPencil className="mx-auto" />
             </Button>}
-          {((facilityLog.staffName == employee.employeeName) &&
+          {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || facilityLog.staffName == employee.employeeName) &&
             <Button className="absolute top-5 right-5"
               variant={"destructive"}
               onClick={() => confirmDeletefacilityLog(facilityLog)}
@@ -268,22 +272,22 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
 
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>
-              <div className="text-xl font-bold text-900">Details</div>
+              <div className="text-xl font-bold text-900 indent-px">Details</div>
               <p>{facilityLog.details}</p>
             </div>
             <Separator orientation="vertical" />
             <div>
-              <div className="text-xl font-bold text-900">Remarks</div>
+              <div className="text-xl font-bold text-900 indent-px">Remarks</div>
               <p>{facilityLog.remarks}</p>
             </div>
-            <div className="indent-px ">
-              <div className="text-xl font-bold text-900">Log Type </div>
+            <div>
+              <div className="text-xl font-bold text-900 indent-px">Log Type </div>
               {(facilityLog.isMaintenance ? "Maintenance Log" : "Operation Log")}
             </div>
           </div>
 
         </Card>
-      </div>
+      </div >
     )
   }
 

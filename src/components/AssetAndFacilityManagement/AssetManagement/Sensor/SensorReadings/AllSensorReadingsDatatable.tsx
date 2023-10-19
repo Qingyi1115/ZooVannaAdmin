@@ -8,7 +8,7 @@ import Sensor from '../../../../../models/Sensor';
 import { render } from 'react-dom';
 import { compareDates } from '../../../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion';
 import useApiJson from '../../../../../hooks/useApiJson';
-import SensorReading from 'src/models/SensorReading';
+import SensorReading from '../../../../../../src/models/SensorReading';
 import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 
 interface AllSensorReadingDatatableProps {

@@ -366,18 +366,41 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
+              body={(animal) => {
+                return animal.sex == "" || animal.sex == null ? (
+                  <span className="flex justify-center ">—</span>
+                ) : (
+                  animal.sex
+                );
+              }}
               field="sex"
               header="Sex"
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
+              body={(animal) => {
+                return animal.identifierType == "" ||
+                  animal.identifierType == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  animal.identifierType
+                );
+              }}
               field="identifierType"
               header="Identifier Type"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
+              body={(animal) => {
+                return animal.identifierValue == "" ||
+                  animal.identifierValue == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  animal.identifierValue
+                );
+              }}
               field="identifierValue"
               header="Identifier Value"
               sortable
@@ -386,7 +409,7 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
             <Column
               body={(animal) => {
                 if (!animal.location || animal.location == "") {
-                  return "NA";
+                  return <span className="flex justify-center">—</span>;
                 } else {
                   return animal.location;
                 }
@@ -397,16 +420,27 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
-              body={(animal) => calculateAge(new Date(animal.dateOfBirth))}
+              body={(animal) => {
+                let calculatedAge = calculateAge(new Date(animal.dateOfBirth));
+                return animal.dateOfBirth == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  calculatedAge
+                );
+              }}
               header="Animal Age"
               sortable
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
               body={(animal) => {
-                return new Date(animal.dateOfBirth).toLocaleDateString(
-                  "en-SG",
-                  dateOptions
+                return animal.dateOfBirth == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  new Date(animal.dateOfBirth).toLocaleDateString(
+                    "en-SG",
+                    dateOptions
+                  )
                 );
               }}
               field="dateOfBirth"

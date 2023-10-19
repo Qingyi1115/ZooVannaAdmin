@@ -3,6 +3,11 @@ enum KeeperType {
   KEEPER = "KEEPER",
 }
 
+enum ActivityType {
+  TRAINING = "TRAINING",
+  ENRICHMENT = "ENRICHMENT",
+}
+
 enum PlannerType {
   CURATOR = "CURATOR",
   SALES = "SALES",
@@ -100,6 +105,7 @@ enum AnimalSex {
   FEMALE = "FEMALE",
   UNKNOWN = "UNKNOWN",
   ASEXUAL = "ASEXUAL",
+  NOT_APPLICABLE = "NOT APPLICABLE",
 }
 
 enum AcquisitionMethod {
@@ -227,11 +233,36 @@ enum HubStatus {
   CONNECTED = "CONNECTED",
 }
 
+enum DayOfWeek {
+  MONDAY = "MONDAY",
+  TUESDAY = "TUESDAY",
+  WEDNESDAY = "WEDNESDAY",
+  THURSDAY = "THURSDAY",
+  FRIDAY = "FRIDAY",
+  SATURDAY = "SATURDAY",
+  SUNDAY = "SUNDAY",
+}
+
+enum RepeatPattern {
+  DAILY = "DAILY",
+  WEEKLY = "WEEKLY",
+  MONTHLY = "MONTHLY",
+  ANUALLY = "ANUALLY",
+}
+
+enum RecurringPattern {
+  NON_RECURRING = "NON-RECURRING",
+  DAILY = "DAILY",
+  WEEKLY = "WEEKLY",
+  MONTHLY = "MONTHLY",
+}
+
 export {
   KeeperType,
   PlannerType,
   GeneralStaffType,
   Specialization,
+  ActivityType,
   MedicalSupplyType,
   ConservationStatus,
   Continent,
@@ -256,5 +287,8 @@ export {
   OrderStatus,
   EnclosureStatus,
   HubStatus,
+  DayOfWeek,
+  RepeatPattern,
+  RecurringPattern,
   IdentifierType,
 };
