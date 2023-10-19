@@ -92,7 +92,7 @@ function AllPromotionDatatable() {
     );
   };
 
-  const navigateEditProduct = (promotion: Promotion) => { };
+  const navigateEditProduct = (promotion: Promotion) => {};
 
   const confirmDeletePromotion = (promotion: Promotion) => {
     setSelectedPromotion(promotion);
@@ -106,7 +106,7 @@ function AllPromotionDatatable() {
   function convertUtcToTimezone(utcDate: Date, targetTimezone: string): string {
     const utcMoment = moment.utc(utcDate);
     const targetMoment = utcMoment.tz(targetTimezone);
-    const formattedTime: string = targetMoment.format("MM-DD-YYYY");
+    const formattedTime: string = targetMoment.format("DD MMM YYYY");
     return formattedTime;
   }
 
@@ -122,7 +122,7 @@ function AllPromotionDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/promotion/deletePromotion/" +
-          selectedPromotion.promotionId
+            selectedPromotion.promotionId
         );
 
         toastShadcn({
