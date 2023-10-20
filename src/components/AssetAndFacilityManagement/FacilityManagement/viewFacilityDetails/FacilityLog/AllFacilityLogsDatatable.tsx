@@ -238,17 +238,6 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             Add Facility Log
           </Button>
         )} */}
-        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
-          <Button
-            onClick={() => {
-              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
-              navigate(`/assetfacility/completefacilitymaintenance/${facilityId}`)
-            }}
-            className="mr-2">
-            <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
-            Complete Maintenance
-          </Button>
-        )}
         {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
           <Button
             onClick={() => {
@@ -295,6 +284,16 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <HiTrash className="mx-auto" />
             </Button>
           )}
+          {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+            <Button
+              onClick={() => {
+                navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
+                navigate(`/assetfacility/completefacilitymaintenance/${facilityId}`)
+              }}
+              className="absolute top-5 right-35">
+              <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+            </Button>
+          )}
 
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>
@@ -307,8 +306,8 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <p>{facilityLog.remarks}</p>
             </div>
             <div>
-              <div className="text-xl font-bold text-900 indent-px">Log Type (to change) </div>
-              {(facilityLog.isMaintenance ? "Maintenance Log" : "Operation Log")}
+              <div className="text-xl font-bold text-900 indent-px">Log Type </div>
+              {facilityLog.facilityLogType}
             </div>
           </div>
 
