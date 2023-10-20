@@ -115,7 +115,9 @@ function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Booking Reference
               </TableCell>
-              <TableCell>{curCustomerOrder.bookingReference}</TableCell>
+              <TableCell className="w-2/3">
+                {curCustomerOrder.bookingReference}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
