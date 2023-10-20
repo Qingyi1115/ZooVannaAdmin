@@ -5,6 +5,7 @@ import Facility from "../../../../models/Facility";
 
 import FacilityLog from "../../../../models/FacilityLog";
 import ViewFacilityLogDetails from "../../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/ViewFacilityLogDetails";
+import { FacilityLogType } from "../../../../enums/FacilityLogType";
 
 
 
@@ -20,7 +21,8 @@ function ViewFacilityLogDetailsPage() {
     facilityDetail: "",
     facilityDetailJson: undefined,
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
+    showOnMap: false
   };
 
   let emptyFacilityLog: FacilityLog = {
@@ -31,7 +33,8 @@ function ViewFacilityLogDetailsPage() {
     details: "",
     remarks: "",
     facility: emptyFacility,
-    staffName: ""
+    staffName: "",
+    facilityLogType: FacilityLogType.maintenanceLog
   }
 
   const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);

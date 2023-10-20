@@ -37,6 +37,8 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
   const [title, setTitle] = useState<string>(""); // text input
   const [details, setDetails] = useState<string>(""); // text input
   const [remarks, setRemarks] = useState<string>(""); // text input
+  const [facilityLogType, setFacilityLogType] = useState<string | undefined>(
+    undefined); // dropdown
   const { curFacility } = props;
   const [formError, setFormError] = useState<string | null>(null);
   const employee = useAuthContext().state.user?.employeeData;
@@ -49,7 +51,8 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
       facilityId: curFacility.facilityId,
       title: title,
       details: details,
-      remarks: remarks
+      remarks: remarks,
+      facilityLogType: "OPERATION_LOG"
     }
     console.log(newFacilityLog);
 
@@ -89,7 +92,7 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">
-            Create Facility Log
+            Create Facility Operation Log
           </span>
           <Button disabled className="invisible">
             Back
@@ -134,6 +137,24 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
         validateFunction={validateFacilityLogName}
         pattern={undefined}
       />
+
+      {/* Facility Log Type */}
+      {/* {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
+        <FormFieldSelect
+          formFieldName="facilityLogType"
+          label="Facility Log Type"
+          required={true}
+          placeholder="Select a facility log type"
+          valueLabelPair={[
+            ["REPAIR_LOG", "Repair Log"],
+            ["MAINTENANCE_LOG", "Maintenance Log"],
+            ["OPERATION_LOG", "Operation Log"]
+          ]}
+          value={facilityLogType}
+          setValue={setFacilityLogType}
+          validateFunction={validateFacilityLogName}
+        />
+      )} */}
 
       <Form.Submit asChild>
         <Button

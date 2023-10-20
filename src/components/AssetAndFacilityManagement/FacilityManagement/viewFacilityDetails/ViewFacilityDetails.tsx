@@ -44,7 +44,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
             </Button>
           </NavLink>
         )}
-        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+        {/* {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
           <NavLink to={`/assetfacility/completefacilitymaintenance/${curFacility.facilityId}`}
             state={{ prev: `/assetfacility/viewfacilitydetails/${curFacility.facilityId}` }}>
             <Button className="mr-2">
@@ -61,7 +61,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
               Create Operations Log
             </Button>
           </NavLink>
-        )}
+        )} */}
 
       </div>
       <Table>

@@ -22,6 +22,8 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { Card } from "primereact/card";
 import { ScrollPanel } from "primereact/scrollpanel";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import { FacilityLogType } from "../../../../../enums/FacilityLogType";
+import { BsWrenchAdjustable } from "react-icons/bs";
 
 interface AllFacilityLogsDatatableProps {
   facilityId: number;
@@ -48,7 +50,8 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     facilityDetail: "",
     facilityDetailJson: emptyInHouse,
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
+    showOnMap: false
   };
 
   let emptyFacilityLog: FacilityLog = {
@@ -59,7 +62,8 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     details: "",
     remarks: "",
     facility: emptyFacility,
-    staffName: ""
+    staffName: "",
+    facilityLogType: FacilityLogType.OPERATION_LOG
   };
 
   const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([]);
@@ -222,7 +226,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             }}
           />
         </span>
-        {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+        {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
           employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
           <Button className="mr-2"
             onClick={() => {
@@ -232,6 +236,28 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           >
             <HiPlus className="mr-auto" />
             Add Facility Log
+          </Button>
+        )} */}
+        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+          <Button
+            onClick={() => {
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
+              navigate(`/assetfacility/completefacilitymaintenance/${facilityId}`)
+            }}
+            className="mr-2">
+            <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+            Complete Maintenance
+          </Button>
+        )}
+        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
+          <Button
+            onClick={() => {
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
+              navigate(`/assetfacility/createfacilitylog/${facilityId}`)
+            }}
+            className="mr-2">
+            <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+            Create Operations Log
           </Button>
         )}
       </div>
@@ -281,7 +307,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <p>{facilityLog.remarks}</p>
             </div>
             <div>
-              <div className="text-xl font-bold text-900 indent-px">Log Type </div>
+              <div className="text-xl font-bold text-900 indent-px">Log Type (to change) </div>
               {(facilityLog.isMaintenance ? "Maintenance Log" : "Operation Log")}
             </div>
           </div>

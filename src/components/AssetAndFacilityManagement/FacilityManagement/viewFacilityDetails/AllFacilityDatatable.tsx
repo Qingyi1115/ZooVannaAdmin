@@ -19,6 +19,7 @@ import { useToast } from "@/components/ui/use-toast";
 import Facility from "../../../../models/Facility";
 import { Separator } from "@/components/ui/separator";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import { BsWrenchAdjustable } from "react-icons/bs";
 
 function AllFacilityDatatable() {
   const apiJson = useApiJson();
@@ -182,6 +183,14 @@ function AllFacilityDatatable() {
               <HiTrash className="mx-auto" />
             </Button>
           )}
+        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+          <NavLink to={`/assetfacility/completefacilitymaintenance/${facility.facilityId}`}
+            state={{ prev: `/assetfacility/viewallfacilities` }}>
+            <Button className="mr-2">
+              <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+            </Button>
+          </NavLink>
+        )}
       </React.Fragment>
     );
   };
@@ -282,7 +291,7 @@ function AllFacilityDatatable() {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "15rem" }}
             ></Column>
           </DataTable>
         </div>

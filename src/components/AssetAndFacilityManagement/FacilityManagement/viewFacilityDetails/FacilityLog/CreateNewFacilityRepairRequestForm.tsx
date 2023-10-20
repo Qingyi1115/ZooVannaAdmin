@@ -13,8 +13,8 @@ import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../../models/Facility";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
 
-interface CreateNewFacilityMaintenanceLogFormProps {
-  curFacility: Facility;
+interface CreatenewFacilityRepairRequestProps {
+  facilityIds: number[];
 }
 
 function validateFacilityLogName(props: ValidityState) {
@@ -29,75 +29,79 @@ function validateFacilityLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenanceLogFormProps) {
+function CreatenewFacilityRepairRequestForm(props: CreatenewFacilityRepairRequestProps) {
+  const location = useLocation();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
   const [title, setTitle] = useState<string>(""); // text input
   const [details, setDetails] = useState<string>(""); // text input
   const [remarks, setRemarks] = useState<string>(""); // text input
-  const { curFacility } = props;
+  const [facilityLogType, setFacilityLogType] = useState<string | undefined>(
+    undefined); // dropdown
   const [formError, setFormError] = useState<string | null>(null);
-  const location = useLocation();
   const employee = useAuthContext().state.user?.employeeData;
+  const { facilityIds } = props;
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
-    const newFacilityLog = {
-      facilityId: curFacility.facilityId,
-      title: title,
-      details: details,
-      remarks: remarks,
-      facilityType: "maintenanceLog"
-    }
-    console.log(newFacilityLog);
+    for (const facilityId of facilityIds) {
 
-    try {
-      const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/createFacilityMaintenanceLog/${curFacility.facilityId}`,
-        newFacilityLog);
-      // success
-      toastShadcn({
-        description: "Successfully created facility maintenance log",
-      });
-      navigate("/assetfacility/maintenance");
-    } catch (error: any) {
-      toastShadcn({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description:
-          "An error has occurred while creating facility log details: \n" +
-          error.message,
-      });
+      const newFacilityLog = {
+        facilityId: facilityId,
+        title: title,
+        details: details,
+        remarks: remarks,
+        facilityLogType: "ACTIVE_REPAIR_TICKET"
+      }
+      console.log(newFacilityLog);
+
+      try {
+        const responseJson = await apiJson.post(
+          `http://localhost:3000/api/assetFacility/createFacilityLog/${facilityId}`,
+          newFacilityLog);
+        // success
+        toastShadcn({
+          description: "Successfully created facility log",
+        });
+      } catch (error: any) {
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while creating facility log details: \n" +
+            error.message,
+        });
+      }
+      console.log(apiJson.result);
     }
-    console.log(apiJson.result);
 
     // handle success case or failurecase using apiJson
   }
 
   return (
     <Form.Root
-      className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
+      className="flex w-full flex-col gap-6  bg-white p-20 text-black "
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >
       {/* Title Header and back button */}
-      <div className="flex flex-col">
+      {/* <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} disabled className="invisible">
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">
-            Complete Maintenance
+            Create Repair Request
           </span>
           <Button disabled className="invisible">
             Back
           </Button>
         </div>
         <Separator />
-      </div>
+      </div> */}
 
       {/* Title */}
       <FormFieldInput
@@ -155,4 +159,4 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
   );
 }
 
-export default CreateNewFacilityMaintenanceLogForm;
+export default CreatenewFacilityRepairRequestForm;

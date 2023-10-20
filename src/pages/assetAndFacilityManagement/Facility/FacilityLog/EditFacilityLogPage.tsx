@@ -4,6 +4,7 @@ import useApiJson from "../../../../hooks/useApiJson";
 import Facility from "../../../../models/Facility";
 import EditFacilityLogForm from "../../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/EditFacilityLogForm";
 import FacilityLog from "../../../../models/FacilityLog";
+import { FacilityLogType } from "../../../../enums/FacilityLogType";
 
 function EditFacilityLogPage() {
   const apiJson = useApiJson();
@@ -16,7 +17,8 @@ function EditFacilityLogPage() {
     facilityDetail: "",
     facilityDetailJson: undefined,
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
+    showOnMap: false
   };
 
   let emptyFacilityLog: FacilityLog = {
@@ -27,7 +29,8 @@ function EditFacilityLogPage() {
     details: "",
     remarks: "",
     facility: emptyFacility,
-    staffName: ""
+    staffName: "",
+    facilityLogType: FacilityLogType.maintenanceLog
   }
 
   const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);
