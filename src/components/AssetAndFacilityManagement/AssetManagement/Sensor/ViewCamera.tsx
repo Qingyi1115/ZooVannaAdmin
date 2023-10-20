@@ -1,17 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import * as Form from "@radix-ui/react-form";
-
-import { MultiSelectChangeEvent } from "primereact/multiselect";
-
-import useApiFormData from "../../../../hooks/useApiFormData";
-import FormFieldInput from "../../../FormFieldInput";
-import Sensor from "../../../../models/Sensor";
-import useApiJson from "../../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../../../FormFieldSelect";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 interface Authorization {
     authorization : any;
