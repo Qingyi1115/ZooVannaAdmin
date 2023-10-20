@@ -51,6 +51,7 @@ function AllCustomerOrderDatatable() {
     customerEmail: "",
     paymentStatus: PaymentStatus.COMPLETED,
     createdAt: new Date(),
+    orderItems: [],
   };
 
   const [customerOrderList, setCustomerOrderList] = useState<CustomerOrder[]>(
@@ -67,8 +68,9 @@ function AllCustomerOrderDatatable() {
   useEffect(() => {
     const fetchCustomerOrder = async () => {
       try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/customerOrder/getAllCustomerOrders"
+        const responseJson = await apiJson.post(
+          "http://localhost:3000/api/customerOrder/getAllCustomerOrders",
+          { includes: ["orderItems"] }
         );
         setCustomerOrderList(responseJson as CustomerOrder[]);
       } catch (error: any) {
@@ -95,7 +97,7 @@ function AllCustomerOrderDatatable() {
       <React.Fragment>
         <div className="mx-auto">
           <NavLink
-            to={`/customerOrder/viewcustomerOrder/${customerOrder.customerOrderId}`}
+            to={`/customerOrder/viewCustomerOrder/${customerOrder.customerOrderId}`}
           >
             <Button className="mr-2">
               <HiEye className="mr-auto" />

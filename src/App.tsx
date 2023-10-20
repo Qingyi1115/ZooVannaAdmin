@@ -117,6 +117,7 @@ import ViewCameraPage from "./pages/assetAndFacilityManagement/Sensor/ViewCamera
 
 //customer order management page
 import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
+import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrderDetailsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -885,7 +886,18 @@ function App() {
                     )
                   }
                 />
-                
+
+                <Route
+                  path="/customerOrder/viewCustomerOrder/:customerOrderId"
+                  element={
+                    user ? (
+                      <ViewCustomerOrderDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
                 <Route
                   path="/promotion/editpromotion/:promotionId"
                   element={
