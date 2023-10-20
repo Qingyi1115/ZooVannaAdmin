@@ -115,6 +115,10 @@ import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
 import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
 import ViewCameraPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraPage";
 
+//customer order management page
+import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
+import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrderDetailsPage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -872,6 +876,28 @@ function App() {
                     )
                   }
                 />
+                <Route
+                  path="/customerOrder/viewAllCustomerOrders"
+                  element={
+                    user ? (
+                      <ViewAllCustomerOrdersPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
+                <Route
+                  path="/customerOrder/viewCustomerOrder/:customerOrderId"
+                  element={
+                    user ? (
+                      <ViewCustomerOrderDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
                 <Route
                   path="/promotion/editpromotion/:promotionId"
                   element={
