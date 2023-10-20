@@ -32,7 +32,7 @@ interface CustomerOrderInfoDetailsProps {
   curCustomerOrder: CustomerOrder;
 }
 
-function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
+function ViewCustomerOrderDetailsEntry(props: CustomerOrderInfoDetailsProps) {
   const { curCustomerOrder } = props;
   const apiJson = useApiJson();
 
@@ -99,13 +99,13 @@ function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
           <TableHeader className=" bg-whiten">
             <TableRow>
               <TableHead className="w-3/3 font-bold" colSpan={3}>
-                Order Details
+                Entry Details
               </TableHead>
               <TableHead className="w-1/3 font-bold" colSpan={2}></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
+            {/* <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 ID
               </TableCell>
@@ -122,8 +122,8 @@ function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
                 Total Amount &#40;S$&#41;
               </TableCell>
               <TableCell>{curCustomerOrder.totalAmount}</TableCell>
-            </TableRow>
-            <TableRow>
+            </TableRow> */}
+            {/* <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Purchase Date
               </TableCell>
@@ -133,21 +133,21 @@ function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
                   "Asia/Singapore"
                 )}
               </TableCell>
-            </TableRow>
-            {/* <TableRow>
+            </TableRow> */}
+            <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Order Status
               </TableCell>
               <TableCell>{curCustomerOrder.orderStatus}</TableCell>
-            </TableRow> */}
-            <TableRow>
+            </TableRow>
+            {/* <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Payment Status
               </TableCell>
               <TableCell>{curCustomerOrder.paymentStatus}</TableCell>
-            </TableRow>
+            </TableRow> */}
 
-            {/* <TableRow>
+            <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Entry Date
               </TableCell>
@@ -186,7 +186,7 @@ function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
                   </TableRow>
                 </React.Fragment>
               );
-            })} */}
+            })}
           </TableBody>
         </Table>
       </div>
@@ -216,4 +216,4 @@ function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
   );
 }
 
-export default ViewCustomerOrderDetails;
+export default ViewCustomerOrderDetailsEntry;
