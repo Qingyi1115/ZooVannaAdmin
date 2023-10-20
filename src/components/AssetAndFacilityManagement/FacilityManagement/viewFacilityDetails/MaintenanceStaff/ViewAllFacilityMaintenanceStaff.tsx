@@ -5,7 +5,7 @@ import useApiJson from "../../../../../hooks/useApiJson";
 import Employee from "../../../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HiCheck, HiClipboard, HiEye, HiMinus, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -13,13 +13,14 @@ import { Dialog } from "primereact/dialog";
 import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
-import { Checkbox, CheckboxClickEvent } from "primereact/checkbox";
+import Facility from "../../../../../models/Facility";
+import { Checkbox, CheckboxChangeEvent, CheckboxClickEvent } from "primereact/checkbox";
 
-interface ManageOperationStaffProps {
+interface ViewAllFacilityMaintenanceStaffProps {
   facilityId: number;
 }
 
-function manageOperationStaff(props: ManageOperationStaffProps) {
+function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
   const { facilityId } = props;
@@ -58,19 +59,23 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   useEffect(() => {
     apiJson.post(
       "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-    ).catch(e => console.log("err", e)).then(res => {
-      const assignedStaff: Employee[] = [];
-      const availableStaff: Employee[] = [];
+    ).catch(e => console.log(e)).then(res => {
+      const assignedStaff: Employee[] = []
+      const availableStaff: Employee[] = []
       for (const staff of res["generalStaffs"]) {
-        if (staff.generalStaffType == "ZOO_OPERATIONS") {
+        // console.log(staff);
+        if (staff.generalStaffType == "ZOO_MAINTENANCE") {
           let emp = staff.employee;
           staff.employee = undefined;
           emp["generalStaff"] = staff
-          emp.currentlyAssigned = emp.generalStaff.operatedFacility?.facilityId == facilityId;
-          if (emp.currentlyAssigned) {
+          const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
+          console.log(maintainedFacility);
+          if (maintainedFacility !== undefined) {
+            emp.currentlyAssigned = true;
             assignedStaff.push(emp);
           }
           else {
+            emp.currentlyAssigned = false;
             availableStaff.push(emp);
           }
         }
@@ -85,7 +90,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId] }).then(res => {
           setRefreshSeed([]);
         }).catch(err => console.log("err", err));
 
@@ -93,7 +98,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         // variant: "destructive",
         title: "Assignment Successful",
         description:
-          "Successfully assigned operation staff: " + selectedEmployeeName,
+          "Successfully assigned maintenance staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setAssignmentDialog(false);
@@ -104,25 +109,24 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while assigning operation staff: \n" + apiJson.error,
+          "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
       });
     }
 
   }
 
-  const removeOperationStaff = async () => {
+  const removeMaintenanceStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
       const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
+        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
       setRefreshSeed([]);
-
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
         description:
-          "Successfully removed operation staff: " + selectedEmployeeName,
+          "Successfully removed maintenance staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setEmployeeRemovalDialog(false);
@@ -133,9 +137,10 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while removing operation staff: \n" + apiJson.error,
+          "An error has occurred while removing maintenance staff: \n" + apiJson.error,
       });
     }
+
   }
 
   const showBulkAssignment = () => {
@@ -148,7 +153,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Operation Staff</h4>
+      <h4 className="m-1">Manage Maintenance Staff</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -163,7 +168,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
       <Button
         onClick={showBulkAssignment}
         disabled={availableEmployees.length == 0}>
-        <HiPlus />Assign Operation Staff
+        <HiPlus />Assign Maintenance Staff
       </Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
@@ -179,15 +184,15 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     }
   };
 
+
   const actionBodyTemplate = (employee: any) => {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
           <Button
             variant={"outline"}
-            className="mr-2"
-            onClick={() => {
-              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageOperations`, { replace: true });
+            className="mr-2" onClick={() => {
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageMaintenance`, { replace: true });
               navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
             }}>
             <HiEye className="mx-auto" />
@@ -198,24 +203,20 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               {/* <Button
                 name="assignButton"
                 variant={"default"}
+                disabled={employee.currentlyAssigned}
                 className="mr-2"
-                disabled={employee.generalStaff?.operatedFacility !== null || employee.currentlyAssigned}
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
               </Button> */}
-              {/* {employee.dateOfResignation ?
-                <span>Removed</span>
-                :
-                <Button
-                  variant={"destructive"}
-                  className="mr-2"
-                  disabled={!employee.currentlyAssigned}
-                  onClick={() => confirmEmployeeRemoval(employee)}
-                >
-                  <HiMinus className="mx-auto" />
-                </Button>
-              } */}
+              {/* <Button
+                variant={"destructive"}
+                className="mr-2"
+                disabled={!employee.currentlyAssigned}
+                onClick={() => confirmEmployeeRemoval(employee)}
+              >
+                <HiMinus className="mx-auto" />
+              </Button> */}
             </div>
 
           }
@@ -226,7 +227,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
   const bulkAssignmentHeader = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Operation Staff</h4>
+      <h4 className="m-1">Manage Maintenance Staff</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -356,7 +357,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     selectedAvailableEmployees.forEach(async (employeeId) => {
       try {
         const responseJson = await apiJson.put(
-          `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
+          `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
             setRefreshSeed([]);
           }).catch(err => console.log("err", err));
 
@@ -364,7 +365,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           // variant: "destructive",
           title: "Assignment Successful",
           description:
-            "Successfully assigned operation staff: " + selectedAvailableEmployees.toString(),
+            "Successfully assigned maintenance staff: " + selectedAvailableEmployees.toString(),
         });
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
@@ -375,7 +376,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while assigning operation staff: \n" + apiJson.error,
+            "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
         });
       }
     });
@@ -394,11 +395,11 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     </React.Fragment>
   );
 
-  const bulkRemoveEmployees = async () => {
+  const bulkRemoveMaintenanceStaff = async () => {
     selectedAssignedEmployees.forEach(async (employeeId) => {
       try {
         const responseJson = await apiJson.del(
-          `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
+          `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
             setRefreshSeed([]);
           }).catch(err => console.log("err", err));
 
@@ -406,7 +407,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           // variant: "destructive",
           title: "Removal Successful",
           description:
-            "Successfully removed operation staff: " + selectedAssignedEmployees.toString(),
+            "Successfully removed maintenance staff: " + selectedAssignedEmployees.toString(),
         });
         setEmployeeRemovalDialog(false);
         setBulkAssignmentDialog(false);
@@ -417,7 +418,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while removing operation staff: \n" + apiJson.error,
+            "An error has occurred while removing maintenance staff: \n" + apiJson.error,
         });
       }
     });
@@ -433,18 +434,29 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={bulkRemoveEmployees}>
+      <Button variant={"destructive"} onClick={bulkRemoveMaintenanceStaff}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
 
+
   return (
     <div>
       <div>
         <Toast ref={toast} />
         <div className="">
+
+          {/* <Button
+            variant={"outline"}
+            className="mr-2" onClick={()=>{ 
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageMaintenance`, { replace: true });
+              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+            }}>
+            <HiPlus className="mx-auto" />
+              Add Maintenance staff
+          </Button> */}
 
           <DataTable
             ref={dt}
@@ -474,17 +486,10 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               field="employeeId"
               header="ID"
               sortable
-              style={{ minWidth: "4rem" }}
             ></Column>
             <Column
               field="employeeName"
               header="Name"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="generalStaff.operatedFacilityName"
-              header="Current Facility Name"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -518,8 +523,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             variant={"destructive"}
             onClick={confirmEmployeeRemoval}
             disabled={selectedAssignedEmployees.length == 0}>
-            <HiMinus />
-            Remove Selected Staff
+            <HiMinus />Remove Selected Staff
           </Button>
         </div>
         <Dialog
@@ -570,7 +574,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           visible={employeeBulkAssignmentDialog}
           style={{ width: "50rem" }}
           breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-          header="Assign Operation Staff"
+          header="Assign Maintenance Staff"
           position={"right"}
           footer={
             <Button
@@ -607,18 +611,10 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               <Column
                 field="employeeId"
                 header="ID"
-                sortable
-                style={{ minWidth: "4rem" }}
               ></Column>
               <Column
                 field="employeeName"
                 header="Name"
-                sortable
-                style={{ minWidth: "12rem" }}
-              ></Column>
-              <Column
-                field="generalStaff.operatedFacilityName"
-                header="Current Facility Name"
                 sortable
                 style={{ minWidth: "12rem" }}
               ></Column>
@@ -649,10 +645,10 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               ></Column>
             </DataTable>
           </div>
-        </Dialog>
-      </div>
-    </div>
+        </Dialog >
+      </div >
+    </div >
   );
 }
 
-export default manageOperationStaff;
+export default ViewAllFacilityMaintenanceStaff;
