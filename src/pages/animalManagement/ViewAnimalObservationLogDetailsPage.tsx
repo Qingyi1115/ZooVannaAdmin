@@ -6,17 +6,18 @@ import AnimalObservationLog from "../../models/AnimalObservationLog";
 import { Button } from "@/components/ui/button";
 import Employee from "../../models/Employee";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage } from "../../enums/Enumurated";
+import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
 import Animal from "../../models/Animal";
 import Species from "../../models/Species";
 import { Rating } from "../../enums/Rating";
 import ViewAnimalObservationLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalObservationLogDetails";
+import Keeper from "../../models/Keeper";
 
 
 
 function ViewAnimalObservationLogDetailsPage() {
   const apiJson = useApiJson();
-  const { facilityId } = useParams<{ facilityId: string }>();
+  const { animalObservationLogId } = useParams<{ animalObservationLogId: string }>();
   const [assignedStaffIds, setAssignedStaffIds] = useState<number[]>([]);
   const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
   const [empList, setEmpList] = useState<Employee[]>([]);
@@ -89,6 +90,14 @@ function ViewAnimalObservationLogDetailsPage() {
     employeeProfileUrl: "",
   };
 
+  let emptyKeeper: Keeper = {
+    id: 0,
+    keeperType: KeeperType.SENIOR_KEEPER,
+    specialization: Specialization.MAMMAL,
+    isDisabled: false,
+    employee: emptyEmployee
+  }
+
   let emptyAnimalObservationLog: AnimalObservationLog = {
     animalObservationLogId: 0,
     dateTime: new Date(),
@@ -96,7 +105,7 @@ function ViewAnimalObservationLogDetailsPage() {
     observationQuality: Rating.NOT_RECORDED,
     details: "",
     animals: [],
-    employee: emptyEmployee
+    keeper: emptyKeeper
   };
 
   const [curAnimalObservationLog, setCurAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
@@ -104,11 +113,12 @@ function ViewAnimalObservationLogDetailsPage() {
 
   useEffect(() => {
     apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalObservationLogById/${curAnimalObservationLog.animalObservationLogId}`)
+      `http://localhost:3000/api/animal/getAnimalObservationLogById/${animalObservationLogId}`)
       .then(res => {
         setCurAnimalObservationLog(res.animalObservationLog as AnimalObservationLog);
       })
       .catch(e => console.log(e));
+    console.log(curAnimalObservationLog);
   }, []);
 
 

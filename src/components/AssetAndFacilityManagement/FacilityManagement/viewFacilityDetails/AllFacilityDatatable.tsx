@@ -23,34 +23,37 @@ function AllfacilityDatatable() {
   const apiJson = useApiJson();
   const employee = useAuthContext().state.user?.employeeData;
   const { facilityDetail } = useParams<{ facilityDetail: string }>();
-  const facilityDetailJson = (facilityDetail == "thirdParty" ?
-    {
-      ownership: "",
-      ownerContact: "",
-      maxAccommodationSize: "",
-      hasAirCon: "",
-      facilityType: ""
-    } :
-    {
-      isPaid: "",
-      maxAccommodationSize: "",
-      hasAirCon: "",
-      facilityType: ""
-    })
+  const facilityDetailJson =
+    facilityDetail == "thirdParty"
+      ? {
+          ownership: "",
+          ownerContact: "",
+          maxAccommodationSize: "",
+          hasAirCon: "",
+          facilityType: "",
+        }
+      : {
+          isPaid: "",
+          maxAccommodationSize: "",
+          hasAirCon: "",
+          facilityType: "",
+        };
 
   let emptyFacility: Facility = {
     facilityId: -1,
     facilityName: "",
+    showOnMap: false,
     xCoordinate: 0,
     yCoordinate: 0,
     facilityDetail: "",
     facilityDetailJson: facilityDetailJson,
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
   };
 
   const [facilityList, setFacilityList] = useState<facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<facility>(emptyFacility);
+  const [selectedFacility, setSelectedFacility] =
+    useState<facility>(emptyFacility);
   const [deletefacilityDialog, setDeleteFacilityDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -59,11 +62,16 @@ function AllfacilityDatatable() {
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    apiJson.post("http://localhost:3000/api/assetFacility/getAllFacility", { includes: ["facilityDetail"] }).catch(e => {
-      console.log(e);
-    }).then(res => {
-      setFacilityList(res["facilities"]);
-    })
+    apiJson
+      .post("http://localhost:3000/api/assetFacility/getAllFacility", {
+        includes: ["facilityDetail"],
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+      .then((res) => {
+        setFacilityList(res["facilities"]);
+      });
   }, []);
 
   //
@@ -87,27 +95,29 @@ function AllfacilityDatatable() {
     );
 
     setDeleteFacilityDialog(false);
-    const responseJson = await apiJson.del(
-      "http://localhost:3000/api/assetFacility/deleteFacility/" +
-      selectedFacility.facilityId
-    ).then(() => {
-
-      toastShadcn({
-        // variant: "destructive",
-        title: "Deletion Successful",
-        description:
-          "Successfully deleted facility: " + selectedFacility.facilityName,
+    const responseJson = await apiJson
+      .del(
+        "http://localhost:3000/api/assetFacility/deleteFacility/" +
+          selectedFacility.facilityId
+      )
+      .then(() => {
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully deleted facility: " + selectedFacility.facilityName,
+        });
+        setFacilityList(_facility);
+        setSelectedFacility(emptyFacility);
+      })
+      .catch((error) => {
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting facility: \n" + apiJson.error,
+        });
       });
-      setFacilityList(_facility);
-      setSelectedFacility(emptyFacility);
-    }).catch(error => {
-      toastShadcn({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description:
-          "An error has occurred while deleting facility: \n" + apiJson.error,
-      });
-    });
   };
 
   const deleteFacilityDialogFooter = (
@@ -119,7 +129,7 @@ function AllfacilityDatatable() {
       <Button
         variant={"destructive"}
         onClick={deleteFacility}
-      // disabled={}
+        // disabled={}
       >
         <HiCheck />
         Yes
@@ -131,24 +141,27 @@ function AllfacilityDatatable() {
   const actionBodyTemplate = (facility: Facility) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
-          state={{ prev: `/assetfacility/viewallfacilities` }}>
-          <Button
-            // variant={"outline"}
-            className="mb-1 mr-1">
+        <NavLink
+          to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
+          state={{ prev: `/assetfacility/viewallfacilities` }}
+        >
+          <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <NavLink to={`/assetfacility/editfacility/${facility.facilityId}`}
-          state={{prev:`/assetfacility/viewallfacilities`}}>
+        {(employee.superAdmin ||
+          employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          <NavLink
+            to={`/assetfacility/editfacility/${facility.facilityId}`}
+            state={{ prev: `/assetfacility/viewallfacilities` }}
+          >
             <Button className="mr-1">
               <HiPencil className="mr-1" />
-
             </Button>
           </NavLink>
-        )} */}
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        )}
+        {(employee.superAdmin ||
+          employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -186,18 +199,19 @@ function AllfacilityDatatable() {
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") ?
+              {employee.superAdmin ||
+              employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ? (
                 <NavLink to={"/assetfacility/createfacility"}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
                     Add Facility
                   </Button>
                 </NavLink>
-                :
+              ) : (
                 <Button disabled className="invisible">
                   Export to .csv
                 </Button>
-              }
+              )}
               <span className=" self-center text-title-xl font-bold">
                 All Facilities
               </span>

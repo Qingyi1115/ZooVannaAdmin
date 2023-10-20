@@ -6,6 +6,7 @@ interface Facility {
   xCoordinate: number;
   yCoordinate: number;
   isSheltered: Boolean;
+  showOnMap: boolean;
   facilityDetail: string;
   facilityDetailJson: any;
   hubProcessors: HubProcessor[];

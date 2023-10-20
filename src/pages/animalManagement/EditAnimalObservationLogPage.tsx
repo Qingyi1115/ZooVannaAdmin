@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import EditFacilityForm from "../../components/AssetAndFacilityManagement/FacilityManagement/EditFacilityForm";
 import useApiJson from "../../hooks/useApiJson";
-import Facility from "../../models/Facility";
 import { Rating } from "../../enums/Rating";
 import EditAnimalObservationLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalObservationLogForm";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage } from "../../enums/Enumurated";
+import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
 import AnimalObservationLog from "../../models/AnimalObservationLog";
 import Employee from "../../models/Employee";
 import Species from "../../models/Species";
+import Keeper from "../../models/Keeper";
 
-function EditFacilityPage() {
+function EditAnimalObservationLogPage() {
   const apiJson = useApiJson();
   const { animalObservationLogId } = useParams<{ animalObservationLogId: string }>();
   const employee = useAuthContext().state.user?.employeeData;
@@ -83,6 +82,14 @@ function EditFacilityPage() {
     employeeProfileUrl: "",
   };
 
+  let emptyKeeper: Keeper = {
+    id: 0,
+    keeperType: KeeperType.SENIOR_KEEPER,
+    specialization: Specialization.MAMMAL,
+    isDisabled: false,
+    employee: emptyEmployee
+  }
+
   let emptyAnimalObservationLog: AnimalObservationLog = {
     animalObservationLogId: 0,
     dateTime: new Date(),
@@ -90,7 +97,7 @@ function EditFacilityPage() {
     observationQuality: Rating.NOT_RECORDED,
     details: "",
     animals: [],
-    employee: emptyEmployee
+    keeper: emptyKeeper
   };
 
   const [curAnimalObservationLog, setCurAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
@@ -110,4 +117,4 @@ function EditFacilityPage() {
   );
 }
 
-export default EditFacilityPage;
+export default EditAnimalObservationLogPage;
