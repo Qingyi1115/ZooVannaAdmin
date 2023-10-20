@@ -48,6 +48,8 @@ import EditAnimalActivityLogPage from "./pages/animalManagement/EditAnimalActivi
 import EditAnimalFeedingLogPage from "./pages/animalManagement/EditAnimalFeedingLogPage";
 import ViewAnimalActivityLogDetailsPage from "./pages/animalManagement/ViewAnimalActivityLogDetailsPage";
 import ViewAnimalFeedingLogDetailsPage from "./pages/animalManagement/ViewAnimalFeedingLogDetailsPage";
+import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
+import CreateFeedingPlan from "./pages/animalManagement/CreateFeedingPlan";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -112,7 +114,6 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
-import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
 
 function App() {
   const { state } = useAuthContext();
@@ -441,6 +442,12 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/animal/createfeedingplan/:speciesCode"
+                  element={
+                    user ? <CreateFeedingPlan /> : <Navigate to="/login" />
                   }
                 />
 
