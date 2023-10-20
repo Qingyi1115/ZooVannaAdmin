@@ -109,7 +109,7 @@ function CreateNewAnimalActivityLogForm() {
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">
-            Create Animal Observation Log
+            Create Animal Activity Log
           </span>
           <Button disabled className="invisible">
             Back
@@ -132,8 +132,8 @@ function CreateNewAnimalActivityLogForm() {
         validateFunction={validateAnimalActivityLogName}
       />
       {/* DateTime */}
-      <div className="flex justify-content-center">
-        <label htmlFor="dateTimeCalendar" className="self-center mx-3 text-lg text-dark ">Date</label>
+      <div className="card justify-content-center block ">
+        <div className="mb-1 block font-medium">Date</div>
         <Calendar id="dateTimeCalendar" showTime hourFormat="12" value={dateTime} onChange={(e: CalendarChangeEvent) => {
           if (e && e.value !== null) {
             setDateTime(e.value as Date);
@@ -178,25 +178,25 @@ function CreateNewAnimalActivityLogForm() {
         required={true}
         placeholder="Select a reaction"
         valueLabelPair={[
-          ["POSITIVE_RESPONSE", "Positive response",],
-          ["RESPONSIVE", "Resoonsive"],
-          ["ENTHUSIASTIC", "Eenthusiastic"],
-          ["ENGAGED", "Enraged",],
-          ["PLAYFUL", "Playful",],
-          ["CONTENT", "Content",],
-          ["NEUTRAL_RESPONSE", "Neutral response",],
-          ["OBSERVANT", "Obesrvant",],
-          ["CAUTIOUS", "Cautious",],
-          ["NEGATIVE_RESPONSE", "Negative response",],
-          ["STRESSED", "Stressed",],
-          ["AVOIDANT", "Avoidant",],
-          ["RESISTANT", "Resistant",],
-          ["AGGRESSIVE", "Aggresive",],
-          ["FEARFUL", "Fearful",],
-          ['OTHER_RESPONSE', "Other response",],
-          ["ENERGETIC", "Energetic",],
-          ["RELAXED", "Relaxed",],
-          ["INDETERMINATE", "Indeterminate",],
+          ["POSITIVE_RESPONSE", "Positive Response"],
+          ["RESPONSIVE", "Responsive"],
+          ["ENTHUSIASTIC", "Enthusiastic"],
+          ["ENGAGED", "Engaged"],
+          ["PLAYFUL", "Playful"],
+          ["CONTENT", "Content"],
+          ["NEUTRAL_RESPONSE", "Neutral Response"],
+          ["OBSERVANT", "Observant"],
+          ["CAUTIOUS", "Cautious"],
+          ["NEGATIVE_RESPONSE", "Negative Response"],
+          ["STRESSED", "Stressed"],
+          ["AVOIDANT", "Avoidant"],
+          ["RESISTANT", "Resistant"],
+          ["AGGRESSIVE", "Aggressive"],
+          ["FEARFUL", "Fearful"],
+          ["OTHER_RESPONSE", "Other Response"],
+          ["ENERGETIC", "Energetic"],
+          ["RELAXED", "Relaxed"],
+          ["INDETERMINATE", "Indeterminate"],
           ["UNDETERMINED", "Undetermined"],
         ]}
         value={animalReaction}
