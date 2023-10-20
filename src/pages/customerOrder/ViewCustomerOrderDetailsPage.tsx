@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import ViewCustomerOrderDetails from "../../components/CustomerOrderManagement/ViewCustomerOrderDetails";
+import ViewCustomerOrderDetailsEntry from "../../components/CustomerOrderManagement/ViewCustomerOrderDetailsEntry";
+
 import {
   Accordion,
   AccordionContent,
@@ -84,23 +86,13 @@ function ViewEmployeeDetailsPage() {
             </div>
             <Accordion type="multiple">
               <AccordionItem value="item-1">
-                <AccordionTrigger>Customer Order Information</AccordionTrigger>
+                <AccordionTrigger>Order Information</AccordionTrigger>
                 <AccordionContent>
                   <ViewCustomerOrderDetails
                     curCustomerOrder={curCustomerOrder}
                   />
                 </AccordionContent>
               </AccordionItem>
-              {/* <AccordionItem value="item-2">
-                <AccordionTrigger>Access Role</AccordionTrigger>
-                <AccordionContent>
-                  <ViewEmployeeRoleDetails
-                    curEmployee={curEmployee}
-                    refreshSeed={refreshSeed}
-                    setRefreshSeed={setRefreshSeed}
-                  />
-                </AccordionContent>
-              </AccordionItem> */}
               {/*<AccordionItem value="item-2">
                     <AccordionTrigger>Species Educational Content</AccordionTrigger>
                     <AccordionContent>
@@ -108,6 +100,14 @@ function ViewEmployeeDetailsPage() {
                     </AccordionContent>
                     </AccordionItem>*/}
             </Accordion>
+            <div className="mt-3">
+              <h2 className="flex flex-1 items-center justify-between rounded-lg px-2 py-4 font-bold">
+                Entry Details
+              </h2>
+              <ViewCustomerOrderDetailsEntry
+                curCustomerOrder={curCustomerOrder}
+              />
+            </div>
           </div>
         )}
       </div>
