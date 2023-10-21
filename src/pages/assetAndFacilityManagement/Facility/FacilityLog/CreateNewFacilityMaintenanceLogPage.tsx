@@ -5,6 +5,8 @@ import Facility from "../../../../models/Facility";
 import FacilityLog from "../../../../models/FacilityLog";
 import CreateNewFacilityMaintenanceLogForm from "../../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/CreateNewFacilityMaintenanceLogForm";
 import { FacilityLogType } from "../../../../enums/FacilityLogType";
+import InHouse from "../../../../models/InHouse";
+import { FacilityType } from "../../../../enums/FacilityType";
 
 function CreateNewFacilityMaintenanceLogPage() {
   const apiJson = useApiJson();
@@ -16,10 +18,20 @@ function CreateNewFacilityMaintenanceLogPage() {
     xCoordinate: 0,
     yCoordinate: 0,
     facilityDetail: "",
-    facilityDetailJson: undefined,
+    facilityDetailJson: "",
     isSheltered: false,
     hubProcessors: [],
     showOnMap: false
+  };
+
+  let emptyInHouse: InHouse = {
+    isPaid: false,
+    lastMaintained: new Date(),
+    maxAccommodationSize: 0,
+    hasAirCon: false,
+    facilityType: FacilityType.AED,
+    facilityLogs: [],
+    facilityId: 0
   };
 
   let emptyFacilityLog: FacilityLog = {
@@ -29,9 +41,10 @@ function CreateNewFacilityMaintenanceLogPage() {
     title: "",
     details: "",
     remarks: "",
-    facility: emptyFacility,
+    inHouse: emptyInHouse,
     staffName: "",
-    facilityLogType: FacilityLogType.MAINTENANCE_LOG
+    facilityLogType: FacilityLogType.MAINTENANCE_LOG,
+    generalStaffs: []
   }
 
   // const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
@@ -46,10 +59,11 @@ function CreateNewFacilityMaintenanceLogPage() {
   const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/assetFacility/getFacilityLog/${facilityLogId}`).then(res => {
+    apiJson.post(`http://localhost:3000/api/assetFacility/getFacilityLog/${facilityLogId}`, { includes: ["inHouse", "generalStaffs"] }).then(res => {
       setCurFacilityLog(res.facilityLog as FacilityLog);
     });
   }, []);
+  console.log(curFacilityLog)
 
 
   return (

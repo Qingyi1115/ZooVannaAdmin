@@ -5,6 +5,8 @@ import Facility from "../../../../models/Facility";
 import EditFacilityLogForm from "../../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/EditFacilityLogForm";
 import FacilityLog from "../../../../models/FacilityLog";
 import { FacilityLogType } from "../../../../enums/FacilityLogType";
+import InHouse from "../../../../models/InHouse";
+import { FacilityType } from "../../../../enums/FacilityType";
 
 function EditFacilityLogPage() {
   const apiJson = useApiJson();
@@ -15,22 +17,33 @@ function EditFacilityLogPage() {
     xCoordinate: 0,
     yCoordinate: 0,
     facilityDetail: "",
-    facilityDetailJson: undefined,
+    facilityDetailJson: "",
     isSheltered: false,
     hubProcessors: [],
     showOnMap: false
   };
 
+  let emptyInHouse: InHouse = {
+    isPaid: false,
+    lastMaintained: new Date(),
+    maxAccommodationSize: 0,
+    hasAirCon: false,
+    facilityType: FacilityType.AED,
+    facilityLogs: [],
+    facilityId: 0
+  };
+
   let emptyFacilityLog: FacilityLog = {
-    facilityLogId: -1,
+    facilityLogId: 0,
     dateTime: new Date(),
     isMaintenance: false,
     title: "",
     details: "",
     remarks: "",
-    facility: emptyFacility,
+    inHouse: emptyInHouse,
     staffName: "",
-    facilityLogType: FacilityLogType.maintenanceLog
+    facilityLogType: FacilityLogType.MAINTENANCE_LOG,
+    generalStaffs: []
   }
 
   const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);

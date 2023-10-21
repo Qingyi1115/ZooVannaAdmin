@@ -52,17 +52,17 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
     e.preventDefault();
 
     const newFacilityLog = {
-      facilityId: curFacilityLog.facility.facilityId,
       title: title,
       details: details,
       remarks: remarks,
-      facilityType: "MAINTENANCE_LOG"
+      facilityLogType: "MAINTENANCE_LOG",
+      employeeIds: [employee?.employeeId]
     }
     console.log(newFacilityLog);
 
     try {
       const facilityLogJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/createFacilityLog/${curFacilityLog.facility.facilityId}`,
+        `http://localhost:3000/api/assetFacility/createFacilityLog/${curFacilityLog.inHouse.facilityId}`,
         newFacilityLog);
 
       const completeMaintenanceJson = await apiJson.get(`http://localhost:3000/api/assetFacility/completeRepairTicket/${curFacilityLog.facilityLogId}`);

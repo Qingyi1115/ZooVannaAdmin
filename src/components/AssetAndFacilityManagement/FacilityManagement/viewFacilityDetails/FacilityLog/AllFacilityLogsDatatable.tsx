@@ -33,14 +33,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const apiJson = useApiJson();
   const { facilityId } = props;
   const employee = useAuthContext().state.user?.employeeData;
-  let emptyInHouse: InHouse = {
-    isPaid: false,
-    lastMaintained: new Date(),
-    maxAccommodationSize: 0,
-    hasAirCon: false,
-    facilityType: FacilityType.AED,
-    facilityLogs: []
-  };
+
 
   let emptyFacility: Facility = {
     facilityId: -1,
@@ -48,10 +41,20 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     xCoordinate: 0,
     yCoordinate: 0,
     facilityDetail: "",
-    facilityDetailJson: emptyInHouse,
+    facilityDetailJson: "",
     isSheltered: false,
     hubProcessors: [],
     showOnMap: false
+  };
+
+  let emptyInHouse: InHouse = {
+    isPaid: false,
+    lastMaintained: new Date(),
+    maxAccommodationSize: 0,
+    hasAirCon: false,
+    facilityType: FacilityType.AED,
+    facilityLogs: [],
+    facilityId: 0
   };
 
   let emptyFacilityLog: FacilityLog = {
@@ -61,9 +64,10 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     title: "",
     details: "",
     remarks: "",
-    facility: emptyFacility,
+    inHouse: emptyInHouse,
     staffName: "",
-    facilityLogType: FacilityLogType.OPERATION_LOG
+    facilityLogType: FacilityLogType.OPERATION_LOG,
+    generalStaffs: []
   };
 
   const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([]);
