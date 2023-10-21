@@ -284,11 +284,11 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <HiTrash className="mx-auto" />
             </Button>
           )}
-          {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+          {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET && (
             <Button
               onClick={() => {
                 navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
-                navigate(`/assetfacility/completefacilitymaintenance/${facilityId}`)
+                navigate(`/assetfacility/completeFacilityRepair/${facilityLog.facilityLogId}`)
               }}
               className="absolute top-5 right-35">
               <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>

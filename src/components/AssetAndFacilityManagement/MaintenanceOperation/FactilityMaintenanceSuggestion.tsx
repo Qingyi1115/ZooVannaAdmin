@@ -373,6 +373,18 @@ function FacilityMaintenanceSuggestion() {
       console.log(facilityId);
       console.log(newFacilityLog);
 
+      selectedEmployees.forEach(async (employeeId) => {
+        const assignJson = await apiJson.put(
+          `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [employeeId] }).then(() => {
+            toastShadcn({
+              title: "Assignment Successful",
+              description:
+                "Successfully assigned " + availableEmployees.filter(emp => selectedEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()
+                + " to " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString()
+            });
+          }).catch(err => { console.log(err) });
+      }
+      );
 
       const responseJson = await apiJson.post(
         `http://localhost:3000/api/assetFacility/createFacilityLog/${facilityId}`, newFacilityLog).then(res => {
@@ -381,9 +393,7 @@ function FacilityMaintenanceSuggestion() {
           toastShadcn({
             title: "Assignment Successful",
             description:
-              "Successfully assigned " + availableEmployees.filter(emp => selectedEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()
-              + " to " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString() +
-              "and created repair tickets for " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString(),
+              "Successfully created repair tickets for " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString(),
           });
           setAssignmentDialog(false);
           setBulkAssignmentDialog(false);

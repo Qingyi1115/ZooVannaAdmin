@@ -184,7 +184,7 @@ function AllFacilityDatatable() {
             </Button>
           )}
         {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
-          <NavLink to={`/assetfacility/completefacilitymaintenance/${facility.facilityId}`}
+          <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}/facilityLog`}
             state={{ prev: `/assetfacility/viewallfacilities` }}>
             <Button className="mr-2">
               <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>

@@ -725,7 +725,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/completefacilitymaintenance/:facilityId"
+                  path="/assetfacility/completeFacilityRepair/:facilityLogId"
                   element={
                     user ? (
                       <CreateNewFacilityMaintenanceLogPage />

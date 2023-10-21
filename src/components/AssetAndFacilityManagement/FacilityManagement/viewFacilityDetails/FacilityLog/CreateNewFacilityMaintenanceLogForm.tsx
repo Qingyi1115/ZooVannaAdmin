@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { DataView } from 'primereact/dataview';
 
 import * as Form from "@radix-ui/react-form";
 import FormFieldRadioGroup from "../../../../FormFieldRadioGroup";
@@ -11,10 +12,13 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../../models/Facility";
+import FacilityLog from "../../../../../models/FacilityLog";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import { Card } from "primereact/card";
 
 interface CreateNewFacilityMaintenanceLogFormProps {
-  curFacility: Facility;
+  // curFacility: Facility;
+  curFacilityLog: FacilityLog;
 }
 
 function validateFacilityLogName(props: ValidityState) {
@@ -33,31 +37,35 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
-  const [title, setTitle] = useState<string>(""); // text input
-  const [details, setDetails] = useState<string>(""); // text input
-  const [remarks, setRemarks] = useState<string>(""); // text input
-  const { curFacility } = props;
+  const { curFacilityLog } = props;
+  const [title, setTitle] = useState<string>(curFacilityLog.title + " - Repairs Complete"); // text input
+  const [details, setDetails] = useState<string>("Fixed: " + curFacilityLog.details); // text input
+  const [remarks, setRemarks] = useState<string>("Repairs Complete"); // text input
+
   const [formError, setFormError] = useState<string | null>(null);
   const location = useLocation();
   const employee = useAuthContext().state.user?.employeeData;
+  const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([curFacilityLog]);
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
     const newFacilityLog = {
-      facilityId: curFacility.facilityId,
+      facilityId: curFacilityLog.facility.facilityId,
       title: title,
       details: details,
       remarks: remarks,
-      facilityType: "maintenanceLog"
+      facilityType: "MAINTENANCE_LOG"
     }
     console.log(newFacilityLog);
 
     try {
-      const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/createFacilityMaintenanceLog/${curFacility.facilityId}`,
+      const facilityLogJson = await apiJson.post(
+        `http://localhost:3000/api/assetFacility/createFacilityLog/${curFacilityLog.facility.facilityId}`,
         newFacilityLog);
+
+      const completeMaintenanceJson = await apiJson.get(`http://localhost:3000/api/assetFacility/completeRepairTicket/${curFacilityLog.facilityLogId}`);
       // success
       toastShadcn({
         description: "Successfully created facility maintenance log",
@@ -77,6 +85,46 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
     // handle success case or failurecase using apiJson
   }
 
+  const listItem = (facilityLog: FacilityLog) => {
+
+    return (
+      <div>
+        <Card className="my-4 relative"
+          title={facilityLog.title}
+          subTitle={<div>
+            {facilityLog.dateTime ? "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}
+            <p></p>{facilityLog.staffName ? "Created by: " + facilityLog.staffName : ""}
+          </div>
+
+          }>
+          <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
+            <div>
+              <div className="text-xl font-bold text-900 indent-px">Details</div>
+              <p>{facilityLog.details}</p>
+            </div>
+            <Separator orientation="vertical" />
+            <div>
+              <div className="text-xl font-bold text-900 indent-px">Remarks</div>
+              <p>{facilityLog.remarks}</p>
+            </div>
+            <div>
+              <div className="text-xl font-bold text-900 indent-px">Log Type </div>
+              {facilityLog.facilityLogType}
+            </div>
+          </div>
+
+        </Card>
+      </div >
+    )
+  }
+
+  const itemTemplate = (facilityLog: FacilityLog) => {
+    if (!facilityLog) {
+      return;
+    }
+    return listItem(facilityLog);
+  };
+
   return (
     <Form.Root
       className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
@@ -90,7 +138,7 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">
-            Complete Maintenance
+            Complete Facility Repairs
           </span>
           <Button disabled className="invisible">
             Back
@@ -98,6 +146,17 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
         </div>
         <Separator />
       </div>
+
+      <div>
+        <div className="mb-1 block font-medium">Repair Ticket</div>
+        <DataView
+          value={facilityLogList}
+          itemTemplate={itemTemplate}
+          layout="list"
+          dataKey="facilityLogId"
+        />
+      </div>
+
 
       {/* Title */}
       <FormFieldInput

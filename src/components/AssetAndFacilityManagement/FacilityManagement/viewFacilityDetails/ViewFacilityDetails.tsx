@@ -45,7 +45,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
           </NavLink>
         )}
         {/* {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
-          <NavLink to={`/assetfacility/completefacilitymaintenance/${curFacility.facilityId}`}
+          <NavLink to={`/assetfacility/completeFacilityRepair/${curFacility.facilityId}`}
             state={{ prev: `/assetfacility/viewfacilitydetails/${curFacility.facilityId}` }}>
             <Button className="mr-2">
               <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
