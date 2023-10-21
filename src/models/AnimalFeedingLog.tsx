@@ -1,5 +1,5 @@
 import Animal from "./Animal";
-import Employee from "./Employee";
+import Keeper from "./Keeper";
 
 interface AnimalFeedingLog {
   animalFeedingLogId: number;
@@ -7,7 +7,7 @@ interface AnimalFeedingLog {
   durationInMinutes: number;
   details: string;
   animals: Animal[];
-  employee: Employee;
+  keeper: Keeper;
 }
 
 export default AnimalFeedingLog;

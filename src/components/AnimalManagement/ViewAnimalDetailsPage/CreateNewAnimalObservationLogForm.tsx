@@ -40,9 +40,7 @@ function CreateNewAnimalObservationLogForm() {
   const [observationQuality, setObservationQuality] = useState<string | undefined>(
     undefined); // dropdown
   const [details, setDetails] = useState<string>(""); // text input
-  const [dateTime, setDateTime] = useState<
-    string | Date | Date[] | null
-  >(null);
+  const [dateTime, setDateTime] = useState<Date | null>(null);
   const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -62,12 +60,11 @@ function CreateNewAnimalObservationLogForm() {
     e.preventDefault();
 
     const newAnimalObservationLog = {
-      dateTime: dateTime,
+      dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details,
-      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode),
-      employee: employee
+      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalObservationLog);
 
@@ -77,14 +74,15 @@ function CreateNewAnimalObservationLogForm() {
         newAnimalObservationLog);
       // success
       toastShadcn({
-        description: "Successfully created animal log",
+        description: "Successfully created animal observation log",
       });
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while creating animal log details: \n" +
+          "An error has occurred while creating animal observation log details: \n" +
           error.message,
       });
     }
