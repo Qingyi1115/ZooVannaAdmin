@@ -10,7 +10,6 @@ function CreateNewFacilityMaintenanceLogPage() {
   const apiJson = useApiJson();
   // const { facilityId } = useParams<{ facilityId: string }>();
   const { facilityLogId } = useParams<{ facilityLogId: string }>();
-  console.log(facilityLogId)
   let emptyFacility: Facility = {
     facilityId: -1,
     facilityName: "",
