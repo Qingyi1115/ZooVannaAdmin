@@ -364,7 +364,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           // variant: "destructive",
           title: "Assignment Successful",
           description:
-            "Successfully assigned operation staff: " + selectedAvailableEmployees.toString(),
+            "Successfully assigned operation staff: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
         });
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
@@ -539,7 +539,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             {selectedEmployee && (
               <span>
                 Are you sure you want to assign this facility to{" "}
-                <b>{selectedAvailableEmployees.toString()}?</b>
+                <b>{availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()}?</b>
               </span>
             )}
           </div>

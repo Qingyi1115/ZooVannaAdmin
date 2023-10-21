@@ -365,7 +365,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
           // variant: "destructive",
           title: "Assignment Successful",
           description:
-            "Successfully assigned maintenance staff: " + selectedAvailableEmployees.toString(),
+            "Successfully assigned maintenance staff: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
         });
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
@@ -543,7 +543,7 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
             {selectedEmployee && (
               <span>
                 Are you sure you want to assign this facility to{" "}
-                <b>{selectedAvailableEmployees.toString()}?</b>
+                <b>{availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()}?</b>
               </span>
             )}
           </div>

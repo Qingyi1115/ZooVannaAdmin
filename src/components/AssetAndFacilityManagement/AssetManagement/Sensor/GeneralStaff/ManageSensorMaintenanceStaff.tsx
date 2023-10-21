@@ -94,7 +94,7 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
         // variant: "destructive",
         title: "Assignment Successful",
         description:
-          "Successfully assigned general staff: " + selectedEmployeeName,
+          "Successfully assigned maintenance staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setAssignmentDialog(false);
@@ -106,7 +106,7 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while assigning general staff: \n" + apiJson.error,
+          "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
       });
     }
 
@@ -386,7 +386,7 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
           // variant: "destructive",
           title: "Assignment Successful",
           description:
-            "Successfully assigned maintenance staff: " + selectedAvailableEmployees.toString(),
+            "Successfully assigned maintenance staff: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
         });
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);

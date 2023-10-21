@@ -361,7 +361,7 @@ function SensorMaintenanceSuggestion() {
           // variant: "destructive",
           title: "Assignment Successful",
           description:
-            "Successfully assigned maintenance staff " + selectedEmployee.employeeName + " to sensor: " + selectedMaintenanceDetails.toString(),
+            "Successfully assigned " + selectedEmployee.employeeName + " to " + sensorList.filter(sensor => selectedMaintenanceDetails.includes(sensor.sensorId)).map((sensor) => " " + sensor.sensorName).toString(),
         });
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
@@ -550,9 +550,9 @@ function SensorMaintenanceSuggestion() {
           />
           {selectedEmployee && (
             <span>
-              Are you sure you want to assign employee {" "}
-              <b>{selectedEmployee.employeeName}?</b> to facility {" "}
-              <b>{selectedMaintenanceDetails.toString()}?</b>
+              Are you sure you want to assign {" "}
+              <b>{selectedEmployee.employeeName}</b> to {" "}
+              <b>{sensorList.filter(sensor => selectedMaintenanceDetails.includes(sensor.sensorId)).map((sensor) => " " + sensor.sensorName).toString()}?</b>
             </span>
           )}
         </div>

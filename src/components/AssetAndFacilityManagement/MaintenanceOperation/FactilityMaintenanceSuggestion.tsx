@@ -381,9 +381,9 @@ function FacilityMaintenanceSuggestion() {
           toastShadcn({
             title: "Assignment Successful",
             description:
-              "Successfully assigned maintenance staff: " + availableEmployees.filter(emp => selectedEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()
-              + " to facility: " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString() +
-              "and created facility log for " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString(),
+              "Successfully assigned " + availableEmployees.filter(emp => selectedEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()
+              + " to " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString() +
+              "and created repair tickets for " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString(),
           });
           setAssignmentDialog(false);
           setBulkAssignmentDialog(false);
@@ -418,7 +418,7 @@ function FacilityMaintenanceSuggestion() {
   );
 
   const [title, setTitle] = useState<string>("Repair Request"); // text input
-  const [details, setDetails] = useState<string>("Please complete repairs for: "); // text input
+  const [details, setDetails] = useState<string>("Please complete repairs for this facility!"); // text input
   const [remarks, setRemarks] = useState<string>("Repairs Incomplete"); // text input
   const [formError, setFormError] = useState<string | null>(null);
 
