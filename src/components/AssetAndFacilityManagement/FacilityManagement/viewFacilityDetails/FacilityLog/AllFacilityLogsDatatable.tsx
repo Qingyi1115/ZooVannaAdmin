@@ -54,7 +54,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     hasAirCon: false,
     facilityType: FacilityType.AED,
     facilityLogs: [],
-    facilityId: 0
+    facility: {} as any
   };
 
   let emptyFacilityLog: FacilityLog = {

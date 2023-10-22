@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataView } from 'primereact/dataview';
 
 import * as Form from "@radix-ui/react-form";
@@ -42,11 +42,26 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
   const [details, setDetails] = useState<string>("Fixed: " + curFacilityLog.details); // text input
   const [remarks, setRemarks] = useState<string>("Repairs Complete"); // text input
 
+  const [facilityLogdetails, setFacilityLogdetails] = useState<string>("Repairs Complete"); // text input
+  const [facilityLogremarks, setFacilityLogremarks] = useState<string>("Repairs Complete"); // text input
+  const [facilityLogfacilityLogType, setFacilityLogfacilityLogType] = useState<string>("Repairs Complete"); // text input
+  const [helloDT, setHelloDT] = useState<string>("Repairs Complete"); // text input
+  const [helloStaffName, setHelloStaffNAme] = useState<string>("Repairs Complete"); // text input
+
+
   const [formError, setFormError] = useState<string | null>(null);
   const location = useLocation();
   const employee = useAuthContext().state.user?.employeeData;
   const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([curFacilityLog]);
 
+  useEffect(()=>{
+    setFacilityLogdetails(curFacilityLog.details)
+    setFacilityLogremarks(curFacilityLog.remarks)
+    setFacilityLogfacilityLogType(curFacilityLog.facilityLogType)
+    setHelloDT(curFacilityLog.dateTime ? "Date created: " + new Date(curFacilityLog.dateTime).toLocaleString() : "");
+    setHelloStaffNAme(curFacilityLog.staffName ? "Created by: " + curFacilityLog.staffName : "");
+  }, [curFacilityLog])
+  
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
@@ -92,24 +107,24 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
         <Card className="my-4 relative"
           title={facilityLog.title}
           subTitle={<div>
-            {facilityLog.dateTime ? "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}
-            <p></p>{facilityLog.staffName ? "Created by: " + facilityLog.staffName : ""}
+            {helloDT}
+            <p></p>{helloStaffName}
           </div>
 
           }>
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>
               <div className="text-xl font-bold text-900 indent-px">Details</div>
-              <p>{facilityLog.details}</p>
+              <p>{facilityLogdetails}</p>
             </div>
             <Separator orientation="vertical" />
             <div>
               <div className="text-xl font-bold text-900 indent-px">Remarks</div>
-              <p>{facilityLog.remarks}</p>
+              <p>{facilityLogremarks}</p>
             </div>
             <div>
               <div className="text-xl font-bold text-900 indent-px">Log Type </div>
-              {facilityLog.facilityLogType}
+              {facilityLogfacilityLogType}
             </div>
           </div>
 
