@@ -218,7 +218,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           placeholder="Sort By"
           onChange={onSortChange}
         />
-        <span className="p-input-icon-left">
+        {/* <span className="p-input-icon-left">
           <i className="pi pi-search" />
 
           <InputText
@@ -229,7 +229,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               setGlobalFilter(target.value);
             }}
           />
-        </span>
+        </span> */}
         {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
           employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") &&
           <Button className="mr-2"
