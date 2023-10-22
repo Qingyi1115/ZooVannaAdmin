@@ -62,7 +62,7 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
 
     try {
       const facilityLogJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/createFacilityLog/${curFacilityLog.inHouse.facilityId}`,
+        `http://localhost:3000/api/assetFacility/createFacilityLog/${curFacilityLog.inHouse.facility.facilityId}`,
         newFacilityLog);
 
       const completeMaintenanceJson = await apiJson.get(`http://localhost:3000/api/assetFacility/completeRepairTicket/${curFacilityLog.facilityLogId}`);

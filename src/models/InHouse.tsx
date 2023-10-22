@@ -9,7 +9,7 @@ interface InHouse {
     hasAirCon: Boolean
     facilityType: FacilityType
     facilityLogs: FacilityLog[]
-    facilityId: number
+    facility: Facility
 }
 
 export default InHouse;
