@@ -38,30 +38,32 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
   const { curFacilityLog } = props;
-  const [title, setTitle] = useState<string>(curFacilityLog.title + " - Repairs Complete"); // text input
-  const [details, setDetails] = useState<string>("Fixed: " + curFacilityLog.details); // text input
+
+  const [facilityLogTitle, setFacilityLogTitle] = useState<string>(""); // text input
+  const [facilityLogDetails, setFacilityLogDetails] = useState<string>(""); // text input
+  const [facilityLogRemarks, setFacilityLogRemarks] = useState<string>(""); // text input
+  const [facilityLogType, setFacilityLogType] = useState<string>(""); // text input
+  const [facilityDateTime, setFacilityDateTime] = useState<string>(""); // text input
+  const [facilityStaffName, setFacilityStaffName] = useState<string>(""); // text input
+
+  const [title, setTitle] = useState<string>(""); // text input
+  const [details, setDetails] = useState<string>(""); // text input
   const [remarks, setRemarks] = useState<string>("Repairs Complete"); // text input
-
-  const [facilityLogdetails, setFacilityLogdetails] = useState<string>("Repairs Complete"); // text input
-  const [facilityLogremarks, setFacilityLogremarks] = useState<string>("Repairs Complete"); // text input
-  const [facilityLogfacilityLogType, setFacilityLogfacilityLogType] = useState<string>("Repairs Complete"); // text input
-  const [helloDT, setHelloDT] = useState<string>("Repairs Complete"); // text input
-  const [helloStaffName, setHelloStaffNAme] = useState<string>("Repairs Complete"); // text input
-
 
   const [formError, setFormError] = useState<string | null>(null);
   const location = useLocation();
   const employee = useAuthContext().state.user?.employeeData;
   const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([curFacilityLog]);
 
-  useEffect(()=>{
-    setFacilityLogdetails(curFacilityLog.details)
-    setFacilityLogremarks(curFacilityLog.remarks)
-    setFacilityLogfacilityLogType(curFacilityLog.facilityLogType)
-    setHelloDT(curFacilityLog.dateTime ? "Date created: " + new Date(curFacilityLog.dateTime).toLocaleString() : "");
-    setHelloStaffNAme(curFacilityLog.staffName ? "Created by: " + curFacilityLog.staffName : "");
+  useEffect(() => {
+    setFacilityLogTitle(curFacilityLog.title)
+    setFacilityLogDetails(curFacilityLog.details)
+    setFacilityLogRemarks(curFacilityLog.remarks)
+    setFacilityLogType(curFacilityLog.facilityLogType)
+    setFacilityDateTime(curFacilityLog.dateTime ? "Date created: " + new Date(curFacilityLog.dateTime).toLocaleString() : "");
+    setFacilityStaffName(curFacilityLog.staffName ? "Created by: " + curFacilityLog.staffName : "");
   }, [curFacilityLog])
-  
+
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
@@ -73,8 +75,8 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
       facilityLogType: "MAINTENANCE_LOG",
       employeeIds: [employee?.employeeId]
     }
-    console.log(newFacilityLog);
-
+    console.log(curFacilityLog);
+    
     try {
       const facilityLogJson = await apiJson.post(
         `http://localhost:3000/api/assetFacility/createFacilityLog/${curFacilityLog.inHouse.facility.facilityId}`,
@@ -105,26 +107,26 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
     return (
       <div>
         <Card className="my-4 relative"
-          title={facilityLog.title}
+          title={facilityLogTitle}
           subTitle={<div>
-            {helloDT}
-            <p></p>{helloStaffName}
+            {facilityDateTime}
+            <p></p>{facilityStaffName}
           </div>
 
           }>
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>
               <div className="text-xl font-bold text-900 indent-px">Details</div>
-              <p>{facilityLogdetails}</p>
+              <p>{facilityLogDetails}</p>
             </div>
             <Separator orientation="vertical" />
             <div>
               <div className="text-xl font-bold text-900 indent-px">Remarks</div>
-              <p>{facilityLogremarks}</p>
+              <p>{facilityLogRemarks}</p>
             </div>
             <div>
               <div className="text-xl font-bold text-900 indent-px">Log Type </div>
-              {facilityLogfacilityLogType}
+              {facilityLogType}
             </div>
           </div>
 

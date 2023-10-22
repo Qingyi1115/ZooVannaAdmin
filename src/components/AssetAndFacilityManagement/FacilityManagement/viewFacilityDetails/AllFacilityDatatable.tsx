@@ -183,14 +183,14 @@ function AllFacilityDatatable() {
               <HiTrash className="mx-auto" />
             </Button>
           )}
-        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+        {/* {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
           <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}/facilityLog`}
             state={{ prev: `/assetfacility/viewallfacilities` }}>
             <Button className="mr-2">
               <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
             </Button>
           </NavLink>
-        )}
+        )} */}
       </React.Fragment>
     );
   };

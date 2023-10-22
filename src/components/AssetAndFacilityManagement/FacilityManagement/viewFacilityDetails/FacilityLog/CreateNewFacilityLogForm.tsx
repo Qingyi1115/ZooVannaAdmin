@@ -12,9 +12,11 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../../models/Facility";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import { FacilityLogType } from "../../../../../enums/FacilityLogType";
 
 interface CreateNewFacilityLogProps {
   curFacility: Facility;
+  curFacilityLogType: FacilityLogType;
 }
 
 function validateFacilityLogName(props: ValidityState) {
@@ -39,7 +41,7 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
   const [remarks, setRemarks] = useState<string>(""); // text input
   const [facilityLogType, setFacilityLogType] = useState<string | undefined>(
     undefined); // dropdown
-  const { curFacility } = props;
+  const { curFacility, curFacilityLogType } = props;
   const [formError, setFormError] = useState<string | null>(null);
   const employee = useAuthContext().state.user?.employeeData;
 
@@ -52,7 +54,7 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
       title: title,
       details: details,
       remarks: remarks,
-      facilityLogType: "OPERATION_LOG"
+      facilityLogType: curFacilityLogType
     }
     console.log(newFacilityLog);
 
@@ -92,7 +94,7 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">
-            Create Facility Operation Log
+            {curFacilityLogType == FacilityLogType.OPERATION_LOG ? "Create Facility Operation Log" : "Create Facility Maintenance Log"}
           </span>
           <Button disabled className="invisible">
             Back

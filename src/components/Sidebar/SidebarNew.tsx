@@ -433,7 +433,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           {(employee.superAdmin ||
                             employee.planningStaff?.plannerType ==
                             "OPERATIONS_MANAGER"
-                            // || employee.generalStaff
+                            || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE"
                           ) && (
                               <li>
                                 <NavLink

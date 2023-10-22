@@ -1,7 +1,6 @@
 import { FacilityLogType } from "src/enums/FacilityLogType";
-import Facility from "./Facility";
 import InHouse from "./InHouse";
-import Employee from "./Employee";
+import GeneralStaff from "./GeneralStaff";
 interface FacilityLog {
   facilityLogId: number;
   dateTime: Date;
@@ -12,7 +11,7 @@ interface FacilityLog {
   staffName: string;
   facilityLogType: FacilityLogType;
   inHouse: InHouse;
-  generalStaffs: Employee[];
+  generalStaffs: GeneralStaff[];
 }
 
 export default FacilityLog;

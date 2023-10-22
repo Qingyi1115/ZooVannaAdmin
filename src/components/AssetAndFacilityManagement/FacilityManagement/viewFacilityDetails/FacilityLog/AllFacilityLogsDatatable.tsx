@@ -230,23 +230,23 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             }}
           />
         </span>
-        {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
+        {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+          employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") &&
           <Button className="mr-2"
             onClick={() => {
               navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
-              navigate(`/assetfacility/createfacilitylog/${facilityId}`)
+              navigate(`/assetfacility/createfacilitylog/${facilityId}/MAINTENANCE_LOG`)
             }}
           >
             <HiPlus className="mr-auto" />
-            Add Facility Log
+            Create Maintenance Log
           </Button>
-        )} */}
+        )}
         {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
           <Button
             onClick={() => {
               navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
-              navigate(`/assetfacility/createfacilitylog/${facilityId}`)
+              navigate(`/assetfacility/createfacilitylog/${facilityId}/OPERATION_LOG`)
             }}
             className="mr-2">
             <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
@@ -258,6 +258,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   );
 
   const listItem = (facilityLog: FacilityLog) => {
+    console.log(facilityLog)
 
     return (
       <div>
@@ -266,6 +267,8 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           subTitle={<div>
             {facilityLog.dateTime ? "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}
             <p></p>{facilityLog.staffName ? "Created by: " + facilityLog.staffName : ""}
+            <p></p>{facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET && facilityLog.generalStaffs
+              ? "Assigned to: " + facilityLog.generalStaffs.map((generalStaff) => " " + generalStaff.employee.employeeName).toString() : ""}
           </div>
 
           }>
@@ -288,16 +291,17 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <HiTrash className="mx-auto" />
             </Button>
           )}
-          {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET && (
-            <Button
-              onClick={() => {
-                navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
-                navigate(`/assetfacility/completeFacilityRepair/${facilityLog.facilityLogId}`)
-              }}
-              className="absolute top-5 right-35">
-              <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
-            </Button>
-          )}
+          {(employee.superAdmin || (facilityLog.generalStaffs.find(generalStaff => generalStaff.employee.employeeId == employee.employeeId))) && facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET &&
+            (
+              <Button
+                onClick={() => {
+                  navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
+                  navigate(`/assetfacility/completeFacilityRepair/${facilityLog.facilityLogId}`)
+                }}
+                className="absolute top-5 right-35">
+                <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+              </Button>
+            )}
 
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>

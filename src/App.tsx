@@ -708,8 +708,18 @@ function App() {
                     )
                   }
                 />
-                <Route
+                {/* <Route
                   path="/assetfacility/createfacilitylog/:facilityId"
+                  element={
+                    user ? (
+                      <CreateNewFacilityLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                /> */}
+                <Route
+                  path="/assetfacility/createfacilitylog/:facilityId/:facilityLogType"
                   element={
                     user ? (
                       <CreateNewFacilityLogPage />

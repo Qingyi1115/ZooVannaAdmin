@@ -22,8 +22,10 @@ import { Checkbox, CheckboxChangeEvent, CheckboxClickEvent } from "primereact/ch
 import ViewAllFacilityMaintenanceStaff from "../FacilityManagement/viewFacilityDetails/MaintenanceStaff/ViewAllFacilityMaintenanceStaff";
 import { useToast } from "@/components/ui/use-toast";
 import CreateNewFacilityRepairRequestForm from "../FacilityManagement/viewFacilityDetails/FacilityLog/CreateNewFacilityRepairRequestForm";
-import FormFieldInput from "../../../components/FormFieldInput";
+import FormFieldInput from "../../FormFieldInput";
 import * as Form from "@radix-ui/react-form";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import { BsWrenchAdjustable } from "react-icons/bs";
 
 
 export function compareDates(d1: Date, d2: Date): number {
@@ -56,6 +58,7 @@ function FacilityMaintenanceSuggestion() {
   const dt = useRef<DataTable<MaintenanceDetails[]>>(null);
   const dt2 = useRef<DataTable<Employee[]>>(null);
   const toastShadcn = useToast().toast;
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptyEmployee: Employee = {
     employeeId: -1,
@@ -91,6 +94,7 @@ function FacilityMaintenanceSuggestion() {
   const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
   const [employeeBulkAssignmentDialog, setBulkAssignmentDialog] = useState<boolean>(false);
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
+  const [forRepair, setForRepair] = useState<boolean>(false);
 
   useEffect(() => {
     apiJson.get(
@@ -141,6 +145,16 @@ function FacilityMaintenanceSuggestion() {
         }}>
           <HiOutlinePresentationChartLine className="mx-auto" />
         </Button>
+        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+          <Button
+            className="mr-2"
+            onClick={() => {
+              navigate(`/assetfacility/maintenance/facilityMaintenance`, { replace: true });
+              navigate(`/assetfacility/viewfacilitydetails/${objDetails.id}/facilityLog`);
+            }}>
+            <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+          </Button>
+        )}
       </React.Fragment>
     );
   };
@@ -203,9 +217,16 @@ function FacilityMaintenanceSuggestion() {
     });
   }, [refreshSeed]);
 
-  const showBulkAssignment = () => {
+  const showBulkRepairAssignment = () => {
     setSelectedEmployees([]);
     setBulkAssignmentDialog(true);
+    setForRepair(true);
+  };
+
+  const showBulkMaintenanceAssignment = () => {
+    setSelectedEmployees([]);
+    setBulkAssignmentDialog(true);
+    setForRepair(false);
   };
 
   const confirmAssignment = () => {
@@ -244,13 +265,15 @@ function FacilityMaintenanceSuggestion() {
           }}
         />
       </span>
-      <Button onClick={showBulkAssignment} disabled={selectedMaintenanceDetails.length == 0}><HiPlus />Create Repair Ticket</Button>
+      <Button onClick={showBulkRepairAssignment} disabled={selectedMaintenanceDetails.length == 0}><HiPlus />Create Repair Ticket</Button>
+      <Button onClick={showBulkMaintenanceAssignment} disabled={selectedMaintenanceDetails.length == 0}><HiPlus />Assign Maintenance Staff</Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
   const hideEmployeeBulkAssignmentDialog = () => {
     setBulkAssignmentDialog(false);
+    setForRepair(false);
   }
 
   const onSelectedEmployeesOnClick = (e: CheckboxClickEvent) => {
@@ -372,43 +395,48 @@ function FacilityMaintenanceSuggestion() {
       }
       console.log(facilityId);
       console.log(newFacilityLog);
+      if (!forRepair) {
+        selectedEmployees.forEach(async (employeeId) => {
+          const assignJson = await apiJson.put(
+            `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [employeeId] }).then(() => {
+              toastShadcn({
+                title: "Assignment Successful",
+                description:
+                  "Successfully assigned " + availableEmployees.filter(emp => selectedEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()
+                  + " to " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString()
+              });
+              setAssignmentDialog(false);
+              setBulkAssignmentDialog(false);
+              setSelectedEmployees([]);
+            }).catch(err => { console.log(err) });
+        }
+        );
+      } else {
 
-      selectedEmployees.forEach(async (employeeId) => {
-        const assignJson = await apiJson.put(
-          `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [employeeId] }).then(() => {
+        const responseJson = await apiJson.post(
+          `http://localhost:3000/api/assetFacility/createFacilityLog/${facilityId}`, newFacilityLog).then(res => {
+            setRefreshSeed([]);
+          }).then(() => {
             toastShadcn({
               title: "Assignment Successful",
               description:
-                "Successfully assigned " + availableEmployees.filter(emp => selectedEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()
-                + " to " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString()
+                "Successfully created repair tickets for " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString(),
             });
-          }).catch(err => { console.log(err) });
+            setAssignmentDialog(false);
+            setBulkAssignmentDialog(false);
+            setSelectedEmployees([]);
+          }).catch(err => {
+            toastShadcn({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description:
+                "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
+            });
+          });
+        // success
+
+        console.log(apiJson.result);
       }
-      );
-
-      const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/createFacilityLog/${facilityId}`, newFacilityLog).then(res => {
-          setRefreshSeed([]);
-        }).then(() => {
-          toastShadcn({
-            title: "Assignment Successful",
-            description:
-              "Successfully created repair tickets for " + facilityList.filter(facility => selectedMaintenanceDetails.includes(facility.facilityId)).map((facility) => " " + facility.facilityName).toString(),
-          });
-          setAssignmentDialog(false);
-          setBulkAssignmentDialog(false);
-          setSelectedEmployees([]);
-        }).catch(err => {
-          toastShadcn({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description:
-              "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
-          });
-        });
-      // success
-
-      console.log(apiJson.result);
     });
   }
 
@@ -569,9 +597,9 @@ function FacilityMaintenanceSuggestion() {
             visible={employeeBulkAssignmentDialog}
             style={{ width: "50rem" }}
             breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-            header="Create Repair Ticket"
+            header={forRepair ? "Create Repair Ticket" : "Assign Maintenance Staff"}
             position={"right"}
-            footer={<Button
+            footer={forRepair ? <Button
               disabled={apiJson.loading || selectedEmployees.length == 0}
               className="h-12 w-2/3 self-center rounded-full text-lg"
               onClick={confirmAssignment}
@@ -581,7 +609,18 @@ function FacilityMaintenanceSuggestion() {
               ) : (
                 <div>Loading</div>
               )}
-            </Button>}
+            </Button> :
+              <Button
+                disabled={apiJson.loading || selectedEmployees.length == 0}
+                className="h-12 w-2/3 self-center rounded-full text-lg"
+                onClick={confirmAssignment}
+              >
+                {!apiJson.loading ? (
+                  <div>Assign General Staff</div>
+                ) : (
+                  <div>Loading</div>
+                )}
+              </Button>}
             onHide={hideEmployeeBulkAssignmentDialog}>
             <div className="confirmation-content">
               <DataTable
@@ -644,7 +683,7 @@ function FacilityMaintenanceSuggestion() {
                   exportable={false}
                 ></Column>
               </DataTable>
-              <Form.Root
+              {forRepair && <Form.Root
                 className="flex w-full flex-col gap-6  bg-white p-20 text-black "
                 onSubmit={handleSubmit}
                 encType="multipart/form-data"
@@ -703,6 +742,7 @@ function FacilityMaintenanceSuggestion() {
                   <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
                 )}
               </Form.Root>
+              }
             </div>
           </Dialog>
 

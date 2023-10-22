@@ -20,6 +20,8 @@ import ManageSensorMaintenanceStaff from "../AssetManagement/Sensor/GeneralStaff
 import Employee from "../../../models/Employee";
 import { Checkbox, CheckboxChangeEvent, CheckboxClickEvent } from "primereact/checkbox";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import { BsWrenchAdjustable } from "react-icons/bs";
 
 export function compareDates(d1: Date, d2: Date): number {
   let date1 = d1.getTime();
@@ -49,6 +51,7 @@ function SensorMaintenanceSuggestion() {
   const dt = useRef<DataTable<MaintenanceDetails[]>>(null);
   const dt2 = useRef<DataTable<Employee[]>>(null);
   const toastShadcn = useToast().toast;
+  const employee = useAuthContext().state.user?.employeeData;
 
   let emptyEmployee: Employee = {
     employeeId: -1,
@@ -118,6 +121,14 @@ function SensorMaintenanceSuggestion() {
         }}>
           <HiOutlinePresentationChartLine className="mx-auto" />
         </Button>
+        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+          <Button className="mr-2" onClick={() => {
+            navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
+            navigate(`/assetfacility/createsensormaintenancelog/${objDetails.id}`);
+          }}>
+            <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+          </Button>
+        )}
       </React.Fragment>
     );
   };
