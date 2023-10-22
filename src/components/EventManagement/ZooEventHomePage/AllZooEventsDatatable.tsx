@@ -33,25 +33,28 @@ import {
   EventTimingType,
 } from "../../../enums/Enumurated";
 import { useNavigate } from "react-router-dom";
-import AnimalActivity from "../../../models/AnimalActivity";
+import ZooEvent from "../../../models/ZooEvent";
 
-let emptyAnimalActivity: AnimalActivity = {
-  animalActivityId: -1,
-  activityType: ActivityType.ENRICHMENT,
-  title: "",
-  details: "",
-  date: new Date(),
-  session: EventTimingType.AFTERNOON,
-  durationInMinutes: -1,
-};
-
-interface AllAnimalActivitiesDatatableProps {
-  animalActivitiesList: AnimalActivity[];
-  setAnimalActivitiesList: any;
+let emptyZooEvent: ZooEvent = {
+  zooEventId: 0,
+  eventName: "",
+  eventDescription: "",
+  eventIsPublic: false,
+  eventStartDateTime: new Date(),
+  eventDurationHrs: 0,
+  eventTiming: null,
+  eventNotificationDate: new Date(),
+  eventEndDateTime: null,
+  imageUrl: ""
 }
 
-function AllAnimalActivitiesDatatable(
-  props: AllAnimalActivitiesDatatableProps
+interface AllZooEventsDatatableProps {
+  zooEventsList: ZooEvent[];
+  setZooEventsList: any;
+}
+
+function AllZooEventsDatatable(
+  props: AllZooEventsDatatableProps
 ) {
   const apiJson = useApiJson();
   const navigate = useNavigate();
@@ -62,57 +65,65 @@ function AllAnimalActivitiesDatatable(
     day: "2-digit",
   };
 
-  const { animalActivitiesList, setAnimalActivitiesList } = props;
-  const [selectedAnimalActivity, setSelectedAnimalActivity] =
-    useState<AnimalActivity>(emptyAnimalActivity);
+  const { zooEventsList, setZooEventsList } = props;
+  const [selectedZooEvent, setSelectedZooEvent] =
+    useState<ZooEvent>(emptyZooEvent);
 
-  const [deleteAnimalActivityDialog, setDeleteAnimalActivityDialog] =
+  const [deleteZooEventDialog, setDeleteZooEventDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
 
-  const dt = useRef<DataTable<AnimalActivity[]>>(null);
+  const dt = useRef<DataTable<ZooEvent[]>>(null);
 
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
-    const fetchAnimalActivities = async () => {
+    const fetchZooEvents = async () => {
       try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/animal/getAllAnimalActivities"
+        const responseJson = await apiJson.post(
+          "http://localhost:3000/api/zooEvent/getAllZooEvents", {
+          startDate: new Date("1900-01-01").toString(),
+          endDate: new Date("2200-12-31").toString(),
+          includes: ["planningStaff",
+            "keepers",
+            "enclosure",
+            "animal",
+            "inHouse",
+            "animalActivity"]
+        }
         );
-        setAnimalActivitiesList(responseJson as AnimalActivity[]);
+        setZooEventsList(responseJson as ZooEvent[]);
       } catch (error: any) {
         console.log(error);
       }
     };
-    fetchAnimalActivities();
+    fetchZooEvents();
   }, []);
-
   //
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
 
   // delete event stuff
-  const confirmDeleteAnimalActivity = (animalActivity: AnimalActivity) => {
-    setSelectedAnimalActivity(animalActivity);
-    setDeleteAnimalActivityDialog(true);
+  const confirmDeleteZooEvent = (zooEvent: ZooEvent) => {
+    setSelectedZooEvent(zooEvent);
+    setDeleteZooEventDialog(true);
   };
 
-  const hideDeleteAnimalActivityDialog = () => {
-    setDeleteAnimalActivityDialog(false);
+  const hideDeleteZooEventDialog = () => {
+    setDeleteZooEventDialog(false);
   };
   //
-  const deleteAnimalActivity = async () => {
-    let _animalActivitiesList = animalActivitiesList.filter(
-      (val) => val.animalActivityId !== selectedAnimalActivity?.animalActivityId
+  const deleteZooEvent = async () => {
+    let _zooEventsList = zooEventsList.filter(
+      (val) => val.zooEventId !== selectedZooEvent?.zooEventId
     );
 
-    const deleteAnimalActivityApi = async () => {
+    const deleteZooEventApi = async () => {
       try {
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/animal/deleteAnimalActivity/" +
-            selectedAnimalActivity.animalActivityId
+          "http://localhost:3000/api/zooEvent/deleteZooEvent/" +
+          selectedZooEvent.zooEventId
         );
 
         toastShadcn({
@@ -120,9 +131,9 @@ function AllAnimalActivitiesDatatable(
           title: "Deletion Successful",
           description: "Successfully deleted event!",
         });
-        setAnimalActivitiesList(_animalActivitiesList);
-        setDeleteAnimalActivityDialog(false);
-        setSelectedAnimalActivity(emptyAnimalActivity);
+        setZooEventsList(_zooEventsList);
+        setDeleteZooEventDialog(false);
+        setSelectedZooEvent(emptyZooEvent);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -133,45 +144,44 @@ function AllAnimalActivitiesDatatable(
         });
       }
     };
-    deleteAnimalActivityApi();
+    deleteZooEventApi();
   };
 
-  const deleteAnimalActivityDialogFooter = (
+  const deleteZooEventDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteAnimalActivityDialog}>
+      <Button onClick={hideDeleteZooEventDialog}>
         <HiX className="mr-2" />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteAnimalActivity}>
+      <Button variant={"destructive"} onClick={deleteZooEvent}>
         <HiCheck className="mr-2" />
         Yes
       </Button>
     </React.Fragment>
   );
   //
-  const actionBodyTemplate = (animalActivity: AnimalActivity) => {
+  const actionBodyTemplate = (zooEvent: ZooEvent) => {
     return (
       <React.Fragment>
         <div className="mx-auto">
           <Button
             className="mr-2"
-            onClick={() =>
-              navigate(
-                `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`
-              )
-            }
+            onClick={() => {
+              navigate(`/zooevent/viewallzooevents/`, { replace: true })
+              navigate(`/zooevent/viewzooeventdetails/${zooEvent.zooEventId}`)
+            }}
           >
             <HiEye className="mr-auto" />
           </Button>
           <Button
             variant={"destructive"}
             className="mr-2"
-            onClick={() => confirmDeleteAnimalActivity(animalActivity)}
+            onClick={() => confirmDeleteZooEvent(zooEvent)}
           >
             <HiTrash className="mx-auto" />
           </Button>
         </div>
-      </React.Fragment>
+      </React.Fragment >
     );
   };
 
@@ -208,14 +218,14 @@ function AllAnimalActivitiesDatatable(
 
           <DataTable
             ref={dt}
-            value={animalActivitiesList}
-            selection={selectedAnimalActivity}
+            value={zooEventsList}
+            selection={selectedZooEvent}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedAnimalActivity(e.value);
+                setSelectedZooEvent(e.value);
               }
             }}
-            dataKey="animalActivityId"
+            dataKey="zooEventId"
             paginator
             // showGridlines
             rows={10}
@@ -228,44 +238,43 @@ function AllAnimalActivitiesDatatable(
             header={header}
           >
             <Column
-              field="animalActivityId"
+              field="zooEventId"
               header="ID"
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
-              field="title"
-              header="Title"
+              field="eventName"
+              header="Name"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="activityType"
+              field="eventDescription"
+              header="Description"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="eventIsPublic"
+              header="Is Public?"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="eventType"
               header="Type"
               sortable
               style={{ minWidth: "10rem" }}
             ></Column>
             <Column
-              body={(animalActivity) => {
-                return new Date(animalActivity.date).toLocaleDateString(
+              body={(zooEvent) => {
+                return new Date(zooEvent.eventStartDateTime).toLocaleDateString(
                   "en-SG",
                   dateOptions
                 );
               }}
-              // field="date"
-              header="Date"
-              sortable
-              style={{ minWidth: "8rem" }}
-            ></Column>
-            <Column
-              field="session"
-              header="Session"
-              sortable
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              field="durationInMinutes"
-              header="Duration (minutes)"
+              header="Start Date"
               sortable
               style={{ minWidth: "8rem" }}
             ></Column>
@@ -281,23 +290,23 @@ function AllAnimalActivitiesDatatable(
         </div>
       </div>
       <Dialog
-        visible={deleteAnimalActivityDialog}
+        visible={deleteZooEventDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteAnimalActivityDialogFooter}
-        onHide={hideDeleteAnimalActivityDialog}
+        footer={deleteZooEventDialogFooter}
+        onHide={hideDeleteZooEventDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedAnimalActivity && (
+          {selectedZooEvent && (
             <span>
               Are you sure you want to delete the selected event plan
-              (ID {selectedAnimalActivity.animalActivityId})?
+              (ID {selectedZooEvent.zooEventId})?
             </span>
           )}
         </div>
@@ -306,4 +315,4 @@ function AllAnimalActivitiesDatatable(
   );
 }
 
-export default AllAnimalActivitiesDatatable;
+export default AllZooEventsDatatable;

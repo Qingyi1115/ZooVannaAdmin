@@ -1,36 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import useApiJson from "../../hooks/useApiJson";
-import AnimalActivity from "../../models/Event";
-import EditEventForm from "../../components/EventManagement/EditEventPage/EditEventForm";
+import ZooEvent from "../../models/Event";
+import EditEventForm from "../../components/EventManagement/EditZooEventPage/EditZooEventForm";
 
-function EditAnimalActivityPage() {
+function EditZooEventPage() {
   const apiJson = useApiJson();
 
-  const { animalActivityId } = useParams<{ animalActivityId: string }>();
-  const [curAnimalActivity, setCurAnimalActivity] =
-    useState<AnimalActivity | null>(null);
+  const { zooEventId } = useParams<{ zooEventId: string }>();
+  const [curZooEvent, setCurZooEvent] =
+    useState<ZooEvent | null>(null);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
-    const fetchAnimalActivity = async () => {
+    const fetchZooEvent = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/animal/getAnimalActivityById/${animalActivityId}`
+          `http://localhost:3000/api/animal/getZooEventById/${zooEventId}`
         );
-        setCurAnimalActivity(responseJson as AnimalActivity);
+        setCurZooEvent(responseJson as ZooEvent);
       } catch (error: any) {
         console.log(error);
       }
     };
-    fetchAnimalActivity();
+    fetchZooEvent();
   }, [refreshSeed]);
 
   return (
     <div className="p-10">
-      {curAnimalActivity && curAnimalActivity.animalActivityId != -1 && (
+      {curZooEvent && curZooEvent.zooEventId != -1 && (
         <EditEventForm
-          curAnimalActivity={curAnimalActivity}
+          curZooEvent={curZooEvent}
           refreshSeed={refreshSeed}
           setRefreshSeed={setRefreshSeed}
         />
@@ -39,4 +39,4 @@ function EditAnimalActivityPage() {
   );
 }
 
-export default EditAnimalActivityPage;
+export default EditZooEventPage;

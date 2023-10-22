@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 
-import AnimalActivity from "../../../models/AnimalActivity";
+import ZooEvent from "../../../models/ZooEvent";
 import Animal from "../../../models/Animal";
 import Species from "../../../models/Species";
 import EnrichmentItem from "../../../models/EnrichmentItem";
@@ -34,67 +34,64 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
 import { PickList } from "primereact/picklist";
 
-interface AddAnimalToActivityFormProps {
-  curAnimalActivity: AnimalActivity;
+interface AddItemToZooEventFormProps {
+  curZooEvent: ZooEvent;
 }
 
-function AddAnimalToActivityForm(props: AddAnimalToActivityFormProps) {
+function AddItemToZooEventForm(props: AddItemToZooEventFormProps) {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const { curAnimalActivity } = props;
-  const animalActivityId = curAnimalActivity.animalActivityId;
+  const { curZooEvent } = props;
+  const zooEventId = curZooEvent.zooEventId;
 
   // const
-  const [animalSourceList, setAnimalSourceList] = useState<Animal[]>([]);
+  const [itemSourceList, setItemSourceList] = useState<EnrichmentItem[]>([]);
 
-  const [animalTargetList, setAnimalTargetList] = useState<Animal[]>(
-    curAnimalActivity.animals || []
+  const [itemTargetList, setItemTargetList] = useState<EnrichmentItem[]>(
+    curZooEvent.enrichmentItems || []
   );
-  const targetAnimalCodesSet = curAnimalActivity.animals
-    ? new Set(curAnimalActivity.animals.map((animal) => animal.animalCode))
+  const targetEnrichmentItemIdSet = curZooEvent.enrichmentItems
+    ? new Set(
+        curZooEvent.enrichmentItems.map(
+          (enrichmenItem) => enrichmenItem.enrichmentItemId
+        )
+      )
     : new Set();
 
   useEffect(() => {
-    const fetchAnimals = async () => {
+    const fetchItems = async () => {
       try {
         const responseJson = await apiJson.get(
-          "http://localhost:3000/api/animal/getAllAnimals"
+          "http://localhost:3000/api/assetFacility/getAllEnrichmentItem"
         );
-        // Also no DECEASED or RELEASED
-        const animalListNotAlreadyInvolved = (responseJson as Animal[])
-          .filter((animal) => !targetAnimalCodesSet.has(animal.animalCode))
-          .filter((animal) => {
-            let statuses = animal.animalStatus.split(",");
-            return !(
-              statuses.includes("DECEASED") || statuses.includes("RELEASED")
-            );
-          });
-        setAnimalSourceList(animalListNotAlreadyInvolved);
+        const itemListNotAlreadyInvolved = (
+          responseJson as EnrichmentItem[]
+        ).filter(
+          (enrichmenItem) =>
+            !targetEnrichmentItemIdSet.has(enrichmenItem.enrichmentItemId)
+        );
+        setItemSourceList(itemListNotAlreadyInvolved);
         // repopulate target list to include species details
-        // Also no DECEASED or RELEASED
-        const animalListAlreadyInvolved = (responseJson as Animal[])
-          .filter((animal) => targetAnimalCodesSet.has(animal.animalCode))
-          .filter((animal) => {
-            let statuses = animal.animalStatus.split(",");
-            return !(
-              statuses.includes("DECEASED") || statuses.includes("RELEASED")
-            );
-          });
-        setAnimalTargetList(animalListAlreadyInvolved);
+        const itemListAlreadyInvolved = (
+          responseJson as EnrichmentItem[]
+        ).filter((enrichmenItem) =>
+          targetEnrichmentItemIdSet.has(enrichmenItem.enrichmentItemId)
+        );
+        setItemTargetList(itemListAlreadyInvolved);
       } catch (error: any) {
         console.log(error);
       }
     };
-    fetchAnimals();
+    fetchItems();
   }, []);
 
   // validation??
   function validateSelectedItem(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
-      if (animalTargetList.length == 0) {
+      if (itemTargetList.length == 0) {
         return (
           <div className="font-medium text-danger">
             * Please select at least one item
@@ -106,24 +103,23 @@ function AddAnimalToActivityForm(props: AddAnimalToActivityFormProps) {
     return null;
   }
   //
-  const animalItemTemplate = (animal: Animal) => {
+  const enrichmentItemItemTemplate = (item: EnrichmentItem) => {
     return (
       <div className="flex flex-wrap items-center gap-3 p-2">
         <img
           className="aspect-square h-12 w-12 rounded-full border border-white object-cover shadow-4"
-          src={`http://localhost:3000/${animal.imageUrl}`}
-          alt={animal.houseName}
+          src={`http://localhost:3000/${item.enrichmentItemImageUrl}`}
+          alt={item.enrichmentItemName}
         />
         <div className="flex flex-1 flex-col justify-center gap-1">
           <div className="font-bold">
-            {animal.houseName} -{" "}
-            <span className="text-sm">{animal.species?.commonName}</span>{" "}
-            {targetAnimalCodesSet.has(animal.animalCode) && (
+            {item.enrichmentItemName}
+            {targetEnrichmentItemIdSet.has(item.enrichmentItemId) && (
               <span className="font-medium text-body">(Already included)</span>
             )}
           </div>
           <div className="flex flex-col items-start gap-1">
-            <span>{animal.animalCode}</span>
+            <span>ID: {item.enrichmentItemId}</span>
           </div>
         </div>
         {/* <span className="font-bold text-900">${item.price}</span> */}
@@ -132,32 +128,34 @@ function AddAnimalToActivityForm(props: AddAnimalToActivityFormProps) {
   };
 
   const onChange = (event: any) => {
-    setAnimalSourceList(event.source);
-    setAnimalTargetList(event.target);
+    setItemSourceList(event.source);
+    setItemTargetList(event.target);
   };
 
   //
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const animalCodes = animalTargetList.map((animal) => animal.animalCode);
+    const enrichmentItemIds = itemTargetList.map(
+      (enrichmenItem) => enrichmenItem.enrichmentItemId
+    );
 
-    let assignAnimalsBody = {
-      animalActivityId,
-      animalCodes,
+    let assignItemsBody = {
+      zooEventId,
+      enrichmentItemIds,
     };
 
-    const assignAnimalsToAnimalActivityApi = async () => {
+    const assignAnimalsToZooEventApi = async () => {
       try {
         const response = await apiJson.put(
-          "http://localhost:3000/api/animal/assignAnimalsToActivity",
-          assignAnimalsBody
+          "http://localhost:3000/api/animal/assignItemToActivity",
+          assignItemsBody
         );
         // success
         toastShadcn({
-          description: "Successfully added animal(s) to event",
+          description: "Successfully added item(s) to event",
         });
-        const redirectUrl = `/animal/viewanimalactivitydetails/${curAnimalActivity.animalActivityId}`;
+        const redirectUrl = `/animal/viewanimalactivitydetails/${curZooEvent.zooEventId}`;
         navigate(redirectUrl);
       } catch (error: any) {
         // got error
@@ -170,7 +168,7 @@ function AddAnimalToActivityForm(props: AddAnimalToActivityFormProps) {
         });
       }
     };
-    assignAnimalsToAnimalActivityApi();
+    assignAnimalsToZooEventApi();
   }
 
   return (
@@ -184,30 +182,30 @@ function AddAnimalToActivityForm(props: AddAnimalToActivityFormProps) {
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
           <Form.Label className="m-4 self-center text-center text-lg font-medium">
-            Select one or more animals to be added to the activity. <br />
+            Select one or more items to be added to the activity. <br />
             Hold the Control/Shift keys and click to select multiple
           </Form.Label>
           <Form.Control
             className="hidden"
             type="text"
-            value={animalTargetList.toString()}
+            value={itemTargetList.toString()}
             required={true}
             onChange={() => null}
           ></Form.Control>
           <PickList
-            source={animalSourceList}
-            target={animalTargetList}
+            source={itemSourceList}
+            target={itemTargetList}
             onChange={onChange}
-            itemTemplate={animalItemTemplate}
+            itemTemplate={enrichmentItemItemTemplate}
             filter
-            filterBy="houseName,species.commonName"
+            filterBy="enrichmentItemName"
             breakpoint="1400px"
             sourceHeader="Available"
-            targetHeader="Selected (Initialised with already involved animals)"
+            targetHeader="Selected (Initialised with already involved items)"
             sourceStyle={{ height: "24rem" }}
             targetStyle={{ height: "24rem" }}
-            sourceFilterPlaceholder="Search by name or species name"
-            targetFilterPlaceholder="Search by name or species name"
+            sourceFilterPlaceholder="Search by name"
+            targetFilterPlaceholder="Search by name"
           />
           <div className="self-center">
             <Form.ValidityState>{validateSelectedItem}</Form.ValidityState>
@@ -223,11 +221,11 @@ function AddAnimalToActivityForm(props: AddAnimalToActivityFormProps) {
           </Button>
         </Form.Submit>
         <div className="self-center text-center">
-          The animals inside the right column will be added to the activity if
+          The items inside the right column will be added to the activity if
           they had not already been added
           <br />
           <span className="text-center font-medium text-danger">
-            Animals already involved but moved to the left column will{" "}
+            Items already involved but moved to the left column will{" "}
             <span className="font-bold">NOT</span> be removed
           </span>
         </div>
@@ -236,4 +234,4 @@ function AddAnimalToActivityForm(props: AddAnimalToActivityFormProps) {
   );
 }
 
-export default AddAnimalToActivityForm;
+export default AddItemToZooEventForm;

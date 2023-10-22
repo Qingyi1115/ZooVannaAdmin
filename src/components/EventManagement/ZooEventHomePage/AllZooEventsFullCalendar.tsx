@@ -38,24 +38,24 @@ import interactionPlugin from "@fullcalendar/interaction";
 // import "@fullcalendar/daygrid/main.css";
 // import "@fullcalendar/timegrid/main.css";
 
-import AnimalActivity from "../../../models/AnimalActivity";
+import ZooEvent from "../../../models/ZooEvent";
 import { HiChevronLeft } from "react-icons/hi";
 import { EventContentArg, EventInput } from "@fullcalendar/core";
 
-interface AllAnimalActivitiesFullCalendarProps {
-  animalActivitiesList: AnimalActivity[];
-  setAnimalActivitiesList: any;
+interface AllZooEventsFullCalendarProps {
+  zooEventsList: ZooEvent[];
+  setZooEventsList: any;
 }
-function AllAnimalActivitiesFullCalendar(
-  props: AllAnimalActivitiesFullCalendarProps
+function AllZooEventsFullCalendar(
+  props: AllZooEventsFullCalendarProps
 ) {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const calendarRef = useRef<FullCalendar>(null);
 
-  const { animalActivitiesList, setAnimalActivitiesList } = props;
+  const { zooEventsList, setZooEventsList } = props;
 
-  const [animalActivities, setAnimalActivities] = useState<AnimalActivity[]>(
+  const [zooEvents, setZooEvents] = useState<ZooEvent[]>(
     []
   );
 
@@ -104,23 +104,23 @@ function AllAnimalActivitiesFullCalendar(
     return { startTime, endTime };
   }
 
-  const events = animalActivitiesList.map((animalActivity) => {
+  const events = zooEventsList.map((zooEvent) => {
     const { startTime, endTime } = calculateSessionTimes(
-      animalActivity.session,
-      new Date(animalActivity.date)
+      zooEvent.session,
+      new Date(zooEvent.eventStartDateTime)
     );
 
     return {
-      title: animalActivity.title,
-      start: startTime, // Convert dateInMilliseconds to a Date object
-      end: endTime, // Convert dateInMilliseconds to a Date object
-      allDay: false,
-      // url: `http://localhost:5173/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
+      eventName: zooEvent.eventName,
+      eventStartDateTime: startTime, // Convert dateInMilliseconds to a Date object
+      eventEndDateTime: endTime, // Convert dateInMilliseconds to a Date object
+      eventIsPublic: false,
+      // url: `http://localhost:5173/zooevent/viewzooeventdetails/${zooEvent.zooEventId}`,
       extendedProps: {
-        animalActivityUrl: `/animal/viewanimalactivitydetails/${animalActivity.animalActivityId}`,
-        activityType: animalActivity.activityType,
-        details: animalActivity.details,
-        durationInMinutes: animalActivity.durationInMinutes,
+        zooEventUrl: `/animal/viewanimalactivitydetails/${zooEvent.zooEventId}`,
+        eventType: zooEvent.eventType,
+        eventDescription: zooEvent.eventDescription,
+        eventDurationHrs: zooEvent.eventDurationHrs,
       },
     };
   });
@@ -251,7 +251,7 @@ function AllAnimalActivitiesFullCalendar(
             events={events}
             height={"70vh"}
             eventClick={(clickInfo) =>
-              navigate(clickInfo.event.extendedProps.animalActivityUrl)
+              navigate(clickInfo.event.extendedProps.zooEventUrl)
             }
             eventContent={handleEventContent}
           />
@@ -261,4 +261,4 @@ function AllAnimalActivitiesFullCalendar(
   );
 }
 
-export default AllAnimalActivitiesFullCalendar;
+export default AllZooEventsFullCalendar;

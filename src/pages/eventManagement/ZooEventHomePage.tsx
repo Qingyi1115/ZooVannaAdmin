@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
-import AllAnimalActivitiesDatatable from "../../components/AnimalManagement/AnimalActivityHomePage/AllAnimalActivitiesDatatable";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { HiPlus } from "react-icons/hi";
@@ -10,39 +9,43 @@ import { Separator } from "@/components/ui/separator";
 import { Toggle } from "@/components/ui/toggle";
 import useApiJson from "../../hooks/useApiJson";
 
-import AnimalActivity from "../../models/AnimalActivity";
+import ZooEvent from "../../models/ZooEvent";
 
 import { HiCalendarDays, HiTableCells } from "react-icons/hi2";
 
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import AllAnimalActivitiesFullCalendar from "../../components/AnimalManagement/AnimalActivityHomePage/AllAnimalActivitiesFullCalendar";
-import AllEventsDatatable from "../../components/EventManagement/EventHomePage/AllEventsDatatable";
-import AllEventsFullCalendar from "../../components/EventManagement/EventHomePage/AllEventsFullCalendar";
+import AllEventsDatatable from "../../components/EventManagement/ZooEventHomePage/AllZooEventsDatatable";
+import AllEventsFullCalendar from "../../components/EventManagement/ZooEventHomePage/AllZooEventsFullCalendar";
 
-function AnimalActivityHomePage() {
+function ZooEventHomePage() {
   const apiJson = useApiJson();
   const [isDatatableView, setIsDatatableView] = useState<boolean>(true);
 
-  const [animalActivitiesList, setAnimalActivitiesList] = useState<
-    AnimalActivity[]
+  const [zooEventsList, setZooEventsList] = useState<
+    ZooEvent[]
   >([]);
 
-  useEffect(() => {
-    const fetchAnimalActivities = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/animal/getAllAnimalActivities"
-        );
-        setAnimalActivitiesList(responseJson as AnimalActivity[]);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    fetchAnimalActivities();
-  }, []);
+  // useEffect(() => {
+  //   const fetchZooEvents = async () => {
+  //     try {
+  //       const responseJson = await apiJson.post(
+  //         "http://localhost:3000/api/zooEvent/getAllZooEvents", {
+  //         startDate: new Date("1900-01-01").toString(),
+  //         endDate: new Date("2200-12-31").toString(),
+  //         includes: ["planningStaff",
+  //           "keepers",
+  //           "enclosure",
+  //           "animal",
+  //           "inHouse",
+  //           "animalActivity"]
+  //       }
+  //       );
+  //       setZooEventsList(responseJson as ZooEvent[]);
+  //     } catch (error: any) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchZooEvents();
+  // }, []);
 
   return (
     <div className="p-10">
@@ -50,7 +53,7 @@ function AnimalActivityHomePage() {
         {/* Title Header and back button */}
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            <NavLink to={"/animal/createanimalactivity"}>
+            <NavLink to={"/zooevent/createzooevent"}>
               <Button className="mr-2 flex items-center">
                 <HiPlus className="mr-2" />
                 Add Event
@@ -98,16 +101,16 @@ function AnimalActivityHomePage() {
           </div>
         </div>
         {isDatatableView ? (
-          animalActivitiesList.length != 0 && (
+          zooEventsList.length != 0 && (
             <AllEventsDatatable
-              animalActivitiesList={animalActivitiesList}
-              setAnimalActivitiesList={setAnimalActivitiesList}
+              zooEventsList={zooEventsList}
+              setZooEventsList={setZooEventsList}
             />
           )
         ) : (
           <AllEventsFullCalendar
-            animalActivitiesList={animalActivitiesList}
-            setAnimalActivitiesList={setAnimalActivitiesList}
+            zooEventsList={zooEventsList}
+            setZooEventsList={setZooEventsList}
           />
         )}
       </div>
@@ -115,4 +118,4 @@ function AnimalActivityHomePage() {
   );
 }
 
-export default AnimalActivityHomePage;
+export default ZooEventHomePage;

@@ -959,7 +959,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/zooevent/viewzooevent/:zooeventId"
+                  path="/zooevent/viewzooeventdetails/:zooeventId"
                   element={
                     user ? <ViewZooEventDetails /> : <Navigate to="/login" />
                   }

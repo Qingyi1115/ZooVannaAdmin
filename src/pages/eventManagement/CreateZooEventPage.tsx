@@ -1,8 +1,7 @@
 import React from "react";
-import CreateAnimalActivityForm from "../../components/AnimalManagement/CreateAnimalActivityPage/CreateAnimalActivityForm";
-import CreateEventForm from "../../components/EventManagement/CreateEventPage/CreateEventForm";
+import CreateEventForm from "../../components/EventManagement/CreateZooEventPage/CreateZooEventForm";
 
-function CreateAnimalActivityPage() {
+function CreateZooEventPage() {
   return (
     <div className="p-10">
       <CreateEventForm />
@@ -10,4 +9,4 @@ function CreateAnimalActivityPage() {
   );
 }
 
-export default CreateAnimalActivityPage;
+export default CreateZooEventPage;

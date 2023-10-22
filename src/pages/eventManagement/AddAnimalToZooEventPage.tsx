@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 
-import AnimalActivity from "../../models/AnimalActivity";
+import ZooEvent from "../../models/ZooEvent";
 import Animal from "../../models/Animal";
 import Species from "../../models/Species";
 import EnrichmentItem from "../../models/EnrichmentItem";
@@ -40,31 +40,30 @@ import {
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import AddAnimalToActivityForm from "../../components/AnimalManagement/CreateAnimalActivityPage/AddAnimalToActivityForm";
-import AddAnimalToEventForm from "../../components/EventManagement/CreateEventPage/AddAnimalToEventForm";
+import AddAnimalToEventForm from "../../components/EventManagement/CreateZooEventPage/AddAnimalToZooEventForm";
 
-function AddAnimalToActivityPage() {
+function AddAnimalToZooEventPage() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const { animalActivityId } = useParams<{ animalActivityId: string }>();
+  const { zooEventId } = useParams<{ zooEventId: string }>();
 
-  const [curAnimalActivity, setCurAnimalActivity] =
-    useState<AnimalActivity | null>(null);
+  const [curZooEvent, setCurZooEvent] =
+    useState<ZooEvent | null>(null);
 
   useEffect(() => {
-    const fetchAnimalActivity = async () => {
+    const fetchZooEvent = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/animal/getAnimalActivityById/${animalActivityId}`
+          `http://localhost:3000/api/zooevent/getZooEventById/${zooEventId}`
         );
-        setCurAnimalActivity(responseJson as AnimalActivity);
+        setCurZooEvent(responseJson as ZooEvent);
       } catch (error: any) {
         console.log(error);
       }
     };
-    fetchAnimalActivity();
+    fetchZooEvent();
   }, []);
 
   return (
@@ -82,7 +81,7 @@ function AddAnimalToActivityPage() {
               Back
             </Button>
             <span className=" self-center text-title-xl font-bold">
-              Add Animal To Activity
+              Add Animal To Event
             </span>
             <Button disabled className="invisible">
               Back
@@ -92,39 +91,39 @@ function AddAnimalToActivityPage() {
         </div>
 
         {/* body */}
-        {curAnimalActivity && (
+        {curZooEvent && (
           <div>
-            <div>Current Activity:</div>
+            <div>Current Event:</div>
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     ID
                   </TableCell>
-                  <TableCell>{curAnimalActivity.animalActivityId}</TableCell>
+                  <TableCell>{curZooEvent.zooEventId}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
-                    Title
+                    Name
                   </TableCell>
-                  <TableCell>{curAnimalActivity.title}</TableCell>
+                  <TableCell>{curZooEvent.eventName}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     Type
                   </TableCell>
-                  <TableCell>{curAnimalActivity.activityType}</TableCell>
+                  <TableCell>{curZooEvent.eventType}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
-                    Details
+                    Description
                   </TableCell>
-                  <TableCell>{curAnimalActivity.details}</TableCell>
+                  <TableCell>{curZooEvent.eventDescription}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
             <Separator className="my-4" />
-            <AddAnimalToEventForm curAnimalActivity={curAnimalActivity} />
+            <AddAnimalToEventForm curZooEvent={curZooEvent} />
           </div>
         )}
       </div>
@@ -132,4 +131,4 @@ function AddAnimalToActivityPage() {
   );
 }
 
-export default AddAnimalToActivityPage;
+export default AddAnimalToZooEventPage;

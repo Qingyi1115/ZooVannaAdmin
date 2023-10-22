@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
-import AnimalActivity from "../../models/AnimalActivity";
+import ZooEvent from "../../models/ZooEvent";
 import Animal from "../../models/Animal";
 import Species from "../../models/Species";
 import EnrichmentItem from "../../models/EnrichmentItem";
@@ -92,15 +92,15 @@ let emptyItem: EnrichmentItem = {
   enrichmentItemName: "",
 };
 
-function ViewAnimalActivityDetails() {
+function ViewZooEventDetails() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const { animalActivityId } = useParams<{ animalActivityId: string }>();
+  const { zooEventId } = useParams<{ zooEventId: string }>();
 
-  const [curAnimalActivity, setCurAnimalActivity] =
-    useState<AnimalActivity | null>(null);
+  const [curZooEvent, setCurZooEvent] =
+    useState<ZooEvent | null>(null);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   const [involvedAnimalList, setInvolvedAnimalList] = useState<Animal[]>();
@@ -114,25 +114,25 @@ function ViewAnimalActivityDetails() {
     useState<string>("");
 
   useEffect(() => {
-    const fetchAnimalActivity = async () => {
+    const fetchZooEvent = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/animal/getAnimalActivityById/${animalActivityId}`
+          `http://localhost:3000/api/animal/getZooEventById/${zooEventId}`
         );
-        setCurAnimalActivity(responseJson as AnimalActivity);
+        setCurZooEvent(responseJson as ZooEvent);
       } catch (error: any) {
         console.log(error);
       }
     };
-    fetchAnimalActivity();
+    fetchZooEvent();
   }, [refreshSeed]);
 
-  useEffect(() => {
-    if (curAnimalActivity?.animals && curAnimalActivity.enrichmentItems) {
-      setInvolvedAnimalList(curAnimalActivity?.animals);
-      setInvolvedItemList(curAnimalActivity?.enrichmentItems);
-    }
-  }, [curAnimalActivity]);
+  // useEffect(() => {
+  //   if (curZooEvent?.animals && curZooEvent.enrichmentItems) {
+  //     setInvolvedAnimalList(curZooEvent?.animals);
+  //     setInvolvedItemList(curZooEvent?.enrichmentItems);
+  //   }
+  // }, [curZooEvent]);
 
   const animalImageBodyTemplate = (rowData: Animal) => {
     return (
@@ -183,7 +183,7 @@ function ViewAnimalActivityDetails() {
 
     let animalCode = selectedAnimal.animalCode;
     const animalToRemoveApiObj = {
-      animalActivityId,
+      zooEventId,
       animalCode,
     };
 
@@ -278,7 +278,7 @@ function ViewAnimalActivityDetails() {
 
     let enrichmentItemId = selectedItem.enrichmentItemId;
     const animalToRemoveApiObj = {
-      animalActivityId,
+      zooEventId,
       enrichmentItemId,
     };
 
@@ -345,7 +345,7 @@ function ViewAnimalActivityDetails() {
 
   return (
     <div className="p-10">
-      {curAnimalActivity && (
+      {curZooEvent && (
         <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
           {/* Header */}
           <div className="flex flex-col">
@@ -374,7 +374,7 @@ function ViewAnimalActivityDetails() {
             <div className="mb-10">
               <div className="text-xl font-medium">Basic Information:</div>
               <NavLink
-                to={`/animal/editanimalactivity/${curAnimalActivity.animalActivityId}`}
+                to={`/animal/editanimalactivity/${curZooEvent.zooEventId}`}
               >
                 <Button className="my-3">Edit Basic Information</Button>
               </NavLink>
@@ -384,45 +384,45 @@ function ViewAnimalActivityDetails() {
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
                       ID
                     </TableCell>
-                    <TableCell>{curAnimalActivity.animalActivityId}</TableCell>
+                    <TableCell>{curZooEvent.zooEventId}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Title
+                      Name
                     </TableCell>
-                    <TableCell>{curAnimalActivity.title}</TableCell>
+                    <TableCell>{curZooEvent.eventName}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
                       Type
                     </TableCell>
-                    <TableCell>{curAnimalActivity.activityType}</TableCell>
+                    <TableCell>{curZooEvent.eventType}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Date
+                      Start Date
                     </TableCell>
                     <TableCell>
-                      {new Date(curAnimalActivity.date).toDateString()}
+                      {new Date(curZooEvent.eventStartDateTime).toDateString()}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
                       Session Timing
                     </TableCell>
-                    <TableCell>{curAnimalActivity.session}</TableCell>
+                    <TableCell>{curZooEvent.eventTiming}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Duration (Minutes)
+                      Duration (Hours)
                     </TableCell>
-                    <TableCell>{curAnimalActivity.durationInMinutes}</TableCell>
+                    <TableCell>{curZooEvent.eventDurationHrs}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Details
+                      Description
                     </TableCell>
-                    <TableCell>{curAnimalActivity.details}</TableCell>
+                    <TableCell>{curZooEvent.eventDescription}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -445,7 +445,7 @@ function ViewAnimalActivityDetails() {
                   <Button
                     onClick={() =>
                       navigate(
-                        `/animal/assignanimalstoactivity/${curAnimalActivity.animalActivityId}`
+                        `/animal/assignanimalstoactivity/${curZooEvent.zooEventId}`
                       )
                     }
                     type="button"
@@ -532,7 +532,7 @@ function ViewAnimalActivityDetails() {
                   <Button
                     onClick={() =>
                       navigate(
-                        `/animal/assignitemstoactivity/${curAnimalActivity.animalActivityId}`
+                        `/animal/assignitemstoactivity/${curZooEvent.zooEventId}`
                       )
                     }
                     type="button"
@@ -616,4 +616,4 @@ function ViewAnimalActivityDetails() {
   );
 }
 
-export default ViewAnimalActivityDetails;
+export default ViewZooEventDetails;

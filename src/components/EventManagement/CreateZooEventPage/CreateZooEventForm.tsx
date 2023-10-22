@@ -32,7 +32,7 @@ import Species from "../../../models/Species";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { Nullable } from "primereact/ts-helpers";
 
-function CreateAnimalActivityForm() {
+function CreateZooEventForm() {
   const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const navigate = useNavigate();
@@ -153,7 +153,7 @@ function CreateAnimalActivityForm() {
     //   console.error('Invalid date format.');
     // }
 
-    const newAnimalActivity = {
+    const newZooEvent = {
       activityType,
       title,
       details,
@@ -162,11 +162,11 @@ function CreateAnimalActivityForm() {
       durationInMinutes,
     };
 
-    const createAnimalActivityApi = async () => {
+    const createZooEventApi = async () => {
       try {
         const response = await apiJson.post(
-          "http://localhost:3000/api/animal/createAnimalActivity",
-          newAnimalActivity
+          "http://localhost:3000/api/animal/createZooEvent",
+          newZooEvent
         );
         // success
         toastShadcn({
@@ -185,7 +185,7 @@ function CreateAnimalActivityForm() {
         });
       }
     };
-    createAnimalActivityApi();
+    createZooEventApi();
   }
 
   return (
@@ -193,7 +193,7 @@ function CreateAnimalActivityForm() {
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
         onSubmit={handleSubmit}
-        // encType="multipart/form-data"
+      // encType="multipart/form-data"
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
@@ -267,7 +267,7 @@ function CreateAnimalActivityForm() {
             <textarea
               rows={3}
               placeholder="e.g., Leave yoga ball in the pen and pushes it towards the tiger,..."
-              // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
           <Form.ValidityState>{validateDetails}</Form.ValidityState>
@@ -357,4 +357,4 @@ function CreateAnimalActivityForm() {
   );
 }
 
-export default CreateAnimalActivityForm;
+export default CreateZooEventForm;

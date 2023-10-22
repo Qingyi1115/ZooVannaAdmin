@@ -25,7 +25,7 @@ import Animal from "../../../models/Animal";
 
 import {
   AcquisitionMethod,
-  ActivityType,
+  EventType,
   AnimalGrowthStage,
   AnimalSex,
   AnimalStatusType,
@@ -38,43 +38,46 @@ import Species from "../../../models/Species";
 
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
-import AnimalActivity from "../../../models/AnimalActivity";
+import ZooEvent from "../../../models/ZooEvent";
 import { Nullable } from "primereact/ts-helpers";
 
-interface EditAnimalActivityFormProps {
-  curAnimalActivity: AnimalActivity;
+interface EditZooEventFormProps {
+  curZooEvent: ZooEvent;
   refreshSeed: number;
   setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
-  const { curAnimalActivity, refreshSeed, setRefreshSeed } = props;
+function EditZooEventForm(props: EditZooEventFormProps) {
+  const { curZooEvent, refreshSeed, setRefreshSeed } = props;
 
   const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const animalActivityId = curAnimalActivity.animalActivityId;
-  const [activityType, setActivityType] = useState<string | undefined>(
-    curAnimalActivity.activityType
+  const zooEventId = curZooEvent.zooEventId;
+  const [eventType, setEventType] = useState<string | undefined>(
+    curZooEvent.eventType
   );
-  const [title, setTitle] = useState<string>(curAnimalActivity.title);
-  const [details, setDetails] = useState<string>(curAnimalActivity.details);
-  const [date, setDate] = useState<Nullable<Date>>(
-    new Date(curAnimalActivity.date)
+  const [eventName, setEventName] = useState<string>(curZooEvent.eventName);
+  const [eventDescription, setEventDescription] = useState<string>(curZooEvent.eventDescription);
+  const [eventStartDateTime, setEventStartDateTime] = useState<Nullable<Date>>(
+    new Date(curZooEvent.eventStartDateTime)
   );
-  const [session, setSession] = useState<string | undefined>(
-    curAnimalActivity.session
+  const [eventEndDateTime, setEventEndDateTime] = useState<Nullable<Date>>(
+    new Date(curZooEvent.eventEndDateTime)
   );
-  const [durationInMinutes, setDurationInMinutes] = useState<
+  const [eventTiming, setEventTiming] = useState<string | undefined>(
+    curZooEvent.eventTiming.toString()
+  );
+  const [eventDurationHrs, setEventDurationHrs] = useState<
     number | undefined
-  >(curAnimalActivity.durationInMinutes);
+  >(curZooEvent.eventDurationHrs);
 
   // validate functions
   function validateIdentifierType(props: ValidityState) {
     if (props != undefined) {
-      if (activityType == undefined) {
+      if (eventType == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please select an activity type!
@@ -86,11 +89,11 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
     return null;
   }
 
-  function validateTitle(props: ValidityState) {
+  function validateEventName(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="font-medium text-danger">* Please enter a title</div>
+          <div className="font-medium text-danger">* Please enter a eventName</div>
         );
       }
       // add any other cases here
@@ -98,12 +101,12 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
     return null;
   }
 
-  function validateDetails(props: ValidityState) {
+  function validateEventDescription(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
           <div className="font-medium text-danger">
-            * Please enter activity details!
+            * Please enter an event description!
           </div>
         );
       }
@@ -114,7 +117,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
 
   function validateDate(props: ValidityState) {
     if (props != undefined) {
-      if (date == null) {
+      if (eventStartDateTime == null) {
         return (
           <div className="font-medium text-danger">
             * Please enter the date of the activity
@@ -126,12 +129,12 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
     return null;
   }
 
-  function validateSession(props: ValidityState) {
+  function validateEventTiming(props: ValidityState) {
     if (props != undefined) {
-      if (session == undefined) {
+      if (eventTiming == undefined) {
         return (
           <div className="font-medium text-danger">
-            * Please select a session timing!
+            * Please select a eventTiming timing!
           </div>
         );
       }
@@ -140,15 +143,15 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
     return null;
   }
 
-  function validateDurationInMinutes(props: ValidityState) {
+  function validateEventDurationHrs(props: ValidityState) {
     if (props != undefined) {
-      if (durationInMinutes == undefined) {
+      if (eventDurationHrs == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please enter a duration
           </div>
         );
-      } else if (durationInMinutes <= 0) {
+      } else if (eventDurationHrs <= 0) {
         return (
           <div className="font-medium text-danger">
             * Duration must be greater than 0
@@ -166,23 +169,23 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    let dateInMilliseconds = date?.getTime();
+    let dateInMilliseconds = eventStartDateTime?.getTime();
 
-    const updatedAnimalActivity = {
-      animalActivityId,
-      activityType,
-      title,
-      details,
+    const updatedZooEvent = {
+      zooEventId,
+      eventType,
+      eventName,
+      eventDescription,
       date: dateInMilliseconds,
-      session,
-      durationInMinutes,
+      eventTiming,
+      eventDurationHrs,
     };
 
-    const updateAnimalActivityApi = async () => {
+    const updateZooEventApi = async () => {
       try {
         const response = await apiJson.put(
-          "http://localhost:3000/api/animal/updateAnimalActivity",
-          updatedAnimalActivity
+          "http://localhost:3000/api/animal/updateZooEvent",
+          updatedZooEvent
         );
         // success
         toastShadcn({
@@ -201,7 +204,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
         });
       }
     };
-    updateAnimalActivityApi();
+    updateZooEventApi();
   }
 
   return (
@@ -209,7 +212,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
         onSubmit={handleSubmit}
-        // encType="multipart/form-data"
+      // encType="multipart/form-data"
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
@@ -223,7 +226,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
               Back
             </Button>
             {/* </NavLink> */}
-            <span className="self-center text-title-xl font-bold">
+            <span className="self-center text-eventName-xl font-bold">
               Update Event
             </span>
             <Button disabled className="invisible">
@@ -234,68 +237,68 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Title */}
+          {/* EventName */}
           <FormFieldInput
             type="text"
-            formFieldName="title"
-            label="Title"
+            formFieldName="eventName"
+            label="EventName"
             required={true}
             placeholder="e.g., Chase yoga ball, mud bath..."
             pattern={undefined}
-            value={title}
-            setValue={setTitle}
-            validateFunction={validateTitle}
+            value={eventName}
+            setValue={setEventName}
+            validateFunction={validateEventName}
           />
 
           {/* Activity Type */}
           <FormFieldSelect
-            formFieldName="activityType"
+            formFieldName="eventType"
             label="Activity Type"
             required={true}
             placeholder="Select an activity type..."
-            valueLabelPair={Object.keys(ActivityType).map((activiTypeKey) => [
-              ActivityType[
-                activiTypeKey as keyof typeof ActivityType
+            valueLabelPair={Object.keys(EventType).map((activiTypeKey) => [
+              EventType[
+                activiTypeKey as keyof typeof EventType
               ].toString(),
-              ActivityType[
-                activiTypeKey as keyof typeof ActivityType
+              EventType[
+                activiTypeKey as keyof typeof EventType
               ].toString(),
             ])}
-            value={activityType}
-            setValue={setActivityType}
+            value={eventType}
+            setValue={setEventType}
             validateFunction={validateIdentifierType}
           />
         </div>
 
-        {/* Details */}
+        {/* EventDescription */}
         <Form.Field
           name="physicalDefiningCharacteristics"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
-          <Form.Label className="font-medium">Details</Form.Label>
+          <Form.Label className="font-medium">EventDescription</Form.Label>
           <Form.Control
             asChild
-            value={details}
+            value={eventDescription}
             required={true}
-            onChange={(e) => setDetails(e.target.value)}
+            onChange={(e) => setEventDescription(e.target.value)}
             className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
           >
             <textarea
               rows={3}
               placeholder="e.g., Leave yoga ball in the pen and pushes it towards the tiger,..."
-              // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
-          <Form.ValidityState>{validateDetails}</Form.ValidityState>
+          <Form.ValidityState>{validateEventDescription}</Form.ValidityState>
         </Form.Field>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Session */}
+          {/* EventTiming */}
           <FormFieldSelect
-            formFieldName="session"
-            label="Session"
+            formFieldName="eventTiming"
+            label="EventTiming"
             required={true}
-            placeholder="Select a session timing..."
+            placeholder="Select a eventTiming timing..."
             valueLabelPair={Object.keys(EventTimingType).map(
               (eventTimingTypeKey) => [
                 EventTimingType[
@@ -306,9 +309,9 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
                 ].toString(),
               ]
             )}
-            value={session}
-            setValue={setSession}
-            validateFunction={validateSession}
+            value={eventTiming}
+            setValue={setEventTiming}
+            validateFunction={validateEventTiming}
           />
 
           {/* Date */}
@@ -321,16 +324,16 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             <Form.Control
               className="hidden"
               type="text"
-              value={date?.toString()}
+              value={eventStartDateTime?.toString()}
               required={true}
               onChange={() => null}
             ></Form.Control>
             <Calendar
-              value={date}
+              value={eventStartDateTime}
               className="w-fit"
               onChange={(e: any) => {
                 if (e && e.value !== undefined) {
-                  setDate(e.value);
+                  setEventStartDateTime(e.value);
 
                   const element = document.getElementById("dateField");
                   if (element) {
@@ -350,14 +353,14 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
         {/* Duration in minutes */}
         <FormFieldInput
           type="number"
-          formFieldName="durationInMinutes"
+          formFieldName="eventDurationHrs"
           label={`Duration (minutes)`}
           required={true}
           pattern={undefined}
           placeholder="e.g., 8"
-          value={durationInMinutes}
-          setValue={setDurationInMinutes}
-          validateFunction={validateDurationInMinutes}
+          value={eventDurationHrs}
+          setValue={setEventDurationHrs}
+          validateFunction={validateEventDurationHrs}
         />
 
         <Form.Submit asChild>
@@ -373,4 +376,4 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
   );
 }
 
-export default EditAnimalActivityForm;
+export default EditZooEventForm;

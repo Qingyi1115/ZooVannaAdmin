@@ -8,20 +8,26 @@ import PlanningStaff from "./PlanningStaff";
 interface ZooEvent {
   zooEventId: number;
   eventName: String;
-  eventNotificationDate: Date;
-  eventStartDateTime: Date;
-  eventEndDateTime: Date | null;
-  eventDurationHrs: number;
-  eventTiming: EventTimingType | null;
   eventDescription: string;
   eventIsPublic: boolean;
   eventType?: EventType;
+  eventStartDateTime: Date;
+
+  // Internal Event
+  eventDurationHrs: number;
+  eventTiming: EventTimingType | null;
+
+  // External Event
+  eventNotificationDate: Date;
+  eventEndDateTime: Date | null;
+  imageUrl: string;
 
   planningStaff?: PlanningStaff;
   keepers?: Keeper[]; // work
   //   enclosure?: Enclosure;
   animal?: Animal;
   inHouse?: InHouse;
+  // animalClinic?: AnimalClinic;
   AnimalActivity?: AnimalActivity;
 }
 

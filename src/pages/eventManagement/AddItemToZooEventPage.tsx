@@ -1,70 +1,47 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 
-import AnimalActivity from "../../models/AnimalActivity";
-import Animal from "../../models/Animal";
-import Species from "../../models/Species";
-import EnrichmentItem from "../../models/EnrichmentItem";
+import ZooEvent from "../../models/ZooEvent";
 
-import * as Form from "@radix-ui/react-form";
-import * as RadioGroup from "@radix-ui/react-radio-group";
-import * as Checkbox from "@radix-ui/react-checkbox";
 
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
-import useApiFormData from "../../hooks/useApiFormData";
-import { HiCheck } from "react-icons/hi";
 
 import useApiJson from "../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
-import { NavLink } from "react-router-dom";
-import {
-  AcquisitionMethod,
-  AnimalGrowthStage,
-  AnimalSex,
-  AnimalStatusType,
-  IdentifierType,
-} from "../../enums/Enumurated";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import AddItemToActivityForm from "../../components/AnimalManagement/CreateAnimalActivityPage/AddItemToActivityForm";
-import AddItemToEventForm from "../../components/EventManagement/CreateEventPage/AddItemToEventForm";
+import AddItemToEventForm from "../../components/EventManagement/CreateZooEventPage/AddItemToZooEventForm";
 
-function AddItemToActivityPage() {
+function AddItemToZooEventPage() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const { animalActivityId } = useParams<{ animalActivityId: string }>();
+  const { zooEventId } = useParams<{ zooEventId: string }>();
 
-  const [curAnimalActivity, setCurAnimalActivity] =
-    useState<AnimalActivity | null>(null);
+  const [curZooEvent, setCurZooEvent] =
+    useState<ZooEvent | null>(null);
 
   useEffect(() => {
-    const fetchAnimalActivity = async () => {
+    const fetchZooEvent = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/animal/getAnimalActivityById/${animalActivityId}`
+          `http://localhost:3000/api/animal/getZooEventById/${zooEventId}`
         );
-        setCurAnimalActivity(responseJson as AnimalActivity);
+        setCurZooEvent(responseJson as ZooEvent);
       } catch (error: any) {
         console.log(error);
       }
     };
-    fetchAnimalActivity();
+    fetchZooEvent();
   }, []);
 
   return (
@@ -92,7 +69,7 @@ function AddItemToActivityPage() {
         </div>
 
         {/* body */}
-        {curAnimalActivity && (
+        {curZooEvent && (
           <div>
             <div>Current Activity:</div>
             <Table>
@@ -101,30 +78,30 @@ function AddItemToActivityPage() {
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     ID
                   </TableCell>
-                  <TableCell>{curAnimalActivity.animalActivityId}</TableCell>
+                  <TableCell>{curZooEvent.zooEventId}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
-                    Title
+                    Name
                   </TableCell>
-                  <TableCell>{curAnimalActivity.title}</TableCell>
+                  <TableCell>{curZooEvent.eventName}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     Type
                   </TableCell>
-                  <TableCell>{curAnimalActivity.activityType}</TableCell>
+                  <TableCell>{curZooEvent.eventType}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
-                    Details
+                    Description
                   </TableCell>
-                  <TableCell>{curAnimalActivity.details}</TableCell>
+                  <TableCell>{curZooEvent.eventDescription}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
             <Separator className="my-4" />
-            <AddItemToEventForm curAnimalActivity={curAnimalActivity} />
+            <AddItemToEventForm curZooEvent={curZooEvent} />
           </div>
         )}
       </div>
@@ -132,4 +109,4 @@ function AddItemToActivityPage() {
   );
 }
 
-export default AddItemToActivityPage;
+export default AddItemToZooEventPage;
