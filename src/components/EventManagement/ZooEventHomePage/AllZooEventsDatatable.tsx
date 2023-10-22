@@ -77,28 +77,6 @@ function AllZooEventsDatatable(
 
   const toastShadcn = useToast().toast;
 
-  useEffect(() => {
-    const fetchZooEvents = async () => {
-      try {
-        const responseJson = await apiJson.post(
-          "http://localhost:3000/api/zooEvent/getAllZooEvents", {
-          startDate: new Date("1900-01-01").toString(),
-          endDate: new Date("2200-12-31").toString(),
-          includes: ["planningStaff",
-            "keepers",
-            "enclosure",
-            "animal",
-            "inHouse",
-            "animalActivity"]
-        }
-        );
-        setZooEventsList(responseJson as ZooEvent[]);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    fetchZooEvents();
-  }, []);
   //
   const exportCSV = () => {
     dt.current?.exportCSV();

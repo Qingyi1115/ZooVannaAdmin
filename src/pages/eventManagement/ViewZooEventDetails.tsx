@@ -97,7 +97,7 @@ function ViewZooEventDetails() {
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const { zooEventId } = useParams<{ zooEventId: string }>();
+  const { zooeventId } = useParams<{ zooeventId: string }>();
 
   const [curZooEvent, setCurZooEvent] =
     useState<ZooEvent | null>(null);
@@ -117,9 +117,10 @@ function ViewZooEventDetails() {
     const fetchZooEvent = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/animal/getZooEventById/${zooEventId}`
+          `http://localhost:3000/api/zooEvent/getZooEventById/${zooeventId}`
         );
-        setCurZooEvent(responseJson as ZooEvent);
+        console.log("a",responseJson)
+        setCurZooEvent(responseJson["zooEvent"] as ZooEvent);
       } catch (error: any) {
         console.log(error);
       }
@@ -183,7 +184,7 @@ function ViewZooEventDetails() {
 
     let animalCode = selectedAnimal.animalCode;
     const animalToRemoveApiObj = {
-      zooEventId,
+      zooeventId,
       animalCode,
     };
 
@@ -278,7 +279,7 @@ function ViewZooEventDetails() {
 
     let enrichmentItemId = selectedItem.enrichmentItemId;
     const animalToRemoveApiObj = {
-      zooEventId,
+      zooeventId,
       enrichmentItemId,
     };
 

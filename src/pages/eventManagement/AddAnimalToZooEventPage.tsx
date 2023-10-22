@@ -56,9 +56,9 @@ function AddAnimalToZooEventPage() {
     const fetchZooEvent = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/zooevent/getZooEventById/${zooEventId}`
+          `http://localhost:3000/api/zooEvent/getZooEventById/${zooEventId}`
         );
-        setCurZooEvent(responseJson as ZooEvent);
+        setCurZooEvent(responseJson["zooEvent"] as ZooEvent);
       } catch (error: any) {
         console.log(error);
       }

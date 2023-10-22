@@ -24,28 +24,24 @@ function ZooEventHomePage() {
     ZooEvent[]
   >([]);
 
-  // useEffect(() => {
-  //   const fetchZooEvents = async () => {
-  //     try {
-  //       const responseJson = await apiJson.post(
-  //         "http://localhost:3000/api/zooEvent/getAllZooEvents", {
-  //         startDate: new Date("1900-01-01").toString(),
-  //         endDate: new Date("2200-12-31").toString(),
-  //         includes: ["planningStaff",
-  //           "keepers",
-  //           "enclosure",
-  //           "animal",
-  //           "inHouse",
-  //           "animalActivity"]
-  //       }
-  //       );
-  //       setZooEventsList(responseJson as ZooEvent[]);
-  //     } catch (error: any) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchZooEvents();
-  // }, []);
+  useEffect(() => {
+    apiJson.post(
+      "http://localhost:3000/api/zooEvent/getAllZooEvents", {
+        startDate: new Date("1970-01-01").getTime(),
+        endDate: new Date("2200-12-31").getTime(),
+        includes: ["planningStaff",
+          "keepers",
+          "enclosure",
+          "animal",
+          "inHouse",
+          "animalActivity"]
+      }
+    ).then(responseJson=>{
+      setZooEventsList(responseJson["zooEvents"] as ZooEvent[])
+    }).catch(error=>{
+      console.log(error);
+    });
+  }, []);
 
   return (
     <div className="p-10">
@@ -53,16 +49,17 @@ function ZooEventHomePage() {
         {/* Title Header and back button */}
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
+            
             <NavLink to={"/zooevent/createzooevent"}>
               <Button className="mr-2 flex items-center">
                 <HiPlus className="mr-2" />
                 Add Event
               </Button>
             </NavLink>
+
             <span className=" self-center text-title-xl font-bold">
               All Events
             </span>
-            <Button className="invisible">I love animals</Button>
           </div>
           <Separator />
         </div>
@@ -101,13 +98,11 @@ function ZooEventHomePage() {
           </div>
         </div>
         {isDatatableView ? (
-          zooEventsList.length != 0 && (
             <AllEventsDatatable
               zooEventsList={zooEventsList}
               setZooEventsList={setZooEventsList}
             />
-          )
-        ) : (
+          ) : (
           <AllEventsFullCalendar
             zooEventsList={zooEventsList}
             setZooEventsList={setZooEventsList}

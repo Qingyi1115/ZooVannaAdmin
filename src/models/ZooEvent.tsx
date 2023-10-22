@@ -28,7 +28,7 @@ interface ZooEvent {
   animal?: Animal;
   inHouse?: InHouse;
   // animalClinic?: AnimalClinic;
-  AnimalActivity?: AnimalActivity;
+  animalActivity?: AnimalActivity;
 }
 
 export default ZooEvent;

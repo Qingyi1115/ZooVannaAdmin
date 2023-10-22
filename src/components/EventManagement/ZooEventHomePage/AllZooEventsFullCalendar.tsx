@@ -55,7 +55,7 @@ function AllZooEventsFullCalendar(
 
   const { zooEventsList, setZooEventsList } = props;
 
-  const [zooEvents, setZooEvents] = useState<ZooEvent[]>(
+  const [events, setEvents] = useState<any[]>(
     []
   );
 
@@ -104,26 +104,33 @@ function AllZooEventsFullCalendar(
     return { startTime, endTime };
   }
 
-  const events = zooEventsList.map((zooEvent) => {
-    const { startTime, endTime } = calculateSessionTimes(
-      zooEvent.session,
-      new Date(zooEvent.eventStartDateTime)
+  
+  useEffect(() => {
+
+    setEvents(
+      zooEventsList.map((ze) => {
+        const { startTime, endTime } = calculateSessionTimes(
+          ze.eventTiming?.toString() || "",
+          new Date(ze.eventStartDateTime)
+        );
+  
+        return {
+          title: ze.eventName,
+          start: startTime, // Convert dateInMilliseconds to a Date object
+          end: endTime, // Convert dateInMilliseconds to a Date object
+          allDay: false,
+          // url: `http://localhost:5173/zooevent/viewzooeventdetails/${zooEvent.zooEventId}`,
+          extendedProps: {
+            zooEventUrl: `/zooevent/viewzooeventdetails/${ze.zooEventId}`,
+            eventType: ze.eventType,
+            eventDescription: ze.eventDescription,
+            eventDurationHrs: ze.eventDurationHrs,
+          },
+        };
+      }).flat(1)
     );
 
-    return {
-      eventName: zooEvent.eventName,
-      eventStartDateTime: startTime, // Convert dateInMilliseconds to a Date object
-      eventEndDateTime: endTime, // Convert dateInMilliseconds to a Date object
-      eventIsPublic: false,
-      // url: `http://localhost:5173/zooevent/viewzooeventdetails/${zooEvent.zooEventId}`,
-      extendedProps: {
-        zooEventUrl: `/animal/viewanimalactivitydetails/${zooEvent.zooEventId}`,
-        eventType: zooEvent.eventType,
-        eventDescription: zooEvent.eventDescription,
-        eventDurationHrs: zooEvent.eventDurationHrs,
-      },
-    };
-  });
+  }, [zooEventsList]);
 
   interface CustomEventProps {
     event: EventInput;
@@ -133,9 +140,9 @@ function AllZooEventsFullCalendar(
     return (
       <div>
         <strong>{event.title}</strong>
-        <p>Type: {event.extendedProps?.activityType}</p>
-        <p>Duration: {event.extendedProps?.durationInMinutes}</p>
-        <p>Details: {event.extendedProps?.details}</p>
+        <p>Type: {event.extendedProps?.eventType}</p>
+        <p>Duration: {event.extendedProps?.eventDurationHrs}</p>
+        <p>Details: {event.extendedProps?.eventDescription}</p>
       </div>
     );
   }
@@ -150,15 +157,15 @@ function AllZooEventsFullCalendar(
           <strong>{event.title}</strong>
           <p>
             <span className="font-medium">Type:</span>{" "}
-            {event.extendedProps?.activityType}
+            {event.extendedProps?.eventType}
           </p>
           <p>
             <span className="font-medium">Duration:</span>{" "}
-            {event.extendedProps?.durationInMinutes} minutes
+            {event.extendedProps?.eventDurationHrs} Hours
           </p>
           <p>
             <span className="font-medium">Details</span>: <br />
-            {event.extendedProps?.details}
+            {event.extendedProps?.eventDescription}
           </p>
         </div>
       );
