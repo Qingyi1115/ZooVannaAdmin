@@ -64,6 +64,7 @@ import {
   InputNumber,
   InputNumberValueChangeEvent,
 } from "primereact/inputnumber";
+import { Item } from "@radix-ui/react-accordion";
 
 function CreateFeedingPlan() {
   const apiJson = useApiJson();
@@ -554,6 +555,19 @@ function CreateFeedingPlan() {
   };
 
   //
+  function isSessionExist(
+    curDdayOfTheWeek: string,
+    curEventTimingType: string
+  ) {
+    return (
+      feedingPlanSessions.findIndex(
+        (session) =>
+          session.dayOfTheWeek === curDdayOfTheWeek &&
+          session.eventTimingType === curEventTimingType
+      ) != -1
+    );
+  }
+
   // Session Template
   const sessionTemplate = (
     curDdayOfTheWeek: string,
@@ -614,30 +628,75 @@ function CreateFeedingPlan() {
   };
 
   // Edit session dialog
+  const [openEditSessionDialog, setOpenEditSessionDialog] =
+    useState<boolean>(false);
   const editSessionDialog = (
-    curDdayOfTheWeek: string,
+    curDayOfTheWeek: string,
     curEventTimingType: string
   ) => {
     // const [selectedSessionToEdit, setSelectedSessionToEdit] =
     //   useState<DummyFeedingPlanSessionDetail | null>(null);
 
+    const tempFeedingPlanSessions = [...feedingPlanSessions];
+
     // find selected session
-    const existingSessionIndex = feedingPlanSessions.findIndex(
+    const existingSessionIndex = [...feedingPlanSessions].findIndex(
       (session) =>
-        session.dayOfTheWeek === curDdayOfTheWeek &&
+        session.dayOfTheWeek === curDayOfTheWeek &&
         session.eventTimingType === curEventTimingType
     );
 
-    let curSessionToEdit;
+    // const [curSessionToEdit, setCurSessionToEdit] =
+    //   useState<DummyFeedingPlanSessionDetail | null>(
+    //     [...feedingPlanSessions][existingSessionIndex]
+    //   );
+    let curSessionToEdit: DummyFeedingPlanSessionDetail;
     if (existingSessionIndex != -1) {
-      curSessionToEdit = feedingPlanSessions[existingSessionIndex];
+      curSessionToEdit = tempFeedingPlanSessions[existingSessionIndex];
+    } else {
+      return;
     }
 
-    function handleEditSession() {}
+    const handleAmountChangeEditSession = (
+      index: number,
+      amount: number | null
+    ) => {
+      if (!curSessionToEdit) {
+        return;
+      }
+      if (curSessionToEdit.feedingItems == undefined) {
+        return;
+      }
+      const updatedCurSessionFeedingItemsToBeEdited = [
+        ...curSessionToEdit.feedingItems,
+      ];
+      updatedCurSessionFeedingItemsToBeEdited[index] = {
+        ...updatedCurSessionFeedingItemsToBeEdited[index],
+        amount,
+      };
+      curSessionToEdit.feedingItems = updatedCurSessionFeedingItemsToBeEdited;
+      // setCurSessionToEdit({
+      //   ...curSessionToEdit,
+      //   feedingItems: updatedCurSessionFeedingItemsToBeEdited,
+      // });
+    };
+
+    function handleEditSession() {
+      // const existingSessionIndexInRealPlan = feedingPlanSessions.findIndex(
+      //   (session) =>
+      //     session.dayOfTheWeek === curDayOfTheWeek &&
+      //     session.eventTimingType === curEventTimingType
+      // );
+      setFeedingPlanSessions(tempFeedingPlanSessions);
+      setOpenEditSessionDialog(false);
+    }
 
     return (
       <React.Fragment>
-        <Dialog>
+        <Dialog
+          open={openEditSessionDialog}
+          onOpenChange={setOpenEditSessionDialog}
+        >
           <DialogTrigger asChild>
             <Button
               variant={"outline"}
@@ -649,7 +708,7 @@ function CreateFeedingPlan() {
           <DialogContent className="ml-[10%] max-w-[60vw]">
             <DialogHeader>
               <DialogTitle>
-                Edit Session: {curDdayOfTheWeek}, {curEventTimingType}
+                Edit Session: {curDayOfTheWeek}, {curEventTimingType}
               </DialogTitle>
               <DialogDescription>
                 Edit Session Info or Food Amount
@@ -659,6 +718,54 @@ function CreateFeedingPlan() {
               <div>
                 <div>
                   Duration in minutes: {curSessionToEdit.durationInMinutes}
+                </div>
+                {/* <div>
+                  {curSessionToEdit.feedingItems &&
+                    curSessionToEdit.feedingItems.map((feedingItem) => (
+                      <div>
+                        <div>{feedingItem.animal.houseName}</div>
+                        <div>
+                          {feedingItem.foodCategory}: {feedingItem.amount}
+                        </div>
+                      </div>
+                    ))}
+                </div> */}
+                <div>
+                  {Object.values(
+                    groupFeedingItemsByAnimal(curSessionToEdit)
+                  ).map(
+                    (
+                      group: {
+                        animal: Animal;
+                        items: DummyFeedingItem[];
+                      },
+                      index
+                    ) => (
+                      <div key={group.animal.animalCode}>
+                        <div>{group.animal.houseName}</div>
+                        <div>
+                          {group.items.map((item) => (
+                            <div>
+                              {item.foodCategory}: {item.amount}
+                              <div>Amount of food to be given:</div>
+                              <InputNumber
+                                placeholder="Amount of food"
+                                value={item.amount}
+                                onValueChange={(
+                                  e: InputNumberValueChangeEvent
+                                ) =>
+                                  handleAmountChangeEditSession(
+                                    index,
+                                    e.value as number | null
+                                  )
+                                }
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             )}
@@ -1096,7 +1203,10 @@ function CreateFeedingPlan() {
                 <TableCell className="w-1/3 align-top font-medium hover:bg-muted/50">
                   <div className="flex justify-between">
                     <div className="">Morning</div>
-                    <div>{editSessionDialog("MONDAY", "MORNING")}</div>
+                    <div>
+                      {isSessionExist("MONDAY", "MORNING") &&
+                        editSessionDialog("MONDAY", "MORNING")}
+                    </div>
                   </div>
                   <div>{sessionTemplate("MONDAY", "MORNING")}</div>
                 </TableCell>
