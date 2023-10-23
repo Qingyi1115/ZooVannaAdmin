@@ -117,6 +117,7 @@ function App() {
   const { state } = useAuthContext();
   const { user } = state;
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  console.log(user);
 
   return (
     <PrimeReactProvider>
