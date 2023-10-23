@@ -112,6 +112,11 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
+import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
+
+//customer order management page
+import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
+import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrderDetailsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -431,6 +436,16 @@ function App() {
                   path="/animal/checkisinbreeding/:speciesCode"
                   element={
                     user ? <CheckIsInbreedingPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/feedingplanhome/:speciesCode"
+                  element={
+                    user ? (
+                      <AnimalFeedingPlanHomePage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
 
@@ -849,6 +864,28 @@ function App() {
                     )
                   }
                 />
+                <Route
+                  path="/customerOrder/viewAllCustomerOrders"
+                  element={
+                    user ? (
+                      <ViewAllCustomerOrdersPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
+                <Route
+                  path="/customerOrder/viewCustomerOrder/:customerOrderId"
+                  element={
+                    user ? (
+                      <ViewCustomerOrderDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
                 <Route
                   path="/promotion/editpromotion/:promotionId"
                   element={
