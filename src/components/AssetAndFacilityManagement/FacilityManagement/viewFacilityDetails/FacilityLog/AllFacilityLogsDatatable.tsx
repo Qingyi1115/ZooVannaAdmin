@@ -262,7 +262,9 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
 
     return (
       <div>
-        <Card className="my-4 relative"
+        <Card
+          // className="my-4 relative"
+          className={(facilityLog.generalStaffs.find(generalStaff => generalStaff.employee.employeeId == employee.employeeId)) && facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET ? "my-4 relative bg-red-100 border-stroke" : "my-4 relative"}
           title={facilityLog.title}
           subTitle={<div>
             {facilityLog.dateTime ? "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}
@@ -274,8 +276,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           }>
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || facilityLog.staffName == employee.employeeName) &&
             <Button
-
-              className="absolute top-5 right-20"
+              className="absolute top-5 right-35"
               onClick={() => {
                 navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
                 navigate(`/assetfacility/editfacilityLog/${facilityLog.facilityLogId}`)
@@ -284,7 +285,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <HiPencil className="mx-auto" />
             </Button>}
           {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || facilityLog.staffName == employee.employeeName) &&
-            <Button className="absolute top-5 right-5"
+            <Button className="absolute top-5 right-20"
               variant={"destructive"}
               onClick={() => confirmDeletefacilityLog(facilityLog)}
             >
@@ -298,7 +299,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
                   navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
                   navigate(`/assetfacility/completeFacilityRepair/${facilityLog.facilityLogId}`)
                 }}
-                className="absolute top-5 right-35">
+                className="absolute top-5 right-5">
                 <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
               </Button>
             )}

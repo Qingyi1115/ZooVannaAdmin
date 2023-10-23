@@ -151,7 +151,9 @@ function FacilityMaintenanceSuggestion() {
             onClick={() => {
               navigate(`/assetfacility/maintenance/facilityMaintenance`, { replace: true });
               navigate(`/assetfacility/viewfacilitydetails/${objDetails.id}/facilityLog`);
-            }}>
+            }}
+            variant={(compareDates(new Date(objDetails.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ? "destructive" : "default"}
+          >
             <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
           </Button>
         )}
@@ -598,7 +600,7 @@ function FacilityMaintenanceSuggestion() {
             style={{ width: "50rem" }}
             breakpoints={{ "960px": "75vw", "641px": "90vw" }}
             header={forRepair ? "Create Repair Ticket" : "Assign Maintenance Staff"}
-            position={"right"}
+            // position={"right"}
             footer={forRepair ? <Button
               disabled={apiJson.loading || selectedEmployees.length == 0}
               className="h-12 w-2/3 self-center rounded-full text-lg"

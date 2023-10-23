@@ -10,7 +10,7 @@ import { InputText } from "primereact/inputtext";
 
 import Sensor from "../../../models/Sensor";
 import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiOutlinePresentationChartLine, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiClipboardList, HiEye, HiOutlinePresentationChartLine, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { NavLink, useNavigate } from "react-router-dom";
 import { SensorType } from "../../../enums/SensorType";
@@ -122,12 +122,27 @@ function SensorMaintenanceSuggestion() {
           <HiOutlinePresentationChartLine className="mx-auto" />
         </Button>
         {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
-          <Button className="mr-2" onClick={() => {
-            navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
-            navigate(`/assetfacility/createsensormaintenancelog/${objDetails.id}`);
-          }}>
-            <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
-          </Button>
+          (compareDates(new Date(objDetails.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ?
+            <Button
+              className="mr-2"
+              onClick={() => {
+                navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
+                navigate(`/assetfacility/createsensormaintenancelog/${objDetails.id}`);
+              }}
+              variant={"destructive"}
+            >
+              <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+            </Button>
+            :
+            <Button
+              className="mr-2"
+              onClick={() => {
+                navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
+                navigate(`/assetfacility/viewsensordetails/${objDetails.id}/maintenanceLogs`);
+              }}
+            >
+              <HiClipboardList className="mx-auto" ></HiClipboardList>
+            </Button>
         )}
       </React.Fragment>
     );
@@ -479,7 +494,7 @@ function SensorMaintenanceSuggestion() {
         style={{ width: "50rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Assign Maintenance Staff"
-        position={"right"}
+        // position={"right"}
         // footer={<Button onClick={confirmAssignment} disabled={selectedEmployees.length == 0}>Assign Selected Staff</Button>}
         onHide={hideEmployeeBulkAssignmentDialog}>
         <DataTable
