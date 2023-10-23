@@ -167,7 +167,8 @@ function ViewAllFacilityMaintenanceStaff(props: ViewAllFacilityMaintenanceStaffP
       </span>
       <Button
         onClick={showBulkAssignment}
-        disabled={availableEmployees.length == 0}>
+        // disabled={availableEmployees.length == 0}
+        >
         <HiPlus />Assign Maintenance Staff
       </Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
