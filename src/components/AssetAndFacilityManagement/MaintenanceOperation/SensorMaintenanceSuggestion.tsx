@@ -243,7 +243,7 @@ function SensorMaintenanceSuggestion() {
           }}
         />
       </span>
-      <Button onClick={showBulkAssignment} disabled={selectedMaintenanceDetails.length == 0}><HiPlus />Assign Maintenance Staff</Button>
+      {employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && (<Button onClick={showBulkAssignment} disabled={selectedMaintenanceDetails.length == 0}><HiPlus />Assign Maintenance Staff</Button>)}
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );

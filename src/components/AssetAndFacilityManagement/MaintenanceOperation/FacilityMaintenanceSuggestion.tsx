@@ -265,8 +265,8 @@ function FacilityMaintenanceSuggestion() {
           }}
         />
       </span>
-      <Button onClick={showBulkRepairAssignment} disabled={selectedMaintenanceDetails.length == 0}><HiPlus />Create Repair Ticket</Button>
-      <Button onClick={showBulkMaintenanceAssignment} disabled={selectedMaintenanceDetails.length == 0}><HiPlus />Assign Maintenance Staff</Button>
+      {employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && (<Button onClick={showBulkRepairAssignment} disabled={selectedMaintenanceDetails.length == 0}><HiPlus />Create Repair Ticket</Button>)}
+      {employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && (<Button onClick={showBulkMaintenanceAssignment} disabled={selectedMaintenanceDetails.length == 0}><HiPlus />Assign Maintenance Staff</Button>)}
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
