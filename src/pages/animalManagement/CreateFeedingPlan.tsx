@@ -26,6 +26,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -72,23 +87,26 @@ function CreateFeedingPlan() {
     foodCategory: string | null;
     amount: number | null;
     unit: string | null;
-    animal: Animal | null;
+    animal: Animal;
   }
   interface DummyFeedingPlanSessionDetail {
-    dayOftheWeek: string;
+    dayOfTheWeek: string;
     eventTimingType: string;
     feedingItems?: DummyFeedingItem[];
+    durationInMinutes: number;
   }
-  const [feedingPlanSessionDetails, setFeedingPlanSessionDetails] = useState<
+  const [feedingPlanSessions, setFeedingPlanSessions] = useState<
     DummyFeedingPlanSessionDetail[]
   >([]);
 
   //
   // Add Food Stuff
-  const [selectedDayOfWeekNewFoodItem, setSelectedDayOfWeekNewFoodItem] =
-    useState<string | undefined>(undefined);
-  const [selectedSessionTimingCreate, setSelectedSessionTimingCreate] =
-    useState<string | undefined>(undefined);
+  const [selectedDaysOfWeekNewFoodItem, setSelectedDaysOfWeekNewFoodItem] =
+    useState<string[]>([]);
+  const [
+    selectedSessionTimingNewFoodItem,
+    setSelectedSessionTimingNewFoodItem,
+  ] = useState<string | undefined>(undefined);
   const [dietNeedsList, setDietNeedsList] = useState<SpeciesDietNeed[]>([]);
   const [listFeedCategoriesRecommended, setListFeedCategoriesRecommended] =
     useState<string[]>([]);
@@ -102,11 +120,14 @@ function CreateFeedingPlan() {
   ] = useState<string | null>(null);
   const [unitOfMeasurementNewFoodItem, setUnitOfMeasurementNewFoodItem] =
     useState<string | null>(null);
+  const [durationInMinutesNewFoodItem, setDurationInMinutesNewFoodItem] =
+    useState<number | null>(null);
+  // below is the list of feeding items for new session(s) to be added
   const [curFeedingItemsNewFeedSession, setCurFeedingItemsNewFeedSession] =
     useState<DummyFeedingItem[]>(
       animalTargetList.map((animal) => ({
         foodCategory: "",
-        amount: 0,
+        amount: null,
         unit: "",
         animal: animal,
       }))
@@ -145,7 +166,181 @@ function CreateFeedingPlan() {
       })
     );
   }, [animalTargetList]);
-  ///
+
+  function clearNewFoodSessionFormBox() {
+    setSelectedCurFeedCategoryNewFoodItem(null);
+    setSelectedDaysOfWeekNewFoodItem([]);
+    setSelectedSessionTimingNewFoodItem(undefined);
+    setUnitOfMeasurementNewFoodItem(null);
+    const resetList = curFeedingItemsNewFeedSession.map((item) => ({
+      ...item,
+      amount: null,
+    }));
+    setCurFeedingItemsNewFeedSession(resetList);
+  }
+
+  function mergeFeedingItems(
+    existingItems: DummyFeedingItem[],
+    newItems: DummyFeedingItem[]
+  ): DummyFeedingItem[] {
+    const itemsMap = new Map();
+
+    // Initialize the map with the existing items
+    existingItems.forEach((item) => {
+      if (item.foodCategory && item.animal?.animalCode) {
+        const key = `${item.foodCategory}_${item.animal.animalCode}`;
+        itemsMap.set(key, item);
+      }
+    });
+
+    // Merge new items into the map
+    newItems.forEach((item) => {
+      if (item.foodCategory && item.animal?.animalCode) {
+        const key = `${item.foodCategory}_${item.animal.animalCode}`;
+        if (itemsMap.has(key)) {
+          // Item with the same foodCategory and animalCode already exists, update the amount
+          const existingItem = itemsMap.get(key);
+          if (item.amount !== null) {
+            existingItem.amount = item.amount;
+          }
+        } else {
+          // Item with a new combination of foodCategory and animalCode, add it to the map
+          itemsMap.set(key, item);
+        }
+      }
+    });
+
+    return Array.from(itemsMap.values());
+  }
+
+  function addNewFoodSessionToPlan() {
+    // console.log("add new food session to plan");
+    // console.log(selectedDaysOfWeekNewFoodItem);
+    // console.log(selectedSessionTimingNewFoodItem);
+    // console.log(selectedCurFeedCategoryNewFoodItem);
+    // console.log(unitOfMeasurementNewFoodItem);
+    // console.log(curFeedingItemsNewFeedSession);
+
+    // feeding plan: has many feed sessions
+    // feed session: has many feed items
+
+    // interface DummyFeedingPlanSessionDetail {
+    //   dayOfTheWeek: string;
+    //   eventTimingType: string;
+    //   feedingItems?: DummyFeedingItem[];
+    // }
+
+    // fill up all unit of measurements and food category for curFeedingItemsNewFeedSession
+    const newFeedingItemsListWithUomAndCategory =
+      curFeedingItemsNewFeedSession.map((item) => ({
+        ...item,
+        foodCategory: selectedCurFeedCategoryNewFoodItem,
+        unit: unitOfMeasurementNewFoodItem,
+      }));
+    console.log(newFeedingItemsListWithUomAndCategory);
+
+    // loop for each day of week:
+    if (
+      selectedDaysOfWeekNewFoodItem != undefined &&
+      selectedSessionTimingNewFoodItem != undefined &&
+      durationInMinutesNewFoodItem != null
+    ) {
+      for (const day of selectedDaysOfWeekNewFoodItem as string[]) {
+        // create new feeding session object (the dummy one)
+        var newFeedingSessionObject: DummyFeedingPlanSessionDetail = {
+          dayOfTheWeek: day[0],
+          eventTimingType: selectedSessionTimingNewFoodItem,
+          feedingItems: newFeedingItemsListWithUomAndCategory,
+          durationInMinutes: durationInMinutesNewFoodItem,
+        };
+
+        // check inside feedingPlanSessions,
+        const existingSessionIndex = feedingPlanSessions.findIndex(
+          (session) =>
+            session.dayOfTheWeek === newFeedingSessionObject.dayOfTheWeek &&
+            session.eventTimingType === newFeedingSessionObject.eventTimingType
+        );
+        // if the session with selectedDayOfWeek and selectedSessionTiming already exists
+        if (existingSessionIndex != -1) {
+          const updatedFeedingPlanSessions = [...feedingPlanSessions];
+
+          // merge feedingItems array between the new and existing feedingSession
+          const existingSession =
+            updatedFeedingPlanSessions[existingSessionIndex];
+          if (
+            existingSession.feedingItems &&
+            newFeedingSessionObject.feedingItems
+          ) {
+            // Merge the feedingItems arrays (concatenation)
+            // existingSession.feedingItems = existingSession.feedingItems.concat(
+            //   newFeedingSessionObject.feedingItems
+            // );
+            existingSession.feedingItems = mergeFeedingItems(
+              existingSession.feedingItems,
+              newFeedingSessionObject.feedingItems
+            );
+          } else if (newFeedingSessionObject.feedingItems) {
+            // If the existing session has no feedingItems, assign the new items
+            existingSession.feedingItems = newFeedingSessionObject.feedingItems;
+          }
+          setFeedingPlanSessions(updatedFeedingPlanSessions);
+        } else {
+          // No matching item found, add the newFeedingPlanSession to feedingPlanSessions
+          const updatedFeedingPlanSessions = [...feedingPlanSessions];
+          updatedFeedingPlanSessions.push(newFeedingSessionObject);
+          setFeedingPlanSessions(updatedFeedingPlanSessions);
+        }
+      }
+    }
+    console.log("end of here");
+    console.log(feedingPlanSessions);
+  }
+
+  // data structure to group feeding items by animals
+  // const feedingItemsByAnimal: {
+  //   [key: string]: { animal: Animal; items: DummyFeedingItem[] };
+  // } = feedingPlanSessions.reduce((result: any, session) => {
+  //   if (session.feedingItems) {
+  //     session.feedingItems.forEach((item) => {
+  //       const animalId = item.animal?.animalId;
+  //       if (animalId !== undefined) {
+  //         if (!result[animalId]) {
+  //           result[animalId] = { animal: item.animal, items: [] };
+  //         }
+  //         result[animalId].items.push(item);
+  //       }
+  //     });
+  //   }
+  //   return result;
+  // }, {});
+  function groupFeedingItemsByAnimal(
+    feedingPlanSession: DummyFeedingPlanSessionDetail
+  ) {
+    const result: {
+      [key: string]: { animal: Animal; items: DummyFeedingItem[] };
+    } = {};
+
+    if (feedingPlanSession.feedingItems) {
+      feedingPlanSession.feedingItems.forEach((item) => {
+        const animalId = item.animal?.animalId;
+        if (animalId !== undefined) {
+          if (!result[animalId]) {
+            result[animalId] = { animal: item.animal, items: [] };
+          }
+          result[animalId].items.push(item);
+        }
+      });
+    }
+
+    return result;
+  }
+
+  // Usage
+  // const feedingItemsByAnimal = groupFeedingItemsByAnimal(feedingPlanSessions);
+
+  //edit food session????? bruh dman hard
+
+  /// end add food stuff
 
   useEffect(() => {
     const fetchSpecies = async () => {
@@ -225,6 +420,40 @@ function CreateFeedingPlan() {
 
     fetchDietNeedsList();
   }, [curSpecies]);
+
+  const animalStatusTemplate = (statuses: string[]) => {
+    return (
+      <React.Fragment>
+        <div className="flex gap-2">
+          {statuses.map((status, index) => (
+            <div
+              key={index}
+              className={` flex w-max items-center justify-center rounded px-1 text-sm font-bold
+                ${
+                  status === "NORMAL"
+                    ? " bg-emerald-100  text-emerald-900"
+                    : status === "PREGNANT"
+                    ? " bg-orange-100 p-[0.1rem] text-orange-900"
+                    : status === "SICK"
+                    ? " bg-yellow-100 p-[0.1rem]  text-yellow-900"
+                    : status === "INJURED"
+                    ? "bg-red-100 p-[0.1rem] text-red-900"
+                    : status === "OFFSITE"
+                    ? " bg-blue-100 p-[0.1rem]  text-blue-900"
+                    : status === "RELEASED"
+                    ? " bg-fuchsia-100 p-[0.1rem]  text-fuchsia-900"
+                    : status === "DECEASED"
+                    ? " bg-slate-300 p-[0.1rem]  text-slate-900"
+                    : "bg-gray-100 text-black"
+                }`}
+            >
+              {status}
+            </div>
+          ))}
+        </div>
+      </React.Fragment>
+    );
+  };
 
   // some validations
   function validateStartDate(props: ValidityState) {
@@ -319,10 +548,132 @@ function CreateFeedingPlan() {
     );
   };
 
-  const onChange = (event: any) => {
+  const onAnimalChange = (event: any) => {
     setAnimalSourceList(event.source);
     setAnimalTargetList(event.target);
   };
+
+  //
+  // Session Template
+  const sessionTemplate = (
+    curDdayOfTheWeek: string,
+    curEventTimingType: string
+  ) => {
+    return (
+      <React.Fragment>
+        <div>
+          {feedingPlanSessions
+            .filter(
+              (session) =>
+                session.dayOfTheWeek === curDdayOfTheWeek &&
+                session.eventTimingType === curEventTimingType
+            )
+            .map((session) => (
+              // session.feedingItems?.map((item, index) => (
+              //   <div key={`MONDAYMorningItem-${index}`}>
+              //     {item.foodCategory}
+              //   </div>
+              // ))
+              <div>
+                {Object.values(groupFeedingItemsByAnimal(session)).map(
+                  (
+                    group: {
+                      animal: Animal;
+                      items: DummyFeedingItem[];
+                    },
+                    index
+                  ) => (
+                    <div key={`animal-${group.animal.animalId}`}>
+                      <h2>Animal {group.animal.houseName}:</h2>
+                      <ul>
+                        {group.items.map((item, itemIndex) => (
+                          <li
+                            key={`feeding-item-${item.animal?.animalId}-${itemIndex}`}
+                          >
+                            - Feeding Item {itemIndex + 1}: {item.foodCategory};
+                            amount:{" "}
+                            {item.amount != 0 ? (
+                              <span>
+                                {item.amount} {item.unit}
+                              </span>
+                            ) : (
+                              <span>None!</span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )
+                )}
+              </div>
+            ))}
+          <Separator />
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  // Edit session dialog
+  const editSessionDialog = (
+    curDdayOfTheWeek: string,
+    curEventTimingType: string
+  ) => {
+    // const [selectedSessionToEdit, setSelectedSessionToEdit] =
+    //   useState<DummyFeedingPlanSessionDetail | null>(null);
+
+    // find selected session
+    const existingSessionIndex = feedingPlanSessions.findIndex(
+      (session) =>
+        session.dayOfTheWeek === curDdayOfTheWeek &&
+        session.eventTimingType === curEventTimingType
+    );
+
+    let curSessionToEdit;
+    if (existingSessionIndex != -1) {
+      curSessionToEdit = feedingPlanSessions[existingSessionIndex];
+    }
+
+    function handleEditSession() {}
+
+    return (
+      <React.Fragment>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant={"outline"}
+              className="h-min bg-white px-2 py-1 text-sm"
+            >
+              Edit session
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="ml-[10%] max-w-[60vw]">
+            <DialogHeader>
+              <DialogTitle>
+                Edit Session: {curDdayOfTheWeek}, {curEventTimingType}
+              </DialogTitle>
+              <DialogDescription>
+                Edit Session Info or Food Amount
+              </DialogDescription>
+            </DialogHeader>
+            {curSessionToEdit && (
+              <div>
+                <div>
+                  Duration in minutes: {curSessionToEdit.durationInMinutes}
+                </div>
+              </div>
+            )}
+            <DialogFooter>
+              <Button type="button" onClick={handleEditSession}>
+                Save changes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </React.Fragment>
+    );
+  };
+
+  ///
 
   //
   async function handleSubmit() {}
@@ -384,7 +735,7 @@ function CreateFeedingPlan() {
             <PickList
               source={animalSourceList}
               target={animalTargetList}
-              onChange={onChange}
+              onChange={onAnimalChange}
               itemTemplate={animalItemTemplate}
               filter
               filterBy="houseName,species.commonName"
@@ -503,16 +854,15 @@ function CreateFeedingPlan() {
               <div className="w-full">
                 <div>Day Of Week:</div>
                 <MultiSelect
-                  value={selectedDayOfWeekNewFoodItem}
+                  value={selectedDaysOfWeekNewFoodItem}
                   // onChange={(e: MultiSelectChangeEvent) => setSelectedBiomes(e.value)}
-                  onChange={(e) => setSelectedDayOfWeekNewFoodItem(e.value)}
+                  onChange={(e) => setSelectedDaysOfWeekNewFoodItem(e.value)}
                   // options={Object.values(BiomeEnum).map((biome) => biome.toString())}
                   options={Object.keys(DayOfWeek).map((dayOfWeekKey) => [
                     DayOfWeek[
                       dayOfWeekKey as keyof typeof DayOfWeek
                     ].toString(),
                   ])}
-                  // optionLabel="biome"
                   placeholder="Select day(s) of week"
                   className="p-multiselect-token:tailwind-multiselect-chip w-full"
                   display="chip"
@@ -522,9 +872,9 @@ function CreateFeedingPlan() {
               <div className="w-full">
                 <div>Feeding Session Timing:</div>
                 <Dropdown
-                  value={selectedSessionTimingCreate}
+                  value={selectedSessionTimingNewFoodItem}
                   onChange={(e: DropdownChangeEvent) =>
-                    setSelectedSessionTimingCreate(e.value)
+                    setSelectedSessionTimingNewFoodItem(e.value)
                   }
                   options={Object.keys(EventTimingType).map(
                     (eventTImingTypeKey) =>
@@ -539,7 +889,19 @@ function CreateFeedingPlan() {
             </div>
 
             <div>
-              <div>Select Food Item</div>
+              <div>Duration (in minutes):</div>
+              <InputNumber
+                placeholder="Duration in minutes"
+                value={durationInMinutesNewFoodItem}
+                onValueChange={(e: InputNumberValueChangeEvent) =>
+                  setDurationInMinutesNewFoodItem(e.value as number | null)
+                }
+                className="w-full"
+              />
+            </div>
+
+            <div>
+              <div>Select Feed Category</div>
               <Dropdown
                 value={selectedCurFeedCategoryNewFoodItem}
                 onChange={(e: DropdownChangeEvent) =>
@@ -629,19 +991,36 @@ function CreateFeedingPlan() {
             <div className="my-4 border border-strokedark/50 bg-whiter p-6">
               {animalTargetList.length > 0 ? (
                 <div>
-                  {selectedCurFeedCategoryNewFoodItem && (
+                  {selectedCurFeedCategoryNewFoodItem ? (
                     <div>
                       How much of {selectedCurFeedCategoryNewFoodItem} should
                       each individual eat this session?
+                      <div className="text-sm">
+                        Note: if {selectedCurFeedCategoryNewFoodItem} is already
+                        added to the selected session(s), the new amount
+                        indicated will overwrite the previously entered amount
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-danger">
+                      Select a feed category above!
                     </div>
                   )}
                   {animalTargetList.map((curAnimal, idx) => (
                     <div key={curAnimal.animalCode} className="">
                       <div>{curAnimal.houseName}</div>
+                      <div>
+                        {animalStatusTemplate(
+                          curAnimal.animalStatus.split(",")
+                        )}
+                      </div>
                       <div className="flex gap-20">
                         <div>
                           <div>Amount of food to be given:</div>
                           <InputNumber
+                            disabled={
+                              selectedCurFeedCategoryNewFoodItem == null
+                            }
                             placeholder="Amount of food"
                             value={curFeedingItemsNewFeedSession[idx]?.amount}
                             onValueChange={(e: InputNumberValueChangeEvent) =>
@@ -668,7 +1047,7 @@ function CreateFeedingPlan() {
               )}
             </div>
 
-            <div>
+            {/* <div>
               {curFeedingItemsNewFeedSession.toString()},{" "}
               {curFeedingItemsNewFeedSession.length}
               {curFeedingItemsNewFeedSession?.map((feedingItem) => (
@@ -680,11 +1059,20 @@ function CreateFeedingPlan() {
                   )}
                 </div>
               ))}
-            </div>
+            </div> */}
+            <Button type="button" onClick={addNewFoodSessionToPlan}>
+              Add Feeding Session(s)
+            </Button>
+            <Button
+              type="button"
+              variant={"ghost"}
+              onClick={clearNewFoodSessionFormBox}
+            >
+              Clear
+            </Button>
 
             {/* end add food box */}
           </div>
-          <Button>Add Food</Button>
           <Table>
             {/* <TableHeader>
               <TableRow>
@@ -699,30 +1087,41 @@ function CreateFeedingPlan() {
               </TableRow>
             </TableHeader> */}
             <TableBody>
-              <TableRow key={"Morning"}>
+              <TableRow>
                 <TableCell className="font-medium" colSpan={3}>
                   MONDAY
                 </TableCell>
               </TableRow>
-              <TableRow key={"Afternoon"} className="hover:bg-transparent">
-                <TableCell className="font-medium">
-                  <div className="h-32">Morning</div>
+              <TableRow key={"MONDAYSessions"} className="hover:bg-transparent">
+                <TableCell className="w-1/3 align-top font-medium hover:bg-muted/50">
+                  <div className="flex justify-between">
+                    <div className="">Morning</div>
+                    <div>{editSessionDialog("MONDAY", "MORNING")}</div>
+                  </div>
+                  <div>{sessionTemplate("MONDAY", "MORNING")}</div>
                 </TableCell>
-                <TableCell className="font-medium">
+                <TableCell className="w-1/3 font-medium hover:bg-muted/50">
                   <div className="h-32">Afternoon</div>
+                  <div>{sessionTemplate("MONDAY", "AFTERNOON")}</div>
                 </TableCell>
-                <TableCell className="font-medium">
+                <TableCell className="w-1/3 font-medium hover:bg-muted/50">
                   <div className="h-32">Evening</div>
+                  <div>{sessionTemplate("MONDAY", "EVENING")}</div>
                 </TableCell>
               </TableRow>
-              <TableRow key={"Evening"}>
-                <TableCell className="font-medium">
+              <TableRow>
+                <TableCell className="font-medium" colSpan={3}>
+                  TUESDAY
+                </TableCell>
+              </TableRow>
+              <TableRow className="hover:bg-transparent">
+                <TableCell className="font-medium hover:bg-muted/50">
                   <div className="h-32">Morning</div>
                 </TableCell>
-                <TableCell className="font-medium">
+                <TableCell className="font-medium hover:bg-muted/50">
                   <div className="h-32">Afternoon</div>
                 </TableCell>
-                <TableCell className="font-medium">
+                <TableCell className="font-medium hover:bg-muted/50">
                   <div className="h-32">Evening</div>
                 </TableCell>
               </TableRow>

@@ -116,8 +116,8 @@ enum AcquisitionMethod {
 }
 
 enum AnimalFeedCategory {
-  RED_MEAT = "RED_MEAT",
-  WHITE_MEAT = "WHITE_MEAT",
+  RED_MEAT = "RED MEAT",
+  WHITE_MEAT = "WHITE MEAT",
   FISH = "FISH",
   INSECTS = "INSECTS",
   HAY = "HAY",
