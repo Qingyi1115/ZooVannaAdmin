@@ -141,7 +141,7 @@ const BarChart: React.FC = () => {
       <div className="mb-6 flex flex-col justify-start gap-6 lg:flex-row lg:gap-12">
         {/* Start Date */}
         <div className="card justify-content-centre flex flex-col">
-          <div>Start Date</div>
+          <div>Start Month</div>
           <Calendar
             style={{ flexGrow: 1 }}
             value={startDate}
@@ -156,7 +156,7 @@ const BarChart: React.FC = () => {
         </div>
         {/* End Date */}
         <div className="card justify-content-center flex flex-col">
-          <div>End Date</div>
+          <div>End Month</div>
           <Calendar
             style={{ flexGrow: 1 }}
             value={endDate}
