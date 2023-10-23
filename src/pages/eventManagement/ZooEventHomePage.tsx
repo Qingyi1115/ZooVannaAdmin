@@ -16,9 +16,19 @@ import { HiCalendarDays, HiTableCells } from "react-icons/hi2";
 import AllEventsDatatable from "../../components/EventManagement/ZooEventHomePage/AllZooEventsDatatable";
 import AllEventsFullCalendar from "../../components/EventManagement/ZooEventHomePage/AllZooEventsFullCalendar";
 
+const YEAR_IN_MILLISECONDS = 1000*60*60*24*365
+interface eventGroup {
+  groupId: number;
+  groupType: string;
+}
+
 function ZooEventHomePage() {
   const apiJson = useApiJson();
   const [isDatatableView, setIsDatatableView] = useState<boolean>(true);
+
+  const [calendarStartDate, setCalendarStartDate] = useState<Date>(new Date(Date.now() - YEAR_IN_MILLISECONDS));
+  const [calendarEndDate, setCalendarEndDate] = useState<Date>(new Date(Date.now() + YEAR_IN_MILLISECONDS));
+  const [eventGroupList, setEventGroupList] = useState<eventGroup[] | null>(null);
 
   const [zooEventsList, setZooEventsList] = useState<
     ZooEvent[]
@@ -27,17 +37,50 @@ function ZooEventHomePage() {
   useEffect(() => {
     apiJson.post(
       "http://localhost:3000/api/zooEvent/getAllZooEvents", {
-        startDate: new Date("1970-01-01").getTime(),
-        endDate: new Date("2200-12-31").getTime(),
-        includes: ["planningStaff",
+        startDate: calendarStartDate,
+        endDate: calendarEndDate,
+        includes: [
+          "planningStaff",
           "keepers",
           "enclosure",
           "animal",
           "inHouse",
-          "animalActivity"]
+          "animalActivity",
+          "feedingPlanSessionDetail",
+        ]
       }
     ).then(responseJson=>{
-      setZooEventsList(responseJson["zooEvents"] as ZooEvent[])
+      if (eventGroupList === null){
+        setEventGroupList(responseJson["zooEvents"].map((ze:ZooEvent) => {
+          if (ze.animalActivity){
+            return {groupId:ze.animalActivity.animalActivityId, groupType:"animalActivity"}
+          }else if (ze.feedingPlanSessionDetail){
+            return {groupId:ze.feedingPlanSessionDetail.feedingPlanSessionDetailId, groupType:"feedingPlanSessionDetail"}
+          }else if (ze){
+            
+          }
+        }))
+        return setZooEventsList(responseJson["zooEvents"] as ZooEvent[])
+      }
+
+      const filteredEvents = [];
+      for (const ze of responseJson["zooEvents"]){
+        if (
+          eventGroupList.find(eventGroup => {
+            if (eventGroup.groupType == "animalActivity"){
+              return eventGroup.groupId == ze.animalActivity?.animalActivityId;
+            }else if (eventGroup.groupType == "feedingPlanSessionDetail"){
+              return eventGroup.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId;
+            }else if (eventGroup.groupType == "public"){
+
+            }
+          })
+        ){
+          filteredEvents.push(ze);
+        }
+      }
+      return setZooEventsList(filteredEvents);
+
     }).catch(error=>{
       console.log(error);
     });
