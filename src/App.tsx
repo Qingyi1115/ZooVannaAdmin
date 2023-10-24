@@ -50,6 +50,7 @@ import ViewAnimalActivityLogDetailsPage from "./pages/animalManagement/ViewAnima
 import ViewAnimalFeedingLogDetailsPage from "./pages/animalManagement/ViewAnimalFeedingLogDetailsPage";
 import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
 import CreateFeedingPlan from "./pages/animalManagement/CreateFeedingPlan";
+import AnimalFeedingPlanDetailsPage from "./pages/animalManagement/AnimalFeedingPlanDetailsPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -448,6 +449,16 @@ function App() {
                   path="/animal/createfeedingplan/:speciesCode"
                   element={
                     user ? <CreateFeedingPlan /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewfeedingplandetails/:feedingPlanId"
+                  element={
+                    user ? (
+                      <AnimalFeedingPlanDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
 

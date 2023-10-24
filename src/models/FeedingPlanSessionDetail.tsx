@@ -4,7 +4,7 @@ import ZooEvent from "./ZooEvent";
 
 interface FeedingPlanSessionDetail {
   feedingPlanDetailId: number;
-  dayOftheWeek: string;
+  dayOfWeek: string;
   eventTimingType: string;
 
   //--FK

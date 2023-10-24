@@ -9,6 +9,11 @@ import useApiJson from "../../hooks/useApiJson";
 import { Separator } from "@/components/ui/separator";
 import Species from "../../models/Species";
 
+import { DataTable, DataTableExpandedRows } from "primereact/datatable";
+import { Column } from "primereact/column";
+import FeedingPlan from "../../models/FeedingPlan";
+import AllAnimalFeedingPlansDatatable from "../../components/AnimalManagement/AnimalFeedingPlanHomePage.tsx/AllAnimalFeedingPlansDatatable";
+
 function AnimalFeedingPlanHomePage() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
@@ -30,6 +35,23 @@ function AnimalFeedingPlanHomePage() {
     };
 
     fetchSpecies();
+  }, []);
+
+  // feeding plans datatable
+  const [feedingPlansList, setFeedingPlansList] = useState<FeedingPlan[]>([]);
+  useEffect(() => {
+    const fetchFeedingPlanCurSpecies = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/animal/getFeedingPlansBySpeciesCode/${speciesCode}`
+        );
+        setFeedingPlansList(responseJson as FeedingPlan[]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    fetchFeedingPlanCurSpecies();
   }, []);
 
   return (
@@ -68,7 +90,12 @@ function AnimalFeedingPlanHomePage() {
         >
           Create New Feeding Plan
         </Button>
-        <div>All Feeding Plans for current species DATATABLE here </div>
+        <div>
+          <AllAnimalFeedingPlansDatatable
+            feedingPlansList={feedingPlansList}
+            setFeedingPlansList={setFeedingPlansList}
+          />
+        </div>
       </div>
     </div>
   );
