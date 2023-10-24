@@ -56,6 +56,7 @@ import {
   AnimalFeedCategory,
   DayOfWeek,
   EventTimingType,
+  FoodUnit,
 } from "../../enums/Enumurated";
 import FormFieldSelect from "../../components/FormFieldSelect";
 import SpeciesDietNeed from "../../models/SpeciesDietNeed";
@@ -93,7 +94,7 @@ function CreateFeedingPlan() {
   interface DummyFeedingPlanSessionDetail {
     dayOfTheWeek: string;
     eventTimingType: string;
-    feedingItems?: DummyFeedingItem[];
+    feedingItems: DummyFeedingItem[];
     durationInMinutes: number;
   }
   const [feedingPlanSessions, setFeedingPlanSessions] = useState<
@@ -173,6 +174,7 @@ function CreateFeedingPlan() {
     setSelectedDaysOfWeekNewFoodItem([]);
     setSelectedSessionTimingNewFoodItem(undefined);
     setUnitOfMeasurementNewFoodItem(null);
+    setDurationInMinutesNewFoodItem(null);
     const resetList = curFeedingItemsNewFeedSession.map((item) => ({
       ...item,
       amount: null,
@@ -457,6 +459,20 @@ function CreateFeedingPlan() {
   };
 
   // some validations
+  function validateFeedingPlanDescrtipion(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter feeding plan description!
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
   function validateStartDate(props: ValidityState) {
     if (props != undefined) {
       if (startDate == null) {
@@ -570,7 +586,7 @@ function CreateFeedingPlan() {
 
   // Session Template
   const sessionTemplate = (
-    curDdayOfTheWeek: string,
+    curDayOfTheWeek: string,
     curEventTimingType: string
   ) => {
     return (
@@ -579,7 +595,7 @@ function CreateFeedingPlan() {
           {feedingPlanSessions
             .filter(
               (session) =>
-                session.dayOfTheWeek === curDdayOfTheWeek &&
+                session.dayOfTheWeek === curDayOfTheWeek &&
                 session.eventTimingType === curEventTimingType
             )
             .map((session) => (
@@ -598,14 +614,15 @@ function CreateFeedingPlan() {
                     index
                   ) => (
                     <div key={`animal-${group.animal.animalId}`}>
-                      <h2>Animal {group.animal.houseName}:</h2>
+                      <div className="font-medium">
+                        {group.animal.houseName}:
+                      </div>
                       <ul>
                         {group.items.map((item, itemIndex) => (
                           <li
                             key={`feeding-item-${item.animal?.animalId}-${itemIndex}`}
                           >
-                            - Feeding Item {itemIndex + 1}: {item.foodCategory};
-                            amount:{" "}
+                            • {item.foodCategory}:{" "}
                             {item.amount != 0 ? (
                               <span>
                                 {item.amount} {item.unit}
@@ -621,9 +638,37 @@ function CreateFeedingPlan() {
                 )}
               </div>
             ))}
-          <Separator />
         </div>
       </React.Fragment>
+    );
+  };
+
+  // session cell template!
+  const sessionCell = (curDayOfTheWeek: string, curEventTimingType: string) => {
+    const sessionExists = !!feedingPlanSessions.find(
+      (session) =>
+        session.dayOfTheWeek === curDayOfTheWeek &&
+        session.eventTimingType === curEventTimingType
+    );
+
+    return (
+      <TableCell className="min-h-[8rem] w-1/3 align-top font-medium hover:bg-muted/50">
+        <div className="flex justify-between">
+          <div className="font-bold">
+            {curEventTimingType.charAt(0).toUpperCase() +
+              curEventTimingType.slice(1).toLowerCase()}
+          </div>
+          <div>
+            {isSessionExist(curDayOfTheWeek, curEventTimingType) &&
+              editSessionDialog(curDayOfTheWeek, curEventTimingType)}
+          </div>
+        </div>
+        {sessionExists ? (
+          <div>{sessionTemplate(curDayOfTheWeek, curEventTimingType)}</div>
+        ) : (
+          <div className="text-orange-800">No session created!</div>
+        )}
+      </TableCell>
     );
   };
 
@@ -783,7 +828,58 @@ function CreateFeedingPlan() {
   ///
 
   //
-  async function handleSubmit() {}
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    // any validations
+
+    const animalCodes = animalTargetList.map((animal) => animal.animalCode);
+
+    const updatedFeedingPlanSessions = feedingPlanSessions.map((session) => ({
+      ...session,
+      feedingItems: session?.feedingItems.map((item) => ({
+        ...item,
+        animalCode: item.animal.animalCode,
+      })),
+    }));
+
+    const newFeedingPlan = {
+      speciesCode,
+      animalCodes,
+      feedingPlanDesc,
+      startDate,
+      endDate,
+      sessions: updatedFeedingPlanSessions,
+    };
+
+    // console.log("creating new feeding plan");
+    // console.log(newFeedingPlan);
+
+    const createFeedingPlanApi = async () => {
+      try {
+        const response = await apiJson.post(
+          "http://localhost:3000/api/animal/createFeedingPlan",
+          newFeedingPlan
+        );
+        // success
+        toastShadcn({
+          description: `Successfully created a new feeding plan for ${curSpecies?.commonName}`,
+        });
+        const redirectUrl = `/animal/feedingplanhome/${speciesCode}/`;
+        navigate(redirectUrl);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while creating new feeding plan: \n" +
+            error.message,
+        });
+      }
+    };
+    createFeedingPlanApi();
+  }
 
   return (
     <div className="p-10">
@@ -860,6 +956,30 @@ function CreateFeedingPlan() {
           </Form.Field>
 
           <Separator />
+
+          {/* Description */}
+          <Form.Field
+            name="physicalDefiningCharacteristics"
+            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          >
+            <Form.Label className="font-medium">Details</Form.Label>
+            <Form.Control
+              asChild
+              value={feedingPlanDesc}
+              required={true}
+              onChange={(e) => setFeedingPlanDesc(e.target.value)}
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+            >
+              <textarea
+                rows={3}
+                placeholder="e.g., General plan in Summer..."
+                // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+              />
+            </Form.Control>
+            <Form.ValidityState>
+              {validateFeedingPlanDescrtipion}
+            </Form.ValidityState>
+          </Form.Field>
 
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
             {/* Start Date */}
@@ -1075,21 +1195,9 @@ function CreateFeedingPlan() {
                 onChange={(e: DropdownChangeEvent) =>
                   setUnitOfMeasurementNewFoodItem(e.value)
                 }
-                options={[
-                  "Kilograms (kg)",
-                  "Grams (g)",
-                  "Pounds (lbs)",
-                  "Ounces (oz)",
-                  "Milligrams (mg)",
-                  "Micrograms (µg)",
-                  "Liters (L)",
-                  "Milliliters (ml)",
-                  "Gallons (gal)",
-                  "Fluid ounces (fl oz)",
-                  "Cups",
-                  "Pints (pt)",
-                  "Quarts (qt)",
-                ]}
+                options={Object.keys(FoodUnit).map((foodUnitKey) =>
+                  FoodUnit[foodUnitKey as keyof typeof FoodUnit].toString()
+                )}
                 placeholder="Select Unit of Measurement"
                 className="w-full"
               />
@@ -1194,46 +1302,96 @@ function CreateFeedingPlan() {
               </TableRow>
             </TableHeader> */}
             <TableBody>
-              <TableRow>
+              <TableRow className="bg-muted/20">
                 <TableCell className="font-medium" colSpan={3}>
                   MONDAY
                 </TableCell>
               </TableRow>
-              <TableRow key={"MONDAYSessions"} className="hover:bg-transparent">
-                <TableCell className="w-1/3 align-top font-medium hover:bg-muted/50">
-                  <div className="flex justify-between">
-                    <div className="">Morning</div>
-                    <div>
-                      {isSessionExist("MONDAY", "MORNING") &&
-                        editSessionDialog("MONDAY", "MORNING")}
-                    </div>
-                  </div>
-                  <div>{sessionTemplate("MONDAY", "MORNING")}</div>
-                </TableCell>
-                <TableCell className="w-1/3 font-medium hover:bg-muted/50">
-                  <div className="h-32">Afternoon</div>
-                  <div>{sessionTemplate("MONDAY", "AFTERNOON")}</div>
-                </TableCell>
-                <TableCell className="w-1/3 font-medium hover:bg-muted/50">
-                  <div className="h-32">Evening</div>
-                  <div>{sessionTemplate("MONDAY", "EVENING")}</div>
-                </TableCell>
+              <TableRow
+                key={"MONDAYSessions"}
+                className="bg-muted/20 hover:bg-muted/20"
+              >
+                {sessionCell("MONDAY", "MORNING")}
+                {sessionCell("MONDAY", "AFTERNOON")}
+                {sessionCell("MONDAY", "EVENING")}
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium" colSpan={3}>
                   TUESDAY
                 </TableCell>
               </TableRow>
-              <TableRow className="hover:bg-transparent">
-                <TableCell className="font-medium hover:bg-muted/50">
-                  <div className="h-32">Morning</div>
+              <TableRow
+                key={"TUESDAYSessions"}
+                className="hover:bg-transparent"
+              >
+                {sessionCell("TUESDAY", "MORNING")}
+                {sessionCell("TUESDAY", "AFTERNOON")}
+                {sessionCell("TUESDAY", "EVENING")}
+              </TableRow>
+              <TableRow className="bg-muted/20">
+                <TableCell className="font-medium" colSpan={3}>
+                  WEDNESDAY
                 </TableCell>
-                <TableCell className="font-medium hover:bg-muted/50">
-                  <div className="h-32">Afternoon</div>
+              </TableRow>
+              <TableRow
+                key={"WEDNESDAYSessions"}
+                className="bg-muted/20 hover:bg-muted/20"
+              >
+                {sessionCell("WEDNESDAY", "MORNING")}
+                {sessionCell("WEDNESDAY", "AFTERNOON")}
+                {sessionCell("WEDNESDAY", "EVENING")}
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium" colSpan={3}>
+                  THURSDAY
                 </TableCell>
-                <TableCell className="font-medium hover:bg-muted/50">
-                  <div className="h-32">Evening</div>
+              </TableRow>
+              <TableRow
+                key={"THURSDAYSessions"}
+                className="hover:bg-transparent"
+              >
+                {sessionCell("THURSDAY", "MORNING")}
+                {sessionCell("THURSDAY", "AFTERNOON")}
+                {sessionCell("THURSDAY", "EVENING")}
+              </TableRow>
+              <TableRow className="bg-muted/20">
+                <TableCell className="font-medium" colSpan={3}>
+                  FRIDAY
                 </TableCell>
+              </TableRow>
+              <TableRow
+                key={"FRIDAYSessions"}
+                className="bg-muted/20 hover:bg-muted/20"
+              >
+                {sessionCell("FRIDAY", "MORNING")}
+                {sessionCell("FRIDAY", "AFTERNOON")}
+                {sessionCell("FRIDAY", "EVENING")}
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium" colSpan={3}>
+                  SATURDAY
+                </TableCell>
+              </TableRow>
+              <TableRow
+                key={"SATURDAYSessions"}
+                className="hover:bg-transparent"
+              >
+                {sessionCell("SATURDAY", "MORNING")}
+                {sessionCell("SATURDAY", "AFTERNOON")}
+                {sessionCell("SATURDAY", "EVENING")}
+              </TableRow>
+              <TableRow className="bg-muted/20">
+                <TableCell className="font-medium" colSpan={3}>
+                  SUNDAY
+                </TableCell>
+              </TableRow>
+              <TableRow
+                key={"SUNDAYSessions"}
+                className="bg-muted/20 hover:bg-muted/20"
+              >
+                {sessionCell("SUNDAY", "MORNING")}
+                {sessionCell("SUNDAY", "AFTERNOON")}
+                {sessionCell("SUNDAY", "EVENING")}
               </TableRow>
             </TableBody>
           </Table>

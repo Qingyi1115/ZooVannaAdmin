@@ -192,6 +192,13 @@ enum EventTimingType {
   EVENING = "EVENING",
 }
 
+enum FoodUnit {
+  KG = "KG",
+  GRAM = "GRAM",
+  ML = "ML",
+  L = "L",
+}
+
 enum ListingType {
   LOCAL_ADULT_ONETIME = "LOCAL_ADULT_ONETIME",
   LOCAL_STUDENT_ONETIME = "LOCAL_STUDENT_ONETIME",
@@ -280,6 +287,7 @@ export {
   Biome,
   EventType,
   EventTimingType,
+  FoodUnit,
   ListingType,
   ListingStatus,
   PaymentStatus,
