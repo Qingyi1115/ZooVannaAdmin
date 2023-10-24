@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import { classNames } from "primereact/utils";
-import { DataTable, DataTableExpandedRows } from "primereact/datatable";
-import { Column } from "primereact/column";
+import { DataTable, DataTableExpandedRows, DataTableFilterMeta } from "primereact/datatable";
+import { Column, ColumnFilterElementTemplateOptions } from "primereact/column";
 // import { Toast } from "primereact/toast";
+import { TriStateCheckbox, TriStateCheckboxChangeEvent } from 'primereact/tristatecheckbox';
 import { FileUpload } from "primereact/fileupload";
 import { Rating } from "primereact/rating";
 import { Toolbar } from "primereact/toolbar";
@@ -34,6 +35,7 @@ import {
 } from "../../../enums/Enumurated";
 import { useNavigate } from "react-router-dom";
 import ZooEvent from "../../../models/ZooEvent";
+import { FilterMatchMode } from "primereact/api";
 
 let emptyZooEvent: ZooEvent = {
   zooEventId: 0,
@@ -52,6 +54,10 @@ interface AllZooEventsDatatableProps {
   zooEventsList: ZooEvent[];
   setZooEventsList: any;
 }
+
+const defaultFilters: DataTableFilterMeta = {
+  eventIsPublic: { value: null, matchMode: FilterMatchMode.EQUALS },
+};
 
 function AllZooEventsDatatable(
   props: AllZooEventsDatatableProps
@@ -72,6 +78,7 @@ function AllZooEventsDatatable(
   const [deleteZooEventDialog, setDeleteZooEventDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
+  const [filters, setFilters] = useState<DataTableFilterMeta>(defaultFilters);
 
   const dt = useRef<DataTable<ZooEvent[]>>(null);
 
@@ -112,6 +119,7 @@ function AllZooEventsDatatable(
         setZooEventsList(_zooEventsList);
         setDeleteZooEventDialog(false);
         setSelectedZooEvent(emptyZooEvent);
+        setFilters(defaultFilters);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -180,6 +188,23 @@ function AllZooEventsDatatable(
     </div>
   );
 
+  const eventIsPublicBodyTemplate = (rowData: ZooEvent) => {
+    return <i className={classNames('pi', { 'text-green-500 pi-check-circle mx-auto': rowData.eventIsPublic, 'text-red-500 pi-times-circle mx-auto': !rowData.eventIsPublic })}></i>;
+  };
+
+  const eventIsPublicFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
+    return (
+      <div>
+        <div className="flex align-items-center gap-2">
+          <label htmlFor="eventIsPublic-filter" className="font-bold">
+            Is Public?
+          </label>
+          <TriStateCheckbox id="eventIsPublic-filter" value={options.value} onChange={(e: TriStateCheckboxChangeEvent) => options.filterCallback(e.value)} />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div>
       <div>
@@ -212,6 +237,7 @@ function AllZooEventsDatatable(
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} species"
+            filters={filters}
             globalFilter={globalFilter}
             header={header}
           >
@@ -236,7 +262,12 @@ function AllZooEventsDatatable(
             <Column
               field="eventIsPublic"
               header="Is Public?"
+              dataType="boolean"
               sortable
+              body={eventIsPublicBodyTemplate}
+              bodyClassName={"text-center"}
+              filter
+              filterElement={eventIsPublicFilterTemplate}
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
