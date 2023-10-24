@@ -242,6 +242,8 @@ function CreateFeedingPlan() {
       }));
     console.log(newFeedingItemsListWithUomAndCategory);
 
+    const updatedFeedingPlanSessions = [...feedingPlanSessions];
+
     // loop for each day of week:
     if (
       selectedDaysOfWeekNewFoodItem != undefined &&
@@ -249,6 +251,7 @@ function CreateFeedingPlan() {
       durationInMinutesNewFoodItem != null
     ) {
       for (const day of selectedDaysOfWeekNewFoodItem as string[]) {
+        console.log("here, " + day);
         // create new feeding session object (the dummy one)
         var newFeedingSessionObject: DummyFeedingPlanSessionDetail = {
           dayOfTheWeek: day[0],
@@ -265,7 +268,7 @@ function CreateFeedingPlan() {
         );
         // if the session with selectedDayOfWeek and selectedSessionTiming already exists
         if (existingSessionIndex != -1) {
-          const updatedFeedingPlanSessions = [...feedingPlanSessions];
+          // const updatedFeedingPlanSessions = [...feedingPlanSessions];
 
           // merge feedingItems array between the new and existing feedingSession
           const existingSession =
@@ -286,36 +289,20 @@ function CreateFeedingPlan() {
             // If the existing session has no feedingItems, assign the new items
             existingSession.feedingItems = newFeedingSessionObject.feedingItems;
           }
-          setFeedingPlanSessions(updatedFeedingPlanSessions);
+          // setFeedingPlanSessions(updatedFeedingPlanSessions);
         } else {
-          // No matching item found, add the newFeedingPlanSession to feedingPlanSessions
-          const updatedFeedingPlanSessions = [...feedingPlanSessions];
+          // No matching item found, add the newFeedingPlanSession to feedingPlanSessiosns
+          // const updatedFeedingPlanSessions = [...feedingPlanSessions];
           updatedFeedingPlanSessions.push(newFeedingSessionObject);
-          setFeedingPlanSessions(updatedFeedingPlanSessions);
+          // setFeedingPlanSessions(updatedFeedingPlanSessions);
         }
       }
+      setFeedingPlanSessions(updatedFeedingPlanSessions);
     }
     console.log("end of here");
     console.log(feedingPlanSessions);
   }
 
-  // data structure to group feeding items by animals
-  // const feedingItemsByAnimal: {
-  //   [key: string]: { animal: Animal; items: DummyFeedingItem[] };
-  // } = feedingPlanSessions.reduce((result: any, session) => {
-  //   if (session.feedingItems) {
-  //     session.feedingItems.forEach((item) => {
-  //       const animalId = item.animal?.animalId;
-  //       if (animalId !== undefined) {
-  //         if (!result[animalId]) {
-  //           result[animalId] = { animal: item.animal, items: [] };
-  //         }
-  //         result[animalId].items.push(item);
-  //       }
-  //     });
-  //   }
-  //   return result;
-  // }, {});
   function groupFeedingItemsByAnimal(
     feedingPlanSession: DummyFeedingPlanSessionDetail
   ) {
@@ -604,7 +591,7 @@ function CreateFeedingPlan() {
               //     {item.foodCategory}
               //   </div>
               // ))
-              <div>
+              <div key={session.dayOfTheWeek + session.eventTimingType}>
                 {Object.values(groupFeedingItemsByAnimal(session)).map(
                   (
                     group: {
@@ -1077,7 +1064,7 @@ function CreateFeedingPlan() {
             <br />
 
             {/* Day Of Week, select multiple. Session Timing, select one */}
-            <div className="flex gap-8">
+            <div className="flex w-full flex-wrap">
               <div className="w-full">
                 <div>Day Of Week:</div>
                 <MultiSelect
@@ -1095,7 +1082,6 @@ function CreateFeedingPlan() {
                   display="chip"
                 />
               </div>
-
               <div className="w-full">
                 <div>Feeding Session Timing:</div>
                 <Dropdown
