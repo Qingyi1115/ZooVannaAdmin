@@ -954,13 +954,13 @@ function App() {
                   }
                 />
                 <Route
-                  path="/zooevent/editzooevent/:zooeventId"
+                  path="/zooevent/editzooevent/:zooEventId"
                   element={
                     user ? <EditZooEventPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
-                  path="/zooevent/viewzooeventdetails/:zooeventId"
+                  path="/zooevent/viewzooeventdetails/:zooEventId"
                   element={
                     user ? <ViewZooEventDetails /> : <Navigate to="/login" />
                   }

@@ -66,7 +66,7 @@ function ZooEventHomePage() {
         return setZooEventsList(responseJson["zooEvents"] as ZooEvent[])
       }
 
-      const filteredEvents = [];
+      const filteredEvents = [] as any[];
       for (const ze of responseJson["zooEvents"]) {
         if (
           eventGroupList.find(eventGroup => {
@@ -94,21 +94,21 @@ function ZooEventHomePage() {
       label: 'Add Animal Activity',
       command: () => {
         navigate(`/zooevent/viewallzooevents/`, { replace: true })
-        navigate(`/zooevent/createzooevent/`)
+        navigate(`/animal/createanimalactivity`)
       }
     },
     {
       label: 'Add Animal Observation',
       command: () => {
         navigate(`/zooevent/viewallzooevents/`, { replace: true })
-        navigate(`/zooevent/createzooevent/`)
+        navigate(`/animal/createanimalobservation`)
       }
     },
     {
       label: 'Add Feeding Plan',
       command: () => {
         navigate(`/zooevent/viewallzooevents/`, { replace: true })
-        navigate(`/zooevent/createzooevent/`)
+        navigate(`/animal/createfeedingplan`)
       }
     }
   ];
@@ -121,11 +121,11 @@ function ZooEventHomePage() {
           <div className="mb-4 flex justify-between">
             <SplitButton
               label="Add Internal Event"
-              className="mr-2 flex items-center"
+              className="mr-2 my-3 flex items-center"
               model={items}
               onClick={() => {
                 navigate(`/zooevent/viewallzooevents/`, { replace: true })
-                navigate(`/zooevent/createzooevent/`)
+                navigate(`/zooevent/createnewzooevent/`)
               }}
             >
               <HiPlus className="mr-2" />
