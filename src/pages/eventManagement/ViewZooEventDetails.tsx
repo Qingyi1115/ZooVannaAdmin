@@ -125,6 +125,7 @@ function ViewZooEventDetails() {
         );
         console.log("a", responseJson)
         setCurZooEvent(responseJson["zooEvent"] as ZooEvent);
+        setInvolvedAnimalList(responseJson["zooEvent"].animals);
       } catch (error: any) {
         console.log(error);
       }
