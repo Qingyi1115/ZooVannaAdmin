@@ -117,6 +117,7 @@ import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPla
 //customer order management page
 import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
 import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrderDetailsPage";
+import SalesChartPage from "./pages/sales/SalesChartPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -884,6 +885,11 @@ function App() {
                       <Navigate to="/login" />
                     )
                   }
+                />
+
+                <Route
+                  path="/sales/viewGraph/"
+                  element={user ? <SalesChartPage /> : <Navigate to="/login" />}
                 />
 
                 <Route
