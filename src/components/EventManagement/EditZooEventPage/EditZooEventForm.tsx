@@ -134,7 +134,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
       if (eventTiming == undefined) {
         return (
           <div className="font-medium text-danger">
-            * Please select a eventTiming timing!
+            * Please select an event timing!
           </div>
         );
       }

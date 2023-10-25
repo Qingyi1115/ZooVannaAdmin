@@ -31,12 +31,14 @@ import {
   AcquisitionMethod,
   AnimalGrowthStage,
   AnimalSex,
+  EventType,
 } from "../../enums/Enumurated";
 import { Dialog } from "primereact/dialog";
 import { Nullable } from "primereact/ts-helpers";
 import * as Form from "@radix-ui/react-form";
 import FormFieldInput from "src/components/FormFieldInput";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import { Checkbox } from "@radix-ui/react-checkbox";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -353,11 +355,14 @@ function ViewZooEventDetails() {
 
   // Make Event Public stuff
   const [makeEventPublicDialog, setMakePublicDialog] = useState<boolean>(false);
-  const [eventNotificationDate, setEventNotificationDate] = useState<string | Date | Date[] | null>();
-  const [eventEndDateTime, setEventEndDateTime] = useState<string | Date | Date[] | null>();
+  const [eventNotificationDate, setEventNotificationDate] = useState<Nullable<Date>>();
+  const [eventStartDateTime, setEventStartDateTime] = useState<Nullable<Date>>();
+  const [eventEndDateTime, setEventEndDateTime] = useState<Nullable<Date>>();
   const [imageUrl, setImageUrl] = useState<string | null>();
   const [imageFile, setImageFile] = useState<File | null>();
   const [formError, setFormError] = useState<string | null>(null);
+  const [updateFuture, setUpdateFuture] = useState<boolean>(false);
+  const [checked, setChecked] = useState<boolean>(false);
 
   const showMakePublicDialog = () => {
     setMakePublicDialog(true);
@@ -367,21 +372,23 @@ function ViewZooEventDetails() {
     setMakePublicDialog(false);
   };
 
-  const makeEventPublic = async () => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 
-    const updatedZooEvent = {
+    const zooEventDetails = {
       zooEventId: curZooEvent?.zooEventId,
       eventIsPublic: true,
-      eventNotificationDate,
-      eventEndDateTime,
+      eventNotificationDate: eventNotificationDate?.getTime(),
+      eventEndDateTime: eventEndDateTime?.getTime(),
       imageUrl
 
     };
 
+    console.log("zooEventDetails", zooEventDetails);
+
     useEffect(() => {
       apiJson.put(
-        "http://localhost:3000/api/animal/updateZooEvent",
-        updatedZooEvent
+        `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
+        zooEventDetails
       ).then(res => {
         // success
         toastShadcn({
@@ -402,13 +409,17 @@ function ViewZooEventDetails() {
   }
 
 
+
   const makeEventPublicDialogFooter = (
     <React.Fragment>
       <Button onClick={hideMakePublicDialog}>
         <HiX className="mr-2" />
         No
       </Button>
-      <Button variant={"destructive"} onClick={makeEventPublic}>
+      <Button
+        variant={"destructive"}
+      // onClick={handleSubmit}
+      >
         <HiCheck className="mr-2" />
         Yes
       </Button>
@@ -484,6 +495,73 @@ function ViewZooEventDetails() {
     );
   };
 
+  function validateStartDate(props: ValidityState) {
+    if (props != undefined) {
+      if (eventStartDateTime == null) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the start date of the period for the recurring
+            event
+          </div>
+        );
+      }
+    }
+
+    if (
+      eventStartDateTime != null &&
+      eventEndDateTime != null &&
+      new Date(eventStartDateTime) > new Date(eventEndDateTime)
+    ) {
+      return (
+        <div className="font-medium text-danger">
+          * Start Date must not be after End Date
+        </div>
+      );
+    }
+    // add any other cases here
+    return null;
+  }
+
+  function validateEndDate(props: ValidityState) {
+    if (props != undefined) {
+      if (eventEndDateTime == null) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the end date of the period for the recurring event
+          </div>
+        );
+      }
+    }
+
+    if (
+      eventEndDateTime != null &&
+      eventStartDateTime != null &&
+      new Date(eventStartDateTime) > new Date(eventEndDateTime)
+    ) {
+      return (
+        <div className="font-medium text-danger">
+          * End Date must not be before Start Date
+        </div>
+      );
+    }
+    // add any other cases here
+    return null;
+  }
+
+  function validateDate(props: ValidityState) {
+    if (props != undefined) {
+      if (eventStartDateTime == null) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter a date!
+          </div>
+        );
+      }
+    }
+    // add any other cases here
+    return null;
+  }
+
   return (
     <div className="p-10">
       {curZooEvent && (
@@ -517,8 +595,8 @@ function ViewZooEventDetails() {
               <div className="my-4 flex justify-start gap-6">
                 <Button
                   onClick={() => {
-                    navigate(`/zooevent/viewzooeventdetails/${curZooEvent.zooEventId}`, { replace: true })
-                    navigate(`/zooevent/editzooevent/${curZooEvent.zooEventId}`)
+                    navigate(`/ zooevent / viewzooeventdetails / ${curZooEvent.zooEventId}`, { replace: true })
+                    navigate(`/ zooevent / editzooevent / ${curZooEvent.zooEventId}`)
                   }}
                   className="my-3">Edit Basic Information
                 </Button>
@@ -690,125 +768,221 @@ function ViewZooEventDetails() {
             </div>
             <br />
             <div className="w-full">
-              <div className="mb-2 text-xl font-medium">
-                Item(s) to be used:
-              </div>
-              <DataTable
-                value={involvedItemList}
-                scrollable
-                scrollHeight="100%"
-                selectionMode="single"
-                globalFilter={involvedItemGlobalFiler}
-                header={involvedItemsHeader}
-                dataKey="enrichmentItemid"
-                style={{ height: "50vh" }}
-                className="h-1/2 overflow-hidden rounded border border-graydark/30"
-              >
-                <Column
-                  field="enrichmentItemImageUrl"
-                  body={enrichmentItemImageBodyTemplate}
-                  style={{ minWidth: "3rem" }}
-                ></Column>
-                <Column
-                  field="enrichmentItemId"
-                  header="ID"
-                  sortable
-                  style={{ minWidth: "3rem" }}
-                ></Column>
-                <Column
-                  field="enrichmentItemName"
-                  header="Name"
-                  sortable
-                  style={{ minWidth: "5rem" }}
-                ></Column>
-              </DataTable>
-              <Dialog
-                visible={removeItemDialog}
-                style={{ width: "32rem" }}
-                breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-                header="Confirm"
-                modal
-                footer={removeItemDialogFooter}
-                onHide={hideRemoveItemDialog}
-              >
-                <div className="confirmation-content">
-                  <i
-                    className="pi pi-exclamation-triangle mr-3"
-                    style={{ fontSize: "2rem" }}
-                  />
-                  {selectedItem && (
-                    <span>
-                      Are you sure you want to remove{" "}
-                      {selectedItem.enrichmentItemName} from the current
-                      activity? ?
-                    </span>
-                  )}
+              {curZooEvent.animalActivity != null && <div>
+                <div className="mb-2 text-xl font-medium">
+                  Item(s) to be used:
                 </div>
-              </Dialog>
+                <DataTable
+                  value={involvedItemList}
+                  scrollable
+                  scrollHeight="100%"
+                  selectionMode="single"
+                  globalFilter={involvedItemGlobalFiler}
+                  header={involvedItemsHeader}
+                  dataKey="enrichmentItemid"
+                  style={{ height: "50vh" }}
+                  className="h-1/2 overflow-hidden rounded border border-graydark/30"
+                >
+                  <Column
+                    field="enrichmentItemImageUrl"
+                    body={enrichmentItemImageBodyTemplate}
+                    style={{ minWidth: "3rem" }}
+                  ></Column>
+                  <Column
+                    field="enrichmentItemId"
+                    header="ID"
+                    sortable
+                    style={{ minWidth: "3rem" }}
+                  ></Column>
+                  <Column
+                    field="enrichmentItemName"
+                    header="Name"
+                    sortable
+                    style={{ minWidth: "5rem" }}
+                  ></Column>
+                </DataTable>
+                <Dialog
+                  visible={removeItemDialog}
+                  style={{ width: "32rem" }}
+                  breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+                  header="Confirm"
+                  modal
+                  footer={removeItemDialogFooter}
+                  onHide={hideRemoveItemDialog}
+                >
+                  <div className="confirmation-content">
+                    <i
+                      className="pi pi-exclamation-triangle mr-3"
+                      style={{ fontSize: "2rem" }}
+                    />
+                    {selectedItem && (
+                      <span>
+                        Are you sure you want to remove{" "}
+                        {selectedItem.enrichmentItemName} from the current
+                        activity? ?
+                      </span>
+                    )}
+                  </div>
+                </Dialog>
+              </div>
+              }
               <Dialog
                 visible={makeEventPublicDialog}
                 style={{ width: "50rem" }}
                 breakpoints={{ "960px": "75vw", "641px": "90vw" }}
                 header="Make Event Public"
-                // position={"right"}
-                footer={
-                  <Button
-                    disabled={apiJson.loading}
-                    className="h-12 w-2/3 self-center rounded-full text-lg"
-                    onClick={makeEventPublic}
-                  >
-                    {!apiJson.loading ? (
-                      <div>Make Event Public</div>
-                    ) : (
-                      <div>Loading</div>
-                    )}
-                  </Button>}
+                // footer={
+                //   <Button
+                //     disabled={apiJson.loading}
+                //     className="h-12 w-2/3 self-center rounded-full text-lg"
+                //     onClick={makeEventPublic}
+                //   >
+                //     {!apiJson.loading ? (
+                //       <div>Make Event Public</div>
+                //     ) : (
+                //       <div>Loading</div>
+                //     )}
+                //   </Button>}
                 onHide={hideMakePublicDialog}>
                 <div className="confirmation-content">
                   <Form.Root
-                    className="flex w-full flex-col gap-6  bg-white p-20 text-black "
-
+                    className="flex w-full flex-col gap-6  bg-white p-10 text-black "
+                    onSubmit={handleSubmit}
                     encType="multipart/form-data"
                   >
-                    {/* Event Notification Date */}
-                    <div className="card justify-content-center block ">
-                      <div className="mb-1 block font-medium">Event Notification Date</div>
+                    {/* Start Date */}
+                    <Form.Field
+                      name="eventStartDateTime"
+                      id="eventStartDateField"
+                      className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+                    >
+                      <Form.Label className="font-medium">Start Date</Form.Label>
+                      <Form.Control
+                        className="hidden"
+                        type="text"
+                        value={eventStartDateTime?.toString()}
+                        required={true}
+                        onChange={() => null}
+                      ></Form.Control>
                       <Calendar
-                        value={eventNotificationDate}
-                        onChange={(e: CalendarChangeEvent) => {
+                        value={eventStartDateTime}
+                        className="w-fit"
+                        onChange={(e: any) => {
                           if (e && e.value !== undefined) {
-                            setEventNotificationDate(e.value);
+                            setEventStartDateTime(e.value);
+
+                            const element = document.getElementById("dateField");
+                            if (element) {
+                              const isDataInvalid = element.getAttribute("data-invalid");
+                              if (isDataInvalid == "true") {
+                                element.setAttribute("data-valid", "true");
+                                element.removeAttribute("data-invalid");
+                              }
+                            }
                           }
                         }}
-                        className="border-100 bg-white "
                       />
-                    </div>
-                    {/* Event End Date */}
-                    <div className="card justify-content-center block ">
-                      <div className="mb-1 block font-medium">End Date</div>
+                      <Form.ValidityState>{validateStartDate}</Form.ValidityState>
+                    </Form.Field>
+                    {/* End Date */}
+                    <Form.Field
+                      name="eventEndDateTime"
+                      id="eventEndDateField"
+                      className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+                    >
+                      <Form.Label className="font-medium">End Date</Form.Label>
+                      <Form.Control
+                        className="hidden"
+                        type="text"
+                        value={eventEndDateTime?.toString()}
+                        required={true}
+                        onChange={() => null}
+                      ></Form.Control>
                       <Calendar
                         value={eventEndDateTime}
-                        onChange={(e: CalendarChangeEvent) => {
+                        className="w-fit"
+                        onChange={(e: any) => {
                           if (e && e.value !== undefined) {
                             setEventEndDateTime(e.value);
+
+                            const element = document.getElementById("dateField");
+                            if (element) {
+                              const isDataInvalid = element.getAttribute("data-invalid");
+                              if (isDataInvalid == "true") {
+                                element.setAttribute("data-valid", "true");
+                                element.removeAttribute("data-invalid");
+                              }
+                            }
                           }
                         }}
-                        className="border-100 bg-white "
                       />
-                    </div>
-                    {/* <Form.Submit asChild> */}
-                    {/* <Button
-                  disabled={apiJson.loading || selectedEmployees.length == 0}
-                  className="h-12 w-2/3 self-center rounded-full text-lg"
-                  onClick={confirmAssignment}
-                >
-                  {!apiJson.loading ? (
-                    <div>Assign Selected Staff</div>
-                  ) : (
-                    <div>Loading</div>
-                  )}
-                </Button> */}
-                    {/* </Form.Submit> */}
+                      <Form.ValidityState>{validateEndDate}</Form.ValidityState>
+                    </Form.Field>
+                    {/* Notification Date */}
+                    <Form.Field
+                      name="eventNotificationDate"
+                      id="eventNotificationDateField"
+                      className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+                    >
+                      <Form.Label className="font-medium">Notification Date</Form.Label>
+                      <Form.Control
+                        className="hidden"
+                        type="text"
+                        value={eventNotificationDate?.toString()}
+                        required={true}
+                        onChange={() => null}
+                      ></Form.Control>
+                      <Calendar
+                        value={eventNotificationDate}
+                        className="w-fit"
+                        onChange={(e: any) => {
+                          if (e && e.value !== undefined) {
+                            setEventNotificationDate(e.value);
+
+                            const element = document.getElementById("dateField");
+                            if (element) {
+                              const isDataInvalid = element.getAttribute("data-invalid");
+                              if (isDataInvalid == "true") {
+                                element.setAttribute("data-valid", "true");
+                                element.removeAttribute("data-invalid");
+                              }
+                            }
+                          }
+                        }}
+                      />
+                      <Form.ValidityState>{validateDate}</Form.ValidityState>
+                    </Form.Field>
+                    {/* Update Future*/}
+                    <Form.Field
+                      name="updateFuture"
+                      id="updateFutureField"
+                      className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+                    >
+                      <Form.Label className="font-medium">Update this and future events?</Form.Label>
+                      <Form.Control
+                        className="hidden"
+                        type="text"
+                        value={updateFuture?.toString()}
+                        required={true}
+                        onChange={() => null}
+                      ></Form.Control>
+                      <Checkbox
+                        onChange={e => setUpdateFuture(e.updateFuture)}
+                        checked={updateFuture}
+                      />
+                    </Form.Field>
+                    <Form.Submit asChild>
+                      <Button
+                        disabled={apiJson.loading}
+                        className="h-12 w-2/3 self-center rounded-full text-lg"
+                      >
+                        {!apiJson.loading ? (
+                          <div>Make Event Public</div>
+                        ) : (
+                          <div>Loading</div>
+                        )}
+                      </Button>
+                    </Form.Submit>
                     {formError && (
                       <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
                     )}

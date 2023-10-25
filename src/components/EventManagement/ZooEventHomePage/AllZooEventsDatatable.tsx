@@ -126,7 +126,7 @@ function AllZooEventsDatatable(
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting species: \n" + error.message,
+            "An error has occurred while deleting event: \n" + error.message,
         });
       }
     };
@@ -236,7 +236,7 @@ function AllZooEventsDatatable(
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} species"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} event"
             filters={filters}
             globalFilter={globalFilter}
             header={header}
