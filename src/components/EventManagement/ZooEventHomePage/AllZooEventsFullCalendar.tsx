@@ -44,7 +44,7 @@ import { EventContentArg, EventInput } from "@fullcalendar/core";
 
 interface AllZooEventsFullCalendarProps {
   zooEventsList: ZooEvent[];
-  setZooEventsList: any;
+  setRefresh: any;
 }
 function AllZooEventsFullCalendar(
   props: AllZooEventsFullCalendarProps
@@ -53,7 +53,7 @@ function AllZooEventsFullCalendar(
   const navigate = useNavigate();
   const calendarRef = useRef<FullCalendar>(null);
 
-  const { zooEventsList, setZooEventsList } = props;
+  const { zooEventsList, setRefresh } = props;
 
   const [events, setEvents] = useState<any[]>(
     []

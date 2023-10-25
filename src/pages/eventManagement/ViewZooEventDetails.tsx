@@ -511,7 +511,7 @@ function ViewZooEventDetails() {
           </div>
           {/* body */}
           <div>
-            <div className="mb-10">
+            <div className="mb-10 ">
               <div className="text-xl font-medium">Basic Information:</div>
               <div className="my-4 flex justify-start gap-6">
                 <Button

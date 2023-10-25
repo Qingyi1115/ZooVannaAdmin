@@ -17,6 +17,8 @@ interface FeedingPlanSessionDetail {
     dayOfWeek : DayOfWeek;
     eventTimingType: EventTimingType;
     durationInMinutes: number;
+    isPublic:boolean;
+    publicEventStartTime:string;
 
     feedingPlan?: any;
     feedingItems?: any[];

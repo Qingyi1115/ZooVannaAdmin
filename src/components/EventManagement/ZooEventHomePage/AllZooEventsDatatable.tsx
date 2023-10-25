@@ -52,7 +52,7 @@ let emptyZooEvent: ZooEvent = {
 
 interface AllZooEventsDatatableProps {
   zooEventsList: ZooEvent[];
-  setZooEventsList: any;
+  setRefresh: any;
 }
 
 const defaultFilters: DataTableFilterMeta = {
@@ -71,7 +71,7 @@ function AllZooEventsDatatable(
     day: "2-digit",
   };
 
-  const { zooEventsList, setZooEventsList } = props;
+  const { zooEventsList, setRefresh } = props;
   const [selectedZooEvent, setSelectedZooEvent] =
     useState<ZooEvent>(emptyZooEvent);
 
@@ -116,7 +116,7 @@ function AllZooEventsDatatable(
           title: "Deletion Successful",
           description: "Successfully deleted event!",
         });
-        setZooEventsList(_zooEventsList);
+        setRefresh([]);
         setDeleteZooEventDialog(false);
         setSelectedZooEvent(emptyZooEvent);
         setFilters(defaultFilters);
