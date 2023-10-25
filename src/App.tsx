@@ -117,8 +117,7 @@ import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPla
 //customer order management page
 import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
 import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrderDetailsPage";
-import BarChart from "./components/SalesManagement/BarChart";
-import SalesChartPage from "./pages/sales/salesChartPage";
+import SalesChartPage from "./pages/sales/SalesChartPage";
 
 function App() {
   const { state } = useAuthContext();
