@@ -3,6 +3,7 @@ import { Chart } from "primereact/chart";
 import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import useApiJson from "../../hooks/useApiJson";
+import Listing from "../../models/Listing";
 
 interface ChartData {
   labels: string[];
@@ -57,6 +58,50 @@ const BarChart: React.FC = () => {
     }
   };
 
+  const fetchListingNames = async (listingIds: string[]) => {
+    const listingNames = [];
+    for (const listingId of listingIds) {
+      const listingResponse = await apiJson.get(
+        `http://localhost:3000/api/listing/getListing/${listingId}`
+      );
+      const listing: Listing = listingResponse.result as Listing;
+      listingNames.push(`${listing.listingType} - ${listing.name}`);
+    }
+    return listingNames;
+  };
+
+  const mapMonthNumbersToNames = (monthNumbers: number[]): string[] => {
+    const months: string[] = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    return monthNumbers.map((monthNumber) => {
+      return months[monthNumber - 1]; // Subtract 1 as month numbers are 1-based
+    });
+  };
+
+  // Function to select the appropriate utility function based on criteria
+  const mapLabels = async (criteria: string, data: any) => {
+    if (criteria === "month") {
+      const monthNumbers = data as number[];
+      return mapMonthNumbersToNames(monthNumbers);
+    } else {
+      const listingIds = data as string[];
+      return fetchListingNames(listingIds);
+    }
+  };
+
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
@@ -73,8 +118,10 @@ const BarChart: React.FC = () => {
 
         if (groupBy.length === 2) {
           const jsonData = responseJson as JSONData;
+
           const reformatData = (data: JSONData): ChartData => {
             const labels = Object.keys(data);
+            // console.log(labels);
             const allSubgroups = new Set<string>();
 
             // Collect all subgroups
@@ -84,9 +131,13 @@ const BarChart: React.FC = () => {
                 allSubgroups.add(subgroupKey);
               });
             });
+            console.log(allSubgroups);
 
             // Sort subgroups
-            const sortedSubgroups = Array.from(allSubgroups).sort();
+            const sortedSubgroups = Array.from(allSubgroups).sort(
+              (a, b) => Number(a) - Number(b)
+            );
+            console.log(sortedSubgroups);
 
             // Create datasets including all subgroups
             const datasets = sortedSubgroups.map((subgroup) => ({
@@ -99,7 +150,25 @@ const BarChart: React.FC = () => {
               datasets,
             };
           };
+
           const chartData = reformatData(jsonData);
+
+          const parentLabels = await mapLabels(groupBy[0], chartData.labels);
+          chartData.labels = parentLabels;
+
+          const modifyDatasetPromises = chartData.datasets.map(
+            async (dataset) => {
+              const modifiedLabel = (
+                await mapLabels(groupBy[1], [dataset.label])
+              )[0];
+              console.log(dataset.label);
+              console.log(modifiedLabel);
+              dataset.label = modifiedLabel;
+            }
+          );
+
+          await Promise.all(modifyDatasetPromises);
+
           setChartData(chartData);
         } else {
           const jsonData = responseJson as JSONData1;
@@ -115,6 +184,8 @@ const BarChart: React.FC = () => {
             labels: labels,
             datasets: datasets,
           };
+          const parentLabels = await mapLabels(groupBy[0], chartData.labels);
+          chartData.labels = parentLabels;
 
           setChartData(chartData);
         }
@@ -124,6 +195,12 @@ const BarChart: React.FC = () => {
     };
     fetchSalesData();
   }, [groupBy, startDate, endDate]);
+
+  const chartOptions = {
+    responsive: true, // Make the chart responsive
+    maintainAspectRatio: true, // Allow the chart to adjust aspect ratio
+    // Additional chart options
+  };
 
   return (
     <div>
@@ -193,7 +270,7 @@ const BarChart: React.FC = () => {
         </div>
       </div>
 
-      <Chart type="bar" data={chartData} />
+      <Chart type="bar" data={chartData} options={chartOptions} />
     </div>
   );
 };
