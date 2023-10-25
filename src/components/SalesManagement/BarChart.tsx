@@ -87,7 +87,7 @@ const BarChart: React.FC = () => {
     ];
 
     return monthNumbers.map((monthNumber) => {
-      return months[monthNumber - 1]; // Subtract 1 as month numbers are 1-based
+      return months[monthNumber]; // Subtract 1 as month numbers are 1-based
     });
   };
 
@@ -115,6 +115,9 @@ const BarChart: React.FC = () => {
           `http://localhost:3000/api/customerOrder/getTotalCustomerOrder/`,
           dataRequest
         );
+
+        console.log(startDate);
+        console.log(endDate);
 
         if (groupBy.length === 2) {
           const jsonData = responseJson as JSONData;
@@ -202,6 +205,19 @@ const BarChart: React.FC = () => {
     // Additional chart options
   };
 
+  const handleEndDateChange = (e: CalendarChangeEvent) => {
+    if (e.value !== null) {
+      // Get the current date
+      const selectedDate = new Date(e.value as Date);
+
+      // Set the date to the last day of the month
+      selectedDate.setMonth(selectedDate.getMonth() + 1, 0);
+
+      // Update the state with the last day of the month
+      setEndDate(selectedDate);
+    }
+  };
+
   return (
     <div>
       <div className="mb-4 flex justify-between">
@@ -237,11 +253,7 @@ const BarChart: React.FC = () => {
           <Calendar
             style={{ flexGrow: 1 }}
             value={endDate}
-            onChange={(e: CalendarChangeEvent) => {
-              if (e && e.value !== undefined) {
-                setEndDate(e.value);
-              }
-            }}
+            onChange={handleEndDateChange}
             view="month"
             dateFormat="mm/yy"
           />
