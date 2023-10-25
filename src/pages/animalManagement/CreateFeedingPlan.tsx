@@ -135,6 +135,110 @@ function CreateFeedingPlan() {
       }))
     );
 
+  // reco amount
+  interface RecoAmount {
+    animalCode: string;
+    weekOrMeal: string;
+    animalFeedCategory: string;
+    recoAmt: number | string | null;
+  }
+  const [animalRecoAmounts, setAnimalRecoAmounts] = useState<RecoAmount[]>([]);
+
+  function getRecoAmountsFeedCategoryForSpecies(animalFeedCategory: string) {
+    const fetchRecoAmount = async () => {
+      try {
+        const recoAmountBody = {
+          speciesCode: speciesCode,
+          animalFeedCategory: animalFeedCategory,
+          // weekOrMeal: weekOrMeal,
+        };
+
+        const responseJson = await apiJson.post(
+          `http://localhost:3000/api/animal/getFeedingItemAmtRecoAllAnimalsOfSpecies/`,
+          recoAmountBody
+        );
+        const recoAmounts = responseJson.recoAmts as RecoAmount[];
+        return recoAmounts;
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    return fetchRecoAmount();
+  }
+
+  function getRecoAmountAnimal(
+    animalFeedCategory: string,
+    weekOrMeal: string,
+    animalCode: string
+  ) {
+    const recoAmountForSpecificAnimal = animalRecoAmounts.find((recoAmount) => {
+      return (
+        recoAmount.animalCode === animalCode &&
+        recoAmount.animalFeedCategory === animalFeedCategory &&
+        recoAmount.weekOrMeal === weekOrMeal
+      );
+    });
+
+    if (recoAmountForSpecificAnimal) {
+      return (
+        <>
+          {recoAmountForSpecificAnimal.recoAmt != "No dietary data found!" ? (
+            <div>
+              {recoAmountForSpecificAnimal.recoAmt?.toLocaleString()} grams (g)
+            </div>
+          ) : (
+            recoAmountForSpecificAnimal.recoAmt
+          )}
+        </>
+      );
+    } else {
+      return "Recommended food data not available!";
+    }
+  }
+
+  // end reco amount
+
+  const convertToGramsOrMl = (amount: any, unit: any) => {
+    switch (unit) {
+      case "KG":
+        return amount * 1000; // Convert kg to g
+      case "GRAM":
+        return amount; // g to g, no conversion needed
+      case "ML":
+        return amount; // ml to ml, no conversion needed
+      case "L":
+        return amount * 1000; // Convert l to ml
+      default:
+        return 0; // Unknown unit, you can handle this as needed
+    }
+  };
+
+  function getAmountFoodAlreadyAddedPerWeekInGrams(
+    animalCode: string,
+    animalFeedCategory: string
+  ) {
+    const sum = feedingPlanSessions.reduce((total, session) => {
+      const filteredItems = session.feedingItems.filter((item) => {
+        return (
+          item.animal.animalCode === animalCode &&
+          item.foodCategory === animalFeedCategory
+        );
+      });
+
+      const sessionSum = filteredItems.reduce((sessionTotal, item) => {
+        const amountInGrams = convertToGramsOrMl(item.amount, item.unit);
+        return sessionTotal + amountInGrams;
+      }, 0);
+
+      return total + sessionSum;
+    }, 0);
+
+    return (
+      sum.toLocaleString() + " (g) | " + (sum / 1000).toLocaleString() + " (kg)"
+    );
+  }
+
   const handleAmountChangeNewFoodItem = (
     idx: number,
     amount: number | null
@@ -390,18 +494,38 @@ function CreateFeedingPlan() {
           ).map((speciesDietNeed) => {
             return speciesDietNeed.animalFeedCategory.toString();
           });
+          const recommendedFeedSet = new Set(listRecommendedFeedCategories);
           // console.log("here");
           // console.log(listRecommendedFeedCategories);
-          const listLeftoverFoodCategories = listAllFeedCategories
-            .filter(
-              (feedCategory) =>
-                !listRecommendedFeedCategories?.includes(feedCategory)
-            )
-            .filter((feedCategory) => feedCategory != "OTHERS");
+          const listLeftoverFoodCategories = listAllFeedCategories.filter(
+            (feedCategory) =>
+              !recommendedFeedSet.has(feedCategory) && feedCategory !== "OTHERS"
+          );
           // console.log("hereee");
           // console.log(listLeftoverFoodCategories);
-          setListFeedCategoriesRecommended(listRecommendedFeedCategories);
+          setListFeedCategoriesRecommended([...recommendedFeedSet]);
           setListFeedCategoriesNoRecommendation(listLeftoverFoodCategories);
+
+          // populate reco amount
+          let tempRecoAmounts: RecoAmount[] = [];
+          for (var feedCategory of recommendedFeedSet) {
+            const recoAmoutsCurFeedcatory =
+              await getRecoAmountsFeedCategoryForSpecies(feedCategory);
+            console.log("aaaaa: " + feedCategory);
+            console.log(recoAmoutsCurFeedcatory);
+
+            if (recoAmoutsCurFeedcatory) {
+              // tempRecoAmounts.concat(recoAmoutsCurFeedcatory);
+              tempRecoAmounts = [
+                ...tempRecoAmounts,
+                ...recoAmoutsCurFeedcatory,
+              ];
+              console.log("getting reco amounts");
+              console.log(tempRecoAmounts);
+            }
+          }
+
+          setAnimalRecoAmounts(tempRecoAmounts);
         }
       } catch (error: any) {
         console.log(error);
@@ -631,6 +755,26 @@ function CreateFeedingPlan() {
   };
 
   // session cell template!
+  function clearOneSession(
+    curDayOfTheWeek: string,
+    curEventTimingType: string
+  ) {
+    const tempFeedingPlanSessions = [...feedingPlanSessions];
+    const existingSessionIndex = [...feedingPlanSessions].findIndex(
+      (session) =>
+        session.dayOfTheWeek === curDayOfTheWeek &&
+        session.eventTimingType === curEventTimingType
+    );
+    let curSessionToEdit: DummyFeedingPlanSessionDetail;
+    if (existingSessionIndex !== -1) {
+      // Remove the session with the existingSessionIndex from tempFeedingPlanSessions
+      tempFeedingPlanSessions.splice(existingSessionIndex, 1);
+    } else {
+      return;
+    }
+    setFeedingPlanSessions(tempFeedingPlanSessions);
+  }
+
   const sessionCell = (curDayOfTheWeek: string, curEventTimingType: string) => {
     const sessionExists = !!feedingPlanSessions.find(
       (session) =>
@@ -646,8 +790,20 @@ function CreateFeedingPlan() {
               curEventTimingType.slice(1).toLowerCase()}
           </div>
           <div>
-            {isSessionExist(curDayOfTheWeek, curEventTimingType) &&
-              editSessionDialog(curDayOfTheWeek, curEventTimingType)}
+            {isSessionExist(curDayOfTheWeek, curEventTimingType) && (
+              <>
+                <Button
+                  variant={"destructive"}
+                  className="mr-2 h-min px-2 py-1 text-sm"
+                  onClick={() =>
+                    clearOneSession(curDayOfTheWeek, curEventTimingType)
+                  }
+                >
+                  Clear
+                </Button>
+                {editSessionDialog(curDayOfTheWeek, curEventTimingType)}
+              </>
+            )}
           </div>
         </div>
         {sessionExists ? (
@@ -734,7 +890,7 @@ function CreateFeedingPlan() {
               variant={"outline"}
               className="h-min bg-white px-2 py-1 text-sm"
             >
-              Edit session
+              Edit
             </Button>
           </DialogTrigger>
           <DialogContent className="ml-[10%] max-w-[60vw]">
@@ -1059,46 +1215,45 @@ function CreateFeedingPlan() {
           <Separator className="my-6" />
 
           <div className="text-lg font-medium">Feeding Plan Details:</div>
-          <div className="w-5/6 self-center border bg-whiten p-4">
-            <div className="text-lg font-bold">Add Food To Plan</div>
-            <br />
+          <div className="flex w-5/6 flex-col gap-4 self-center rounded-md border border-strokedark/30 bg-whiter p-8 shadow-md">
+            <div className="text-center text-xl font-bold">
+              Add Food To Plan
+            </div>
 
-            {/* Day Of Week, select multiple. Session Timing, select one */}
-            <div className="flex w-full flex-wrap">
-              <div className="w-full">
-                <div>Day Of Week:</div>
-                <MultiSelect
-                  value={selectedDaysOfWeekNewFoodItem}
-                  // onChange={(e: MultiSelectChangeEvent) => setSelectedBiomes(e.value)}
-                  onChange={(e) => setSelectedDaysOfWeekNewFoodItem(e.value)}
-                  // options={Object.values(BiomeEnum).map((biome) => biome.toString())}
-                  options={Object.keys(DayOfWeek).map((dayOfWeekKey) => [
-                    DayOfWeek[
-                      dayOfWeekKey as keyof typeof DayOfWeek
-                    ].toString(),
-                  ])}
-                  placeholder="Select day(s) of week"
-                  className="p-multiselect-token:tailwind-multiselect-chip w-full"
-                  display="chip"
-                />
-              </div>
-              <div className="w-full">
-                <div>Feeding Session Timing:</div>
-                <Dropdown
-                  value={selectedSessionTimingNewFoodItem}
-                  onChange={(e: DropdownChangeEvent) =>
-                    setSelectedSessionTimingNewFoodItem(e.value)
-                  }
-                  options={Object.keys(EventTimingType).map(
-                    (eventTImingTypeKey) =>
-                      EventTimingType[
-                        eventTImingTypeKey as keyof typeof EventTimingType
-                      ].toString()
-                  )}
-                  placeholder="Select Feeding Session Timing"
-                  className="w-full"
-                />
-              </div>
+            {/* Day Of Week, select multiple */}
+            <div className="w-full">
+              <div>Day Of Week:</div>
+              <MultiSelect
+                value={selectedDaysOfWeekNewFoodItem}
+                // onChange={(e: MultiSelectChangeEvent) => setSelectedBiomes(e.value)}
+                onChange={(e) => setSelectedDaysOfWeekNewFoodItem(e.value)}
+                // options={Object.values(BiomeEnum).map((biome) => biome.toString())}
+                options={Object.keys(DayOfWeek).map((dayOfWeekKey) => [
+                  DayOfWeek[dayOfWeekKey as keyof typeof DayOfWeek].toString(),
+                ])}
+                placeholder="Select day(s) of week"
+                className="p-multiselect-token:tailwind-multiselect-chip w-full"
+                display="chip"
+              />
+            </div>
+
+            {/* Session Timing, select one */}
+            <div className="w-full">
+              <div>Feeding Session Timing:</div>
+              <Dropdown
+                value={selectedSessionTimingNewFoodItem}
+                onChange={(e: DropdownChangeEvent) =>
+                  setSelectedSessionTimingNewFoodItem(e.value)
+                }
+                options={Object.keys(EventTimingType).map(
+                  (eventTImingTypeKey) =>
+                    EventTimingType[
+                      eventTImingTypeKey as keyof typeof EventTimingType
+                    ].toString()
+                )}
+                placeholder="Select Feeding Session Timing"
+                className="w-full"
+              />
             </div>
 
             <div>
@@ -1135,43 +1290,6 @@ function CreateFeedingPlan() {
                 placeholder="Select Food Item Category"
                 className="w-full"
               />
-              {/* <div className="text-sm">
-                Below are recommended food types according to the animal's
-                dietary requirements
-              </div>
-              <div className="flex flex-wrap gap-4 overflow-x-auto">
-                {dietNeedsList.map((dietNeed) => (
-                  <div className="">
-                    <img
-                      src={
-                        "../../../../src/assets/feedcategory/" +
-                        dietNeed.animalFeedCategory +
-                        ".jpg"
-                      }
-                      alt={`Animal Feed Category: ${dietNeed.animalFeedCategory}`}
-                      className="aspect-square h-32 w-32 object-cover"
-                    />
-                    <div>{dietNeed.animalFeedCategory}</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-wrap gap-4 overflow-x-auto">
-                {listFeedCategoriesNoRecommendation.map((feedCategory) => (
-                  <div className="">
-                    <img
-                      src={
-                        "../../../../src/assets/feedcategory/" +
-                        feedCategory +
-                        ".jpg"
-                      }
-                      alt={`Animal Feed Category: ${feedCategory}`}
-                      className="aspect-square h-32 w-32 object-cover"
-                    />
-                    <div className="">{feedCategory}</div>
-                  </div>
-                ))}
-              </div> */}
             </div>
 
             <div>
@@ -1232,9 +1350,41 @@ function CreateFeedingPlan() {
                             }
                           />
                         </div>
-                        <div>
-                          Recommended: <div>100000 kg per meal</div>
-                          <div>100000 kg per week</div>
+                        <div className="flex gap-8">
+                          <div>
+                            Recommended:{" "}
+                            <div className="flex gap-8">
+                              <div>
+                                Per meal: <br />
+                                {selectedCurFeedCategoryNewFoodItem &&
+                                  getRecoAmountAnimal(
+                                    selectedCurFeedCategoryNewFoodItem,
+                                    "meal",
+                                    curAnimal.animalCode
+                                  )}
+                              </div>
+                              <div>
+                                Per week: <br />
+                                {selectedCurFeedCategoryNewFoodItem &&
+                                  getRecoAmountAnimal(
+                                    selectedCurFeedCategoryNewFoodItem,
+                                    "week",
+                                    curAnimal.animalCode
+                                  )}
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            Amount already added <br />
+                            per week:
+                            <div>
+                              {selectedCurFeedCategoryNewFoodItem &&
+                                getAmountFoodAlreadyAddedPerWeekInGrams(
+                                  curAnimal.animalCode,
+                                  selectedCurFeedCategoryNewFoodItem
+                                )}
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <Separator className="my-4" />
@@ -1249,6 +1399,16 @@ function CreateFeedingPlan() {
             </div>
 
             {/* <div>
+              Hey, <br />
+              {animalRecoAmounts.map((recoAmount) => (
+                <div>
+                  {recoAmount.animalCode}, {recoAmount.animalFeedCategory},{" "}
+                  {recoAmount.weekOrMeal}: {recoAmount.recoAmt}
+                </div>
+              ))}
+            </div> */}
+
+            {/* <div>
               {curFeedingItemsNewFeedSession.toString()},{" "}
               {curFeedingItemsNewFeedSession.length}
               {curFeedingItemsNewFeedSession?.map((feedingItem) => (
@@ -1261,19 +1421,33 @@ function CreateFeedingPlan() {
                 </div>
               ))}
             </div> */}
-            <Button type="button" onClick={addNewFoodSessionToPlan}>
-              Add Feeding Session(s)
-            </Button>
-            <Button
-              type="button"
-              variant={"ghost"}
-              onClick={clearNewFoodSessionFormBox}
-            >
-              Clear
-            </Button>
+            <div className="flex gap-12">
+              <Button
+                type="button"
+                onClick={addNewFoodSessionToPlan}
+                className="w-full"
+              >
+                Add Feeding Session(s)
+              </Button>
+              <Button
+                type="button"
+                variant={"ghost"}
+                onClick={clearNewFoodSessionFormBox}
+                className="w-full"
+              >
+                Clear
+              </Button>
+            </div>
 
             {/* end add food box */}
           </div>
+          <Button
+            variant={"destructive"}
+            type="button"
+            onClick={() => setFeedingPlanSessions([])}
+          >
+            Clear All Sessions
+          </Button>
           <Table>
             {/* <TableHeader>
               <TableRow>

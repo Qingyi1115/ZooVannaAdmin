@@ -195,8 +195,8 @@ enum EventTimingType {
 enum FoodUnit {
   KG = "KG",
   GRAM = "GRAM",
-  ML = "ML",
-  L = "L",
+  // ML = "ML",
+  // L = "L",
 }
 
 enum ListingType {
