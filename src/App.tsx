@@ -121,6 +121,12 @@ import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrde
 import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrderDetailsPage";
 import SalesChartPage from "./pages/sales/SalesChartPage";
 
+//Event management page
+import CreateZooEventPage from "./pages/eventManagement/CreateZooEventPage";
+import EditZooEventPage from "./pages/eventManagement/EditZooEventPage";
+import ViewZooEventDetails from "./pages/eventManagement/ViewZooEventDetails";
+import ZooEventHomePage from "./pages/eventManagement/ZooEventHomePage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -966,6 +972,37 @@ function App() {
                   path="/listing/viewlisting/:listingId"
                   element={
                     user ? <ViewListingDetailsPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* Event Management */}
+                <Route
+                  path="/zooevent/createnewzooevent"
+                  element={
+                    user ? <CreateZooEventPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/viewallzooevents"
+                  element={
+                    user ? <ZooEventHomePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/editzooevent/:zooEventId"
+                  element={
+                    user ? <EditZooEventPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/viewzooeventdetails/:zooEventId"
+                  element={
+                    user ? <ViewZooEventDetails /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/viewzooeventdetails/:zooEventId/:tab"
+                  element={
+                    user ? <ViewZooEventDetails /> : <Navigate to="/login" />
                   }
                 />
               </Route>

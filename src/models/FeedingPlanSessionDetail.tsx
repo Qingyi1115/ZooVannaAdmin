@@ -3,6 +3,7 @@ import FeedingPlan from "./FeedingPlan";
 import ZooEvent from "./ZooEvent";
 
 interface FeedingPlanSessionDetail {
+  feedingPlanSessionDetailId:number;
   feedingPlanDetailId: number;
   dayOfWeek: string;
   eventTimingType: string;
