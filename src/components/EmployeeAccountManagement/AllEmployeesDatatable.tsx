@@ -181,7 +181,7 @@ function AllEmployeesDatatable() {
         {/* Title Header and back button */}
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            <NavLink to={"/employee/createNewEmployee"}>
+            <NavLink to={"/employeeAccount/createNewEmployee"}>
               <Button className="mr-2">
                 <HiPlus className="mr-auto" />
                 Add Employee
