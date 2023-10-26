@@ -80,7 +80,16 @@ function AnimalFeedingPlanDetailsPage() {
         {curFeedingPlan && (
           <div>
             <div className="mb-4">
-              <Button className="mb-4">Edit Basic Info</Button>
+              <Button
+                className="mb-4"
+                onClick={() => {
+                  navigate(
+                    `/animal/editfeedingplanbasicinfo/${curFeedingPlan.feedingPlanId}`
+                  );
+                }}
+              >
+                Edit Basic Info
+              </Button>
               <div className="text-lg font-bold">Basic Information</div>
               <Table>
                 <TableBody>

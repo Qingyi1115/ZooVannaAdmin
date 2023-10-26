@@ -8,6 +8,7 @@ interface FeedingPlan {
   feedingPlanDesc: string;
   startDate: Date;
   endDate: Date;
+  title: string;
 
   //--FK
   species?: Species;
