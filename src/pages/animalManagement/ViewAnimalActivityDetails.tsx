@@ -30,11 +30,14 @@ import { HiCheck, HiTrash, HiX } from "react-icons/hi";
 
 import {
   AcquisitionMethod,
+  ActivityType,
   AnimalGrowthStage,
   AnimalSex,
 } from "../../enums/Enumurated";
 import { Dialog } from "primereact/dialog";
 import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalActivityLogsDatatable";
+import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
+import { Activity } from "lucide-react";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -377,7 +380,11 @@ function ViewAnimalActivityDetails() {
             <Tabs defaultValue={tab ? `${tab}` : "details"} className="w-full">
               <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
                 <TabsTrigger value="details">Details</TabsTrigger>
-                <TabsTrigger value="activitylogs">Activity Logs</TabsTrigger>
+                {curAnimalActivity.activityType == ActivityType.OBSERVATION ?
+                  <TabsTrigger value="observationlogs">Observation Logs</TabsTrigger>
+                  :
+                  <TabsTrigger value="activitylogs">Activity Logs</TabsTrigger>}
+
               </TabsList>
               <TabsContent value="details">
                 <div className="mb-10">
@@ -649,10 +656,14 @@ function ViewAnimalActivityDetails() {
                   </div>
                 </div>
               </TabsContent>
-
-              <TabsContent value="activitylogs">
-                <AllAnimalActivityLogsDatatable speciesCode={""} animalCode={""} animalActivityLogId={curAnimalActivity.animalActivityId} />
-              </TabsContent>
+              {curAnimalActivity.activityType == ActivityType.OBSERVATION ?
+                <TabsContent value="observationlogs">
+                  <AllAnimalObservationLogsDatatable speciesCode={""} animalCode={""} animalActivityId={curAnimalActivity.animalActivityId} />
+                </TabsContent>
+                :
+                <TabsContent value="activitylogs">
+                  <AllAnimalActivityLogsDatatable speciesCode={""} animalCode={""} animalActivityId={curAnimalActivity.animalActivityId} />
+                </TabsContent>}
             </Tabs>
 
           </div>

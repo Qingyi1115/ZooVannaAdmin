@@ -72,9 +72,12 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
   const [durationInMinutes, setDurationInMinutes] = useState<
     number | undefined
   >(curAnimalActivity.durationInMinutes);
+  const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
+    number | undefined
+  >(undefined);
   const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
     RecurringPattern[
-      curAnimalActivity.recurringPattern as keyof typeof RecurringPattern
+    curAnimalActivity.recurringPattern as keyof typeof RecurringPattern
     ]
   );
   const [startDate, setStartDate] = useState<Nullable<Date>>(
@@ -292,6 +295,26 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
     return null;
   }
 
+  function validateRequiredNumberOfKeeper(props: ValidityState) {
+    if (props != undefined) {
+      if (durationInMinutes == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the number of keepers required
+          </div>
+        );
+      } else if (durationInMinutes <= 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Number of keepers must be greater than 0
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
   // end validate functions
 
   // handle submit
@@ -341,6 +364,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
       dayOfMonth,
       eventTimingType,
       durationInMinutes,
+      requiredNumberOfKeeper
     };
 
     console.log(updatedAnimalActivity);
@@ -376,7 +400,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
         onSubmit={handleSubmit}
-        // encType="multipart/form-data"
+      // encType="multipart/form-data"
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
@@ -450,7 +474,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             <textarea
               rows={3}
               placeholder="e.g., Leave yoga ball in the pen and pushes it towards the tiger,..."
-              // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
           <Form.ValidityState>{validateDetails}</Form.ValidityState>
@@ -491,6 +515,19 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             validateFunction={validateDurationInMinutes}
           />
         </div>
+
+        {/* Number of keepers required */}
+        <FormFieldInput
+          type="number"
+          formFieldName="durationInMinutes"
+          label={`Number of keepers required`}
+          required={true}
+          pattern={undefined}
+          placeholder="e.g., 2"
+          value={requiredNumberOfKeeper}
+          setValue={setRequiredNumberOfKeeper}
+          validateFunction={validateRequiredNumberOfKeeper}
+        />
 
         {/* Recurring Pattern */}
         <FormFieldSelect

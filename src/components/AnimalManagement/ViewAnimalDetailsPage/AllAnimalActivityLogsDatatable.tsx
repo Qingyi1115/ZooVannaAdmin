@@ -30,14 +30,14 @@ import { HiMiniListBullet } from "react-icons/hi2";
 interface AllAnimalActivityLogsDatatableProps {
   speciesCode: string;
   animalCode: string;
-  animalActivityLogId: number;
+  animalActivityId: number;
 }
 
 function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatableProps) {
   const apiJson = useApiJson();
-  const { speciesCode, animalCode, animalActivityLogId } = props;
+  const { speciesCode, animalCode, animalActivityId } = props;
   const [animalActivitySearch, setAnimalActivitySearch] =
-    useState<boolean>(animalActivityLogId != -1);
+    useState<boolean>(animalActivityId != -1);
   const employee = useAuthContext().state.user?.employeeData;
   let emptySpecies: Species = {
     speciesId: -1,
@@ -157,7 +157,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
     if (animalActivitySearch) {
 
       apiJson.get(
-        `http://localhost:3000/api/animal/getAnimalActivityLogsByAnimalActivityId/${animalActivityLogId}`)
+        `http://localhost:3000/api/animal/getAnimalActivityLogsByAnimalActivityId/${animalActivityId}`)
         .then(res => {
           console.log("animalActivityLogList", res.animalActivityLogs);
           setAnimalActivityLogList(res.animalActivityLogs as AnimalActivityLog[]);
@@ -247,28 +247,8 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
               // variant={"outline"}
               className="mb-1 mr-1"
               onClick={() => {
-                navigate(`/animal/viewanimalactivitydetails/${animalActivityLogId}/activitylogs`, { replace: true })
+                navigate(`/animal/viewanimalactivitydetails/${animalActivityId}/activitylogs`, { replace: true })
                 navigate(`/animal/viewAnimalActivityLogDetails/${animalActivityLog.animalActivityLogId}`)
-              }}>
-              <HiEye className="mx-auto" />
-            </Button>
-            <Button
-              // variant={"outline"}
-              className="mb-1 mr-1"
-              onClick={() => {
-                navigate(`/animal/viewanimalactivitydetails/${animalActivityLogId}/activitylogs`, { replace: true })
-                navigate(`/animal/viewAnimalActivityDetails/${animalActivityLog.animalActivity.animalActivityId}`)
-              }}>
-              <HiMiniListBullet className="mx-auto" />
-            </Button>
-          </div> :
-          <div>
-            <Button
-              // variant={"outline"}
-              className="mb-1 mr-1"
-              onClick={() => {
-                navigate(`/animal/viewAnimalDetails/${animalCode}/activitylogs`, { replace: true })
-                navigate(`/animal/viewAnimalActivityLogDetails/${animalActivityLogId}`)
               }}>
               <HiEye className="mx-auto" />
             </Button>
@@ -279,16 +259,30 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
             >
               <HiTrash className="mx-auto" />
             </Button>
+          </div> :
+          <div>
+            <Button
+              // variant={"outline"}
+              className="mb-1 mr-1"
+              onClick={() => {
+                navigate(`/animal/viewAnimalDetails/${animalCode}/activitylogs`, { replace: true })
+                navigate(`/animal/viewAnimalActivityLogDetails/${animalActivityLog.animalActivityLogId}`)
+              }}>
+              <HiEye className="mx-auto" />
+            </Button>
+            <Button
+              // variant={"outline"}
+              className="mb-1 mr-1"
+              onClick={() => {
+                navigate(`/animal/viewAnimalDetails/${animalCode}/activitylogs`, { replace: true })
+                navigate(`/animal/viewAnimalActivityDetails/${animalActivityLog.animalActivity.animalActivityId}`)
+              }}>
+              <HiMiniListBullet className="mx-auto" />
+            </Button>
+
           </div>}
 
-        {/* <Button
-          className="mr-1"
-          onClick={() => {
-            navigate(`/animal/viewAnimalDetails/${animalCode}/activitylogs`, { replace: true })
-            navigate(`/animal/editAnimalActivityLog/${animalActivityLog.animalTrainingLogId}`)
-          }}>
-          <HiPencil className="mr-1" />
-        </Button> */}
+
       </React.Fragment>
     );
   };
@@ -353,8 +347,8 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
           employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS")) ?
           <Button className="mr-2"
             onClick={() => {
-              navigate(`/animal/viewanimalactivitydetails/${animalActivityLogId}/activitylogs`, { replace: true })
-              navigate(`/animal/createAnimalActivityLog/${animalActivityLogId}`)
+              navigate(`/animal/viewanimalactivitydetails/${animalActivityId}/activitylogs`, { replace: true })
+              navigate(`/animal/createAnimalActivityLog/${animalActivityId}`)
             }}>
             <HiPlus className="mr-auto" />
             Add Animal Activity Log

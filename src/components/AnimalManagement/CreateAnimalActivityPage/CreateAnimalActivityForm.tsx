@@ -52,6 +52,9 @@ function CreateAnimalActivityForm() {
   const [durationInMinutes, setDurationInMinutes] = useState<
     number | undefined
   >(undefined);
+  const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
+    number | undefined
+  >(undefined);
   const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
     undefined
   );
@@ -141,6 +144,26 @@ function CreateAnimalActivityForm() {
         return (
           <div className="font-medium text-danger">
             * Duration must be greater than 0
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateRequiredNumberOfKeeper(props: ValidityState) {
+    if (props != undefined) {
+      if (durationInMinutes == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the number of keepers required
+          </div>
+        );
+      } else if (durationInMinutes <= 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Number of keepers must be greater than 0
           </div>
         );
       }
@@ -318,6 +341,7 @@ function CreateAnimalActivityForm() {
       dayOfMonth,
       eventTimingType,
       durationInMinutes,
+      requiredNumberOfKeeper
     };
 
     const createAnimalActivityApi = async () => {
@@ -351,7 +375,7 @@ function CreateAnimalActivityForm() {
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
         onSubmit={handleSubmit}
-        // encType="multipart/form-data"
+      // encType="multipart/form-data"
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
@@ -425,7 +449,7 @@ function CreateAnimalActivityForm() {
             <textarea
               rows={3}
               placeholder="e.g., Leave yoga ball in the pen and pushes it towards the tiger,..."
-              // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
           <Form.ValidityState>{validateDetails}</Form.ValidityState>
@@ -466,6 +490,19 @@ function CreateAnimalActivityForm() {
             validateFunction={validateDurationInMinutes}
           />
         </div>
+
+        {/* Number of keepers required */}
+        <FormFieldInput
+          type="number"
+          formFieldName="durationInMinutes"
+          label={`Number of keepers required`}
+          required={true}
+          pattern={undefined}
+          placeholder="e.g., 2"
+          value={requiredNumberOfKeeper}
+          setValue={setRequiredNumberOfKeeper}
+          validateFunction={validateRequiredNumberOfKeeper}
+        />
 
         {/* Recurring Pattern */}
         <FormFieldSelect
@@ -529,6 +566,7 @@ function CreateAnimalActivityForm() {
                 />
                 <Form.ValidityState>{validateOneOffDate}</Form.ValidityState>
               </Form.Field>
+
             </div>
           )}
 

@@ -141,7 +141,7 @@ function ViewAnimalDetailsPage() {
                 <AllAnimalObservationLogsDatatable
                   speciesCode={curAnimal.species.speciesCode}
                   animalCode={curAnimal.animalCode}
-                />
+                  animalActivityId={-1} />
               </div>
             </TabsContent>
             <TabsContent value="feedinglogs">
@@ -156,7 +156,8 @@ function ViewAnimalDetailsPage() {
               <div>
                 <AllAnimalActivityLogsDatatable
                   speciesCode={curAnimal.species.speciesCode}
-                  animalCode={curAnimal.animalCode} animalActivityLogId={-1} />
+                  animalCode={curAnimal.animalCode}
+                  animalActivityId={-1} />
               </div>
             </TabsContent>
             {/* <TabsContent value="medical">

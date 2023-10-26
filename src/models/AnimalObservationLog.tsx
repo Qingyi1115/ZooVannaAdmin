@@ -1,5 +1,6 @@
 import { Rating } from "../enums/Rating";
 import Animal from "./Animal";
+import AnimalActivity from "./AnimalActivity";
 import Keeper from "./Keeper";
 
 interface AnimalObservationLog {
@@ -10,6 +11,7 @@ interface AnimalObservationLog {
   details: string;
   animals: Animal[];
   keeper: Keeper;
+  animalActivity: AnimalActivity;
 }
 
 export default AnimalObservationLog;
