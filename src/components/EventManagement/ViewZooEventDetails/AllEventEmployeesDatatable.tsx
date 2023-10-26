@@ -70,18 +70,21 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
 
       // }
       console.log("AddFacilityMaintenanceStaff", res);
-      setCurrentKeepers(res["currentKeepers"].map(keeper=>{
-        const emp = keeper.employee
-        keeper.employee = undefined
-        emp.keeper = keeper;
-        return emp;
-      }));
       setAvailiableKeepers(res["availiableKeepers"].map(keeper=>{
         const emp = keeper.employee
         keeper.employee = undefined
         emp.keeper = keeper;
+        emp.keeperType = keeper.keeperType;
+        emp.currentlyAssigned = false;
         return emp;
-      }));
+      }).concat(res["currentKeepers"].map(keeper=>{
+        const emp = keeper.employee
+        keeper.employee = undefined
+        emp.keeper = keeper;
+        emp.keeperType = keeper.keeperType;
+        emp.currentlyAssigned = true;
+        return emp;
+      })));
     });
   }, [refreshSeed]);
 
@@ -101,11 +104,12 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
+      const values = { employeeIds: [selectedEmployee.employeeId,] ,
+        zooEventIds: [zooEventId,]
+      };
       const responseJson = await apiJson.put(
         `http://localhost:3000/api/zooEvent/assignZooEventKeeper`, 
-        { employeeIds: [selectedEmployee.employeeId,] ,
-          zooEventIds: [zooEventId,]
-        }).then(res => {
+        values).then(res => {
           toastShadcn({
             // variant: "destructive",
             title: "Assignment Successful",
@@ -299,8 +303,8 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="employeeEmail"
-              header="Email"
+              field="keeperType"
+              header="Keeper Type"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
