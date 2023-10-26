@@ -255,6 +255,7 @@ function CreateFeedingPlan() {
     setCurFeedingItemsNewFeedSession(updatedCurFeedingItemsToBeAdded);
   };
 
+  // update feedingItemsNewFeedSession array when animals change
   useEffect(() => {
     setCurFeedingItemsNewFeedSession(
       animalTargetList.map((animal) => {
@@ -275,6 +276,23 @@ function CreateFeedingPlan() {
         }
       })
     );
+
+    // update cur feeding sessions also, to remove all items containing animal that were removed
+    const tempFeedingPlanSessions = [...feedingPlanSessions];
+    const animalCodes = animalTargetList.map((animal) => {
+      return animal.animalCode;
+    });
+
+    const updatedFeedingPlanSessions = feedingPlanSessions.map((session) => ({
+      ...session,
+      feedingItems: session.feedingItems
+        .map((item) => ({
+          ...item,
+          animalCode: item.animal.animalCode,
+        }))
+        .filter((item) => animalCodes.includes(item.animalCode)),
+    }));
+    setFeedingPlanSessions(updatedFeedingPlanSessions);
   }, [animalTargetList]);
 
   function clearNewFoodSessionFormBox() {
@@ -313,6 +331,8 @@ function CreateFeedingPlan() {
           const existingItem = itemsMap.get(key);
           if (item.amount !== null) {
             existingItem.amount = item.amount;
+          } else {
+            item.amount = 0;
           }
         } else {
           // Item with a new combination of foodCategory and animalCode, add it to the map
@@ -387,10 +407,11 @@ function CreateFeedingPlan() {
     const newFeedingItemsListWithUomAndCategory =
       curFeedingItemsNewFeedSession.map((item) => ({
         ...item,
+        amount: item.amount == null ? 0 : item.amount,
         foodCategory: selectedCurFeedCategoryNewFoodItem,
         unit: unitOfMeasurementNewFoodItem,
       }));
-    console.log(newFeedingItemsListWithUomAndCategory);
+    // console.log(newFeedingItemsListWithUomAndCategory);
 
     const updatedFeedingPlanSessions = [...feedingPlanSessions];
 
@@ -435,6 +456,9 @@ function CreateFeedingPlan() {
               existingSession.feedingItems,
               newFeedingSessionObject.feedingItems
             );
+
+            // update attributes
+            existingSession.durationInMinutes = durationInMinutesNewFoodItem;
           } else if (newFeedingSessionObject.feedingItems) {
             // If the existing session has no feedingItems, assign the new items
             existingSession.feedingItems = newFeedingSessionObject.feedingItems;
@@ -449,8 +473,8 @@ function CreateFeedingPlan() {
       }
       setFeedingPlanSessions(updatedFeedingPlanSessions);
     }
-    console.log("end of here");
-    console.log(feedingPlanSessions);
+    // console.log("end of here");
+    // console.log(feedingPlanSessions);
   }
 
   function groupFeedingItemsByAnimal(
@@ -761,7 +785,10 @@ function CreateFeedingPlan() {
               //     {item.foodCategory}
               //   </div>
               // ))
-              <div key={session.dayOfTheWeek + session.eventTimingType}>
+              <div
+                key={session.dayOfTheWeek + session.eventTimingType}
+                className="max-h-[16em] overflow-y-auto py-2"
+              >
                 {Object.values(groupFeedingItemsByAnimal(session)).map(
                   (
                     group: {
@@ -770,7 +797,10 @@ function CreateFeedingPlan() {
                     },
                     index
                   ) => (
-                    <div key={`animal-${group.animal.animalId}`}>
+                    <div
+                      key={`animal-${group.animal.animalId}`}
+                      className="mb-2 text-sm"
+                    >
                       <div className="font-medium">
                         {group.animal.houseName}:
                       </div>
@@ -778,11 +808,13 @@ function CreateFeedingPlan() {
                         {group.items.map((item, itemIndex) => (
                           <li
                             key={`feeding-item-${item.animal?.animalId}-${itemIndex}`}
+                            className="ml-4 font-normal"
                           >
-                            • {item.foodCategory}:{" "}
+                            {item.foodCategory}:{" "}
                             {item.amount != 0 ? (
                               <span>
-                                {item.amount} {item.unit}
+                                {item.amount}{" "}
+                                <span className="text-xs">{item.unit}</span>
                               </span>
                             ) : (
                               <span>None!</span>
@@ -828,18 +860,23 @@ function CreateFeedingPlan() {
         session.eventTimingType === curEventTimingType
     );
 
-    // const curSession = feedingPlanSessions.find(
-    //   (session) =>
-    //     session.dayOfTheWeek === curDayOfTheWeek &&
-    //     session.eventTimingType === curEventTimingType
-    // );
+    const curSession = feedingPlanSessions.find(
+      (session) =>
+        session.dayOfTheWeek === curDayOfTheWeek &&
+        session.eventTimingType === curEventTimingType
+    );
 
     return (
       <TableCell className="min-h-[8rem] w-1/3 align-top font-medium hover:bg-muted/50">
-        <div className="flex justify-between">
+        <div className="mb-1 flex justify-between">
           <div className="font-bold">
             {curEventTimingType.charAt(0).toUpperCase() +
-              curEventTimingType.slice(1).toLowerCase()}
+              curEventTimingType.slice(1).toLowerCase()}{" "}
+            {curSession && (
+              <span className="text-sm font-normal">
+                ({curSession?.durationInMinutes} minutes)
+              </span>
+            )}
           </div>
           <div>
             {isSessionExist(curDayOfTheWeek, curEventTimingType) && (
@@ -1746,6 +1783,13 @@ function CreateFeedingPlan() {
             <div className="flex gap-12">
               <Button
                 type="button"
+                disabled={
+                  !selectedCurFeedCategoryNewFoodItem ||
+                  !selectedDaysOfWeekNewFoodItem ||
+                  !selectedSessionTimingNewFoodItem ||
+                  !unitOfMeasurementNewFoodItem ||
+                  !durationInMinutesNewFoodItem
+                }
                 onClick={addNewFoodSessionToPlan}
                 className="w-full"
               >

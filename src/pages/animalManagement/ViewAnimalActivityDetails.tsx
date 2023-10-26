@@ -439,7 +439,7 @@ function ViewAnimalActivityDetails() {
                   )}
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Session Timing
+                      Shift Timing
                     </TableCell>
                     <TableCell>{curAnimalActivity.eventTimingType}</TableCell>
                   </TableRow>
