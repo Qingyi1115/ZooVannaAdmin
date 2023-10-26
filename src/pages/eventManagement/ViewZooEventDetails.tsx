@@ -386,29 +386,52 @@ function ViewZooEventDetails() {
 
     };
     console.log(updateFuture)
-    console.log("zooEventDetails", zooEventDetails);
-
-    useEffect(() => {
-      apiJson.put(
-        `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
-        zooEventDetails
-      ).then(res => {
-        // success
-        toastShadcn({
-          description: "Successfully updated event",
+    console.log("handleSubmit", zooEventDetails);
+    if (updateFuture) {
+      useEffect(() => {
+        apiJson.put(
+          `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
+          zooEventDetails
+        ).then(res => {
+          // success
+          toastShadcn({
+            description: "Successfully updated event",
+          });
+          setMakePublicDialog(false);
+        }).catch(error => {
+          // got error
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while updating event: \n" +
+              error.message,
+          });
         });
-        setMakePublicDialog(false);
-      }).catch(error => {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while updating event: \n" +
-            error.message,
+      }, [refreshSeed]);
+    } else {
+      useEffect(() => {
+        apiJson.put(
+          `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
+          zooEventDetails
+        ).then(res => {
+          // success
+          toastShadcn({
+            description: "Successfully updated event",
+          });
+          setMakePublicDialog(false);
+        }).catch(error => {
+          // got error
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while updating event: \n" +
+              error.message,
+          });
         });
-      });
-    }, [refreshSeed]);
+      }, [refreshSeed]);
+    }
   }
 
 
@@ -973,17 +996,17 @@ function ViewZooEventDetails() {
                       className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
                     >
                       <Form.Label className="font-medium">Update this and future events?</Form.Label>
-                      {/* <Form.Control
+                      <Form.Control
                         className="hidden"
                         type="text"
                         value={updateFuture?.toString()}
                         required={true}
                         onChange={() => null}
-                      ></Form.Control> */}
+                      ></Form.Control>
                       {/* <Checkbox
                         onChange={(e: any) => setChecked(e.checked)}
                         checked={checked}
-                      /> */}
+                      />} */}
                       <Checkbox.Root
                         className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow outline-none focus:shadow-[0_0_0_2px_gray]"
                         id="c1"
