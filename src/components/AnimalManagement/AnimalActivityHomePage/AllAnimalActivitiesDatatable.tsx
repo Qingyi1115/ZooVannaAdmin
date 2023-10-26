@@ -48,6 +48,7 @@ let emptyAnimalActivity: AnimalActivity = {
   endDate: new Date(),
   eventTimingType: EventTimingType.AFTERNOON,
   durationInMinutes: -1,
+  animalActivityLogs: []
 };
 
 interface AllAnimalActivitiesDatatableProps {
@@ -117,7 +118,7 @@ function AllAnimalActivitiesDatatable(
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteAnimalActivity/" +
-            selectedAnimalActivity.animalActivityId
+          selectedAnimalActivity.animalActivityId
         );
 
         toastShadcn({
@@ -228,7 +229,7 @@ function AllAnimalActivitiesDatatable(
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} species"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal activities"
             globalFilter={globalFilter}
             header={header}
           >

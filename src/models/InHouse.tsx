@@ -1,4 +1,5 @@
 import { FacilityType } from "../enums/FacilityType"
+import Facility from "./Facility"
 import FacilityLog from "./FacilityLog"
 
 interface InHouse {
@@ -8,6 +9,7 @@ interface InHouse {
     hasAirCon: Boolean
     facilityType: FacilityType
     facilityLogs: FacilityLog[]
+    facility: Facility
 }
 
 export default InHouse;

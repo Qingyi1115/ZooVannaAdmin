@@ -1,28 +1,28 @@
 import { Toast } from "primereact/toast";
 import React, { useEffect, useState, useRef, forwardRef } from "react";
 import { DataTable } from "primereact/datatable";
-import useApiJson from "../../../../../hooks/useApiJson";
-import Employee from "../../../../../models/Employee";
+import useApiJson from "../../../hooks/useApiJson";
+import Employee from "../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HiCheck, HiClipboard, HiEye, HiMinus, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
-import GeneralStaff from "../../../../../models/GeneralStaff";
+import GeneralStaff from "../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
-import Sensor from "../../../../../models/Sensor";
+import Facility from "../../../models/Facility";
 
-interface AddSensorMaintenanceStaffProps {
-  sensorId: number;
+interface AddFacilityMaintenanceStaffProps {
+  facilityId: number;
 }
 
-function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
+function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
-  const { sensorId } = props;
+  const { facilityId } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -57,14 +57,19 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
     ).catch(e => console.log(e)).then(res => {
       const allStaffs: Employee[] = []
       for (const staff of res["generalStaffs"]) {
+        // console.log(staff);
         if (staff.generalStaffType == "ZOO_MAINTENANCE") {
           let emp = staff.employee;
           staff.employee = undefined;
           emp["generalStaff"] = staff
-          emp.currentlyAssigned = (emp.generalStaff.sensors as Sensor[]).find(sensor => Number(sensor.sensorId) == sensorId);
+          const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
+          console.log(maintainedFacility);
+          emp.currentlyAssigned = (maintainedFacility !== undefined);
           allStaffs.push(emp)
         }
+
       }
+      console.log(allStaffs);
       setEmployeeList(allStaffs);
 
     });
@@ -87,7 +92,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToSensor/${sensorId}`, { employeeId: selectedEmployee.employeeId }).then(res => {
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
           setRefreshSeed([]);
         }).catch(err => console.log("err", err));
 
@@ -95,7 +100,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
         // variant: "destructive",
         title: "Assignment Successful",
         description:
-          "Successfully assigned general staff: " + selectedEmployeeName,
+          "Successfully assigned maintenance staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setAssignmentDialog(false);
@@ -106,7 +111,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while assigning general staff: \n" + apiJson.error,
+          "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
       });
     }
 
@@ -125,19 +130,18 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
     </React.Fragment>
   );
 
-  const removeGeneralStaff = async () => {
+  const removeMaintenanceStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
-      const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromSensor/${sensorId}`, { employeeId: selectedEmployee.employeeId });
-
+      const responseJson = await apiJson.del(
+        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
       setRefreshSeed([]);
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
         description:
-          "Successfully removed general staff: " + selectedEmployeeName,
+          "Successfully removed maintenance staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setEmployeeRemovalDialog(false);
@@ -148,7 +152,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while removing general staff: \n" + apiJson.error,
+          "An error has occurred while removing maintenance staff: \n" + apiJson.error,
       });
     }
 
@@ -160,7 +164,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={removeGeneralStaff}>
+      <Button variant={"destructive"} onClick={removeMaintenanceStaff}>
         <HiCheck />
         Yes
       </Button>
@@ -199,30 +203,29 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
-            <Button
-              variant={"outline"}
-              className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewsensordetails/${sensorId}/generalStaff`, { replace: true });
-                navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
-              }}>
-              <HiEye className="mx-auto" />
-            </Button>
+          <Button
+            variant={"outline"}
+            className="mr-2" onClick={() => {
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageMaintenance`, { replace: true });
+              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+            }}>
+            <HiEye className="mx-auto" />
+          </Button>
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>
               <Button
                 name="assignButton"
                 variant={"default"}
-                className="mr-2"
                 disabled={employee.currentlyAssigned}
+                className="mr-2"
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
               </Button>
               <Button
-                name="removeButton"
                 variant={"destructive"}
-                className="mx-auto"
+                className="mr-2"
                 disabled={!employee.currentlyAssigned}
                 onClick={() => confirmEmployeeRemoval(employee)}
               >
@@ -241,6 +244,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
       <div>
         <Toast ref={toast} />
         <div className="">
+
           <DataTable
             ref={dt}
             value={employeeList}
@@ -261,12 +265,6 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
             globalFilter={globalFilter}
             header={header}
           >
-            <Column
-              field="employeeId"
-              header="ID"
-              sortable
-              style={{ minWidth: "4rem" }}
-            ></Column>
             <Column
               field="employeeName"
               header="Name"
@@ -297,7 +295,7 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "14rem" }}
             ></Column>
           </DataTable>
         </div>
@@ -350,4 +348,4 @@ function AddSensorMaintenanceStaff(props: AddSensorMaintenanceStaffProps) {
   );
 }
 
-export default AddSensorMaintenanceStaff;
+export default AddFacilityMaintenanceStaff;

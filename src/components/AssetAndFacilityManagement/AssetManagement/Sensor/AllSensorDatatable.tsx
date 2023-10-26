@@ -122,20 +122,22 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
   const actionBodyTemplate = (sensor: Sensor) => {
     return (
       <React.Fragment>
-          <Button variant={"outline"} className="mb-1 mr-1" onClick={()=>{ 
-                navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
-                navigate(`/assetfacility/viewsensordetails/${sensor.sensorId}`);
-              }}>
-            <HiEye className="mx-auto" />
-          </Button>
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        <Button
+          // variant={"outline"}
+          className="mb-1 mr-1" onClick={() => {
+            navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
+            navigate(`/assetfacility/viewsensordetails/${sensor.sensorId}`);
+          }}>
+          <HiEye className="mx-auto" />
+        </Button>
+        {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <Button className="mr-2" onClick={()=>{ 
                 navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
                 navigate(`/assetfacility/editsensor/${sensor.sensorId}`);
               }}>
               <HiPencil className="mx-auto" />
             </Button>
-        )}
+        )} */}
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
             variant={"destructive"}
@@ -164,13 +166,13 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
         />
       </span>
       {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <Button className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
-                navigate(`/assetfacility/createsensor/${curHub.hubProcessorId}`);
-              }}>
-            <HiPlus className="mr-auto" />
-            Add Sensor
-          </Button>
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
+          navigate(`/assetfacility/createsensor/${curHub.hubProcessorId}`);
+        }}>
+          <HiPlus className="mr-auto" />
+          Add Sensor
+        </Button>
       )}
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>

@@ -18,20 +18,25 @@ import { Card } from "primereact/card";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import Animal from "../../../models/Animal";
 import Species from "../../../models/Species";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../../enums/Enumurated";
+import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization, ActivityType, EventTimingType, RecurringPattern } from "../../../enums/Enumurated";
 import { Rating } from "../../../enums/Rating";
 import Employee from "../../../models/Employee";
 import { Column } from "primereact/column";
 import Keeper from "../../../models/Keeper";
+import AnimalActivity from "src/models/AnimalActivity";
+import { HiMiniListBullet } from "react-icons/hi2";
 
 interface AllAnimalObservationLogsDatatableProps {
   speciesCode: string;
   animalCode: string;
+  animalActivityId: number;
 }
 
 function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatatableProps) {
   const apiJson = useApiJson();
-  const { speciesCode, animalCode } = props;
+  const { speciesCode, animalCode, animalActivityId } = props;
+  const [animalActivitySearch, setAnimalActivitySearch] =
+    useState<boolean>(animalActivityId != -1);
   const employee = useAuthContext().state.user?.employeeData;
   let emptySpecies: Species = {
     speciesId: -1,
@@ -107,6 +112,21 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     employee: emptyEmployee
   }
 
+  let emptyAnimalActivity: AnimalActivity = {
+    animalActivityId: -1,
+    activityType: ActivityType.TRAINING,
+    title: "",
+    details: "",
+    recurringPattern: RecurringPattern.DAILY,
+    dayOfMonth: null,
+    dayOfWeek: null,
+    startDate: new Date(),
+    endDate: new Date(),
+    eventTimingType: EventTimingType.AFTERNOON,
+    durationInMinutes: -1,
+    animalActivityLogs: []
+  };
+
   let emptyAnimalObservationLog: AnimalObservationLog = {
     animalObservationLogId: 0,
     dateTime: new Date(),
@@ -114,7 +134,8 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     observationQuality: Rating.NOT_RECORDED,
     details: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
+    animalActivity: emptyAnimalActivity
   };
 
 
@@ -128,13 +149,21 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
   useEffect(() => {
-    console.log(animalCode);
-    apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalObservationLogsByAnimalCode/${animalCode}`)
-      .then(res => {
-        setAnimalObservationLogList(res.animalObservationLogs as AnimalObservationLog[]);
-      })
-      .catch(e => console.log(e));
+    if (animalActivitySearch) {
+      apiJson.get(
+        `http://localhost:3000/api/animal/getAnimalObservationLogsByAnimalActivityId/${animalActivityId}`)
+        .then(res => {
+          setAnimalObservationLogList(res.animalObservationLogs as AnimalObservationLog[]);
+        })
+        .catch(e => console.log(e));
+    } else {
+      apiJson.get(
+        `http://localhost:3000/api/animal/getAnimalObservationLogsByAnimalCode/${animalCode}`)
+        .then(res => {
+          setAnimalObservationLogList(res.animalObservationLogs as AnimalObservationLog[]);
+        })
+        .catch(e => console.log(e));
+    }
   }, []);
   console.log(animalObservationLogList);
 
@@ -204,31 +233,47 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const actionBodyTemplate = (animalObservationLog: AnimalObservationLog) => {
     return (
       <React.Fragment>
-        <Button
-          // variant={"outline"}
-          className="mb-1 mr-1"
-          onClick={() => {
-            navigate(`/animal/viewAnimalDetails/${animalCode}/behaviour`, { replace: true })
-            navigate(`/animal/viewAnimalObservationLogDetails/${animalObservationLog.animalObservationLogId}`)
-          }}>
-          <HiEye className="mx-auto" />
-        </Button>
-        {/* <Button
-          className="mr-1"
-          onClick={() => {
-            navigate(`/animal/viewAnimalDetails/${animalCode}/behaviour`, { replace: true })
-            navigate(`/animal/editAnimalObservationLog/${animalObservationLog.animalObservationLogId}`)
-          }}>
-          <HiPencil className="mr-1" />
-        </Button> */}
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteanimalObservationLog(animalObservationLog)}
-        >
-          <HiTrash className="mx-auto" />
-
-        </Button>
+        {animalActivitySearch ?
+          <div>
+            <Button
+              // variant={"outline"}
+              className="mb-1 mr-1"
+              onClick={() => {
+                navigate(`/animal/viewanimalactivitydetails/${animalActivityId}/observationlogs`, { replace: true })
+                navigate(`/animal/viewAnimalObservationLogDetails/${animalObservationLog.animalObservationLogId}`)
+              }}>
+              <HiEye className="mx-auto" />
+            </Button>
+            <Button
+              variant={"destructive"}
+              className="mr-2"
+              onClick={() => confirmDeleteanimalObservationLog(animalObservationLog)}
+            >
+              <HiTrash className="mx-auto" />
+            </Button>
+          </div>
+          :
+          <div>
+            <Button
+              // variant={"outline"}
+              className="mb-1 mr-1"
+              onClick={() => {
+                navigate(`/animal/viewAnimalDetails/${animalCode}/behaviour`, { replace: true })
+                navigate(`/animal/viewAnimalObservationLogDetails/${animalObservationLog.animalObservationLogId}`)
+              }}>
+              <HiEye className="mx-auto" />
+            </Button>
+            <Button
+              // variant={"outline"}
+              className="mb-1 mr-1"
+              onClick={() => {
+                navigate(`/animal/viewAnimalDetails/${animalCode}/activitylogs`, { replace: true })
+                navigate(`/animal/viewAnimalActivityDetails/${animalObservationLog.animalActivity.animalActivityId}`)
+              }}>
+              <HiMiniListBullet className="mx-auto" />
+            </Button>
+          </div>
+        }
       </React.Fragment>
     );
   };
@@ -289,6 +334,21 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             }}
           />
         </span>
+        {((animalActivitySearch && (employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS")) ?
+          <Button className="mr-2"
+            onClick={() => {
+              navigate(`/animal/viewanimalactivitydetails/${animalActivityId}/observationlogs`, { replace: true })
+              navigate(`/animal/createAnimalObservationLog/${animalActivityId}`)
+            }}>
+            <HiPlus className="mr-auto" />
+            Add Animal Observation Log
+          </Button>
+          : <Button disabled className="invisible">
+            Add Log
+          </Button>
+        )}
+        <Button onClick={exportCSV}>Export to .csv</Button>
       </div>
     </div>
   );
@@ -345,21 +405,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") ?
-                <Button className="mr-2"
-                  onClick={() => {
-                    navigate(`/animal/viewAnimalDetails/${animalCode}/behaviour`, { replace: true })
-                    navigate(`/animal/createAnimalObservationLog/${speciesCode}`)
-                  }}>
-                  <HiPlus className="mr-auto" />
-                  Add Animal Observation Log
-                </Button>
-                : <Button disabled className="invisible">
-                  Add Log
-                </Button>
-              )}
-              <Button onClick={exportCSV}>Export to .csv</Button>
+
             </div>
             <Separator />
           </div>
@@ -379,7 +425,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facilities"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal observation logs"
             globalFilter={globalFilter}
             header={header}
           >

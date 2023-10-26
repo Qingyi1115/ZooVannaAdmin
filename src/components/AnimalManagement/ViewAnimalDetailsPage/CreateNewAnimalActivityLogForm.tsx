@@ -16,10 +16,12 @@ import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import Employee from "../../../models/Employee";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import { set } from "date-fns";
+import AnimalActivityLog from "../../../models/AnimalActivityLog";
+import AnimalActivity from "../../../models/AnimalActivity";
 
-// interface CreateNewAnimalActivityLogProps {
-//   speciesCode: string;
-// }
+interface CreateNewAnimalActivityLogProps {
+  curAnimalActivity: AnimalActivity
+}
 
 function validateAnimalActivityLogName(props: ValidityState) {
   if (props != undefined) {
@@ -33,10 +35,11 @@ function validateAnimalActivityLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalActivityLogForm() {
+function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+  const { curAnimalActivity } = props;
   const [activityType, setActivityType] = useState<string | undefined>(
     undefined); // dropdown
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
@@ -53,16 +56,21 @@ function CreateNewAnimalActivityLogForm() {
   const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
-      setCurAnimalList(res as Animal[]);
-      console.log(res);
-    });
+    if (curAnimalActivity.animals != undefined && curAnimalActivity.animals?.length > 0) {
+      setCurAnimalList(curAnimalActivity.animals)
+    } else {
+      apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+        setCurAnimalList(res as Animal[]);
+        console.log(res);
+      });
+    }
   }, []);
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
-    const newAnimalActivityLog = {
+    const newAnimalActivity = {
+      animalActivityId: curAnimalActivity.animalActivityId,
       activityType: activityType,
       dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
@@ -71,12 +79,12 @@ function CreateNewAnimalActivityLogForm() {
       details: details,
       animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
-    console.log(newAnimalActivityLog);
+    console.log(newAnimalActivity);
 
     try {
       const responseJson = await apiJson.post(
-        `http://localhost:3000/api/animal/createAnimalActivityLog`,
-        newAnimalActivityLog);
+        `http://localhost:3000/api/animal/createAnimalActivityLog/`,
+        newAnimalActivity);
       // success
       toastShadcn({
         description: "Successfully created animal activity log",
@@ -125,7 +133,8 @@ function CreateNewAnimalActivityLogForm() {
         placeholder="Select an activity type..."
         valueLabelPair={[
           ["TRAINING", "Training"],
-          ["ENRICHMENT", "Enrichment"]
+          ["ENRICHMENT", "Enrichment"],
+          // ["OBSERVATION", "Observation"]
         ]}
         value={activityType}
         setValue={setActivityType}

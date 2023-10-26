@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AllSensorReadingDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/SensorReadings/AllSensorReadingsDatatable";
 import AllMaintenanceLogsDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/AllMaintenanceLogsDatatable";
 import { useAuthContext } from "../../../hooks/useAuthContext";
-import AddSensorMaintenanceStaff from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/GeneralStaff/AddSensorMaintenanceStaff";
+import AddSensorMaintenanceStaff from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/GeneralStaff/ManageSensorMaintenanceStaff";
 
 function ViewSensorDetailsPage() {
   const apiJson = useApiJson();
