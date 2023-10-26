@@ -434,7 +434,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facilities"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal activity logs"
             globalFilter={globalFilter}
             header={header}
           >

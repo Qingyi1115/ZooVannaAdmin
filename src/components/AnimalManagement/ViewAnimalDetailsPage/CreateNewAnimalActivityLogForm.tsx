@@ -55,18 +55,16 @@ function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) 
   const [curAnimalList, setCurAnimalList] = useState<any>(null);
   const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
 
-
-  if (curAnimalActivity.animals != undefined && curAnimalActivity.animals?.length > 0) {
-    setCurAnimalList(curAnimalActivity.animals)
-  } else {
-    useEffect(() => {
+  useEffect(() => {
+    if (curAnimalActivity.animals != undefined && curAnimalActivity.animals?.length > 0) {
+      setCurAnimalList(curAnimalActivity.animals)
+    } else {
       apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
         setCurAnimalList(res as Animal[]);
         console.log(res);
       });
-    }, []);
-  }
-
+    }
+  }, []);
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
