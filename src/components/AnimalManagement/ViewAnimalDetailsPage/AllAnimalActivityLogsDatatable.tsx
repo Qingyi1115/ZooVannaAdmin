@@ -257,7 +257,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
               className="mb-1 mr-1"
               onClick={() => {
                 navigate(`/animal/viewanimalactivitydetails/${animalActivityLogId}/activitylogs`, { replace: true })
-                navigate(`/animal/viewAnimalActivityLogDetails/${animalActivityLog.animalActivityLogId}`)
+                navigate(`/animal/viewAnimalActivityDetails/${animalActivityLog.animalActivity.animalActivityId}`)
               }}>
               <HiMiniListBullet className="mx-auto" />
             </Button>

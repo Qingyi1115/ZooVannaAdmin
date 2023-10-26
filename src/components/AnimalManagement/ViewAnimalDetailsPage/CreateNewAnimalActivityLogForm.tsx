@@ -133,7 +133,8 @@ function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) 
         placeholder="Select an activity type..."
         valueLabelPair={[
           ["TRAINING", "Training"],
-          ["ENRICHMENT", "Enrichment"]
+          ["ENRICHMENT", "Enrichment"],
+          ["OBSERVATION", "Observation"]
         ]}
         value={activityType}
         setValue={setActivityType}
