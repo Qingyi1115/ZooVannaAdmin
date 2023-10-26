@@ -31,6 +31,7 @@ function AnimalFeedingPlanDetailsPage() {
   const [curFeedingPlan, setCurFeedingPlan] = useState<FeedingPlan | null>(
     null
   );
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
     const fetchFeedingPlan = async () => {
@@ -47,7 +48,7 @@ function AnimalFeedingPlanDetailsPage() {
     };
 
     fetchFeedingPlan();
-  }, []);
+  }, [refreshSeed]);
 
   return (
     <div className="p-10">
@@ -137,6 +138,8 @@ function AnimalFeedingPlanDetailsPage() {
                   <AnimalFeedingPlanSessionsSchedule
                     curFeedingPlan={curFeedingPlan}
                     setCurFeedingPlan={setCurFeedingPlan}
+                    refreshSeed={refreshSeed}
+                    setRefreshSeed={setRefreshSeed}
                   />
                 </TabsContent>
                 <TabsContent value="feedingLogs">Feeding Logs</TabsContent>
