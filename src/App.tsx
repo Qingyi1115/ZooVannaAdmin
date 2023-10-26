@@ -116,10 +116,16 @@ import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
 
+//customer order management page
+import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
+import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrderDetailsPage";
+import SalesChartPage from "./pages/sales/SalesChartPage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  console.log(user);
 
   return (
     <PrimeReactProvider>
@@ -877,6 +883,33 @@ function App() {
                     )
                   }
                 />
+                <Route
+                  path="/customerOrder/viewAllCustomerOrders"
+                  element={
+                    user ? (
+                      <ViewAllCustomerOrdersPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
+                <Route
+                  path="/customerOrder/viewCustomerOrder/:customerOrderId"
+                  element={
+                    user ? (
+                      <ViewCustomerOrderDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
+                <Route
+                  path="/sales/viewGraph/"
+                  element={user ? <SalesChartPage /> : <Navigate to="/login" />}
+                />
+
                 <Route
                   path="/promotion/editpromotion/:promotionId"
                   element={
