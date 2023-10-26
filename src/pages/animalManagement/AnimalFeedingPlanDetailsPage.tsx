@@ -21,6 +21,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AnimalFeedingPlanSessionsSchedule from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanSessionsSchedule";
 import AnimalFeedingPlanInvolvedAnimalDatatable from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
+import AllFeedingPlanFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllFeedingPlanFeedingLogsDatatable";
 
 function AnimalFeedingPlanDetailsPage() {
   const apiJson = useApiJson();
@@ -151,7 +152,12 @@ function AnimalFeedingPlanDetailsPage() {
                     setRefreshSeed={setRefreshSeed}
                   />
                 </TabsContent>
-                <TabsContent value="feedingLogs">Feeding Logs</TabsContent>
+                <TabsContent value="feedingLogs">
+                  <AllFeedingPlanFeedingLogsDatatable
+                    feedingPlanId={curFeedingPlan.feedingPlanId}
+                    feedingPlan={curFeedingPlan}
+                  />
+                </TabsContent>
               </Tabs>
             </div>
           </div>
