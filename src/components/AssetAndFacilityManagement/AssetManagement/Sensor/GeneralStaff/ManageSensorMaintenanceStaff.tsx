@@ -585,7 +585,6 @@ function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) 
           style={{ width: "50rem" }}
           breakpoints={{ "960px": "75vw", "641px": "90vw" }}
           header="Assign Maintenance Staff"
-          position={"right"}
           // footer={
           //   <Button
           //     onClick={() => confirmAssignment(selectedEmployee)}
