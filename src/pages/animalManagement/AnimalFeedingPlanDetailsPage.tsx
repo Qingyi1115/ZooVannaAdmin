@@ -113,7 +113,7 @@ function AnimalFeedingPlanDetailsPage() {
               </Table>
               <br />
               <div className="">
-                <div className="text-lg font-bold">Involved Animal List.</div>
+                <div className="text-lg font-bold">Involved Animal List</div>
                 <AnimalFeedingPlanInvolvedAnimalDatatable
                   involvedAnimalList={
                     curFeedingPlan.animals ? curFeedingPlan.animals : []

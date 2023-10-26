@@ -33,7 +33,7 @@ function AnimalFeedingPlanInvolvedAnimalDatatable(
       <img
         src={"http://localhost:3000/" + rowData.imageUrl}
         alt={rowData.houseName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        className="aspect-square h-10 w-10 rounded-full border border-white object-cover shadow-4"
       />
     );
   };
@@ -85,7 +85,7 @@ function AnimalFeedingPlanInvolvedAnimalDatatable(
         // onSelectionChange={(e) =>
         //   setSelectedAnimalToBecomeParent(e.value)
         // }
-        style={{ height: "30vh" }}
+        style={{ height: "35vh" }}
         dataKey="animalCode"
         className="h-1/2 overflow-hidden rounded border border-graydark/30"
       >

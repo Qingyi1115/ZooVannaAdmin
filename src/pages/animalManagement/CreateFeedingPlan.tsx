@@ -68,6 +68,7 @@ import {
 } from "primereact/inputnumber";
 import { Item } from "@radix-ui/react-accordion";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import AnimalFeedingPlanInvolvedAnimalDatatable from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 
 function CreateFeedingPlan() {
   const apiJson = useApiJson();
@@ -129,7 +130,7 @@ function CreateFeedingPlan() {
   // below is the list of feeding items for new session(s) to be added
   const [curFeedingItemsNewFeedSession, setCurFeedingItemsNewFeedSession] =
     useState<DummyFeedingItem[]>(
-      animalTargetList.map((animal) => ({
+      animalSourceList.map((animal) => ({
         foodCategory: "",
         amount: null,
         unit: "",
@@ -258,7 +259,7 @@ function CreateFeedingPlan() {
   // update feedingItemsNewFeedSession array when animals change
   useEffect(() => {
     setCurFeedingItemsNewFeedSession(
-      animalTargetList.map((animal) => {
+      animalSourceList.map((animal) => {
         const existingItem = curFeedingItemsNewFeedSession.find((feedingItem) =>
           feedingItem.animal
             ? feedingItem.animal.animalCode === animal.animalCode
@@ -279,7 +280,7 @@ function CreateFeedingPlan() {
 
     // update cur feeding sessions also, to remove all items containing animal that were removed
     const tempFeedingPlanSessions = [...feedingPlanSessions];
-    const animalCodes = animalTargetList.map((animal) => {
+    const animalCodes = animalSourceList.map((animal) => {
       return animal.animalCode;
     });
 
@@ -293,7 +294,7 @@ function CreateFeedingPlan() {
         .filter((item) => animalCodes.includes(item.animalCode)),
     }));
     setFeedingPlanSessions(updatedFeedingPlanSessions);
-  }, [animalTargetList]);
+  }, [animalSourceList]);
 
   function clearNewFoodSessionFormBox() {
     setSelectedCurFeedCategoryNewFoodItem(null);
@@ -1237,7 +1238,7 @@ function CreateFeedingPlan() {
 
     // any validations
 
-    const animalCodes = animalTargetList.map((animal) => animal.animalCode);
+    const animalCodes = animalSourceList.map((animal) => animal.animalCode);
 
     const updatedFeedingPlanSessions = feedingPlanSessions.map((session) => ({
       ...session,
@@ -1319,7 +1320,7 @@ function CreateFeedingPlan() {
           className="flex w-full flex-col gap-6 rounded-lg bg-white text-black"
           onSubmit={handleSubmit}
         >
-          <Form.Field
+          {/* <Form.Field
             name="selectedAnimals"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
@@ -1357,7 +1358,13 @@ function CreateFeedingPlan() {
             <div className="self-center">
               <Form.ValidityState>{validateSelectAnimal}</Form.ValidityState>
             </div>
-          </Form.Field>
+          </Form.Field> */}
+          <div>
+            <div className="text-lg font-medium">Involved Animal List:</div>
+            <AnimalFeedingPlanInvolvedAnimalDatatable
+              involvedAnimalList={animalSourceList ? animalSourceList : []}
+            />
+          </div>
 
           <Separator />
 
@@ -1569,7 +1576,7 @@ function CreateFeedingPlan() {
             </div>
 
             <div className="my-4 rounded-lg border border-strokedark/20 bg-white p-6">
-              {animalTargetList.length > 0 ? (
+              {animalSourceList.length > 0 ? (
                 <div>
                   <div className="flex justify-center gap-2 text-center text-lg font-bold">
                     Feed Amount for Each Animal
@@ -1610,8 +1617,8 @@ function CreateFeedingPlan() {
                       Auto-fill Suggested Amounts
                     </Button>
                   </div>
-                  <div className="flex flex-col gap-4">
-                    {animalTargetList.map((curAnimal, idx) => (
+                  <div className="flex max-h-[40vh] flex-col gap-4 overflow-auto pb-4 pr-4">
+                    {animalSourceList.map((curAnimal, idx) => (
                       <div
                         key={curAnimal.animalCode}
                         className="rounded-md border border-strokedark/30 p-4 shadow-sm"
@@ -1807,6 +1814,8 @@ function CreateFeedingPlan() {
 
             {/* end add food box */}
           </div>
+
+          <div>{editSessionDialog()}</div>
           <Button
             variant={"destructive"}
             type="button"
@@ -1814,7 +1823,6 @@ function CreateFeedingPlan() {
           >
             Clear All Sessions
           </Button>
-          <div>{editSessionDialog()}</div>
           <Table>
             {/* <TableHeader>
               <TableRow>
