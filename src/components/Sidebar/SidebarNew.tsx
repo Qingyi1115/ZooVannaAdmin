@@ -958,7 +958,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <NavLink
                             to="#"
                             className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/listing" ||
-                                pathname.includes("listing")) &&
+                              pathname.includes("listing")) &&
                               "bg-graydark"
                               }`}
                             onClick={(e) => {
@@ -1037,7 +1037,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <NavLink
                             to="#"
                             className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/promotion" ||
-                                pathname.includes("promotion")) &&
+                              pathname.includes("promotion")) &&
                               "bg-graydark"
                               }`}
                             onClick={(e) => {
@@ -1083,7 +1083,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                   View All Events
                                 </NavLink>
                               </li>
-                              <li>
+                              {/* <li>
                                 <NavLink
                                   to="/zooevent/createnewzooevent"
                                   className={({ isActive }) =>
@@ -1093,7 +1093,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 >
                                   Create New Event
                                 </NavLink>
-                              </li>
+                              </li> */}
                             </ul>
                           </div>
 
@@ -1117,7 +1117,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <NavLink
                             to="#"
                             className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/customerOrder" ||
-                                pathname.includes("customerOrder")) &&
+                              pathname.includes("customerOrder")) &&
                               "bg-graydark"
                               }`}
                             onClick={(e) => {
@@ -1187,7 +1187,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <NavLink
                             to="#"
                             className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/customerOrder" ||
-                                pathname.includes("customerOrder")) &&
+                              pathname.includes("customerOrder")) &&
                               "bg-graydark"
                               }`}
                             onClick={(e) => {

@@ -165,7 +165,7 @@ function CreateZooEventForm() {
     const createZooEventApi = async () => {
       try {
         const response = await apiJson.post(
-          "http://localhost:3000/api/animal/createZooEvent",
+          "http://localhost:3000/api/zooevent/createZooEvent",
           newZooEvent
         );
         // success

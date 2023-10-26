@@ -22,6 +22,7 @@ import { compareDates } from '../../components/AssetAndFacilityManagement/Mainte
 import FormFieldSelect from "../../components/FormFieldSelect";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import { Menu } from "primereact/menu";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const YEAR_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 365
 interface eventGroup {
@@ -48,6 +49,8 @@ function ZooEventHomePage() {
   >([]);
   const navigate = useNavigate();
 
+  const employee = useAuthContext().state.user?.employeeData;
+
   useEffect(() => {
     apiJson.post(
       "http://localhost:3000/api/zooEvent/getAllZooEvents", {
@@ -68,9 +71,14 @@ function ZooEventHomePage() {
       console.log("responseJson", responseJson)
 
       const allEventGroup: any[] = [];
-      
+
 
       responseJson["zooEvents"].forEach((ze: ZooEvent) => {
+
+        if (employee.keeper != undefined) {
+
+        }
+
         if (ze.animalActivity) {
           if (!allEventGroup.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity")) {
             allEventGroup.push({
