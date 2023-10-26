@@ -138,9 +138,9 @@ function ViewAnimalObservationLogDetailsPage() {
         </div>
 
         <hr className="bg-stroke opacity-20" />
-        <span className=" self-center text-title-xl font-bold">
+        {/* <span className=" self-center text-title-xl font-bold">
           {curAnimalObservationLog.animalObservationLogId}
-        </span>
+        </span> */}
         <ViewAnimalObservationLogDetails curAnimalObservationLog={curAnimalObservationLog} />
 
       </div>

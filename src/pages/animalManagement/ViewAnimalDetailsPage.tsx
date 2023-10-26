@@ -107,11 +107,11 @@ function ViewAnimalDetailsPage() {
                 Training and Enrichment Activity
               </TabsTrigger>
               <TabsTrigger value="behaviour">
-                Behaviour Observations
+                Observation Logs
               </TabsTrigger>
               <TabsTrigger value="activitylogs">Activity Logs</TabsTrigger>
               <TabsTrigger value="feedinglogs">Feeding Logs</TabsTrigger>
-              <TabsTrigger value="medical">Medical</TabsTrigger>
+              {/* <TabsTrigger value="medical">Medical</TabsTrigger> */}
             </TabsList>
             <TabsContent value="basicinfo">
               <AnimalBasicInformation
@@ -160,9 +160,9 @@ function ViewAnimalDetailsPage() {
                 />
               </div>
             </TabsContent>
-            <TabsContent value="medical">
+            {/* <TabsContent value="medical">
               Medical Logs and whatever else here
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
         </div>
       )}

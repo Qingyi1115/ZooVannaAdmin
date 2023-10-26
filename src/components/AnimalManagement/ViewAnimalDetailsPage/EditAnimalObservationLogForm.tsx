@@ -88,6 +88,7 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
       toastShadcn({
         description: "Successfully edited animal observation log",
       });
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -124,14 +125,14 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
             </Button>
           </div>
           <Separator />
-          <span className="mt-4 self-center text-title-xl font-bold">
+          {/* <span className="mt-4 self-center text-title-xl font-bold">
             {curAnimalObservationLog.animalObservationLogId}
-          </span>
+          </span> */}
         </div>
 
         {/* DateTime */}
-        <div className="flex justify-content-center">
-          <label htmlFor="dateTimeCalendar" className="self-center mx-3 text-lg text-dark ">Date</label>
+        <div className="card justify-content-center block ">
+          <div className="mb-1 block font-medium">Date</div>
           <Calendar id="dateTimeCalendar" showTime hourFormat="12" value={dateTime} onChange={(e: CalendarChangeEvent) => {
             if (e && e.value !== null) {
               setDateTime(e.value as Date);
