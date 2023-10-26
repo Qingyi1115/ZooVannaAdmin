@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import useApiJson from "../../hooks/useApiJson";
 import {
   BsBroadcast,
+  BsCalendarWeek,
   BsFillHouseExclamationFill,
   BsHouseExclamation,
 } from "react-icons/bs";
@@ -11,6 +12,8 @@ import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { HiClipboardList } from "react-icons/hi";
 import Sensor from "../../models/Sensor";
+import ZooEvent from "../../models/ZooEvent";
+import { set } from "date-fns";
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -24,6 +27,9 @@ const DropdownNotification = () => {
   const [sensorList, setSensorList] = useState<any[]>([]);
   const [speciesList, setSpeciesList] = useState<any[]>([]);
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
+
+  const [eventList, setEventList] = useState<any[]>([]);
+  const YEAR_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 365
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -111,6 +117,43 @@ const DropdownNotification = () => {
   }, [refreshSeed]);
 
   useEffect(() => {
+    if (
+      !(
+        employee.superAdmin ||
+        employee.planningStaff?.plannerType == "SALES" ||
+        employee.planningStaff?.plannerType == "OPERATIONS_MANAGER"
+      ) &&
+      !employee.keeper
+    )
+      return;
+    apiJson
+      .post(
+        "http://localhost:3000/api/zooEvent/getAllZooEvents", {
+        startDate: new Date(Date.now() - YEAR_IN_MILLISECONDS),
+        endDate: new Date(Date.now() + YEAR_IN_MILLISECONDS),
+        includes: [
+          "planningStaff",
+          "keepers"
+        ]
+      }
+      )
+      .catch((error) => {
+        console.log(error);
+      })
+      .then((responseJson) => {
+        const assignedEvents: ZooEvent[] = []
+        responseJson["zooEvents"].forEach((ze: ZooEvent) => {
+          if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId) ||
+            ze.planningStaff?.employeeId == employee.employeeId) {
+            assignedEvents.push(ze);
+          };
+        });
+        setEventList(assignedEvents);
+        console.log(assignedEvents)
+      });
+  }, [refreshSeed]);
+
+  useEffect(() => {
     const looper = () => {
       setRefreshSeed([]);
       setTimeout(() => {
@@ -129,9 +172,9 @@ const DropdownNotification = () => {
         className="relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white"
       >
         {(facilityList.length || sensorList.length) ?
-        <span className="absolute -top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1">
-          <span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75"></span>
-        </span>:<div></div>
+          <span className="absolute -top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1">
+            <span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75"></span>
+          </span> : <div></div>
         }
 
         <svg
@@ -153,9 +196,8 @@ const DropdownNotification = () => {
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
-        className={`absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80 ${
-          dropdownOpen === true ? "block" : "hidden"
-        }`}
+        className={`absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80 ${dropdownOpen === true ? "block" : "hidden"
+          }`}
       >
         <div className="px-4.5 py-3">
           <h5 className="text-sm font-medium text-bodydark2">
@@ -164,8 +206,8 @@ const DropdownNotification = () => {
         </div>
 
         {employee.superAdmin ||
-        employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-        employee.generalStaff ? (
+          employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+          employee.generalStaff ? (
           <ul className="flex h-auto flex-col overflow-y-auto">
             <li>
               <Link
@@ -217,8 +259,8 @@ const DropdownNotification = () => {
                     </Link>
                   </li>
                 );
-              })}
-
+              })
+            }
             <li>
               <Link
                 className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
@@ -244,7 +286,7 @@ const DropdownNotification = () => {
               </Link>
             </li>
 
-            {sensorList.map((sensor) => {
+            {sensorList && sensorList.map((sensor) => {
               return (
                 <li key={sensor.sensorId}>
                   <Link
@@ -262,6 +304,56 @@ const DropdownNotification = () => {
                         Suggested Date:{" "}
                         {new Date(
                           sensor.predictedMaintenanceDate
+                        ).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
+
+            <li>
+              <Link
+                className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                to="/zooevent/viewallzooevents"
+              >
+                {eventList.length ? (
+                  <div className="text-amber-500">
+                    <p className="text-sm">
+                      <BsCalendarWeek />
+                      Assigned to {eventList.length} events
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-green-700">
+                    <p className="text-sm">
+                      <BsCalendarWeek />
+                      No assigned events!
+                    </p>
+                  </div>
+                )}
+
+                <p className="text-xs">Today</p>
+              </Link>
+            </li>
+            {eventList && eventList.map((event) => {
+              return (
+                <li key={event.zooEventId}>
+                  <Link
+                    className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                    to={`zooevent/viewzooeventdetails/${event.zooEventId}`}
+                  >
+                    <div className="text-red-700">
+                      <BsCalendarWeek />
+                      <p className="text-sm">
+                        <span className="text-red-700">
+                          {event.eventName}
+                        </span>{" "}
+                      </p>
+                      <p className="text-xs">
+                        Start Date:{" "}
+                        {new Date(
+                          event.eventStartDateTime
                         ).toLocaleDateString()}
                       </p>
                     </div>
