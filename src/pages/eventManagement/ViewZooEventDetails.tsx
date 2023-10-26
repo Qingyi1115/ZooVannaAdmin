@@ -130,7 +130,6 @@ function ViewZooEventDetails() {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/zooEvent/getZooEventById/${zooEventId}`
         );
-        console.log("a", responseJson)
         setCurZooEvent(responseJson["zooEvent"] as ZooEvent);
         setInvolvedAnimalList(responseJson["zooEvent"].animals);
       } catch (error: any) {
@@ -1072,7 +1071,7 @@ function ViewZooEventDetails() {
                 </TabsContent>}
 
                 <TabsContent value="assignedEmployees">
-                  <AllEventEmployeesDatatable />
+                  <AllEventEmployeesDatatable zooEventId={zooEventId as any} />
                 </TabsContent>
               </Tabs>
 

@@ -16,13 +16,13 @@ import { Separator } from "@/components/ui/separator";
 import Facility from "../../../models/Facility";
 
 interface AddFacilityMaintenanceStaffProps {
-  facilityId: number;
+  zooEventId: number;
 }
 
 function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
-  const { facilityId } = props;
+  const { zooEventId } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -48,30 +48,30 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
-  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
+  const [availiableKeepers, setAvailiableKeepers] = useState<Employee[]>([]);
+  const [currentKeepers, setCurrentKeepers] = useState<Employee[]>([]);
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   useEffect(() => {
-    apiJson.post(
-      "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-    ).catch(e => console.log(e)).then(res => {
-      const allStaffs: Employee[] = []
-      for (const staff of res["generalStaffs"]) {
-        // console.log(staff);
-        if (staff.generalStaffType == "ZOO_MAINTENANCE") {
-          let emp = staff.employee;
-          staff.employee = undefined;
-          emp["generalStaff"] = staff
-          const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
-          console.log(maintainedFacility);
-          emp.currentlyAssigned = (maintainedFacility !== undefined);
-          allStaffs.push(emp)
-        }
+    apiJson.get(
+      `http://localhost:3000/api/zooEvent/getKeepersForZooEvent/${zooEventId}`).catch(e => console.log(e)).then(res => {
+      // const allStaffs: Employee[] = []
+      // for (const staff of res["generalStaffs"]) {
+      //   // console.log(staff);
+      //   if (staff.generalStaffType == "ZOO_MAINTENANCE") {
+      //     let emp = staff.employee;
+      //     staff.employee = undefined;
+      //     emp["generalStaff"] = staff
+      //     const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
+      //     console.log(maintainedFacility);
+      //     emp.currentlyAssigned = (maintainedFacility !== undefined);
+      //     allStaffs.push(emp)
+      //   }
 
-      }
-      console.log(allStaffs);
-      setEmployeeList(allStaffs);
-
+      // }
+      console.log("AddFacilityMaintenanceStaff", res);
+      setCurrentKeepers(res["currentKeepers"].map(keeper=>keeper.employee));
+      setAvailiableKeepers(res["availiableKeepers"].map(keeper=>keeper.employee));
     });
   }, [refreshSeed]);
 
@@ -247,7 +247,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
 
           <DataTable
             ref={dt}
-            value={employeeList}
+            value={availiableKeepers}
             selection={selectedEmployee}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
