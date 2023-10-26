@@ -376,7 +376,7 @@ function ViewZooEventDetails() {
   };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-
+    e.preventDefault();
     const zooEventDetails = {
       zooEventId: curZooEvent?.zooEventId,
       eventIsPublic: true,
