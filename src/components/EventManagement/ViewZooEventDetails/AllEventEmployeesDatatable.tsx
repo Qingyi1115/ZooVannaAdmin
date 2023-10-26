@@ -417,7 +417,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
               // variant: "destructive",
               title: "Assignment Successful",
               description:
-                "Successfully assigned keeper: " + selectedAvailableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
+                "Successfully assigned this event to: " + selectedAvailableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
             });
 
             setRefreshSeed([]);
@@ -474,7 +474,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
           // variant: "destructive",
           title: "Removal Successful",
           description:
-            "Successfully removed keeper: " + selectedAssignedEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
+            "Successfully removed keeper: " + selectedAssignedEmployees.filter(emp => selectedAssignedEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
         });
         setSelectedEmployee(employee);
         setEmployeeRemovalDialog(false);
@@ -633,7 +633,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
             {selectedEmployee && (
               <span>
                 Are you sure you want to remove{" "}
-                <b>{selectedAssignedEmployees.toString()}</b>?
+                <b>{assignedEmployees.filter(emp => selectedAssignedEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()}</b>?
               </span>
             )}
           </div>
