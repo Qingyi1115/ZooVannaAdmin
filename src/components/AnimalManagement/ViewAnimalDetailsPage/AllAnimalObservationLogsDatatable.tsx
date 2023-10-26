@@ -128,9 +128,9 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
   useEffect(() => {
-    console.log(speciesCode);
+    console.log(animalCode);
     apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalObservationLogsBySpeciesCode/${speciesCode}`)
+      `http://localhost:3000/api/animal/getAnimalObservationLogsByAnimalCode/${animalCode}`)
       .then(res => {
         setAnimalObservationLogList(res.animalObservationLogs as AnimalObservationLog[]);
       })

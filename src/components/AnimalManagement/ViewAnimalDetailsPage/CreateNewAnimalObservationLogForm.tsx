@@ -113,8 +113,8 @@ function CreateNewAnimalObservationLogForm() {
         <Separator />
       </div>
       {/* DateTime */}
-      <div className="flex justify-content-center">
-        <label htmlFor="dateTimeCalendar" className="self-center mx-3 text-lg text-dark ">Date</label>
+      <div className="card justify-content-center block ">
+        <div className="mb-1 block font-medium">Date</div>
         <Calendar id="dateTimeCalendar" showTime hourFormat="12" value={dateTime} onChange={(e: CalendarChangeEvent) => {
           if (e && e.value !== null) {
             setDateTime(e.value as Date);

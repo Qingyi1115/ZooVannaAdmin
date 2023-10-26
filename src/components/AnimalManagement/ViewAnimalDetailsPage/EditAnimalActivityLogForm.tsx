@@ -89,13 +89,13 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
 
     apiJson.put(
       `http://localhost:3000/api/animal/updateAnimalActivityLog/${curAnimalActivityLog.animalActivityLogId}`,
-      newAnimalActivityLog).then(res=>{
+      newAnimalActivityLog).then(res => {
         // success
         toastShadcn({
           description: "Successfully edited animal activity log",
         });
         navigate(-1);
-      }).catch(err=>{
+      }).catch(err => {
         console.log(err);
         toastShadcn({
           variant: "destructive",
@@ -132,7 +132,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           </div>
           <Separator />
           <span className="mt-4 self-center text-title-xl font-bold">
-            {curAnimalActivityLog.animalActivityLogId}
+            {curAnimalActivityLog.activityType + " at " + new Date(curAnimalActivityLog.dateTime).toLocaleString()}
           </span>
         </div>
         {/* Activity Type */}
@@ -151,8 +151,8 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
         />
 
         {/* DateTime */}
-        <div className="flex justify-content-center">
-          <label htmlFor="dateTimeCalendar" className="self-center mx-3 text-lg text-dark ">Date</label>
+        <div className="card justify-content-center block ">
+          <div className="mb-1 block font-medium">Date</div>
           <Calendar id="dateTimeCalendar" showTime hourFormat="12" value={dateTime} onChange={(e: CalendarChangeEvent) => {
             if (e && e.value !== null) {
               setDateTime(e.value as Date);
@@ -197,25 +197,25 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           required={true}
           placeholder="Select a reaction"
           valueLabelPair={[
-            ["POSITIVE_RESPONSE", "Positive response",],
+            ["POSITIVE_RESPONSE", "Positive Response"],
             ["RESPONSIVE", "Responsive"],
             ["ENTHUSIASTIC", "Enthusiastic"],
-            ["ENGAGED", "Enraged",],
-            ["PLAYFUL", "Playful",],
-            ["CONTENT", "Content",],
-            ["NEUTRAL_RESPONSE", "Neutral response",],
-            ["OBSERVANT", "Obesrvant",],
-            ["CAUTIOUS", "Cautious",],
-            ["NEGATIVE_RESPONSE", "Negative response",],
-            ["STRESSED", "Stressed",],
-            ["AVOIDANT", "Avoidant",],
-            ["RESISTANT", "Resistant",],
-            ["AGGRESSIVE", "Aggresive",],
-            ["FEARFUL", "Fearful",],
-            ['OTHER_RESPONSE', "Other response",],
-            ["ENERGETIC", "Energetic",],
-            ["RELAXED", "Relaxed",],
-            ["INDETERMINATE", "Indeterminate",],
+            ["ENGAGED", "Engaged"],
+            ["PLAYFUL", "Playful"],
+            ["CONTENT", "Content"],
+            ["NEUTRAL_RESPONSE", "Neutral Response"],
+            ["OBSERVANT", "Observant"],
+            ["CAUTIOUS", "Cautious"],
+            ["NEGATIVE_RESPONSE", "Negative Response"],
+            ["STRESSED", "Stressed"],
+            ["AVOIDANT", "Avoidant"],
+            ["RESISTANT", "Resistant"],
+            ["AGGRESSIVE", "Aggressive"],
+            ["FEARFUL", "Fearful"],
+            ["OTHER_RESPONSE", "Other Response"],
+            ["ENERGETIC", "Energetic"],
+            ["RELAXED", "Relaxed"],
+            ["INDETERMINATE", "Indeterminate"],
             ["UNDETERMINED", "Undetermined"],
           ]}
           value={animalReaction}
