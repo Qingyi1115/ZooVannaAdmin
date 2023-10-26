@@ -190,7 +190,9 @@ function CreateFeedingPlan() {
               {recoAmountForSpecificAnimal.recoAmt?.toLocaleString()} grams (g)
             </div>
           ) : (
-            recoAmountForSpecificAnimal.recoAmt
+            <div className="text-danger">
+              {recoAmountForSpecificAnimal.recoAmt}
+            </div>
           )}
         </>
       );
@@ -320,6 +322,48 @@ function CreateFeedingPlan() {
     });
 
     return Array.from(itemsMap.values());
+  }
+
+  function autoAddSuggestedFeedingAmount() {
+    if (!selectedCurFeedCategoryNewFoodItem) {
+      return;
+    }
+
+    if (
+      curFeedingItemsNewFeedSession.length == 0 &&
+      !unitOfMeasurementNewFoodItem
+    ) {
+      return;
+    }
+
+    const tempFeedingItemsNewFeedSession = [...curFeedingItemsNewFeedSession];
+    // use animalRecoAmounts to fill
+    for (var feedingItem of tempFeedingItemsNewFeedSession) {
+      // const curRecoAmt = getRecoAmountAnimal(
+      //   selectedCurFeedCategoryNewFoodItem,
+      //   "meal",
+      //   feedingItem.animal.animalCode
+      // );
+      const curRecoAmt = animalRecoAmounts.find((recoAmount) => {
+        return (
+          recoAmount.animalCode === feedingItem.animal.animalCode &&
+          recoAmount.animalFeedCategory ===
+            selectedCurFeedCategoryNewFoodItem &&
+          recoAmount.weekOrMeal === "meal"
+        );
+      });
+      // if (curRecoAmt && unitOfMeasurementNewFoodItem == "KG") {
+      // }
+      if (curRecoAmt) {
+        feedingItem.amount =
+          curRecoAmt.recoAmt == "No dietary data found!"
+            ? Number(0)
+            : unitOfMeasurementNewFoodItem == "KG"
+            ? Number(curRecoAmt.recoAmt) / 1000
+            : Number(curRecoAmt.recoAmt);
+      }
+    }
+    setCurFeedingItemsNewFeedSession(tempFeedingItemsNewFeedSession);
   }
 
   function addNewFoodSessionToPlan() {
@@ -1518,7 +1562,16 @@ function CreateFeedingPlan() {
                     </div>
                   )}
                   <div className="my-4 flex w-full justify-center">
-                    <Button>Auto-fill Suggested Amounts</Button>
+                    <Button
+                      disabled={
+                        !selectedCurFeedCategoryNewFoodItem ||
+                        !unitOfMeasurementNewFoodItem
+                      }
+                      type="button"
+                      onClick={autoAddSuggestedFeedingAmount}
+                    >
+                      Auto-fill Suggested Amounts
+                    </Button>
                   </div>
                   <div className="flex flex-col gap-4">
                     {animalTargetList.map((curAnimal, idx) => (
@@ -1592,44 +1645,66 @@ function CreateFeedingPlan() {
                               <span className="font-medium ">
                                 Recommended Amount:
                               </span>{" "}
-                              <div className="flex gap-8">
+                              <div className="flex items-end gap-8">
                                 <div>
-                                  Per meal: <br />
-                                  <span className="text-lg">
-                                    {selectedCurFeedCategoryNewFoodItem &&
-                                      getRecoAmountAnimal(
-                                        selectedCurFeedCategoryNewFoodItem,
-                                        "meal",
-                                        curAnimal.animalCode
-                                      )}
+                                  <span className="text-sm">
+                                    Per meal: <br />
                                   </span>
+                                  <div
+                                    className={`rounded bg-slate-200 p-1 ${
+                                      !selectedCurFeedCategoryNewFoodItem &&
+                                      "animate-pulse p-2"
+                                    }`}
+                                  >
+                                    <span className="text-base font-bold">
+                                      {selectedCurFeedCategoryNewFoodItem &&
+                                        getRecoAmountAnimal(
+                                          selectedCurFeedCategoryNewFoodItem,
+                                          "meal",
+                                          curAnimal.animalCode
+                                        )}
+                                    </span>
+                                  </div>
                                 </div>
                                 <div>
-                                  Per week: <br />
-                                  <span className="text-lg">
-                                    {selectedCurFeedCategoryNewFoodItem &&
-                                      getRecoAmountAnimal(
-                                        selectedCurFeedCategoryNewFoodItem,
-                                        "week",
-                                        curAnimal.animalCode
-                                      )}
-                                  </span>
+                                  <div className="text-sm">
+                                    Per week: <br />
+                                  </div>
+                                  <div
+                                    className={`rounded bg-slate-200 p-1 ${
+                                      !selectedCurFeedCategoryNewFoodItem &&
+                                      "animate-pulse p-2"
+                                    }`}
+                                  >
+                                    <span className="text-base font-bold">
+                                      {selectedCurFeedCategoryNewFoodItem &&
+                                        getRecoAmountAnimal(
+                                          selectedCurFeedCategoryNewFoodItem,
+                                          "week",
+                                          curAnimal.animalCode
+                                        )}
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                             <div className="w-1/3">
-                              <span className="font-medium">
-                                Amount already added <br />
-                                per week:
-                              </span>
+                              <span className="font-medium">Added Amount:</span>
                               <div>
-                                <span className="text-lg">
-                                  {selectedCurFeedCategoryNewFoodItem &&
-                                    getAmountFoodAlreadyAddedPerWeekInGrams(
-                                      curAnimal.animalCode,
-                                      selectedCurFeedCategoryNewFoodItem
-                                    )}
-                                </span>
+                                <div
+                                  className={`w-full rounded bg-slate-200 p-1 text-center ${
+                                    !selectedCurFeedCategoryNewFoodItem &&
+                                    "animate-pulse p-2"
+                                  }`}
+                                >
+                                  <span className="w-full text-base font-bold">
+                                    {selectedCurFeedCategoryNewFoodItem &&
+                                      getAmountFoodAlreadyAddedPerWeekInGrams(
+                                        curAnimal.animalCode,
+                                        selectedCurFeedCategoryNewFoodItem
+                                      )}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
