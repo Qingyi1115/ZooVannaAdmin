@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -25,15 +25,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogFooter,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from "@/components/ui/dialog";
+import { Dialog } from "primereact/dialog";
 import {
   Tooltip,
   TooltipContent,
@@ -512,8 +513,8 @@ function CreateFeedingPlan() {
           for (var feedCategory of recommendedFeedSet) {
             const recoAmoutsCurFeedcatory =
               await getRecoAmountsFeedCategoryForSpecies(feedCategory);
-            console.log("aaaaa: " + feedCategory);
-            console.log(recoAmoutsCurFeedcatory);
+            // console.log("aaaaa: " + feedCategory);
+            // console.log(recoAmoutsCurFeedcatory);
 
             if (recoAmoutsCurFeedcatory) {
               // tempRecoAmounts.concat(recoAmoutsCurFeedcatory);
@@ -521,8 +522,8 @@ function CreateFeedingPlan() {
                 ...tempRecoAmounts,
                 ...recoAmoutsCurFeedcatory,
               ];
-              console.log("getting reco amounts");
-              console.log(tempRecoAmounts);
+              // console.log("getting reco amounts");
+              // console.log(tempRecoAmounts);
             }
           }
 
@@ -783,6 +784,12 @@ function CreateFeedingPlan() {
         session.eventTimingType === curEventTimingType
     );
 
+    // const curSession = feedingPlanSessions.find(
+    //   (session) =>
+    //     session.dayOfTheWeek === curDayOfTheWeek &&
+    //     session.eventTimingType === curEventTimingType
+    // );
+
     return (
       <TableCell className="min-h-[8rem] w-1/3 align-top font-medium hover:bg-muted/50">
         <div className="flex justify-between">
@@ -802,7 +809,18 @@ function CreateFeedingPlan() {
                 >
                   Clear
                 </Button>
-                {editSessionDialog(curDayOfTheWeek, curEventTimingType)}
+                <Button
+                  variant={"outline"}
+                  type="button"
+                  className="h-min bg-white px-2 py-1 text-sm"
+                  onClick={() => {
+                    setSelectedSessionToEditDayOfWeek(curDayOfTheWeek);
+                    setSelectedSessionToEditTiming(curEventTimingType);
+                    setOpenEditSessionDialog(true);
+                  }}
+                >
+                  Edit
+                </Button>
               </>
             )}
           </div>
@@ -819,100 +837,140 @@ function CreateFeedingPlan() {
   // Edit session dialog
   const [openEditSessionDialog, setOpenEditSessionDialog] =
     useState<boolean>(false);
-  const editSessionDialog = (
-    curDayOfTheWeek: string,
-    curEventTimingType: string
-  ) => {
-    // const [selectedSessionToEdit, setSelectedSessionToEdit] =
-    //   useState<DummyFeedingPlanSessionDetail | null>(null);
+  const [selectedSessionToEditDayOfWeek, setSelectedSessionToEditDayOfWeek] =
+    useState<string | null>(null);
+  const [selectedSessionToEditTiming, setSelectedSessionToEditTiming] =
+    useState<string | null>(null);
+  // const [selectedSessionToEdit, setSelectedSessionToEdit] =
+  //   useState<DummyFeedingPlanSessionDetail | null>(null);
+  const editSessionDialog = () =>
+    // curDayOfTheWeek: string,
+    // curEventTimingType: string
+    {
+      const [selectedSessionToEdit, setSelectedSessionToEdit] =
+        useState<DummyFeedingPlanSessionDetail | null>(null);
+      const dropdownRef = useRef<Dropdown>(null);
 
-    const tempFeedingPlanSessions = [...feedingPlanSessions];
+      const tempFeedingPlanSessions = [...feedingPlanSessions];
 
-    // find selected session
-    const existingSessionIndex = [...feedingPlanSessions].findIndex(
-      (session) =>
-        session.dayOfTheWeek === curDayOfTheWeek &&
-        session.eventTimingType === curEventTimingType
-    );
+      // find selected session
+      const existingSessionIndex = [...feedingPlanSessions].findIndex(
+        (session) =>
+          session.dayOfTheWeek === selectedSessionToEditDayOfWeek &&
+          session.eventTimingType === selectedSessionToEditTiming
+      );
 
-    // const [curSessionToEdit, setCurSessionToEdit] =
-    //   useState<DummyFeedingPlanSessionDetail | null>(
-    //     [...feedingPlanSessions][existingSessionIndex]
-    //   );
-    let curSessionToEdit: DummyFeedingPlanSessionDetail;
-    if (existingSessionIndex != -1) {
-      curSessionToEdit = tempFeedingPlanSessions[existingSessionIndex];
-    } else {
-      return;
-    }
+      // const [curSessionToEdit, setCurSessionToEdit] =
+      //   useState<DummyFeedingPlanSessionDetail | null>(
+      //     [...feedingPlanSessions][existingSessionIndex]
+      //   );
+      let curSessionToEdit: DummyFeedingPlanSessionDetail;
 
-    const handleDurationChangeEditSession = (newDurationInMinutes: number) => {
-      if (!curSessionToEdit) {
+      if (existingSessionIndex != -1) {
+        curSessionToEdit = tempFeedingPlanSessions[existingSessionIndex];
+      } else {
         return;
       }
-      curSessionToEdit.durationInMinutes = newDurationInMinutes;
-    };
 
-    const handleAmountChangeEditSession = (
-      index: number,
-      amount: number | null
-    ) => {
-      if (!curSessionToEdit) {
-        return;
-      }
-      if (curSessionToEdit.feedingItems == undefined) {
-        return;
-      }
-      const updatedCurSessionFeedingItemsToBeEdited = [
-        ...curSessionToEdit.feedingItems,
-      ];
-      updatedCurSessionFeedingItemsToBeEdited[index] = {
-        ...updatedCurSessionFeedingItemsToBeEdited[index],
-        amount,
+      const handleDurationChangeEditSession = (
+        newDurationInMinutes: number
+      ) => {
+        if (!curSessionToEdit) {
+          return;
+        }
+        curSessionToEdit.durationInMinutes = newDurationInMinutes;
       };
-      curSessionToEdit.feedingItems = updatedCurSessionFeedingItemsToBeEdited;
-      // setCurSessionToEdit({
-      //   ...curSessionToEdit,
-      //   feedingItems: updatedCurSessionFeedingItemsToBeEdited,
-      // });
-    };
 
-    function handleEditSession() {
-      // const existingSessionIndexInRealPlan = feedingPlanSessions.findIndex(
-      //   (session) =>
-      //     session.dayOfTheWeek === curDayOfTheWeek &&
-      //     session.eventTimingType === curEventTimingType
-      // );
-      setFeedingPlanSessions(tempFeedingPlanSessions);
-      setOpenEditSessionDialog(false);
-    }
+      const handleUnitChangeEditSession = (index: number, unit: string) => {
+        if (!curSessionToEdit) {
+          return;
+        }
+        if (curSessionToEdit.feedingItems == undefined) {
+          return;
+        }
+        const updatedCurSessionFeedingItemsToBeEdited = [
+          ...curSessionToEdit.feedingItems,
+        ];
+        updatedCurSessionFeedingItemsToBeEdited[index] = {
+          ...updatedCurSessionFeedingItemsToBeEdited[index],
+          unit,
+        };
+        curSessionToEdit.feedingItems = updatedCurSessionFeedingItemsToBeEdited;
+        console.log("edit unit");
+        console.log(curSessionToEdit.feedingItems[index].unit);
+        // setCurSessionToEditUseState(curSessionToEdit);
+      };
 
-    return (
-      <React.Fragment>
-        <Dialog
-          open={openEditSessionDialog}
-          onOpenChange={setOpenEditSessionDialog}
-        >
-          <DialogTrigger asChild>
+      const handleAmountChangeEditSession = (
+        index: number,
+        amount: number | null
+      ) => {
+        if (!curSessionToEdit) {
+          return;
+        }
+        if (curSessionToEdit.feedingItems == undefined) {
+          return;
+        }
+        const updatedCurSessionFeedingItemsToBeEdited = [
+          ...curSessionToEdit.feedingItems,
+        ];
+        updatedCurSessionFeedingItemsToBeEdited[index] = {
+          ...updatedCurSessionFeedingItemsToBeEdited[index],
+          amount,
+        };
+        curSessionToEdit.feedingItems = updatedCurSessionFeedingItemsToBeEdited;
+        // setCurSessionToEdit({
+        //   ...curSessionToEdit,
+        //   feedingItems: updatedCurSessionFeedingItemsToBeEdited,
+        // });
+      };
+
+      function handleEditSession() {
+        // const existingSessionIndexInRealPlan = feedingPlanSessions.findIndex(
+        //   (session) =>
+        //     session.dayOfTheWeek === curDayOfTheWeek &&
+        //     session.eventTimingType === curEventTimingType
+        // );
+        setFeedingPlanSessions(tempFeedingPlanSessions);
+        setOpenEditSessionDialog(false);
+      }
+
+      const footerContent = (
+        <Button type="button" onClick={handleEditSession}>
+          Save changes
+        </Button>
+      );
+
+      return (
+        <React.Fragment>
+          <Dialog
+            visible={openEditSessionDialog}
+            header={"Edit Session Details"}
+            onHide={() => setOpenEditSessionDialog(false)}
+            // onOpenChange={setOpenEditSessionDialog}
+            footer={footerContent}
+            style={{ width: "60vw", height: "70vh", marginLeft: "10%" }}
+          >
+            {/* <DialogTrigger asChild>
             <Button
               variant={"outline"}
               className="h-min bg-white px-2 py-1 text-sm"
             >
               Edit
             </Button>
-          </DialogTrigger>
-          <DialogContent className="ml-[10%] max-w-[60vw]">
-            <DialogHeader>
+          </DialogTrigger> */}
+            {/* <DialogContent className="ml-[10%] max-h-[70vh] max-w-[60vw] overflow-auto"> */}
+            {/* <DialogHeader>
               <DialogTitle>Edit Session Details</DialogTitle>
               <DialogDescription>
                 Edit Session Info or Food Amount
               </DialogDescription>
-            </DialogHeader>
+            </DialogHeader> */}
             {curSessionToEdit && (
-              <div>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
+              <div className="flex flex-col gap-4">
+                <Table className="">
+                  <TableHeader className="">
+                    <TableRow className="">
                       <TableHead>Day</TableHead>
                       <TableHead>Session Timing</TableHead>
                       {/* <TableHead>Duration (minutes)</TableHead> */}
@@ -941,18 +999,10 @@ function CreateFeedingPlan() {
                     className="w-full"
                   />
                 </div>
-                {/* <div>
-                  {curSessionToEdit.feedingItems &&
-                    curSessionToEdit.feedingItems.map((feedingItem) => (
-                      <div>
-                        <div>{feedingItem.animal.houseName}</div>
-                        <div>
-                          {feedingItem.foodCategory}: {feedingItem.amount}
-                        </div>
-                      </div>
-                    ))}
-                </div> */}
-                <div>
+                <div className="mt-2 font-bold">
+                  Edit specific amounts below
+                </div>
+                <div className="flex flex-col gap-4">
                   {Object.values(
                     groupFeedingItemsByAnimal(curSessionToEdit)
                   ).map(
@@ -963,25 +1013,126 @@ function CreateFeedingPlan() {
                       },
                       index
                     ) => (
-                      <div key={group.animal.animalCode}>
-                        <div>{group.animal.houseName}</div>
+                      <div
+                        key={group.animal.animalCode}
+                        className="rounded-md border border-strokedark/30 p-4 shadow-sm"
+                      >
+                        {/* first row, animal stuff */}
+                        <div className="mb-4 flex gap-4">
+                          <img
+                            className="aspect-square h-12 w-12 rounded-full border border-white object-cover shadow-4"
+                            src={`http://localhost:3000/${group.animal.imageUrl}`}
+                            alt={group.animal.houseName}
+                          />
+                          <div>
+                            <div className="mb-1 flex gap-2">
+                              <div>{group.animal.houseName}</div>
+                              {(group.animal.animalStatus
+                                .split(",")
+                                .includes("PREGNANT") ||
+                                group.animal.animalStatus
+                                  .split(",")
+                                  .includes("SICK")) && (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger type="button">
+                                      <HiOutlineExclamationCircle className="h-6 w-6 animate-pulse stroke-danger" />
+                                    </TooltipTrigger>
+                                    <TooltipContent className="border-strokedark/40">
+                                      Sick, pregnant, and possibly injured
+                                      animals may require{" "}
+                                      <span className="font-bold">
+                                        more food
+                                      </span>{" "}
+                                      given to them!
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )}
+                            </div>
+                            <div>
+                              {animalStatusTemplate(
+                                group.animal.animalStatus.split(",")
+                              )}
+                            </div>
+                          </div>
+                        </div>
                         <div>
                           {group.items.map((item) => (
-                            <div>
-                              {item.foodCategory}: {item.amount}
-                              <div>Amount of food to be given:</div>
-                              <InputNumber
-                                placeholder="Amount of food"
-                                value={item.amount}
-                                onValueChange={(
-                                  e: InputNumberValueChangeEvent
-                                ) =>
-                                  handleAmountChangeEditSession(
-                                    index,
-                                    e.value as number | null
-                                  )
-                                }
-                              />
+                            <div className="h-full">
+                              <div className="flex gap-8">
+                                <div className="flex gap-4">
+                                  <div className="">
+                                    <div className="">{item.foodCategory}:</div>
+                                    {/* <div>Amount of food to be given:</div> */}
+                                    <InputNumber
+                                      placeholder="Amount of food"
+                                      value={item.amount}
+                                      onValueChange={(
+                                        e: InputNumberValueChangeEvent
+                                      ) =>
+                                        handleAmountChangeEditSession(
+                                          index,
+                                          e.value as number | null
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                  <div className="">
+                                    <span className="">Unit: </span>
+                                    <div className="flex h-12 items-center">
+                                      {item.unit}
+                                    </div>
+                                  </div>
+                                </div>
+                                {/* reco amounts stuff */}
+                                <div className="flex w-full justify-between gap-8">
+                                  <div>
+                                    <span className="font-medium ">
+                                      Recommended Amount:
+                                    </span>{" "}
+                                    <div className="flex gap-8">
+                                      <div>
+                                        Per meal: <br />
+                                        <span className="text-lg">
+                                          {selectedCurFeedCategoryNewFoodItem &&
+                                            getRecoAmountAnimal(
+                                              selectedCurFeedCategoryNewFoodItem,
+                                              "meal",
+                                              group.animal.animalCode
+                                            )}
+                                        </span>
+                                      </div>
+                                      <div>
+                                        Per week: <br />
+                                        <span className="text-lg">
+                                          {selectedCurFeedCategoryNewFoodItem &&
+                                            getRecoAmountAnimal(
+                                              selectedCurFeedCategoryNewFoodItem,
+                                              "week",
+                                              group.animal.animalCode
+                                            )}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="w-1/3">
+                                    <span className="font-medium">
+                                      Amount already added <br />
+                                      per week:
+                                    </span>
+                                    <div>
+                                      <span className="text-lg">
+                                        {selectedCurFeedCategoryNewFoodItem &&
+                                          getAmountFoodAlreadyAddedPerWeekInGrams(
+                                            group.animal.animalCode,
+                                            selectedCurFeedCategoryNewFoodItem
+                                          )}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -991,16 +1142,11 @@ function CreateFeedingPlan() {
                 </div>
               </div>
             )}
-            <DialogFooter>
-              <Button type="button" onClick={handleEditSession}>
-                Save changes
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </React.Fragment>
-    );
-  };
+            {/* </DialogContent> */}
+          </Dialog>
+        </React.Fragment>
+      );
+    };
 
   ///
 
@@ -1549,6 +1695,7 @@ function CreateFeedingPlan() {
           >
             Clear All Sessions
           </Button>
+          <div>{editSessionDialog()}</div>
           <Table>
             {/* <TableHeader>
               <TableRow>
@@ -1562,6 +1709,7 @@ function CreateFeedingPlan() {
                 <TableHead className="">Sunday</TableHead>
               </TableRow>
             </TableHeader> */}
+
             <TableBody>
               <TableRow className="bg-muted/20">
                 <TableCell className="font-medium" colSpan={3}>
