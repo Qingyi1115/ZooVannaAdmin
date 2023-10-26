@@ -75,26 +75,49 @@ function ZooEventHomePage() {
 
       responseJson["zooEvents"].forEach((ze: ZooEvent) => {
 
-        if (employee.keeper != undefined) {
-
-        }
-
         if (ze.animalActivity) {
           if (!allEventGroup.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity")) {
-            allEventGroup.push({
-              groupId: ze.animalActivity.animalActivityId,
-              groupType: "animalActivity",
-              groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
-            });
+            if (!(employee.superAdmin ||
+              employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+              employee.planningStaff?.plannerType == "SALES")
+              && employee.keeper) {
+              if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
+                allEventGroup.push({
+                  groupId: ze.animalActivity.animalActivityId,
+                  groupType: "animalActivity",
+                  groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
+                });
+              }
+            } else {
+              allEventGroup.push({
+                groupId: ze.animalActivity.animalActivityId,
+                groupType: "animalActivity",
+                groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
+              });
+            }
           }
         } else if (ze.feedingPlanSessionDetail) {
           if (!allEventGroup.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail")) {
-            allEventGroup.push({
-              groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
-              groupType: "feedingPlanSessionDetail",
-              groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
-                " " + ze.feedingPlanSessionDetail.eventTimingType
-            })
+            if (!(employee.superAdmin ||
+              employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+              employee.planningStaff?.plannerType == "SALES")
+              && employee.keeper) {
+              if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
+                allEventGroup.push({
+                  groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
+                  groupType: "feedingPlanSessionDetail",
+                  groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
+                    " " + ze.feedingPlanSessionDetail.eventTimingType
+                })
+              }
+            } else {
+              allEventGroup.push({
+                groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
+                groupType: "feedingPlanSessionDetail",
+                groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
+                  " " + ze.feedingPlanSessionDetail.eventTimingType
+              })
+            }
           }
         } else if (ze) {
 
