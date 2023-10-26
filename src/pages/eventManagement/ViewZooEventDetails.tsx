@@ -109,7 +109,7 @@ function ViewZooEventDetails() {
 
   const { zooEventId } = useParams<{ zooEventId: string }>();
   const { tab } = useParams<{ tab: string }>();
-  
+
   const [curZooEvent, setCurZooEvent] =
     useState<ZooEvent | null>(null);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
@@ -390,44 +390,44 @@ function ViewZooEventDetails() {
     console.log(updateFuture)
     if (updateFuture) {
       const data = {
-        eventName:curZooEvent?.eventName, 
-        eventDescription:curZooEvent?.eventDescription,
-        eventIsPublic:curZooEvent?.eventIsPublic,
-        eventType:curZooEvent?.eventType,
-        eventStartDateTime:eventStartDateTime?.getTime(),
-        requiredNumberOfKeeper:curZooEvent?.requiredNumberOfKeeper,
-    
-        eventDurationHrs:curZooEvent?.eventDurationHrs,
-        eventTiming:curZooEvent?.eventTiming,
-        
-        eventNotificationDate:eventNotificationDate?.getTime(),
-        eventEndDateTime:curZooEvent?.eventEndDateTime,
+        eventName: curZooEvent?.eventName,
+        eventDescription: curZooEvent?.eventDescription,
+        eventIsPublic: curZooEvent?.eventIsPublic,
+        eventType: curZooEvent?.eventType,
+        eventStartDateTime: eventStartDateTime?.getTime(),
+        requiredNumberOfKeeper: curZooEvent?.requiredNumberOfKeeper,
+
+        eventDurationHrs: curZooEvent?.eventDurationHrs,
+        eventTiming: curZooEvent?.eventTiming,
+
+        eventNotificationDate: eventNotificationDate?.getTime(),
+        eventEndDateTime: curZooEvent?.eventEndDateTime,
       };
       console.log(data);
-        apiJson.put(
-          `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
-          data
-        ).then(res => {
-          // success
-          toastShadcn({
-            description: "Successfully updated event",
-          });
-          setMakePublicDialog(false);
-        }).catch(error => {
-          // got error
-          toastShadcn({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description:
-              "An error has occurred while updating event: \n" +
-              error.message,
-          });
+      apiJson.put(
+        `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
+        data
+      ).then(res => {
+        // success
+        toastShadcn({
+          description: "Successfully updated event",
         });
+        setMakePublicDialog(false);
+      }).catch(error => {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while updating event: \n" +
+            error.message,
+        });
+      });
     } else {
       console.log(zooEventDetails);
       apiJson.put(
         `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
-        {zooEventDetails:zooEventDetails}
+        { zooEventDetails: zooEventDetails }
       ).then(res => {
         // success
         toastShadcn({
@@ -634,7 +634,7 @@ function ViewZooEventDetails() {
           <div>
             <div className="mb-10 ">
               <Tabs
-                defaultValue={tab ? `${tab}` : "facilityDetails"}
+                defaultValue={tab ? `${tab}` : "details"}
                 className="w-full"
               >
                 <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
@@ -816,7 +816,7 @@ function ViewZooEventDetails() {
                           <Form.ValidityState>{validateEndDate}</Form.ValidityState>
                         </Form.Field> */}
                         {/* Notification Date */}
-                        {/* <Form.Field
+                        <Form.Field
                           name="eventNotificationDate"
                           id="eventNotificationDateField"
                           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
@@ -848,7 +848,7 @@ function ViewZooEventDetails() {
                             }}
                           />
                           <Form.ValidityState>{validateDate}</Form.ValidityState>
-                        </Form.Field> */}
+                        </Form.Field>
                         {/* Update Future*/}
                         <Form.Field
                           name="updateFuture"
@@ -863,14 +863,10 @@ function ViewZooEventDetails() {
                             required={true}
                             onChange={() => null}
                           ></Form.Control>
-                          {/* <Checkbox
-                        onChange={(e: any) => setChecked(e.checked)}
-                        checked={checked}
-                      />} */}
                           <Checkbox.Root
                             className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow outline-none focus:shadow-[0_0_0_2px_gray]"
                             id="c1"
-                            onCheckedChange={(event:boolean) => { setUpdateFuture(event) }}
+                            onCheckedChange={(event: boolean) => { setUpdateFuture(event) }}
                           >
                             <Checkbox.Indicator>
                               <CheckIcon />
