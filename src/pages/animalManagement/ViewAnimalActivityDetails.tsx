@@ -650,7 +650,7 @@ function ViewAnimalActivityDetails() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="activityLogs">
+              <TabsContent value="activitylogs">
                 <AllAnimalActivityLogsDatatable speciesCode={""} animalCode={""} animalActivityLogId={curAnimalActivity.animalActivityId} />
               </TabsContent>
             </Tabs>
