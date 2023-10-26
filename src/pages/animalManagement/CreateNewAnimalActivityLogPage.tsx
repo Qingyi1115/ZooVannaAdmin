@@ -5,16 +5,17 @@ import useApiJson from "../../hooks/useApiJson";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import AnimalActivityLog from "../../models/AnimalActivityLog";
 import { Rating } from "../../enums/Rating";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization, ActivityType } from "../../enums/Enumurated";
+import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization, ActivityType, EventTimingType, RecurringPattern } from "../../enums/Enumurated";
 import { Reaction } from "../../enums/Reaction";
 import Animal from "../../models/Animal";
 import Employee from "../../models/Employee";
 import Keeper from "../../models/Keeper";
 import Species from "../../models/Species";
+import AnimalActivity from "../../models/AnimalActivity";
 
 function CreateAnimalActivityLogPage() {
   const apiJson = useApiJson();
-  const { animalActivityLogId } = useParams<{ animalActivityLogId: string }>();
+  const { animalActivityId } = useParams<{ animalActivityId: string }>();
   const employee = useAuthContext().state.user?.employeeData;
 
   let emptySpecies: Species = {
@@ -91,28 +92,32 @@ function CreateAnimalActivityLogPage() {
     employee: emptyEmployee
   }
 
-  let emptyAnimalActivityLog: AnimalActivityLog = {
-    animalActivityLogId: 0,
-    dateTime: new Date(),
-    durationInMinutes: 0,
-    sessionRating: Rating.NOT_RECORDED,
+  let emptyAnimalActivity: AnimalActivity = {
+    animalActivityId: -1,
+    activityType: ActivityType.ENRICHMENT,
+    title: "",
     details: "",
-    animals: [],
-    keeper: emptyKeeper,
-    activityType: ActivityType.TRAINING,
-    animalReaction: Reaction.POSITIVE_RESPONSE
-  };
+    recurringPattern: RecurringPattern.DAILY,
+    dayOfMonth: null,
+    dayOfWeek: null,
+    startDate: new Date(),
+    endDate: new Date(),
+    eventTimingType: EventTimingType.AFTERNOON,
+    durationInMinutes: -1,
+    animalActivityLogs: []
+  }
 
-  const [curAnimalActivityLog, setCurAnimalActivityLog] = useState<AnimalActivityLog>(emptyAnimalActivityLog);
+  const [curAnimalActivity, setCurAnimalActivity] = useState<AnimalActivity>(emptyAnimalActivity);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAnimalActivityLogById/${animalActivityLogId}`).then(res => {
-      setCurAnimalActivityLog(res["animalActivityLog"]);
+    apiJson.get(`http://localhost:3000/api/animal/getAnimalActivityById/${animalActivityId}`).then(res => {
+      setCurAnimalActivity(res["animalActivity"]);
+      console.log("res", res)
     });
-  }, [0]);
+  }, []);
   return (
     <div className="p-10">
-      <CreateNewAnimalActivityLogForm curAnimalActivityLog={curAnimalActivityLog} />
+      <CreateNewAnimalActivityLogForm curAnimalActivity={curAnimalActivity} />
     </div>
   );
 }

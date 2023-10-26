@@ -328,7 +328,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/animal/createAnimalActivityLog/:animalId"
+                  path="/animal/createAnimalActivityLog/:animalActivityId"
                   element={
                     user ? (
                       <CreateNewAnimalActivityLogPage />
@@ -394,7 +394,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/animal/createanimalactivity"
+                  path="/animal/createanimalactivity/"
                   element={
                     user ? (
                       <CreateAnimalActivityPage />
