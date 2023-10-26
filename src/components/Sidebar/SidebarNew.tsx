@@ -1025,7 +1025,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 )}
               {/* Event */}
               {(employee.superAdmin ||
-                employee.planningStaff?.plannerType == "SALES") && (
+                employee.planningStaff?.plannerType == "SALES" ||
+                employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+                employee.keeper) && (
                   <SidebarLinkGroup
                     activeCondition={
                       pathname === "/" || pathname.includes("zooevent")
