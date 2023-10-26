@@ -51,66 +51,66 @@ function ZooEventHomePage() {
   useEffect(() => {
     apiJson.post(
       "http://localhost:3000/api/zooEvent/getAllZooEvents", {
-        startDate: calendarStartDate,
-        endDate: calendarEndDate,
-        includes: [
-          "planningStaff",
-          "keepers",
-          "enclosure",
-          "animal",
-          "inHouse",
-          "animalActivity",
-          "feedingPlanSessionDetail",
-        ]
-      }
-    ).then(responseJson=>{
-      
-    console.log("responseJson", responseJson)
+      startDate: calendarStartDate,
+      endDate: calendarEndDate,
+      includes: [
+        "planningStaff",
+        "keepers",
+        "enclosure",
+        "animal",
+        "inHouse",
+        "animalActivity",
+        "feedingPlanSessionDetail",
+      ]
+    }
+    ).then(responseJson => {
 
-    const allEventGroup:any[] = [];
+      console.log("responseJson", responseJson)
 
-    responseJson["zooEvents"].forEach((ze:ZooEvent) => {
-      if (ze.animalActivity){
-        if (!allEventGroup.find(group=>group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity")){
-          allEventGroup.push({
-            groupId:ze.animalActivity.animalActivityId, 
-            groupType:"animalActivity", 
-            groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType 
-          });
+      const allEventGroup: any[] = [];
+
+      responseJson["zooEvents"].forEach((ze: ZooEvent) => {
+        if (ze.animalActivity) {
+          if (!allEventGroup.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity")) {
+            allEventGroup.push({
+              groupId: ze.animalActivity.animalActivityId,
+              groupType: "animalActivity",
+              groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
+            });
+          }
+        } else if (ze.feedingPlanSessionDetail) {
+          if (!allEventGroup.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail")) {
+            allEventGroup.push({
+              groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
+              groupType: "feedingPlanSessionDetail",
+              groupName: ze.feedingPlanSessionDetail.feedingPlan.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
+                " " + ze.feedingPlanSessionDetail.eventTimingType
+            })
+          }
+        } else if (ze) {
+
         }
-      }else if (ze.feedingPlanSessionDetail){
-        if (!allEventGroup.find(group=>group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail")){
-          allEventGroup.push({
-            groupId:ze.feedingPlanSessionDetail.feedingPlanSessionDetailId, 
-            groupType:"feedingPlanSessionDetail",
-            groupName: ze.feedingPlanSessionDetail.feedingPlan.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
-            " " + ze.feedingPlanSessionDetail.eventTimingType
-          })
-        }
-      }else if (ze){
-        
-      }
-    });
-    setEventGroupList(allEventGroup);
-    setSelEventGroupList(allEventGroup);
-    setFilteredZooEventsList(responseJson["zooEvents"]);
-    return setZooEventsList(responseJson["zooEvents"]);
+      });
+      setEventGroupList(allEventGroup);
+      setSelEventGroupList(allEventGroup);
+      setFilteredZooEventsList(responseJson["zooEvents"]);
+      return setZooEventsList(responseJson["zooEvents"]);
 
     }).catch(error => {
       console.log(error);
     });
   }, [refresh]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setFilteredZooEventsList(
-      zooEventsList.filter(ze=>{
-      if (ze.animalActivity){
-        return selEventGroupList.find(group=>group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity");
-      }else if (ze.feedingPlanSessionDetail){
-        return selEventGroupList.find(group=>group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail");
-      }else if (ze){
-        
-      }
+      zooEventsList.filter(ze => {
+        if (ze.animalActivity) {
+          return selEventGroupList.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity");
+        } else if (ze.feedingPlanSessionDetail) {
+          return selEventGroupList.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail");
+        } else if (ze) {
+
+        }
       })
     )
   }, [selEventGroupList]);
@@ -120,36 +120,36 @@ function ZooEventHomePage() {
     {
       label: 'Internal',
       items: [
-          {
-              label: 'Animal Activity',
-              command: () => {
-                navigate(`/zooevent/viewallzooevents/`, { replace: true })
-                navigate(`/animal/createanimalactivity`);
-              }
-          },
-          {
-              label: 'Animal Observation',
-              command: () => {
-                navigate(`/zooevent/viewallzooevents/`, { replace: true })
-                navigate(`/animal/createanimalobservation`)
-              }
-          },
-          {
-              label: 'Feeding Plan',
-              command: () => {
-                navigate(`/zooevent/viewallzooevents/`, { replace: true })
-                navigate(`/animal/createfeedingplan`)
-              }
+        {
+          label: 'Animal Activity',
+          command: () => {
+            navigate(`/zooevent/viewallzooevents/`, { replace: true })
+            navigate(`/animal/createanimalactivity`);
           }
+        },
+        {
+          label: 'Animal Observation',
+          command: () => {
+            navigate(`/zooevent/viewallzooevents/`, { replace: true })
+            navigate(`/animal/createanimalobservation`)
+          }
+        },
+        {
+          label: 'Feeding Plan',
+          command: () => {
+            navigate(`/zooevent/viewallzooevents/`, { replace: true })
+            navigate(`/animal/createfeedingplan`)
+          }
+        }
       ]
-  },{
-    label: 'Public',
-    items: [{
-      label: 'None',
-      icon: '',
-      command: () => {}
-  }]
-  },
+    }, {
+      label: 'Public',
+      items: [{
+        label: 'None',
+        icon: '',
+        command: () => { }
+      }]
+    },
   ];
 
   return (
@@ -158,53 +158,57 @@ function ZooEventHomePage() {
         {/* Title Header and back button */}
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            
-          <Menu model={items} popup ref={menuLeft} id="popup_menu_right" popupAlignment="left" />
-          <Button className="mr-2" onClick={(event) => menuLeft.current?.toggle(event)} aria-controls="popup_menu_right" aria-haspopup >
-            <HiPlus className="mr-2" />
-            Add Event
-          </Button>
+
+            <Menu model={items} popup ref={menuLeft} id="popup_menu_right" popupAlignment="left" />
+            <Button className="mr-2" onClick={(event) => menuLeft.current?.toggle(event)} aria-controls="popup_menu_right" aria-haspopup >
+              <HiPlus className="mr-2" />
+              Add Event
+            </Button>
 
             <span className=" self-center text-title-xl font-bold">
               All Events
             </span>
+            <Button className="mr-2 invisible" disabled aria-controls="popup_menu_right" aria-haspopup >
+              <HiPlus className="mr-2" />
+              Add Event
+            </Button>
           </div>
           <Separator />
         </div>
         <div>
-            <label htmlFor="startDateCalendar"  className="self-center mx-3 text-lg text-graydark">Start Date</label>
-            <Calendar id="startDateCalendar" showTime hourFormat="12" value={calendarStartDate} 
+          <label htmlFor="startDateCalendar" className="self-center mx-3 text-lg text-graydark">Start Date</label>
+          <Calendar id="startDateCalendar" showTime hourFormat="12" value={calendarStartDate}
             onChange={(e: CalendarChangeEvent) => {
-                      if (e && e.value !== null) {
-                        let selStartDate:Date = e.value as Date;
-                        setCalendarStartDate(selStartDate);
-                        // setCalendarStartDate calendarStartDate
-                        setRefresh([])
-                      }
-                    }} />
-            <label htmlFor="endDateCalendar"  className="self-center mx-3 text-lg text-graydark">End Date</label>
-            <Calendar id="endDateCalendar" showTime hourFormat="12" value={calendarEndDate} 
+              if (e && e.value !== null) {
+                let selStartDate: Date = e.value as Date;
+                setCalendarStartDate(selStartDate);
+                // setCalendarStartDate calendarStartDate
+                setRefresh([])
+              }
+            }} />
+          <label htmlFor="endDateCalendar" className="self-center mx-3 text-lg text-graydark">End Date</label>
+          <Calendar id="endDateCalendar" showTime hourFormat="12" value={calendarEndDate}
             onChange={(e: CalendarChangeEvent) => {
-                      if (e && e.value !== null) {
-                        let endD:Date = e.value as Date;
-                        setCalendarEndDate(endD);
-                        // setCalendarStartDate calendarStartDate
-                        setRefresh([])
-                      }
-                    }} />
-      <div className=" p-4">
-      <MultiSelect
-        value={selEventGroupList}
-        onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
-        options={eventGroupList}
-        optionLabel="groupName"
-        filter
-        display="chip"
-        placeholder="Filter Events"
-        className="w-full md:w-20rem" />
+              if (e && e.value !== null) {
+                let endD: Date = e.value as Date;
+                setCalendarEndDate(endD);
+                // setCalendarStartDate calendarStartDate
+                setRefresh([])
+              }
+            }} />
+          <div className=" p-4">
+            <MultiSelect
+              value={selEventGroupList}
+              onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
+              options={eventGroupList}
+              optionLabel="groupName"
+              filter
+              display="chip"
+              placeholder="Filter Events"
+              className="w-full md:w-20rem" />
+          </div>
         </div>
-        </div>
-        <div className="flex w-full flex-col items-center gap-4 rounded-md bg-whiten/50 p-4">
+        <div className="flex w-full flex-row content-center gap-6 rounded-md bg-whiten/50 p-2 mb-4 justify-between">
           <div className="h-max w-max">
             {/* View Selector */}
             <Toggle
@@ -230,20 +234,33 @@ function ZooEventHomePage() {
               />
             </Toggle>
           </div>
-          <div className="text-2xl font-medium">
+          <div className="text-2xl font-medium text-center">
             {isDatatableView ? (
               <span>Datatable View</span>
             ) : (
               <span>Calendar View</span>
             )}
           </div>
+          <Toggle
+            id="toggleDatatable"
+            disabled
+            aria-label="Toggle View Datatable"
+            pressed={isDatatableView}
+            onPressedChange={setIsDatatableView}
+            className={`invisible h-min w-min rounded-l-lg rounded-r-none px-3 py-2 transition-all data-[state=off]:bg-gray data-[state=on]:bg-primary data-[state=off]:text-whiten`}
+          >
+            <HiTableCells
+              className={`${!isDatatableView && "fill-graydark/50"} h-6 w-6`}
+            />
+          </Toggle>
+
         </div>
         {isDatatableView ? (
-            <AllEventsDatatable
-              zooEventsList={filteredZooEventsList}
-              setRefresh={setRefresh}
-            />
-          ) : (
+          <AllEventsDatatable
+            zooEventsList={filteredZooEventsList}
+            setRefresh={setRefresh}
+          />
+        ) : (
           <AllEventsFullCalendar
             zooEventsList={filteredZooEventsList}
             setRefresh={setRefresh}

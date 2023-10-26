@@ -216,7 +216,6 @@ function EditZooEventForm(props: EditZooEventFormProps) {
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            {/* <NavLink className="flex" to={`/animal/viewallanimals`}> */}
             <Button
               onClick={() => navigate(-1)}
               variant={"outline"}
@@ -225,15 +224,17 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             >
               Back
             </Button>
-            {/* </NavLink> */}
-            <span className="self-center text-eventName-xl font-bold">
-              Update Event
+            <span className="self-center text-lg text-graydark">
+              Edit Zoo Event
             </span>
             <Button disabled className="invisible">
               Back
             </Button>
           </div>
           <Separator />
+          <span className="mt-4 self-center text-title-xl font-bold">
+            {curZooEvent.eventName}
+          </span>
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -241,9 +242,9 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           <FormFieldInput
             type="text"
             formFieldName="eventName"
-            label="EventName"
+            label="Name"
             required={true}
-            placeholder="e.g., Chase yoga ball, mud bath..."
+            placeholder="Add an event title..."
             pattern={undefined}
             value={eventName}
             setValue={setEventName}
@@ -253,15 +254,15 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           {/* Activity Type */}
           <FormFieldSelect
             formFieldName="eventType"
-            label="Activity Type"
+            label="Type"
             required={true}
-            placeholder="Select an activity type..."
-            valueLabelPair={Object.keys(EventType).map((activiTypeKey) => [
+            placeholder="Select an event type..."
+            valueLabelPair={Object.keys(EventType).map((eventTypeKey) => [
               EventType[
-                activiTypeKey as keyof typeof EventType
+                eventTypeKey as keyof typeof EventType
               ].toString(),
               EventType[
-                activiTypeKey as keyof typeof EventType
+                eventTypeKey as keyof typeof EventType
               ].toString(),
             ])}
             value={eventType}
@@ -275,7 +276,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           name="physicalDefiningCharacteristics"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
-          <Form.Label className="font-medium">EventDescription</Form.Label>
+          <Form.Label className="font-medium">Description</Form.Label>
           <Form.Control
             asChild
             value={eventDescription}
@@ -285,7 +286,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           >
             <textarea
               rows={3}
-              placeholder="e.g., Leave yoga ball in the pen and pushes it towards the tiger,..."
+              placeholder="Add an event description..."
             // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
@@ -296,9 +297,9 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           {/* EventTiming */}
           <FormFieldSelect
             formFieldName="eventTiming"
-            label="EventTiming"
+            label="Timing"
             required={true}
-            placeholder="Select a eventTiming timing..."
+            placeholder="Select an event timing..."
             valueLabelPair={Object.keys(EventTimingType).map(
               (eventTimingTypeKey) => [
                 EventTimingType[

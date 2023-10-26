@@ -185,6 +185,7 @@ function AllZooEventsDatatable(
           }}
         />
       </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -209,16 +210,6 @@ function AllZooEventsDatatable(
     <div>
       <div>
         <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button className="invisible"></Button>
-              <span className="invisible">All Events</span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
-
           <DataTable
             ref={dt}
             value={zooEventsList}
@@ -314,8 +305,8 @@ function AllZooEventsDatatable(
           />
           {selectedZooEvent && (
             <span>
-              Are you sure you want to delete the selected event plan
-              (ID {selectedZooEvent.zooEventId})?
+              Are you sure you want to delete{" "}
+              {selectedZooEvent.eventName}?
             </span>
           )}
         </div>

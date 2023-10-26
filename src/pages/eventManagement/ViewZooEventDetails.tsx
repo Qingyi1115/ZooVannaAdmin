@@ -38,7 +38,9 @@ import { Nullable } from "primereact/ts-helpers";
 import * as Form from "@radix-ui/react-form";
 import FormFieldInput from "src/components/FormFieldInput";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import { Checkbox } from "@radix-ui/react-checkbox";
+import * as Checkbox from '@radix-ui/react-checkbox';
+import { CheckIcon } from "lucide-react";
+import { set } from "date-fns";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -135,6 +137,7 @@ function ViewZooEventDetails() {
     fetchZooEvent();
   }, [refreshSeed]);
 
+  console.log(curZooEvent)
   // useEffect(() => {
   //   if (curZooEvent?.animals && curZooEvent.enrichmentItems) {
   //     setInvolvedAnimalList(curZooEvent?.animals);
@@ -382,7 +385,7 @@ function ViewZooEventDetails() {
       imageUrl
 
     };
-
+    console.log(updateFuture)
     console.log("zooEventDetails", zooEventDetails);
 
     useEffect(() => {
@@ -595,17 +598,28 @@ function ViewZooEventDetails() {
               <div className="my-4 flex justify-start gap-6">
                 <Button
                   onClick={() => {
-                    navigate(`/ zooevent / viewzooeventdetails / ${curZooEvent.zooEventId}`, { replace: true })
-                    navigate(`/ zooevent / editzooevent / ${curZooEvent.zooEventId}`)
+                    // if (curZooEvent.animalActivity != null) {
+                    //   navigate(`/animal/editanimalactivity/${curZooEvent.zooEventId}`, { replace: true })
+                    //   navigate(`/zooevent/editzooevent/${curZooEvent.zooEventId}`)
+                    // }
+                    navigate(`/zooevent/viewzooeventdetails/${curZooEvent.zooEventId}`, { replace: true })
+                    navigate(`/zooevent/editzooevent/${curZooEvent.zooEventId}`)
                   }}
                   className="my-3">Edit Basic Information
                 </Button>
-                <Button
-                  onClick={() => {
-                    showMakePublicDialog();
-                  }}
-                  className="my-3">Make Event Public
-                </Button>
+                {!curZooEvent.eventIsPublic ?
+                  <Button
+                    onClick={() => {
+                      showMakePublicDialog();
+                    }}
+                    className="my-3">Make Event Public
+                  </Button> :
+                  <Button
+                    disabled
+                    className="invisible my-3"
+                  >Make Event Public
+                  </Button>
+                }
               </div>
               <Table>
                 <TableBody>
@@ -959,17 +973,26 @@ function ViewZooEventDetails() {
                       className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
                     >
                       <Form.Label className="font-medium">Update this and future events?</Form.Label>
-                      <Form.Control
+                      {/* <Form.Control
                         className="hidden"
                         type="text"
                         value={updateFuture?.toString()}
                         required={true}
                         onChange={() => null}
-                      ></Form.Control>
-                      <Checkbox
-                        onChange={e => setUpdateFuture(e.updateFuture)}
-                        checked={updateFuture}
-                      />
+                      ></Form.Control> */}
+                      {/* <Checkbox
+                        onChange={(e: any) => setChecked(e.checked)}
+                        checked={checked}
+                      /> */}
+                      <Checkbox.Root
+                        className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow outline-none focus:shadow-[0_0_0_2px_gray]"
+                        id="c1"
+                        onCheckedChange={() => { setUpdateFuture(checked) }}
+                      >
+                        <Checkbox.Indicator>
+                          <CheckIcon />
+                        </Checkbox.Indicator>
+                      </Checkbox.Root>
                     </Form.Field>
                     <Form.Submit asChild>
                       <Button
@@ -977,7 +1000,7 @@ function ViewZooEventDetails() {
                         className="h-12 w-2/3 self-center rounded-full text-lg"
                       >
                         {!apiJson.loading ? (
-                          <div>Make Event Public</div>
+                          <div>Submit</div>
                         ) : (
                           <div>Loading</div>
                         )}
