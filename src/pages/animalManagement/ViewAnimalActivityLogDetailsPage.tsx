@@ -143,7 +143,7 @@ function ViewAnimalActivityLogDetailsPage() {
 
         <hr className="bg-stroke opacity-20" />
         <span className=" self-center text-title-xl font-bold">
-          {curAnimalActivityLog.activityType}
+          {curAnimalActivityLog.activityType + " at " + new Date(curAnimalActivityLog.dateTime).toLocaleString()}
         </span>
         <ViewAnimalActivityLogDetails curAnimalActivityLog={curAnimalActivityLog} />
 

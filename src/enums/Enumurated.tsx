@@ -116,8 +116,8 @@ enum AcquisitionMethod {
 }
 
 enum AnimalFeedCategory {
-  RED_MEAT = "RED_MEAT",
-  WHITE_MEAT = "WHITE_MEAT",
+  RED_MEAT = "RED MEAT",
+  WHITE_MEAT = "WHITE MEAT",
   FISH = "FISH",
   INSECTS = "INSECTS",
   HAY = "HAY",
@@ -190,6 +190,13 @@ enum EventTimingType {
   MORNING = "MORNING",
   AFTERNOON = "AFTERNOON",
   EVENING = "EVENING",
+}
+
+enum FoodUnit {
+  KG = "KG",
+  GRAM = "GRAM",
+  // ML = "ML",
+  // L = "L",
 }
 
 enum ListingType {
@@ -280,6 +287,7 @@ export {
   Biome,
   EventType,
   EventTimingType,
+  FoodUnit,
   ListingType,
   ListingStatus,
   PaymentStatus,

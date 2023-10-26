@@ -519,16 +519,6 @@ function AllAnimalsDatatable() {
               style={{ minWidth: "5rem" }}
             ></Column>
             <Column
-              body={(animal) => {
-                return animal.dateOfBirth == null ? (
-                  <span className="flex justify-center">—</span>
-                ) : (
-                  new Date(animal.dateOfBirth).toLocaleDateString(
-                    "en-SG",
-                    dateOptions
-                  )
-                );
-              }}
               field="age"
               header="Animal Age"
               sortable
@@ -543,9 +533,13 @@ function AllAnimalsDatatable() {
             ></Column>
             <Column
               body={(animal) => {
-                return new Date(animal.dateOfBirth).toLocaleDateString(
-                  "en-SG",
-                  dateOptions
+                return animal.dateOfBirth == null ? (
+                  <span className="flex justify-center">—</span>
+                ) : (
+                  new Date(animal.dateOfBirth).toLocaleDateString(
+                    "en-SG",
+                    dateOptions
+                  )
                 );
               }}
               field="dateOfBirth"

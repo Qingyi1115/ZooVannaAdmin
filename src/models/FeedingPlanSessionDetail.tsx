@@ -1,30 +1,16 @@
-import { EventTimingType } from "../enums/Enumurated";
+import FeedingItem from "./FeedingItem";
+import FeedingPlan from "./FeedingPlan";
 import ZooEvent from "./ZooEvent";
 
-enum DayOfWeek{
-    MONDAY = "MONDAY",
-    TUESDAY = "TUESDAY",
-    WEDNESDAY = "WEDNESDAY",
-    THURSDAY = "THURSDAY",
-    FRIDAY = "FRIDAY",
-    SATURDAY = "SATURDAY",
-    SUNDAY = "SUNDAY",
-}
-
-
 interface FeedingPlanSessionDetail {
-    feedingPlanSessionDetailId: number;
-    dayOfWeek : DayOfWeek;
-    eventTimingType: EventTimingType;
-    durationInMinutes: number;
-    isPublic:boolean;
-    publicEventStartTime:string;
+  feedingPlanDetailId: number;
+  dayOfWeek: string;
+  eventTimingType: string;
 
-    feedingPlan?: any;
-    feedingItems?: any[];
-    zooEvents?: ZooEvent[];
-    
+  //--FK
+  feedingPlan?: FeedingPlan;
+  feedingItems?: FeedingItem[];
+  zooEvents?: ZooEvent[];
 }
 
-export {DayOfWeek};
 export default FeedingPlanSessionDetail;

@@ -48,6 +48,9 @@ import EditAnimalActivityLogPage from "./pages/animalManagement/EditAnimalActivi
 import EditAnimalFeedingLogPage from "./pages/animalManagement/EditAnimalFeedingLogPage";
 import ViewAnimalActivityLogDetailsPage from "./pages/animalManagement/ViewAnimalActivityLogDetailsPage";
 import ViewAnimalFeedingLogDetailsPage from "./pages/animalManagement/ViewAnimalFeedingLogDetailsPage";
+import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
+import CreateFeedingPlan from "./pages/animalManagement/CreateFeedingPlan";
+import AnimalFeedingPlanDetailsPage from "./pages/animalManagement/AnimalFeedingPlanDetailsPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -112,7 +115,6 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
-import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
 
 //customer order management page
 import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
@@ -450,6 +452,22 @@ function App() {
                   element={
                     user ? (
                       <AnimalFeedingPlanHomePage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/createfeedingplan/:speciesCode"
+                  element={
+                    user ? <CreateFeedingPlan /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewfeedingplandetails/:feedingPlanId"
+                  element={
+                    user ? (
+                      <AnimalFeedingPlanDetailsPage />
                     ) : (
                       <Navigate to="/login" />
                     )
