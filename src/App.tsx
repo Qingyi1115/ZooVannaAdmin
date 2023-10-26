@@ -414,6 +414,16 @@ function App() {
                   }
                 />
                 <Route
+                  path="/animal/viewanimalactivitydetails/:animalActivityId/:tab"
+                  element={
+                    user ? (
+                      <ViewAnimalActivityDetails />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
                   path="/animal/assignanimalstoactivity/:animalActivityId"
                   element={
                     user ? (

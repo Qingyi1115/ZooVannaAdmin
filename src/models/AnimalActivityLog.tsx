@@ -3,6 +3,7 @@ import Animal from "./Animal";
 import Keeper from "./Keeper";
 import { ActivityType } from "../enums/ActivityType";
 import { Reaction } from "../enums/Reaction";
+import AnimalActivity from "./AnimalActivity";
 
 interface AnimalActivityLog {
   animalActivityLogId: number;
@@ -14,6 +15,7 @@ interface AnimalActivityLog {
   details: string;
   animals: Animal[];
   keeper: Keeper;
+  animalActivity: AnimalActivity;
 }
 
 export default AnimalActivityLog;

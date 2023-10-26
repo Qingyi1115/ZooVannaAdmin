@@ -16,10 +16,11 @@ import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import Employee from "../../../models/Employee";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import { set } from "date-fns";
+import AnimalActivityLog from "../../../models/AnimalActivityLog";
 
-// interface CreateNewAnimalActivityLogProps {
-//   speciesCode: string;
-// }
+interface CreateNewAnimalActivityLogProps {
+  curAnimalActivityLog: AnimalActivityLog
+}
 
 function validateAnimalActivityLogName(props: ValidityState) {
   if (props != undefined) {
@@ -33,10 +34,11 @@ function validateAnimalActivityLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalActivityLogForm() {
+function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+  const { curAnimalActivityLog } = props;
   const [activityType, setActivityType] = useState<string | undefined>(
     undefined); // dropdown
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
@@ -52,17 +54,23 @@ function CreateNewAnimalActivityLogForm() {
   const [curAnimalList, setCurAnimalList] = useState<any>(null);
   const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
 
-  useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
-      setCurAnimalList(res as Animal[]);
-      console.log(res);
-    });
-  }, []);
+  if (curAnimalActivityLog.animals.length > 0) {
+    setCurAnimalList(curAnimalActivityLog.animals);
+  } else {
+    useEffect(() => {
+      apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+        setCurAnimalList(res as Animal[]);
+        console.log(res);
+      });
+    }, []);
+  }
+
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
     const newAnimalActivityLog = {
+      animalActivityLogId: curAnimalActivityLog.animalActivityLogId,
       activityType: activityType,
       dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,

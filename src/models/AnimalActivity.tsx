@@ -8,6 +8,7 @@ import {
 import EnrichmentItem from "./EnrichmentItem";
 import Employee from "./Employee";
 import ZooEvent from "./ZooEvent";
+import AnimalActivityLog from "./AnimalActivityLog";
 
 interface AnimalActivity {
   animalActivityId: number;
@@ -26,6 +27,7 @@ interface AnimalActivity {
   animals?: Animal[];
   enrichmentItems?: EnrichmentItem[];
   zooEvents?: ZooEvent[];
+  animalActivityLogs: AnimalActivityLog[];
 }
 
 export default AnimalActivity;

@@ -48,6 +48,7 @@ let emptyAnimalActivity: AnimalActivity = {
   endDate: new Date(),
   eventTimingType: EventTimingType.AFTERNOON,
   durationInMinutes: -1,
+  animalActivityLogs: []
 };
 
 interface AllAnimalActivitiesDatatableProps {
