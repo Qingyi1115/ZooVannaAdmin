@@ -17,13 +17,13 @@ import { Separator } from "@/components/ui/separator";
 {
   /*const toast = useRef<Toast>(null);*/
 }
-interface RemoveFacilityMaintenanceStaffProps {
+interface AddFacilityMaintenanceStaffProps {
   facilityId: number;
   employeeList: Employee[];
   setRefreshSeed: Function;
 }
 
-function RemoveFacilityMaintenanceStaff(props: RemoveFacilityMaintenanceStaffProps) {
+function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
   const { facilityId, employeeList, setRefreshSeed } = props;
@@ -244,4 +244,4 @@ function RemoveFacilityMaintenanceStaff(props: RemoveFacilityMaintenanceStaffPro
   );
 }
 
-export default RemoveFacilityMaintenanceStaff;
+export default AddFacilityMaintenanceStaff;

@@ -12,11 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../../models/Facility";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
-import { FacilityLogType } from "../../../../../enums/FacilityLogType";
 
-interface CreateNewFacilityLogProps {
-  curFacility: Facility;
-  curFacilityLogType: FacilityLogType;
+interface CreatenewFacilityRepairRequestProps {
+  facilityIds: number[];
 }
 
 function validateFacilityLogName(props: ValidityState) {
@@ -31,7 +29,7 @@ function validateFacilityLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
+function CreatenewFacilityRepairRequestForm(props: CreatenewFacilityRepairRequestProps) {
   const location = useLocation();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
@@ -41,67 +39,69 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
   const [remarks, setRemarks] = useState<string>(""); // text input
   const [facilityLogType, setFacilityLogType] = useState<string | undefined>(
     undefined); // dropdown
-  const { curFacility, curFacilityLogType } = props;
   const [formError, setFormError] = useState<string | null>(null);
   const employee = useAuthContext().state.user?.employeeData;
+  const { facilityIds } = props;
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
-    const newFacilityLog = {
-      facilityId: curFacility.facilityId,
-      title: title,
-      details: details,
-      remarks: remarks,
-      facilityLogType: curFacilityLogType
-    }
-    console.log(newFacilityLog);
+    for (const facilityId of facilityIds) {
 
-    try {
-      const responseJson = await apiJson.post(
-        `http://localhost:3000/api/assetFacility/createFacilityLog/${curFacility.facilityId}`,
-        newFacilityLog);
-      // success
-      toastShadcn({
-        description: "Successfully created facility log",
-      });
-      navigate(-1);
-    } catch (error: any) {
-      toastShadcn({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description:
-          "An error has occurred while creating facility log details: \n" +
-          error.message,
-      });
+      const newFacilityLog = {
+        facilityId: facilityId,
+        title: title,
+        details: details,
+        remarks: remarks,
+        facilityLogType: "ACTIVE_REPAIR_TICKET"
+      }
+      console.log(newFacilityLog);
+
+      try {
+        const responseJson = await apiJson.post(
+          `http://localhost:3000/api/assetFacility/createFacilityLog/${facilityId}`,
+          newFacilityLog);
+        // success
+        toastShadcn({
+          description: "Successfully created facility log",
+        });
+      } catch (error: any) {
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while creating facility log details: \n" +
+            error.message,
+        });
+      }
+      console.log(apiJson.result);
     }
-    console.log(apiJson.result);
 
     // handle success case or failurecase using apiJson
   }
 
   return (
     <Form.Root
-      className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
+      className="flex w-full flex-col gap-6  bg-white p-20 text-black "
       onSubmit={handleSubmit}
       encType="multipart/form-data"
     >
       {/* Title Header and back button */}
-      <div className="flex flex-col">
+      {/* <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} disabled className="invisible">
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">
-            {curFacilityLogType == FacilityLogType.OPERATION_LOG ? "Create Facility Operation Log" : "Create Facility Maintenance Log"}
+            Create Repair Request
           </span>
           <Button disabled className="invisible">
             Back
           </Button>
         </div>
         <Separator />
-      </div>
+      </div> */}
 
       {/* Title */}
       <FormFieldInput
@@ -140,24 +140,6 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
         pattern={undefined}
       />
 
-      {/* Facility Log Type */}
-      {/* {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
-        <FormFieldSelect
-          formFieldName="facilityLogType"
-          label="Facility Log Type"
-          required={true}
-          placeholder="Select a facility log type"
-          valueLabelPair={[
-            ["REPAIR_LOG", "Repair Log"],
-            ["MAINTENANCE_LOG", "Maintenance Log"],
-            ["OPERATION_LOG", "Operation Log"]
-          ]}
-          value={facilityLogType}
-          setValue={setFacilityLogType}
-          validateFunction={validateFacilityLogName}
-        />
-      )} */}
-
       <Form.Submit asChild>
         <Button
           disabled={apiJson.loading}
@@ -177,4 +159,4 @@ function CreateNewFacilityLogForm(props: CreateNewFacilityLogProps) {
   );
 }
 
-export default CreateNewFacilityLogForm;
+export default CreatenewFacilityRepairRequestForm;

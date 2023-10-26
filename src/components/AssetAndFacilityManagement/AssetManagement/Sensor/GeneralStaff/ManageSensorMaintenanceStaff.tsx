@@ -13,16 +13,17 @@ import { Dialog } from "primereact/dialog";
 import GeneralStaff from "../../../../../models/GeneralStaff";
 import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
-import { Checkbox, CheckboxClickEvent } from "primereact/checkbox";
+import Sensor from "../../../../../models/Sensor";
+import { Checkbox, CheckboxClickEvent, CheckboxChangeEvent } from "primereact/checkbox";
 
-interface ManageOperationStaffProps {
-  facilityId: number;
+interface ManageSensorMaintenanceStaffProps {
+  sensorId: number;
 }
 
-function manageOperationStaff(props: ManageOperationStaffProps) {
+function ManageSensorMaintenanceStaff(props: ManageSensorMaintenanceStaffProps) {
   const apiJson = useApiJson();
 
-  const { facilityId } = props;
+  const { sensorId } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -58,15 +59,15 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   useEffect(() => {
     apiJson.post(
       "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-    ).catch(e => console.log("err", e)).then(res => {
+    ).catch(e => console.log(e)).then(res => {
       const assignedStaff: Employee[] = [];
       const availableStaff: Employee[] = [];
       for (const staff of res["generalStaffs"]) {
-        if (staff.generalStaffType == "ZOO_OPERATIONS") {
+        if (staff.generalStaffType == "ZOO_MAINTENANCE") {
           let emp = staff.employee;
           staff.employee = undefined;
           emp["generalStaff"] = staff
-          emp.currentlyAssigned = emp.generalStaff.operatedFacility?.facilityId == facilityId;
+          emp.currentlyAssigned = (emp.generalStaff.sensors as Sensor[]).find(sensor => Number(sensor.sensorId) == sensorId);
           if (emp.currentlyAssigned) {
             assignedStaff.push(emp);
           }
@@ -85,7 +86,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
+        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToSensor/${sensorId}`, { employeeId: selectedEmployee.employeeId }).then(res => {
           setRefreshSeed([]);
         }).catch(err => console.log("err", err));
 
@@ -93,10 +94,11 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         // variant: "destructive",
         title: "Assignment Successful",
         description:
-          "Successfully assigned operation staff: " + selectedEmployeeName,
+          "Successfully assigned maintenance staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setAssignmentDialog(false);
+      setBulkAssignmentDialog(false);
       // window.location.reload();
     } catch (error: any) {
       // got error
@@ -104,25 +106,25 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while assigning operation staff: \n" + apiJson.error,
+          "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
       });
     }
 
   }
 
-  const removeOperationStaff = async () => {
+  const removeGeneralStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
-      const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
-      setRefreshSeed([]);
+      const responseJson = await apiJson.put(
+        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromSensor/${sensorId}`, { employeeId: selectedEmployee.employeeId });
 
+      setRefreshSeed([]);
       toastShadcn({
         // variant: "destructive",
         title: "Removal Successful",
         description:
-          "Successfully removed operation staff: " + selectedEmployeeName,
+          "Successfully removed general staff: " + selectedEmployeeName,
       });
       setSelectedEmployee(employee);
       setEmployeeRemovalDialog(false);
@@ -133,9 +135,10 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while removing operation staff: \n" + apiJson.error,
+          "An error has occurred while removing general staff: \n" + apiJson.error,
       });
     }
+
   }
 
   const showBulkAssignment = () => {
@@ -148,7 +151,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Operation Staff</h4>
+      <h4 className="m-1">Manage Maintenance Staff</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -163,31 +166,30 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
       <Button
         onClick={showBulkAssignment}
         disabled={availableEmployees.length == 0}>
-        <HiPlus />Assign Operation Staff
+        <HiPlus />Assign Maintenance Staff
       </Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
-  const confirmAssignment = () => {
+  const confirmAssignment = (employee: Employee) => {
+    setSelectedEmployee(employee);
     setAssignmentDialog(true);
   };
 
-  const confirmEmployeeRemoval = () => {
-    if (selectedAssignedEmployees.length != 0) {
-      setEmployeeRemovalDialog(true);
-    }
+  const confirmEmployeeRemoval = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setEmployeeRemovalDialog(true);
   };
 
-  const actionBodyTemplate = (employee: any) => {
+  const assignedActionBodyTemplate = (employee: any) => {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
           <Button
             variant={"outline"}
-            className="mr-2"
-            onClick={() => {
-              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageOperations`, { replace: true });
+            className="mr-2" onClick={() => {
+              navigate(`/assetfacility/viewsensordetails/${sensorId}/generalStaff`, { replace: true });
               navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
             }}>
             <HiEye className="mx-auto" />
@@ -195,27 +197,47 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           {employee.dateOfResignation ?
             <span>Removed</span>
             : <div>
-              {/* <Button
+              <Button
+                name="removeButton"
+                variant={"destructive"}
+                className="mx-auto"
+                disabled={!employee.currentlyAssigned}
+                onClick={() => confirmEmployeeRemoval(employee)}
+              >
+                <HiMinus className="mx-auto" />
+              </Button>
+            </div>
+
+          }
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const availableActionBodyTemplate = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Button
+            variant={"outline"}
+            className="mr-2" onClick={() => {
+              navigate(`/assetfacility/viewsensordetails/${sensorId}/generalStaff`, { replace: true });
+              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
+            }}>
+            <HiEye className="mx-auto" />
+          </Button>
+          {employee.dateOfResignation ?
+            <span>Removed</span>
+            : <div>
+              <Button
                 name="assignButton"
                 variant={"default"}
                 className="mr-2"
-                disabled={employee.generalStaff?.operatedFacility !== null || employee.currentlyAssigned}
+                disabled={employee.currentlyAssigned}
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
-              </Button> */}
-              {/* {employee.dateOfResignation ?
-                <span>Removed</span>
-                :
-                <Button
-                  variant={"destructive"}
-                  className="mr-2"
-                  disabled={!employee.currentlyAssigned}
-                  onClick={() => confirmEmployeeRemoval(employee)}
-                >
-                  <HiMinus className="mx-auto" />
-                </Button>
-              } */}
+              </Button>
             </div>
 
           }
@@ -226,7 +248,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
   const bulkAssignmentHeader = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Operation Staff</h4>
+      <h4 className="m-1">Manage Maintenance Staff</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -356,7 +378,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     selectedAvailableEmployees.forEach(async (employeeId) => {
       try {
         const responseJson = await apiJson.put(
-          `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
+          `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToSensor/${sensorId}`, { employeeId: employeeId }).then(res => {
             setRefreshSeed([]);
           }).catch(err => console.log("err", err));
 
@@ -364,7 +386,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           // variant: "destructive",
           title: "Assignment Successful",
           description:
-            "Successfully assigned operation staff: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
+            "Successfully assigned maintenance staff: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
         });
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
@@ -375,7 +397,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while assigning operation staff: \n" + apiJson.error,
+            "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
         });
       }
     });
@@ -387,26 +409,25 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         <HiX />
         No
       </Button>
-      <Button onClick={bulkAssignEmployees}>
+      <Button onClick={assignEmployee}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
 
-  const bulkRemoveEmployees = async () => {
+  const bulkRemoveMaintenanceStaff = async () => {
     selectedAssignedEmployees.forEach(async (employeeId) => {
       try {
-        const responseJson = await apiJson.del(
-          `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
+        const responseJson = await apiJson.put(
+          `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromSensor/${sensorId}`, { employeeId: employeeId }).then(res => {
             setRefreshSeed([]);
           }).catch(err => console.log("err", err));
-
         toastShadcn({
           // variant: "destructive",
           title: "Removal Successful",
           description:
-            "Successfully removed operation staff: " + selectedAssignedEmployees.toString(),
+            "Successfully removed maintenance staff: " + selectedAssignedEmployees.toString(),
         });
         setEmployeeRemovalDialog(false);
         setBulkAssignmentDialog(false);
@@ -417,7 +438,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while removing operation staff: \n" + apiJson.error,
+            "An error has occurred while removing maintenance staff: \n" + apiJson.error,
         });
       }
     });
@@ -433,19 +454,19 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={bulkRemoveEmployees}>
+      <Button variant={"destructive"} onClick={removeGeneralStaff}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
 
+
   return (
     <div>
       <div>
         <Toast ref={toast} />
         <div className="">
-
           <DataTable
             ref={dt}
             value={assignedEmployees}
@@ -466,10 +487,10 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             globalFilter={globalFilter}
             header={header}
           >
-            <Column
+            {/* <Column
               body={assignedEmployeeCheckbox}
-              header={allAssignedEmployeesCheckbox}
-            ></Column>
+            header={allAssignedEmployeesCheckbox}
+            ></Column> */}
             <Column
               field="employeeId"
               header="ID"
@@ -479,12 +500,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             <Column
               field="employeeName"
               header="Name"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column>
-            <Column
-              field="generalStaff.operatedFacilityName"
-              header="Current Facility Name"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -507,20 +522,19 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              body={actionBodyTemplate}
+              body={assignedActionBodyTemplate}
               header="Actions"
               frozen
               alignFrozen="right"
               exportable={false}
             ></Column>
           </DataTable>
-          <Button
+          {/* <Button
             variant={"destructive"}
-            onClick={confirmEmployeeRemoval}
-            disabled={selectedAssignedEmployees.length == 0}>
-            <HiMinus />
-            Remove Selected Staff
-          </Button>
+            onClick={() => confirmEmployeeRemoval(selectedEmployee)}
+            disabled={assignedEmployees.length == 0}>
+            <HiMinus />Remove Maintenance Staff
+          </Button> */}
         </div>
         <Dialog
           visible={employeeAssignmentDialog}
@@ -538,8 +552,8 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             />
             {selectedEmployee && (
               <span>
-                Are you sure you want to assign this facility to{" "}
-                <b>{availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()}?</b>
+                Are you sure you want to assign this sensor to{" "}
+                <b>{selectedEmployee.employeeName}?</b>
               </span>
             )}
           </div>
@@ -570,14 +584,14 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           visible={employeeBulkAssignmentDialog}
           style={{ width: "50rem" }}
           breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-          header="Assign Operation Staff"
+          header="Assign Maintenance Staff"
           position={"right"}
-          footer={
-            <Button
-              onClick={confirmAssignment}
-              disabled={selectedAvailableEmployees.length == 0}>
-              Assign Selected Staff
-            </Button>}
+          // footer={
+          //   <Button
+          //     onClick={() => confirmAssignment(selectedEmployee)}
+          //     disabled={selectedAvailableEmployees.length == 0}>
+          //     Assign Selected Staff
+          //   </Button>}
           onHide={hideEmployeeBulkAssignmentDialog}>
           <div className="confirmation-content">
             <DataTable
@@ -600,10 +614,10 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               globalFilter={globalFilter}
               header={bulkAssignmentHeader}
             >
-              <Column
+              {/* <Column
                 body={availableEmployeeCheckbox}
-                header={allAvailableEmployeesCheckbox}
-              ></Column>
+              header={allAvailableEmployeesCheckbox}
+              ></Column> */}
               <Column
                 field="employeeId"
                 header="ID"
@@ -613,12 +627,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               <Column
                 field="employeeName"
                 header="Name"
-                sortable
-                style={{ minWidth: "12rem" }}
-              ></Column>
-              <Column
-                field="generalStaff.operatedFacilityName"
-                header="Current Facility Name"
                 sortable
                 style={{ minWidth: "12rem" }}
               ></Column>
@@ -641,7 +649,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 style={{ minWidth: "12rem" }}
               ></Column>
               <Column
-                body={actionBodyTemplate}
+                body={availableActionBodyTemplate}
                 header="Actions"
                 frozen
                 alignFrozen="right"
@@ -651,8 +659,8 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           </div>
         </Dialog>
       </div>
-    </div>
+    </div >
   );
 }
 
-export default manageOperationStaff;
+export default ManageSensorMaintenanceStaff;

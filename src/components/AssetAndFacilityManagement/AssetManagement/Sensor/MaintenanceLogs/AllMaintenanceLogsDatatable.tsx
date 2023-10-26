@@ -186,7 +186,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
         placeholder="Sort By"
         onChange={onSortChange}
       />
-      <span className="p-input-icon-left">
+      {/* <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
           type="search"
@@ -196,7 +196,7 @@ function AllMaintenanceLogsDatatable(props: AllMaintenanceLogsDatatableProps) {
             setGlobalFilter(target.value);
           }}
         />
-      </span>
+      </span> */}
       {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <Button className="mr-2" onClick={() => {
           navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/maintenanceLogs`, { replace: true });

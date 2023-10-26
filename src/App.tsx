@@ -115,6 +115,7 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
+import ViewCameraPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraPage";
 
 //customer order management page
 import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
@@ -645,6 +646,18 @@ function App() {
                     user ? <ViewSensorDetailsPage /> : <Navigate to="/login" />
                   }
                 />
+
+                <Route
+                  path="/assetfacility/viewcamera/:sensorId"
+                  element={
+                    user ? (
+                      <ViewCameraPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
                 <Route
                   path="/assetfacility/createhub"
                   element={
@@ -731,8 +744,18 @@ function App() {
                     )
                   }
                 />
-                <Route
+                {/* <Route
                   path="/assetfacility/createfacilitylog/:facilityId"
+                  element={
+                    user ? (
+                      <CreateNewFacilityLogPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                /> */}
+                <Route
+                  path="/assetfacility/createfacilitylog/:facilityId/:facilityLogType"
                   element={
                     user ? (
                       <CreateNewFacilityLogPage />
@@ -748,7 +771,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/assetfacility/completefacilitymaintenance/:facilityId"
+                  path="/assetfacility/completeFacilityRepair/:facilityLogId"
                   element={
                     user ? (
                       <CreateNewFacilityMaintenanceLogPage />

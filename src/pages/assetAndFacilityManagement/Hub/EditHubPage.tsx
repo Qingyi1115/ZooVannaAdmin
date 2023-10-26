@@ -21,7 +21,8 @@ function EditHubPage() {
     facilityDetail: "",
     facilityDetailJson: undefined,
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
+    showOnMap: false
   };
 
   let emptyHub: Hub = {

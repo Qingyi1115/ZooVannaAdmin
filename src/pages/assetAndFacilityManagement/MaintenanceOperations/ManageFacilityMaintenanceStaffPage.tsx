@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Employee from "src/models/Employee";
-import AddFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/AddFacilityMaintenanceStaff";
+import ViewAllFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ViewAllFacilityMaintenanceStaff";
 import RemoveFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/RemoveFacilityMaintenanceStaff";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -49,7 +49,7 @@ function ManageFacilityMaintenanceStaffPage() {
   return (
 
     <div className="">
-      <AddFacilityMaintenanceStaff facilityId={Number(facilityId)} ></AddFacilityMaintenanceStaff>
+      <ViewAllFacilityMaintenanceStaff facilityId={Number(facilityId)} ></ViewAllFacilityMaintenanceStaff>
       {/* <Tabs
         defaultValue={tab ? `${tab}` : "assignstaff"}
         className="w-full"
@@ -59,7 +59,7 @@ function ManageFacilityMaintenanceStaffPage() {
           <TabsTrigger value="removestaff">Remove Maintenance Staff</TabsTrigger>
         </TabsList>
         <TabsContent value="assignstaff">
-          {facilityId && <AddFacilityMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList} setRefreshSeed={setRefreshSeed}></AddFacilityMaintenanceStaff>}
+          {facilityId && <ViewAllFacilityMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList} setRefreshSeed={setRefreshSeed}></ViewAllFacilityMaintenanceStaff>}
         </TabsContent>
         <TabsContent value="removestaff">
           {facilityId && <RemoveFacilityMaintenanceStaff facilityId={Number(facilityId)} employeeList={currEmpList} setRefreshSeed={setRefreshSeed}></RemoveFacilityMaintenanceStaff>}

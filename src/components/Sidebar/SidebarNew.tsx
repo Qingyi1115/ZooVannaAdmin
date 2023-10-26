@@ -72,9 +72,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   return (
     <aside
       ref={sidebar}
-      className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      }`}
+      className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
@@ -131,11 +130,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <NavLink
                         to="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${
-                          (pathname === "/species" ||
-                            pathname.includes("species")) &&
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/species" ||
+                          pathname.includes("species")) &&
                           "bg-graydark"
-                        }`}
+                          }`}
                         onClick={(e) => {
                           e.preventDefault();
                           sidebarExpanded
@@ -146,9 +144,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <GiLion className="h-5 w-5" />
                         Species
                         <svg
-                          className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
-                            open && "rotate-180"
-                          }`}
+                          className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && "rotate-180"
+                            }`}
                           width="20"
                           height="20"
                           viewBox="0 0 20 20"
@@ -165,9 +162,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       </NavLink>
                       {/* <!-- Dropdown Menu Start --> */}
                       <div
-                        className={`translate transform overflow-hidden ${
-                          !open && "hidden"
-                        }`}
+                        className={`translate transform overflow-hidden ${!open && "hidden"
+                          }`}
                       >
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                           <li>
@@ -211,11 +207,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <NavLink
                         to="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${
-                          (pathname === "/animal" ||
-                            pathname.includes("animal")) &&
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/animal" ||
+                          pathname.includes("animal")) &&
                           "bg-graydark"
-                        }`}
+                          }`}
                         onClick={(e) => {
                           e.preventDefault();
                           sidebarExpanded
@@ -226,9 +221,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <IoPawOutline className="h-5 w-5" />
                         Animal
                         <svg
-                          className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
-                            open && "rotate-180"
-                          }`}
+                          className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && "rotate-180"
+                            }`}
                           width="20"
                           height="20"
                           viewBox="0 0 20 20"
@@ -244,9 +238,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </svg>
                       </NavLink>
                       <div
-                        className={`translate transform overflow-hidden ${
-                          !open && "hidden"
-                        }`}
+                        className={`translate transform overflow-hidden ${!open && "hidden"
+                          }`}
                       >
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                           <li>
@@ -402,11 +395,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <NavLink
                         to="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${
-                          (pathname === "/assetfacility" ||
-                            pathname.includes("assetfacility")) &&
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/assetfacility" ||
+                          pathname.includes("assetfacility")) &&
                           "bg-graydark"
-                        }`}
+                          }`}
                         onClick={(e) => {
                           e.preventDefault();
                           sidebarExpanded
@@ -417,9 +409,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <BsBuildingGear className="h-5 w-5" />
                         Assets & Facilities
                         <svg
-                          className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
-                            open && "rotate-180"
-                          }`}
+                          className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && "rotate-180"
+                            }`}
                           width="20"
                           height="20"
                           viewBox="0 0 20 20"
@@ -436,43 +427,43 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       </NavLink>
                       {/* <!-- Dropdown Menu Start --> */}
                       <div
-                        className={`translate transform overflow-hidden ${
-                          !open && "hidden"
-                        }`}
+                        className={`translate transform overflow-hidden ${!open && "hidden"
+                          }`}
                       >
                         <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                           {(employee.superAdmin ||
                             employee.planningStaff?.plannerType ==
-                              "OPERATIONS_MANAGER" ||
-                            employee.generalStaff) && (
-                            <li>
-                              <NavLink
-                                to="/assetfacility/maintenance"
-                                className={({ isActive }) =>
-                                  "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                  (isActive && "!text-white")
-                                }
-                              >
-                                Facility Maintenance
-                              </NavLink>
-                            </li>
-                          )}
+                            "OPERATIONS_MANAGER"
+                            || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE"
+                          ) && (
+                              <li>
+                                <NavLink
+                                  to="/assetfacility/maintenance"
+                                  className={({ isActive }) =>
+                                    "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                    (isActive && "!text-white")
+                                  }
+                                >
+                                  Facility Maintenance
+                                </NavLink>
+                              </li>
+                            )}
                           {(employee.superAdmin ||
                             employee.planningStaff?.plannerType ==
-                              "OPERATIONS_MANAGER" ||
-                            employee.generalStaff) && (
-                            <li>
-                              <NavLink
-                                to="/assetfacility/viewallfacilities"
-                                className={({ isActive }) =>
-                                  "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                  (isActive && "!text-white")
-                                }
-                              >
-                                View All Customer Facilities
-                              </NavLink>
-                            </li>
-                          )}
+                            "OPERATIONS_MANAGER" ||
+                            employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
+                              <li>
+                                <NavLink
+                                  to="/assetfacility/viewallfacilities"
+                                  className={({ isActive }) =>
+                                    "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                    (isActive && "!text-white")
+                                  }
+                                >
+                                  View All Customer Facilities
+                                </NavLink>
+                              </li>
+                            )}
                           {/* {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")) && (
                             <li>
                               <NavLink
@@ -488,36 +479,36 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           )} */}
                           {(employee.superAdmin ||
                             employee.planningStaff?.plannerType ==
-                              "OPERATIONS_MANAGER" ||
+                            "OPERATIONS_MANAGER" ||
                             employee.generalStaff) && (
-                            <li>
-                              <NavLink
-                                to="/assetfacility/viewallassets"
-                                className={({ isActive }) =>
-                                  "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                  (isActive && "!text-white")
-                                }
-                              >
-                                View All Assets
-                              </NavLink>
-                            </li>
-                          )}
+                              <li>
+                                <NavLink
+                                  to="/assetfacility/viewallassets"
+                                  className={({ isActive }) =>
+                                    "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                    (isActive && "!text-white")
+                                  }
+                                >
+                                  View All Assets
+                                </NavLink>
+                              </li>
+                            )}
                           {(employee.superAdmin ||
                             employee.planningStaff?.plannerType ==
-                              "OPERATIONS_MANAGER" ||
+                            "OPERATIONS_MANAGER" ||
                             employee.generalStaff) && (
-                            <li>
-                              <NavLink
-                                to="/assetfacility/maplanding"
-                                className={({ isActive }) =>
-                                  "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                  (isActive && "!text-white")
-                                }
-                              >
-                                Map
-                              </NavLink>
-                            </li>
-                          )}
+                              <li>
+                                <NavLink
+                                  to="/assetfacility/maplanding"
+                                  className={({ isActive }) =>
+                                    "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                    (isActive && "!text-white")
+                                  }
+                                >
+                                  Map
+                                </NavLink>
+                              </li>
+                            )}
 
                           {/* <li>
                             <NavLink
@@ -610,11 +601,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <React.Fragment>
                         <NavLink
                           to="#"
-                          className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${
-                            (pathname === "/employee" ||
-                              pathname.includes("employeeAccount")) &&
+                          className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark ${(pathname === "/employee" ||
+                            pathname.includes("employeeAccount")) &&
                             "bg-graydark dark:bg-meta-4"
-                          }`}
+                            }`}
                           onClick={(e) => {
                             e.preventDefault();
                             sidebarExpanded
@@ -625,9 +615,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           <HiOutlineUserAdd className="h-5 w-5" />
                           Employee
                           <svg
-                            className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
-                              open && "rotate-180"
-                            }`}
+                            className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && "rotate-180"
+                              }`}
                             width="20"
                             height="20"
                             viewBox="0 0 20 20"
@@ -644,9 +633,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         </NavLink>
                         {/* <!-- Dropdown Menu Start --> */}
                         <div
-                          className={`translate transform overflow-hidden ${
-                            !open && "hidden"
-                          }`}
+                          className={`translate transform overflow-hidden ${!open && "hidden"
+                            }`}
                         >
                           <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                             <li>

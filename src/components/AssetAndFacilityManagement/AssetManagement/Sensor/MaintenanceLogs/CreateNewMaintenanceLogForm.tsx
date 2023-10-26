@@ -60,8 +60,8 @@ function CreateNewMaintenanceLogForm(props: CreateNewMaintenanceLogProps) {
         description: "Successfully created sensor maintenance log",
       });
       (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")
-        ? navigate(-1)
-        : navigate("/assetfacility/maintenance/sensorMaintenance");
+        ? navigate("/assetfacility/maintenance/sensorMaintenance")
+        : navigate(-1);
       console.log(responseJson);
     } catch (error: any) {
       toastShadcn({
