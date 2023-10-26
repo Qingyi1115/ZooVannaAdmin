@@ -989,6 +989,12 @@ function App() {
                     user ? <ViewZooEventDetails /> : <Navigate to="/login" />
                   }
                 />
+                <Route
+                  path="/zooevent/viewzooeventdetails/:zooEventId/:tab"
+                  element={
+                    user ? <ViewZooEventDetails /> : <Navigate to="/login" />
+                  }
+                />
               </Route>
               <Route path="*" element={<NotFoundPage />} />
             </Routes>

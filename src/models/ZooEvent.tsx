@@ -13,6 +13,7 @@ interface ZooEvent {
   eventIsPublic: boolean;
   eventType?: EventType;
   eventStartDateTime: Date;
+  requiredNumberOfKeeper: number;
 
   // Internal Event
   eventDurationHrs: number;

@@ -154,7 +154,7 @@ function AllZooEventsDatatable(
             className="mr-2"
             onClick={() => {
               navigate(`/zooevent/viewallzooevents/`, { replace: true })
-              navigate(`/zooevent/viewzooeventdetails/${zooEvent.zooEventId}`)
+              navigate(`/zooevent/viewzooeventdetails/${zooEvent.zooEventId}/details`)
             }}
           >
             <HiEye className="mr-auto" />

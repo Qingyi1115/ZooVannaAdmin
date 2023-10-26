@@ -108,7 +108,8 @@ function ViewZooEventDetails() {
   const toastShadcn = useToast().toast;
 
   const { zooEventId } = useParams<{ zooEventId: string }>();
-
+  const { tab } = useParams<{ tab: string }>();
+  
   const [curZooEvent, setCurZooEvent] =
     useState<ZooEvent | null>(null);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
@@ -122,7 +123,6 @@ function ViewZooEventDetails() {
   );
   const [involvedItemGlobalFiler, setInvolvedItemGlobalFilter] =
     useState<string>("");
-  const { tab } = useParams<{ tab: string }>();
 
   useEffect(() => {
     const fetchZooEvent = async () => {
@@ -140,7 +140,6 @@ function ViewZooEventDetails() {
     fetchZooEvent();
   }, [refreshSeed]);
 
-  console.log(curZooEvent)
   // useEffect(() => {
   //   if (curZooEvent?.animals && curZooEvent.enrichmentItems) {
   //     setInvolvedAnimalList(curZooEvent?.animals);
@@ -379,6 +378,7 @@ function ViewZooEventDetails() {
   };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    console.log(curZooEvent);
     e.preventDefault();
     const zooEventDetails = {
       zooEventId: curZooEvent?.zooEventId,
@@ -389,12 +389,25 @@ function ViewZooEventDetails() {
 
     };
     console.log(updateFuture)
-    console.log("handleSubmit", zooEventDetails);
     if (updateFuture) {
-      useEffect(() => {
+      const data = {
+        eventName:curZooEvent?.eventName, 
+        eventDescription:curZooEvent?.eventDescription,
+        eventIsPublic:curZooEvent?.eventIsPublic,
+        eventType:curZooEvent?.eventType,
+        eventStartDateTime:eventStartDateTime?.getTime(),
+        requiredNumberOfKeeper:curZooEvent?.requiredNumberOfKeeper,
+    
+        eventDurationHrs:curZooEvent?.eventDurationHrs,
+        eventTiming:curZooEvent?.eventTiming,
+        
+        eventNotificationDate:eventNotificationDate?.getTime(),
+        eventEndDateTime:curZooEvent?.eventEndDateTime,
+      };
+      console.log(data);
         apiJson.put(
           `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
-          zooEventDetails
+          data
         ).then(res => {
           // success
           toastShadcn({
@@ -411,29 +424,27 @@ function ViewZooEventDetails() {
               error.message,
           });
         });
-      }, [refreshSeed]);
     } else {
-      useEffect(() => {
-        apiJson.put(
-          `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
-          zooEventDetails
-        ).then(res => {
-          // success
-          toastShadcn({
-            description: "Successfully updated event",
-          });
-          setMakePublicDialog(false);
-        }).catch(error => {
-          // got error
-          toastShadcn({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description:
-              "An error has occurred while updating event: \n" +
-              error.message,
-          });
+      console.log(zooEventDetails);
+      apiJson.put(
+        `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
+        {zooEventDetails:zooEventDetails}
+      ).then(res => {
+        // success
+        toastShadcn({
+          description: "Successfully updated event",
         });
-      }, [refreshSeed]);
+        setMakePublicDialog(false);
+      }).catch(error => {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while updating event: \n" +
+            error.message,
+        });
+      });
     }
   }
 
@@ -753,6 +764,7 @@ function ViewZooEventDetails() {
                           <Calendar
                             value={eventStartDateTime}
                             className="w-fit"
+                            showTime hourFormat="24"
                             onChange={(e: any) => {
                               if (e && e.value !== undefined) {
                                 setEventStartDateTime(e.value);
@@ -771,7 +783,7 @@ function ViewZooEventDetails() {
                           <Form.ValidityState>{validateStartDate}</Form.ValidityState>
                         </Form.Field>
                         {/* End Date */}
-                        <Form.Field
+                        {/* <Form.Field
                           name="eventEndDateTime"
                           id="eventEndDateField"
                           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
@@ -803,9 +815,9 @@ function ViewZooEventDetails() {
                             }}
                           />
                           <Form.ValidityState>{validateEndDate}</Form.ValidityState>
-                        </Form.Field>
+                        </Form.Field> */}
                         {/* Notification Date */}
-                        <Form.Field
+                        {/* <Form.Field
                           name="eventNotificationDate"
                           id="eventNotificationDateField"
                           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
@@ -837,7 +849,7 @@ function ViewZooEventDetails() {
                             }}
                           />
                           <Form.ValidityState>{validateDate}</Form.ValidityState>
-                        </Form.Field>
+                        </Form.Field> */}
                         {/* Update Future*/}
                         <Form.Field
                           name="updateFuture"
@@ -859,7 +871,7 @@ function ViewZooEventDetails() {
                           <Checkbox.Root
                             className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow outline-none focus:shadow-[0_0_0_2px_gray]"
                             id="c1"
-                            onCheckedChange={() => { setUpdateFuture(checked) }}
+                            onCheckedChange={(event:boolean) => { setUpdateFuture(event) }}
                           >
                             <Checkbox.Indicator>
                               <CheckIcon />

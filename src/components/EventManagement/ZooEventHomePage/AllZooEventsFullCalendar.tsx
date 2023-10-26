@@ -121,7 +121,7 @@ function AllZooEventsFullCalendar(
           allDay: false,
           // url: `http://localhost:5173/zooevent/viewzooeventdetails/${zooEvent.zooEventId}`,
           extendedProps: {
-            zooEventUrl: `/zooevent/viewzooeventdetails/${ze.zooEventId}`,
+            zooEventUrl: `/zooevent/viewzooeventdetails/${ze.zooEventId}/details`,
             eventType: ze.eventType,
             eventDescription: ze.eventDescription,
             eventDurationHrs: ze.eventDurationHrs,

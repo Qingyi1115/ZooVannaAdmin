@@ -68,6 +68,7 @@ function ZooEventHomePage() {
       console.log("responseJson", responseJson)
 
       const allEventGroup: any[] = [];
+      
 
       responseJson["zooEvents"].forEach((ze: ZooEvent) => {
         if (ze.animalActivity) {
@@ -83,7 +84,7 @@ function ZooEventHomePage() {
             allEventGroup.push({
               groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
               groupType: "feedingPlanSessionDetail",
-              groupName: ze.feedingPlanSessionDetail.feedingPlan.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
+              groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
                 " " + ze.feedingPlanSessionDetail.eventTimingType
             })
           }
