@@ -70,8 +70,18 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
 
       // }
       console.log("AddFacilityMaintenanceStaff", res);
-      setCurrentKeepers(res["currentKeepers"].map(keeper=>keeper.employee));
-      setAvailiableKeepers(res["availiableKeepers"].map(keeper=>keeper.employee));
+      setCurrentKeepers(res["currentKeepers"].map(keeper=>{
+        const emp = keeper.employee
+        keeper.employee = undefined
+        emp.keeper = keeper;
+        return emp;
+      }));
+      setAvailiableKeepers(res["availiableKeepers"].map(keeper=>{
+        const emp = keeper.employee
+        keeper.employee = undefined
+        emp.keeper = keeper;
+        return emp;
+      }));
     });
   }, [refreshSeed]);
 
@@ -92,16 +102,30 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignMaintenanceStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-          setRefreshSeed([]);
-        }).catch(err => console.log("err", err));
+        `http://localhost:3000/api/zooEvent/assignZooEventKeeper`, 
+        { employeeIds: [selectedEmployee.employeeId,] ,
+          zooEventIds: [zooEventId,]
+        }).then(res => {
+          toastShadcn({
+            // variant: "destructive",
+            title: "Assignment Successful",
+            description:
+              "Successfully assigned maintenance staff: " + selectedEmployeeName,
+          });
 
+          setRefreshSeed([]);
+        }).catch(err => {console.log("err", err),
+        
       toastShadcn({
-        // variant: "destructive",
-        title: "Assignment Successful",
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
         description:
-          "Successfully assigned maintenance staff: " + selectedEmployeeName,
+          "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
       });
+    }
+      );
+
+      
       setSelectedEmployee(employee);
       setAssignmentDialog(false);
       // window.location.reload();
@@ -134,8 +158,11 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
-      const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
+      const responseJson = await apiJson.put(
+        `http://localhost:3000/api/zooEvent/removeKeeperfromZooEvent`, 
+        { employeeIds: [selectedEmployee.employeeId,],
+          zooEventIds:[zooEventId]
+        });
       setRefreshSeed([]);
       toastShadcn({
         // variant: "destructive",
@@ -206,7 +233,7 @@ function AddFacilityMaintenanceStaff(props: AddFacilityMaintenanceStaffProps) {
           <Button
             variant={"outline"}
             className="mr-2" onClick={() => {
-              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageMaintenance`, { replace: true });
+              navigate(`/zooevent/viewzooeventdetails/${zooEventId}/assignedEmployees`, { replace: true });
               navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
             }}>
             <HiEye className="mx-auto" />
