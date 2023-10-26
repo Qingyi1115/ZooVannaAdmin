@@ -6,6 +6,7 @@ enum KeeperType {
 enum ActivityType {
   TRAINING = "TRAINING",
   ENRICHMENT = "ENRICHMENT",
+  OBSERVATION = "OBSERVATION"
 }
 
 enum PlannerType {
