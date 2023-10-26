@@ -48,6 +48,9 @@ import EditAnimalActivityLogPage from "./pages/animalManagement/EditAnimalActivi
 import EditAnimalFeedingLogPage from "./pages/animalManagement/EditAnimalFeedingLogPage";
 import ViewAnimalActivityLogDetailsPage from "./pages/animalManagement/ViewAnimalActivityLogDetailsPage";
 import ViewAnimalFeedingLogDetailsPage from "./pages/animalManagement/ViewAnimalFeedingLogDetailsPage";
+import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
+import CreateFeedingPlan from "./pages/animalManagement/CreateFeedingPlan";
+import AnimalFeedingPlanDetailsPage from "./pages/animalManagement/AnimalFeedingPlanDetailsPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -112,13 +115,18 @@ import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
-import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
 import ViewCameraPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraPage";
 
 //customer order management page
 import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
 import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrderDetailsPage";
 import SalesChartPage from "./pages/sales/SalesChartPage";
+
+//Event management page
+import CreateZooEventPage from "./pages/eventManagement/CreateZooEventPage";
+import EditZooEventPage from "./pages/eventManagement/EditZooEventPage";
+import ViewZooEventDetails from "./pages/eventManagement/ViewZooEventDetails";
+import ZooEventHomePage from "./pages/eventManagement/ZooEventHomePage";
 
 function App() {
   const { state } = useAuthContext();
@@ -445,6 +453,22 @@ function App() {
                   element={
                     user ? (
                       <AnimalFeedingPlanHomePage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/createfeedingplan/:speciesCode"
+                  element={
+                    user ? <CreateFeedingPlan /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/animal/viewfeedingplandetails/:feedingPlanId"
+                  element={
+                    user ? (
+                      <AnimalFeedingPlanDetailsPage />
                     ) : (
                       <Navigate to="/login" />
                     )
@@ -961,6 +985,37 @@ function App() {
                   path="/listing/viewlisting/:listingId"
                   element={
                     user ? <ViewListingDetailsPage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* Event Management */}
+                <Route
+                  path="/zooevent/createnewzooevent"
+                  element={
+                    user ? <CreateZooEventPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/viewallzooevents"
+                  element={
+                    user ? <ZooEventHomePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/editzooevent/:zooEventId"
+                  element={
+                    user ? <EditZooEventPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/viewzooeventdetails/:zooEventId"
+                  element={
+                    user ? <ViewZooEventDetails /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/viewzooeventdetails/:zooEventId/:tab"
+                  element={
+                    user ? <ViewZooEventDetails /> : <Navigate to="/login" />
                   }
                 />
               </Route>

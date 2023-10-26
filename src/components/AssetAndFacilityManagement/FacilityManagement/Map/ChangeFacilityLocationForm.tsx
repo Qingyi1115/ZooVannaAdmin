@@ -165,7 +165,7 @@ function ChangeFacilityLocationForm(props: ChangeFacilityLocationFormProps) {
               bounds={backgroundbounds}
             />
             <ImageOverlay
-              url={"../../../../src/assets/merlionzootest.png"}
+              url={"../../../../src/assets/realmap.png"}
               bounds={bounds}
             />
             {yCoordinate && xCoordinate && (

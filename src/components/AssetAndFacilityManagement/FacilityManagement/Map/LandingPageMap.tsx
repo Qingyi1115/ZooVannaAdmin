@@ -200,7 +200,7 @@ function LandingPageMap(props: LandingPageMapProps) {
             bounds={backgroundbounds}
           />
           <ImageOverlay
-            url={"../../../../src/assets/merlionzootest.png"}
+            url={"../../../../src/assets/realmap.png"}
             bounds={bounds}
           />
           {facilityList.map((facility, idx) => (
