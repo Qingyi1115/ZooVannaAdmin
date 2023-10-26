@@ -8,7 +8,7 @@ interface FeedingItem {
   unit: string;
 
   //--FK
-  animal?: Animal;
+  animal: Animal;
   feedingPlans?: FeedingPlan;
 }
 

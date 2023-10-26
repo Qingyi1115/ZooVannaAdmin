@@ -99,6 +99,9 @@ function CreateFeedingPlan() {
     eventTimingType: string;
     feedingItems: DummyFeedingItem[];
     durationInMinutes: number;
+    isPublic: boolean;
+    publicEventStartTime: string | null;
+    requiredNumberOfKeeper: number;
   }
   const [feedingPlanSessions, setFeedingPlanSessions] = useState<
     DummyFeedingPlanSessionDetail[]
@@ -127,6 +130,10 @@ function CreateFeedingPlan() {
     useState<string | null>(null);
   const [durationInMinutesNewFoodItem, setDurationInMinutesNewFoodItem] =
     useState<number | null>(null);
+  const [
+    requiredNumberOfKeeperNewFoodItem,
+    setRequiredNumberOfKeeperNewFoodItem,
+  ] = useState<number | null>(1);
   // below is the list of feeding items for new session(s) to be added
   const [curFeedingItemsNewFeedSession, setCurFeedingItemsNewFeedSession] =
     useState<DummyFeedingItem[]>(
@@ -420,7 +427,8 @@ function CreateFeedingPlan() {
     if (
       selectedDaysOfWeekNewFoodItem != undefined &&
       selectedSessionTimingNewFoodItem != undefined &&
-      durationInMinutesNewFoodItem != null
+      durationInMinutesNewFoodItem != null &&
+      requiredNumberOfKeeperNewFoodItem != null
     ) {
       for (const day of selectedDaysOfWeekNewFoodItem as string[]) {
         console.log("here, " + day);
@@ -430,6 +438,9 @@ function CreateFeedingPlan() {
           eventTimingType: selectedSessionTimingNewFoodItem,
           feedingItems: newFeedingItemsListWithUomAndCategory,
           durationInMinutes: durationInMinutesNewFoodItem,
+          isPublic: false,
+          publicEventStartTime: null,
+          requiredNumberOfKeeper: requiredNumberOfKeeperNewFoodItem,
         };
 
         // check inside feedingPlanSessions,
@@ -460,6 +471,8 @@ function CreateFeedingPlan() {
 
             // update attributes
             existingSession.durationInMinutes = durationInMinutesNewFoodItem;
+            existingSession.requiredNumberOfKeeper =
+              requiredNumberOfKeeperNewFoodItem;
           } else if (newFeedingSessionObject.feedingItems) {
             // If the existing session has no feedingItems, assign the new items
             existingSession.feedingItems = newFeedingSessionObject.feedingItems;
@@ -871,13 +884,22 @@ function CreateFeedingPlan() {
       <TableCell className="min-h-[8rem] w-1/3 align-top font-medium hover:bg-muted/50">
         <div className="mb-1 flex justify-between">
           <div className="font-bold">
-            {curEventTimingType.charAt(0).toUpperCase() +
-              curEventTimingType.slice(1).toLowerCase()}{" "}
-            {curSession && (
-              <span className="text-sm font-normal">
-                ({curSession?.durationInMinutes} minutes)
-              </span>
-            )}
+            <div>
+              {curEventTimingType.charAt(0).toUpperCase() +
+                curEventTimingType.slice(1).toLowerCase()}{" "}
+              {curSession && (
+                <span className="text-sm font-normal">
+                  ({curSession?.durationInMinutes} minutes)
+                </span>
+              )}
+            </div>
+            <div>
+              {curSession && (
+                <div>
+                  No. Required Keepers: {curSession?.requiredNumberOfKeeper}
+                </div>
+              )}
+            </div>
           </div>
           <div>
             {isSessionExist(curDayOfTheWeek, curEventTimingType) && (
@@ -963,6 +985,15 @@ function CreateFeedingPlan() {
         curSessionToEdit.durationInMinutes = newDurationInMinutes;
       };
 
+      const handleNumKeeperChangeEditSession = (
+        newRequiredNumberOfKeeper: number
+      ) => {
+        if (!curSessionToEdit) {
+          return;
+        }
+        curSessionToEdit.requiredNumberOfKeeper = newRequiredNumberOfKeeper;
+      };
+
       const handleUnitChangeEditSession = (index: number, unit: string) => {
         if (!curSessionToEdit) {
           return;
@@ -1031,7 +1062,11 @@ function CreateFeedingPlan() {
             onHide={() => setOpenEditSessionDialog(false)}
             // onOpenChange={setOpenEditSessionDialog}
             footer={footerContent}
-            style={{ width: "60vw", height: "70vh", marginLeft: "10%" }}
+            style={{
+              width: "60vw",
+              height: "70vh",
+              marginLeft: "10%",
+            }}
           >
             {/* <DialogTrigger asChild>
             <Button
@@ -1077,6 +1112,17 @@ function CreateFeedingPlan() {
                     value={curSessionToEdit.durationInMinutes}
                     onValueChange={(e: InputNumberValueChangeEvent) =>
                       handleDurationChangeEditSession(e.value as number)
+                    }
+                    className="w-full"
+                  />
+                </div>
+                <div>
+                  <div>Required Number of Keepers:</div>
+                  <InputNumber
+                    placeholder="Required number of keepers"
+                    value={curSessionToEdit.requiredNumberOfKeeper}
+                    onValueChange={(e: InputNumberValueChangeEvent) =>
+                      handleNumKeeperChangeEditSession(e.value as number)
                     }
                     className="w-full"
                   />
@@ -1177,9 +1223,9 @@ function CreateFeedingPlan() {
                                       <div>
                                         Per meal: <br />
                                         <span className="text-lg">
-                                          {selectedCurFeedCategoryNewFoodItem &&
+                                          {item.foodCategory &&
                                             getRecoAmountAnimal(
-                                              selectedCurFeedCategoryNewFoodItem,
+                                              item.foodCategory,
                                               "meal",
                                               group.animal.animalCode
                                             )}
@@ -1188,9 +1234,9 @@ function CreateFeedingPlan() {
                                       <div>
                                         Per week: <br />
                                         <span className="text-lg">
-                                          {selectedCurFeedCategoryNewFoodItem &&
+                                          {item.foodCategory &&
                                             getRecoAmountAnimal(
-                                              selectedCurFeedCategoryNewFoodItem,
+                                              item.foodCategory,
                                               "week",
                                               group.animal.animalCode
                                             )}
@@ -1205,10 +1251,10 @@ function CreateFeedingPlan() {
                                     </span>
                                     <div>
                                       <span className="text-lg">
-                                        {selectedCurFeedCategoryNewFoodItem &&
+                                        {item.foodCategory &&
                                           getAmountFoodAlreadyAddedPerWeekInGrams(
                                             group.animal.animalCode,
-                                            selectedCurFeedCategoryNewFoodItem
+                                            item.foodCategory
                                           )}
                                       </span>
                                     </div>
@@ -1245,6 +1291,7 @@ function CreateFeedingPlan() {
       feedingItems: session?.feedingItems.map((item) => ({
         ...item,
         animalCode: item.animal.animalCode,
+        animal: null,
       })),
     }));
 
@@ -1531,6 +1578,18 @@ function CreateFeedingPlan() {
                 value={durationInMinutesNewFoodItem}
                 onValueChange={(e: InputNumberValueChangeEvent) =>
                   setDurationInMinutesNewFoodItem(e.value as number | null)
+                }
+                className="w-full"
+              />
+            </div>
+
+            <div>
+              <div>Required Number of Keepers:</div>
+              <InputNumber
+                placeholder="Required number of keepers"
+                value={requiredNumberOfKeeperNewFoodItem}
+                onValueChange={(e: InputNumberValueChangeEvent) =>
+                  setRequiredNumberOfKeeperNewFoodItem(e.value as number | null)
                 }
                 className="w-full"
               />
