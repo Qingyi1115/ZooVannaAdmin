@@ -31,21 +31,24 @@ function AnimalFeedingPlanDetailsPage() {
   const [curFeedingPlan, setCurFeedingPlan] = useState<FeedingPlan | null>(
     null
   );
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
-    const fetchSpecies = async () => {
+    const fetchFeedingPlan = async () => {
       try {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/animal/getFeedingPlanById/${feedingPlanId}`
         );
         setCurFeedingPlan(responseJson as FeedingPlan);
+        console.log("aaaa test");
+        console.log(responseJson as FeedingPlan);
       } catch (error: any) {
         console.log(error);
       }
     };
 
-    fetchSpecies();
-  }, []);
+    fetchFeedingPlan();
+  }, [refreshSeed]);
 
   return (
     <div className="p-10">
@@ -76,8 +79,17 @@ function AnimalFeedingPlanDetailsPage() {
 
         {curFeedingPlan && (
           <div>
-            <div>
-              <Button>Edit Details and Involved Animals</Button>
+            <div className="mb-4">
+              <Button
+                className="mb-4"
+                onClick={() => {
+                  navigate(
+                    `/animal/editfeedingplanbasicinfo/${curFeedingPlan.feedingPlanId}`
+                  );
+                }}
+              >
+                Edit Basic Info
+              </Button>
               <div className="text-lg font-bold">Basic Information</div>
               <Table>
                 <TableBody>
@@ -113,7 +125,7 @@ function AnimalFeedingPlanDetailsPage() {
               </Table>
               <br />
               <div className="">
-                <div className="text-lg font-bold">Involved Animal List.</div>
+                <div className="text-lg font-bold">Involved Animal List</div>
                 <AnimalFeedingPlanInvolvedAnimalDatatable
                   involvedAnimalList={
                     curFeedingPlan.animals ? curFeedingPlan.animals : []
@@ -131,13 +143,12 @@ function AnimalFeedingPlanDetailsPage() {
                   <TabsTrigger value="feedingLogs">Feeding Logs</TabsTrigger>
                 </TabsList>
                 <TabsContent value="sessionSchedule">
-                  Sessions Schedule Calendar showing sessions and items.
-                  Hm...after updating animal, need to remove items that contains
-                  that animal. For
-                  <Button>Edit Sessions</Button>
+                  {/* <Button>Edit Sessions</Button> */}
                   <AnimalFeedingPlanSessionsSchedule
                     curFeedingPlan={curFeedingPlan}
                     setCurFeedingPlan={setCurFeedingPlan}
+                    refreshSeed={refreshSeed}
+                    setRefreshSeed={setRefreshSeed}
                   />
                 </TabsContent>
                 <TabsContent value="feedingLogs">Feeding Logs</TabsContent>

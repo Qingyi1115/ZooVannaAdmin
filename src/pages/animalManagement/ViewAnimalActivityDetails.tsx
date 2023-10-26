@@ -380,11 +380,13 @@ function ViewAnimalActivityDetails() {
             <Tabs defaultValue={tab ? `${tab}` : "details"} className="w-full">
               <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
                 <TabsTrigger value="details">Details</TabsTrigger>
-                {curAnimalActivity.activityType == ActivityType.OBSERVATION ?
-                  <TabsTrigger value="observationlogs">Observation Logs</TabsTrigger>
-                  :
-                  <TabsTrigger value="activitylogs">Activity Logs</TabsTrigger>}
-
+                {curAnimalActivity.activityType == ActivityType.OBSERVATION ? (
+                  <TabsTrigger value="observationlogs">
+                    Observation Logs
+                  </TabsTrigger>
+                ) : (
+                  <TabsTrigger value="activitylogs">Activity Logs</TabsTrigger>
+                )}
               </TabsList>
               <TabsContent value="details">
                 <div className="mb-10">
@@ -399,7 +401,9 @@ function ViewAnimalActivityDetails() {
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           ID
                         </TableCell>
-                        <TableCell>{curAnimalActivity.animalActivityId}</TableCell>
+                        <TableCell>
+                          {curAnimalActivity.animalActivityId}
+                        </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -434,7 +438,9 @@ function ViewAnimalActivityDetails() {
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Recurring Pattern
                         </TableCell>
-                        <TableCell>{curAnimalActivity.recurringPattern}</TableCell>
+                        <TableCell>
+                          {curAnimalActivity.recurringPattern}
+                        </TableCell>
                       </TableRow>
                       {curAnimalActivity.recurringPattern == "WEEKLY" && (
                         <TableRow>
@@ -456,13 +462,17 @@ function ViewAnimalActivityDetails() {
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Session Timing
                         </TableCell>
-                        <TableCell>{curAnimalActivity.eventTimingType}</TableCell>
+                        <TableCell>
+                          {curAnimalActivity.eventTimingType}
+                        </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Duration (Minutes)
                         </TableCell>
-                        <TableCell>{curAnimalActivity.durationInMinutes}</TableCell>
+                        <TableCell>
+                          {curAnimalActivity.durationInMinutes}
+                        </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -555,7 +565,8 @@ function ViewAnimalActivityDetails() {
                         {selectedAnimal && (
                           <span>
                             Are you sure you want to remove{" "}
-                            {selectedAnimal.houseName} from the current activity? ?
+                            {selectedAnimal.houseName} from the current
+                            activity? ?
                           </span>
                         )}
                       </div>
@@ -656,16 +667,24 @@ function ViewAnimalActivityDetails() {
                   </div>
                 </div>
               </TabsContent>
-              {curAnimalActivity.activityType == ActivityType.OBSERVATION ?
+              {curAnimalActivity.activityType == ActivityType.OBSERVATION ? (
                 <TabsContent value="observationlogs">
-                  <AllAnimalObservationLogsDatatable speciesCode={""} animalCode={""} animalActivityId={curAnimalActivity.animalActivityId} />
+                  <AllAnimalObservationLogsDatatable
+                    speciesCode={""}
+                    animalCode={""}
+                    animalActivityId={curAnimalActivity.animalActivityId}
+                  />
                 </TabsContent>
-                :
+              ) : (
                 <TabsContent value="activitylogs">
-                  <AllAnimalActivityLogsDatatable speciesCode={""} animalCode={""} animalActivityId={curAnimalActivity.animalActivityId} />
-                </TabsContent>}
+                  <AllAnimalActivityLogsDatatable
+                    speciesCode={""}
+                    animalCode={""}
+                    animalActivityId={curAnimalActivity.animalActivityId}
+                  />
+                </TabsContent>
+              )}
             </Tabs>
-
           </div>
         </div>
       )}

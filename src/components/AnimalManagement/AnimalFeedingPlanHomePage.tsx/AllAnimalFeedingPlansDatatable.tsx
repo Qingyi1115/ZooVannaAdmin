@@ -114,7 +114,8 @@ function AllAnimalFeedingPlansDatatable(
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting species: \n" + error.message,
+            "An error has occurred while deleting feeding plan: \n" +
+            error.message,
         });
       }
     };

@@ -51,6 +51,7 @@ import ViewAnimalFeedingLogDetailsPage from "./pages/animalManagement/ViewAnimal
 import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
 import CreateFeedingPlan from "./pages/animalManagement/CreateFeedingPlan";
 import AnimalFeedingPlanDetailsPage from "./pages/animalManagement/AnimalFeedingPlanDetailsPage";
+import EditFeedingPlanBasicInfoPage from "./pages/animalManagement/EditFeedingPlanBasicInfoPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -479,6 +480,16 @@ function App() {
                   element={
                     user ? (
                       <AnimalFeedingPlanDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/animal/editfeedingplanbasicinfo/:feedingPlanId"
+                  element={
+                    user ? (
+                      <EditFeedingPlanBasicInfoPage />
                     ) : (
                       <Navigate to="/login" />
                     )

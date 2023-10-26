@@ -459,7 +459,7 @@ function CreateAnimalActivityForm() {
           {/* Session */}
           <FormFieldSelect
             formFieldName="session"
-            label="Session Timing"
+            label="Shift Timing"
             required={true}
             placeholder="Select a session timing..."
             valueLabelPair={Object.keys(EventTimingType).map(
