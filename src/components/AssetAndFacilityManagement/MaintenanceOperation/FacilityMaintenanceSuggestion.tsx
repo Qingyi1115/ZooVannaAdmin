@@ -40,7 +40,8 @@ interface MaintenanceDetails {
   lastMaintenance: string,
   suggestedMaintenance: string,
   type: string,
-  id: number
+  id: number,
+  repairRequired:boolean
 }
 
 function rowColor(facility: any) {
@@ -121,6 +122,7 @@ function FacilityMaintenanceSuggestion() {
           new Date(facility.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Facility",
         id: facility.facilityId,
+        repairRequired:facility.inHouse.facilityLogs?.find(log=>log.generalStaffs?.find(gs=>gs.employeeId == employee.employeeId))
       })
     })
     setObjectsList(obj)
@@ -152,7 +154,9 @@ function FacilityMaintenanceSuggestion() {
               navigate(`/assetfacility/maintenance/facilityMaintenance`, { replace: true });
               navigate(`/assetfacility/viewfacilitydetails/${objDetails.id}/facilityLog`);
             }}
-            variant={(compareDates(new Date(objDetails.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ? "destructive" : "default"}
+            variant={
+              objDetails.repairRequired ? "destructive" : "default"
+            }
           >
             <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
           </Button>

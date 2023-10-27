@@ -177,13 +177,13 @@ function ZooEventHomePage() {
           }
         },
 
-        // {
-        //   label: 'Feeding Plan',
-        //   command: () => {
-        //     navigate(`/zooevent/viewallzooevents/`, { replace: true })
-        //     navigate(`/animal/createfeedingplan`)
-        //   }
-        // }
+        {
+          label: 'Feeding Plan',
+          command: () => {
+            navigate(`/zooevent/viewallzooevents/`, { replace: true })
+            navigate(`/animal/viewallanimals/`)
+          }
+        }
       ]
     },
     // {
