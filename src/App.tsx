@@ -362,7 +362,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/animal/createAnimalFeedingLog/:animalId"
+                  path="/animal/createAnimalFeedingLog/:feedingPlanId"
                   element={
                     user ? (
                       <CreateNewAnimalFeedingLogPage />
@@ -472,7 +472,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/animal/createfeedingplan/:feedingPlanId"
+                  path="/animal/createfeedingplan/"
                   element={
                     user ? <CreateFeedingPlan /> : <Navigate to="/login" />
                   }
