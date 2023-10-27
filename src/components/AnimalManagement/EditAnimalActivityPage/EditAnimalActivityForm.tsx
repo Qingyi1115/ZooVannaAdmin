@@ -438,10 +438,6 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             validateFunction={validateTitle}
           />
 
-          {/* Activity Type */}
-          <span className="mb-1 block font-medium">
-            Activity Type<br/> <b>{activityType}</b>
-          </span>
           {/* <FormFieldSelect
             formFieldName="activityType"
             label="Activity Type"
@@ -461,6 +457,10 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
           /> */}
         </div>
 
+        {/* Activity Type */}
+        <div className="mb-1 block font-medium">
+          Activity Type<br /> <b>{activityType}</b>
+        </div>
         {/* Details */}
         <Form.Field
           name="physicalDefiningCharacteristics"
