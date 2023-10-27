@@ -219,6 +219,11 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           eventIsPublic: false,
           eventNotificationDate: curZooEvent.eventNotificationDate,
           eventEndDateTime: curZooEvent.eventEndDateTime,
+          eventName:eventName,
+          eventDescription:eventDescription,
+          eventTiming:eventTiming,
+          eventStartDateTime:eventStartDateTime,
+          eventDurationHrs:eventDurationHrs
         };
       console.log(zooEventDetails);
       apiJson.put(
