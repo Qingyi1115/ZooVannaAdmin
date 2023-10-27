@@ -439,7 +439,10 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
           />
 
           {/* Activity Type */}
-          <FormFieldSelect
+          <span className="mb-1 block font-medium">
+            Activity Type<br/> <b>{activityType}</b>
+          </span>
+          {/* <FormFieldSelect
             formFieldName="activityType"
             label="Activity Type"
             required={true}
@@ -455,7 +458,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             value={activityType}
             setValue={setActivityType}
             validateFunction={validateIdentifierType}
-          />
+          /> */}
         </div>
 
         {/* Details */}
