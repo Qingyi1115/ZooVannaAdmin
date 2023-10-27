@@ -76,9 +76,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
     number | undefined
   >(curAnimalActivity.requiredNumberOfKeeper);
   const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
-    RecurringPattern[
-    curAnimalActivity.recurringPattern as keyof typeof RecurringPattern
-    ]
+    curAnimalActivity.recurringPattern
   );
   const [startDate, setStartDate] = useState<Nullable<Date>>(
     new Date(curAnimalActivity.startDate)
@@ -539,14 +537,15 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
           required={true}
           placeholder="Select a recurring pattern. Select NON-RECURRING if this is a one-off event. "
           valueLabelPair={Object.keys(RecurringPattern).map(
-            (recurringPatternKey) => [
+            (recurringPatternKey) => {
+              return [
               RecurringPattern[
                 recurringPatternKey as keyof typeof RecurringPattern
               ].toString(),
               RecurringPattern[
                 recurringPatternKey as keyof typeof RecurringPattern
               ].toString(),
-            ]
+            ];}
           )}
           value={recurringPattern}
           setValue={setRecurringPattern}
