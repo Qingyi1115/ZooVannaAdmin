@@ -105,7 +105,8 @@ function EditAnimalActivityLogPage() {
     endDate: new Date(),
     eventTimingType: EventTimingType.AFTERNOON,
     durationInMinutes: -1,
-    animalActivityLogs: []
+    animalActivityLogs: [],
+    requiredNumberOfKeeper: 0
   };
 
   let emptyAnimalActivityLog: AnimalActivityLog = {

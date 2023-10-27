@@ -373,12 +373,12 @@ function AllFeedingPlanFeedingLogsDatatable(
                 <Button
                   className="mr-2"
                   onClick={() => {
-                    // navigate(
-                    //   `/animal/viewAnimalDetails/${animalCode}/feedinglogs`,
-                    //   { replace: true }
-                    // );
                     navigate(
-                      `/animal/createAnimalFeedingLog/${feedingPlan.species?.speciesCode}`
+                      `/animal/viewfeedingplandetails/${feedingPlanId}/feedingLogs`,
+                      { replace: true }
+                    );
+                    navigate(
+                      `/animal/createAnimalFeedingLog/${feedingPlan.feedingPlanId}`
                     );
                   }}
                 >
