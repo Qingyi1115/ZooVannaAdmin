@@ -362,7 +362,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/animal/createAnimalFeedingLog/:animalId"
+                  path="/animal/createAnimalFeedingLog/:feedingPlanId"
                   element={
                     user ? (
                       <CreateNewAnimalFeedingLogPage />

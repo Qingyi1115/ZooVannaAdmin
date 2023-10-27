@@ -76,9 +76,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
     number | undefined
   >(curAnimalActivity.requiredNumberOfKeeper);
   const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
-    RecurringPattern[
-    curAnimalActivity.recurringPattern as keyof typeof RecurringPattern
-    ]
+    curAnimalActivity.recurringPattern
   );
   const [startDate, setStartDate] = useState<Nullable<Date>>(
     new Date(curAnimalActivity.startDate)
@@ -414,7 +412,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
               Back
             </Button>
             {/* </NavLink> */}
-            <span className="self-center text-title-xl font-bold">
+            <span className="self-center text-lg text-graydark">
               Update Animal Activity
             </span>
             <Button disabled className="invisible">
@@ -422,6 +420,9 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             </Button>
           </div>
           <Separator />
+          <span className="mt-4 self-center text-title-xl font-bold">
+            {curAnimalActivity.title}
+          </span>
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -539,14 +540,16 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
           required={true}
           placeholder="Select a recurring pattern. Select NON-RECURRING if this is a one-off event. "
           valueLabelPair={Object.keys(RecurringPattern).map(
-            (recurringPatternKey) => [
-              RecurringPattern[
-                recurringPatternKey as keyof typeof RecurringPattern
-              ].toString(),
-              RecurringPattern[
-                recurringPatternKey as keyof typeof RecurringPattern
-              ].toString(),
-            ]
+            (recurringPatternKey) => {
+              return [
+                RecurringPattern[
+                  recurringPatternKey as keyof typeof RecurringPattern
+                ].toString(),
+                RecurringPattern[
+                  recurringPatternKey as keyof typeof RecurringPattern
+                ].toString(),
+              ];
+            }
           )}
           value={recurringPattern}
           setValue={setRecurringPattern}

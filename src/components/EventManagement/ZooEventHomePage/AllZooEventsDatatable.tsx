@@ -242,7 +242,7 @@ function AllZooEventsDatatable(
               field="eventName"
               header="Name"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "10rem" }}
             ></Column>
             <Column
               field="eventDescription"
@@ -262,13 +262,13 @@ function AllZooEventsDatatable(
               bodyClassName={"text-center"}
               filter
               filterElement={eventIsPublicFilterTemplate}
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "4rem" }}
             ></Column>
             <Column
               field="eventType"
               header="Type"
               sortable
-              style={{ minWidth: "10rem" }}
+              style={{ minWidth: "4rem" }}
             ></Column>
             <Column
               body={(zooEvent) => {
@@ -277,7 +277,7 @@ function AllZooEventsDatatable(
                   dateOptions
                 );
               }}
-              header="Start Date"
+              header="Event Date"
               sortable
               style={{ minWidth: "8rem" }}
             ></Column>

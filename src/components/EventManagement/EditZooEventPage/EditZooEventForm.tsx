@@ -69,12 +69,18 @@ function EditZooEventForm(props: EditZooEventFormProps) {
   const [eventEndDateTime, setEventEndDateTime] = useState<Nullable<Date>>(
     curZooEvent.eventEndDateTime
   );
+  const [eventNotificationDate, setEventNotificationDate] = useState<Nullable<Date>>(
+    curZooEvent.eventNotificationDate
+  );
   const [eventTiming, setEventTiming] = useState<string | undefined>(
-    curZooEvent.eventTiming.toString()
+    curZooEvent.eventTiming?.toString()
   );
   const [eventDurationHrs, setEventDurationHrs] = useState<
     number | undefined
   >(curZooEvent.eventDurationHrs);
+  const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
+    number | undefined
+  >(curZooEvent.requiredNumberOfKeeper);
 
   // validate functions
   function validateIdentifierType(props: ValidityState) {
@@ -95,7 +101,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="font-medium text-danger">* Please enter a eventName</div>
+          <div className="font-medium text-danger">* Please enter an event name!</div>
         );
       }
       // add any other cases here
@@ -122,7 +128,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
       if (eventStartDateTime == null) {
         return (
           <div className="font-medium text-danger">
-            * Please enter the date of the activity
+            * Please enter the date of the event
           </div>
         );
       }
@@ -160,6 +166,27 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           </div>
         );
       }
+
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateRequiredNumberOfKeeper(props: ValidityState) {
+    if (props != undefined) {
+      if (requiredNumberOfKeeper == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the number of keepers required
+          </div>
+        );
+      } else if (requiredNumberOfKeeper <= 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Number of keepers must be greater than 0
+          </div>
+        );
+      }
       // add any other cases here
     }
     return null;
@@ -183,78 +210,84 @@ function EditZooEventForm(props: EditZooEventFormProps) {
       eventDurationHrs,
     };
 
-      try {
+    try {
 
 
-        if (updateFuture){
+      if (updateFuture) {
 
-          const data = {
-            eventName: eventName,
-            eventDescription: eventDescription,
-            eventIsPublic: false,
-            eventType: eventType,
-            eventStartDateTime: dateInMilliseconds,
-            requiredNumberOfKeeper: curZooEvent?.requiredNumberOfKeeper,
-    
-            eventDurationHrs: eventDurationHrs,
-            eventTiming: eventTiming,
-    
-            eventNotificationDate: curZooEvent.eventNotificationDate,
-            eventEndDateTime: curZooEvent?.eventEndDateTime,
-          };
-
-          const response = await apiJson.put(
-            `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
-            data
-          );
-          // success
-          toastShadcn({
-            description: "Successfully updated event",
-          });
-          navigate(-1);
-        }else{
-          
-        const zooEventDetails = {
-          zooEventId: curZooEvent?.zooEventId,
+        const data = {
+          eventName: eventName,
+          eventDescription: eventDescription,
           eventIsPublic: false,
+          eventType: eventType,
+          eventStartDateTime: dateInMilliseconds,
+          requiredNumberOfKeeper: requiredNumberOfKeeper,
+
+          eventDurationHrs: eventDurationHrs,
+          eventTiming: eventTiming,
+
           eventNotificationDate: curZooEvent.eventNotificationDate,
-          eventEndDateTime: curZooEvent.eventEndDateTime,
+          eventEndDateTime: curZooEvent?.eventEndDateTime,
         };
-      console.log(zooEventDetails);
-      apiJson.put(
-        `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
-        { zooEventDetails: zooEventDetails }
-      ).then(res => {
+
+        const response = await apiJson.put(
+          `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
+          data
+        );
         // success
         toastShadcn({
           description: "Successfully updated event",
         });
         navigate(-1);
-      }).catch(error => {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while updating event: \n" +
-            error.message,
-        });
-      });
-        }
+      } else {
 
-        
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while updating event: \n" +
-            error.message,
+        const zooEventDetails = {
+          zooEventId: curZooEvent?.zooEventId,
+          eventIsPublic: false,
+          eventNotificationDate: curZooEvent.eventNotificationDate,
+          eventEndDateTime: curZooEvent.eventEndDateTime,
+          eventName: eventName,
+          eventDescription: eventDescription,
+          eventTiming: eventTiming,
+          eventStartDateTime: eventStartDateTime,
+          eventDurationHrs: eventDurationHrs,
+          requiredNumberOfKeeper: requiredNumberOfKeeper
+        };
+        console.log(zooEventDetails);
+        apiJson.put(
+          `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
+          { zooEventDetails: zooEventDetails }
+        ).then(res => {
+          // success
+          toastShadcn({
+            description: "Successfully updated event",
+          });
+          navigate(-1);
+        }).catch(error => {
+          // got error
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while updating event: \n" +
+              error.message,
+          });
         });
       }
-    };
-  
+
+
+    } catch (error: any) {
+      // got error
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while updating event: \n" +
+          error.message,
+      });
+    }
+  };
+
 
   return (
     <div>
@@ -287,7 +320,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* EventName */}
+          {/* Event Name */}
           <FormFieldInput
             type="text"
             formFieldName="eventName"
@@ -302,7 +335,12 @@ function EditZooEventForm(props: EditZooEventFormProps) {
 
         </div>
 
-        {/* EventDescription */}
+        {/* Event Type */}
+        <div className="mb-1 block font-medium">
+          Event Type<br /> <b>{eventType}</b>
+        </div>
+
+        {/* Event Description */}
         <Form.Field
           name="physicalDefiningCharacteristics"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
@@ -323,8 +361,8 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           </Form.Control>
           <Form.ValidityState>{validateEventDescription}</Form.ValidityState>
         </Form.Field>
-      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        { !curZooEvent.eventIsPublic && (
+        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+          {!curZooEvent.eventIsPublic && (
             <FormFieldSelect
               formFieldName="eventTiming"
               label="Timing"
@@ -344,15 +382,41 @@ function EditZooEventForm(props: EditZooEventFormProps) {
               setValue={setEventTiming}
               validateFunction={validateEventTiming}
             />
-        )}
+          )}
 
-          {/* Date */}
+          {/* Duration in minutes */}
+          <FormFieldInput
+            type="number"
+            formFieldName="eventDurationHrs"
+            label={`Duration (minutes)`}
+            required={true}
+            pattern={undefined}
+            placeholder="e.g., 8"
+            value={eventDurationHrs}
+            setValue={setEventDurationHrs}
+            validateFunction={validateEventDurationHrs}
+          />
+
+          {/* Number of keepers required */}
+          <FormFieldInput
+            type="number"
+            formFieldName="durationInMinutes"
+            label={`Number of keepers required`}
+            required={true}
+            pattern={undefined}
+            placeholder="e.g., 2"
+            value={requiredNumberOfKeeper}
+            setValue={setRequiredNumberOfKeeper}
+            validateFunction={validateRequiredNumberOfKeeper}
+          />
+
+          {/* Start Date */}
           <Form.Field
             name="dateOfMeasure"
             id="dateField"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <Form.Label className="font-medium">{curZooEvent.eventIsPublic? "Start Date" : "Date"}</Form.Label>
+            <Form.Label className="font-medium">{curZooEvent.eventIsPublic ? "Start Date" : "Date"}</Form.Label>
             <Form.Control
               className="hidden"
               type="text"
@@ -362,66 +426,88 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             ></Form.Control>
 
             {!curZooEvent.eventIsPublic && (
-               <Calendar
-                 value={eventStartDateTime}
-                 className="w-fit"
-                 onChange={(e: any) => {
-                   if (e && e.value !== undefined) {
-                     setEventStartDateTime(e.value);
-   
-                     const element = document.getElementById("dateField");
-                     if (element) {
-                       const isDataInvalid = element.getAttribute("data-invalid");
-                       if (isDataInvalid == "true") {
-                         element.setAttribute("data-valid", "true");
-                         element.removeAttribute("data-invalid");
-                       }
-                     }
-                   }
-                 }}
-               />
+              <Calendar
+                value={eventStartDateTime}
+                className="w-fit"
+                onChange={(e: any) => {
+                  if (e && e.value !== undefined) {
+                    setEventStartDateTime(e.value);
+
+                    const element = document.getElementById("dateField");
+                    if (element) {
+                      const isDataInvalid = element.getAttribute("data-invalid");
+                      if (isDataInvalid == "true") {
+                        element.setAttribute("data-valid", "true");
+                        element.removeAttribute("data-invalid");
+                      }
+                    }
+                  }
+                }}
+              />
             )}
 
             {curZooEvent.eventIsPublic && (
-               <Calendar
-               showTime
-                 value={eventStartDateTime}
-                 className="w-fit"
-                 onChange={(e: any) => {
-                   if (e && e.value !== undefined) {
-                     setEventStartDateTime(e.value);
-   
-                     const element = document.getElementById("dateField");
-                     if (element) {
-                       const isDataInvalid = element.getAttribute("data-invalid");
-                       if (isDataInvalid == "true") {
-                         element.setAttribute("data-valid", "true");
-                         element.removeAttribute("data-invalid");
-                       }
-                     }
-                   }
-                 }}
-               />
+              <Calendar
+                showTime
+                value={eventStartDateTime}
+                className="w-fit"
+                onChange={(e: any) => {
+                  if (e && e.value !== undefined) {
+                    setEventStartDateTime(e.value);
+
+                    const element = document.getElementById("dateField");
+                    if (element) {
+                      const isDataInvalid = element.getAttribute("data-invalid");
+                      if (isDataInvalid == "true") {
+                        element.setAttribute("data-valid", "true");
+                        element.removeAttribute("data-invalid");
+                      }
+                    }
+                  }
+                }}
+              />
             )}
-           
-
-
             <Form.ValidityState>{validateDate}</Form.ValidityState>
           </Form.Field>
-        </div>
 
-        {/* Duration in minutes */}
-        <FormFieldInput
-          type="number"
-          formFieldName="eventDurationHrs"
-          label={`Duration (minutes)`}
-          required={true}
-          pattern={undefined}
-          placeholder="e.g., 8"
-          value={eventDurationHrs}
-          setValue={setEventDurationHrs}
-          validateFunction={validateEventDurationHrs}
-        />
+          {/* Event Notification Date */}
+          {curZooEvent.eventIsPublic && (
+            <Form.Field
+              name="eventNotificationDate"
+              id="dateField"
+              className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+            >
+              <Form.Label className="font-medium">Event Notification Date</Form.Label>
+              <Form.Control
+                className="hidden"
+                type="text"
+                value={eventNotificationDate?.toString()}
+                required={true}
+                onChange={() => null}
+              ></Form.Control>
+
+              <Calendar
+                value={eventNotificationDate}
+                className="w-fit"
+                onChange={(e: any) => {
+                  if (e && e.value !== undefined) {
+                    setEventStartDateTime(e.value);
+
+                    const element = document.getElementById("dateField");
+                    if (element) {
+                      const isDataInvalid = element.getAttribute("data-invalid");
+                      if (isDataInvalid == "true") {
+                        element.setAttribute("data-valid", "true");
+                        element.removeAttribute("data-invalid");
+                      }
+                    }
+                  }
+                }}
+              />
+              <Form.ValidityState>{validateDate}</Form.ValidityState>
+            </Form.Field>
+          )}
+        </div>
 
         {/* Update Future*/}
         <Form.Field

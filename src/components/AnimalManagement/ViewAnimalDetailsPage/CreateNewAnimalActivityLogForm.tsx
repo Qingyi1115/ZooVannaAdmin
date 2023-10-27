@@ -41,7 +41,7 @@ function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) 
   const navigate = useNavigate();
   const { curAnimalActivity } = props;
   const [activityType, setActivityType] = useState<string | undefined>(
-    undefined); // dropdown
+    curAnimalActivity.activityType); // dropdown
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
   const [sessionRating, setSessionRating] = useState<string | undefined>(
     undefined); // dropdown

@@ -24,6 +24,10 @@ import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import { Menu } from "primereact/menu";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
+function beautify(ugly:string){
+  return ugly.split("_").map(word=>word[0].toLocaleUpperCase() + word.substring(1, word.length).toLocaleLowerCase()).join(" ");
+}
+
 const YEAR_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 365
 interface eventGroup {
   groupId: number;
@@ -125,8 +129,11 @@ function ZooEventHomePage() {
       });
       setEventGroupList(allEventGroup);
       setSelEventGroupList(allEventGroup);
-      setFilteredZooEventsList(responseJson["zooEvents"]);
-      return setZooEventsList(responseJson["zooEvents"]);
+      const a = responseJson["zooEvents"].map(ze=>{
+        return {...ze, eventType:beautify(ze.eventType)}
+      });
+      setFilteredZooEventsList(a);
+      return setZooEventsList(a);
 
     }).catch(error => {
       console.log(error);
