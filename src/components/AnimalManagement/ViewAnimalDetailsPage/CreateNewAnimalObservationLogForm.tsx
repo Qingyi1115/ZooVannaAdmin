@@ -45,15 +45,15 @@ function CreateNewAnimalObservationLogForm() {
   const [formError, setFormError] = useState<string | null>(null);
 
 
-  const [curAnimalList, setCurAnimalList] = useState<any>(null);
-  const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
+  // const [curAnimalList, setCurAnimalList] = useState<any>(null);
+  // const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
 
-  useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
-      setCurAnimalList(res as Animal[]);
-      console.log(res);
-    });
-  }, []);
+  // useEffect(() => {
+  //   apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+  //     setCurAnimalList(res as Animal[]);
+  //     console.log(res);
+  //   });
+  // }, []);
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
@@ -64,7 +64,7 @@ function CreateNewAnimalObservationLogForm() {
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details,
-      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
+      // animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalObservationLog);
 
@@ -164,7 +164,7 @@ function CreateNewAnimalObservationLogForm() {
         validateFunction={validateAnimalObservationLogName}
         pattern={undefined}
       />
-      {/* Animals */}
+      {/* Animals
       <MultiSelect
         value={selectedAnimals}
         onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
@@ -173,7 +173,7 @@ function CreateNewAnimalObservationLogForm() {
         filter
         placeholder="Select Animals"
         maxSelectedLabels={3}
-        className="w-full md:w-20rem" />
+        className="w-full md:w-20rem" /> */}
 
       <Form.Submit asChild>
         <Button
