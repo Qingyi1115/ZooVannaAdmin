@@ -386,8 +386,8 @@ function AnimalFeedingPlanSessionsSchedule(
           unit,
         };
         curSessionToEdit.feedingItems = updatedCurSessionFeedingItemsToBeEdited;
-        console.log("edit unit");
-        console.log(curSessionToEdit.feedingItems[index].unit);
+        // console.log("edit unit");
+        // console.log(curSessionToEdit.feedingItems[index].unit);
         // setCurSessionToEditUseState(curSessionToEdit);
       };
 
@@ -475,9 +475,6 @@ function AnimalFeedingPlanSessionsSchedule(
       );
 
       function handleCloseEditSessionDialog() {
-        console.log("closing...");
-        console.log(curSessionToEdit);
-        console.log(curSessionToEditUnchanged);
         curSessionToEdit.durationInMinutes =
           curSessionToEditUnchanged.durationInMinutes;
         curSessionToEdit.feedingItems = curSessionToEditUnchanged.feedingItems;
@@ -1299,6 +1296,10 @@ function AnimalFeedingPlanSessionsSchedule(
 
     const deleteFeedingPlanSessionApi = async () => {
       try {
+        console.log(
+          "selectedFeedingPlanSession?.feedingPlanSessionDetailId: " +
+            selectedFeedingPlanSession?.feedingPlanSessionDetailId
+        );
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteFeedingPlanSessionDetailById/" +
             selectedFeedingPlanSession?.feedingPlanSessionDetailId
