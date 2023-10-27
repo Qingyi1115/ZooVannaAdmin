@@ -647,7 +647,7 @@ function ViewZooEventDetails() {
                 className="w-full"
               >
                 <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-                  <TabsTrigger value="details">Details</TabsTrigger>
+                  <TabsTrigger value="details">Basic Information</TabsTrigger>
 
                   <TabsTrigger value="involvedAnimals">Involved Animals</TabsTrigger>
                   {curZooEvent.animalActivity != null && <TabsTrigger value="involvedItems">Involved Items</TabsTrigger>}
@@ -655,7 +655,6 @@ function ViewZooEventDetails() {
                 </TabsList>
 
                 <TabsContent value="details">
-                  <div className="my-4 text-xl font-medium">Basic Information:</div>
                   <div className="my-4 flex justify-start gap-6">
                     <Button
                       onClick={() => {
