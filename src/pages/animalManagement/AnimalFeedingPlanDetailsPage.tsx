@@ -136,7 +136,7 @@ function AnimalFeedingPlanDetailsPage() {
             </div>
             <div>
               <div className="text-lg font-bold">Schedule and Logs</div>
-              <Tabs defaultValue={"sessionSchedule"} className="w-full">
+              <Tabs defaultValue="sessionSchedule" className="w-full">
                 <TabsList className="no-scrollbar my-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
                   <TabsTrigger value="sessionSchedule">
                     Session Schedule

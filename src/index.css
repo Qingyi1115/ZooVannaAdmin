@@ -70,8 +70,8 @@
 
 .fc-event.training,
 .fc-v-event.training {
-  background-color: #622323;
-  border: 1px solid #622323;
+  background-color: #6c0063;
+  border: 1px solid #6c0063;
 }
 
 .fc-event.enrichment,
@@ -104,7 +104,7 @@
 .fc.fc-theme-standard
   .fc-view-harness
   .fc-event.fc-daygrid-dot-event.training:hover {
-  background: #62232360; /* Adjust the color and opacity as needed */
+  background: #6c0063; /* Adjust the color and opacity as needed */
   color: #24341c;
   cursor: pointer;
 }

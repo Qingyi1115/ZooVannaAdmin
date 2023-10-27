@@ -235,8 +235,8 @@ function AllAnimalActivitiesFullCalendar(
                 <div className="h-6 w-6 rounded bg-[#0f3360]" />
                 <span className="font-bold">Observation</span>
               </div>
-              <div className="flex gap-2 text-[#622323]">
-                <div className="h-6 w-6 rounded bg-[#622323]" />
+              <div className="flex gap-2 text-[#6c0063]">
+                <div className="h-6 w-6 rounded bg-[#6c0063]" />
                 <span className="font-bold">Training</span>
               </div>
               <div className="flex gap-2 text-[#976405]">
