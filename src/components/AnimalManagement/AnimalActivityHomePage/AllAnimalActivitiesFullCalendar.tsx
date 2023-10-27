@@ -163,11 +163,11 @@ function AllAnimalActivitiesFullCalendar(
           },
           classNames:
             curActivityType == "TRAINING"
-              ? ["training"]
+              ? ["training overflow-hidden"]
               : curActivityType == "ENRICHMENT"
-              ? ["enrichment"]
+              ? ["enrichment overflow-hidden"]
               : curActivityType == "OBSERVATION"
-              ? ["observation"]
+              ? ["observation overflow-hidden"]
               : [],
         };
       });
