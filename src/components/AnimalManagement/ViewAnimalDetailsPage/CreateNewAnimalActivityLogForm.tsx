@@ -127,8 +127,8 @@ function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) 
       </div>
       {/* Activity Type */}
       <div className="mb-1 block font-medium">
-        Activity Type<br /> <b>{activityType}</b>
-      </div>
+          Activity Type<br /> <b>{activityType}</b>
+        </div>
       {/* <FormFieldSelect
         formFieldName="activityType"
         label="Activity Type"

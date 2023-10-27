@@ -23,6 +23,7 @@ interface AnimalActivity {
   dayOfMonth: number | null;
   eventTimingType: EventTimingType;
   durationInMinutes: number;
+  requiredNumberOfKeeper: number;
 
   // -- FK
   animals?: Animal[];
