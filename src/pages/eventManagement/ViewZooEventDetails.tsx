@@ -712,7 +712,8 @@ function ViewZooEventDetails() {
                           {curZooEvent.eventIsPublic? "Start Date Time" : "Start Date"}
                         </TableCell>
                         <TableCell>
-                          {new Date(curZooEvent.eventStartDateTime).toDateString()}
+                          {curZooEvent.eventIsPublic? new Date(curZooEvent.eventStartDateTime).toLocaleString() 
+                          : new Date(curZooEvent.eventStartDateTime).toLocaleDateString()}
                         </TableCell>
                       </TableRow>
 
@@ -724,7 +725,8 @@ function ViewZooEventDetails() {
                         End Date Time
                       </TableCell>
                       <TableCell>
-                        {new Date(curZooEvent.eventStartDateTime).toDateString()}
+                          {curZooEvent.eventIsPublic? new Date(curZooEvent.eventEndDateTime || "").toLocaleString() 
+                          : new Date(curZooEvent.eventEndDateTime || "").toLocaleDateString()}
                       </TableCell>
                     </TableRow>
                        )
