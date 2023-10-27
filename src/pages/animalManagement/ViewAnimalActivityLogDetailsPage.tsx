@@ -6,7 +6,7 @@ import AnimalActivityLog from "../../models/AnimalActivityLog";
 import { Button } from "@/components/ui/button";
 import Employee from "../../models/Employee";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
+import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization, EventTimingType, RecurringPattern } from "../../enums/Enumurated";
 import Animal from "../../models/Animal";
 import Species from "../../models/Species";
 import { Rating } from "../../enums/Rating";
@@ -14,6 +14,7 @@ import ViewAnimalActivityLogDetails from "../../components/AnimalManagement/View
 import Keeper from "../../models/Keeper";
 import { Reaction } from "../../enums/Reaction";
 import { ActivityType } from "../../enums/ActivityType";
+import AnimalActivity from "../../models/AnimalActivity";
 
 
 
@@ -100,6 +101,22 @@ function ViewAnimalActivityLogDetailsPage() {
     employee: emptyEmployee
   }
 
+  let emptyAnimalActivity: AnimalActivity = {
+    animalActivityId: -1,
+    activityType: ActivityType.ENRICHMENT,
+    title: "",
+    details: "",
+    recurringPattern: RecurringPattern.DAILY,
+    dayOfMonth: null,
+    dayOfWeek: null,
+    startDate: new Date(),
+    endDate: new Date(),
+    eventTimingType: EventTimingType.AFTERNOON,
+    durationInMinutes: -1,
+    animalActivityLogs: [],
+    requiredNumberOfKeeper: 0
+  };
+
   let emptyAnimalActivityLog: AnimalActivityLog = {
     animalActivityLogId: 0,
     dateTime: new Date(),
@@ -109,7 +126,8 @@ function ViewAnimalActivityLogDetailsPage() {
     animals: [],
     keeper: emptyKeeper,
     activityType: ActivityType.TRAINING,
-    animalReaction: Reaction.POSITIVE_RESPONSE
+    animalReaction: Reaction.POSITIVE_RESPONSE,
+    animalActivity: emptyAnimalActivity
   };
 
   const [curAnimalActivityLog, setCurAnimalActivityLog] = useState<AnimalActivityLog>(emptyAnimalActivityLog);

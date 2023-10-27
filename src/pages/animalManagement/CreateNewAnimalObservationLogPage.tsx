@@ -68,7 +68,8 @@ function CreateNewAnimalObservationLogPage() {
     endDate: new Date(),
     eventTimingType: EventTimingType.AFTERNOON,
     durationInMinutes: -1,
-    animalActivityLogs: []
+    animalActivityLogs: [],
+    requiredNumberOfKeeper: 0
   }
 
   const [curAnimalActivity, setCurAnimalActivity] = useState<AnimalActivity>(emptyAnimalActivity);

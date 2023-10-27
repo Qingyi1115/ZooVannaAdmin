@@ -74,7 +74,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
   >(curAnimalActivity.durationInMinutes);
   const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
     number | undefined
-  >(undefined);
+  >(curAnimalActivity.requiredNumberOfKeeper);
   const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
     RecurringPattern[
     curAnimalActivity.recurringPattern as keyof typeof RecurringPattern
@@ -297,13 +297,13 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
 
   function validateRequiredNumberOfKeeper(props: ValidityState) {
     if (props != undefined) {
-      if (durationInMinutes == undefined) {
+      if (requiredNumberOfKeeper == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please enter the number of keepers required
           </div>
         );
-      } else if (durationInMinutes <= 0) {
+      } else if (requiredNumberOfKeeper <= 0) {
         return (
           <div className="font-medium text-danger">
             * Number of keepers must be greater than 0
@@ -438,6 +438,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             validateFunction={validateTitle}
           />
 
+
           {/* <FormFieldSelect
             formFieldName="activityType"
             label="Activity Type"
@@ -456,7 +457,6 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             validateFunction={validateIdentifierType}
           /> */}
         </div>
-
         {/* Activity Type */}
         <div className="mb-1 block font-medium">
           Activity Type<br /> <b>{activityType}</b>

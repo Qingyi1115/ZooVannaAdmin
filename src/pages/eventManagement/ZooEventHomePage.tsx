@@ -202,39 +202,6 @@ function ZooEventHomePage() {
           </div>
           <Separator />
         </div>
-        <div>
-          <label htmlFor="startDateCalendar" className="self-center mx-3 text-lg text-graydark">Start Date</label>
-          <Calendar id="startDateCalendar" showTime hourFormat="12" value={calendarStartDate}
-            onChange={(e: CalendarChangeEvent) => {
-              if (e && e.value !== null) {
-                let selStartDate: Date = e.value as Date;
-                setCalendarStartDate(selStartDate);
-                // setCalendarStartDate calendarStartDate
-                setRefresh([])
-              }
-            }} />
-          <label htmlFor="endDateCalendar" className="self-center mx-3 text-lg text-graydark">End Date</label>
-          <Calendar id="endDateCalendar" showTime hourFormat="12" value={calendarEndDate}
-            onChange={(e: CalendarChangeEvent) => {
-              if (e && e.value !== null) {
-                let endD: Date = e.value as Date;
-                setCalendarEndDate(endD);
-                // setCalendarStartDate calendarStartDate
-                setRefresh([])
-              }
-            }} />
-          <div className=" p-4">
-            <MultiSelect
-              value={selEventGroupList}
-              onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
-              options={eventGroupList}
-              optionLabel="groupName"
-              filter
-              display="chip"
-              placeholder="Filter Events"
-              className="w-full md:w-20rem" />
-          </div>
-        </div>
         <div className="flex w-full flex-row content-center gap-6 rounded-md bg-whiten/50 p-2 mb-4 justify-between">
           <div className="h-max w-max">
             {/* View Selector */}
@@ -282,6 +249,44 @@ function ZooEventHomePage() {
           </Toggle>
 
         </div>
+        <div>
+          <label htmlFor="startDateCalendar" className="self-center mx-3 text-lg text-graydark">Start Date</label>
+          <Calendar id="startDateCalendar" showTime hourFormat="12" value={calendarStartDate}
+            onChange={(e: CalendarChangeEvent) => {
+              if (e && e.value !== null) {
+                let selStartDate: Date = e.value as Date;
+                setCalendarStartDate(selStartDate);
+                // setCalendarStartDate calendarStartDate
+                setRefresh([])
+              }
+            }} />
+          <label htmlFor="endDateCalendar" className="self-center mx-3 text-lg text-graydark">End Date</label>
+          <Calendar id="endDateCalendar" showTime hourFormat="12" value={calendarEndDate}
+            onChange={(e: CalendarChangeEvent) => {
+              if (e && e.value !== null) {
+                let endD: Date = e.value as Date;
+                setCalendarEndDate(endD);
+                // setCalendarStartDate calendarStartDate
+                setRefresh([])
+              }
+            }} />
+          <div className="flex gap-8 p-4 items-center">
+          <div className="whitespace-no-wrap min-w-max text-lg">
+              Event Group Filter
+            </div>
+            <MultiSelect
+            id={"eventGroupFilter"}
+              value={selEventGroupList}
+              onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
+              options={eventGroupList}
+              optionLabel="groupName"
+              filter
+              display="chip"
+              placeholder="Filter Events"
+              className="w-full md:w-20rem" />
+          </div>
+        </div>
+       
         {isDatatableView ? (
           <AllEventsDatatable
             zooEventsList={filteredZooEventsList}
