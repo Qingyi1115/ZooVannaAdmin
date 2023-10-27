@@ -26,6 +26,7 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
 import ZooEvent from "src/models/ZooEvent";
 
+
 function MaintenanceNotificationCard() {
   const apiJson = useApiJson();
   const location = useLocation();
@@ -42,17 +43,12 @@ function MaintenanceNotificationCard() {
   const [eventList, setEventList] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchSpecies = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          "http://localhost:3000/api/species/getallspecies"
-        );
+     apiJson.get(
+        "http://localhost:3000/api/species/getallspecies"
+    ).then(responseJson=>{
         setSpeciesList(responseJson as Species[]);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    fetchSpecies();
+
+    }).catch(err=>console.log(err));
   }, []);
 
   useEffect(() => {

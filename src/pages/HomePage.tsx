@@ -17,7 +17,6 @@ import { useAuthContext } from "../hooks/useAuthContext";
 
 function HomePage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
-  const [facilityNotificationLoading, setFacilityNotificationLoading] = React.useState<boolean>(false);
 
   const { state } = useAuthContext();
   const employee = state.user?.employeeData;
@@ -39,18 +38,12 @@ function HomePage() {
             </Card>
           </div>
         </div>
-        {facilityNotificationLoading ? (
+        {
 
-          <Card className="h-full w-1/2 p-10">
-          <Skeleton className="mb-4 h-[20px] w-2/3 rounded-full" />
-          <Skeleton className="mb-4 h-[20px] w-2/3 rounded-full" />
-          <Skeleton className="mb-4 h-[20px] w-2/3 rounded-full" />
-          </Card>
-        ):(
-          (employee.planningStaff || employee.generalStaff) &&
-          <MaintenanceNotificationCard />
+        (employee.planningStaff || employee.generalStaff) &&
+        <MaintenanceNotificationCard/>
+        }
 
-        )}
       </div>
     </div>
   );
