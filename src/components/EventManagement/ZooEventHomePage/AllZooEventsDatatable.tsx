@@ -255,7 +255,10 @@ function AllZooEventsDatatable(
               header="Is Public?"
               dataType="boolean"
               sortable
-              body={eventIsPublicBodyTemplate}
+              body={(zooEvent) => {
+                return zooEvent.eventIsPublic ? "Yes" : "No"
+              }
+              }
               bodyClassName={"text-center"}
               filter
               filterElement={eventIsPublicFilterTemplate}

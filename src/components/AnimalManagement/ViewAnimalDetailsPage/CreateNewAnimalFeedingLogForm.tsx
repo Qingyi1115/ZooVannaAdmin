@@ -15,10 +15,11 @@ import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import Employee from "../../../models/Employee";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import FeedingPlan from "../../../models/FeedingPlan";
 
-// interface CreateNewAnimalFeedingLogProps {
-//   speciesCode: string;
-// }
+interface CreateNewAnimalFeedingLogProps {
+  curFeedingPlan: FeedingPlan;
+}
 
 function validateAnimalFeedingLogName(props: ValidityState) {
   if (props != undefined) {
@@ -32,7 +33,7 @@ function validateAnimalFeedingLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalFeedingLogForm() {
+function CreateNewAnimalFeedingLogForm(props: CreateNewAnimalFeedingLogProps ) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ function CreateNewAnimalFeedingLogForm() {
   const [dateTime, setDateTime] = useState<Date | null>(null);
   const employee = useAuthContext().state.user?.employeeData;
   const [formError, setFormError] = useState<string | null>(null);
-
+  const { curFeedingPlan } = props;
 
   const [curAnimalList, setCurAnimalList] = useState<any>(null);
   const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);

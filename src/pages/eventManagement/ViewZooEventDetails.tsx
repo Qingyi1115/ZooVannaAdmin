@@ -109,7 +109,7 @@ function ViewZooEventDetails() {
 
   const { zooEventId } = useParams<{ zooEventId: string }>();
   const { tab } = useParams<{ tab: string }>();
-  
+
   const [curZooEvent, setCurZooEvent] =
     useState<ZooEvent | null>(null);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
@@ -124,15 +124,22 @@ function ViewZooEventDetails() {
   const [involvedItemGlobalFiler, setInvolvedItemGlobalFilter] =
     useState<string>("");
 
+  function updateZooEventFromRes(zooEvent: ZooEvent) {
+    setCurZooEvent(zooEvent);
+    setInvolvedAnimalList(zooEvent.animals);
+    setEventStartDateTime(new Date(zooEvent.eventStartDateTime));
+    setEventNotificationDate(new Date(zooEvent.eventNotificationDate));
+
+  }
+
   useEffect(() => {
     const fetchZooEvent = async () => {
       try {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/zooEvent/getZooEventById/${zooEventId}`
         );
-        console.log("a", responseJson)
-        setCurZooEvent(responseJson["zooEvent"] as ZooEvent);
-        setInvolvedAnimalList(responseJson["zooEvent"].animals);
+        console.log("responseJson", responseJson)
+        updateZooEventFromRes(responseJson["zooEvent"]);
       } catch (error: any) {
         console.log(error);
       }
@@ -380,55 +387,56 @@ function ViewZooEventDetails() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     console.log(curZooEvent);
     e.preventDefault();
-    const zooEventDetails = {
-      zooEventId: curZooEvent?.zooEventId,
-      eventIsPublic: true,
-      eventNotificationDate: eventNotificationDate?.getTime(),
-      eventEndDateTime: eventEndDateTime?.getTime(),
-      imageUrl
-
-    };
     console.log(updateFuture)
     if (updateFuture) {
       const data = {
-        eventName:curZooEvent?.eventName, 
-        eventDescription:curZooEvent?.eventDescription,
-        eventIsPublic:curZooEvent?.eventIsPublic,
-        eventType:curZooEvent?.eventType,
-        eventStartDateTime:eventStartDateTime?.getTime(),
-        requiredNumberOfKeeper:curZooEvent?.requiredNumberOfKeeper,
-    
-        eventDurationHrs:curZooEvent?.eventDurationHrs,
-        eventTiming:curZooEvent?.eventTiming,
-        
-        eventNotificationDate:eventNotificationDate?.getTime(),
-        eventEndDateTime:curZooEvent?.eventEndDateTime,
+        eventName: curZooEvent?.eventName,
+        eventDescription: curZooEvent?.eventDescription,
+        eventIsPublic: true,
+        eventType: curZooEvent?.eventType,
+        eventStartDateTime: eventStartDateTime?.getTime(),
+        requiredNumberOfKeeper: curZooEvent?.requiredNumberOfKeeper,
+
+        eventDurationHrs: curZooEvent?.eventDurationHrs,
+        eventTiming: curZooEvent?.eventTiming,
+
+        eventNotificationDate: eventNotificationDate?.getTime(),
+        eventEndDateTime: curZooEvent?.eventEndDateTime?.getTime(),
       };
       console.log(data);
-        apiJson.put(
-          `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
-          data
-        ).then(res => {
-          // success
-          toastShadcn({
-            description: "Successfully updated event",
-          });
-          setMakePublicDialog(false);
-        }).catch(error => {
-          // got error
-          toastShadcn({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description:
-              "An error has occurred while updating event: \n" +
-              error.message,
-          });
+      apiJson.put(
+        `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
+        data
+      ).then(res => {
+        updateZooEventFromRes(res["zooEvent"]);
+        // success
+        toastShadcn({
+          description: "Successfully updated event",
         });
+        setMakePublicDialog(false);
+      }).catch(error => {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while updating event: \n" +
+            error.message,
+        });
+      });
     } else {
+      const zooEventDetails = {
+        zooEventId: curZooEvent?.zooEventId,
+        eventIsPublic: false,
+        eventNotificationDate: eventNotificationDate?.getTime(),
+        eventEndDateTime: eventEndDateTime?.getTime(),
+        imageUrl
+  
+      };
       console.log(zooEventDetails);
       apiJson.put(
         `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
-        {zooEventDetails:zooEventDetails}
+        { zooEventDetails: zooEventDetails }
       ).then(res => {
         // success
         toastShadcn({
@@ -635,11 +643,11 @@ function ViewZooEventDetails() {
           <div>
             <div className="mb-10 ">
               <Tabs
-                defaultValue={tab ? `${tab}` : "facilityDetails"}
+                defaultValue={tab ? `${tab}` : "details"}
                 className="w-full"
               >
                 <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-                  <TabsTrigger value="details">Details</TabsTrigger>
+                  <TabsTrigger value="details">Basic Information</TabsTrigger>
 
                   <TabsTrigger value="involvedAnimals">Involved Animals</TabsTrigger>
                   {curZooEvent.animalActivity != null && <TabsTrigger value="involvedItems">Involved Items</TabsTrigger>}
@@ -647,7 +655,6 @@ function ViewZooEventDetails() {
                 </TabsList>
 
                 <TabsContent value="details">
-                  <div className="my-4 text-xl font-medium">Basic Information:</div>
                   <div className="my-4 flex justify-start gap-6">
                     <Button
                       onClick={() => {
@@ -660,18 +667,23 @@ function ViewZooEventDetails() {
                       }}
                       className="my-3">Edit Basic Information
                     </Button>
-                    {!curZooEvent.eventIsPublic ?
+
+                    {curZooEvent.animalActivity ?
                       <Button
+                        onClick={() => {
+                          navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
+                          navigate(`/animal/viewanimalactivitydetails/${curZooEvent.animalActivity?.animalActivityId}`);
+                        }}
+                        className="my-3">
+                        View Animal Activity
+                      </Button> :
+                      (!curZooEvent.eventIsPublic && < Button
                         onClick={() => {
                           showMakePublicDialog();
                         }}
-                        className="my-3">Make Event Public
-                      </Button> :
-                      <Button
-                        disabled
-                        className="invisible my-3"
-                      >Make Event Public
-                      </Button>
+                        className="my-3">
+                        Make Event Public
+                      </Button>)
                     }
                   </div>
 
@@ -697,24 +709,51 @@ function ViewZooEventDetails() {
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Start Date
+                          {curZooEvent.eventIsPublic? "Start Date Time" : "Start Date"}
                         </TableCell>
                         <TableCell>
-                          {new Date(curZooEvent.eventStartDateTime).toDateString()}
+                          {curZooEvent.eventIsPublic? new Date(curZooEvent.eventStartDateTime).toLocaleString() 
+                          : new Date(curZooEvent.eventStartDateTime).toLocaleDateString()}
                         </TableCell>
                       </TableRow>
+
+                    { curZooEvent.eventIsPublic
+                       &&(
+                        
+                      <TableRow>
+                      <TableCell className="w-1/3 font-bold" colSpan={2}>
+                        End Date Time
+                      </TableCell>
+                      <TableCell>
+                          {curZooEvent.eventIsPublic? new Date(curZooEvent.eventEndDateTime || "").toLocaleString() 
+                          : new Date(curZooEvent.eventEndDateTime || "").toLocaleDateString()}
+                      </TableCell>
+                    </TableRow>
+                       )
+                    }
+
+                    {  !curZooEvent.eventIsPublic && (
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Session Timing
                         </TableCell>
                         <TableCell>{curZooEvent.eventTiming}</TableCell>
                       </TableRow>
+                      )}
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Duration (Hours)
                         </TableCell>
                         <TableCell>{curZooEvent.eventDurationHrs}</TableCell>
                       </TableRow>
+                      {curZooEvent.eventNotificationDate && <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Notification Date
+                        </TableCell>
+                        <TableCell>
+                          {new Date(curZooEvent.eventNotificationDate).toDateString()}
+                        </TableCell>
+                      </TableRow>}
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Description
@@ -817,7 +856,7 @@ function ViewZooEventDetails() {
                           <Form.ValidityState>{validateEndDate}</Form.ValidityState>
                         </Form.Field> */}
                         {/* Notification Date */}
-                        {/* <Form.Field
+                        <Form.Field
                           name="eventNotificationDate"
                           id="eventNotificationDateField"
                           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
@@ -849,7 +888,7 @@ function ViewZooEventDetails() {
                             }}
                           />
                           <Form.ValidityState>{validateDate}</Form.ValidityState>
-                        </Form.Field> */}
+                        </Form.Field>
                         {/* Update Future*/}
                         <Form.Field
                           name="updateFuture"
@@ -864,14 +903,10 @@ function ViewZooEventDetails() {
                             required={true}
                             onChange={() => null}
                           ></Form.Control>
-                          {/* <Checkbox
-                        onChange={(e: any) => setChecked(e.checked)}
-                        checked={checked}
-                      />} */}
                           <Checkbox.Root
                             className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow outline-none focus:shadow-[0_0_0_2px_gray]"
                             id="c1"
-                            onCheckedChange={(event:boolean) => { setUpdateFuture(event) }}
+                            onCheckedChange={(event: boolean) => { setUpdateFuture(event) }}
                           >
                             <Checkbox.Indicator>
                               <CheckIcon />
@@ -900,9 +935,6 @@ function ViewZooEventDetails() {
 
                 <TabsContent value="involvedAnimals">
                   <div className="w-full">
-                    <div className="my-4mb-2 text-xl font-medium">
-                      Involved Animal(s):
-                    </div>
                     <DataTable
                       value={involvedAnimalList}
                       scrollable
@@ -1012,9 +1044,6 @@ function ViewZooEventDetails() {
 
                 {curZooEvent.animalActivity != null && <TabsContent value="involvedItems">
                   <div>
-                    <div className="my-4 mb-2 text-xl font-medium">
-                      Item(s) to be used:
-                    </div>
                     <DataTable
                       value={involvedItemList}
                       scrollable
@@ -1072,15 +1101,16 @@ function ViewZooEventDetails() {
                 </TabsContent>}
 
                 <TabsContent value="assignedEmployees">
-                  <AllEventEmployeesDatatable />
+                  <AllEventEmployeesDatatable zooEventId={zooEventId as any} />
                 </TabsContent>
               </Tabs>
 
             </div>
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }
 

@@ -34,6 +34,8 @@ function AnimalFeedingPlanDetailsPage() {
   );
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
+  const { tab } = useParams<{ tab: string }>();
+
   useEffect(() => {
     const fetchFeedingPlan = async () => {
       try {

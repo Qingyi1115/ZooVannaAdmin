@@ -136,7 +136,10 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           </span>
         </div>
         {/* Activity Type */}
-        <FormFieldSelect
+        <div className="mb-1 block font-medium">
+          Activity Type<br /> <b>{activityType}</b>
+        </div>
+        {/* <FormFieldSelect
           formFieldName="activityType"
           label="Activity Type"
           required={true}
@@ -148,7 +151,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           value={activityType}
           setValue={setActivityType}
           validateFunction={validateAnimalActivityLogName}
-        />
+        /> */}
 
         {/* DateTime */}
         <div className="card justify-content-center block ">
