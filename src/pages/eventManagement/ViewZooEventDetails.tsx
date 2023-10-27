@@ -672,6 +672,20 @@ function ViewZooEventDetails() {
                       >Make Event Public
                       </Button>
                     }
+                    {curZooEvent.animalActivity ?
+                      <Button
+                        onClick={() => {
+                          navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
+                          navigate(`/animal/viewanimalactivitydetails/${curZooEvent.animalActivity?.animalActivityId}`);
+                        }}
+                        className="my-3">View Animal Activity
+                      </Button> :
+                      <Button
+                        disabled
+                        className="invisible my-3"
+                      >View Animal Activity
+                      </Button>
+                    }
                   </div>
 
                   <Table>
