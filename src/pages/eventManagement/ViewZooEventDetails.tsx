@@ -124,14 +124,22 @@ function ViewZooEventDetails() {
   const [involvedItemGlobalFiler, setInvolvedItemGlobalFilter] =
     useState<string>("");
 
+  function updateZooEventFromRes(zooEvent:ZooEvent){
+    setCurZooEvent(zooEvent);
+    setInvolvedAnimalList(zooEvent.animals);
+    setEventStartDateTime(new Date(zooEvent.eventStartDateTime));
+    setEventNotificationDate(new Date(zooEvent.eventNotificationDate));
+
+  }
+
   useEffect(() => {
     const fetchZooEvent = async () => {
       try {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/zooEvent/getZooEventById/${zooEventId}`
         );
-        setCurZooEvent(responseJson["zooEvent"] as ZooEvent);
-        setInvolvedAnimalList(responseJson["zooEvent"].animals);
+        console.log("responseJson",responseJson)
+        updateZooEventFromRes(responseJson["zooEvent"]);
       } catch (error: any) {
         console.log(error);
       }
@@ -392,7 +400,7 @@ function ViewZooEventDetails() {
       const data = {
         eventName: curZooEvent?.eventName,
         eventDescription: curZooEvent?.eventDescription,
-        eventIsPublic: curZooEvent?.eventIsPublic,
+        eventIsPublic: true,
         eventType: curZooEvent?.eventType,
         eventStartDateTime: eventStartDateTime?.getTime(),
         requiredNumberOfKeeper: curZooEvent?.requiredNumberOfKeeper,
@@ -401,13 +409,14 @@ function ViewZooEventDetails() {
         eventTiming: curZooEvent?.eventTiming,
 
         eventNotificationDate: eventNotificationDate?.getTime(),
-        eventEndDateTime: curZooEvent?.eventEndDateTime,
+        eventEndDateTime: curZooEvent?.eventEndDateTime?.getTime(),
       };
       console.log(data);
       apiJson.put(
         `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
         data
       ).then(res => {
+        updateZooEventFromRes(res["zooEvent"]);
         // success
         toastShadcn({
           description: "Successfully updated event",

@@ -27,7 +27,7 @@ interface ZooEvent {
   planningStaff?: PlanningStaff;
   keepers?: Keeper[]; // work
   // enclosure?: Enclosure;
-  animal?: Animal;
+  animals?: Animal[];
   inHouse?: InHouse;
   // animalClinic?: AnimalClinic;
   animalActivity?: AnimalActivity;
