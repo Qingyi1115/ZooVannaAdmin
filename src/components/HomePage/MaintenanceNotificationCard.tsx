@@ -171,10 +171,9 @@ function MaintenanceNotificationCard() {
     <Card className="h-max w-max">
       {" "}
       <CardHeader>
-        <CardTitle>Abnormal Weight Warning!</CardTitle>
+        <CardTitle>Assets and Facility Notification</CardTitle>
         <CardDescription className="w-[25vw]">
-          The following animals have abnormal weights according to latest
-          records
+          Maintenance suggestions and Zoo Events
         </CardDescription>
       </CardHeader>
       <CardContent>
