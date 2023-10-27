@@ -12,9 +12,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import FatAnimalsCard from "../components/HomePage/FatAnimalsCard";
+import MaintenanceNotificationCard from "../components/HomePage/MaintenanceNotificationCard";
 
 function HomePage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [facilityNotificationLoading, setFacilityNotificationLoading] = React.useState<boolean>(false);
 
   return (
     <div className="h-screen w-full p-10">
@@ -33,11 +35,17 @@ function HomePage() {
             </Card>
           </div>
         </div>
-        <Card className="h-full w-1/2 p-10">
+        {facilityNotificationLoading ? (
+
+          <Card className="h-full w-1/2 p-10">
           <Skeleton className="mb-4 h-[20px] w-2/3 rounded-full" />
           <Skeleton className="mb-4 h-[20px] w-2/3 rounded-full" />
           <Skeleton className="mb-4 h-[20px] w-2/3 rounded-full" />
-        </Card>
+          </Card>
+        ):(
+          <MaintenanceNotificationCard />
+
+        )}
       </div>
     </div>
   );
