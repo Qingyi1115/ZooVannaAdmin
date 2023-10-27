@@ -61,13 +61,59 @@
   border: 1px solid #84985a;
   transition: background-color 0.3s ease;
 }
+
+.fc-event.observation,
+.fc-v-event.observation {
+  background-color: #0f3360;
+  border: 1px solid #0f3360;
+}
+
+.fc-event.training,
+.fc-v-event.training {
+  background-color: #622323;
+  border: 1px solid #622323;
+}
+
+.fc-event.enrichment,
+.fc-v-event.enrichment {
+  background-color: #976405;
+  border: 1px solid #976405;
+}
+
 /* 
 .fc-event:hover,
 .fc-v-event:hover {
   background-color: rgba(132, 152, 90, 0.9);
 } */
+/* below "background" changes hover color for full calendar event pill */
 .fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event:hover {
   background: #84985a95;
+  color: #24341c;
+  cursor: pointer;
+}
+/* Hover state styles for pills with the "observation" class */
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.observation:hover {
+  background: #0f336060; /* Adjust the color and opacity as needed */
+  color: #24341c;
+  cursor: pointer;
+}
+
+/* Hover state styles for pills with the "training" class */
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.training:hover {
+  background: #62232360; /* Adjust the color and opacity as needed */
+  color: #24341c;
+  cursor: pointer;
+}
+
+/* Hover state styles for pills with the "enrichment" class */
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.enrichment:hover {
+  background: #97640560; /* Adjust the color and opacity as needed */
   color: #24341c;
   cursor: pointer;
 }
