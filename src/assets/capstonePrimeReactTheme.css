@@ -3873,6 +3873,11 @@
 .p-column-filter-overlay-menu .p-column-filter-buttonbar {
   padding: 1.25rem;
 }
+.p-column-filter-buttonbar button[aria-label="Apply"] {
+  background-color: #84985a; /* Your desired background color */
+  color: #fff; /* Your desired text color */
+  /* Add more styles as needed */
+}
 .fc.fc-unthemed .fc-view-container th {
   background: #ebebeb;
   border: 1px solid #e8f0e2;
