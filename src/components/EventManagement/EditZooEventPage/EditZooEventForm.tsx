@@ -524,7 +524,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             onChange={() => null}
           ></Form.Control>
           <Checkbox.Root
-            className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow outline-none focus:shadow-[0_0_0_2px_gray]"
+            className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow outline-none focus:shadow-[0_0_0_2px_black]"
             id="c1"
             onCheckedChange={(event: boolean) => { setUpdateFuture(event) }}
           >

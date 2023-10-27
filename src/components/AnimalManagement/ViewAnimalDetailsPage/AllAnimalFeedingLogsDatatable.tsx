@@ -23,6 +23,7 @@ import { Rating } from "../../../enums/Rating";
 import Employee from "../../../models/Employee";
 import { Column } from "primereact/column";
 import Keeper from "../../../models/Keeper";
+import FeedingPlan from "../../../models/FeedingPlan";
 
 interface AllAnimalFeedingLogsDatatableProps {
   speciesCode: string;
@@ -107,13 +108,28 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
     employee: emptyEmployee
   }
 
+  let emptyFeedingPlan: FeedingPlan = {
+    feedingPlanId: -1,
+    feedingPlanDesc: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    animals: [],
+    feedingPlanSessionDetails: [],
+    title: "",
+  };
+
   let emptyAnimalFeedingLog: AnimalFeedingLog = {
     animalFeedingLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    details: "",
+    amountOffered: "",
+    amountConsumed: "",
+    amountLeftovers: "",
+    presentationMethod: "",
+    extraRemarks: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
+    feedingPlan: emptyFeedingPlan
   };
 
 
@@ -292,45 +308,6 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
     </div>
   );
 
-  const listItem = (animalFeedingLog: AnimalFeedingLog) => {
-    return (
-      <div>
-        <Card className="my-4 relative"
-          title={animalFeedingLog.animalFeedingLogId}
-          subTitle={animalFeedingLog.dateTime ?
-            "Date created: " + new Date(animalFeedingLog.dateTime).toLocaleString() : ""}>
-          {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
-          <Button className="absolute top-5 right-5"
-            variant={"destructive"}
-            onClick={() => confirmDeleteanimalFeedingLog(animalFeedingLog)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
-          )} */}
-          <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
-            <div>
-              <div className="text-xl font-bold text-900">Duration In Minutes</div>
-              <p>{animalFeedingLog.durationInMinutes}</p>
-            </div>
-            <Separator orientation="vertical" />
-            <div>
-              <div className="text-xl font-bold text-900">Details</div>
-              <p>{animalFeedingLog.details}</p>
-            </div>
-          </div>
-
-        </Card>
-      </div>
-    )
-  }
-
-  const itemTemplate = (animalFeedingLog: AnimalFeedingLog) => {
-    if (!animalFeedingLog) {
-      return;
-    }
-    return listItem(animalFeedingLog);
-  };
-
   return (
     <div>
       <div>
@@ -402,8 +379,32 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="details"
-              header="Details"
+              field="amountOffered"
+              header="Amount Offered"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="amountConsumed"
+              header="Amount Consumed"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="amountLeftovers"
+              header="Amount Leftovers"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="presentationMethod"
+              header="Presentation Method"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="extraRemarks"
+              header="Extra Remarks"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>

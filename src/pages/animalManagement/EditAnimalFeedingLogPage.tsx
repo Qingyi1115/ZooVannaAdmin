@@ -10,6 +10,7 @@ import AnimalFeedingLog from "../../models/AnimalFeedingLog";
 import Employee from "../../models/Employee";
 import Species from "../../models/Species";
 import Keeper from "../../models/Keeper";
+import FeedingPlan from "../../models/FeedingPlan";
 
 function EditAnimalFeedingLogPage() {
   const apiJson = useApiJson();
@@ -90,13 +91,28 @@ function EditAnimalFeedingLogPage() {
     employee: emptyEmployee
   }
 
+  let emptyFeedingPlan: FeedingPlan = {
+    feedingPlanId: -1,
+    feedingPlanDesc: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    animals: [],
+    feedingPlanSessionDetails: [],
+    title: "",
+  };
+
   let emptyAnimalFeedingLog: AnimalFeedingLog = {
     animalFeedingLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    details: "",
+    amountOffered: "",
+    amountConsumed: "",
+    amountLeftovers: "",
+    presentationMethod: "",
+    extraRemarks: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
+    feedingPlan: emptyFeedingPlan
   };
 
   const [curAnimalFeedingLog, setCurAnimalFeedingLog] = useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
