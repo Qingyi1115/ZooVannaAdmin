@@ -229,18 +229,18 @@ function AllAnimalActivitiesFullCalendar(
       <div className="flex w-full justify-center">
         <div className="w-full">
           <div className="flex justify-between">
-            <div className="flex gap-4">
+            <div className="mb-1 flex items-center gap-4 rounded border border-strokedark/20 px-4 text-sm">
               <span>Legend: </span>
-              <div className="flex gap-2 text-[#0f3360]">
-                <div className="h-6 w-6 rounded bg-[#0f3360]" />
+              <div className="flex items-center gap-2 text-[#0f3360]">
+                <div className="h-5 w-5 rounded bg-[#0f3360]" />
                 <span className="font-bold">Observation</span>
               </div>
-              <div className="flex gap-2 text-[#6c0063]">
-                <div className="h-6 w-6 rounded bg-[#6c0063]" />
+              <div className="flex items-center gap-2 text-[#6c0063]">
+                <div className="h-5 w-5 rounded bg-[#6c0063]" />
                 <span className="font-bold">Training</span>
               </div>
-              <div className="flex gap-2 text-[#976405]">
-                <div className="h-6 w-6 rounded bg-[#976405]" />
+              <div className="flex items-center gap-2 text-[#976405]">
+                <div className="h-5 w-5 rounded bg-[#976405]" />
                 <span className="font-bold">Enrichment</span>
               </div>
             </div>

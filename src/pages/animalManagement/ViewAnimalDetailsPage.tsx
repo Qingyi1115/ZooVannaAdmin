@@ -104,11 +104,9 @@ function ViewAnimalDetailsPage() {
               <TabsTrigger value="weight">Weight</TabsTrigger>
               <TabsTrigger value="feeding">Feeding</TabsTrigger>
               <TabsTrigger value="trainingenrichmentactivity">
-                Training and Enrichment Activity
+                Activities
               </TabsTrigger>
-              <TabsTrigger value="behaviour">
-                Observation Logs
-              </TabsTrigger>
+              <TabsTrigger value="behaviour">Observation Logs</TabsTrigger>
               <TabsTrigger value="activitylogs">Activity Logs</TabsTrigger>
               <TabsTrigger value="feedinglogs">Feeding Logs</TabsTrigger>
               {/* <TabsTrigger value="medical">Medical</TabsTrigger> */}
@@ -141,7 +139,8 @@ function ViewAnimalDetailsPage() {
                 <AllAnimalObservationLogsDatatable
                   speciesCode={curAnimal.species.speciesCode}
                   animalCode={curAnimal.animalCode}
-                  animalActivityId={-1} />
+                  animalActivityId={-1}
+                />
               </div>
             </TabsContent>
             <TabsContent value="feedinglogs">
@@ -157,7 +156,8 @@ function ViewAnimalDetailsPage() {
                 <AllAnimalActivityLogsDatatable
                   speciesCode={curAnimal.species.speciesCode}
                   animalCode={curAnimal.animalCode}
-                  animalActivityId={-1} />
+                  animalActivityId={-1}
+                />
               </div>
             </TabsContent>
             {/* <TabsContent value="medical">
