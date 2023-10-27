@@ -127,8 +127,8 @@ function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) 
       </div>
       {/* Activity Type */}
       <div className="mb-1 block font-medium">
-          Activity Type<br /> <b>{activityType}</b>
-        </div>
+        Activity Type<br /> <b>{activityType}</b>
+      </div>
       {/* <FormFieldSelect
         formFieldName="activityType"
         label="Activity Type"
@@ -215,18 +215,31 @@ function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) 
         setValue={setAnimalReaction}
         validateFunction={validateAnimalActivityLogName}
       />
+
       {/* Details */}
-      <FormFieldInput
-        type="text"
-        formFieldName="details"
-        label="Details"
-        required={true}
-        placeholder=""
-        value={details}
-        setValue={setDetails}
-        validateFunction={validateAnimalActivityLogName}
-        pattern={undefined}
-      />
+      <Form.Field
+        name="details"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">
+          Details
+        </Form.Label>
+        <Form.Control
+          asChild
+          value={details}
+          required={true}
+          onChange={(e) => setDetails(e.target.value)}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        >
+          <textarea
+            rows={6}
+            placeholder="Activity details..."
+          />
+        </Form.Control>
+        <Form.ValidityState>
+          {validateAnimalActivityLogName}
+        </Form.ValidityState>
+      </Form.Field>
 
       <Form.Submit asChild>
         <Button

@@ -118,13 +118,28 @@ function AllFeedingPlanFeedingLogsDatatable(
     employee: emptyEmployee,
   };
 
+  let emptyFeedingPlan: FeedingPlan = {
+    feedingPlanId: -1,
+    feedingPlanDesc: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    animals: [],
+    feedingPlanSessionDetails: [],
+    title: "",
+  };
+
   let emptyAnimalFeedingLog: AnimalFeedingLog = {
     animalFeedingLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    details: "",
+    amountOffered: "",
+    amountConsumed: "",
+    amountLeftovers: "",
+    presentationMethod: "",
+    extraRemarks: "",
     animals: [],
     keeper: emptyKeeper,
+    feedingPlan: emptyFeedingPlan
   };
 
   const [animalFeedingLogList, setAnimalFeedingLogList] = useState<
@@ -145,6 +160,7 @@ function AllFeedingPlanFeedingLogsDatatable(
         `http://localhost:3000/api/animal/getAnimalFeedingLogByFeedingPlanId/${feedingPlanId}`
       )
       .then((res) => {
+        console.log(res)
         setAnimalFeedingLogList(res.animalFeedingLogs as AnimalFeedingLog[]);
       })
       .catch((e) => console.log(e));
@@ -178,7 +194,7 @@ function AllFeedingPlanFeedingLogsDatatable(
         setDeleteAnimalFeedingLogDialog(false);
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteAnimalFeedingLogById/" +
-            selectedAnimalFeedingLog.animalFeedingLogId
+          selectedAnimalFeedingLog.animalFeedingLogId
         );
 
         toastShadcn({
@@ -314,51 +330,6 @@ function AllFeedingPlanFeedingLogsDatatable(
     </div>
   );
 
-  const listItem = (animalFeedingLog: AnimalFeedingLog) => {
-    return (
-      <div>
-        <Card
-          className="relative my-4"
-          title={animalFeedingLog.animalFeedingLogId}
-          subTitle={
-            animalFeedingLog.dateTime
-              ? "Date created: " +
-                new Date(animalFeedingLog.dateTime).toLocaleString()
-              : ""
-          }
-        >
-          {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
-          <Button className="absolute top-5 right-5"
-            variant={"destructive"}
-            onClick={() => confirmDeleteanimalFeedingLog(animalFeedingLog)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
-          )} */}
-          <div className="justify-left flex flex-col gap-6 lg:flex-row lg:gap-12">
-            <div>
-              <div className="text-900 text-xl font-bold">
-                Duration In Minutes
-              </div>
-              <p>{animalFeedingLog.durationInMinutes}</p>
-            </div>
-            <Separator orientation="vertical" />
-            <div>
-              <div className="text-900 text-xl font-bold">Details</div>
-              <p>{animalFeedingLog.details}</p>
-            </div>
-          </div>
-        </Card>
-      </div>
-    );
-  };
-
-  const itemTemplate = (animalFeedingLog: AnimalFeedingLog) => {
-    if (!animalFeedingLog) {
-      return;
-    }
-    return listItem(animalFeedingLog);
-  };
 
   return (
     <div>
@@ -368,8 +339,8 @@ function AllFeedingPlanFeedingLogsDatatable(
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-              employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS" ? (
+              {feedingPlan == null && employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS" ? (
                 <Button
                   className="mr-2"
                   onClick={() => {
@@ -439,8 +410,32 @@ function AllFeedingPlanFeedingLogsDatatable(
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="details"
-              header="Details"
+              field="amountOffered"
+              header="Amount Offered"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="amountConsumed"
+              header="Amount Consumed"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="amountLeftovers"
+              header="Amount Leftovers"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="presentationMethod"
+              header="Presentation Method"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="extraRemarks"
+              header="Extra Remarks"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>

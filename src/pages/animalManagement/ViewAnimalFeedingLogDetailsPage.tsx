@@ -12,6 +12,7 @@ import Species from "../../models/Species";
 import { Rating } from "../../enums/Rating";
 import ViewAnimalFeedingLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalFeedingLogDetails";
 import Keeper from "../../models/Keeper";
+import FeedingPlan from "../../models/FeedingPlan";
 
 
 
@@ -98,13 +99,28 @@ function ViewAnimalFeedingLogDetailsPage() {
     employee: emptyEmployee
   }
 
+  let emptyFeedingPlan: FeedingPlan = {
+    feedingPlanId: -1,
+    feedingPlanDesc: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    animals: [],
+    feedingPlanSessionDetails: [],
+    title: "",
+  };
+
   let emptyAnimalFeedingLog: AnimalFeedingLog = {
     animalFeedingLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    details: "",
+    amountOffered: "",
+    amountConsumed: "",
+    amountLeftovers: "",
+    presentationMethod: "",
+    extraRemarks: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
+    feedingPlan: emptyFeedingPlan
   };
 
   const [curAnimalFeedingLog, setCurAnimalFeedingLog] = useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
@@ -114,6 +130,7 @@ function ViewAnimalFeedingLogDetailsPage() {
     apiJson.get(
       `http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`)
       .then(res => {
+        console.log("res", res);
         setCurAnimalFeedingLog(res.animalFeedingLog as AnimalFeedingLog);
       })
       .catch(e => console.log(e));
@@ -128,7 +145,7 @@ function ViewAnimalFeedingLogDetailsPage() {
           <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
-          <span className="self-center text-lg text-graydark">
+          <span className="self-center text-title-xl font-bold">
             View Animal Feeding Log Details
           </span>
           <Button disabled className="invisible">

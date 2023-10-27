@@ -42,7 +42,8 @@ function ZooEventHomePage() {
   const [calendarEndDate, setCalendarEndDate] = useState<Date>(new Date(Date.now() + YEAR_IN_MILLISECONDS));
 
   const [eventGroupList, setEventGroupList] = useState<any>([]);
-  const [selEventGroupList, setSelEventGroupList] = useState<eventGroup[]>([]);
+  const [selEventGroupList, setSelEventGroupList] = useState<any[]>([]);
+  // const [selEventGroupList, setSelEventGroupList] = useState<eventGroup[]>([]);
 
   const [refresh, setRefresh] = useState<any>(0);
   const [zooEventsList, setZooEventsList] = useState<
@@ -77,61 +78,68 @@ function ZooEventHomePage() {
       const allEventGroup: any[] = [];
 
 
-      responseJson["zooEvents"].forEach((ze: ZooEvent) => {
-
-        if (ze.animalActivity) {
-          if (!allEventGroup.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity")) {
-            if (!(employee.superAdmin ||
-              employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-              employee.planningStaff?.plannerType == "SALES")
-              && employee.keeper) {
-              if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
-                allEventGroup.push({
-                  groupId: ze.animalActivity.animalActivityId,
-                  groupType: "animalActivity",
-                  groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
-                });
-              }
-            } else {
-              allEventGroup.push({
-                groupId: ze.animalActivity.animalActivityId,
-                groupType: "animalActivity",
-                groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
-              });
-            }
-          }
-        } else if (ze.feedingPlanSessionDetail) {
-          if (!allEventGroup.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail")) {
-            if (!(employee.superAdmin ||
-              employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-              employee.planningStaff?.plannerType == "SALES")
-              && employee.keeper) {
-              if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
-                allEventGroup.push({
-                  groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
-                  groupType: "feedingPlanSessionDetail",
-                  groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
-                    " " + ze.feedingPlanSessionDetail.eventTimingType
-                })
-              }
-            } else {
-              allEventGroup.push({
-                groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
-                groupType: "feedingPlanSessionDetail",
-                groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
-                  " " + ze.feedingPlanSessionDetail.eventTimingType
-              })
-            }
-          }
-        } else if (ze) {
-
-        }
-      });
-      setEventGroupList(allEventGroup);
-      setSelEventGroupList(allEventGroup);
       const a = responseJson["zooEvents"].map(ze=>{
         return {...ze, eventType:beautify(ze.eventType)}
       });
+
+      a.forEach((ze: ZooEvent) => {
+
+      //   if (ze.animalActivity) {
+      //     if (!allEventGroup.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity")) {
+      //       if (!(employee.superAdmin ||
+      //         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+      //         employee.planningStaff?.plannerType == "SALES")
+      //         && employee.keeper) {
+      //         if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
+      //           allEventGroup.push({
+      //             groupId: ze.animalActivity.animalActivityId,
+      //             groupType: "animalActivity",
+      //             groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
+      //           });
+      //         }
+      //       } else {
+      //         allEventGroup.push({
+      //           groupId: ze.animalActivity.animalActivityId,
+      //           groupType: "animalActivity",
+      //           groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
+      //         });
+      //       }
+      //     }
+      //   } else if (ze.feedingPlanSessionDetail) {
+      //     if (!allEventGroup.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail")) {
+      //       if (!(employee.superAdmin ||
+      //         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+      //         employee.planningStaff?.plannerType == "SALES")
+      //         && employee.keeper) {
+      //         if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
+      //           allEventGroup.push({
+      //             groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
+      //             groupType: "feedingPlanSessionDetail",
+      //             groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
+      //               " " + ze.feedingPlanSessionDetail.eventTimingType
+      //           })
+      //         }
+      //       } else {
+      //         allEventGroup.push({
+      //           groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
+      //           groupType: "feedingPlanSessionDetail",
+      //           groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
+      //             " " + ze.feedingPlanSessionDetail.eventTimingType
+      //         })
+      //       }
+      //     }
+      //   } else if (ze) {
+
+      //   }
+
+
+        if (!allEventGroup.find(et=> et == ze.eventType)){
+          allEventGroup.push(ze.eventType);
+        }
+
+      });
+      setEventGroupList(allEventGroup);
+      setSelEventGroupList(allEventGroup);
       setFilteredZooEventsList(a);
       return setZooEventsList(a);
 
@@ -143,13 +151,15 @@ function ZooEventHomePage() {
   useEffect(() => {
     setFilteredZooEventsList(
       zooEventsList.filter(ze => {
-        if (ze.animalActivity) {
-          return selEventGroupList.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity");
-        } else if (ze.feedingPlanSessionDetail) {
-          return selEventGroupList.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail");
-        } else if (ze) {
+        // if (ze.animalActivity) {
+        //   return selEventGroupList.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity");
+        // } else if (ze.feedingPlanSessionDetail) {
+        //   return selEventGroupList.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail");
+        // } else if (ze) {
 
-        }
+        // }
+
+        return selEventGroupList.find(et=> ze.eventType == et); 
       })
     )
   }, [selEventGroupList]);
@@ -167,13 +177,13 @@ function ZooEventHomePage() {
           }
         },
 
-        // {
-        //   label: 'Feeding Plan',
-        //   command: () => {
-        //     navigate(`/zooevent/viewallzooevents/`, { replace: true })
-        //     navigate(`/animal/createfeedingplan`)
-        //   }
-        // }
+        {
+          label: 'Feeding Plan',
+          command: () => {
+            navigate(`/zooevent/viewallzooevents/`, { replace: true })
+            navigate(`/animal/viewallanimals/`)
+          }
+        }
       ]
     },
     // {
@@ -279,14 +289,14 @@ function ZooEventHomePage() {
             }} />
           <div className="flex gap-8 p-4 items-center">
           <div className="whitespace-no-wrap min-w-max text-lg">
-              Event Group Filter
+              Event Type
             </div>
             <MultiSelect
             id={"eventGroupFilter"}
               value={selEventGroupList}
               onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
               options={eventGroupList}
-              optionLabel="groupName"
+              optionLabel=""
               filter
               display="chip"
               placeholder="Filter Events"

@@ -32,10 +32,12 @@ import {
   AnimalGrowthStage,
   AnimalSex,
   EventTimingType,
+  EventType,
 } from "../../../enums/Enumurated";
 import { useNavigate } from "react-router-dom";
 import ZooEvent from "../../../models/ZooEvent";
-import { FilterMatchMode } from "primereact/api";
+import { FilterMatchMode, FilterOperator } from "primereact/api";
+import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
 let emptyZooEvent: ZooEvent = {
   zooEventId: 0,
@@ -47,7 +49,8 @@ let emptyZooEvent: ZooEvent = {
   eventTiming: null,
   eventNotificationDate: new Date(),
   eventEndDateTime: null,
-  imageUrl: ""
+  imageUrl: "",
+  requiredNumberOfKeeper: 0
 }
 
 interface AllZooEventsDatatableProps {
@@ -57,6 +60,7 @@ interface AllZooEventsDatatableProps {
 
 const defaultFilters: DataTableFilterMeta = {
   eventIsPublic: { value: null, matchMode: FilterMatchMode.EQUALS },
+  eventType: { value: null, matchMode: FilterMatchMode.IN }
 };
 
 function AllZooEventsDatatable(
@@ -83,6 +87,8 @@ function AllZooEventsDatatable(
   const dt = useRef<DataTable<ZooEvent[]>>(null);
 
   const toastShadcn = useToast().toast;
+
+  const [eventTypes] = useState<EventType[]>(Object.values(EventType));
 
   //
   const exportCSV = () => {
@@ -206,6 +212,19 @@ function AllZooEventsDatatable(
     );
   };
 
+  const eventTypeFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
+    return <MultiSelect value={options.value} options={eventTypes} itemTemplate={eventTypeItemTemplate} onChange={(e: MultiSelectChangeEvent) => options.filterCallback(e.value)} optionLabel="name" placeholder="Any" className="p-column-filter" />;
+  };
+
+  const eventTypeItemTemplate = (option: EventType) => {
+    return (
+      <div className="flex align-items-center gap-2">
+        <span>{option.valueOf()}</span>
+      </div>
+    );
+  };
+
+
   return (
     <div>
       <div>
@@ -230,6 +249,7 @@ function AllZooEventsDatatable(
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} event"
             filters={filters}
             globalFilter={globalFilter}
+            // globalFilterFields={['eventIsPublic', 'eventType.valueOf()']}
             header={header}
           >
             <Column
@@ -268,7 +288,10 @@ function AllZooEventsDatatable(
               field="eventType"
               header="Type"
               sortable
-              style={{ minWidth: "4rem" }}
+              // filter
+              // showFilterMatchModes={false}
+              // filterElement={eventTypeFilterTemplate}
+              style={{ minWidth: "10rem" }}
             ></Column>
             <Column
               body={(zooEvent) => {

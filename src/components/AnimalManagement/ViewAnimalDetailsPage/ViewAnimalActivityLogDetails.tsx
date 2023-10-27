@@ -11,6 +11,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 import AnimalActivityLog from "../../../models/AnimalActivityLog";
 import Animal from "../../../models/Animal";
+import AnimalFeedingPlanInvolvedAnimalDatatable from "../AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 
 interface ViewAnimalActivityLogDetailsProps {
   curAnimalActivityLog: AnimalActivityLog
@@ -79,12 +80,12 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
             </TableCell>
             <TableCell>{curAnimalActivityLog.details}</TableCell>
           </TableRow>
-          <TableRow>
+          {/* <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Animals
             </TableCell>
             <TableCell>{curAnimalActivityLog.animals.map((animal: Animal) => animal.houseName).join(", ")}</TableCell>
-          </TableRow>
+          </TableRow> */}
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Keeper
@@ -93,6 +94,9 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
           </TableRow>
         </TableBody>
       </Table>
+      <br />
+      <span className="text-lg font-medium">Involved Animals:</span>
+      <AnimalFeedingPlanInvolvedAnimalDatatable involvedAnimalList={curAnimalActivityLog.animals} />
     </div>
   )
 }

@@ -366,7 +366,7 @@ function ViewAnimalActivityDetails() {
                 Back
               </Button>
               {/* </NavLink> */}
-              <span className="mt-4 self-center text-title-xl font-bold">
+              <span className="self-center text-lg text-graydark">
                 Animal Activity Details
               </span>
               <Button disabled className="invisible">
@@ -374,12 +374,15 @@ function ViewAnimalActivityDetails() {
               </Button>
             </div>
             <Separator />
+            <span className="mt-4 self-center text-title-xl font-bold">
+              {curAnimalActivity.title}
+            </span>
           </div>
           {/* body */}
           <div>
             <Tabs defaultValue={tab ? `${tab}` : "details"} className="w-full">
               <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-                <TabsTrigger value="details">Details</TabsTrigger>
+                <TabsTrigger value="details">Basic Information</TabsTrigger>
                 {curAnimalActivity.activityType == ActivityType.OBSERVATION ? (
                   <TabsTrigger value="observationlogs">
                     Observation Logs

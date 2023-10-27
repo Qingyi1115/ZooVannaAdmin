@@ -254,7 +254,7 @@ function AllAnimalActivitiesDatatable(
             ></Column>
             <Column
               field="recurringPattern"
-              header="Type"
+              header="Recurrence"
               sortable
               style={{ minWidth: "10rem" }}
             ></Column>

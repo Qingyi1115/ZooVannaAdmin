@@ -156,18 +156,32 @@ function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogP
         setValue={setObservationQuality}
         validateFunction={validateAnimalObservationLogName}
       />
+
       {/* Details */}
-      <FormFieldInput
-        type="text"
-        formFieldName="details"
-        label="Details"
-        required={true}
-        placeholder=""
-        value={details}
-        setValue={setDetails}
-        validateFunction={validateAnimalObservationLogName}
-        pattern={undefined}
-      />
+      <Form.Field
+        name="details"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">
+          Details
+        </Form.Label>
+        <Form.Control
+          asChild
+          value={details}
+          required={true}
+          onChange={(e) => setDetails(e.target.value)}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        >
+          <textarea
+            rows={6}
+            placeholder="Observation details..."
+          />
+        </Form.Control>
+        <Form.ValidityState>
+          {validateAnimalObservationLogName}
+        </Form.ValidityState>
+      </Form.Field>
+
       {/* Animals
       <MultiSelect
         value={selectedAnimals}

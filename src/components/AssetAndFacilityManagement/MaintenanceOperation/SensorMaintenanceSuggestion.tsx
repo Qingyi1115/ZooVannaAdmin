@@ -122,18 +122,18 @@ function SensorMaintenanceSuggestion() {
           <HiOutlinePresentationChartLine className="mx-auto" />
         </Button>
         {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
-          (compareDates(new Date(objDetails.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ?
-            <Button
-              className="mr-2"
-              onClick={() => {
-                navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
-                navigate(`/assetfacility/createsensormaintenancelog/${objDetails.id}`);
-              }}
-              variant={"destructive"}
-            >
-              <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
-            </Button>
-            :
+          // (compareDates(new Date(objDetails.suggestedMaintenance), new Date()) <= -1000 * 60 * 60 * 24 * 3) ?
+          //   <Button
+          //     className="mr-2"
+          //     onClick={() => {
+          //       navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
+          //       navigate(`/assetfacility/createsensormaintenancelog/${objDetails.id}`);
+          //     }}
+          //     variant={"destructive"}
+          //   >
+          //     <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+          //   </Button>
+          //   :
             <Button
               className="mr-2"
               onClick={() => {

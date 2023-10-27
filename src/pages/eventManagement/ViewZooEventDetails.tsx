@@ -431,7 +431,7 @@ function ViewZooEventDetails() {
         eventNotificationDate: eventNotificationDate?.getTime(),
         eventEndDateTime: eventEndDateTime?.getTime(),
         imageUrl
-  
+
       };
       console.log(zooEventDetails);
       apiJson.put(
@@ -685,6 +685,30 @@ function ViewZooEventDetails() {
                         Make Event Public
                       </Button>)
                     }
+
+                    {(curZooEvent.eventType == EventType.EMPLOYEE_FEEDING ||
+                      curZooEvent.eventType == EventType.CUSTOMER_FEEDING) &&
+                      curZooEvent.feedingPlanSessionDetail?.feedingPlan
+                      &&
+                      <div className="flex justify-start gap-6" >
+                        <Button
+                          onClick={() => {
+                            navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
+                            navigate(`/animal/createAnimalFeedingLog/${curZooEvent.feedingPlanSessionDetail?.feedingPlan?.feedingPlanId}`);
+                          }}
+                          className="my-3">
+                          Create Feeding Log
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
+                            navigate(`/animal/viewfeedingplandetails/${curZooEvent.feedingPlanSessionDetail?.feedingPlan?.feedingPlanId}/feedingLogs`);
+                          }}
+                          className="my-3">
+                          View Feeding Plan
+                        </Button>
+                      </div>
+                    }
                   </div>
 
                   <Table>
@@ -709,36 +733,36 @@ function ViewZooEventDetails() {
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          {curZooEvent.eventIsPublic? "Start Date Time" : "Start Date"}
+                          {curZooEvent.eventIsPublic ? "Start Date Time" : "Start Date"}
                         </TableCell>
                         <TableCell>
-                          {curZooEvent.eventIsPublic? new Date(curZooEvent.eventStartDateTime).toLocaleString() 
-                          : new Date(curZooEvent.eventStartDateTime).toLocaleDateString()}
+                          {curZooEvent.eventIsPublic ? new Date(curZooEvent.eventStartDateTime).toLocaleString()
+                            : new Date(curZooEvent.eventStartDateTime).toLocaleDateString()}
                         </TableCell>
                       </TableRow>
 
-                    { curZooEvent.eventIsPublic
-                       &&(
-                        
-                      <TableRow>
-                      <TableCell className="w-1/3 font-bold" colSpan={2}>
-                        End Date Time
-                      </TableCell>
-                      <TableCell>
-                          {curZooEvent.eventIsPublic? new Date(curZooEvent.eventEndDateTime || "").toLocaleString() 
-                          : new Date(curZooEvent.eventEndDateTime || "").toLocaleDateString()}
-                      </TableCell>
-                    </TableRow>
-                       )
-                    }
+                      {curZooEvent.eventIsPublic
+                        && (
 
-                    {  !curZooEvent.eventIsPublic && (
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Session Timing
-                        </TableCell>
-                        <TableCell>{curZooEvent.eventTiming}</TableCell>
-                      </TableRow>
+                          <TableRow>
+                            <TableCell className="w-1/3 font-bold" colSpan={2}>
+                              End Date Time
+                            </TableCell>
+                            <TableCell>
+                              {curZooEvent.eventIsPublic ? new Date(curZooEvent.eventEndDateTime || "").toLocaleString()
+                                : new Date(curZooEvent.eventEndDateTime || "").toLocaleDateString()}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      }
+
+                      {!curZooEvent.eventIsPublic && (
+                        <TableRow>
+                          <TableCell className="w-1/3 font-bold" colSpan={2}>
+                            Session Timing
+                          </TableCell>
+                          <TableCell>{curZooEvent.eventTiming}</TableCell>
+                        </TableRow>
                       )}
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
