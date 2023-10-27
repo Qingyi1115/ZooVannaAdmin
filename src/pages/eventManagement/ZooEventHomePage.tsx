@@ -159,29 +159,24 @@ function ZooEventHomePage() {
             navigate(`/animal/createanimalactivity`);
           }
         },
-        {
-          label: 'Animal Observation',
-          command: () => {
-            navigate(`/zooevent/viewallzooevents/`, { replace: true })
-            navigate(`/animal/createanimalobservation`)
-          }
-        },
-        {
-          label: 'Feeding Plan',
-          command: () => {
-            navigate(`/zooevent/viewallzooevents/`, { replace: true })
-            navigate(`/animal/createfeedingplan`)
-          }
-        }
+
+        // {
+        //   label: 'Feeding Plan',
+        //   command: () => {
+        //     navigate(`/zooevent/viewallzooevents/`, { replace: true })
+        //     navigate(`/animal/createfeedingplan`)
+        //   }
+        // }
       ]
-    }, {
-      label: 'Public',
-      items: [{
-        label: 'None',
-        icon: '',
-        command: () => { }
-      }]
     },
+    // {
+    //   label: 'Public',
+    //   items: [{
+    //     label: 'None',
+    //     icon: '',
+    //     command: () => { }
+    //   }]
+    // },
   ];
 
   return (

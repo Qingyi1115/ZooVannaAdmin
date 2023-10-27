@@ -744,6 +744,14 @@ function ViewZooEventDetails() {
                         </TableCell>
                         <TableCell>{curZooEvent.eventDurationHrs}</TableCell>
                       </TableRow>
+                      {curZooEvent.eventNotificationDate && <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Notification Date
+                        </TableCell>
+                        <TableCell>
+                          {new Date(curZooEvent.eventNotificationDate).toDateString()}
+                        </TableCell>
+                      </TableRow>}
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Description
