@@ -15,10 +15,11 @@ import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import Employee from "../../../models/Employee";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import AnimalActivity from "../../../models/AnimalActivity";
 
-// interface CreateNewAnimalObservationLogProps {
-//   speciesCode: string;
-// }
+interface CreateNewAnimalObservationLogProps {
+  curAnimalActivity: AnimalActivity;
+}
 
 function validateAnimalObservationLogName(props: ValidityState) {
   if (props != undefined) {
@@ -32,10 +33,12 @@ function validateAnimalObservationLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalObservationLogForm() {
+function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+
+  const { curAnimalActivity } = props;
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
   const [observationQuality, setObservationQuality] = useState<string | undefined>(
     undefined); // dropdown
@@ -45,26 +48,27 @@ function CreateNewAnimalObservationLogForm() {
   const [formError, setFormError] = useState<string | null>(null);
 
 
-  const [curAnimalList, setCurAnimalList] = useState<any>(null);
-  const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
+  // const [curAnimalList, setCurAnimalList] = useState<any>(null);
+  // const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
 
-  useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
-      setCurAnimalList(res as Animal[]);
-      console.log(res);
-    });
-  }, []);
+  // useEffect(() => {
+  //   apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+  //     setCurAnimalList(res as Animal[]);
+  //     console.log(res);
+  //   });
+  // }, []);
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
     const newAnimalObservationLog = {
+      animalActivityId: curAnimalActivity.animalActivityId,
       dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details,
-      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
+      // animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalObservationLog);
 
@@ -164,7 +168,7 @@ function CreateNewAnimalObservationLogForm() {
         validateFunction={validateAnimalObservationLogName}
         pattern={undefined}
       />
-      {/* Animals */}
+      {/* Animals
       <MultiSelect
         value={selectedAnimals}
         onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
@@ -173,7 +177,7 @@ function CreateNewAnimalObservationLogForm() {
         filter
         placeholder="Select Animals"
         maxSelectedLabels={3}
-        className="w-full md:w-20rem" />
+        className="w-full md:w-20rem" /> */}
 
       <Form.Submit asChild>
         <Button

@@ -224,16 +224,6 @@ function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) 
         validateFunction={validateAnimalActivityLogName}
         pattern={undefined}
       />
-      {/* Animals */}
-      <MultiSelect
-        value={selectedAnimals}
-        onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
-        options={curAnimalList}
-        optionLabel="houseName"
-        filter
-        placeholder="Select Animals"
-        maxSelectedLabels={3}
-        className="w-full md:w-20rem" />
 
       <Form.Submit asChild>
         <Button

@@ -239,7 +239,8 @@ function AnimalFeedingPlanSessionsSchedule(
 
   function getAmountFoodAlreadyAddedPerWeekInGrams(
     animalCode: string,
-    animalFeedCategory: string
+    animalFeedCategory: string,
+    unit: string
   ) {
     const sum = feedingPlanSessions.reduce((total, session) => {
       if (!session.feedingItems) {
@@ -260,15 +261,16 @@ function AnimalFeedingPlanSessionsSchedule(
       return total + sessionSum;
     }, 0);
 
-    return (
-      sum.toLocaleString() + " (g) | " + (sum / 1000).toLocaleString() + " (kg)"
-    );
+    return unit == "GRAM"
+      ? sum.toLocaleString() + " (g)"
+      : (sum / 1000).toLocaleString() + " (kg)";
   }
 
   function getRecoAmountAnimal(
     animalFeedCategory: string,
     weekOrMeal: string,
-    animalCode: string
+    animalCode: string,
+    unit: string
   ) {
     const recoAmountForSpecificAnimal = animalRecoAmounts.find((recoAmount) => {
       return (
@@ -284,7 +286,18 @@ function AnimalFeedingPlanSessionsSchedule(
         <>
           {recoAmountForSpecificAnimal.recoAmt != "No dietary data found!" ? (
             <div>
-              {recoAmountForSpecificAnimal.recoAmt?.toLocaleString()} grams (g)
+              {unit == "GRAM" ? (
+                <span>
+                  {recoAmountForSpecificAnimal.recoAmt?.toLocaleString()} (g)
+                </span>
+              ) : (
+                <span>
+                  {(
+                    Number(recoAmountForSpecificAnimal.recoAmt) / 1000
+                  ).toLocaleString()}{" "}
+                  (kg)
+                </span>
+              )}
             </div>
           ) : (
             <div className="text-danger">
@@ -329,9 +342,13 @@ function AnimalFeedingPlanSessionsSchedule(
       //     [...feedingPlanSessions][existingSessionIndex]
       //   );
       let curSessionToEdit: FeedingPlanSessionDetail;
+      let curSessionToEditUnchanged: FeedingPlanSessionDetail;
 
       if (existingSessionIndex != -1) {
         curSessionToEdit = tempFeedingPlanSessions[existingSessionIndex];
+        curSessionToEditUnchanged = {
+          ...tempFeedingPlanSessions[existingSessionIndex],
+        };
       } else {
         return;
       }
@@ -369,8 +386,8 @@ function AnimalFeedingPlanSessionsSchedule(
           unit,
         };
         curSessionToEdit.feedingItems = updatedCurSessionFeedingItemsToBeEdited;
-        console.log("edit unit");
-        console.log(curSessionToEdit.feedingItems[index].unit);
+        // console.log("edit unit");
+        // console.log(curSessionToEdit.feedingItems[index].unit);
         // setCurSessionToEditUseState(curSessionToEdit);
       };
 
@@ -457,15 +474,23 @@ function AnimalFeedingPlanSessionsSchedule(
         </Button>
       );
 
+      function handleCloseEditSessionDialog() {
+        curSessionToEdit.durationInMinutes =
+          curSessionToEditUnchanged.durationInMinutes;
+        curSessionToEdit.feedingItems = curSessionToEditUnchanged.feedingItems;
+        setFeedingPlanSessions(tempFeedingPlanSessions);
+        setOpenEditSessionDialog(false);
+      }
+
       return (
         <React.Fragment>
           <Dialog
             visible={openEditSessionDialog}
             header={"Edit Session Details"}
-            onHide={() => setOpenEditSessionDialog(false)}
+            onHide={handleCloseEditSessionDialog}
             // onOpenChange={setOpenEditSessionDialog}
             footer={footerContent}
-            style={{ width: "60vw", height: "70vh", marginLeft: "10%" }}
+            style={{ width: "60vw", height: "70vh" }}
           >
             {/* <DialogTrigger asChild>
         <Button
@@ -586,10 +611,10 @@ function AnimalFeedingPlanSessionsSchedule(
                         </div>
                         <div>
                           {group.feedingItems.map((item) => (
-                            <div className="h-full">
+                            <div key={item.feedingItemId} className="h-full">
                               <div className="flex gap-8">
                                 <div className="flex gap-4">
-                                  <div className="">
+                                  <div className="text-sm">
                                     <div className="">{item.foodCategory}:</div>
                                     {/* <div>Amount of food to be given:</div> */}
                                     <InputNumber
@@ -621,39 +646,51 @@ function AnimalFeedingPlanSessionsSchedule(
                                     <div className="flex gap-8">
                                       <div>
                                         Per meal: <br />
-                                        <span className="text-lg">
-                                          {item.foodCategory &&
-                                            getRecoAmountAnimal(
-                                              item.foodCategory,
-                                              "meal",
-                                              group.animal.animalCode
-                                            )}
-                                        </span>
+                                        <div
+                                          className={`rounded bg-slate-200 p-1`}
+                                        >
+                                          <span className="text-sm font-bold">
+                                            {item.foodCategory &&
+                                              getRecoAmountAnimal(
+                                                item.foodCategory,
+                                                "meal",
+                                                group.animal.animalCode,
+                                                item.unit
+                                              )}
+                                          </span>
+                                        </div>
                                       </div>
                                       <div>
                                         Per week: <br />
-                                        <span className="text-lg">
-                                          {item.foodCategory &&
-                                            getRecoAmountAnimal(
-                                              item.foodCategory,
-                                              "week",
-                                              group.animal.animalCode
-                                            )}
-                                        </span>
+                                        <div
+                                          className={`rounded bg-slate-200 p-1`}
+                                        >
+                                          <span className="text-sm font-bold">
+                                            {item.foodCategory &&
+                                              getRecoAmountAnimal(
+                                                item.foodCategory,
+                                                "week",
+                                                group.animal.animalCode,
+                                                item.unit
+                                              )}
+                                          </span>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                   <div className="w-1/3">
                                     <span className="font-medium">
-                                      Amount already added <br />
-                                      per week:
+                                      Amount Added
                                     </span>
-                                    <div>
-                                      <span className="text-lg">
+                                    <div
+                                      className={`w-full rounded bg-slate-200 p-1 text-center`}
+                                    >
+                                      <span className="w-full text-sm font-bold">
                                         {item.foodCategory &&
                                           getAmountFoodAlreadyAddedPerWeekInGrams(
                                             group.animal.animalCode,
-                                            item.foodCategory
+                                            item.foodCategory,
+                                            item.unit
                                           )}
                                       </span>
                                     </div>
@@ -877,7 +914,7 @@ function AnimalFeedingPlanSessionsSchedule(
             header={"Add New Session Details"}
             onHide={() => setOpenCreateSessionDialog(false)}
             // onOpenChange={setOpenEditSessionDialog}
-            style={{ width: "70vw", height: "80vh", marginLeft: "10%" }}
+            style={{ width: "70vw", height: "80vh" }}
           >
             {/* <div className="text-center text-xl font-bold">
               Add Food To Plan
@@ -1099,10 +1136,12 @@ function AnimalFeedingPlanSessionsSchedule(
                                     >
                                       <span className="text-base font-bold">
                                         {selectedCurFeedCategoryNewFoodItem &&
+                                          unitOfMeasurementNewFoodItem &&
                                           getRecoAmountAnimal(
                                             selectedCurFeedCategoryNewFoodItem,
                                             "meal",
-                                            curAnimal.animalCode
+                                            curAnimal.animalCode,
+                                            unitOfMeasurementNewFoodItem
                                           )}
                                       </span>
                                     </div>
@@ -1119,10 +1158,12 @@ function AnimalFeedingPlanSessionsSchedule(
                                     >
                                       <span className="text-base font-bold">
                                         {selectedCurFeedCategoryNewFoodItem &&
+                                          unitOfMeasurementNewFoodItem &&
                                           getRecoAmountAnimal(
                                             selectedCurFeedCategoryNewFoodItem,
                                             "week",
-                                            curAnimal.animalCode
+                                            curAnimal.animalCode,
+                                            unitOfMeasurementNewFoodItem
                                           )}
                                       </span>
                                     </div>
@@ -1142,9 +1183,11 @@ function AnimalFeedingPlanSessionsSchedule(
                                   >
                                     <span className="w-full text-base font-bold">
                                       {selectedCurFeedCategoryNewFoodItem &&
+                                        unitOfMeasurementNewFoodItem &&
                                         getAmountFoodAlreadyAddedPerWeekInGrams(
                                           curAnimal.animalCode,
-                                          selectedCurFeedCategoryNewFoodItem
+                                          selectedCurFeedCategoryNewFoodItem,
+                                          unitOfMeasurementNewFoodItem
                                         )}
                                     </span>
                                   </div>
@@ -1253,6 +1296,10 @@ function AnimalFeedingPlanSessionsSchedule(
 
     const deleteFeedingPlanSessionApi = async () => {
       try {
+        console.log(
+          "selectedFeedingPlanSession?.feedingPlanSessionDetailId: " +
+            selectedFeedingPlanSession?.feedingPlanSessionDetailId
+        );
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteFeedingPlanSessionDetailById/" +
             selectedFeedingPlanSession?.feedingPlanSessionDetailId

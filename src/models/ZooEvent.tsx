@@ -8,7 +8,7 @@ import PlanningStaff from "./PlanningStaff";
 
 interface ZooEvent {
   zooEventId: number;
-  eventName: String;
+  eventName: string;
   eventDescription: string;
   eventIsPublic: boolean;
   eventType?: EventType;
@@ -27,7 +27,7 @@ interface ZooEvent {
   planningStaff?: PlanningStaff;
   keepers?: Keeper[]; // work
   // enclosure?: Enclosure;
-  animal?: Animal;
+  animals?: Animal[];
   inHouse?: InHouse;
   // animalClinic?: AnimalClinic;
   animalActivity?: AnimalActivity;

@@ -102,7 +102,7 @@ function AnimalFeedingPlanDetailsPage() {
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Title
+                      Description
                     </TableCell>
                     <TableCell>{curFeedingPlan?.feedingPlanDesc}</TableCell>
                   </TableRow>
