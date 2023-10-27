@@ -472,7 +472,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/animal/createfeedingplan/"
+                  path="/animal/createfeedingplan/:speciesCode"
                   element={
                     user ? <CreateFeedingPlan /> : <Navigate to="/login" />
                   }
