@@ -488,6 +488,16 @@ function App() {
                   }
                 />
                 <Route
+                  path="/animal/viewfeedingplandetails/:feedingPlanId/"
+                  element={
+                    user ? (
+                      <AnimalFeedingPlanDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
                   path="/animal/viewfeedingplandetails/:feedingPlanId/:tab"
                   element={
                     user ? (
