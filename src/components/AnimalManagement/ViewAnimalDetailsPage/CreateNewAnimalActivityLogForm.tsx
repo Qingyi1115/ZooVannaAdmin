@@ -126,7 +126,10 @@ function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) 
         <Separator />
       </div>
       {/* Activity Type */}
-      <FormFieldSelect
+      <div className="mb-1 block font-medium">
+          Activity Type<br /> <b>{activityType}</b>
+        </div>
+      {/* <FormFieldSelect
         formFieldName="activityType"
         label="Activity Type"
         required={true}
@@ -139,7 +142,7 @@ function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) 
         value={activityType}
         setValue={setActivityType}
         validateFunction={validateAnimalActivityLogName}
-      />
+      /> */}
       {/* DateTime */}
       <div className="card justify-content-center block ">
         <div className="mb-1 block font-medium">Date</div>
