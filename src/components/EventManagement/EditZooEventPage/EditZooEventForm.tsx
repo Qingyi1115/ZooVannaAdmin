@@ -323,28 +323,28 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           </Form.Control>
           <Form.ValidityState>{validateEventDescription}</Form.ValidityState>
         </Form.Field>
-
-        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* EventTiming */}
-          <FormFieldSelect
-            formFieldName="eventTiming"
-            label="Timing"
-            required={true}
-            placeholder="Select an event timing..."
-            valueLabelPair={Object.keys(EventTimingType).map(
-              (eventTimingTypeKey) => [
-                EventTimingType[
-                  eventTimingTypeKey as keyof typeof EventTimingType
-                ].toString(),
-                EventTimingType[
-                  eventTimingTypeKey as keyof typeof EventTimingType
-                ].toString(),
-              ]
-            )}
-            value={eventTiming}
-            setValue={setEventTiming}
-            validateFunction={validateEventTiming}
-          />
+      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
+        { !curZooEvent.eventIsPublic && (
+            <FormFieldSelect
+              formFieldName="eventTiming"
+              label="Timing"
+              required={true}
+              placeholder="Select an event timing..."
+              valueLabelPair={Object.keys(EventTimingType).map(
+                (eventTimingTypeKey) => [
+                  EventTimingType[
+                    eventTimingTypeKey as keyof typeof EventTimingType
+                  ].toString(),
+                  EventTimingType[
+                    eventTimingTypeKey as keyof typeof EventTimingType
+                  ].toString(),
+                ]
+              )}
+              value={eventTiming}
+              setValue={setEventTiming}
+              validateFunction={validateEventTiming}
+            />
+        )}
 
           {/* Date */}
           <Form.Field
@@ -352,7 +352,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             id="dateField"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <Form.Label className="font-medium">Date</Form.Label>
+            <Form.Label className="font-medium">{curZooEvent.eventIsPublic? "Start Date" : "Date"}</Form.Label>
             <Form.Control
               className="hidden"
               type="text"
