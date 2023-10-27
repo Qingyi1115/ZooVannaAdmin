@@ -191,7 +191,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           const data = {
             eventName: eventName,
             eventDescription: eventDescription,
-            eventIsPublic: true,
+            eventIsPublic: false,
             eventType: eventType,
             eventStartDateTime: dateInMilliseconds,
             requiredNumberOfKeeper: curZooEvent?.requiredNumberOfKeeper,
