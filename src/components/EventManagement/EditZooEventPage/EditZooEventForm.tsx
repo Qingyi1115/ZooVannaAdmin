@@ -251,24 +251,6 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             validateFunction={validateEventName}
           />
 
-          {/* Activity Type */}
-          <FormFieldSelect
-            formFieldName="eventType"
-            label="Type"
-            required={true}
-            placeholder="Select an event type..."
-            valueLabelPair={Object.keys(EventType).map((eventTypeKey) => [
-              EventType[
-                eventTypeKey as keyof typeof EventType
-              ].toString(),
-              EventType[
-                eventTypeKey as keyof typeof EventType
-              ].toString(),
-            ])}
-            value={eventType}
-            setValue={setEventType}
-            validateFunction={validateIdentifierType}
-          />
         </div>
 
         {/* EventDescription */}
@@ -329,24 +311,52 @@ function EditZooEventForm(props: EditZooEventFormProps) {
               required={true}
               onChange={() => null}
             ></Form.Control>
-            <Calendar
-              value={eventStartDateTime}
-              className="w-fit"
-              onChange={(e: any) => {
-                if (e && e.value !== undefined) {
-                  setEventStartDateTime(e.value);
 
-                  const element = document.getElementById("dateField");
-                  if (element) {
-                    const isDataInvalid = element.getAttribute("data-invalid");
-                    if (isDataInvalid == "true") {
-                      element.setAttribute("data-valid", "true");
-                      element.removeAttribute("data-invalid");
-                    }
-                  }
-                }
-              }}
-            />
+            {!curZooEvent.eventIsPublic && (
+               <Calendar
+                 value={eventStartDateTime}
+                 className="w-fit"
+                 onChange={(e: any) => {
+                   if (e && e.value !== undefined) {
+                     setEventStartDateTime(e.value);
+   
+                     const element = document.getElementById("dateField");
+                     if (element) {
+                       const isDataInvalid = element.getAttribute("data-invalid");
+                       if (isDataInvalid == "true") {
+                         element.setAttribute("data-valid", "true");
+                         element.removeAttribute("data-invalid");
+                       }
+                     }
+                   }
+                 }}
+               />
+            )}
+
+            {curZooEvent.eventIsPublic && (
+               <Calendar
+               showTime
+                 value={eventStartDateTime}
+                 className="w-fit"
+                 onChange={(e: any) => {
+                   if (e && e.value !== undefined) {
+                     setEventStartDateTime(e.value);
+   
+                     const element = document.getElementById("dateField");
+                     if (element) {
+                       const isDataInvalid = element.getAttribute("data-invalid");
+                       if (isDataInvalid == "true") {
+                         element.setAttribute("data-valid", "true");
+                         element.removeAttribute("data-invalid");
+                       }
+                     }
+                   }
+                 }}
+               />
+            )}
+           
+
+
             <Form.ValidityState>{validateDate}</Form.ValidityState>
           </Form.Field>
         </div>
