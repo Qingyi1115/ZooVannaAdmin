@@ -37,7 +37,7 @@ interface DietNeedDatatableProps {
 }
 
 const emptyDietNeeds: SpeciesDietNeed = {
-  speciesDietNeedId: 1,
+  speciesDietNeedId: -1,
   animalFeedCategory: AnimalFeedCategory.FISH,
   amountPerMealGram: 100,
   amountPerWeekGram: 1000,
@@ -175,7 +175,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
             setDietNeedsList(e.value);
           }
         }}
-        dataKey="speciesId"
+        dataKey="speciesDietNeedId"
         paginator
         // showGridlines
         rows={10}
@@ -200,13 +200,25 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="amountPerMealGram"
+          field="amountPerMealGramMale"
           header="Amount Per Meal (grams)"
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="amountPerWeekGram"
+          field="amountPerWeekGramMale"
+          header="Amount Per Week (grams)"
+          sortable
+          style={{ minWidth: "10rem" }}
+        ></Column>
+        <Column
+          field="amountPerMealGramFemale"
+          header="Amount Per Meal (grams)"
+          sortable
+          style={{ minWidth: "10rem" }}
+        ></Column>
+        <Column
+          field="amountPerWeekGramFemale"
           header="Amount Per Week (grams)"
           sortable
           style={{ minWidth: "10rem" }}

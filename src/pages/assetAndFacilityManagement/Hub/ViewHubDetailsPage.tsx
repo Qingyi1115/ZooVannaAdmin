@@ -14,6 +14,7 @@ function ViewHubDetailsPage() {
   const apiJson = useApiJson();
   const { hubProcessorId } = useParams<{ hubProcessorId: string }>();
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  const [refreshSeed2, setRefreshSeed2] = useState<any>(0);
   const navigate = useNavigate();
 
   let emptyFacility: Facility = {
@@ -35,7 +36,8 @@ function ViewHubDetailsPage() {
     hubSecret: "",
     hubStatus: HubStatus.PENDING,
     facility: emptyFacility,
-    sensors: []
+    sensors: [],
+    radioGroup:null,
   };
 
 
@@ -46,9 +48,12 @@ function ViewHubDetailsPage() {
     apiJson.post(
       `http://localhost:3000/api/assetFacility/getHub/${hubProcessorId}`,
       { includes: ["sensors", "facility"] }).then(res => {
+        for (const sensor of res.hubProcessor.sensors){
+          sensor.dateOfActivation = new Date(sensor.dateOfActivation).toLocaleString()
+          sensor.dateOfLastMaintained = new Date(sensor.dateOfLastMaintained).toLocaleString()
+        }
         setCurHub(res.hubProcessor as Hub);
-        console.log(curHub);
-      }).catch(e => console.log(e));
+      }).catch(e => console.log(e)).then(()=>setRefreshSeed2([]));
   }, [refreshSeed]);
 
   return (
@@ -81,7 +86,7 @@ function ViewHubDetailsPage() {
               setRefreshSeed={setRefreshSeed} />
           </TabsContent>
           <TabsContent value="sensors">
-            <AllSensorDatatable curHub={curHub} />
+            <AllSensorDatatable curHub={curHub} refreshSeed={refreshSeed2} />
           </TabsContent>
         </Tabs>
       </div>

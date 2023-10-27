@@ -6,7 +6,7 @@ import Employee from "../../../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiMinus, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
@@ -66,7 +66,6 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
     try {
       const responseJson = await apiJson.del(
         `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-          console.log("ih", res["inHouse"]["operationStaffs"])
           setRefreshSeed([])
         }).catch(err => console.log("err", err));
 
@@ -118,6 +117,7 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
           }}
         />
       </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -144,7 +144,7 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
             className="mr-2"
             onClick={() => confirmEmployeeRemoval(employee)}
           >
-            <HiTrash className="mx-auto" />
+            <HiMinus className="mx-auto" />
           </Button>
         }
       </React.Fragment>
@@ -155,20 +155,7 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button disabled className="invisible">
-                Back
-              </Button>
-              <span className="self-center text-title font-bold">
-                Remove Operations Staff
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
 
           <DataTable
             ref={dt}

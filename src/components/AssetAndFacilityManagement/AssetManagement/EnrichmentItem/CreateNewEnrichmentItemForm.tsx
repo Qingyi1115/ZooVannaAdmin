@@ -7,7 +7,6 @@ import FormFieldSelect from "../../../FormFieldSelect";
 import useApiFormData from "../../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 // Field validations
@@ -101,12 +100,9 @@ function CreateNewEnrichmentItemForm() {
       {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <NavLink
-            to="/assetfacility/viewallenrichmentitems">
-            <Button variant={"outline"} type="button" className="">
+            <Button variant={"outline"} type="button" className="" onClick={()=> navigate(-1)}>
               Back
             </Button>
-          </NavLink>
           <span className="self-center text-title-xl font-bold">
             Create Enrichment Item
           </span>

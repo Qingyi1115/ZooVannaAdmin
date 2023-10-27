@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
 
@@ -10,12 +10,12 @@ import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagemen
 import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Employee from "../../../models/Employee";
-import ManageFacilityMaintenanceStaffPage from "../MaintenanceOperations/ManageFacilityMaintenanceStaffPage";
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
 import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
 import AllFacilityLogsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/AllFacilityLogsDatatable";
 import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import ViewAllFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ViewAllFacilityMaintenanceStaff";
 
 
 
@@ -26,7 +26,8 @@ function ViewFacilityDetailsPage() {
   const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
   const [empList, setEmpList] = useState<Employee[]>([]);
   const employee = useAuthContext().state.user?.employeeData;
-
+  const navigate = useNavigate();
+  const location = useLocation();
   // let emptyThirdParty: ThirdParty = {
   //   ownership: "",
   //   ownerContact: "",
@@ -53,7 +54,8 @@ function ViewFacilityDetailsPage() {
     facilityDetail: "",
     facilityDetailJson: undefined,
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
+    showOnMap: false
   };
 
   const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
@@ -70,7 +72,13 @@ function ViewFacilityDetailsPage() {
           `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
           { includes: ["hubProcessors"] }
         );
-        console.log(responseJson);
+        for (const processor of responseJson.facility.hubProcessors){
+          if (processor.lastDataUpdate){
+            processor.lastDataUpdateString = new Date(processor.lastDataUpdate).toLocaleString();
+          }else{
+            processor.lastDataUpdateString = "No last update!";
+          }
+        }
         setCurFacility(responseJson.facility as Facility);
       } catch (error: any) {
         console.log(error);
@@ -84,11 +92,14 @@ function ViewFacilityDetailsPage() {
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         <div className="flex justify-between">
-          <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
+          {/* <NavLink className="flex" to={`/assetfacility/viewallfacilities`}>
             <Button variant={"outline"} type="button" className="">
               Back
             </Button>
-          </NavLink>
+          </NavLink> */}
+          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+            Back
+          </Button>
           <span className="self-center text-lg text-graydark">
             View Facility Details
           </span>
@@ -111,8 +122,8 @@ function ViewFacilityDetailsPage() {
 
             <TabsTrigger value="hubs">Hubs</TabsTrigger>
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
-            {curFacility.facilityDetail == "inHouse" && employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
-            {curFacility.facilityDetail == "inHouse" && employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
+            {curFacility.facilityDetail == "inHouse" && (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
+            {curFacility.facilityDetail == "inHouse" && (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
             <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
           </TabsList>
           <TabsContent value="facilityDetails">
@@ -123,20 +134,20 @@ function ViewFacilityDetailsPage() {
             </div>
           </TabsContent>
           <TabsContent value="facilityLog">
-            <AllFacilityLogsDatatable curFacility={curFacility} curInHouse={curInHouse} />
+            <AllFacilityLogsDatatable facilityId={Number(facilityId)} />
           </TabsContent>
           <TabsContent value="hubs">
             <AllHubDatatable curFacility={curFacility} />
           </TabsContent>
-          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <TabsContent value="manageMaintenance">
-            <ManageFacilityMaintenanceStaffPage />
-          </TabsContent>
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+            <TabsContent value="manageMaintenance">
+              <ViewAllFacilityMaintenanceStaff facilityId={Number(facilityId)} />
+            </TabsContent>
           )}
-          {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <TabsContent value="manageOperations">
-            <ManageOperationStaffPage />
-          </TabsContent>
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+            <TabsContent value="manageOperations">
+              <ManageOperationStaffPage />
+            </TabsContent>
           )}
           <TabsContent value="customerReport">
             <AllCustomerReportsDatatable curFacility={curFacility} />

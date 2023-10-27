@@ -4,43 +4,59 @@ import useApiJson from "../../../../hooks/useApiJson";
 import Facility from "../../../../models/Facility";
 import EditFacilityLogForm from "../../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/EditFacilityLogForm";
 import FacilityLog from "../../../../models/FacilityLog";
+import { FacilityLogType } from "../../../../enums/FacilityLogType";
+import InHouse from "../../../../models/InHouse";
+import { FacilityType } from "../../../../enums/FacilityType";
 
 function EditFacilityLogPage() {
   const apiJson = useApiJson();
-  const [refreshSeed, setRefreshSeed] = useState<number>(0);
-  const { logId } = useParams<{ logId: string }>();
+  const { facilityLogId } = useParams<{ facilityLogId: string }>();
   let emptyFacility: Facility = {
     facilityId: -1,
     facilityName: "",
     xCoordinate: 0,
     yCoordinate: 0,
     facilityDetail: "",
-    facilityDetailJson: undefined,
+    facilityDetailJson: "",
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
+    showOnMap: false
+  };
+
+  let emptyInHouse: InHouse = {
+    isPaid: false,
+    lastMaintained: new Date(),
+    maxAccommodationSize: 0,
+    hasAirCon: false,
+    facilityType: FacilityType.AED,
+    facilityLogs: [],
+    facilityId: 0
   };
 
   let emptyFacilityLog: FacilityLog = {
-    logId: -1,
+    facilityLogId: 0,
     dateTime: new Date(),
     isMaintenance: false,
     title: "",
     details: "",
     remarks: "",
-    facility: emptyFacility
+    inHouse: emptyInHouse,
+    staffName: "",
+    facilityLogType: FacilityLogType.MAINTENANCE_LOG,
+    generalStaffs: []
   }
 
   const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/assetFacility/getFacilityLog/${logId}`, { includes: [] }).then(res => {
+    apiJson.get(`http://localhost:3000/api/assetFacility/getFacilityLog/${facilityLogId}`).then(res => {
       setCurFacilityLog(res.facilityLog as FacilityLog);
     });
-  }, [refreshSeed]);
+  }, []);
 
   return (
     <div className="p-10">
-      {curFacilityLog && curFacilityLog.logId != -1 && (
+      {curFacilityLog && curFacilityLog.facilityLogId != -1 && (
         <EditFacilityLogForm curFacilityLog={curFacilityLog} />
       )}
     </div>

@@ -19,15 +19,29 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
 
   const { curEmployee } = props;
 
-  const [employeeName, setEmployeeName] = useState<string>(curEmployee.employeeName); // text input
-  const [employeeEmail, setEmployeeEmail] = useState<string>(curEmployee.employeeEmail); // text input
-  const [employeeAddress, setEmployeeAddress] = useState<string>(curEmployee.employeeAddress); // text input
-  const [employeePhoneNumber, setEmployeePhoneNumber] = useState<string>(curEmployee.employeePhoneNumber); // text input
-  const [employeeEducation, setEmployeeEducation] = useState<string>(curEmployee.employeeEducation); // text inputt
-  const [isAccountManager, setIsAccountManager] = useState<Boolean>(curEmployee.isAccountManager);
+  const [employeeName, setEmployeeName] = useState<string>(
+    curEmployee.employeeName
+  ); // text input
+  const [employeeEmail, setEmployeeEmail] = useState<string>(
+    curEmployee.employeeEmail
+  ); // text input
+  const [employeeAddress, setEmployeeAddress] = useState<string>(
+    curEmployee.employeeAddress
+  ); // text input
+  const [employeePhoneNumber, setEmployeePhoneNumber] = useState<string>(
+    curEmployee.employeePhoneNumber
+  ); // text input
+  const [employeeEducation, setEmployeeEducation] = useState<string>(
+    curEmployee.employeeEducation
+  ); // text inputt
+  const [isAccountManager, setIsAccountManager] = useState<Boolean>(
+    curEmployee.isAccountManager
+  );
   // const [employeePasswordHash, setEmployeePasswordHash] = useState<string>(""); // text input
   // const [employeeSalt, setEmployeeSalt] = useState<string>(""); // text input
-  const [employeeDoorAccessCode, setEmployeeDoorAccessCode] = useState<string>(curEmployee.employeeDoorAccessCode); // text input
+  const [employeeDoorAccessCode, setEmployeeDoorAccessCode] = useState<string>(
+    curEmployee.employeeDoorAccessCode
+  ); // text input
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -71,7 +85,6 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
     setImageFile(null);
   }
 
-
   function validateIsAccountManager(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
@@ -92,7 +105,9 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
   function onAccountManagerSelectChange(e: MultiSelectChangeEvent) {
     setIsAccountManager(e.value);
 
-    const element = document.getElementById("selectMultiHasAdminPrivilegesField");
+    const element = document.getElementById(
+      "selectMultiHasAdminPrivilegesField"
+    );
     if (element) {
       const isDataInvalid = element.getAttribute("data-invalid");
       if (isDataInvalid == "true") {
@@ -219,24 +234,21 @@ function EditEmployeeForm(props: EditEmployeeFormProps) {
               setValue={setEmployeeEducation}
               validateFunction={validateName}
             />
-            <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-
-            </div>
+            <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12"></div>
+            <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12"></div>
 
             <Form.Submit asChild>
               <Button
                 disabled={apiFormData.loading}
                 className="h-12 w-2/3 self-center rounded-full text-lg"
               >
-                {!apiFormData.loading ? (
-                  <div>Submit</div>
-                ) : (
-                  <div>Loading</div>
-                )}
+                {!apiFormData.loading ? <div>Submit</div> : <div>Loading</div>}
               </Button>
             </Form.Submit>
             {formError && (
-              <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+              <div className="m-2 border-danger bg-red-100 p-2">
+                {formError}
+              </div>
             )}
           </div>
         </Form.Root>

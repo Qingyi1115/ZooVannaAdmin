@@ -19,6 +19,7 @@ import { Separator } from "@radix-ui/react-select";
 import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import { BsWrenchAdjustable } from "react-icons/bs";
 
 interface FacilityDetailsProps {
   curFacility: Facility;
@@ -33,15 +34,35 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
   return (
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
-        
-      {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <NavLink to={`/assetfacility/editfacility/${curFacility.facilityId}`}>
-          <Button className="mr-2">
-            <HiPencil className="mx-auto" ></HiPencil>
-            Edit Facility details
-          </Button>
-        </NavLink>
-      )}
+
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          <NavLink to={`/assetfacility/editfacility/${curFacility.facilityId}`}
+            state={{ prev: `/assetfacility/viewfacilitydetails/${curFacility.facilityId}` }}>
+            <Button className="mr-2">
+              <HiPencil className="mx-auto" ></HiPencil>
+              Edit Facility Details
+            </Button>
+          </NavLink>
+        )}
+        {/* {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+          <NavLink to={`/assetfacility/completeFacilityRepair/${curFacility.facilityId}`}
+            state={{ prev: `/assetfacility/viewfacilitydetails/${curFacility.facilityId}` }}>
+            <Button className="mr-2">
+              <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+              Complete Maintenance
+            </Button>
+          </NavLink>
+        )}
+        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
+          <NavLink to={`/assetfacility/createfacilitylog/${curFacility.facilityId}`}
+            state={{ prev: `/assetfacility/viewfacilitydetails/${curFacility.facilityId}` }}>
+            <Button className="mr-2">
+              <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+              Create Operations Log
+            </Button>
+          </NavLink>
+        )} */}
+
       </div>
       <Table>
         <TableBody>

@@ -15,7 +15,7 @@ function ManageOperationStaffPage() {
 
   return (
 
-    <div className="flex w-full flex-col gap-6 rounded-lg bg-white p-5 text-black">
+    <div className="">
       <ManageOperationStaff facilityId={Number(facilityId)} ></ManageOperationStaff>
       {/* <Tabs
         defaultValue={tab ? `${tab}` : "assignstaff"}

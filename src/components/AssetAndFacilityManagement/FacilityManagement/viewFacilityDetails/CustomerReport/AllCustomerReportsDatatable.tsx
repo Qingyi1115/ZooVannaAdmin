@@ -14,39 +14,39 @@ import { Button } from "@/components/ui/button";
 import { NavLink, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
-import CustomerReport from "../../../../../models/CustomerReport";
+import CustomerReportLog from "../../../../../models/CustomerReportLog";
 import Facility from "../../../../../models/Facility";
 
-interface AllCustomerReportsDatatableProps {
+interface AllCustomerReportLogsDatatableProps {
   curFacility: Facility;
 }
 
-function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
+function AllCustomerReportLogsDatatable(props: AllCustomerReportLogsDatatableProps) {
   const apiJson = useApiJson();
   const { curFacility } = props;
-  let emptyCustomerReport: CustomerReport = {
-    customerReportId: -1,
+  let emptyCustomerReportLog: CustomerReportLog = {
+    customerReportLogId: -1,
     dateTime: new Date(),
     title: "",
     remarks: "",
     viewed: false
   };
 
-  const [customerReportList, setCustomerReportList] = useState<CustomerReport[]>([]);
-  const [selectedCustomerReport, setSelectedCustomerReport] = useState<CustomerReport>(emptyCustomerReport);
-  const [deletecustomerReportDialog, setDeleteCustomerReportDialog] =
+  const [customerReportLogList, setCustomerReportLogList] = useState<CustomerReportLog[]>([]);
+  const [selectedCustomerReportLog, setSelectedCustomerReportLog] = useState<CustomerReportLog>(emptyCustomerReportLog);
+  const [deletecustomerReportLogDialog, setDeleteCustomerReportLogDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<CustomerReport[]>>(null);
+  const dt = useRef<DataTable<CustomerReportLog[]>>(null);
   const toastShadcn = useToast().toast;
 
   // Get all customer reports
   // useEffect(() => {
-  //   apiJson.post("http://localhost:3000/api/assetFacility/getAllCustomerReport", { includes: [] }).catch(e => {
+  //   apiJson.post("http://localhost:3000/api/assetFacility/getAllCustomerReportLog", { includes: [] }).catch(e => {
   //     console.log(e);
   //   }).then(res => {
-  //     setCustomerReportList(res["customerReports"]);
+  //     setCustomerReportLogList(res["customerReportLogs"]);
   //   })
   // }, []);
 
@@ -56,74 +56,74 @@ function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
   };
 
 
-  const confirmDeletecustomerReport = (customerReport: CustomerReport) => {
-    setSelectedCustomerReport(customerReport);
-    setDeleteCustomerReportDialog(true);
+  const confirmDeletecustomerReportLog = (customerReportLog: CustomerReportLog) => {
+    setSelectedCustomerReportLog(customerReportLog);
+    setDeleteCustomerReportLogDialog(true);
   };
 
-  const hideDeleteCustomerReportDialog = () => {
-    setDeleteCustomerReportDialog(false);
+  const hideDeleteCustomerReportLogDialog = () => {
+    setDeleteCustomerReportLogDialog(false);
   };
 
-  // delete customerReport stuff
-  const deleteCustomerReport = async () => {
-    let _customerReport = customerReportList.filter(
-      (val) => val.customerReportId !== selectedCustomerReport?.customerReportId
+  // delete customerReportLog stuff
+  const deleteCustomerReportLog = async () => {
+    let _customerReportLog = customerReportLogList.filter(
+      (val) => val.customerReportLogId !== selectedCustomerReportLog?.customerReportLogId
     );
 
-    const deleteCustomerReport = async () => {
+    const deleteCustomerReportLog = async () => {
       try {
-        setDeleteCustomerReportDialog(false);
+        setDeleteCustomerReportLogDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/assetFacility/deleteCustomerReport/" +
-          selectedCustomerReport.customerReportId
+          "http://localhost:3000/api/assetFacility/deleteCustomerReportLog/" +
+          selectedCustomerReportLog.customerReportLogId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted customerReport: " + selectedCustomerReport.customerReportId,
+            "Successfully deleted customerReportLog: " + selectedCustomerReportLog.customerReportLogId,
         });
-        setCustomerReportList(_customerReport);
-        setSelectedCustomerReport(emptyCustomerReport);
+        setCustomerReportLogList(_customerReportLog);
+        setSelectedCustomerReportLog(emptyCustomerReportLog);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting customerReport: \n" + apiJson.error,
+            "An error has occurred while deleting customerReportLog: \n" + apiJson.error,
         });
       }
     };
-    deleteCustomerReport();
+    deleteCustomerReportLog();
   };
 
-  const deleteCustomerReportDialogFooter = (
+  const deleteCustomerReportLogDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideDeleteCustomerReportDialog}>
+      <Button onClick={hideDeleteCustomerReportLogDialog}>
         <HiX />
         No
       </Button>
-      <Button variant={"destructive"} onClick={deleteCustomerReport}>
+      <Button variant={"destructive"} onClick={deleteCustomerReportLog}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end delete customerReport stuff
+  // end delete customerReportLog stuff
 
-  const actionBodyTemplate = (customerReport: CustomerReport) => {
+  const actionBodyTemplate = (customerReportLog: CustomerReportLog) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetcustomerReport/viewcustomerReportdetails/${customerReport.customerReportId}`}>
+        <NavLink to={`/assetcustomerReportLog/viewcustomerReportLogdetails/${customerReportLog.customerReportLogId}`}>
           <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mx-auto" />
 
           </Button>
         </NavLink>
-        <NavLink to={`/assetcustomerReport/editcustomerReport/${customerReport.customerReportId}`}>
+        <NavLink to={`/assetcustomerReportLog/editcustomerReportLog/${customerReportLog.customerReportLogId}`}>
           <Button className="mr-1">
             <HiPencil className="mr-1" />
 
@@ -132,7 +132,7 @@ function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
         <Button
           variant={"destructive"}
           className="mr-2"
-          onClick={() => confirmDeletecustomerReport(customerReport)}
+          onClick={() => confirmDeletecustomerReportLog(customerReportLog)}
         >
           <HiTrash className="mx-auto" />
 
@@ -155,6 +155,7 @@ function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
           }}
         />
       </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -162,34 +163,18 @@ function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <NavLink to={"/assetcustomerReport/createsensor"}>
-
-                <Button disabled className="invisible">
-                  Back
-                </Button>
-              </NavLink>
-              <span className=" self-center text-title-xl font-bold">
-                All Customer Reports
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
 
           <DataTable
             ref={dt}
-            value={customerReportList}
-            selection={selectedCustomerReport}
+            value={customerReportLogList}
+            selection={selectedCustomerReportLog}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedCustomerReport(e.value);
+                setSelectedCustomerReportLog(e.value);
               }
             }}
-            dataKey="customerReportId"
+            dataKey="customerReportLogId"
             paginator
             rows={10}
             scrollable
@@ -201,7 +186,7 @@ function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
             header={header}
           >
             <Column
-              field="customerReportId"
+              field="customerReportLogId"
               header="ID"
               sortable
               style={{ minWidth: "12rem" }}
@@ -242,23 +227,23 @@ function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
         </div>
       </div>
       <Dialog
-        visible={deletecustomerReportDialog}
+        visible={deletecustomerReportLogDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={deleteCustomerReportDialogFooter}
-        onHide={hideDeleteCustomerReportDialog}
+        footer={deleteCustomerReportLogDialogFooter}
+        onHide={hideDeleteCustomerReportLogDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedCustomerReport && (
+          {selectedCustomerReportLog && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedCustomerReport.customerReportId}</b>?
+              <b>{selectedCustomerReportLog.customerReportLogId}</b>?
             </span>
           )}
         </div>
@@ -267,4 +252,4 @@ function AllCustomerReportsDatatable(props: AllCustomerReportsDatatableProps) {
   );
 }
 
-export default AllCustomerReportsDatatable;
+export default AllCustomerReportLogsDatatable;

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Employee from "src/models/Employee";
-import AddFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/AddFacilityMaintenanceStaff";
+import ViewAllFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ViewAllFacilityMaintenanceStaff";
 import RemoveFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/RemoveFacilityMaintenanceStaff";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -18,38 +18,39 @@ function ManageFacilityMaintenanceStaffPage() {
   const { tab } = useParams<{ tab: string }>();
 
   useEffect(() => {
-    let assignedStaffs : any = []
+    let assignedStaffs: any = []
+    apiJson.get(
+      `http://localhost:3000/api/assetFacility/getAssignedMaintenanceStaffOfFacility/${facilityId}`
+    ).catch(e => console.log(e)).then(res => {
+      setCurrEmpList(res["maintenanceStaffs"]);
+      assignedStaffs = res["maintenanceStaffs"];
+    }).then(() => {
       apiJson.get(
-        `http://localhost:3000/api/assetFacility/getAssignedMaintenanceStaffOfFacility/${facilityId}`
+        `http://localhost:3000/api/assetFacility/getAllMaintenanceStaff`
       ).catch(e => console.log(e)).then(res => {
-        setCurrEmpList(res["maintenanceStaffs"]);
-        assignedStaffs = res["maintenanceStaffs"];
-      }).then(()=>{
-        apiJson.get(
-          `http://localhost:3000/api/assetFacility/getAllMaintenanceStaff`
-        ).catch(e => console.log(e)).then(res => {
-          const allStaffs = res["maintenanceStaffs"];
-          const assignedStaffIds = []
-          for (const staff of assignedStaffs){
-            assignedStaffIds.push(staff.employeeId)
+        const allStaffs = res["maintenanceStaffs"];
+        const assignedStaffIds = []
+        for (const staff of assignedStaffs) {
+          assignedStaffIds.push(staff.employeeId)
+        }
+        const subset = []
+        for (const employee of allStaffs) {
+          if (!assignedStaffIds.includes(employee.employeeId)) {
+            subset.push(employee);
           }
-          const subset = []
-          for (const employee of allStaffs) {
-            if (!assignedStaffIds.includes(employee.employeeId)) {
-              subset.push(employee);
-            }
-          }
-      
-          setEmpList(subset)
-        });
+        }
+
+        setEmpList(subset)
       });
+    });
   }, [refreshSeed]);
 
 
   return (
 
-    <div className="flex w-full flex-col gap-6 rounded-lg bg-white p-5 text-black">
-      <Tabs
+    <div className="">
+      <ViewAllFacilityMaintenanceStaff facilityId={Number(facilityId)} ></ViewAllFacilityMaintenanceStaff>
+      {/* <Tabs
         defaultValue={tab ? `${tab}` : "assignstaff"}
         className="w-full"
       >
@@ -58,12 +59,12 @@ function ManageFacilityMaintenanceStaffPage() {
           <TabsTrigger value="removestaff">Remove Maintenance Staff</TabsTrigger>
         </TabsList>
         <TabsContent value="assignstaff">
-          {facilityId && <AddFacilityMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList} setRefreshSeed={setRefreshSeed}></AddFacilityMaintenanceStaff>}
+          {facilityId && <ViewAllFacilityMaintenanceStaff facilityId={Number(facilityId)} employeeList={empList} setRefreshSeed={setRefreshSeed}></ViewAllFacilityMaintenanceStaff>}
         </TabsContent>
         <TabsContent value="removestaff">
           {facilityId && <RemoveFacilityMaintenanceStaff facilityId={Number(facilityId)} employeeList={currEmpList} setRefreshSeed={setRefreshSeed}></RemoveFacilityMaintenanceStaff>}
         </TabsContent>
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 }

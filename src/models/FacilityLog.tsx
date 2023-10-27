@@ -1,14 +1,17 @@
-import Facility from "./Facility";
+import { FacilityLogType } from "src/enums/FacilityLogType";
 import InHouse from "./InHouse";
-
+import GeneralStaff from "./GeneralStaff";
 interface FacilityLog {
-  logId: number;
+  facilityLogId: number;
   dateTime: Date;
   isMaintenance: Boolean;
   title: string;
   details: string;
   remarks: string;
-  facility: Facility;
+  staffName: string;
+  facilityLogType: FacilityLogType;
+  inHouse: InHouse;
+  generalStaffs: GeneralStaff[];
 }
 
 export default FacilityLog;

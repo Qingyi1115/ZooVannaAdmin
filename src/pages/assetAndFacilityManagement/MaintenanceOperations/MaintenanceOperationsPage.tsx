@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import MaintenanceOperationSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
+import SensorMaintenanceSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
 import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import FactilityMaintenanceSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/FactilityMaintenanceSuggestion";
+import FactilityMaintenanceSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/FacilityMaintenanceSuggestion";
 
 
 function MaintenanceOperationSuggestionPage() {
@@ -22,7 +22,7 @@ function MaintenanceOperationSuggestionPage() {
             <FactilityMaintenanceSuggestion />
           </TabsContent>
           <TabsContent value="sensorMaintenance">
-            <MaintenanceOperationSuggestion />
+            <SensorMaintenanceSuggestion />
           </TabsContent></Tabs>
       </div>
     </div>

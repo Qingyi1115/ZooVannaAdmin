@@ -9,7 +9,6 @@ import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
 import useApiFormData from "../../../../hooks/useApiFormData";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -104,7 +103,7 @@ function CreateNewAnimalFeedForm() {
       toastShadcn({
         description: "Successfully created animal feed",
       });
-      const redirectUrl = `/assetfacility/viewallanimalfeed`;
+      const redirectUrl = `/assetfacility/viewallassets/animalFeed`;
       navigate(redirectUrl);
     } catch (error: any) {
       toastShadcn({
@@ -126,12 +125,9 @@ function CreateNewAnimalFeedForm() {
       {/* Title Header and back button */}
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
-          <NavLink
-            to="/assetfacility/viewallanimalfeed">
-            <Button variant={"outline"} type="button" className="">
+            <Button variant={"outline"} type="button" className="" onClick={()=>{navigate(-1)}} >
               Back
             </Button>
-          </NavLink>
 
           <span className="self-center text-title-xl font-bold">
             Create Animal Feed

@@ -23,7 +23,7 @@ function MainLayout(props: PropsType) {
       {user && (
         <SidebarNew sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       )}
-      <div className="no-scrollbar relative flex w-full flex-1 flex-col overflow-y-auto overflow-x-hidden">
+      <div className=" relative flex w-full flex-1 flex-col overflow-y-auto overflow-x-hidden">
         {user && (
           <HeaderNew
             sidebarOpen={sidebarOpen}

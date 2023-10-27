@@ -13,7 +13,7 @@ import useApiJson from "../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
@@ -60,7 +60,7 @@ function AllEnrichmentItemDatatable() {
     dt.current?.exportCSV();
   };
 
- 
+
   const imageBodyTemplate = (rowData: EnrichmentItem) => {
     return (
       <img
@@ -136,13 +136,12 @@ function AllEnrichmentItemDatatable() {
   const actionBodyTemplate = (enrichmentItem: EnrichmentItem) => {
     return (
       <React.Fragment>
-        <NavLink
-          to={`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemId}`}
-        >
-          <Button className="mr-2">
-            <HiPencil className="mx-auto" />
-          </Button>
-        </NavLink>
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewallassets/enrichmentItem`, { replace: true });
+          navigate(`/assetfacility/editenrichmentitem/${enrichmentItem.enrichmentItemId}`);
+        }}>
+          <HiPencil className="mx-auto" />
+        </Button>
         <Button
           variant={"destructive"}
           className="mr-2"
@@ -168,6 +167,17 @@ function AllEnrichmentItemDatatable() {
           }}
         />
       </span>
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewallassets/enrichmentItem`, { replace: true });
+          navigate("/assetfacility/createenrichmentitem");
+        }}>
+          <HiPlus className="mr-auto" />
+          Add Enrichment Item
+        </Button> : <Button disabled className="invisible">
+          Export to .csv
+        </Button>}
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -175,24 +185,7 @@ function AllEnrichmentItemDatatable() {
     <div>
       <div>
         <Toast ref={toast} />
-        <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-            {(employee.planningStaff?.plannerType == "CURATOR") && (
-              <NavLink to={"/assetfacility/createenrichmentitem"}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                </Button>
-              </NavLink>
-            )}
-              <span className="self-center text-title-xl font-bold">
-                All Enrichment Items
-              </span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
+        <div className="">
 
           <DataTable
             ref={dt}
@@ -215,6 +208,13 @@ function AllEnrichmentItemDatatable() {
             header={header}
           >
             <Column
+              field="enrichmentItemImageUrl"
+              header="Image"
+              frozen
+              body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
+            ></Column>
+            <Column
               field="enrichmentItemId"
               header="ID"
               sortable
@@ -226,12 +226,7 @@ function AllEnrichmentItemDatatable() {
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
-            <Column
-              field="enrichmentItemImageUrl"
-              header="Image"
-              body={imageBodyTemplate}
-            ></Column>
-            {(employee.planningStaff?.plannerType == "CURATOR") && (
+            {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && (
               <Column
                 body={actionBodyTemplate}
                 header="Actions"
