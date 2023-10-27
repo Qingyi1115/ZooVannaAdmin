@@ -33,7 +33,7 @@ function AnimalFeedingPlanDetailsPage() {
     null
   );
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
-  
+
   const { tab } = useParams<{ tab: string }>();
 
   useEffect(() => {
@@ -138,7 +138,10 @@ function AnimalFeedingPlanDetailsPage() {
             </div>
             <div>
               <div className="text-lg font-bold">Schedule and Logs</div>
-              <Tabs defaultValue={tab ? `${tab}` : "facilityDetails"} className="w-full">
+              <Tabs
+                defaultValue={tab ? `${tab}` : "sessionSchedule"}
+                className="w-full"
+              >
                 <TabsList className="no-scrollbar my-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
                   <TabsTrigger value="sessionSchedule">
                     Session Schedule
