@@ -124,7 +124,7 @@ function ViewZooEventDetails() {
   const [involvedItemGlobalFiler, setInvolvedItemGlobalFilter] =
     useState<string>("");
 
-  function updateZooEventFromRes(zooEvent:ZooEvent){
+  function updateZooEventFromRes(zooEvent: ZooEvent) {
     setCurZooEvent(zooEvent);
     setInvolvedAnimalList(zooEvent.animals);
     setEventStartDateTime(new Date(zooEvent.eventStartDateTime));
@@ -138,7 +138,7 @@ function ViewZooEventDetails() {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/zooEvent/getZooEventById/${zooEventId}`
         );
-        console.log("responseJson",responseJson)
+        console.log("responseJson", responseJson)
         updateZooEventFromRes(responseJson["zooEvent"]);
       } catch (error: any) {
         console.log(error);
@@ -668,32 +668,23 @@ function ViewZooEventDetails() {
                       }}
                       className="my-3">Edit Basic Information
                     </Button>
-                    {!curZooEvent.eventIsPublic ?
-                      <Button
-                        onClick={() => {
-                          showMakePublicDialog();
-                        }}
-                        className="my-3">Make Event Public
-                      </Button> :
-                      <Button
-                        disabled
-                        className="invisible my-3"
-                      >Make Event Public
-                      </Button>
-                    }
+
                     {curZooEvent.animalActivity ?
                       <Button
                         onClick={() => {
                           navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
                           navigate(`/animal/viewanimalactivitydetails/${curZooEvent.animalActivity?.animalActivityId}`);
                         }}
-                        className="my-3">View Animal Activity
+                        className="my-3">
+                        View Animal Activity
                       </Button> :
-                      <Button
-                        disabled
-                        className="invisible my-3"
-                      >View Animal Activity
-                      </Button>
+                      (!curZooEvent.eventIsPublic && < Button
+                        onClick={() => {
+                          showMakePublicDialog();
+                        }}
+                        className="my-3">
+                        Make Event Public
+                      </Button>)
                     }
                   </div>
 
@@ -1091,8 +1082,9 @@ function ViewZooEventDetails() {
             </div>
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }
 
