@@ -571,7 +571,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           style={{ width: "50rem" }}
           breakpoints={{ "960px": "75vw", "641px": "90vw" }}
           header="Assign Operation Staff"
-          position={"right"}
           footer={
             <Button
               onClick={confirmAssignment}
