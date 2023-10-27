@@ -709,18 +709,35 @@ function ViewZooEventDetails() {
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Start Date
+                          {curZooEvent.eventIsPublic? "Start Date Time" : "Start Date"}
                         </TableCell>
                         <TableCell>
                           {new Date(curZooEvent.eventStartDateTime).toDateString()}
                         </TableCell>
                       </TableRow>
+
+                    { curZooEvent.eventIsPublic
+                       &&(
+                        
+                      <TableRow>
+                      <TableCell className="w-1/3 font-bold" colSpan={2}>
+                        End Date Time
+                      </TableCell>
+                      <TableCell>
+                        {new Date(curZooEvent.eventStartDateTime).toDateString()}
+                      </TableCell>
+                    </TableRow>
+                       )
+                    }
+
+                    {  !curZooEvent.eventIsPublic && (
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Session Timing
                         </TableCell>
                         <TableCell>{curZooEvent.eventTiming}</TableCell>
                       </TableRow>
+                      )}
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Duration (Hours)
