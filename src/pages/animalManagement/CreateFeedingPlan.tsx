@@ -139,7 +139,7 @@ function CreateFeedingPlan() {
     useState<DummyFeedingItem[]>(
       animalSourceList.map((animal) => ({
         foodCategory: "",
-        amount: null,
+        amount: 0,
         unit: "",
         animal: animal,
       }))
@@ -180,7 +180,8 @@ function CreateFeedingPlan() {
   function getRecoAmountAnimal(
     animalFeedCategory: string,
     weekOrMeal: string,
-    animalCode: string
+    animalCode: string,
+    unit: string
   ) {
     const recoAmountForSpecificAnimal = animalRecoAmounts.find((recoAmount) => {
       return (
@@ -195,12 +196,21 @@ function CreateFeedingPlan() {
         <>
           {recoAmountForSpecificAnimal.recoAmt != "No dietary data found!" ? (
             <div>
-              {recoAmountForSpecificAnimal.recoAmt?.toLocaleString()} grams (g)
+              {unit == "GRAM" ? (
+                <span>
+                  {recoAmountForSpecificAnimal.recoAmt?.toLocaleString()} (g)
+                </span>
+              ) : (
+                <span>
+                  {(
+                    Number(recoAmountForSpecificAnimal.recoAmt) / 1000
+                  ).toLocaleString()}{" "}
+                  (kg)
+                </span>
+              )}
             </div>
           ) : (
-            <div className="text-danger">
-              {recoAmountForSpecificAnimal.recoAmt}
-            </div>
+            <div className="text-danger">No data found</div>
           )}
         </>
       );
@@ -228,7 +238,8 @@ function CreateFeedingPlan() {
 
   function getAmountFoodAlreadyAddedPerWeekInGrams(
     animalCode: string,
-    animalFeedCategory: string
+    animalFeedCategory: string,
+    unit: string
   ) {
     const sum = feedingPlanSessions.reduce((total, session) => {
       const filteredItems = session.feedingItems.filter((item) => {
@@ -246,9 +257,9 @@ function CreateFeedingPlan() {
       return total + sessionSum;
     }, 0);
 
-    return (
-      sum.toLocaleString() + " (g) | " + (sum / 1000).toLocaleString() + " (kg)"
-    );
+    return unit == "GRAM"
+      ? sum.toLocaleString() + " (g)"
+      : (sum / 1000).toLocaleString() + " (kg)";
   }
 
   const handleAmountChangeNewFoodItem = (
@@ -1065,7 +1076,6 @@ function CreateFeedingPlan() {
             style={{
               width: "60vw",
               height: "70vh",
-              marginLeft: "10%",
             }}
           >
             {/* <DialogTrigger asChild>
@@ -1167,12 +1177,11 @@ function CreateFeedingPlan() {
                                       <HiOutlineExclamationCircle className="h-6 w-6 animate-pulse stroke-danger" />
                                     </TooltipTrigger>
                                     <TooltipContent className="border-strokedark/40">
-                                      Sick, pregnant, and possibly injured
-                                      animals may require{" "}
+                                      Please note that sick, pregnant, and
+                                      possibly injured animals may require{" "}
                                       <span className="font-bold">
-                                        more food
+                                        special diets!
                                       </span>{" "}
-                                      given to them!
                                     </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
@@ -1185,7 +1194,7 @@ function CreateFeedingPlan() {
                             </div>
                           </div>
                         </div>
-                        <div>
+                        <div className="flex flex-col gap-4 text-sm">
                           {group.items.map((item) => (
                             <div className="h-full">
                               <div className="flex gap-8">
@@ -1222,41 +1231,67 @@ function CreateFeedingPlan() {
                                     <div className="flex gap-8">
                                       <div>
                                         Per meal: <br />
-                                        <span className="text-lg">
-                                          {item.foodCategory &&
-                                            getRecoAmountAnimal(
-                                              item.foodCategory,
-                                              "meal",
-                                              group.animal.animalCode
-                                            )}
-                                        </span>
+                                        <div
+                                          className={`rounded bg-slate-200 p-1 ${
+                                            !selectedCurFeedCategoryNewFoodItem &&
+                                            "animate-pulse p-2"
+                                          }`}
+                                        >
+                                          <span className="text-sm font-bold">
+                                            {item.foodCategory &&
+                                              item.unit &&
+                                              getRecoAmountAnimal(
+                                                item.foodCategory,
+                                                "meal",
+                                                group.animal.animalCode,
+                                                item.unit
+                                              )}
+                                          </span>
+                                        </div>
                                       </div>
                                       <div>
                                         Per week: <br />
-                                        <span className="text-lg">
-                                          {item.foodCategory &&
-                                            getRecoAmountAnimal(
-                                              item.foodCategory,
-                                              "week",
-                                              group.animal.animalCode
-                                            )}
-                                        </span>
+                                        <div
+                                          className={`rounded bg-slate-200 p-1 ${
+                                            !selectedCurFeedCategoryNewFoodItem &&
+                                            "animate-pulse p-2"
+                                          }`}
+                                        >
+                                          <span className="text-sm font-bold">
+                                            {item.foodCategory &&
+                                              item.unit &&
+                                              getRecoAmountAnimal(
+                                                item.foodCategory,
+                                                "week",
+                                                group.animal.animalCode,
+                                                item.unit
+                                              )}
+                                          </span>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                   <div className="w-1/3">
                                     <span className="font-medium">
-                                      Amount already added <br />
-                                      per week:
+                                      Amount Added:
                                     </span>
                                     <div>
-                                      <span className="text-lg">
-                                        {item.foodCategory &&
-                                          getAmountFoodAlreadyAddedPerWeekInGrams(
-                                            group.animal.animalCode,
-                                            item.foodCategory
-                                          )}
-                                      </span>
+                                      <div
+                                        className={`w-full rounded bg-slate-200 p-1 text-center ${
+                                          !selectedCurFeedCategoryNewFoodItem &&
+                                          "animate-pulse p-2"
+                                        }`}
+                                      >
+                                        <span className="w-full text-sm font-bold">
+                                          {item.foodCategory &&
+                                            item.unit &&
+                                            getAmountFoodAlreadyAddedPerWeekInGrams(
+                                              group.animal.animalCode,
+                                              item.foodCategory,
+                                              item.unit
+                                            )}
+                                        </span>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -1341,7 +1376,7 @@ function CreateFeedingPlan() {
           <div className="mb-4 flex justify-between">
             {/* <NavLink className="flex" to={(-1)}> */}
             <Button
-              onClick={() => navigate("/animal/viewallanimals/")}
+              onClick={() => navigate(-1)}
               variant={"outline"}
               type="button"
               className=""
@@ -1420,7 +1455,7 @@ function CreateFeedingPlan() {
             name="physicalDefiningCharacteristics"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <Form.Label className="font-medium">Details</Form.Label>
+            <Form.Label className="font-medium">Description</Form.Label>
             <Form.Control
               asChild
               value={feedingPlanDesc}
@@ -1704,12 +1739,11 @@ function CreateFeedingPlan() {
                                       <HiOutlineExclamationCircle className="h-6 w-6 animate-pulse stroke-danger" />
                                     </TooltipTrigger>
                                     <TooltipContent className="border-strokedark/40">
-                                      Sick, pregnant, and possibly injured
-                                      animals may require{" "}
+                                      Please note that sick, pregnant, and
+                                      possibly injured animals may require{" "}
                                       <span className="font-bold">
-                                        more food
+                                        special diets!
                                       </span>{" "}
-                                      given to them!
                                     </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
@@ -1745,7 +1779,7 @@ function CreateFeedingPlan() {
                           {/* reco amounts stuff */}
                           <div className="flex w-full justify-between gap-8">
                             <div>
-                              <span className="font-medium ">
+                              <span className="font-medium">
                                 Recommended Amount:
                               </span>{" "}
                               <div className="flex items-end gap-8">
@@ -1761,10 +1795,12 @@ function CreateFeedingPlan() {
                                   >
                                     <span className="text-base font-bold">
                                       {selectedCurFeedCategoryNewFoodItem &&
+                                        unitOfMeasurementNewFoodItem &&
                                         getRecoAmountAnimal(
                                           selectedCurFeedCategoryNewFoodItem,
                                           "meal",
-                                          curAnimal.animalCode
+                                          curAnimal.animalCode,
+                                          unitOfMeasurementNewFoodItem
                                         )}
                                     </span>
                                   </div>
@@ -1781,10 +1817,12 @@ function CreateFeedingPlan() {
                                   >
                                     <span className="text-base font-bold">
                                       {selectedCurFeedCategoryNewFoodItem &&
+                                        unitOfMeasurementNewFoodItem &&
                                         getRecoAmountAnimal(
                                           selectedCurFeedCategoryNewFoodItem,
                                           "week",
-                                          curAnimal.animalCode
+                                          curAnimal.animalCode,
+                                          unitOfMeasurementNewFoodItem
                                         )}
                                     </span>
                                   </div>
@@ -1802,9 +1840,11 @@ function CreateFeedingPlan() {
                                 >
                                   <span className="w-full text-base font-bold">
                                     {selectedCurFeedCategoryNewFoodItem &&
+                                      unitOfMeasurementNewFoodItem &&
                                       getAmountFoodAlreadyAddedPerWeekInGrams(
                                         curAnimal.animalCode,
-                                        selectedCurFeedCategoryNewFoodItem
+                                        selectedCurFeedCategoryNewFoodItem,
+                                        unitOfMeasurementNewFoodItem
                                       )}
                                   </span>
                                 </div>

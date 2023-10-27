@@ -84,17 +84,20 @@ function AnimalFeedingPlanHomePage() {
         </div>
 
         {/*  */}
-        <Button
+        {/* <Button
           onClick={() => navigate(`/animal/createfeedingplan/${speciesCode}`)}
           className=""
         >
           Create New Feeding Plan
-        </Button>
+        </Button> */}
         <div>
-          <AllAnimalFeedingPlansDatatable
-            feedingPlansList={feedingPlansList}
-            setFeedingPlansList={setFeedingPlansList}
-          />
+          {speciesCode && (
+            <AllAnimalFeedingPlansDatatable
+              feedingPlansList={feedingPlansList}
+              setFeedingPlansList={setFeedingPlansList}
+              speciesCode={speciesCode}
+            />
+          )}
         </div>
       </div>
     </div>

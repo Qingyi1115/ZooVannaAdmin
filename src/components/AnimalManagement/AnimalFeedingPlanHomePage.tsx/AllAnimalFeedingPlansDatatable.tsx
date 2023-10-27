@@ -43,11 +43,13 @@ let emptyFeedingPlan: FeedingPlan = {
   endDate: new Date(),
   animals: [],
   feedingPlanSessionDetails: [],
+  title: "",
 };
 
 interface AllAnimalFeedingPlansDatatableProps {
   feedingPlansList: FeedingPlan[];
   setFeedingPlansList: any;
+  speciesCode: string;
 }
 
 function AllAnimalFeedingPlansDatatable(
@@ -63,7 +65,7 @@ function AllAnimalFeedingPlansDatatable(
     day: "2-digit",
   };
 
-  const { feedingPlansList, setFeedingPlansList } = props;
+  const { feedingPlansList, setFeedingPlansList, speciesCode } = props;
   const [selectedFeedingPlan, setSelectedFeedingPlan] =
     useState<FeedingPlan>(emptyFeedingPlan);
 
@@ -187,9 +189,16 @@ function AllAnimalFeedingPlansDatatable(
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <Button className="invisible"></Button>
+              <Button
+                onClick={() =>
+                  navigate(`/animal/createfeedingplan/${speciesCode}`)
+                }
+                className=""
+              >
+                <HiPlus className="mr-2" /> Create New Feeding Plan
+              </Button>
               <span className="invisible">All Feeding Plans</span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
+              <Button className="invisible"></Button>
             </div>
             <Separator />
           </div>
