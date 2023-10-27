@@ -76,7 +76,6 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details,
-      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalObservationLog);
 
