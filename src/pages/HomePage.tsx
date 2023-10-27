@@ -13,11 +13,15 @@ import {
 } from "@/components/ui/card";
 import FatAnimalsCard from "../components/HomePage/FatAnimalsCard";
 import MaintenanceNotificationCard from "../components/HomePage/MaintenanceNotificationCard";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 function HomePage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [facilityNotificationLoading, setFacilityNotificationLoading] = React.useState<boolean>(false);
 
+  const { state } = useAuthContext();
+  const employee = state.user?.employeeData;
+  
   return (
     <div className="h-screen w-full p-10">
       <div className="flex h-5/6 w-full gap-10">
@@ -43,6 +47,7 @@ function HomePage() {
           <Skeleton className="mb-4 h-[20px] w-2/3 rounded-full" />
           </Card>
         ):(
+          (employee.planningStaff || employee.generalStaff) &&
           <MaintenanceNotificationCard />
 
         )}
