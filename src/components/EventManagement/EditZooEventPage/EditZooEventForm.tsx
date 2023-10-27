@@ -211,15 +211,14 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           toastShadcn({
             description: "Successfully updated event",
           });
-          const redirectUrl = `/animal/animalactivities/`;
-          navigate(redirectUrl);
+          navigate(-1);
         }else{
           
         const zooEventDetails = {
           zooEventId: curZooEvent?.zooEventId,
           eventIsPublic: false,
-          eventNotificationDate: curZooEvent.eventNotificationDate?.getTime(),
-          eventEndDateTime: curZooEvent.eventEndDateTime?.getTime(),
+          eventNotificationDate: curZooEvent.eventNotificationDate,
+          eventEndDateTime: curZooEvent.eventEndDateTime,
         };
       console.log(zooEventDetails);
       apiJson.put(
@@ -230,6 +229,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
         toastShadcn({
           description: "Successfully updated event",
         });
+        navigate(-1);
       }).catch(error => {
         // got error
         toastShadcn({
