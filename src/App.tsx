@@ -472,7 +472,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/animal/createfeedingplan/:feedingPlanId"
+                  path="/animal/createfeedingplan/:speciesCode"
                   element={
                     user ? <CreateFeedingPlan /> : <Navigate to="/login" />
                   }
@@ -965,7 +965,6 @@ function App() {
                   path="/sales/viewGraph/"
                   element={user ? <SalesChartPage /> : <Navigate to="/login" />}
                 />
-
 
                 <Route
                   path="/promotion/editpromotion/:promotionId"
