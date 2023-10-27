@@ -918,9 +918,6 @@ function ViewZooEventDetails() {
 
                 <TabsContent value="involvedAnimals">
                   <div className="w-full">
-                    <div className="my-4mb-2 text-xl font-medium">
-                      Involved Animal(s):
-                    </div>
                     <DataTable
                       value={involvedAnimalList}
                       scrollable
@@ -1030,9 +1027,6 @@ function ViewZooEventDetails() {
 
                 {curZooEvent.animalActivity != null && <TabsContent value="involvedItems">
                   <div>
-                    <div className="my-4 mb-2 text-xl font-medium">
-                      Item(s) to be used:
-                    </div>
                     <DataTable
                       value={involvedItemList}
                       scrollable
