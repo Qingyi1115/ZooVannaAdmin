@@ -387,14 +387,6 @@ function ViewZooEventDetails() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     console.log(curZooEvent);
     e.preventDefault();
-    const zooEventDetails = {
-      zooEventId: curZooEvent?.zooEventId,
-      eventIsPublic: true,
-      eventNotificationDate: eventNotificationDate?.getTime(),
-      eventEndDateTime: eventEndDateTime?.getTime(),
-      imageUrl
-
-    };
     console.log(updateFuture)
     if (updateFuture) {
       const data = {
@@ -433,6 +425,14 @@ function ViewZooEventDetails() {
         });
       });
     } else {
+      const zooEventDetails = {
+        zooEventId: curZooEvent?.zooEventId,
+        eventIsPublic: false,
+        eventNotificationDate: eventNotificationDate?.getTime(),
+        eventEndDateTime: eventEndDateTime?.getTime(),
+        imageUrl
+  
+      };
       console.log(zooEventDetails);
       apiJson.put(
         `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
