@@ -154,13 +154,13 @@ function CreateAnimalActivityForm() {
 
   function validateRequiredNumberOfKeeper(props: ValidityState) {
     if (props != undefined) {
-      if (durationInMinutes == undefined) {
+      if (requiredNumberOfKeeper == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please enter the number of keepers required
           </div>
         );
-      } else if (durationInMinutes <= 0) {
+      } else if (requiredNumberOfKeeper <= 0) {
         return (
           <div className="font-medium text-danger">
             * Number of keepers must be greater than 0
