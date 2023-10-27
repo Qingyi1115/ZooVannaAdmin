@@ -15,10 +15,11 @@ import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import Employee from "../../../models/Employee";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import AnimalActivity from "../../../models/AnimalActivity";
 
-// interface CreateNewAnimalObservationLogProps {
-//   speciesCode: string;
-// }
+interface CreateNewAnimalObservationLogProps {
+  curAnimalActivity: AnimalActivity;
+}
 
 function validateAnimalObservationLogName(props: ValidityState) {
   if (props != undefined) {
@@ -32,10 +33,12 @@ function validateAnimalObservationLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalObservationLogForm() {
+function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+
+  const { curAnimalActivity } = props;
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
   const [observationQuality, setObservationQuality] = useState<string | undefined>(
     undefined); // dropdown
@@ -60,6 +63,7 @@ function CreateNewAnimalObservationLogForm() {
     e.preventDefault();
 
     const newAnimalObservationLog = {
+      animalActivityId: curAnimalActivity.animalActivityId,
       dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
