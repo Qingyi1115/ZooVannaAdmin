@@ -128,6 +128,8 @@ import CreateZooEventPage from "./pages/eventManagement/CreateZooEventPage";
 import EditZooEventPage from "./pages/eventManagement/EditZooEventPage";
 import ViewZooEventDetails from "./pages/eventManagement/ViewZooEventDetails";
 import ZooEventHomePage from "./pages/eventManagement/ZooEventHomePage";
+import RevenueChart2 from "./components/SalesManagement/RevenueChart2";
+import RevenueChartFinal from "./components/SalesManagement/RevenueChartFinal";
 
 function App() {
   const { state } = useAuthContext();
@@ -660,13 +662,7 @@ function App() {
 
                 <Route
                   path="/assetfacility/viewcamera/:sensorId"
-                  element={
-                    user ? (
-                      <ViewCameraPage />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
+                  element={user ? <ViewCameraPage /> : <Navigate to="/login" />}
                 />
 
                 <Route
@@ -959,6 +955,7 @@ function App() {
                   path="/sales/viewGraph/"
                   element={user ? <SalesChartPage /> : <Navigate to="/login" />}
                 />
+
 
                 <Route
                   path="/promotion/editpromotion/:promotionId"
