@@ -339,7 +339,7 @@ function AllFeedingPlanFeedingLogsDatatable(
           {/* Title Header and back button */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              {employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+              {feedingPlan == null && employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
                 employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS" ? (
                 <Button
                   className="mr-2"

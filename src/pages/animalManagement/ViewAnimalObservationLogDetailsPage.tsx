@@ -6,12 +6,13 @@ import AnimalObservationLog from "../../models/AnimalObservationLog";
 import { Button } from "@/components/ui/button";
 import Employee from "../../models/Employee";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
+import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization, ActivityType, EventTimingType, RecurringPattern } from "../../enums/Enumurated";
 import Animal from "../../models/Animal";
 import Species from "../../models/Species";
 import { Rating } from "../../enums/Rating";
 import ViewAnimalObservationLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalObservationLogDetails";
 import Keeper from "../../models/Keeper";
+import AnimalActivity from "../../models/AnimalActivity";
 
 
 
@@ -98,6 +99,22 @@ function ViewAnimalObservationLogDetailsPage() {
     employee: emptyEmployee
   }
 
+  let emptyAnimalActivity: AnimalActivity = {
+    animalActivityId: -1,
+    activityType: ActivityType.TRAINING,
+    title: "",
+    details: "",
+    recurringPattern: RecurringPattern.DAILY,
+    dayOfMonth: null,
+    dayOfWeek: null,
+    startDate: new Date(),
+    endDate: new Date(),
+    eventTimingType: EventTimingType.AFTERNOON,
+    durationInMinutes: -1,
+    animalActivityLogs: [],
+    requiredNumberOfKeeper: 0
+  };
+
   let emptyAnimalObservationLog: AnimalObservationLog = {
     animalObservationLogId: 0,
     dateTime: new Date(),
@@ -105,7 +122,8 @@ function ViewAnimalObservationLogDetailsPage() {
     observationQuality: Rating.NOT_RECORDED,
     details: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
+    animalActivity: emptyAnimalActivity
   };
 
   const [curAnimalObservationLog, setCurAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
@@ -129,7 +147,7 @@ function ViewAnimalObservationLogDetailsPage() {
           <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
-          <span className="self-center text-lg text-graydark">
+          <span className="self-center text-title-xl font-bold">
             View Animal Observation Log Details
           </span>
           <Button disabled className="invisible">

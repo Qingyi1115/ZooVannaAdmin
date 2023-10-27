@@ -127,7 +127,7 @@ function EditAnimalFeedingLogForm(props: EditAnimalFeedingLogFormProps) {
             <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
               Back
             </Button>
-            <span className="self-center text-lg text-graydark">
+            <span className="self-center text-title-xl font-bold">
               Edit Animal Feeding Log
             </span>
             <Button disabled className="invisible">

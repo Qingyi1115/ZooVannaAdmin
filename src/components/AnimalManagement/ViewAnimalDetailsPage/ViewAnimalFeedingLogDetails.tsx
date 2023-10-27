@@ -11,6 +11,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 import AnimalFeedingLog from "../../../models/AnimalFeedingLog";
 import Animal from "../../../models/Animal";
+import AnimalFeedingPlanInvolvedAnimalDatatable from "../AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 
 interface ViewAnimalFeedingLogDetailsProps {
   curAnimalFeedingLog: AnimalFeedingLog
@@ -57,16 +58,40 @@ function ViewAnimalFeedingLogDetails(props: ViewAnimalFeedingLogDetailsProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Details
+              Amount Offered
             </TableCell>
-            <TableCell>{curAnimalFeedingLog.details}</TableCell>
+            <TableCell>{curAnimalFeedingLog.amountOffered}</TableCell>
           </TableRow>
           <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Amount Consumed
+            </TableCell>
+            <TableCell>{curAnimalFeedingLog.amountConsumed}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Amount Leftovers
+            </TableCell>
+            <TableCell>{curAnimalFeedingLog.amountLeftovers}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Presentation Method
+            </TableCell>
+            <TableCell>{curAnimalFeedingLog.presentationMethod}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Extra Remarks
+            </TableCell>
+            <TableCell>{curAnimalFeedingLog.extraRemarks}</TableCell>
+          </TableRow>
+          {/* <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Animals
             </TableCell>
             <TableCell>{curAnimalFeedingLog.animals.map((animal: Animal) => animal.houseName).join(", ")}</TableCell>
-          </TableRow>
+          </TableRow> */}
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Keeper
@@ -75,7 +100,11 @@ function ViewAnimalFeedingLogDetails(props: ViewAnimalFeedingLogDetailsProps) {
           </TableRow>
         </TableBody>
       </Table>
+      <br />
+      <span className="text-lg font-medium">Involved Animals:</span>
+      <AnimalFeedingPlanInvolvedAnimalDatatable involvedAnimalList={curAnimalFeedingLog.animals} />
     </div>
+
   )
 }
 

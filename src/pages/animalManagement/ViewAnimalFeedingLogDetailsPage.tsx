@@ -130,6 +130,7 @@ function ViewAnimalFeedingLogDetailsPage() {
     apiJson.get(
       `http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`)
       .then(res => {
+        console.log("res", res);
         setCurAnimalFeedingLog(res.animalFeedingLog as AnimalFeedingLog);
       })
       .catch(e => console.log(e));
@@ -144,7 +145,7 @@ function ViewAnimalFeedingLogDetailsPage() {
           <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
-          <span className="self-center text-lg text-graydark">
+          <span className="self-center text-title-xl font-bold">
             View Animal Feeding Log Details
           </span>
           <Button disabled className="invisible">
