@@ -41,7 +41,9 @@ function ZooEventHomePage() {
 
   const [eventGroupList, setEventGroupList] = useState<any>([]);
   const [selEventGroupList, setSelEventGroupList] = useState<any[]>([]);
-  // const [selEventGroupList, setSelEventGroupList] = useState<eventGroup[]>([]);
+
+  const [titleGroupList, setTitleGroupList] = useState<any>([]);
+  const [selTitleGroupList, setSelTitleGroupList] = useState<any[]>([]);
 
   const [refresh, setRefresh] = useState<any>(0);
   const [zooEventsList, setZooEventsList] = useState<
@@ -74,7 +76,7 @@ function ZooEventHomePage() {
       console.log("responseJson", responseJson)
 
       const allEventGroup: any[] = [];
-
+      const allTitleGroups: any[] = [];
 
       const a = responseJson["zooEvents"].map(ze => {
         return { ...ze, eventType: beautifyText(ze.eventType) }
@@ -82,53 +84,17 @@ function ZooEventHomePage() {
 
       a.forEach((ze: ZooEvent) => {
 
-        //   if (ze.animalActivity) {
-        //     if (!allEventGroup.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity")) {
-        //       if (!(employee.superAdmin ||
-        //         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-        //         employee.planningStaff?.plannerType == "SALES")
-        //         && employee.keeper) {
-        //         if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
-        //           allEventGroup.push({
-        //             groupId: ze.animalActivity.animalActivityId,
-        //             groupType: "animalActivity",
-        //             groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
-        //           });
-        //         }
-        //       } else {
-        //         allEventGroup.push({
-        //           groupId: ze.animalActivity.animalActivityId,
-        //           groupType: "animalActivity",
-        //           groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
-        //         });
-        //       }
-        //     }
-        //   } else if (ze.feedingPlanSessionDetail) {
-        //     if (!allEventGroup.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail")) {
-        //       if (!(employee.superAdmin ||
-        //         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-        //         employee.planningStaff?.plannerType == "SALES")
-        //         && employee.keeper) {
-        //         if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
-        //           allEventGroup.push({
-        //             groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
-        //             groupType: "feedingPlanSessionDetail",
-        //             groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
-        //               " " + ze.feedingPlanSessionDetail.eventTimingType
-        //           })
-        //         }
-        //       } else {
-        //         allEventGroup.push({
-        //           groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
-        //           groupType: "feedingPlanSessionDetail",
-        //           groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
-        //             " " + ze.feedingPlanSessionDetail.eventTimingType
-        //         })
-        //       }
-        //     }
-        //   } else if (ze) {
+          if (ze.animalActivity) {
+            if (ze.animalActivity?.title !== undefined && !allTitleGroups.find(title => title == ze.animalActivity?.title)) {
+              allTitleGroups.push(ze.animalActivity?.title);
+            }
+          } else if (ze.feedingPlanSessionDetail) {
+            if (ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && !allTitleGroups.find(title => title == ze.feedingPlanSessionDetail?.feedingPlan?.title)) {
+              allTitleGroups.push(ze.feedingPlanSessionDetail?.feedingPlan?.title);
+            }
+          } else if (ze) {
 
-        //   }
+          }
 
 
         if (!allEventGroup.find(et => et == ze.eventType)) {
@@ -137,6 +103,7 @@ function ZooEventHomePage() {
 
       });
       setEventGroupList(allEventGroup);
+      setTitleGroupList(allTitleGroups);
 
       const newGp = allEventGroup.filter(gp => selEventGroupList.includes(gp));
       if (selEventGroupList.length == 0 || newGp.length == 0) {
@@ -144,6 +111,15 @@ function ZooEventHomePage() {
       } else {
         setSelEventGroupList(newGp);
       }
+
+      const newTi = allTitleGroups.filter(ti => selTitleGroupList.includes(ti));
+      console.log("newTi",newTi)
+      if (selTitleGroupList.length == 0 || newTi.length == 0) {
+        setSelTitleGroupList(allTitleGroups);
+      } else {
+        setSelTitleGroupList(newTi);
+      }
+
       setFilteredZooEventsList(a);
       return setZooEventsList(a);
 
@@ -160,13 +136,20 @@ function ZooEventHomePage() {
         // } else if (ze.feedingPlanSessionDetail) {
         //   return selEventGroupList.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail");
         // } else if (ze) {
-
         // }
 
         return selEventGroupList.find(et => ze.eventType == et);
+      }).filter(ze=>{
+        if (ze.animalActivity) {
+          return selTitleGroupList.find(ti => ti == ze.animalActivity?.title);
+        } else if (ze.feedingPlanSessionDetail) {
+          return selTitleGroupList.find(ti => ti == ze.feedingPlanSessionDetail?.feedingPlan?.title);
+        } else if (ze) {
+
+        }
       })
     )
-  }, [selEventGroupList]);
+  }, [selEventGroupList, selTitleGroupList]);
 
   const menuLeft = useRef<Menu>(null);
   let items = [
@@ -297,19 +280,35 @@ function ZooEventHomePage() {
                 setRefresh([])
               }
             }} />
+            <div className="flex gap-8 p-4 items-center">
+              <div className="whitespace-no-wrap min-w-max text-lg">
+                Event Type
+              </div>
+              <MultiSelect
+                id={"eventGroupFilter"}
+                value={selEventGroupList}
+                onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
+                options={eventGroupList}
+                optionLabel=""
+                filter
+                display="chip"
+                placeholder="Filter Type"
+                className="w-full md:w-20rem overflow-hidden" />
+            </div>
+
           <div className="flex gap-8 p-4 items-center">
             <div className="whitespace-no-wrap min-w-max text-lg">
-              Event Type
+              Title
             </div>
             <MultiSelect
-              id={"eventGroupFilter"}
-              value={selEventGroupList}
-              onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
-              options={eventGroupList}
+              id={"eventTitleFilter"}
+              value={selTitleGroupList}
+              onChange={(e: MultiSelectChangeEvent) =>setSelTitleGroupList(e.value)}
+              options={titleGroupList}
               optionLabel=""
               filter
               display="chip"
-              placeholder="Filter Events"
+              placeholder="Filter Title"
               className="w-full md:w-20rem overflow-hidden" />
           </div>
         </div>

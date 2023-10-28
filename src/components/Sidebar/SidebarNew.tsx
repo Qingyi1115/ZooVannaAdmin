@@ -385,6 +385,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </SidebarLinkGroup> */}
 
               {/* <!-- Menu Item Asset Facility --> */}
+              {(employee.superAdmin || employee.planningStaff || employee.generalStaff) &&
               <SidebarLinkGroup
                 activeCondition={
                   pathname === "/" || pathname.includes("assetfacility")
@@ -585,6 +586,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   );
                 }}
               </SidebarLinkGroup>
+              }
 
               {/* <!-- Menu Item Employee Account --> */}
               {employee.isAccountManager && (
