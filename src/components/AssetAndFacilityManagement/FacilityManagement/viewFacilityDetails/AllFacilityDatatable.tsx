@@ -8,6 +8,7 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
+import facility from "src/models/Facility";
 import useApiJson from "../../../../hooks/useApiJson";
 import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { MdOutlineAssignmentInd } from "react-icons/md";
@@ -52,14 +53,14 @@ function AllFacilityDatatable() {
     hubProcessors: [],
   };
 
-  const [facilityList, setFacilityList] = useState<Facility[]>([]);
+  const [facilityList, setFacilityList] = useState<facility[]>([]);
   const [selectedFacility, setSelectedFacility] =
-    useState<Facility>(emptyFacility);
+    useState<facility>(emptyFacility);
   const [deletefacilityDialog, setDeleteFacilityDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Facility[]>>(null);
+  const dt = useRef<DataTable<facility[]>>(null);
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
@@ -80,7 +81,7 @@ function AllFacilityDatatable() {
     dt.current?.exportCSV();
   };
 
-  const confirmDeletefacility = (facility: Facility) => {
+  const confirmDeletefacility = (facility: facility) => {
     setSelectedFacility(facility);
     setDeleteFacilityDialog(true);
   };
