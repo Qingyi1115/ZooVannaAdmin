@@ -53,7 +53,7 @@ function FacilityMaintenanceSuggestion() {
   const navigate = useNavigate();
   const [objectsList, setObjectsList] = useState<MaintenanceDetails[]>([]);
   const [facilityList, setFacilityList] = useState<any[]>([]);
-  const [selectedObject, setSelectedObject] = useState<MaintenanceDetails>({ name: "", description: "", lastMaintenance: "", suggestedMaintenance: "", type: "", id: -1 });
+  const [selectedObject, setSelectedObject] = useState<MaintenanceDetails>({ name: "", description: "", lastMaintenance: "", suggestedMaintenance: "", type: "", id: -1, repairRequired: false });
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<MaintenanceDetails[]>>(null);
