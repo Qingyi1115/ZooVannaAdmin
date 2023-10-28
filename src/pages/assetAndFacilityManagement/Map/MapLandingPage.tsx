@@ -40,6 +40,9 @@ import { FacilityType } from "../../../enums/FacilityType";
 import { Dialog } from "primereact/dialog";
 import { HiCheck, HiX } from "react-icons/hi";
 import { IdentifierType } from "../../../enums/Enumurated";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
+import { InputText } from "primereact/inputtext";
 // import geolocation from "geolocation";
 
 function MapLandingPage() {
@@ -47,12 +50,26 @@ function MapLandingPage() {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
-  const [facilityList, setFacilityList] = useState<Facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
-    null
-  );
-  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  let emptyFacility: Facility = {
+    facilityId: -1,
+    facilityName: "",
+    showOnMap: false,
+    xCoordinate: 0,
+    yCoordinate: 0,
+    facilityDetail: "",
+    facilityDetailJson: "",
+    isSheltered: false,
+    hubProcessors: [],
+  };
 
+  const [facilityList, setFacilityList] = useState<Facility[]>([]);
+  const [selectedFacility, setSelectedFacility] = useState<Facility>(
+    emptyFacility
+  );
+
+  const dt = useRef<DataTable<Facility[]>>(null);
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  const [globalFilter, setGlobalFilter] = useState<string>("");
   const [deleteLocationFromMapDialog, setDeleteLocationFromMapDialog] =
     useState<boolean>(false);
 
@@ -89,7 +106,7 @@ function MapLandingPage() {
           const updatedFacility = facilityListWithLocation.find(
             (facility) => facility.facilityId === selectedFacility.facilityId
           );
-          setSelectedFacility(updatedFacility || null);
+          setSelectedFacility(updatedFacility || emptyFacility);
         }
       } catch (error: any) {
         console.log(error);
@@ -177,7 +194,7 @@ function MapLandingPage() {
       toastShadcn({
         description: "Successfully remove location map",
       });
-      setSelectedFacility(null);
+      setSelectedFacility(emptyFacility);
       setDeleteLocationFromMapDialog(false);
       setRefreshSeed(refreshSeed + 1);
     } catch (error: any) {
@@ -279,6 +296,25 @@ function MapLandingPage() {
   );
   // end delete stuff
 
+
+  const header = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h4 className="m-1">All Facilities</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+    </div>
+  );
+
+
   return (
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
@@ -315,8 +351,8 @@ function MapLandingPage() {
                       Type:{" "}
                       {
                         FacilityType[
-                          selectedFacility.facilityDetailJson
-                            .facilityType as keyof typeof FacilityType
+                        selectedFacility.facilityDetailJson
+                          .facilityType as keyof typeof FacilityType
                         ]
                       }
                     </div>
@@ -384,7 +420,7 @@ function MapLandingPage() {
               </div>
             </CardContent>
           </Card>
-          <div className="w-full">
+          <div className="w-full space-y-4">
             <div className="flex h-[5vh] items-center gap-4">
               <div>Filters: </div>
               {/* Facility Type Filter */}
@@ -450,6 +486,61 @@ function MapLandingPage() {
                 setIsShownOnMap={setIsShownOnMap}
               />
             </div>
+            <Card>
+              <DataTable
+                ref={dt}
+                value={facilityList}
+                selection={selectedFacility}
+                onSelectionChange={(e) => {
+                  if (Array.isArray(e.value)) {
+                    setSelectedFacility(e.value);
+                  }
+                }}
+                dataKey="facilityId"
+                paginator
+                rows={10}
+                scrollable
+                selectionMode={"single"}
+                rowsPerPageOptions={[5, 10, 25]}
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facilities"
+                globalFilter={globalFilter}
+                header={header}
+              >
+                <Column
+                  field="facilityId"
+                  header="ID"
+                  sortable
+                  style={{ minWidth: "4rem" }}
+                ></Column>
+                <Column
+                  field="facilityName"
+                  header="Name"
+                  sortable
+                  style={{ minWidth: "12rem" }}
+                ></Column>
+                <Column
+                  field="facilityDetail"
+                  header="Owner Type"
+                  sortable
+                  style={{ minWidth: "12rem" }}
+                ></Column>
+                <Column
+                  field="isSheltered"
+                  header="Shelter available"
+                  sortable
+                  style={{ minWidth: "12rem" }}
+                ></Column>
+                {/* <Column
+                body={actionBodyTemplate}
+                header="Actions"
+                frozen
+                alignFrozen="right"
+                exportable={false}
+                style={{ minWidth: "15rem" }}
+              ></Column> */}
+              </DataTable>
+            </Card>
           </div>
         </div>
       </div>
@@ -491,7 +582,7 @@ function MapLandingPage() {
               {isShownOnMap ? (
                 <span>
                   Are you sure you want to hide selected facility's location
-                  from the customermap?
+                  from the customer map?
                   <br />
                   This will not remove the facility and its location details
                   from the map
@@ -499,7 +590,7 @@ function MapLandingPage() {
               ) : (
                 <span>
                   Are you sure you want to show selected facility's location on
-                  the customermap?
+                  the customer map?
                   <br />
                   This will not remove the facility and its location details
                   from the map
