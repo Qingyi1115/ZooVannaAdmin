@@ -43,12 +43,12 @@ function MaintenanceNotificationCard() {
   const [eventList, setEventList] = useState<any[]>([]);
 
   useEffect(() => {
-     apiJson.get(
-        "http://localhost:3000/api/species/getallspecies"
-    ).then(responseJson=>{
-        setSpeciesList(responseJson as Species[]);
+    apiJson.get(
+      "http://localhost:3000/api/species/getallspecies"
+    ).then(responseJson => {
+      setSpeciesList(responseJson as Species[]);
 
-    }).catch(err=>console.log(err));
+    }).catch(err => console.log(err));
   }, []);
 
   useEffect(() => {
@@ -164,16 +164,17 @@ function MaintenanceNotificationCard() {
   }, [refreshSeed]);
 
   return (
-    <Card className="h-max w-max">
+    <Card className=" shrink h-max w-max">
       {" "}
       <CardHeader>
-        <CardTitle>Assets and Facility Notification</CardTitle>
+        <CardTitle>Notifications</CardTitle>
         <CardDescription className="w-[25vw]">
-          Maintenance suggestions and Zoo Events
+          Maintenance Suggestions and Zoo Events
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-between"> <ul className="flex h-auto flex-col overflow-y-auto">
+        <div className="flex justify-between">
+          <ul className="flex h-auto w-auto flex-col overflow-y-auto">
             <li>
               <Link
                 className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"

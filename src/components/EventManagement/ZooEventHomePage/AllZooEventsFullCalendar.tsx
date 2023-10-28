@@ -198,7 +198,7 @@ function AllZooEventsFullCalendar(
     <div>
       <div className="flex w-full justify-center">
         <div className="w-full">
-          <div className="flex justify-between">
+          <div className="flex justify-between overflow-hidden">
             {/* Legend */}
             <div className="mb-1 flex items-center gap-4 rounded border border-strokedark/20 px-4 text-sm">
               <span>Legend: </span>

@@ -119,7 +119,7 @@ function FatAnimalsCard() {
   };
 
   return (
-    <Card className="h-max w-max">
+    <Card className="shrink h-max w-max">
       {" "}
       <CardHeader>
         <CardTitle>Abnormal Weight Warning!</CardTitle>
@@ -153,7 +153,7 @@ function FatAnimalsCard() {
           style={{ height: "40vh", width: "25vw" }}
           dataKey="animalCode"
           className="h-1/2 overflow-hidden rounded border border-graydark/30"
-          //   filterDisplay="row"
+        //   filterDisplay="row"
         >
           <Column
             field="imageUrl"
