@@ -365,7 +365,7 @@ function MapLandingPage() {
           {/* <Button onClick={testGetLocation}>Test get location</Button> */}
         </div>
         <div className="flex gap-8">
-          <Card className="h-[55vh] w-1/4">
+          <Card className="h-[55vh] w-1/4 sticky top-30">
             <CardContent className="flex h-full flex-col justify-between">
               <div className="pb-4 pt-8">
                 {!selectedFacility ? (
