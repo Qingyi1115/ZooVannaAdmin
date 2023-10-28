@@ -139,10 +139,12 @@ function ZooEventHomePage() {
 
       });
       setEventGroupList(allEventGroup);
-      if (selEventGroupList.length == 0){
+
+      const newGp = allEventGroup.filter(gp=>selEventGroupList.includes(gp));
+      if (selEventGroupList.length == 0 || newGp.length == 0){
         setSelEventGroupList(allEventGroup);
       }else{
-        setSelEventGroupList(allEventGroup.filter(gp=>selEventGroupList.includes(gp)));
+        setSelEventGroupList(newGp);
       }
       setFilteredZooEventsList(a);
       return setZooEventsList(a);
