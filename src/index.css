@@ -74,6 +74,18 @@
   border: 1px solid #6c0063;
 }
 
+.fc-event.cusfeeding,
+.fc-v-event.cusfeeding {
+  background-color: #6c0063;
+  border: 1px solid #6c0063;
+}
+
+.fc-event.empfeeding,
+.fc-v-event.empfeeding {
+  background-color: #6c0063;
+  border: 1px solid #6c0063;
+}
+
 .fc-event.enrichment,
 .fc-v-event.enrichment {
   background-color: #976405;
@@ -114,6 +126,24 @@
   .fc-view-harness
   .fc-event.fc-daygrid-dot-event.enrichment:hover {
   background: #97640560; /* Adjust the color and opacity as needed */
+  color: #24341c;
+  cursor: pointer;
+}
+
+/* Hover state styles for pills with the "enrichment" class */
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.cusfeeding:hover {
+  background: #4000ff60; /* Adjust the color and opacity as needed */
+  color: #24341c;
+  cursor: pointer;
+}
+
+/* Hover state styles for pills with the "enrichment" class */
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.empfeeding:hover {
+  background: #960069; /* Adjust the color and opacity as needed */
   color: #24341c;
   cursor: pointer;
 }

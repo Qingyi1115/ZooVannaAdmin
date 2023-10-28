@@ -113,6 +113,9 @@ function AllZooEventsFullCalendar(
           ze.eventTiming?.toString() || "",
           new Date(ze.eventStartDateTime)
         );
+        console.log("naming",zooEventsList)
+
+        const naming:any = ze.eventType;
   
         return {
           title: ze.eventName,
@@ -126,6 +129,18 @@ function AllZooEventsFullCalendar(
             eventDescription: ze.eventDescription,
             eventDurationHrs: ze.eventDurationHrs,
           },
+          classNames: 
+          naming == "Training"
+            ? ["training overflow-hidden"]
+            : naming == "Enrichment"
+            ? ["enrichment overflow-hidden"]
+            : naming == "Observation"
+            ? ["observation overflow-hidden"]
+            : naming == "Employee Feeding"
+            ? ["empfeeding overflow-hidden"]
+            : naming == "Customer Feeding"
+            ? ["cusfeeding overflow-hidden"]
+            : [],
         };
       }).flat(1)
     );
@@ -184,6 +199,29 @@ function AllZooEventsFullCalendar(
       <div className="flex w-full justify-center">
         <div className="w-full">
           <div className="mb-2 flex justify-end gap-2">
+          <div className="mb-1 flex items-center gap-4 rounded border border-strokedark/20 px-4 text-sm">
+              <span>Legend: </span>
+              <div className="flex items-center gap-2 text-[#0f3360]">
+                <div className="h-5 w-5 rounded bg-[#0f3360]" />
+                <span className="font-bold">Observation</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#6c0063]">
+                <div className="h-5 w-5 rounded bg-[#6c0063]" />
+                <span className="font-bold">Training</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#976405]">
+                <div className="h-5 w-5 rounded bg-[#976405]" />
+                <span className="font-bold">Enrichment</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#4000ff60]">
+                <div className="h-5 w-5 rounded bg-[#4000ff60]" />
+                <span className="font-bold">Customer Feeding</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#960069]">
+                <div className="h-5 w-5 rounded bg-[#960069]" />
+                <span className="font-bold">Employee Feeding</span>
+              </div>
+            </div>
             {/* Month selection control */}
             <Select
               value={currentMonth.toString()}
