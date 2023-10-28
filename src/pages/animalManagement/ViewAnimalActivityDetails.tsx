@@ -38,6 +38,7 @@ import { Dialog } from "primereact/dialog";
 import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalActivityLogsDatatable";
 import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
 import { Activity } from "lucide-react";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -112,7 +113,7 @@ function ViewAnimalActivityDetails() {
   const [involvedAnimalGlobalFiler, setInvolvedAnimalGlobalFilter] =
     useState<string>("");
   const { tab } = useParams<{ tab: string }>();
-
+  const employee = useAuthContext().state.user?.employeeData;
   const [involvedItemList, setInvolvedItemList] = useState<EnrichmentItem[]>(
     []
   );
@@ -393,11 +394,13 @@ function ViewAnimalActivityDetails() {
               </TabsList>
               <TabsContent value="details">
                 <div className="mb-10">
-                  <NavLink
-                    to={`/animal/editanimalactivity/${curAnimalActivity.animalActivityId}`}
-                  >
-                    <Button className="my-3">Edit Basic Information</Button>
-                  </NavLink>
+                  {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+                    <NavLink
+                      to={`/animal/editanimalactivity/${curAnimalActivity.animalActivityId}`}
+                    >
+                      <Button className="my-3">Edit Basic Information</Button>
+                    </NavLink>
+                  }
                   <Table>
                     <TableBody>
                       <TableRow>

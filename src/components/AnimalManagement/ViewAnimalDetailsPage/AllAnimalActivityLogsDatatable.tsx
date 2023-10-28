@@ -39,6 +39,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
   const [animalActivitySearch, setAnimalActivitySearch] =
     useState<boolean>(animalActivityId != -1);
   const employee = useAuthContext().state.user?.employeeData;
+
   let emptySpecies: Species = {
     speciesId: -1,
     speciesCode: "",
@@ -253,13 +254,15 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
               }}>
               <HiEye className="mx-auto" />
             </Button>
-            <Button
+            {(animalActivityLog.keeper.employee.employeeName == employee.employeeName
+              || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
+            ) && <Button
               variant={"destructive"}
               className="mr-2"
               onClick={() => confirmDeleteanimalActivityLog(animalActivityLog)}
             >
-              <HiTrash className="mx-auto" />
-            </Button>
+                <HiTrash className="mx-auto" />
+              </Button>}
           </div> :
           <div>
             <Button
@@ -344,8 +347,8 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
             }}
           />
         </span>
-        {(animalActivitySearch && ((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS")) ?
+        {(animalActivitySearch && ((employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR" ||
+          employee.keeper)) ?
           <Button className="mr-2"
             onClick={() => {
               navigate(`/animal/viewanimalactivitydetails/${animalActivityId}/activitylogs`, { replace: true })
@@ -362,50 +365,6 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
       </div>
     </div>
   );
-
-  const listItem = (animalActivityLog: AnimalActivityLog) => {
-    return (
-      <div>
-        <Card className="my-4 relative"
-          title={animalActivityLog.animalActivityLogId}
-          subTitle={animalActivityLog.dateTime ?
-            "Date created: " + new Date(animalActivityLog.dateTime).toLocaleString() : ""}>
-          {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
-          <Button className="absolute top-5 right-5"
-            variant={"destructive"}
-            onClick={() => confirmDeleteanimalActivityLog(animalActivityLog)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
-          )} */}
-          <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
-            <div>
-              <div className="text-xl font-bold text-900">Duration In Minutes</div>
-              <p>{animalActivityLog.durationInMinutes}</p>
-            </div>
-            <Separator orientation="vertical" />
-            <div>
-              <div className="text-xl font-bold text-900">Session Rating</div>
-              <p>{animalActivityLog.sessionRating}</p>
-            </div>
-            <Separator orientation="vertical" />
-            <div>
-              <div className="text-xl font-bold text-900">Details</div>
-              <p>{animalActivityLog.details}</p>
-            </div>
-          </div>
-
-        </Card>
-      </div>
-    )
-  }
-
-  const itemTemplate = (animalActivityLog: AnimalActivityLog) => {
-    if (!animalActivityLog) {
-      return;
-    }
-    return listItem(animalActivityLog);
-  };
 
   return (
     <div>
@@ -478,6 +437,12 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
             <Column
               field="details"
               header="Details"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="keeper.employee.employeeName"
+              header="Keeper"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>

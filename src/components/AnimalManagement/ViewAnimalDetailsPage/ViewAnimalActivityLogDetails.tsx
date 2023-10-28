@@ -12,6 +12,7 @@ import { HiPencil } from "react-icons/hi";
 import AnimalActivityLog from "../../../models/AnimalActivityLog";
 import Animal from "../../../models/Animal";
 import AnimalFeedingPlanInvolvedAnimalDatatable from "../AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 interface ViewAnimalActivityLogDetailsProps {
   curAnimalActivityLog: AnimalActivityLog
@@ -21,18 +22,23 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
   const { curAnimalActivityLog } = props;
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
+  const employee = useAuthContext().state.user?.employeeData;
 
   return (
     <div className="flex flex-col">
       <div>
-        <Button className="mr-2"
-          onClick={() => {
-            navigate(`/animal/viewAnimalActivityLogDetails/${curAnimalActivityLog.animalActivityLogId}`, { replace: true })
-            navigate(`/animal/editAnimalActivityLog/${curAnimalActivityLog.animalActivityLogId}`)
-          }}>
-          <HiPencil className="mx-auto" />
-          Edit Animal Activity Log Details
-        </Button>
+        {(curAnimalActivityLog.keeper.employee.employeeName == employee.employeeName
+          || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
+        ) &&
+          <Button className="mr-2"
+            onClick={() => {
+              navigate(`/animal/viewAnimalActivityLogDetails/${curAnimalActivityLog.animalActivityLogId}`, { replace: true })
+              navigate(`/animal/editAnimalActivityLog/${curAnimalActivityLog.animalActivityLogId}`)
+            }}>
+            <HiPencil className="mx-auto" />
+            Edit Animal Activity Log Details
+          </Button>
+        }
       </div>
 
 

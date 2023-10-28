@@ -38,6 +38,7 @@ import { useNavigate } from "react-router-dom";
 import ZooEvent from "../../../models/ZooEvent";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 let emptyZooEvent: ZooEvent = {
   zooEventId: 0,
@@ -87,7 +88,7 @@ function AllZooEventsDatatable(
   const dt = useRef<DataTable<ZooEvent[]>>(null);
 
   const toastShadcn = useToast().toast;
-
+  const employee = useAuthContext().state.user?.employeeData;
   const [eventTypes] = useState<EventType[]>(Object.values(EventType));
 
   //
@@ -165,13 +166,15 @@ function AllZooEventsDatatable(
           >
             <HiEye className="mr-auto" />
           </Button>
-          <Button
-            variant={"destructive"}
-            className="mr-2"
-            onClick={() => confirmDeleteZooEvent(zooEvent)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+            <Button
+              variant={"destructive"}
+              className="mr-2"
+              onClick={() => confirmDeleteZooEvent(zooEvent)}
+            >
+              <HiTrash className="mx-auto" />
+            </Button>
+          }
         </div>
       </React.Fragment >
     );

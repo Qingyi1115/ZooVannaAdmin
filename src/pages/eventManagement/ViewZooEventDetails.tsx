@@ -43,6 +43,9 @@ import { CheckIcon } from "lucide-react";
 import { set } from "date-fns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AllEventEmployeesDatatable from "../../components/EventManagement/ViewZooEventDetails/AllEventEmployeesDatatable";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import Keeper from "../../models/Keeper";
+import beautifyText from "../../hooks/beautifyText";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -113,7 +116,7 @@ function ViewZooEventDetails() {
   const [curZooEvent, setCurZooEvent] =
     useState<ZooEvent | null>(null);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
-
+  const employee = useAuthContext().state.user?.employeeData;
   const [involvedAnimalList, setInvolvedAnimalList] = useState<Animal[]>();
   const [involvedAnimalGlobalFiler, setInvolvedAnimalGlobalFilter] =
     useState<string>("");
@@ -651,22 +654,19 @@ function ViewZooEventDetails() {
 
                   <TabsTrigger value="involvedAnimals">Involved Animals</TabsTrigger>
                   {curZooEvent.animalActivity != null && <TabsTrigger value="involvedItems">Involved Items</TabsTrigger>}
-                  <TabsTrigger value="assignedEmployees">Assigned Employees</TabsTrigger>
+                  {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && <TabsTrigger value="assignedEmployees">Assigned Employees</TabsTrigger>}
                 </TabsList>
 
                 <TabsContent value="details">
                   <div className="my-4 flex justify-start gap-6">
-                    <Button
-                      onClick={() => {
-                        // if (curZooEvent.animalActivity != null) {
-                        //   navigate(`/animal/editanimalactivity/${curZooEvent.zooEventId}`, { replace: true })
-                        //   navigate(`/zooevent/editzooevent/${curZooEvent.zooEventId}`)
-                        // }
-                        navigate(`/zooevent/viewzooeventdetails/${curZooEvent.zooEventId}`, { replace: true })
-                        navigate(`/zooevent/editzooevent/${curZooEvent.zooEventId}`)
-                      }}
-                      className="my-3">Edit Basic Information
-                    </Button>
+                    {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+                      <Button
+                        onClick={() => {
+                          navigate(`/zooevent/viewzooeventdetails/${curZooEvent.zooEventId}`, { replace: true })
+                          navigate(`/zooevent/editzooevent/${curZooEvent.zooEventId}`)
+                        }}
+                        className="my-3">Edit Basic Information
+                      </Button>}
 
                     {curZooEvent.animalActivity ?
                       <Button
@@ -729,7 +729,7 @@ function ViewZooEventDetails() {
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Type
                         </TableCell>
-                        <TableCell>{curZooEvent.eventType}</TableCell>
+                        <TableCell>{beautifyText(curZooEvent.eventType)}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -761,7 +761,7 @@ function ViewZooEventDetails() {
                           <TableCell className="w-1/3 font-bold" colSpan={2}>
                             Session Timing
                           </TableCell>
-                          <TableCell>{curZooEvent.eventTiming}</TableCell>
+                          <TableCell>{beautifyText(curZooEvent.eventTiming)}</TableCell>
                         </TableRow>
                       )}
                       <TableRow>
@@ -783,6 +783,12 @@ function ViewZooEventDetails() {
                           Description
                         </TableCell>
                         <TableCell>{curZooEvent.eventDescription}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Keepers
+                        </TableCell>
+                        <TableCell>{curZooEvent.keepers?.map((keeper: Keeper) => beautifyText(keeper.employee.employeeName)).join(", ")}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -1124,9 +1130,11 @@ function ViewZooEventDetails() {
 
                 </TabsContent>}
 
-                <TabsContent value="assignedEmployees">
-                  <AllEventEmployeesDatatable zooEventId={zooEventId as any} />
-                </TabsContent>
+                {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+                  <TabsContent value="assignedEmployees">
+                    <AllEventEmployeesDatatable zooEventId={zooEventId as any} />
+                  </TabsContent>
+                }
               </Tabs>
 
             </div>

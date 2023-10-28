@@ -23,10 +23,8 @@ import FormFieldSelect from "../../components/FormFieldSelect";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import { Menu } from "primereact/menu";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import beautifyText from "../../hooks/beautifyText";
 
-function beautify(ugly:string){
-  return ugly.split("_").map(word=>word[0].toLocaleUpperCase() + word.substring(1, word.length).toLocaleLowerCase()).join(" ");
-}
 
 const YEAR_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 365
 interface eventGroup {
@@ -78,72 +76,72 @@ function ZooEventHomePage() {
       const allEventGroup: any[] = [];
 
 
-      const a = responseJson["zooEvents"].map(ze=>{
-        return {...ze, eventType:beautify(ze.eventType)}
+      const a = responseJson["zooEvents"].map(ze => {
+        return { ...ze, eventType: beautifyText(ze.eventType) }
       });
 
       a.forEach((ze: ZooEvent) => {
 
-      //   if (ze.animalActivity) {
-      //     if (!allEventGroup.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity")) {
-      //       if (!(employee.superAdmin ||
-      //         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-      //         employee.planningStaff?.plannerType == "SALES")
-      //         && employee.keeper) {
-      //         if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
-      //           allEventGroup.push({
-      //             groupId: ze.animalActivity.animalActivityId,
-      //             groupType: "animalActivity",
-      //             groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
-      //           });
-      //         }
-      //       } else {
-      //         allEventGroup.push({
-      //           groupId: ze.animalActivity.animalActivityId,
-      //           groupType: "animalActivity",
-      //           groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
-      //         });
-      //       }
-      //     }
-      //   } else if (ze.feedingPlanSessionDetail) {
-      //     if (!allEventGroup.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail")) {
-      //       if (!(employee.superAdmin ||
-      //         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-      //         employee.planningStaff?.plannerType == "SALES")
-      //         && employee.keeper) {
-      //         if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
-      //           allEventGroup.push({
-      //             groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
-      //             groupType: "feedingPlanSessionDetail",
-      //             groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
-      //               " " + ze.feedingPlanSessionDetail.eventTimingType
-      //           })
-      //         }
-      //       } else {
-      //         allEventGroup.push({
-      //           groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
-      //           groupType: "feedingPlanSessionDetail",
-      //           groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
-      //             " " + ze.feedingPlanSessionDetail.eventTimingType
-      //         })
-      //       }
-      //     }
-      //   } else if (ze) {
+        //   if (ze.animalActivity) {
+        //     if (!allEventGroup.find(group => group.groupId == ze.animalActivity?.animalActivityId && group.groupType == "animalActivity")) {
+        //       if (!(employee.superAdmin ||
+        //         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+        //         employee.planningStaff?.plannerType == "SALES")
+        //         && employee.keeper) {
+        //         if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
+        //           allEventGroup.push({
+        //             groupId: ze.animalActivity.animalActivityId,
+        //             groupType: "animalActivity",
+        //             groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
+        //           });
+        //         }
+        //       } else {
+        //         allEventGroup.push({
+        //           groupId: ze.animalActivity.animalActivityId,
+        //           groupType: "animalActivity",
+        //           groupName: ze.animalActivity.title + " " + ze.animalActivity.eventTimingType
+        //         });
+        //       }
+        //     }
+        //   } else if (ze.feedingPlanSessionDetail) {
+        //     if (!allEventGroup.find(group => group.groupId == ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId && group.groupType == "feedingPlanSessionDetail")) {
+        //       if (!(employee.superAdmin ||
+        //         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+        //         employee.planningStaff?.plannerType == "SALES")
+        //         && employee.keeper) {
+        //         if (ze.keepers?.find((k: any) => k.employeeId == employee.employeeId)) {
+        //           allEventGroup.push({
+        //             groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
+        //             groupType: "feedingPlanSessionDetail",
+        //             groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
+        //               " " + ze.feedingPlanSessionDetail.eventTimingType
+        //           })
+        //         }
+        //       } else {
+        //         allEventGroup.push({
+        //           groupId: ze.feedingPlanSessionDetail.feedingPlanSessionDetailId,
+        //           groupType: "feedingPlanSessionDetail",
+        //           groupName: ze.feedingPlanSessionDetail?.feedingPlanSessionDetailId + " " + ze.feedingPlanSessionDetail.feedingPlan?.title + " " + ze.feedingPlanSessionDetail.dayOfWeek +
+        //             " " + ze.feedingPlanSessionDetail.eventTimingType
+        //         })
+        //       }
+        //     }
+        //   } else if (ze) {
 
-      //   }
+        //   }
 
 
-        if (!allEventGroup.find(et=> et == ze.eventType)){
+        if (!allEventGroup.find(et => et == ze.eventType)) {
           allEventGroup.push(ze.eventType);
         }
 
       });
       setEventGroupList(allEventGroup);
 
-      const newGp = allEventGroup.filter(gp=>selEventGroupList.includes(gp));
-      if (selEventGroupList.length == 0 || newGp.length == 0){
+      const newGp = allEventGroup.filter(gp => selEventGroupList.includes(gp));
+      if (selEventGroupList.length == 0 || newGp.length == 0) {
         setSelEventGroupList(allEventGroup);
-      }else{
+      } else {
         setSelEventGroupList(newGp);
       }
       setFilteredZooEventsList(a);
@@ -165,7 +163,7 @@ function ZooEventHomePage() {
 
         // }
 
-        return selEventGroupList.find(et=> ze.eventType == et); 
+        return selEventGroupList.find(et => ze.eventType == et);
       })
     )
   }, [selEventGroupList]);
@@ -210,10 +208,16 @@ function ZooEventHomePage() {
           <div className="mb-4 flex justify-between">
 
             <Menu model={items} popup ref={menuLeft} id="popup_menu_right" popupAlignment="left" />
-            <Button className="mr-2" onClick={(event) => menuLeft.current?.toggle(event)} aria-controls="popup_menu_right" aria-haspopup >
-              <HiPlus className="mr-2" />
-              Add Event
-            </Button>
+            {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
+              <Button className="mr-2" onClick={(event) => menuLeft.current?.toggle(event)} aria-controls="popup_menu_right" aria-haspopup >
+                <HiPlus className="mr-2" />
+                Add Event
+              </Button>
+              : <Button className="mr-2 invisible" disabled aria-controls="popup_menu_right" aria-haspopup >
+                <HiPlus className="mr-2" />
+                Add Event
+              </Button>
+            }
 
             <span className=" self-center text-title-xl font-bold">
               All Events
@@ -294,11 +298,11 @@ function ZooEventHomePage() {
               }
             }} />
           <div className="flex gap-8 p-4 items-center">
-          <div className="whitespace-no-wrap min-w-max text-lg">
+            <div className="whitespace-no-wrap min-w-max text-lg">
               Event Type
             </div>
             <MultiSelect
-            id={"eventGroupFilter"}
+              id={"eventGroupFilter"}
               value={selEventGroupList}
               onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
               options={eventGroupList}
@@ -306,10 +310,10 @@ function ZooEventHomePage() {
               filter
               display="chip"
               placeholder="Filter Events"
-              className="w-full md:w-20rem" />
+              className="w-full md:w-20rem overflow-hidden" />
           </div>
         </div>
-       
+
         {isDatatableView ? (
           <AllEventsDatatable
             zooEventsList={filteredZooEventsList}
