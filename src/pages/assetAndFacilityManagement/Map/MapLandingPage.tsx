@@ -38,8 +38,12 @@ import Facility from "../../../models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
 import { FacilityType } from "../../../enums/FacilityType";
 import { Dialog } from "primereact/dialog";
-import { HiCheck, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPlus, HiX } from "react-icons/hi";
 import { IdentifierType } from "../../../enums/Enumurated";
+import { DataTable } from "primereact/datatable";
+import { dt } from "@fullcalendar/core/internal-common";
+import { Column } from "primereact/column";
+import { InputText } from "primereact/inputtext";
 // import geolocation from "geolocation";
 
 function MapLandingPage() {
@@ -279,6 +283,65 @@ function MapLandingPage() {
   );
   // end delete stuff
 
+  // Datatable stuff
+  let emptyFacility: Facility = {
+    facilityId: -1,
+    facilityName: "",
+    showOnMap: false,
+    xCoordinate: 0,
+    yCoordinate: 0,
+    facilityDetail: "",
+    facilityDetailJson: "",
+    isSheltered: false,
+    hubProcessors: [],
+  };
+
+  const dt = useRef<DataTable<Facility[]>>(null);
+  const [globalFilter, setGlobalFilter] = useState<string>("");
+  const [tableSelectedFacility, setTableSelectedFacility] =
+    useState<Facility>(emptyFacility);
+
+  const header = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h4 className="m-1">All Facilities</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+    </div>
+  );
+
+  const actionBodyTemplate = (facility: Facility) => {
+    return (
+      <React.Fragment>
+        <Button
+          // variant={"outline"}
+          onClick={() => {
+            setTableSelectedFacility(facility);
+            setSelectedFacility(tableSelectedFacility);
+          }}
+          className="mr-1">
+          <HiPlus className="mr-1" />
+        </Button>
+        <NavLink
+          to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
+          state={{ prev: `/assetfacility/maplanding` }}
+        >
+          <Button variant={"outline"} className="mb-1 mr-1">
+            <HiEye className="mx-auto" />
+          </Button>
+        </NavLink>
+      </React.Fragment >
+    );
+  };
+
   return (
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
@@ -315,8 +378,8 @@ function MapLandingPage() {
                       Type:{" "}
                       {
                         FacilityType[
-                          selectedFacility.facilityDetailJson
-                            .facilityType as keyof typeof FacilityType
+                        selectedFacility.facilityDetailJson
+                          .facilityType as keyof typeof FacilityType
                         ]
                       }
                     </div>
@@ -384,7 +447,7 @@ function MapLandingPage() {
               </div>
             </CardContent>
           </Card>
-          <div className="w-full">
+          <div className="w-full space-y-4">
             <div className="flex h-[5vh] items-center gap-4">
               <div>Filters: </div>
               {/* Facility Type Filter */}
@@ -450,6 +513,62 @@ function MapLandingPage() {
                 setIsShownOnMap={setIsShownOnMap}
               />
             </div>
+
+            <Card>
+              <DataTable
+                ref={dt}
+                value={facilityList}
+                selection={tableSelectedFacility}
+                onSelectionChange={(e) => {
+                  if (Array.isArray(e.value)) {
+                    setTableSelectedFacility(e.value);
+                  }
+                }}
+                dataKey="facilityId"
+                paginator
+                rows={10}
+                scrollable
+                selectionMode={"single"}
+                rowsPerPageOptions={[5, 10, 25]}
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facilities"
+                globalFilter={globalFilter}
+                header={header}
+              >
+                <Column
+                  field="facilityId"
+                  header="ID"
+                  sortable
+                  style={{ minWidth: "4rem" }}
+                ></Column>
+                <Column
+                  field="facilityName"
+                  header="Name"
+                  sortable
+                  style={{ minWidth: "12rem" }}
+                ></Column>
+                <Column
+                  field="facilityDetail"
+                  header="Owner Type"
+                  sortable
+                  style={{ minWidth: "12rem" }}
+                ></Column>
+                <Column
+                  field="isSheltered"
+                  header="Shelter available"
+                  sortable
+                  style={{ minWidth: "12rem" }}
+                ></Column>
+                <Column
+                  body={actionBodyTemplate}
+                  header="Actions"
+                  frozen
+                  alignFrozen="right"
+                  exportable={false}
+                ></Column>
+              </DataTable>
+            </Card>
+
           </div>
         </div>
       </div>
