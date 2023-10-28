@@ -12,6 +12,7 @@ import { HiPencil } from "react-icons/hi";
 import AnimalFeedingLog from "../../../models/AnimalFeedingLog";
 import Animal from "../../../models/Animal";
 import AnimalFeedingPlanInvolvedAnimalDatatable from "../AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 interface ViewAnimalFeedingLogDetailsProps {
   curAnimalFeedingLog: AnimalFeedingLog
@@ -21,18 +22,23 @@ function ViewAnimalFeedingLogDetails(props: ViewAnimalFeedingLogDetailsProps) {
   const { curAnimalFeedingLog } = props;
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
+  const employee = useAuthContext().state.user?.employeeData;
 
   return (
     <div className="flex flex-col">
       <div>
-        <Button className="mr-2"
-          onClick={() => {
-            navigate(`/animal/viewAnimalFeedingLogDetails/${curAnimalFeedingLog.animalFeedingLogId}`, { replace: true })
-            navigate(`/animal/editAnimalFeedingLog/${curAnimalFeedingLog.animalFeedingLogId}`)
-          }}>
-          <HiPencil className="mx-auto" />
-          Edit Animal Feeding Log Details
-        </Button>
+        {(curAnimalFeedingLog.keeper.employee.employeeName == employee.employeeName
+          || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
+        ) &&
+          <Button className="mr-2"
+            onClick={() => {
+              navigate(`/animal/viewAnimalFeedingLogDetails/${curAnimalFeedingLog.animalFeedingLogId}`, { replace: true })
+              navigate(`/animal/editAnimalFeedingLog/${curAnimalFeedingLog.animalFeedingLogId}`)
+            }}>
+            <HiPencil className="mx-auto" />
+            Edit Animal Feeding Log Details
+          </Button>
+        }
       </div>
 
 

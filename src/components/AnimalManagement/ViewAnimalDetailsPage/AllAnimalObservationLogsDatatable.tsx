@@ -25,6 +25,7 @@ import { Column } from "primereact/column";
 import Keeper from "../../../models/Keeper";
 import AnimalActivity from "src/models/AnimalActivity";
 import { HiMiniListBullet } from "react-icons/hi2";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface AllAnimalObservationLogsDatatableProps {
   speciesCode: string;
@@ -172,7 +173,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
     dt.current?.exportCSV();
   };
 
-  const confirmDeleteanimalObservationLog = (animalObservationLog: AnimalObservationLog) => {
+  const confirmDeleteAnimalObservationLog = (animalObservationLog: AnimalObservationLog) => {
     setSelectedAnimalObservationLog(animalObservationLog);
     setDeleteAnimalObservationLogDialog(true);
   };
@@ -245,13 +246,17 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               }}>
               <HiEye className="mx-auto" />
             </Button>
-            <Button
-              variant={"destructive"}
-              className="mr-2"
-              onClick={() => confirmDeleteanimalObservationLog(animalObservationLog)}
-            >
-              <HiTrash className="mx-auto" />
-            </Button>
+            {(animalObservationLog.keeper.employee.employeeName == employee.employeeName
+              || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
+            ) &&
+              <Button
+                variant={"destructive"}
+                className="mr-2"
+                onClick={() => confirmDeleteAnimalObservationLog(animalObservationLog)}
+              >
+                <HiTrash className="mx-auto" />
+              </Button>
+            }
           </div>
           :
           <div>
@@ -264,7 +269,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               }}>
               <HiEye className="mx-auto" />
             </Button>
-            <Button
+            {/* <Button
               // variant={"outline"}
               className="mb-1 mr-1"
               onClick={() => {
@@ -272,7 +277,16 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
                 navigate(`/animal/viewAnimalActivityDetails/${animalObservationLog.animalActivity.animalActivityId}`)
               }}>
               <HiMiniListBullet className="mx-auto" />
-            </Button>
+            </Button> */}
+            {(animalObservationLog.keeper.employee.employeeName == employee.employeeName
+              || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
+            ) && <Button
+              variant={"destructive"}
+              className="mr-2"
+              onClick={() => confirmDeleteAnimalObservationLog(animalObservationLog)}
+            >
+                <HiTrash className="mx-auto" />
+              </Button>}
           </div>
         }
       </React.Fragment>
@@ -335,8 +349,8 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             }}
           />
         </span>
-        {((animalActivitySearch && (employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS")) ?
+        {(animalActivitySearch && ((employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR" ||
+          employee.keeper)) &&
           <Button className="mr-2"
             onClick={() => {
               navigate(`/animal/viewanimalactivitydetails/${animalActivityId}/observationlogs`, { replace: true })
@@ -345,71 +359,18 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
             <HiPlus className="mr-auto" />
             Add Animal Observation Log
           </Button>
-          : <Button disabled className="invisible">
-            Add Log
-          </Button>
         )}
         <Button onClick={exportCSV}>Export to .csv</Button>
       </div>
     </div>
   );
 
-  const listItem = (animalObservationLog: AnimalObservationLog) => {
-    return (
-      <div>
-        <Card className="my-4 relative"
-          title={animalObservationLog.animalObservationLogId}
-          subTitle={animalObservationLog.dateTime ?
-            "Date created: " + new Date(animalObservationLog.dateTime).toLocaleString() : ""}>
-          {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
-          <Button className="absolute top-5 right-5"
-            variant={"destructive"}
-            onClick={() => confirmDeleteanimalObservationLog(animalObservationLog)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
-          )} */}
-          <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
-            <div>
-              <div className="text-xl font-bold text-900">Duration In Minutes</div>
-              <p>{animalObservationLog.durationInMinutes}</p>
-            </div>
-            <Separator orientation="vertical" />
-            <div>
-              <div className="text-xl font-bold text-900">Observation Quality</div>
-              <p>{animalObservationLog.observationQuality}</p>
-            </div>
-            <Separator orientation="vertical" />
-            <div>
-              <div className="text-xl font-bold text-900">Details</div>
-              <p>{animalObservationLog.details}</p>
-            </div>
-          </div>
-
-        </Card>
-      </div>
-    )
-  }
-
-  const itemTemplate = (animalObservationLog: AnimalObservationLog) => {
-    if (!animalObservationLog) {
-      return;
-    }
-    return listItem(animalObservationLog);
-  };
-
   return (
     <div>
       <div>
         <Toast ref={toast} />
         <div className="">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
 
-            </div>
-            <Separator />
-          </div>
           <DataTable
             ref={dt}
             value={animalObservationLogList}
@@ -455,6 +416,9 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
+              body={(animalObservationLog) => {
+                return beautifyText(animalObservationLog.observationQuality)
+              }}
               field="observationQuality"
               header="Observation Quality"
               sortable
@@ -466,23 +430,12 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
-            {/* <Column
-              field="animals.houseName"
-              header="Animals"
-              sortable
-              style={{ display: "none" }}
-              filter
-              filterPlaceholder="Search by animal code"
-            ></Column>
             <Column
-              // body={(animalObservationLog) => {
-              //   return animalObservationLog.keeper.employeeId;
-              // }}
               field="keeper.employee.employeeName"
               header="Keeper"
               sortable
               style={{ minWidth: "12rem" }}
-            ></Column> */}
+            ></Column>
             <Column
               body={actionBodyTemplate}
               header="Actions"
@@ -492,20 +445,7 @@ function AllAnimalObservationLogsDatatable(props: AllAnimalObservationLogsDatata
               style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>
-          {/* <DataView
-            value={animalObservationLogList}
-            itemTemplate={itemTemplate}
-            layout="list"
-            dataKey="animalObservationLogId"
-            header={header}
-            sortField={sortField}
-            sortOrder={sortOrder}
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal observation logs"
-            rows={10}
-            rowsPerPageOptions={[5, 10, 25]}
-            paginator
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          /> */}
+
         </div>
       </div>
       <Dialog

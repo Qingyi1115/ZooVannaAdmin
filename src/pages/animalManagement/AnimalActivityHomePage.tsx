@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import AllAnimalActivitiesDatatable from "../../components/AnimalManagement/AnimalActivityHomePage/AllAnimalActivitiesDatatable";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { HiPlus } from "react-icons/hi";
 import { Separator } from "@/components/ui/separator";
@@ -19,10 +19,13 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import AllAnimalActivitiesFullCalendar from "../../components/AnimalManagement/AnimalActivityHomePage/AllAnimalActivitiesFullCalendar";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 function AnimalActivityHomePage() {
   const apiJson = useApiJson();
   const [isDatatableView, setIsDatatableView] = useState<boolean>(true);
+  const employee = useAuthContext().state.user?.employeeData;
+  const navigate = useNavigate();
 
   const [animalActivitiesList, setAnimalActivitiesList] = useState<
     AnimalActivity[]
@@ -48,12 +51,18 @@ function AnimalActivityHomePage() {
         {/* Title Header and back button */}
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            <NavLink to={"/animal/createanimalactivity"}>
-              <Button className="mr-2 flex items-center">
+            {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") ?
+              <Button
+                onClick={() => {
+                  navigate(`/animal/animalactivities`, { replace: true })
+                  navigate(`/animal/createanimalactivity`)
+                }}
+                className="mr-2 flex items-center">
                 <HiPlus className="mr-2" />
                 Add Animal Activity
               </Button>
-            </NavLink>
+              : <Button className="invisible">I love animals</Button>
+            }
             <span className=" self-center text-title-xl font-bold">
               All Animal Activities
             </span>
@@ -109,7 +118,7 @@ function AnimalActivityHomePage() {
           />
         )}
       </div>
-    </div>
+    </div >
   );
 }
 

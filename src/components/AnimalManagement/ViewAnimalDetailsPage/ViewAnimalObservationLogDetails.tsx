@@ -12,6 +12,8 @@ import { HiPencil } from "react-icons/hi";
 import AnimalObservationLog from "../../../models/AnimalObservationLog";
 import Animal from "../../../models/Animal";
 import AnimalFeedingPlanInvolvedAnimalDatatable from "../AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface ViewAnimalObservationLogDetailsProps {
   curAnimalObservationLog: AnimalObservationLog
@@ -21,18 +23,23 @@ function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsP
   const { curAnimalObservationLog } = props;
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
+  const employee = useAuthContext().state.user?.employeeData;
 
   return (
     <div className="flex flex-col">
       <div>
-        <Button className="mr-2"
-          onClick={() => {
-            navigate(`/animal/viewAnimalObservationLogDetails/${curAnimalObservationLog.animalObservationLogId}`, { replace: true })
-            navigate(`/animal/editAnimalObservationLog/${curAnimalObservationLog.animalObservationLogId}`)
-          }}>
-          <HiPencil className="mx-auto" />
-          Edit Animal Observation Log Details
-        </Button>
+        {(curAnimalObservationLog.keeper.employee.employeeName == employee.employeeName
+          || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
+        ) &&
+          <Button className="mr-2"
+            onClick={() => {
+              navigate(`/animal/viewAnimalObservationLogDetails/${curAnimalObservationLog.animalObservationLogId}`, { replace: true })
+              navigate(`/animal/editAnimalObservationLog/${curAnimalObservationLog.animalObservationLogId}`)
+            }}>
+            <HiPencil className="mx-auto" />
+            Edit Animal Observation Log Details
+          </Button>
+        }
       </div>
 
 
@@ -60,7 +67,7 @@ function ViewAnimalObservationLogDetails(props: ViewAnimalObservationLogDetailsP
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Observation Quality
             </TableCell>
-            <TableCell>{curAnimalObservationLog.observationQuality}</TableCell>
+            <TableCell>{beautifyText(curAnimalObservationLog.observationQuality)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

@@ -34,6 +34,7 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
   const apiJson = useApiJson();
   const { speciesCode, animalCode } = props;
   const employee = useAuthContext().state.user?.employeeData;
+
   let emptySpecies: Species = {
     speciesId: -1,
     speciesCode: "",
@@ -157,7 +158,7 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
     dt.current?.exportCSV();
   };
 
-  const confirmDeleteanimalFeedingLog = (animalFeedingLog: AnimalFeedingLog) => {
+  const confirmDeleteAnimalFeedingLog = (animalFeedingLog: AnimalFeedingLog) => {
     setSelectedAnimalFeedingLog(animalFeedingLog);
     setDeleteAnimalFeedingLogDialog(true);
   };
@@ -228,22 +229,18 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
           }}>
           <HiEye className="mx-auto" />
         </Button>
-        {/* <Button
-          className="mr-1"
-          onClick={() => {
-            navigate(`/animal/viewAnimalDetails/${animalCode}/feedinglogs`, { replace: true })
-            navigate(`/animal/editAnimalFeedingLog/${animalFeedingLog.animalFeedingLogId}`)
-          }}>
-          <HiPencil className="mr-1" />
-        </Button> */}
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteanimalFeedingLog(animalFeedingLog)}
-        >
-          <HiTrash className="mx-auto" />
 
-        </Button>
+        {(animalFeedingLog.keeper.employee.employeeName == employee.employeeName
+          || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
+        ) &&
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmDeleteAnimalFeedingLog(animalFeedingLog)}
+          >
+            <HiTrash className="mx-auto" />
+          </Button>
+        }
       </React.Fragment>
     );
   };
@@ -304,6 +301,8 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
             }}
           />
         </span>
+
+        <Button onClick={exportCSV}>Export to .csv</Button>
       </div>
     </div>
   );
@@ -317,7 +316,7 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") ?
+                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
                 <Button className="mr-2"
                   onClick={() => {
                     navigate(`/animal/viewAnimalDetails/${animalCode}/feedinglogs`, { replace: true })
@@ -326,11 +325,7 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
                   <HiPlus className="mr-auto" />
                   Add Animal Feeding Log
                 </Button>
-                : <Button disabled className="invisible">
-                  Add Log
-                </Button>
               )}
-              <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
             <Separator />
           </div>
@@ -408,6 +403,12 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
+            <Column
+              field="keeper.employee.employeeName"
+              header="Keeper"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
             {/* <Column
               field="animals.houseName"
               header="Animals"
@@ -415,16 +416,7 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
               style={{ display: "none" }}
               filter
               filterPlaceholder="Search by animal code"
-            ></Column>
-            <Column
-              // body={(animalFeedingLog) => {
-              //   return animalFeedingLog.keeper.employeeId;
-              // }}
-              field="keeper.employee.employeeName"
-              header="Keeper"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column> */}
+            ></Column>*/}
             <Column
               body={actionBodyTemplate}
               header="Actions"

@@ -13,6 +13,7 @@ import AnimalActivityLog from "../../../models/AnimalActivityLog";
 import Animal from "../../../models/Animal";
 import AnimalFeedingPlanInvolvedAnimalDatatable from "../AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface ViewAnimalActivityLogDetailsProps {
   curAnimalActivityLog: AnimalActivityLog
@@ -54,7 +55,7 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Activity Type
             </TableCell>
-            <TableCell>{curAnimalActivityLog.activityType}</TableCell>
+            <TableCell>{beautifyText(curAnimalActivityLog.activityType)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -72,13 +73,13 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Session Rating
             </TableCell>
-            <TableCell>{curAnimalActivityLog.sessionRating}</TableCell>
+            <TableCell>{beautifyText(curAnimalActivityLog.sessionRating)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Animal Reaction
             </TableCell>
-            <TableCell>{curAnimalActivityLog.animalReaction}</TableCell>
+            <TableCell>{beautifyText(curAnimalActivityLog.animalReaction)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -96,7 +97,7 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Keeper
             </TableCell>
-            <TableCell>{curAnimalActivityLog.keeper.employee.employeeName}</TableCell>
+            <TableCell>{beautifyText(curAnimalActivityLog.keeper.employee.employeeName)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

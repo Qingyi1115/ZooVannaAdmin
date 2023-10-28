@@ -35,6 +35,8 @@ import {
 } from "../../../enums/Enumurated";
 import { useNavigate } from "react-router-dom";
 import AnimalActivity from "../../../models/AnimalActivity";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import beautifyText from "../../../hooks/beautifyText";
 
 let emptyAnimalActivity: AnimalActivity = {
   animalActivityId: -1,
@@ -79,6 +81,7 @@ function AllAnimalActivitiesDatatable(
 
   const dt = useRef<DataTable<AnimalActivity[]>>(null);
 
+  const employee = useAuthContext().state.user?.employeeData;
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
@@ -170,13 +173,15 @@ function AllAnimalActivitiesDatatable(
           >
             <HiEye className="mr-auto" />
           </Button>
-          <Button
-            variant={"destructive"}
-            className="mr-2"
-            onClick={() => confirmDeleteAnimalActivity(animalActivity)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+            <Button
+              variant={"destructive"}
+              className="mr-2"
+              onClick={() => confirmDeleteAnimalActivity(animalActivity)}
+            >
+              <HiTrash className="mx-auto" />
+            </Button>
+          }
         </div>
       </React.Fragment>
     );
@@ -196,6 +201,8 @@ function AllAnimalActivitiesDatatable(
           }}
         />
       </span>
+
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -203,16 +210,6 @@ function AllAnimalActivitiesDatatable(
     <div>
       <div>
         <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button className="invisible"></Button>
-              <span className="invisible">All Animal Activities</span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
-
           <DataTable
             ref={dt}
             value={animalActivitiesList}
@@ -247,12 +244,18 @@ function AllAnimalActivitiesDatatable(
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
+              body={(animalActivity) => {
+                return beautifyText(animalActivity.activityType)
+              }}
               field="activityType"
               header="Type"
               sortable
               style={{ minWidth: "10rem" }}
             ></Column>
             <Column
+              body={(animalActivity) => {
+                return beautifyText(animalActivity.recurringPattern)
+              }}
               field="recurringPattern"
               header="Recurrence"
               sortable
@@ -283,6 +286,9 @@ function AllAnimalActivitiesDatatable(
               style={{ minWidth: "8rem" }}
             ></Column>
             <Column
+              body={(animalActivity) => {
+                return beautifyText(animalActivity.eventTimingType)
+              }}
               field="eventTimingType"
               header="Session Timing"
               sortable

@@ -39,6 +39,7 @@ import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/Vi
 import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
 import { Activity } from "lucide-react";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import beautifyText from "../../hooks/beautifyText";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -421,7 +422,7 @@ function ViewAnimalActivityDetails() {
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Type
                         </TableCell>
-                        <TableCell>{curAnimalActivity.activityType}</TableCell>
+                        <TableCell>{beautifyText(curAnimalActivity.activityType)}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -445,7 +446,7 @@ function ViewAnimalActivityDetails() {
                           Recurring Pattern
                         </TableCell>
                         <TableCell>
-                          {curAnimalActivity.recurringPattern}
+                          {beautifyText(curAnimalActivity.recurringPattern)}
                         </TableCell>
                       </TableRow>
                       {curAnimalActivity.recurringPattern == "WEEKLY" && (
@@ -453,7 +454,7 @@ function ViewAnimalActivityDetails() {
                           <TableCell className="w-1/3 font-bold" colSpan={2}>
                             Day Of Week
                           </TableCell>
-                          <TableCell>{curAnimalActivity.dayOfWeek}</TableCell>
+                          <TableCell>{beautifyText(curAnimalActivity.dayOfWeek)}</TableCell>
                         </TableRow>
                       )}
                       {curAnimalActivity.recurringPattern == "MONTHLY" && (
@@ -461,7 +462,7 @@ function ViewAnimalActivityDetails() {
                           <TableCell className="w-1/3 font-bold" colSpan={2}>
                             Day Of Month
                           </TableCell>
-                          <TableCell>{curAnimalActivity.dayOfMonth}</TableCell>
+                          <TableCell>{beautifyText(curAnimalActivity.dayOfMonth)}</TableCell>
                         </TableRow>
                       )}
                       <TableRow>
@@ -469,7 +470,7 @@ function ViewAnimalActivityDetails() {
                           Session Timing
                         </TableCell>
                         <TableCell>
-                          {curAnimalActivity.eventTimingType}
+                          {beautifyText(curAnimalActivity.eventTimingType)}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -504,17 +505,19 @@ function ViewAnimalActivityDetails() {
                         }}
                         className="mb-2 h-full w-60"
                       />
-                      <Button
-                        onClick={() =>
-                          navigate(
-                            `/animal/assignanimalstoactivity/${curAnimalActivity.animalActivityId}`
-                          )
-                        }
-                        type="button"
-                        className="h-12 w-60"
-                      >
-                        Assign Animal(s)
-                      </Button>
+                      {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+                        <Button
+                          onClick={() =>
+                            navigate(
+                              `/animal/assignanimalstoactivity/${curAnimalActivity.animalActivityId}`
+                            )
+                          }
+                          type="button"
+                          className="h-12 w-60"
+                        >
+                          Assign Animal(s)
+                        </Button>
+                      }
                     </div>
                     <DataTable
                       value={involvedAnimalList}
@@ -547,12 +550,14 @@ function ViewAnimalActivityDetails() {
                         sortable
                         style={{ minWidth: "5rem" }}
                       ></Column>
-                      <Column
-                        body={animalActionBodyTemplate}
-                        header="Actions"
-                        exportable={false}
-                        style={{ minWidth: "3rem" }}
-                      ></Column>
+                      {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+                        <Column
+                          body={animalActionBodyTemplate}
+                          header="Actions"
+                          exportable={false}
+                          style={{ minWidth: "3rem" }}
+                        ></Column>
+                      }
                     </DataTable>
                     <Dialog
                       visible={removeAnimalDialog}
@@ -592,17 +597,19 @@ function ViewAnimalActivityDetails() {
                         }}
                         className="mb-2 h-min w-60"
                       />
-                      <Button
-                        onClick={() =>
-                          navigate(
-                            `/animal/assignitemstoactivity/${curAnimalActivity.animalActivityId}`
-                          )
-                        }
-                        type="button"
-                        className="h-12 w-60"
-                      >
-                        Assign Item(s)
-                      </Button>
+                      {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+                        <Button
+                          onClick={() =>
+                            navigate(
+                              `/animal/assignitemstoactivity/${curAnimalActivity.animalActivityId}`
+                            )
+                          }
+                          type="button"
+                          className="h-12 w-60"
+                        >
+                          Assign Item(s)
+                        </Button>
+                      }
                     </div>
                     <DataTable
                       value={involvedItemList}
@@ -640,12 +647,14 @@ function ViewAnimalActivityDetails() {
                         sortable
                         style={{ minWidth: "5rem" }}
                       ></Column>
-                      <Column
-                        body={itemActionBodyTemplate}
-                        header="Actions"
-                        exportable={false}
-                        style={{ minWidth: "3rem" }}
-                      ></Column>
+                      {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+                        <Column
+                          body={itemActionBodyTemplate}
+                          header="Actions"
+                          exportable={false}
+                          style={{ minWidth: "3rem" }}
+                        ></Column>
+                      }
                     </DataTable>
                     <Dialog
                       visible={removeItemDialog}

@@ -22,6 +22,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AnimalFeedingPlanSessionsSchedule from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanSessionsSchedule";
 import AnimalFeedingPlanInvolvedAnimalDatatable from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 import AllFeedingPlanFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllFeedingPlanFeedingLogsDatatable";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 function AnimalFeedingPlanDetailsPage() {
   const apiJson = useApiJson();
@@ -33,7 +34,7 @@ function AnimalFeedingPlanDetailsPage() {
     null
   );
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
-
+  const employee = useAuthContext().state.user?.employeeData;
   const { tab } = useParams<{ tab: string }>();
 
   useEffect(() => {
@@ -83,16 +84,17 @@ function AnimalFeedingPlanDetailsPage() {
         {curFeedingPlan && (
           <div>
             <div className="mb-4">
-              <Button
-                className="mb-4"
-                onClick={() => {
-                  navigate(
-                    `/animal/editfeedingplanbasicinfo/${curFeedingPlan.feedingPlanId}`
-                  );
-                }}
-              >
-                Edit Basic Info
-              </Button>
+              {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+                <Button
+                  className="mb-4"
+                  onClick={() => {
+                    navigate(
+                      `/animal/editfeedingplanbasicinfo/${curFeedingPlan.feedingPlanId}`
+                    );
+                  }}
+                >
+                  Edit Basic Info
+                </Button>}
               <div className="text-lg font-bold">Basic Information</div>
               <Table>
                 <TableBody>

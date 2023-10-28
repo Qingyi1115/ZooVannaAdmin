@@ -26,6 +26,7 @@ import Keeper from "../../../models/Keeper";
 import { Reaction } from "../../../enums/Reaction";
 import AnimalActivity from "src/models/AnimalActivity";
 import { HiMiniListBullet } from "react-icons/hi2";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface AllAnimalActivityLogsDatatableProps {
   speciesCode: string;
@@ -181,7 +182,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
     dt.current?.exportCSV();
   };
 
-  const confirmDeleteanimalActivityLog = (animalActivityLog: AnimalActivityLog) => {
+  const confirmDeleteAnimalActivityLog = (animalActivityLog: AnimalActivityLog) => {
     setSelectedAnimalActivityLog(animalActivityLog);
     setDeleteAnimalActivityLogDialog(true);
   };
@@ -259,7 +260,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
             ) && <Button
               variant={"destructive"}
               className="mr-2"
-              onClick={() => confirmDeleteanimalActivityLog(animalActivityLog)}
+              onClick={() => confirmDeleteAnimalActivityLog(animalActivityLog)}
             >
                 <HiTrash className="mx-auto" />
               </Button>}
@@ -274,7 +275,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
               }}>
               <HiEye className="mx-auto" />
             </Button>
-            <Button
+            {/* <Button
               // variant={"outline"}
               className="mb-1 mr-1"
               onClick={() => {
@@ -282,7 +283,16 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
                 navigate(`/animal/viewAnimalActivityDetails/${animalActivityLog.animalActivity.animalActivityId}`)
               }}>
               <HiMiniListBullet className="mx-auto" />
-            </Button>
+            </Button> */}
+            {(animalActivityLog.keeper.employee.employeeName == employee.employeeName
+              || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
+            ) && <Button
+              variant={"destructive"}
+              className="mr-2"
+              onClick={() => confirmDeleteAnimalActivityLog(animalActivityLog)}
+            >
+                <HiTrash className="mx-auto" />
+              </Button>}
 
           </div>}
 
@@ -348,7 +358,7 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
           />
         </span>
         {(animalActivitySearch && ((employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR" ||
-          employee.keeper)) ?
+          employee.keeper)) &&
           <Button className="mr-2"
             onClick={() => {
               navigate(`/animal/viewanimalactivitydetails/${animalActivityId}/activitylogs`, { replace: true })
@@ -356,9 +366,6 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
             }}>
             <HiPlus className="mr-auto" />
             Add Animal Activity Log
-          </Button>
-          : <Button disabled className="invisible">
-            Add Log
           </Button>
         )}
         <Button onClick={exportCSV}>Export to .csv</Button>
@@ -399,6 +406,9 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
+              body={(animalActivityLog) => {
+                return beautifyText(animalActivityLog.activityType)
+              }}
               field="activityType"
               header="Activity Type"
               sortable
@@ -423,12 +433,18 @@ function AllAnimalActivityLogsDatatable(props: AllAnimalActivityLogsDatatablePro
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
+              body={(animalActivityLog) => {
+                return beautifyText(animalActivityLog.sessionRating)
+              }}
               field="sessionRating"
               header="Session Rating"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
+              body={(animalActivityLog) => {
+                return beautifyText(animalActivityLog.animalReaction)
+              }}
               field="animalReaction"
               header="Animal Reaction"
               sortable

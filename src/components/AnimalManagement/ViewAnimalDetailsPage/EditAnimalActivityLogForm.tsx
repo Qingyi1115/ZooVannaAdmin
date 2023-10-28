@@ -15,6 +15,7 @@ import Animal from "../../../models/Animal";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import { set } from "date-fns";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface EditAnimalActivityLogFormProps {
   curAnimalActivityLog: AnimalActivityLog
@@ -137,7 +138,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
         </div>
         {/* Activity Type */}
         <div className="mb-1 block font-medium">
-          Activity Type<br /> <b>{activityType}</b>
+          Activity Type<br /> <b>{beautifyText(activityType?.toString())}</b>
         </div>
         {/* <FormFieldSelect
           formFieldName="activityType"
@@ -152,6 +153,10 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           setValue={setActivityType}
           validateFunction={validateAnimalActivityLogName}
         /> */}
+        {/* Keeper */}
+        {/* <div className="mb-1 block font-medium">
+          Keeper<br /> <b>{curAnimalActivityLog.keeper.employee.employeeName}</b>
+        </div> */}
 
         {/* DateTime */}
         <div className="card justify-content-center block ">
