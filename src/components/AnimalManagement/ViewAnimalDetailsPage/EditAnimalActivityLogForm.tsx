@@ -38,15 +38,15 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
 
 
-  const [curAnimalList, setCurAnimalList] = useState<any>(null);
-  const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
+  // const [curAnimalList, setCurAnimalList] = useState<any>(null);
+  // const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
 
-  useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
-      setCurAnimalList(res as Animal[]);
-      setSelectedAnimals(res.filter((animal: Animal) => curAnimalActivityLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
-    });
-  }, [curAnimalActivityLog]);
+  // useEffect(() => {
+  //   apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+  //     setCurAnimalList(res as Animal[]);
+  //     setSelectedAnimals(res.filter((animal: Animal) => curAnimalActivityLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
+  //   });
+  // }, [curAnimalActivityLog]);
 
   useEffect(() => {
     setActivityType(String(curAnimalActivityLog.activityType))
@@ -84,7 +84,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
       sessionRating: sessionRating,
       details: details,
       animalReaction: animalReaction,
-      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
+      // animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalActivityLog);
 
@@ -243,14 +243,15 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           pattern={undefined}
         />
         {/* Animals */}
-        <MultiSelect
+        {/* <MultiSelect
           value={selectedAnimals}
           onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
           options={curAnimalList}
           optionLabel="houseName"
           filter
           placeholder="Select Animals"
-          className="w-full md:w-20rem" />
+          className="w-full md:w-20rem" /> */}
+
         <Form.Submit asChild>
           <Button
             disabled={apiJson.loading}
