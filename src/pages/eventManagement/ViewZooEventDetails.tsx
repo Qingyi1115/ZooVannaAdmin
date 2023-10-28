@@ -958,7 +958,7 @@ function ViewZooEventDetails() {
                 </TabsContent>
 
                 <TabsContent value="involvedAnimals">
-                  <div className="w-full">
+                  <div className="">
                     <DataTable
                       value={involvedAnimalList}
                       scrollable
@@ -968,7 +968,7 @@ function ViewZooEventDetails() {
                       header={involvedAnimalsHeader}
                       style={{ height: "50vh" }}
                       dataKey="animalCode"
-                      className="h-1/2 overflow-hidden rounded border border-graydark/30"
+                      className="h-1/2 rounded border border-graydark/30"
                     >
                       <Column
                         field="imageUrl"
@@ -1077,7 +1077,7 @@ function ViewZooEventDetails() {
                       header={involvedItemsHeader}
                       dataKey="enrichmentItemid"
                       style={{ height: "50vh" }}
-                      className="h-1/2 overflow-hidden rounded border border-graydark/30"
+                      className="h-1/2 rounded border border-graydark/30"
                     >
                       <Column
                         field="enrichmentItemImageUrl"
