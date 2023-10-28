@@ -76,7 +76,7 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
       employeeIds: [employee?.employeeId]
     }
     console.log(curFacilityLog);
-    
+
     try {
       const facilityLogJson = await apiJson.post(
         `http://localhost:3000/api/assetFacility/createFacilityLog/${curFacilityLog.inHouse.facility.facilityId}`,
@@ -85,7 +85,7 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
       const completeMaintenanceJson = await apiJson.get(`http://localhost:3000/api/assetFacility/completeRepairTicket/${curFacilityLog.facilityLogId}`);
       // success
       toastShadcn({
-        description: "Successfully created facility maintenance log",
+        description: "Successfully completed repair ticket",
       });
       navigate("/assetfacility/maintenance");
     } catch (error: any) {
