@@ -168,13 +168,13 @@ function MaintenanceNotificationCard() {
       {" "}
       <CardHeader>
         <CardTitle>Notifications</CardTitle>
-        <CardDescription className="w-[25vw]">
+        <CardDescription className="h-auto w-max">
           Maintenance Suggestions and Zoo Events
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="h-auto w-max">
         <div className="flex justify-between">
-          <ul className="flex h-auto w-auto flex-col overflow-y-auto">
+          <ul className="flex h-auto w-max flex-col overflow-y-auto">
             <li>
               <Link
                 className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"

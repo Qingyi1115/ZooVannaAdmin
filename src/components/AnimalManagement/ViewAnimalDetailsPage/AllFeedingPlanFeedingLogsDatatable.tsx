@@ -324,7 +324,23 @@ function AllFeedingPlanFeedingLogsDatatable(
             }}
           />
         </span>
-
+        {feedingPlan != null && (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR" || employee.keeper) && (
+          <Button
+            className="mr-2"
+            onClick={() => {
+              navigate(
+                `/animal/viewfeedingplandetails/${feedingPlanId}/feedingLogs`,
+                { replace: true }
+              );
+              navigate(
+                `/animal/createAnimalFeedingLog/${feedingPlan.feedingPlanId}`
+              );
+            }}
+          >
+            <HiPlus className="mr-auto" />
+            Add Animal Feeding Log
+          </Button>
+        )}
         <Button onClick={exportCSV}>Export to .csv</Button>
       </div>
     </div>
@@ -336,29 +352,7 @@ function AllFeedingPlanFeedingLogsDatatable(
       <div>
         <Toast ref={toast} />
         <div className="">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              {feedingPlan != null && (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR" || employee.keeper) && (
-                <Button
-                  className="mr-2"
-                  onClick={() => {
-                    navigate(
-                      `/animal/viewfeedingplandetails/${feedingPlanId}/feedingLogs`,
-                      { replace: true }
-                    );
-                    navigate(
-                      `/animal/createAnimalFeedingLog/${feedingPlan.feedingPlanId}`
-                    );
-                  }}
-                >
-                  <HiPlus className="mr-auto" />
-                  Add Animal Feeding Log
-                </Button>
-              )}
-            </div>
-            <Separator />
-          </div>
+
           <DataTable
             ref={dt}
             value={animalFeedingLogList}

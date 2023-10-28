@@ -301,7 +301,17 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
             }}
           />
         </span>
-
+        {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
+          <Button className="mr-2"
+            onClick={() => {
+              navigate(`/animal/viewAnimalDetails/${animalCode}/feedinglogs`, { replace: true })
+              navigate(`/animal/createAnimalFeedingLog/${speciesCode}`)
+            }}>
+            <HiPlus className="mr-auto" />
+            Add Animal Feeding Log
+          </Button>
+        )}
         <Button onClick={exportCSV}>Export to .csv</Button>
       </div>
     </div>
@@ -312,23 +322,7 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
       <div>
         <Toast ref={toast} />
         <div className="">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-                employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
-                <Button className="mr-2"
-                  onClick={() => {
-                    navigate(`/animal/viewAnimalDetails/${animalCode}/feedinglogs`, { replace: true })
-                    navigate(`/animal/createAnimalFeedingLog/${speciesCode}`)
-                  }}>
-                  <HiPlus className="mr-auto" />
-                  Add Animal Feeding Log
-                </Button>
-              )}
-            </div>
-            <Separator />
-          </div>
+
           <DataTable
             ref={dt}
             value={animalFeedingLogList}

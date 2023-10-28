@@ -101,24 +101,28 @@ function HomePage() {
   return (
     <div className="h-screen max-w-screen p-10">
       <div className="flex shrink h-5/6 w-full gap-10">
-        <Card className="h-max w-max">
-          {" "}
-          <CardHeader>
-            <CardTitle>Good {timeOfDay}, {employee.employeeName}</CardTitle>
-            <CardDescription className="w-[25vw]">
-              Here are your events
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AllEventsFullCalendar
-              zooEventsList={filteredZooEventsList}
-              setRefresh={() => { }}
-            />
-          </CardContent>
-        </Card>
         <div className="flex flex-col gap-4">
-          <FatAnimalsCard />
-          {/* <div className="flex flex-col gap-10">
+          <Card className="h-max w-max">
+            {" "}
+            <CardHeader>
+              <CardTitle>Good {timeOfDay}, {employee.employeeName}</CardTitle>
+              <CardDescription className="w-[25vw]">
+                Here are your events
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AllEventsFullCalendar
+                zooEventsList={filteredZooEventsList}
+                setRefresh={() => { }}
+              />
+            </CardContent>
+          </Card>
+          <div className="flex flex-row">
+            <FatAnimalsCard />
+          </div>
+
+        </div>
+        {/* <div className="flex flex-col gap-10">
           <Card className="h-1/2 w-full flex-grow p-10">
             <Skeleton className="h-[20px] w-[100px] rounded-full" />
           </Card>
@@ -131,10 +135,10 @@ function HomePage() {
             </Card>
           </div>
         </div> */}
-          {(employee.superAdmin || employee.planningStaff || employee.generalStaff) &&
-            <MaintenanceNotificationCard />}
+        {(employee.superAdmin || employee.planningStaff || employee.generalStaff) &&
+          <MaintenanceNotificationCard />}
 
-        </div>
+
       </div>
     </div>
   );
