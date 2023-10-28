@@ -38,12 +38,13 @@ import Facility from "../../../models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
 import { FacilityType } from "../../../enums/FacilityType";
 import { Dialog } from "primereact/dialog";
-import { HiCheck, HiEye, HiPlus, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiInformationCircle, HiPlus, HiX } from "react-icons/hi";
 import { IdentifierType } from "../../../enums/Enumurated";
 import { DataTable } from "primereact/datatable";
 import { dt } from "@fullcalendar/core/internal-common";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
+import { HiMap, HiMapPin } from "react-icons/hi2";
 // import geolocation from "geolocation";
 
 function MapLandingPage() {
@@ -328,14 +329,14 @@ function MapLandingPage() {
             setSelectedFacility(tableSelectedFacility);
           }}
           className="mr-1">
-          <HiPlus className="mr-1" />
+          <HiMapPin className="mr-1" />
         </Button>
         <NavLink
           to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
           state={{ prev: `/assetfacility/maplanding` }}
         >
           <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
+            <HiInformationCircle className="mx-auto" />
           </Button>
         </NavLink>
       </React.Fragment >
