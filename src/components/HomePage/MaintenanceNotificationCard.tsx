@@ -172,9 +172,12 @@ function MaintenanceNotificationCard() {
           Maintenance Suggestions and Zoo Events
         </CardDescription>
       </CardHeader>
+
       <CardContent className="h-auto w-max">
         <div className="flex justify-between">
           <ul className="flex h-auto w-max flex-col overflow-y-auto">
+            
+          { (employee.superAdmin || employee.generalStaff || employee.planningStaff) &&
             <li>
               <Link
                 className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
@@ -199,8 +202,10 @@ function MaintenanceNotificationCard() {
                 <p className="text-xs">Today</p>
               </Link>
             </li>
+            }
 
-            {facilityList &&
+            
+            { (employee.superAdmin || employee.generalStaff || employee.planningStaff) &&facilityList &&
               facilityList.map((facility) => {
                 return (
                   <li key={facility.facilityId}>
@@ -227,17 +232,20 @@ function MaintenanceNotificationCard() {
                 );
               })
             }
+
+            
+      { (employee.superAdmin || employee.generalStaff || employee.planningStaff) &&(
             <li>
               <Link
                 className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
                 to="/assetfacility/maintenance/sensorMaintenance"
               >
                 {sensorList.length ? (
-                  <div className="text-amber-500">
-                    <p className="text-sm">
-                      <BsBroadcast />
+                  <div className="text-amber-500 flex-row">
+                    <div><BsBroadcast /></div>
+                    <div><p className="text-sm">
                       Sensors to maintain {sensorList.length}
-                    </p>
+                    </p></div>
                   </div>
                 ) : (
                   <div className="text-green-700">
@@ -250,9 +258,10 @@ function MaintenanceNotificationCard() {
 
                 <p className="text-xs">Today</p>
               </Link>
-            </li>
+            </li>)}
 
-            {sensorList && sensorList.map((sensor) => {
+            { (employee.superAdmin || employee.generalStaff || employee.planningStaff) &&
+            sensorList && sensorList.map((sensor) => {
               return (
                 <li key={sensor.sensorId}>
                   <Link
@@ -278,6 +287,7 @@ function MaintenanceNotificationCard() {
               );
             })}
 
+            { (employee.superAdmin || employee.keeper || employee.planningStaff) &&
             <li>
               <Link
                 className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
@@ -302,7 +312,10 @@ function MaintenanceNotificationCard() {
                 <p className="text-xs">Today</p>
               </Link>
             </li>
-            {eventList && eventList.map((event) => {
+            }
+
+          { (employee.superAdmin || employee.keeper || employee.planningStaff) 
+                  && eventList && eventList.map((event) => {
               return (
                 <li key={event.zooEventId}>
                   <Link

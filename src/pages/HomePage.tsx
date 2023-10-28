@@ -135,8 +135,7 @@ function HomePage() {
             </Card>
           </div>
         </div> */}
-        {(employee.superAdmin || employee.planningStaff || employee.generalStaff) &&
-          <MaintenanceNotificationCard />}
+          <MaintenanceNotificationCard />
 
 
       </div>
