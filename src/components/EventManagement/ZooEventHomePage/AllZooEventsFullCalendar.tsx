@@ -214,12 +214,12 @@ function AllZooEventsFullCalendar(
                 <div className="h-5 w-5 rounded bg-[#976405]" />
                 <span className="font-bold">Enrichment</span>
               </div>
-              <div className="flex items-center gap-2 text-[#CC5A71]">
-                <div className="h-5 w-5 rounded bg-[#CC5A71]" />
+              <div className="flex items-center gap-2 text-[#087E8B]">
+                <div className="h-5 w-5 rounded bg-[#087E8B]" />
                 <span className="font-bold">Customer Feeding</span>
               </div>
-              <div className="flex items-center gap-2 text-[#960069]">
-                <div className="h-5 w-5 rounded bg-[#960069]" />
+              <div className="flex items-center gap-2 text-[#CC5A71]">
+                <div className="h-5 w-5 rounded bg-[#CC5A71]" />
                 <span className="font-bold">Employee Feeding</span>
               </div>
             </div>
