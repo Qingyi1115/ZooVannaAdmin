@@ -165,10 +165,10 @@ function AllAnimalActivitiesFullCalendar(
             curActivityType == "TRAINING"
               ? ["training overflow-hidden"]
               : curActivityType == "ENRICHMENT"
-              ? ["enrichment overflow-hidden"]
-              : curActivityType == "OBSERVATION"
-              ? ["observation overflow-hidden"]
-              : [],
+                ? ["enrichment overflow-hidden"]
+                : curActivityType == "OBSERVATION"
+                  ? ["observation overflow-hidden"]
+                  : [],
         };
       });
       return eventsToReturn;
@@ -229,6 +229,7 @@ function AllAnimalActivitiesFullCalendar(
       <div className="flex w-full justify-center">
         <div className="w-full">
           <div className="flex justify-between">
+            {/* Legend */}
             <div className="mb-1 flex items-center gap-4 rounded border border-strokedark/20 px-4 text-sm">
               <span>Legend: </span>
               <div className="flex items-center gap-2 text-[#0f3360]">
@@ -244,8 +245,8 @@ function AllAnimalActivitiesFullCalendar(
                 <span className="font-bold">Enrichment</span>
               </div>
             </div>
-            {/* Month selection control */}
             <div className="mb-2 flex justify-end gap-2">
+              {/* Month selection control */}
               <Select
                 value={currentMonth.toString()}
                 onValueChange={(value) => setCurrentMonth(parseInt(value))}
