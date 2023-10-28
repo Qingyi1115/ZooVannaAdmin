@@ -41,7 +41,7 @@ interface MaintenanceDetails {
   suggestedMaintenance: string,
   type: string,
   id: number,
-  repairRequired:boolean
+  repairRequired: boolean
 }
 
 function rowColor(facility: any) {
@@ -122,7 +122,7 @@ function FacilityMaintenanceSuggestion() {
           new Date(facility.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Facility",
         id: facility.facilityId,
-        repairRequired:facility.inHouse.facilityLogs?.find(log=>log.generalStaffs?.find(gs=>gs.employeeId == employee.employeeId))
+        repairRequired: facility.inHouse.facilityLogs?.find(log => log.generalStaffs?.find(gs => gs.employeeId == employee.employeeId))
       })
     })
     setObjectsList(obj)
@@ -557,10 +557,12 @@ function FacilityMaintenanceSuggestion() {
             globalFilter={globalFilter}
             header={header}
           >
-            <Column
-              body={maintenanceDetailsCheckbox}
-              header={allMaintenanceDetailsCheckbox}
-            ></Column>
+            {employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" &&
+              < Column
+                body={maintenanceDetailsCheckbox}
+                header={allMaintenanceDetailsCheckbox}
+              ></Column>
+            }
             <Column
               field="id"
               header="ID"
@@ -779,7 +781,7 @@ function FacilityMaintenanceSuggestion() {
         </div>
       </div>
 
-    </div>
+    </div >
   );
 }
 

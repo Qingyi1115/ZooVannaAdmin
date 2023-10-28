@@ -134,15 +134,15 @@ function SensorMaintenanceSuggestion() {
           //     <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
           //   </Button>
           //   :
-            <Button
-              className="mr-2"
-              onClick={() => {
-                navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
-                navigate(`/assetfacility/viewsensordetails/${objDetails.id}/maintenanceLogs`);
-              }}
-            >
-              <HiClipboardList className="mx-auto" ></HiClipboardList>
-            </Button>
+          <Button
+            className="mr-2"
+            onClick={() => {
+              navigate(`/assetfacility/maintenance/sensorMaintenance`, { replace: true });
+              navigate(`/assetfacility/viewsensordetails/${objDetails.id}/maintenanceLogs`);
+            }}
+          >
+            <HiClipboardList className="mx-auto" ></HiClipboardList>
+          </Button>
         )}
       </React.Fragment>
     );
@@ -445,10 +445,12 @@ function SensorMaintenanceSuggestion() {
             globalFilter={globalFilter}
             header={header}
           >
-            <Column
-              body={maintenanceDetailsCheckbox}
-              header={allMaintenanceDetailsCheckbox}
-            ></Column>
+            {employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" &&
+              <Column
+                body={maintenanceDetailsCheckbox}
+                header={allMaintenanceDetailsCheckbox}
+              ></Column>
+            }
             <Column
               field="id"
               header="ID"
