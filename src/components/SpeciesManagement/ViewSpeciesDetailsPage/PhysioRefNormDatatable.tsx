@@ -32,6 +32,7 @@ import { useToast } from "@/components/ui/use-toast";
 import Species from "../../../models/Species";
 import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
 import { useNavigate } from "react-router-dom";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface PhysioRefNormDatatableProps {
   physiologicalRefNormsList: PhysiologicalReferenceNorms[];
@@ -97,7 +98,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deletePhysiologicalReferenceNorms/" +
-            selectedPhysioRefNorm?.physiologicalRefId
+          selectedPhysioRefNorm?.physiologicalRefId
         );
 
         toastShadcn({
@@ -209,6 +210,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
         <Column
           field="growthStage"
           header="Growth Stage"
+          body={(physiologicalReferenceNorm: PhysiologicalReferenceNorms) => beautifyText(physiologicalReferenceNorm.growthStage)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>

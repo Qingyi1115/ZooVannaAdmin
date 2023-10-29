@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import Species from "../../../models/Species";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface DietNeedDatatableProps {
   dietNeedsList: SpeciesDietNeed[];
@@ -85,7 +86,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deleteDietNeed/" +
-            selectedDietNeeds?.speciesDietNeedId
+          selectedDietNeeds?.speciesDietNeedId
         );
 
         toastShadcn({
@@ -190,12 +191,14 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
         <Column
           field="growthStage"
           header="Growth Stage"
+          body={(dietNeed: SpeciesDietNeed) => beautifyText(dietNeed.growthStage)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
           field="animalFeedCategory"
           header="Feed Category"
+          body={(dietNeed: SpeciesDietNeed) => beautifyText(dietNeed.animalFeedCategory)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
@@ -226,18 +229,21 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
         <Column
           field="presentationContainer"
           header="Recommended Container"
+          body={(dietNeed: SpeciesDietNeed) => beautifyText(dietNeed.presentationContainer)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
           field="presentationMethod"
           header="Recommended Method"
+          body={(dietNeed: SpeciesDietNeed) => beautifyText(dietNeed.presentationMethod)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
           field="presentationLocation"
           header="Feed Location"
+          body={(dietNeed: SpeciesDietNeed) => beautifyText(dietNeed.presentationLocation)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>

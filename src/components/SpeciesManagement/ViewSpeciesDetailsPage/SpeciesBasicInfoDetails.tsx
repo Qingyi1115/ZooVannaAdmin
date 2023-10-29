@@ -13,6 +13,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import beautifyText from "../../../hooks/beautifyText";
 interface SpeciesBasicInfoDetailsProps {
   curSpecies: Species;
 }
@@ -63,7 +64,7 @@ function SpeciesBasicInfoDetails(props: SpeciesBasicInfoDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Conservation Status
             </TableCell>
-            <TableCell>{curSpecies.conservationStatus}</TableCell>
+            <TableCell>{beautifyText(curSpecies.conservationStatus)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/5 font-bold" rowSpan={8}>
@@ -114,7 +115,7 @@ function SpeciesBasicInfoDetails(props: SpeciesBasicInfoDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Group Sexual Dynamic
             </TableCell>
-            <TableCell>{curSpecies.groupSexualDynamic}</TableCell>
+            <TableCell>{beautifyText(curSpecies.groupSexualDynamic)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
