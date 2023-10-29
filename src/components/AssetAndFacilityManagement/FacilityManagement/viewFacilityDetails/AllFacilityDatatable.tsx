@@ -215,11 +215,13 @@ function AllFacilityDatatable() {
 
   const imageBodyTemplate = (rowData: Facility) => {
     return (
-      <img
-        src={"http://localhost:3000/" + rowData.imageUrl}
-        alt={rowData.facilityName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      rowData.imageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.facilityName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        /> :
+        "No image"
     );
   };
 
