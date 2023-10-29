@@ -228,7 +228,7 @@ function AllFacilityDatatable() {
           alt={rowData.facilityName}
           className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
         /> :
-        "No image"
+        "-"
     );
   };
 
