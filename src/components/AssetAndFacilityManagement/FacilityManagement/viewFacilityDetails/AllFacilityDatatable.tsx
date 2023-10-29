@@ -279,12 +279,12 @@ function AllFacilityDatatable() {
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
-            <Column
+            {/* <Column
               field="isSheltered"
               header="Shelter available"
               sortable
               style={{ minWidth: "12rem" }}
-            ></Column>
+            ></Column> */}
             <Column
               body={actionBodyTemplate}
               header="Actions"

@@ -36,6 +36,7 @@ interface MaintenanceDetails {
   suggestedMaintenance: string,
   type: string,
   id: number
+  facilityName: string
 }
 
 function SensorMaintenanceSuggestion() {
@@ -45,7 +46,7 @@ function SensorMaintenanceSuggestion() {
   const [objectsList, setObjectsList] = useState<MaintenanceDetails[]>([]);
   const [sensorList, setSensorList] = useState<any[]>([]);
   const [facilityList, setFacilityList] = useState<any[]>([]);
-  const [selectedObject, setSelectedObject] = useState<MaintenanceDetails>({ name: "", description: "", lastMaintenance: "", suggestedMaintenance: "", type: "", id: -1 });
+  const [selectedObject, setSelectedObject] = useState<MaintenanceDetails>({ name: "", description: "", lastMaintenance: "", suggestedMaintenance: "", type: "", id: -1, facilityName: "" });
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<MaintenanceDetails[]>>(null);
@@ -100,7 +101,8 @@ function SensorMaintenanceSuggestion() {
         suggestedMaintenance: sensor.predictedMaintenanceDate ?
           new Date(sensor.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Sensor",
-        id: sensor.sensorId
+        id: sensor.sensorId,
+        facilityName: sensor.hub.facility.facilityName
       })
     })
     setObjectsList(obj)
@@ -478,6 +480,12 @@ function SensorMaintenanceSuggestion() {
               header="Suggested Date of Maintenance"
               sortable
               body={statusBodyTemplate}
+              style={{ minWidth: "13rem" }}
+            ></Column>
+            <Column
+              field="facilityName"
+              header="Facility"
+              sortable
               style={{ minWidth: "13rem" }}
             ></Column>
             <Column
