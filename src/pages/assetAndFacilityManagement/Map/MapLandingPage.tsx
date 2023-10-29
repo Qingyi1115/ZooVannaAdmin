@@ -338,23 +338,25 @@ function MapLandingPage() {
   const actionBodyTemplate = (facility: FacilityWithSelected) => {
     return (
       <React.Fragment>
-        <Button
-          // variant={"outline"}
-          onClick={() => {
-            handleMarkerClick(facility);
-          }}
-          className="mr-1"
-        >
-          <HiMapPin className="mr-1" />
-        </Button>
-        <NavLink
-          to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
-          state={{ prev: `/assetfacility/maplanding` }}
-        >
-          <Button variant={"outline"} className="mb-1 mr-1">
-            <HiInformationCircle className="mx-auto" />
+        <div className="flex flex-col gap-2">
+          <Button
+            // variant={"outline"}
+            onClick={() => {
+              handleMarkerClick(facility);
+            }}
+            className="mr-1"
+          >
+            <HiMapPin className="mr-1" />
           </Button>
-        </NavLink>
+          <NavLink
+            to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
+            state={{ prev: `/assetfacility/maplanding` }}
+          >
+            <Button variant={"outline"} className="mb-1 mr-1">
+              <HiInformationCircle className="mx-auto" />
+            </Button>
+          </NavLink>
+        </div>
       </React.Fragment>
     );
   };
