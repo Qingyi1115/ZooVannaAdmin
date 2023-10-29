@@ -124,8 +124,8 @@ function FacilityMaintenanceSuggestion() {
         type: "Facility",
         id: facility.facilityId,
         repairRequired: facility.inHouse.facilityLogs?.find(log => log.generalStaffs?.find(gs => gs.employeeId == employee.employeeId)),
-        operationStaffString: facility.inHouse?.operationStaffs?.map((staff: GeneralStaff) => staff.employee?.employeeName).join(", ") || "None Assigned",
-        maintenanceStaffString: facility.inHouse?.maintenanceStaffs?.map((staff: GeneralStaff) => staff.employee?.employeeName).join(", ") || "None Assigned",
+        operationStaffString: facility.inHouse?.operationStaffs?.map((staff: GeneralStaff) => staff.employee?.employeeName).join(", ") || "-",
+        maintenanceStaffString: facility.inHouse?.maintenanceStaffs?.map((staff: GeneralStaff) => staff.employee?.employeeName).join(", ") || "-",
         repairTicket: facility.inHouse?.facilityLogs?.find(log => log.facilityLogType == "ACTIVE_REPAIR_TICKET") ? "Yes" : "No"
       })
     })
