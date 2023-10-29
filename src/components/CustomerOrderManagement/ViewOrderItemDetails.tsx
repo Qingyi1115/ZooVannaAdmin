@@ -21,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import beautifyText from "../../hooks/beautifyText";
 
 interface ListingInfo {
   listingName: string;
@@ -123,7 +124,7 @@ function ViewCustomerOrderDetailsEntry(props: CustomerOrderInfoDetailsProps) {
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Order Status
               </TableCell>
-              <TableCell>{curCustomerOrder.orderStatus}</TableCell>
+              <TableCell>{beautifyText(curCustomerOrder.orderStatus)}</TableCell>
             </TableRow>
             {/* <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>

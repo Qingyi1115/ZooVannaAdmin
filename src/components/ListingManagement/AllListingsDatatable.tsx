@@ -23,6 +23,7 @@ import { Dialog } from "primereact/dialog";
 import { ListingStatus, ListingType } from "../../enums/Enumurated";
 import { Separator } from "@/components/ui/separator";
 import { FiPlay } from "react-icons/fi";
+import beautifyText from "../../hooks/beautifyText";
 
 {
   /*const toast = useRef<Toast>(null);*/
@@ -347,13 +348,15 @@ function AllListingsDatatable() {
             ></Column>
             <Column
               field="listingType"
-              header="ListingType"
+              header="Listing Type"
+              body={(listing: Listing) => beautifyText(listing.listingType)}
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
               field="listingStatus"
-              header="ListingStatus"
+              header="Listing Status"
+              body={(listing: Listing) => beautifyText(listing.listingStatus)}
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>

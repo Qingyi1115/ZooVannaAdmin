@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import beautifyText from "../../hooks/beautifyText";
 
 interface ListingInfoDetailsProps {
   curListing: Listing;
@@ -67,14 +68,14 @@ function ViewListingDetails(props: ListingInfoDetailsProps) {
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Listing Type
               </TableCell>
-              <TableCell>{curListing.listingType}</TableCell>
+              <TableCell>{beautifyText(curListing.listingType)}</TableCell>
             </TableRow>
 
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Listing Status
               </TableCell>
-              <TableCell>{curListing.listingStatus}</TableCell>
+              <TableCell>{beautifyText(curListing.listingStatus)}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>

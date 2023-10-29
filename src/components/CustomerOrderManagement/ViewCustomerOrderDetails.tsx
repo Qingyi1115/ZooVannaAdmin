@@ -11,6 +11,7 @@ import * as Form from "@radix-ui/react-form";
 import * as moment from "moment-timezone";
 import OrderItem from "../../models/OrderItem";
 import Listing from "../../models/Listing";
+import beautifyText from "../../hooks/beautifyText";
 
 import {
   Table,
@@ -140,7 +141,7 @@ function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Order Status
               </TableCell>
-              <TableCell>{curCustomerOrder.orderStatus}</TableCell>
+              <TableCell>{beautifyText(curCustomerOrder.orderStatus)}</TableCell>
             </TableRow> */}
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>

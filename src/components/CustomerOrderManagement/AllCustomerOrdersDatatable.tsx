@@ -28,6 +28,8 @@ import { Separator } from "@/components/ui/separator";
 import * as moment from "moment-timezone";
 import { OrderStatus } from "../../enums/Enumurated";
 import { PaymentStatus } from "../../enums/PaymentStatus";
+import Customer from "../../models/Customer";
+import beautifyText from "../../hooks/beautifyText";
 
 function AllCustomerOrderDatatable() {
   const apiJson = useApiJson();
@@ -189,6 +191,7 @@ function AllCustomerOrderDatatable() {
             <Column
               field="orderStatus"
               header="Order Status"
+              body={(customerOrder: CustomerOrder) => beautifyText(customerOrder.orderStatus)}
               sortable
               style={{ minWidth: "7rem" }}
             ></Column>
