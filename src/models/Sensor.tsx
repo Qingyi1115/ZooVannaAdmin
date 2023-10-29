@@ -3,6 +3,7 @@ import HubProcessor from "./HubProcessor";
 import SensorReading from "./SensorReading";
 import Employee from "./Employee";
 import MaintenanceLog from "./MaintenanceLog";
+import GeneralStaff from "./GeneralStaff";
 
 interface Sensor {
     sensorId: number;
@@ -13,6 +14,6 @@ interface Sensor {
     hubProcessor: HubProcessor
     sensorReadings: SensorReading[]
     maintenanceLogs: MaintenanceLog[],
-    generalStaff: Employee[]
+    generalStaff: GeneralStaff
 }
 export default Sensor;

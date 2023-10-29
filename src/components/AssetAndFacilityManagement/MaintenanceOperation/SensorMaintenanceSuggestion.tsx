@@ -22,6 +22,7 @@ import { Checkbox, CheckboxChangeEvent, CheckboxClickEvent } from "primereact/ch
 import { useToast } from "@/components/ui/use-toast";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import { BsWrenchAdjustable } from "react-icons/bs";
+import GeneralStaff from "../../../models/GeneralStaff";
 
 export function compareDates(d1: Date, d2: Date): number {
   let date1 = d1.getTime();
@@ -82,7 +83,7 @@ function SensorMaintenanceSuggestion() {
       "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
     ).catch(error => {
     }).then(responseJson => {
-      console.log("responseJson",responseJson)
+      console.log("responseJson", responseJson)
       let sortedList = responseJson["sensors"].sort((a: any, b: any) => {
         if (!a.predictedMaintenanceDate) return 1;
         if (!b.predictedMaintenanceDate) return -1;
@@ -103,7 +104,8 @@ function SensorMaintenanceSuggestion() {
           new Date(sensor.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Sensor",
         id: sensor.sensorId,
-        facilityName: sensor.hubProcessor.facility.facilityName
+        facilityName: sensor.hubProcessor.facility.facilityName,
+        maintenanceStaffString: sensor.generalStaff?.employee?.employeeName || "-",
       })
     })
     setObjectsList(obj)
@@ -481,6 +483,12 @@ function SensorMaintenanceSuggestion() {
               header="Suggested Date of Maintenance"
               sortable
               body={statusBodyTemplate}
+              style={{ minWidth: "13rem" }}
+            ></Column>
+            <Column
+              field="maintenanceStaffString"
+              header="Maintenance Staff"
+              sortable
               style={{ minWidth: "13rem" }}
             ></Column>
             <Column
