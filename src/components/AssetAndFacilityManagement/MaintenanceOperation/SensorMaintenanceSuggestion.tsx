@@ -102,7 +102,7 @@ function SensorMaintenanceSuggestion() {
           new Date(sensor.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Sensor",
         id: sensor.sensorId,
-        facilityName: sensor.hub.facility.facilityName
+        facilityName: sensor.hubProcessor.facility.facilityName
       })
     })
     setObjectsList(obj)
