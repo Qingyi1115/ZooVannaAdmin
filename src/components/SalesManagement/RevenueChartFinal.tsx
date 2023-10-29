@@ -105,6 +105,7 @@ const RevenueChartFinal: React.FC<LineChartProps> = ({
   endDate,
 }) => {
   const [data, setData] = useState({});
+  const [sum, setSum] = useState<number>(0);
   const apiJson = useApiJson();
 
   useEffect(() => {
@@ -129,14 +130,19 @@ const RevenueChartFinal: React.FC<LineChartProps> = ({
               label: "Revenue",
               data: Object.values(responseJson),
               fill: false,
-              borderColor:
-                document.documentElement.style.getPropertyValue("--blue-500"), // Use the CSS variable
+              // borderColor: "black",
               tension: 0.4,
             },
           ],
         };
 
+        const sum: number = Object.values<number>(responseJson).reduce(
+          (acc, value) => acc + value,
+          0
+        );
+
         setData(chartData);
+        setSum(sum);
       } catch (error: any) {
         console.log(error);
       }
@@ -146,45 +152,78 @@ const RevenueChartFinal: React.FC<LineChartProps> = ({
 
   const options = {
     maintainAspectRatio: false,
-    aspectRatio: 0.8,
+    aspectRatio: 1.7,
     plugins: {
       legend: {
-        labels: {
-          color:
-            document.documentElement.style.getPropertyValue("--text-color"), // Use the CSS variable
-        },
+        display: false,
       },
     },
+
     scales: {
       x: {
+        title: {
+          display: true,
+          text: "Months",
+        },
         ticks: {
           color: document.documentElement.style.getPropertyValue(
             "--text-color-secondary"
-          ), // Use the CSS variable
+          ),
         },
         grid: {
-          color:
-            document.documentElement.style.getPropertyValue("--surface-border"), // Use the CSS variable
+          display: false,
         },
       },
+
       y: {
+        title: {
+          display: true,
+          text: "Revenue",
+        },
         ticks: {
           color: document.documentElement.style.getPropertyValue(
             "--text-color-secondary"
-          ), // Use the CSS variable
+          ),
         },
         grid: {
-          color:
-            document.documentElement.style.getPropertyValue("--surface-border"), // Use the CSS variable
+          display: true,
         },
       },
     },
   };
 
+  const startDateFormatted = new Date(startDate).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+  });
+
+  const endDateFormatted = new Date(endDate).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+  });
+
   return (
-    <div>
-      <h2>Revenue</h2>
-      <Chart type="line" data={data} options={options} />
+    <div className="flex gap-2 pt-2">
+      <div className="w-3/4" id="revenueChartContainer">
+        <div className="h-full rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
+          <Chart type="line" data={data} options={options} />
+        </div>
+      </div>
+      <div className="w-1/4 " id="revenueChartContainer">
+        <div className="flex h-full flex-col items-center justify-center rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
+          <h2 className="pb-3 text-center text-xl font-semibold">
+            Total Revenue:
+          </h2>
+          <h1 className="pb-4 text-center text-6xl font-semibold">
+            ${sum ? sum.toFixed(0) : "Calculating..."}
+          </h1>
+          <p className="text-s pb-3 text-center">
+            from {startDateFormatted} to {endDateFormatted}
+          </p>
+        </div>
+      </div>
+      {/* <h2 className="pb-3 text-xl font-semibold">Revenue</h2> */}
+      {/* <Chart type="line" data={data} options={options} /> */}
     </div>
   );
 };
