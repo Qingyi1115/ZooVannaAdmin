@@ -78,23 +78,23 @@ function ZooEventHomePage() {
       const allEventGroup: any[] = [];
       const allTitleGroups: any[] = [];
 
-      const a = responseJson["zooEvents"].map(ze => {
+      const a = responseJson["zooEvents"].map((ze: ZooEvent) => {
         return { ...ze, eventType: beautifyText(ze.eventType) }
       });
 
       a.forEach((ze: ZooEvent) => {
 
-          if (ze.animalActivity) {
-            if (ze.animalActivity?.title !== undefined && !allTitleGroups.find(title => title == ze.animalActivity?.title)) {
-              allTitleGroups.push(ze.animalActivity?.title);
-            }
-          } else if (ze.feedingPlanSessionDetail) {
-            if (ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && !allTitleGroups.find(title => title == ze.feedingPlanSessionDetail?.feedingPlan?.title)) {
-              allTitleGroups.push(ze.feedingPlanSessionDetail?.feedingPlan?.title);
-            }
-          } else if (ze) {
-
+        if (ze.animalActivity) {
+          if (ze.animalActivity?.title !== undefined && !allTitleGroups.find(title => title == ze.animalActivity?.title)) {
+            allTitleGroups.push(ze.animalActivity?.title);
           }
+        } else if (ze.feedingPlanSessionDetail) {
+          if (ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && !allTitleGroups.find(title => title == ze.feedingPlanSessionDetail?.feedingPlan?.title)) {
+            allTitleGroups.push(ze.feedingPlanSessionDetail?.feedingPlan?.title);
+          }
+        } else if (ze) {
+
+        }
 
 
         if (!allEventGroup.find(et => et == ze.eventType)) {
@@ -113,7 +113,7 @@ function ZooEventHomePage() {
       }
 
       const newTi = allTitleGroups.filter(ti => selTitleGroupList.includes(ti));
-      console.log("newTi",newTi)
+      console.log("newTi", newTi)
       if (selTitleGroupList.length == 0 || newTi.length == 0) {
         setSelTitleGroupList(allTitleGroups);
       } else {
@@ -139,7 +139,7 @@ function ZooEventHomePage() {
         // }
 
         return selEventGroupList.find(et => ze.eventType == et);
-      }).filter(ze=>{
+      }).filter(ze => {
         if (ze.animalActivity) {
           return selTitleGroupList.find(ti => ti == ze.animalActivity?.title);
         } else if (ze.feedingPlanSessionDetail) {
@@ -280,21 +280,21 @@ function ZooEventHomePage() {
                 setRefresh([])
               }
             }} />
-            <div className="flex gap-8 p-4 items-center">
-              <div className="whitespace-no-wrap min-w-max text-lg">
-                Event Type
-              </div>
-              <MultiSelect
-                id={"eventGroupFilter"}
-                value={selEventGroupList}
-                onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
-                options={eventGroupList}
-                optionLabel=""
-                filter
-                display="chip"
-                placeholder="Filter Type"
-                className="w-full md:w-20rem overflow-hidden" />
+          <div className="flex gap-8 p-4 items-center">
+            <div className="whitespace-no-wrap min-w-max text-lg">
+              Event Type
             </div>
+            <MultiSelect
+              id={"eventGroupFilter"}
+              value={selEventGroupList}
+              onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
+              options={eventGroupList}
+              optionLabel=""
+              filter
+              display="chip"
+              placeholder="Filter Type"
+              className="w-full md:w-20rem overflow-hidden" />
+          </div>
 
           <div className="flex gap-8 p-4 items-center">
             <div className="whitespace-no-wrap min-w-max text-lg">
@@ -303,7 +303,7 @@ function ZooEventHomePage() {
             <MultiSelect
               id={"eventTitleFilter"}
               value={selTitleGroupList}
-              onChange={(e: MultiSelectChangeEvent) =>setSelTitleGroupList(e.value)}
+              onChange={(e: MultiSelectChangeEvent) => setSelTitleGroupList(e.value)}
               options={titleGroupList}
               optionLabel=""
               filter
