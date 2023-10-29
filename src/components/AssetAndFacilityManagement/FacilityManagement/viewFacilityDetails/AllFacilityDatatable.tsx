@@ -162,7 +162,7 @@ function AllFacilityDatatable() {
               </Button>
             </NavLink>
           )}
-        {(employee.superAdmin ||
+        {/* {(employee.superAdmin ||
           employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <NavLink
               to={`/assetfacility/editfacility/${facility.facilityId}`}
@@ -172,7 +172,7 @@ function AllFacilityDatatable() {
                 <HiPencil className="mr-1" />
               </Button>
             </NavLink>
-          )}
+          )} */}
         {(employee.superAdmin ||
           employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <Button
