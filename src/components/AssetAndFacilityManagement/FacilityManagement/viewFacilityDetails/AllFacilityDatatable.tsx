@@ -73,7 +73,12 @@ function AllFacilityDatatable() {
         console.log(e);
       })
       .then((res) => {
-        setFacilityList(res["facilities"]);
+        console.log("req", res)
+        setFacilityList(res["facilities"].map(facility => {
+          facility.opStaffStr = facility.facilityDetailJson.operationStaffs?.map(staff => staff.employee.employeeName).join(", ") || "-"
+          facility.manStaffStr = facility.facilityDetailJson.maintenanceStaffs?.map(staff => staff.employee.employeeName).join(", ") || "-"
+          return facility;
+        }));
       });
   }, []);
 
@@ -148,7 +153,9 @@ function AllFacilityDatatable() {
           to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
           state={{ prev: `/assetfacility/viewallfacilities` }}
         >
-          <Button className="mb-1 mr-1">
+          <Button
+            // variant={"outline"}
+            className="mb-1 mr-1">
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
@@ -296,12 +303,32 @@ function AllFacilityDatatable() {
             <Column
               field="facilityDetail"
               header="Owner Type"
+              body={(facility) => {
+                return facility.facilityDetail == "thirdParty" ?
+                  "Third-party" : "In-house"
+              }}
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
               field="isSheltered"
               header="Shelter available"
+              body={(facility) => {
+                return facility.isSheltered ? "Yes" : "No"
+              }}
+              sortable
+              style={{ minWidth: "12rem" }
+              }
+            ></Column>
+            <Column
+              field="opStaffStr"
+              header="Operation Staff"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="manStaffStr"
+              header="Maintenance Staff"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>

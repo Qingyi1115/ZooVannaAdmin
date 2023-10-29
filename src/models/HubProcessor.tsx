@@ -2,7 +2,7 @@ import { HubStatus } from "src/enums/HubStatus";
 import Sensor from "./Sensor";
 import Facility from "./Facility";
 
-interface Hub {
+interface HubProcessor {
     hubProcessorId: number;
     processorName: string;
     ipAddressName: string;
@@ -13,4 +13,4 @@ interface Hub {
     facility: Facility;
     radioGroup: number | null;
 }
-export default Hub;
+export default HubProcessor;

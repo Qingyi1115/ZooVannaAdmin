@@ -409,8 +409,8 @@ function MapLandingPage() {
                       Type:{" "}
                       {
                         FacilityType[
-                          selectedFacility.facilityDetailJson
-                            .facilityType as keyof typeof FacilityType
+                        selectedFacility.facilityDetailJson
+                          .facilityType as keyof typeof FacilityType
                         ]
                       }
                     </div>
@@ -519,14 +519,22 @@ function MapLandingPage() {
               <Column
                 field="facilityDetail"
                 header="Owner Type"
+                body={(facility) => {
+                  return facility.facilityDetail == "thirdParty" ?
+                    "Third-party" : "In-house"
+                }}
                 sortable
                 style={{ minWidth: "12rem" }}
               ></Column>
               <Column
                 field="isSheltered"
                 header="Shelter available"
+                body={(facility) => {
+                  return facility.isSheltered ? "Yes" : "No"
+                }}
                 sortable
-                style={{ minWidth: "12rem" }}
+                style={{ minWidth: "12rem" }
+                }
               ></Column>
               <Column
                 body={actionBodyTemplate}

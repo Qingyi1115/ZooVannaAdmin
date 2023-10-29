@@ -5,7 +5,7 @@ import Facility from "../../../../models/Facility";
 import MaintenanceLog from "../../../../models/MaintenanceLog";
 import { HubStatus } from "../../../../enums/HubStatus";
 import { SensorType } from "../../../../enums/SensorType";
-import Hub from "../../../../models/Hub";
+import Hub from "../../../../models/HubProcessor";
 import Sensor from "../../../../models/Sensor";
 import ViewMaintenanceLogDetails from "../../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/ViewMaintenanceLogDetails";
 

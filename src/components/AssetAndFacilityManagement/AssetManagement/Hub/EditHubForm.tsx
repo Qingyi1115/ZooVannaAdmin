@@ -5,7 +5,7 @@ import { MultiSelectChangeEvent } from "primereact/multiselect";
 
 import useApiFormData from "../../../../hooks/useApiFormData";
 import FormFieldInput from "../../../FormFieldInput";
-import Hub from "../../../../models/Hub";
+import Hub from "../../../../models/HubProcessor";
 import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
