@@ -176,6 +176,7 @@ const RevenueChartFinal: React.FC<LineChartProps> = ({
       },
 
       y: {
+        beginAtZero: true,
         title: {
           display: true,
           text: "Revenue",
