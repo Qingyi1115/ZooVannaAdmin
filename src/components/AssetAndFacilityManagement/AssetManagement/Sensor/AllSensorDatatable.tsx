@@ -20,6 +20,7 @@ import Hub from "../../../../models/HubProcessor";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import GeneralStaff from "../../../../models/GeneralStaff";
+import beautifyText from "../../../../hooks/beautifyText";
 
 interface AllSensorDatatableProps {
   curHub: Hub,
@@ -231,6 +232,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
             <Column
               field="sensorType"
               header="Sensor Type"
+              body={(sensor: Sensor) => beautifyText(sensor.sensorType)}
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>

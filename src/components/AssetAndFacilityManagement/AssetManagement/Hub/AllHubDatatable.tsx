@@ -19,6 +19,8 @@ import { Separator } from "@/components/ui/separator";
 import Facility from "../../../../models/Facility";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
+import HubProcessor from "../../../../models/HubProcessor";
+import beautifyText from "../../../../hooks/beautifyText";
 
 interface AllHubDatatableProps {
   curFacility: Facility;
@@ -236,6 +238,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
             <Column
               field="hubStatus"
               header="Hub Status"
+              body={(hubProcessor: HubProcessor) => beautifyText(hubProcessor.hubStatus)}
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>

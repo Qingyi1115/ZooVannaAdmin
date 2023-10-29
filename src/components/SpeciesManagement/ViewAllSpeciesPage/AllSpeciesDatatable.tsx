@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import beautifyText from "../../../hooks/beautifyText";
 
 function AllSpeciesDatatable() {
   const apiJson = useApiJson();
@@ -266,6 +267,7 @@ function AllSpeciesDatatable() {
             <Column
               field="conservationStatus"
               header="Conservation Status"
+              body={(species: Species) => beautifyText(species.conservationStatus)}
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>

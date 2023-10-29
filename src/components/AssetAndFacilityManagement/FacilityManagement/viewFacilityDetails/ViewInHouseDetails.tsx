@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import Facility from "src/models/Facility";
 import InHouse from "src/models/InHouse";
+import beautifyText from "../../../../hooks/beautifyText";
 
 interface InHouseDetailsProps {
   curInHouse: InHouse;
@@ -47,7 +48,7 @@ function ViewInHouseDetails(props: InHouseDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Facility Type
             </TableCell>
-            <TableCell>{curInHouse.facilityType}</TableCell>
+            <TableCell>{beautifyText(curInHouse.facilityType)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

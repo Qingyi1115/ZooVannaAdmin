@@ -19,6 +19,7 @@ import { Separator } from "@radix-ui/react-select";
 import { useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import beautifyText from "../../../../hooks/beautifyText";
 
 interface HubDetailsProps {
   curHub: Hub;
@@ -103,7 +104,7 @@ function ViewHubDetails(props: HubDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Hub Status
             </TableCell>
-            <TableCell>{curHub.hubStatus}</TableCell>
+            <TableCell>{beautifyText(curHub.hubStatus)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

@@ -24,6 +24,7 @@ import { ScrollPanel } from "primereact/scrollpanel";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
 import { FacilityLogType } from "../../../../../enums/FacilityLogType";
 import { BsWrenchAdjustable } from "react-icons/bs";
+import beautifyText from "../../../../../hooks/beautifyText";
 
 interface AllFacilityLogsDatatableProps {
   facilityId: number;
@@ -316,7 +317,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             </div>
             <div>
               <div className="text-xl font-bold text-900 indent-px">Log Type </div>
-              {facilityLog.facilityLogType}
+              {beautifyText(facilityLog.facilityLogType)}
             </div>
           </div>
 

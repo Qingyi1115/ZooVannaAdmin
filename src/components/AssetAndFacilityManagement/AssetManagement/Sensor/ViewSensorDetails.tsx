@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { HiCamera, HiPencil } from "react-icons/hi";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { BsWrenchAdjustable } from "react-icons/bs";
+import beautifyText from "../../../../hooks/beautifyText";
 
 interface SensorDetailsProps {
   curSensor: Sensor;
@@ -36,12 +37,12 @@ function ViewSensorDetails(props: SensorDetailsProps) {
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
 
-          <Button className="mr-2" onClick={() => {
-            navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
-            navigate(`/assetfacility/viewfacilitydetails/${curSensor.hubProcessor?.facilityId}`);
-          }}>
-            Facility Details
-          </Button>
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
+          navigate(`/assetfacility/viewfacilitydetails/${curSensor.hubProcessor?.facilityId}`);
+        }}>
+          Facility Details
+        </Button>
 
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button className="mr-2" onClick={() => {
@@ -63,12 +64,12 @@ function ViewSensorDetails(props: SensorDetailsProps) {
         )}
         {curSensor.sensorType == "CAMERA" && (
 
-          <Button className="mr-2" onClick={()=>{ 
+          <Button className="mr-2" onClick={() => {
             navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
             navigate(`/assetfacility/viewcamera/${curSensor.sensorId}`);
           }}>
-          <HiCamera className="mx-auto" />
-          View Camera
+            <HiCamera className="mx-auto" />
+            View Camera
           </Button>
         )}
 
@@ -109,7 +110,7 @@ function ViewSensorDetails(props: SensorDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Type
             </TableCell>
-            <TableCell>{String(curSensor.sensorType)}</TableCell>
+            <TableCell>{String(beautifyText(curSensor.sensorType))}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

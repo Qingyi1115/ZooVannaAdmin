@@ -15,6 +15,7 @@ import Facility from "../../../../../models/Facility";
 import FacilityLog from "../../../../../models/FacilityLog";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
 import { Card } from "primereact/card";
+import beautifyText from "../../../../../hooks/beautifyText";
 
 interface CreateNewFacilityMaintenanceLogFormProps {
   // curFacility: Facility;
@@ -126,7 +127,7 @@ function CreateNewFacilityMaintenanceLogForm(props: CreateNewFacilityMaintenance
             </div>
             <div>
               <div className="text-xl font-bold text-900 indent-px">Log Type </div>
-              {facilityLogType}
+              {beautifyText(facilityLogType)}
             </div>
           </div>
 
