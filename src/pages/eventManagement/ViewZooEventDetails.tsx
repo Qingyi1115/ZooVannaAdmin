@@ -1010,7 +1010,7 @@ function ViewZooEventDetails() {
                           return animal.sex == "" || animal.sex == null ? (
                             <span className="flex justify-center ">—</span>
                           ) : (
-                            animal.sex
+                            beautifyText(animal.sex)
                           );
                         }}
                         field="sex"

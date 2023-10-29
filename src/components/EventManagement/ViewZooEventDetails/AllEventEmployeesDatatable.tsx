@@ -15,6 +15,8 @@ import { Toolbar } from "primereact/toolbar";
 import { Separator } from "@/components/ui/separator";
 import ZooEvent from "../../../models/ZooEvent";
 import { Checkbox, CheckboxChangeEvent, CheckboxClickEvent } from "primereact/checkbox";
+import beautifyText from "../../../hooks/beautifyText";
+import Keeper from "../../../models/Keeper";
 
 interface AllEventEmployeesDatatableProps {
   zooEventId: number;
@@ -564,6 +566,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
             <Column
               field="keeperType"
               header="Keeper Type"
+              body={(keeper: Keeper) => beautifyText(keeper.keeperType)}
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -682,6 +685,13 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
               <Column
                 field="employeeName"
                 header="Name"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="keeperType"
+                header="Keeper Type"
+                body={(keeper: Keeper) => beautifyText(keeper.keeperType)}
                 sortable
                 style={{ minWidth: "12rem" }}
               ></Column>
