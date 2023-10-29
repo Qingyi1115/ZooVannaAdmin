@@ -30,6 +30,7 @@ import {
   AnimalGrowthStage,
   AnimalSex,
 } from "../../../enums/Enumurated";
+import beautifyText from "../../../hooks/beautifyText";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -370,7 +371,7 @@ function AnimalsBySpeciesDatatable(props: AnimalsBySpeciesDatatableProps) {
                 return animal.sex == "" || animal.sex == null ? (
                   <span className="flex justify-center ">—</span>
                 ) : (
-                  animal.sex
+                  beautifyText(animal.sex)
                 );
               }}
               field="sex"

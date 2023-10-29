@@ -30,6 +30,7 @@ import { Separator } from "@/components/ui/separator";
 import DeclareDeathFormDialog from "./DeclareDeathFormDialog";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface AnimalBasicInformationProps {
   curAnimal: Animal;
@@ -47,11 +48,11 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
     curAnimal.animalStatus === "NORMAL"
       ? "bg-green-600"
       : curAnimal.animalStatus === "PREGNANT"
-      ? "bg-warning"
-      : curAnimal.animalStatus === "SICK" ||
-        curAnimal.animalStatus === "INJURED"
-      ? "bg-destructive"
-      : "";
+        ? "bg-warning"
+        : curAnimal.animalStatus === "SICK" ||
+          curAnimal.animalStatus === "INJURED"
+          ? "bg-destructive"
+          : "";
 
   function calculateAge(dateOfBirth: Date): string {
     const dob = dateOfBirth;
@@ -132,22 +133,21 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             <div
               key={index}
               className={` flex w-max items-center justify-center rounded px-1 text-sm font-bold
-                ${
-                  status === "NORMAL"
-                    ? " bg-emerald-100  text-emerald-900"
-                    : status === "PREGNANT"
+                ${status === "NORMAL"
+                  ? " bg-emerald-100  text-emerald-900"
+                  : status === "PREGNANT"
                     ? " bg-orange-100 p-[0.1rem] text-orange-900"
                     : status === "SICK"
-                    ? " bg-yellow-100 p-[0.1rem]  text-yellow-900"
-                    : status === "INJURED"
-                    ? "bg-red-100 p-[0.1rem] text-red-900"
-                    : status === "OFFSITE"
-                    ? " bg-blue-100 p-[0.1rem]  text-blue-900"
-                    : status === "RELEASED"
-                    ? " bg-fuchsia-100 p-[0.1rem]  text-fuchsia-900"
-                    : status === "DECEASED"
-                    ? " bg-slate-300 p-[0.1rem]  text-slate-900"
-                    : "bg-gray-100 text-black"
+                      ? " bg-yellow-100 p-[0.1rem]  text-yellow-900"
+                      : status === "INJURED"
+                        ? "bg-red-100 p-[0.1rem] text-red-900"
+                        : status === "OFFSITE"
+                          ? " bg-blue-100 p-[0.1rem]  text-blue-900"
+                          : status === "RELEASED"
+                            ? " bg-fuchsia-100 p-[0.1rem]  text-fuchsia-900"
+                            : status === "DECEASED"
+                              ? " bg-slate-300 p-[0.1rem]  text-slate-900"
+                              : "bg-gray-100 text-black"
                 }`}
             >
               {status}
@@ -251,7 +251,7 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
               {curAnimal.sex == null || curAnimal.sex.toString() == "" ? (
                 <span className="">—</span>
               ) : (
-                curAnimal.sex
+                beautifyText(curAnimal.sex)
               )}
             </TableCell>
           </TableRow>
@@ -264,7 +264,7 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             <TableCell className="w-1/6 font-bold">Type</TableCell>
             <TableCell>
               {curAnimal.identifierType == "" ||
-              curAnimal.identifierType == null ? (
+                curAnimal.identifierType == null ? (
                 <span className="">—</span>
               ) : (
                 curAnimal.identifierType
@@ -275,7 +275,7 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             <TableCell className="w-1/6 font-bold">Value</TableCell>
             <TableCell>
               {curAnimal.identifierValue == "" ||
-              curAnimal.identifierValue == null ? (
+                curAnimal.identifierValue == null ? (
                 <span className="">—</span>
               ) : (
                 curAnimal.identifierValue
@@ -288,7 +288,7 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             </TableCell>
             <TableCell>
               {curAnimal.dateOfBirth?.toString() == "" ||
-              curAnimal.dateOfBirth == null ? (
+                curAnimal.dateOfBirth == null ? (
                 <span className="">—</span>
               ) : (
                 calculateAge(new Date(curAnimal.dateOfBirth))
@@ -299,7 +299,7 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Current Growth Stage
             </TableCell>
-            <TableCell>{curAnimal.growthStage}</TableCell>
+            <TableCell>{beautifyText(curAnimal.growthStage)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/5 font-bold" rowSpan={3}>
@@ -343,13 +343,13 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Method</TableCell>
-            <TableCell>{curAnimal.acquisitionMethod}</TableCell>
+            <TableCell>{beautifyText(curAnimal.acquisitionMethod)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/6 font-bold">Remarks</TableCell>
             <TableCell>
               {curAnimal.acquisitionRemarks == "" ||
-              curAnimal.acquisitionRemarks == null ? (
+                curAnimal.acquisitionRemarks == null ? (
                 <span className="">—</span>
               ) : (
                 curAnimal.acquisitionRemarks

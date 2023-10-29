@@ -10,6 +10,7 @@ import useApiJson from "../../../hooks/useApiJson";
 
 import { useToast } from "@/components/ui/use-toast";
 import Animal from "../../../models/Animal";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface AnimalFeedingPlanInvolvedAnimalDatatableProps {
   involvedAnimalList: Animal[];
@@ -122,6 +123,7 @@ function AnimalFeedingPlanInvolvedAnimalDatatable(
         <Column
           field="growthStage"
           header="Growth Stage"
+          body={(animal: Animal) => beautifyText(animal.growthStage)}
           sortable
           style={{ minWidth: "7rem" }}
         ></Column>

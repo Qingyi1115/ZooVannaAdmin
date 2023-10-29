@@ -48,6 +48,7 @@ import { Button } from "@/components/ui/button";
 
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface OneParentCardProps {
   curAnimal: Animal;
@@ -263,6 +264,7 @@ function OneParentCard(props: OneParentCardProps) {
           <Column
             field="sex"
             header="Sex"
+            body={(animal: Animal) => beautifyText(animal.sex)}
             sortable
             style={{ minWidth: "7rem" }}
           ></Column>
@@ -298,17 +300,16 @@ function OneParentCard(props: OneParentCardProps) {
           <p className="text-lg font-bold">{parent.houseName}</p>
           <p className="text-sm">{parent.species.commonName}</p>
           <p
-            className={`${
-              parent.sex == "MALE"
+            className={`${parent.sex == "MALE"
                 ? "text-[#3b82f6]"
                 : parent.sex == "FEMALE"
-                ? "text-[#ec4899]"
-                : parent.sex == "UNKNOWN"
-                ? "text-slate-900"
-                : parent.sex == "ASEXUAL"
-                ? "text-purple-600"
-                : "text-black"
-            }`}
+                  ? "text-[#ec4899]"
+                  : parent.sex == "UNKNOWN"
+                    ? "text-slate-900"
+                    : parent.sex == "ASEXUAL"
+                      ? "text-purple-600"
+                      : "text-black"
+              }`}
           >
             {parent.sex}
           </p>

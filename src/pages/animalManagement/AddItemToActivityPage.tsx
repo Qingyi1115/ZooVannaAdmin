@@ -41,6 +41,7 @@ import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import AddItemToActivityForm from "../../components/AnimalManagement/CreateAnimalActivityPage/AddItemToActivityForm";
+import beautifyText from "../../hooks/beautifyText";
 
 function AddItemToActivityPage() {
   const apiJson = useApiJson();
@@ -112,7 +113,7 @@ function AddItemToActivityPage() {
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     Type
                   </TableCell>
-                  <TableCell>{curAnimalActivity.activityType}</TableCell>
+                  <TableCell>{beautifyText(curAnimalActivity.activityType)}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>

@@ -49,6 +49,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import OneParentCard from "./OneParentCard";
+import beautifyText from "../../../hooks/beautifyText";
 interface AnimalParentsCardProps {
   curAnimal: Animal;
   setCurAnimal: any;
@@ -246,6 +247,7 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
           <Column
             field="sex"
             header="Sex"
+            body={(animal: Animal) => beautifyText(animal.sex)}
             sortable
             style={{ minWidth: "7rem" }}
           ></Column>
