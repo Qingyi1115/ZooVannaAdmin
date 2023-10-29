@@ -295,6 +295,7 @@ function MapLandingPage() {
     facilityDetailJson: "",
     isSheltered: false,
     hubProcessors: [],
+    imageUrl: ""
   };
 
   const dt = useRef<DataTable<Facility[]>>(null);
@@ -340,6 +341,16 @@ function MapLandingPage() {
           </Button>
         </NavLink>
       </React.Fragment >
+    );
+  };
+
+  const imageBodyTemplate = (rowData: Facility) => {
+    return (
+      <img
+        src={"http://localhost:3000/" + rowData.imageUrl}
+        alt={rowData.facilityName}
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+      />
     );
   };
 
@@ -536,6 +547,13 @@ function MapLandingPage() {
                 globalFilter={globalFilter}
                 header={header}
               >
+                <Column
+                  field="imageUrl"
+                  header="Image"
+                  frozen
+                  body={imageBodyTemplate}
+                  style={{ minWidth: "6rem" }}
+                ></Column>
                 <Column
                   field="facilityId"
                   header="ID"
