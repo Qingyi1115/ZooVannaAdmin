@@ -38,7 +38,13 @@ import Facility from "../../../models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
 import { FacilityType } from "../../../enums/FacilityType";
 import { Dialog } from "primereact/dialog";
-import { HiCheck, HiEye, HiInformationCircle, HiPlus, HiX } from "react-icons/hi";
+import {
+  HiCheck,
+  HiEye,
+  HiInformationCircle,
+  HiPlus,
+  HiX,
+} from "react-icons/hi";
 import { IdentifierType } from "../../../enums/Enumurated";
 import { DataTable } from "primereact/datatable";
 import { dt } from "@fullcalendar/core/internal-common";
@@ -47,15 +53,30 @@ import { InputText } from "primereact/inputtext";
 import { HiMap, HiMapPin } from "react-icons/hi2";
 // import geolocation from "geolocation";
 
+let emptyFacility: FacilityWithSelected = {
+  facilityId: -1,
+  facilityName: "",
+  showOnMap: false,
+  xCoordinate: 0,
+  yCoordinate: 0,
+  facilityDetail: "",
+  facilityDetailJson: "",
+  isSheltered: false,
+  hubProcessors: [],
+  selected: false,
+};
+interface FacilityWithSelected extends Facility {
+  selected: boolean;
+}
+
 function MapLandingPage() {
   const navigate = useNavigate();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
-  const [facilityList, setFacilityList] = useState<Facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
-    null
-  );
+  const [facilityList, setFacilityList] = useState<FacilityWithSelected[]>([]);
+  const [selectedFacility, setSelectedFacility] =
+    useState<FacilityWithSelected>(emptyFacility);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   const [deleteLocationFromMapDialog, setDeleteLocationFromMapDialog] =
@@ -63,9 +84,9 @@ function MapLandingPage() {
 
   const [isShownOnMap, setIsShownOnMap] = useState<boolean>(false);
 
-  const [filteredFacilityList, setFilteredFacilityList] = useState<Facility[]>(
-    []
-  );
+  const [filteredFacilityList, setFilteredFacilityList] = useState<
+    FacilityWithSelected[]
+  >([]);
   const [facilityTypeFilterValue, setFacilityTypeFilterValue] = useState<
     string | null
   >(null);
@@ -81,20 +102,25 @@ function MapLandingPage() {
           { includes: ["facilityDetail"] }
         );
         const facilityListWithLocation = (
-          responseJson.facilities as Facility[]
-        ).filter((facility) => {
-          // console.log(facility);
-          return !(
-            facility.xCoordinate == null || facility.yCoordinate == null
-          );
-        });
+          responseJson.facilities as FacilityWithSelected[]
+        )
+          .filter((facility) => {
+            // console.log(facility);
+            return !(
+              facility.xCoordinate == null || facility.yCoordinate == null
+            );
+          })
+          .map((facility) => ({
+            ...facility,
+            selected: false,
+          }));
         setFacilityList(facilityListWithLocation);
         setFilteredFacilityList(facilityListWithLocation);
         if (selectedFacility) {
           const updatedFacility = facilityListWithLocation.find(
             (facility) => facility.facilityId === selectedFacility.facilityId
           );
-          setSelectedFacility(updatedFacility || null);
+          if (updatedFacility) setSelectedFacility(updatedFacility);
         }
       } catch (error: any) {
         console.log(error);
@@ -182,7 +208,7 @@ function MapLandingPage() {
       toastShadcn({
         description: "Successfully remove location map",
       });
-      setSelectedFacility(null);
+      setSelectedFacility(emptyFacility);
       setDeleteLocationFromMapDialog(false);
       setRefreshSeed(refreshSeed + 1);
     } catch (error: any) {
@@ -285,22 +311,12 @@ function MapLandingPage() {
   // end delete stuff
 
   // Datatable stuff
-  let emptyFacility: Facility = {
-    facilityId: -1,
-    facilityName: "",
-    showOnMap: false,
-    xCoordinate: 0,
-    yCoordinate: 0,
-    facilityDetail: "",
-    facilityDetailJson: "",
-    isSheltered: false,
-    hubProcessors: [],
-  };
 
-  const dt = useRef<DataTable<Facility[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [tableSelectedFacility, setTableSelectedFacility] =
-    useState<Facility>(emptyFacility);
+    useState<FacilityWithSelected>(emptyFacility);
+
+  const dt = useRef<DataTable<FacilityWithSelected[]>>(null);
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -319,28 +335,42 @@ function MapLandingPage() {
     </div>
   );
 
-  const actionBodyTemplate = (facility: Facility) => {
+  const actionBodyTemplate = (facility: FacilityWithSelected) => {
     return (
       <React.Fragment>
-        <Button
-          // variant={"outline"}
-          onClick={() => {
-            setSelectedFacility(facility);
-          }}
-          className="mr-1">
-          <HiMapPin className="mr-1" />
-        </Button>
-        <NavLink
-          to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
-          state={{ prev: `/assetfacility/maplanding` }}
-        >
-          <Button variant={"outline"} className="mb-1 mr-1">
-            <HiInformationCircle className="mx-auto" />
+        <div className="flex flex-col gap-2">
+          <Button
+            // variant={"outline"}
+            onClick={() => {
+              handleMarkerClick(facility);
+            }}
+            className="mr-1"
+          >
+            <HiMapPin className="mr-1" />
           </Button>
-        </NavLink>
-      </React.Fragment >
+          <NavLink
+            to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
+            state={{ prev: `/assetfacility/maplanding` }}
+          >
+            <Button variant={"outline"} className="mb-1 mr-1">
+              <HiInformationCircle className="mx-auto" />
+            </Button>
+          </NavLink>
+        </div>
+      </React.Fragment>
     );
   };
+
+  function handleMarkerClick(selectedFacility: FacilityWithSelected) {
+    const tempFacilityList = facilityList.map((facility) =>
+      facility.facilityId === selectedFacility.facilityId
+        ? { ...facility, selected: !facility.selected }
+        : { ...facility, selected: false }
+    );
+    setSelectedFacility(selectedFacility);
+    setIsShownOnMap(selectedFacility.showOnMap);
+    setFilteredFacilityList(tempFacilityList);
+  }
 
   return (
     <div className="p-10">
@@ -363,71 +393,72 @@ function MapLandingPage() {
           </Button>
           {/* <Button onClick={testGetLocation}>Test get location</Button> */}
         </div>
-        <div className="flex gap-8">
-          <Card className="h-[55vh] w-1/4 sticky top-30">
-            <CardContent className="flex h-full flex-col justify-between">
-              <div className="pb-4 pt-8">
-                {!selectedFacility ? (
-                  <div className="text-center">No facility selected</div>
-                ) : (
-                  <div className="flex flex-col gap-4 pt-2 text-center">
+        <Card className="flex h-[15vh] items-center">
+          <CardContent className="flex h-full w-full items-center justify-between pb-0">
+            <div className="">
+              {selectedFacility.facilityId == -1 ? (
+                <div className="text-center">No facility selected</div>
+              ) : (
+                <div className="flex gap-12 text-start text-base">
+                  <div className="flex flex-col ">
                     <div className="text-xl font-medium">
                       {selectedFacility.facilityName}
                     </div>
-                    <div className="text-lg">
+                    <div className="text-base">
                       Type:{" "}
                       {
                         FacilityType[
-                        selectedFacility.facilityDetailJson
-                          .facilityType as keyof typeof FacilityType
+                          selectedFacility.facilityDetailJson
+                            .facilityType as keyof typeof FacilityType
                         ]
                       }
                     </div>
+                  </div>
+                  <div>
+                    Current Coordinates:
                     <div>
-                      Current Coordinates:
-                      <div>
-                        X-Coordinates:{" "}
-                        <span className="font-medium">
-                          {selectedFacility.xCoordinate.toFixed(4)}
-                        </span>
-                      </div>
-                      <div>
-                        Y-Coordinates:{" "}
-                        <span className="font-medium">
-                          {selectedFacility.yCoordinate.toFixed(4)}
-                        </span>
-                      </div>
+                      X:{" "}
+                      <span className="font-medium">
+                        {selectedFacility.xCoordinate.toFixed(4)}
+                      </span>
                     </div>
                     <div>
-                      Show on map:{" "}
+                      Y:{" "}
                       <span className="font-medium">
-                        {selectedFacility.showOnMap ? (
-                          <span className="text-primary">Yes</span>
-                        ) : (
-                          <span className="text-destructive">No</span>
-                        )}
+                        {selectedFacility.yCoordinate.toFixed(4)}
                       </span>
                     </div>
                   </div>
-                )}
-              </div>
-              <Separator />
-              <div className="flex w-full flex-col items-center gap-2">
-                <div className="mb-2 flex items-center text-lg">
-                  Show on customer map:
-                  <Switch
-                    disabled={!selectedFacility}
-                    className="ml-2"
-                    checked={isShownOnMap}
-                    onCheckedChange={(checked) =>
-                      handleOnCheckedChangeShowOnMap(checked)
-                    }
-                  />
+                  <div>
+                    Show on map:{" "}
+                    <div className="font-medium">
+                      {selectedFacility.showOnMap ? (
+                        <span className="text-primary">Yes</span>
+                      ) : (
+                        <span className="text-destructive">No</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
+              )}
+            </div>
+            <div className="flex items-center gap-8">
+              <div className="flex items-center text-lg">
+                Show on customer map:
+                <Switch
+                  disabled={selectedFacility.facilityId == -1}
+                  className="ml-2"
+                  checked={isShownOnMap}
+                  onCheckedChange={(checked) =>
+                    handleOnCheckedChangeShowOnMap(checked)
+                  }
+                />
+              </div>
 
+              <div className="flex flex-col gap-4">
                 <Button
                   className="w-full"
-                  disabled={!selectedFacility}
+                  disabled={selectedFacility.facilityId == -1}
                   onClick={() =>
                     navigate(
                       `/assetfacility/changelocation/${selectedFacility?.facilityId}`
@@ -438,15 +469,74 @@ function MapLandingPage() {
                 </Button>
                 <Button
                   className="w-full"
-                  disabled={!selectedFacility}
+                  disabled={selectedFacility.facilityId == -1}
                   variant={"destructive"}
                   onClick={() => confirmDeleteLocationFromMap()}
                 >
                   Remove From Map
                 </Button>
               </div>
-            </CardContent>
+            </div>
+          </CardContent>
+        </Card>
+        <div className="flex gap-8">
+          <Card className="h-[50vh]">
+            <DataTable
+              ref={dt}
+              value={filteredFacilityList}
+              selection={selectedFacility}
+              onSelectionChange={(e) => {
+                if (Array.isArray(e.value)) {
+                  handleMarkerClick(e.value);
+                }
+              }}
+              dataKey="facilityId"
+              // paginator
+              rows={10}
+              scrollable
+              scrollHeight="100%"
+              selectionMode={"single"}
+              // rowsPerPageOptions={[5, 10, 25]}
+              // paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+              // currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facilities"
+              globalFilter={globalFilter}
+              header={header}
+              style={{ width: "25vw", height: "100%" }}
+            >
+              <Column
+                field="facilityId"
+                header="ID"
+                sortable
+                style={{ minWidth: "4rem" }}
+              ></Column>
+              <Column
+                field="facilityName"
+                header="Name"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="facilityDetail"
+                header="Owner Type"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="isSheltered"
+                header="Shelter available"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                body={actionBodyTemplate}
+                header="Actions"
+                frozen
+                alignFrozen="right"
+                exportable={false}
+              ></Column>
+            </DataTable>
           </Card>
+
           <div className="w-full space-y-4">
             <div className="flex h-[5vh] items-center gap-4">
               <div>Filters: </div>
@@ -508,20 +598,21 @@ function MapLandingPage() {
             <div className="w-full overflow-hidden rounded-md border border-stroke shadow-md">
               <LandingPageMap
                 facilityList={filteredFacilityList}
+                setFacilityList={setFilteredFacilityList}
                 selectedFacility={selectedFacility}
                 setSelectedFacility={setSelectedFacility}
                 setIsShownOnMap={setIsShownOnMap}
               />
             </div>
 
-            <Card>
+            {/* <Card>
               <DataTable
                 ref={dt}
-                value={facilityList}
-                selection={tableSelectedFacility}
+                value={filteredFacilityList}
+                selection={selectedFacility}
                 onSelectionChange={(e) => {
                   if (Array.isArray(e.value)) {
-                    setTableSelectedFacility(e.value);
+                    handleMarkerClick(e.value);
                   }
                 }}
                 dataKey="facilityId"
@@ -567,8 +658,7 @@ function MapLandingPage() {
                   exportable={false}
                 ></Column>
               </DataTable>
-            </Card>
-
+            </Card> */}
           </div>
         </div>
       </div>
