@@ -42,6 +42,7 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
 import AnimalActivity from "../../../models/AnimalActivity";
 import { Nullable } from "primereact/ts-helpers";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface EditAnimalActivityFormProps {
   curAnimalActivity: AnimalActivity;
@@ -460,7 +461,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
         </div>
         {/* Activity Type */}
         <div className="mb-1 block font-medium">
-          Activity Type<br /> <b>{activityType}</b>
+          Activity Type<br /> <b>{beautifyText(activityType)}</b>
         </div>
         {/* Details */}
         <Form.Field
