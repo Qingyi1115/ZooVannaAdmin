@@ -72,7 +72,12 @@ function AllFacilityDatatable() {
         console.log(e);
       })
       .then((res) => {
-        setFacilityList(res["facilities"]);
+        console.log("req",res)
+        setFacilityList(res["facilities"].map(facility=>{
+          facility.opStaffStr = facility.facilityDetailJson.maintenanceStaffs?.map(staff=>staff.employee.employeeName).join(", ") || "No assigned Staffs"
+          facility.manStaffStr = facility.facilityDetailJson.operationStaffs?.map(staff=>staff.employee.employeeName).join(", ") || "No assigned Staffs"
+          return facility;
+        }));
       });
   }, []);
 
@@ -296,13 +301,13 @@ function AllFacilityDatatable() {
               }
             ></Column>
             <Column
-              field=""
+              field="opStaffStr"
               header="Operation Staff"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field=""
+              field="manStaffStr"
               header="Maintenance Staff"
               sortable
               style={{ minWidth: "12rem" }}
