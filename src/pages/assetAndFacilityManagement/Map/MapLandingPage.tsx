@@ -38,7 +38,13 @@ import Facility from "../../../models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
 import { FacilityType } from "../../../enums/FacilityType";
 import { Dialog } from "primereact/dialog";
-import { HiCheck, HiEye, HiInformationCircle, HiPlus, HiX } from "react-icons/hi";
+import {
+  HiCheck,
+  HiEye,
+  HiInformationCircle,
+  HiPlus,
+  HiX,
+} from "react-icons/hi";
 import { IdentifierType } from "../../../enums/Enumurated";
 import { DataTable } from "primereact/datatable";
 import { dt } from "@fullcalendar/core/internal-common";
@@ -47,15 +53,18 @@ import { InputText } from "primereact/inputtext";
 import { HiMap, HiMapPin } from "react-icons/hi2";
 // import geolocation from "geolocation";
 
+interface FacilityWithSelected extends Facility {
+  selected: boolean;
+}
+
 function MapLandingPage() {
   const navigate = useNavigate();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
 
-  const [facilityList, setFacilityList] = useState<Facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
-    null
-  );
+  const [facilityList, setFacilityList] = useState<FacilityWithSelected[]>([]);
+  const [selectedFacility, setSelectedFacility] =
+    useState<FacilityWithSelected | null>(null);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   const [deleteLocationFromMapDialog, setDeleteLocationFromMapDialog] =
@@ -63,9 +72,9 @@ function MapLandingPage() {
 
   const [isShownOnMap, setIsShownOnMap] = useState<boolean>(false);
 
-  const [filteredFacilityList, setFilteredFacilityList] = useState<Facility[]>(
-    []
-  );
+  const [filteredFacilityList, setFilteredFacilityList] = useState<
+    FacilityWithSelected[]
+  >([]);
   const [facilityTypeFilterValue, setFacilityTypeFilterValue] = useState<
     string | null
   >(null);
@@ -81,13 +90,18 @@ function MapLandingPage() {
           { includes: ["facilityDetail"] }
         );
         const facilityListWithLocation = (
-          responseJson.facilities as Facility[]
-        ).filter((facility) => {
-          // console.log(facility);
-          return !(
-            facility.xCoordinate == null || facility.yCoordinate == null
-          );
-        });
+          responseJson.facilities as FacilityWithSelected[]
+        )
+          .filter((facility) => {
+            // console.log(facility);
+            return !(
+              facility.xCoordinate == null || facility.yCoordinate == null
+            );
+          })
+          .map((facility) => ({
+            ...facility,
+            selected: false,
+          }));
         setFacilityList(facilityListWithLocation);
         setFilteredFacilityList(facilityListWithLocation);
         if (selectedFacility) {
@@ -285,7 +299,7 @@ function MapLandingPage() {
   // end delete stuff
 
   // Datatable stuff
-  let emptyFacility: Facility = {
+  let emptyFacility: FacilityWithSelected = {
     facilityId: -1,
     facilityName: "",
     showOnMap: false,
@@ -295,12 +309,13 @@ function MapLandingPage() {
     facilityDetailJson: "",
     isSheltered: false,
     hubProcessors: [],
+    selected: false,
   };
 
-  const dt = useRef<DataTable<Facility[]>>(null);
+  const dt = useRef<DataTable<FacilityWithSelected[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [tableSelectedFacility, setTableSelectedFacility] =
-    useState<Facility>(emptyFacility);
+    useState<FacilityWithSelected>(emptyFacility);
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -319,7 +334,7 @@ function MapLandingPage() {
     </div>
   );
 
-  const actionBodyTemplate = (facility: Facility) => {
+  const actionBodyTemplate = (facility: FacilityWithSelected) => {
     return (
       <React.Fragment>
         <Button
@@ -328,7 +343,8 @@ function MapLandingPage() {
             setTableSelectedFacility(facility);
             setSelectedFacility(tableSelectedFacility);
           }}
-          className="mr-1">
+          className="mr-1"
+        >
           <HiMapPin className="mr-1" />
         </Button>
         <NavLink
@@ -339,7 +355,7 @@ function MapLandingPage() {
             <HiInformationCircle className="mx-auto" />
           </Button>
         </NavLink>
-      </React.Fragment >
+      </React.Fragment>
     );
   };
 
@@ -365,7 +381,7 @@ function MapLandingPage() {
           {/* <Button onClick={testGetLocation}>Test get location</Button> */}
         </div>
         <div className="flex gap-8">
-          <Card className="h-[55vh] w-1/4 sticky top-30">
+          <Card className="sticky top-30 h-[55vh] w-1/4">
             <CardContent className="flex h-full flex-col justify-between">
               <div className="pb-4 pt-8">
                 {!selectedFacility ? (
@@ -379,8 +395,8 @@ function MapLandingPage() {
                       Type:{" "}
                       {
                         FacilityType[
-                        selectedFacility.facilityDetailJson
-                          .facilityType as keyof typeof FacilityType
+                          selectedFacility.facilityDetailJson
+                            .facilityType as keyof typeof FacilityType
                         ]
                       }
                     </div>
@@ -509,6 +525,7 @@ function MapLandingPage() {
             <div className="w-full overflow-hidden rounded-md border border-stroke shadow-md">
               <LandingPageMap
                 facilityList={filteredFacilityList}
+                setFacilityList={setFilteredFacilityList}
                 selectedFacility={selectedFacility}
                 setSelectedFacility={setSelectedFacility}
                 setIsShownOnMap={setIsShownOnMap}
@@ -569,7 +586,6 @@ function MapLandingPage() {
                 ></Column>
               </DataTable>
             </Card>
-
           </div>
         </div>
       </div>
