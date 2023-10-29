@@ -35,6 +35,14 @@ function ViewSensorDetails(props: SensorDetailsProps) {
   return (
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
+
+          <Button className="mr-2" onClick={() => {
+            navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
+            navigate(`/assetfacility/viewfacilitydetails/${curSensor.hubProcessor?.facilityId}`);
+          }}>
+            Facility Details
+          </Button>
+
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button className="mr-2" onClick={() => {
             navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
@@ -78,6 +86,12 @@ function ViewSensorDetails(props: SensorDetailsProps) {
               Name
             </TableCell>
             <TableCell>{String(curSensor.sensorName)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Facility
+            </TableCell>
+            <TableCell>{curSensor.hubProcessor?.facility?.facilityName}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

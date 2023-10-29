@@ -11,7 +11,7 @@ function AddNewLocationPage() {
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
         {/* Header */}
-        <div className="mb-4 flex justify-between">
+        <div className="mb-2 flex justify-between">
           <Button
             variant={"outline"}
             type="button"

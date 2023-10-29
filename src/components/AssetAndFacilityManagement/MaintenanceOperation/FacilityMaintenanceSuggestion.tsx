@@ -26,6 +26,7 @@ import FormFieldInput from "../../FormFieldInput";
 import * as Form from "@radix-ui/react-form";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import { BsWrenchAdjustable } from "react-icons/bs";
+import GeneralStaff from "../../../models/GeneralStaff";
 
 
 export function compareDates(d1: Date, d2: Date): number {
@@ -116,13 +117,16 @@ function FacilityMaintenanceSuggestion() {
     facilityList.forEach((facility: any) => {
       obj.push({
         name: facility.facilityName,
-        description: (facility.isSheltered ? "Sheltered " : "Unsheltered ") + (facility.facilityDetail as string).toLocaleLowerCase(),
+        description: (facility.isSheltered ? "Sheltered " : "Unsheltered ") + (facility.facilityDetail == "thirdParty" ? "Third-party" : "In-house"),
         lastMaintenance: new Date(facility.facilityDetailJson["lastMaintained"]).toLocaleString(),
         suggestedMaintenance: facility.predictedMaintenanceDate ?
           new Date(facility.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Facility",
         id: facility.facilityId,
-        repairRequired: facility.inHouse.facilityLogs?.find(log => log.generalStaffs?.find(gs => gs.employeeId == employee.employeeId))
+        repairRequired: facility.inHouse.facilityLogs?.find(log => log.generalStaffs?.find(gs => gs.employeeId == employee.employeeId)),
+        operationStaffString: facility.inHouse?.operationStaffs?.map((staff: GeneralStaff) => staff.employee?.employeeName).join(", ") || "-",
+        maintenanceStaffString: facility.inHouse?.maintenanceStaffs?.map((staff: GeneralStaff) => staff.employee?.employeeName).join(", ") || "-",
+        repairTicket: facility.inHouse?.facilityLogs?.find(log => log.facilityLogType == "ACTIVE_REPAIR_TICKET") ? "Yes" : "No"
       })
     })
     setObjectsList(obj)
@@ -577,7 +581,7 @@ function FacilityMaintenanceSuggestion() {
               field="description"
               header="Description"
               sortable
-              style={{ minWidth: "10rem" }}
+              style={{ minWidth: "13rem" }}
             ></Column>
             <Column
               field="lastMaintenance"
@@ -589,6 +593,24 @@ function FacilityMaintenanceSuggestion() {
               field="suggestedMaintenance"
               header="Suggested Date of Maintenance"
               body={statusBodyTemplate}
+              sortable
+              style={{ minWidth: "13rem" }}
+            ></Column>
+            <Column
+              field="operationStaffString"
+              header="Operation Staff"
+              sortable
+              style={{ minWidth: "13rem" }}
+            ></Column>
+            <Column
+              field="maintenanceStaffString"
+              header="Maintenance Staff"
+              sortable
+              style={{ minWidth: "13rem" }}
+            ></Column>
+            <Column
+              field="repairTicket"
+              header="Has Repair Ticket?"
               sortable
               style={{ minWidth: "13rem" }}
             ></Column>

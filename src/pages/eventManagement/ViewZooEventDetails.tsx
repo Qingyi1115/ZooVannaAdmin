@@ -652,144 +652,152 @@ function ViewZooEventDetails() {
                 </TabsList>
 
                 <TabsContent value="details">
-                  <div className="my-4 flex justify-start gap-6">
-                    {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
-                      <Button
-                        onClick={() => {
-                          navigate(`/zooevent/viewzooeventdetails/${curZooEvent.zooEventId}`, { replace: true })
-                          navigate(`/zooevent/editzooevent/${curZooEvent.zooEventId}`)
-                        }}
-                        className="my-3">Edit Basic Information
-                      </Button>}
+                  <div className="flex flex-col">
+                    <div className="my-4 flex justify-start gap-6">
+                      {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+                        <Button
+                          onClick={() => {
+                            navigate(`/zooevent/viewzooeventdetails/${curZooEvent.zooEventId}`, { replace: true })
+                            navigate(`/zooevent/editzooevent/${curZooEvent.zooEventId}`)
+                          }}
+                          className="my-3">Edit Basic Information
+                        </Button>}
 
-                    {curZooEvent.animalActivity ?
-                      <Button
-                        onClick={() => {
-                          navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
-                          navigate(`/animal/viewanimalactivitydetails/${curZooEvent.animalActivity?.animalActivityId}`);
-                        }}
-                        className="my-3">
-                        View Animal Activity
-                      </Button> :
-                      ((employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && !curZooEvent.eventIsPublic && < Button
-                        onClick={() => {
-                          showMakePublicDialog();
-                        }}
-                        className="my-3">
-                        Make Event Public
-                      </Button>)
-                    }
-
-                    {(curZooEvent.eventType == EventType.EMPLOYEE_FEEDING ||
-                      curZooEvent.eventType == EventType.CUSTOMER_FEEDING) &&
-                      curZooEvent.feedingPlanSessionDetail?.feedingPlan
-                      &&
-                      <div className="flex justify-start gap-6" >
+                      {curZooEvent.animalActivity ?
                         <Button
                           onClick={() => {
                             navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
-                            navigate(`/animal/createAnimalFeedingLog/${curZooEvent.feedingPlanSessionDetail?.feedingPlan?.feedingPlanId}`);
+                            navigate(`/animal/viewanimalactivitydetails/${curZooEvent.animalActivity?.animalActivityId}`);
                           }}
                           className="my-3">
-                          Create Feeding Log
-                        </Button>
-                        <Button
+                          View Animal Activity
+                        </Button> :
+                        ((employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && !curZooEvent.eventIsPublic && < Button
                           onClick={() => {
-                            navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
-                            navigate(`/animal/viewfeedingplandetails/${curZooEvent.feedingPlanSessionDetail?.feedingPlan?.feedingPlanId}/feedingLogs`);
+                            showMakePublicDialog();
                           }}
                           className="my-3">
-                          View Feeding Plan
-                        </Button>
-                      </div>
-                    }
-                  </div>
-
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          ID
-                        </TableCell>
-                        <TableCell>{curZooEvent.zooEventId}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Name
-                        </TableCell>
-                        <TableCell>{curZooEvent.eventName}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Type
-                        </TableCell>
-                        <TableCell>{beautifyText(curZooEvent.eventType)}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          {curZooEvent.eventIsPublic ? "Start Date Time" : "Start Date"}
-                        </TableCell>
-                        <TableCell>
-                          {curZooEvent.eventIsPublic ? new Date(curZooEvent.eventStartDateTime).toLocaleString()
-                            : new Date(curZooEvent.eventStartDateTime).toLocaleDateString()}
-                        </TableCell>
-                      </TableRow>
-
-                      {curZooEvent.eventIsPublic
-                        && (
-
-                          <TableRow>
-                            <TableCell className="w-1/3 font-bold" colSpan={2}>
-                              End Date Time
-                            </TableCell>
-                            <TableCell>
-                              {curZooEvent.eventIsPublic ? new Date(curZooEvent.eventEndDateTime || "").toLocaleString()
-                                : new Date(curZooEvent.eventEndDateTime || "").toLocaleDateString()}
-                            </TableCell>
-                          </TableRow>
-                        )
+                          Make Event Public
+                        </Button>)
                       }
 
-                      {!curZooEvent.eventIsPublic && (
+                      {(curZooEvent.eventType == EventType.EMPLOYEE_FEEDING ||
+                        curZooEvent.eventType == EventType.CUSTOMER_FEEDING) &&
+                        curZooEvent.feedingPlanSessionDetail?.feedingPlan
+                        &&
+                        <div className="flex justify-start gap-6" >
+                          <Button
+                            onClick={() => {
+                              navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
+                              navigate(`/animal/createAnimalFeedingLog/${curZooEvent.feedingPlanSessionDetail?.feedingPlan?.feedingPlanId}`);
+                            }}
+                            className="my-3">
+                            Create Feeding Log
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
+                              navigate(`/animal/viewfeedingplandetails/${curZooEvent.feedingPlanSessionDetail?.feedingPlan?.feedingPlanId}/feedingLogs`);
+                            }}
+                            className="my-3">
+                            View Feeding Plan
+                          </Button>
+                        </div>
+                      }
+                    </div>
+
+                    {/* {curZooEvent.eventIsPublic && <img
+                      src={"http://localhost:3000/" + curZooEvent.imageUrl}
+                      alt="Current event image"
+                      className="my-4 self-center aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
+                    />} */}
+
+                    <Table>
+                      <TableBody>
                         <TableRow>
                           <TableCell className="w-1/3 font-bold" colSpan={2}>
-                            Session Timing
+                            ID
                           </TableCell>
-                          <TableCell>{beautifyText(curZooEvent.eventTiming)}</TableCell>
+                          <TableCell>{curZooEvent.zooEventId}</TableCell>
                         </TableRow>
-                      )}
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Duration (Hours)
-                        </TableCell>
-                        <TableCell>{curZooEvent.eventDurationHrs}</TableCell>
-                      </TableRow>
-                      {curZooEvent.eventNotificationDate && <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Notification Date
-                        </TableCell>
-                        <TableCell>
-                          {new Date(curZooEvent.eventNotificationDate).toDateString()}
-                        </TableCell>
-                      </TableRow>}
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Description
-                        </TableCell>
-                        <TableCell>{curZooEvent.eventDescription}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Keepers
-                        </TableCell>
-                        <TableCell>
-                          {(curZooEvent.keepers != undefined && curZooEvent.keepers?.length > 0) ?
-                            curZooEvent.keepers?.map((keeper: Keeper) => keeper.employee.employeeName).join(", ") :
-                            "No keepers assigned to this event!"}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+                        <TableRow>
+                          <TableCell className="w-1/3 font-bold" colSpan={2}>
+                            Name
+                          </TableCell>
+                          <TableCell>{curZooEvent.eventName}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="w-1/3 font-bold" colSpan={2}>
+                            Type
+                          </TableCell>
+                          <TableCell>{beautifyText(curZooEvent.eventType)}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="w-1/3 font-bold" colSpan={2}>
+                            {curZooEvent.eventIsPublic ? "Start Date Time" : "Start Date"}
+                          </TableCell>
+                          <TableCell>
+                            {curZooEvent.eventIsPublic ? new Date(curZooEvent.eventStartDateTime).toLocaleString()
+                              : new Date(curZooEvent.eventStartDateTime).toLocaleDateString()}
+                          </TableCell>
+                        </TableRow>
+
+                        {curZooEvent.eventIsPublic
+                          && (
+
+                            <TableRow>
+                              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                                End Date Time
+                              </TableCell>
+                              <TableCell>
+                                {curZooEvent.eventIsPublic ? new Date(curZooEvent.eventEndDateTime || "").toLocaleString()
+                                  : new Date(curZooEvent.eventEndDateTime || "").toLocaleDateString()}
+                              </TableCell>
+                            </TableRow>
+                          )
+                        }
+
+                        {!curZooEvent.eventIsPublic && (
+                          <TableRow>
+                            <TableCell className="w-1/3 font-bold" colSpan={2}>
+                              Session Timing
+                            </TableCell>
+                            <TableCell>{beautifyText(curZooEvent.eventTiming)}</TableCell>
+                          </TableRow>
+                        )}
+                        <TableRow>
+                          <TableCell className="w-1/3 font-bold" colSpan={2}>
+                            Duration (Hours)
+                          </TableCell>
+                          <TableCell>{curZooEvent.eventDurationHrs}</TableCell>
+                        </TableRow>
+                        {curZooEvent.eventNotificationDate && <TableRow>
+                          <TableCell className="w-1/3 font-bold" colSpan={2}>
+                            Notification Date
+                          </TableCell>
+                          <TableCell>
+                            {new Date(curZooEvent.eventNotificationDate).toDateString()}
+                          </TableCell>
+                        </TableRow>}
+                        <TableRow>
+                          <TableCell className="w-1/3 font-bold" colSpan={2}>
+                            Description
+                          </TableCell>
+                          <TableCell>{curZooEvent.eventDescription}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="w-1/3 font-bold" colSpan={2}>
+                            Keepers
+                          </TableCell>
+                          <TableCell>
+                            {(curZooEvent.keepers != undefined && curZooEvent.keepers?.length > 0) ?
+                              curZooEvent.keepers?.map((keeper: Keeper) => keeper.employee.employeeName).join(", ") :
+                              "No keepers assigned to this event!"}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </div>
                   <Dialog
                     visible={makeEventPublicDialog}
                     style={{ width: "50rem" }}

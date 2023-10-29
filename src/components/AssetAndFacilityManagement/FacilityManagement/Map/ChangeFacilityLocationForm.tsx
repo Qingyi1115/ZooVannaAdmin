@@ -31,6 +31,69 @@ interface ChangeFacilityLocationFormProps {
   curFacility: Facility;
 }
 
+function iconFunction(facilityType: string) {
+  let iconUrl = `../../../../../src/assets/mapicons/1.png`;
+  switch (facilityType) {
+    case "INFORMATION_CENTRE":
+      iconUrl = `../../../../../src/assets/mapicons/1.png`;
+      break;
+    case "ZOO_DIRECTORY":
+      iconUrl = `../../../../../src/assets/mapicons/3.png`;
+      break;
+    case "AMPHITHEATRE":
+      iconUrl = `../../../../../src/assets/mapicons/4.png`;
+      break;
+
+    case "GAZEBO":
+      iconUrl = `../../../../../src/assets/mapicons/5.png`;
+      break;
+
+    case "AED":
+      iconUrl = `../../../../../src/assets/mapicons/6.png`;
+      break;
+
+    case "RESTROOM":
+      iconUrl = `../../../../../src/assets/mapicons/7.png`;
+      break;
+
+    case "NURSERY":
+      iconUrl = `../../../../../src/assets/mapicons/8.png`;
+      break;
+
+    case "FIRST_AID":
+      iconUrl = `../../../../../src/assets/mapicons/9.png`;
+      break;
+    case "BENCHES":
+      iconUrl = `../../../../../src/assets/mapicons/10.png`;
+      break;
+    case "PLAYGROUND":
+      iconUrl = `../../../../../src/assets/mapicons/11.png`;
+      break;
+    case "TRAMSTOP":
+      iconUrl = `../../../../../src/assets/mapicons/13.png`;
+      break;
+    case "PARKING":
+      iconUrl = `../../../../../src/assets/mapicons/14.png`;
+      break;
+    case "RESTAURANT":
+      iconUrl = `../../../../../src/assets/mapicons/15.png`;
+      break;
+    case "SHOP_SOUVENIR":
+      iconUrl = `../../../../../src/assets/mapicons/16.png`;
+      break;
+    default:
+      iconUrl = `../../../../../src/assets/mapicons/17.png`;
+      break;
+  }
+
+  return new L.Icon({
+    iconUrl,
+    iconSize: [40, 41], // Adjust the size as needed
+    iconAnchor: [15, 40], // Adjust the anchor point as needed
+    // Additional selected marker styles
+  });
+}
+
 const merlioncenter: LatLngExpression = [1.295, 103.775887811];
 const merliontopleft: LatLng = new LatLng(1.3, 103.766998922);
 const merlionbottomright: LatLng = new LatLng(1.29, 103.7847767);
@@ -169,7 +232,10 @@ function ChangeFacilityLocationForm(props: ChangeFacilityLocationFormProps) {
               bounds={bounds}
             />
             {yCoordinate && xCoordinate && (
-              <Marker position={[yCoordinate, xCoordinate]}></Marker>
+              <Marker
+                icon={iconFunction(curFacility.facilityDetailJson.facilityType)}
+                position={[yCoordinate, xCoordinate]}
+              ></Marker>
             )}
             <DummyMapChildren />
           </MapContainer>

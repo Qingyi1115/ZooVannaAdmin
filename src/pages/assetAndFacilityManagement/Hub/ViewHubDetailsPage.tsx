@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
-import Hub from "../../../models/Hub";
+import Hub from "../../../models/HubProcessor";
 import { Button } from "@/components/ui/button";
 import { HubStatus } from "../../../enums/HubStatus";
 import ViewHubDetails from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/ViewHubDetails";

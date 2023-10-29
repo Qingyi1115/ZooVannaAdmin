@@ -6,7 +6,7 @@ import Facility from "../../../models/Facility";
 import { Button } from "@/components/ui/button";
 
 import ViewSensorDetails from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/ViewSensorDetails";
-import Hub from "../../../models/Hub";
+import Hub from "../../../models/HubProcessor";
 import { HubStatus } from "../../../enums/HubStatus";
 import { SensorType } from "../../../enums/SensorType";
 import Sensor from "../../../models/Sensor";
@@ -67,7 +67,8 @@ function ViewSensorDetailsPage() {
   useEffect(() => {
     apiJson.post(
       `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
-      { includes: ["hubProcessor", "maintenanceLogs", "generalStaff"] }).then(res => {
+      { includes: ["hubProcessor", "generalStaff"] }).then(res => {
+        console.log("res",res)
         setCurSensor(res.sensor as Sensor);
       }).catch(e => console.log(e));
   }, []);

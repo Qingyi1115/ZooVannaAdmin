@@ -6,7 +6,7 @@ import MaintenanceLog from "../../../../models/MaintenanceLog";
 import EditMaintenanceLogForm from "../../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/EditMaintenanceLogForm";
 import { HubStatus } from "../../../../enums/HubStatus";
 import { SensorType } from "../../../../enums/SensorType";
-import Hub from "../../../../models/Hub";
+import Hub from "../../../../models/HubProcessor";
 import Sensor from "../../../../models/Sensor";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 
