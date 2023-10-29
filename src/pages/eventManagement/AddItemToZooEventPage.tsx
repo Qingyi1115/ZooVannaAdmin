@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/table";
 
 import AddItemToEventForm from "../../components/EventManagement/CreateZooEventPage/AddItemToZooEventForm";
+import beautifyText from "../../hooks/beautifyText";
 
 function AddItemToZooEventPage() {
   const apiJson = useApiJson();
@@ -90,7 +91,7 @@ function AddItemToZooEventPage() {
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     Type
                   </TableCell>
-                  <TableCell>{curZooEvent.eventType}</TableCell>
+                  <TableCell>{beautifyText(curZooEvent.eventType)}}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>

@@ -41,6 +41,7 @@ import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import AddAnimalToEventForm from "../../components/EventManagement/CreateZooEventPage/AddAnimalToZooEventForm";
+import beautifyText from "../../hooks/beautifyText";
 
 function AddAnimalToZooEventPage() {
   const apiJson = useApiJson();
@@ -112,7 +113,7 @@ function AddAnimalToZooEventPage() {
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     Type
                   </TableCell>
-                  <TableCell>{curZooEvent.eventType}</TableCell>
+                  <TableCell>{beautifyText(curZooEvent.eventType)}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
