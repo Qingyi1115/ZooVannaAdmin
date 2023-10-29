@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import ViewCustomerOrderDetails from "../../components/CustomerOrderManagement/ViewCustomerOrderDetails";
-import ViewCustomerOrderDetailsEntry from "../../components/CustomerOrderManagement/ViewCustomerOrderDetailsEntry";
+import ViewOrderItemDetails from "../../components/CustomerOrderManagement/ViewOrderItemDetails";
 
 import {
   Accordion,
@@ -59,7 +59,7 @@ function ViewEmployeeDetailsPage() {
 
   return (
     <div className="p-10">
-      <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default">
+      <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
         {curCustomerOrder && curCustomerOrder.customerOrderId != -1 && (
           <div className="flex flex-col">
             <div className="flex flex-col">
@@ -104,9 +104,7 @@ function ViewEmployeeDetailsPage() {
               <h2 className="flex flex-1 items-center justify-between rounded-lg px-2 py-4 font-bold">
                 Entry Details
               </h2>
-              <ViewCustomerOrderDetailsEntry
-                curCustomerOrder={curCustomerOrder}
-              />
+              <ViewOrderItemDetails curCustomerOrder={curCustomerOrder} />
             </div>
           </div>
         )}
