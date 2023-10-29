@@ -106,16 +106,16 @@ function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
+              <TableCell className="w-1/2 font-bold" colSpan={2}>
                 ID
               </TableCell>
               <TableCell>{curCustomerOrder.customerOrderId}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
+              <TableCell className="w-1/2 font-bold" colSpan={2}>
                 Booking Reference
               </TableCell>
-              <TableCell className="w-2/3">
+              <TableCell className="w-1/2">
                 {curCustomerOrder.bookingReference}
               </TableCell>
             </TableRow>

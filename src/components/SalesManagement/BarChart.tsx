@@ -27,9 +27,10 @@ interface JSONData1 {
 interface BarChartProps {
   startDate: Date;
   endDate: Date;
+  groupBy: string[];
 }
 
-const BarChart: React.FC<BarChartProps> = ({ startDate, endDate }) => {
+const BarChart: React.FC<BarChartProps> = ({ startDate, endDate, groupBy }) => {
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [],
@@ -50,23 +51,24 @@ const BarChart: React.FC<BarChartProps> = ({ startDate, endDate }) => {
   //     new Date().setMonth(new Date().getMonth() + 3)
   //   );
 
-  const [groupBy, setGroupBy] = useState<string[]>(["month"]);
+  // const [groupBy, setGroupBy] = useState<string[]>(["month"]);
 
-  const handleCheckboxChange = (event: CheckboxChangeEvent, value: string) => {
-    if (event.checked !== undefined) {
-      if (event.checked) {
-        setGroupBy((prevGroupBy) => [...prevGroupBy, value]);
-      } else {
-        setGroupBy((prevGroupBy) =>
-          prevGroupBy.filter((item) => item !== value)
-        );
-      }
-    }
-  };
+  // const handleCheckboxChange = (event: CheckboxChangeEvent, value: string) => {
+  //   if (event.checked !== undefined) {
+  //     if (event.checked) {
+  //       setGroupBy((prevGroupBy) => [...prevGroupBy, value]);
+  //     } else {
+  //       setGroupBy((prevGroupBy) =>
+  //         prevGroupBy.filter((item) => item !== value)
+  //       );
+  //     }
+  //   }
+  // };
 
   const fetchListingNames = async (listingIds: string[]) => {
     const listingNames = [];
     for (const listingId of listingIds) {
+      console.log(listingId);
       const listingResponse = await apiJson.get(
         `http://localhost:3000/api/listing/getListing/${listingId}`
       );
@@ -205,10 +207,36 @@ const BarChart: React.FC<BarChartProps> = ({ startDate, endDate }) => {
     fetchSalesData();
   }, [groupBy, startDate, endDate]);
 
+  const displayLegend =
+    groupBy.toString() === "month" || groupBy.toString() === "listingId"
+      ? false
+      : true;
+
   const chartOptions = {
-    responsive: true, // Make the chart responsive
-    maintainAspectRatio: true, // Allow the chart to adjust aspect ratio
-    // Additional chart options
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        display: displayLegend,
+        labels: {
+          boxWidth: 12,
+        },
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Months",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "No. of tickets",
+        },
+      },
+    },
   };
 
   // const handleEndDateChange = (e: CalendarChangeEvent) => {
@@ -223,17 +251,23 @@ const BarChart: React.FC<BarChartProps> = ({ startDate, endDate }) => {
   //     setEndDate(selectedDate);
   //   }
   // };
-  const handleGroupButtonClick = (value: string[]) => {
-    setGroupBy(value);
-  };
+  // const handleGroupButtonClick = (value: string[]) => {
+  //   setGroupBy(value);
+  // };
 
   return (
     <div>
-      <h2 className="text-title-l pb-4 font-bold">
-        Number of Tickets Purchased
+      <h2 className="text-l font-semibold">
+        {groupBy.toString() == "month"
+          ? "Per month"
+          : groupBy.toString() == "listingId"
+          ? "By listing"
+          : groupBy.toString() == "month,listingId"
+          ? "Breakdown of listing per month"
+          : "Breakdown of month per listing"}
       </h2>
       <div className="mb-6 flex flex-col justify-start gap-6 lg:flex-row lg:gap-12">
-        <div>
+        {/* <div>
           <h2>Group by:</h2>
           <Button
             className="mr-1"
@@ -258,8 +292,8 @@ const BarChart: React.FC<BarChartProps> = ({ startDate, endDate }) => {
             onClick={() => handleGroupButtonClick(["listingId", "month"])}
           >
             Listing ID and Month
-          </Button>
-          {/* <div>
+          </Button> */}
+        {/* <div>
             <Checkbox
               inputId="listingIdCheckbox"
               value="listingId"
@@ -278,10 +312,12 @@ const BarChart: React.FC<BarChartProps> = ({ startDate, endDate }) => {
             />
             <label htmlFor="monthCheckbox">Month</label>
           </div> */}
-        </div>
+        {/* </div> */}
       </div>
 
-      <Chart type="bar" data={chartData} options={chartOptions} />
+      {chartData.labels.length > 0 && (
+        <Chart type="bar" data={chartData} options={chartOptions} />
+      )}
     </div>
   );
 };
