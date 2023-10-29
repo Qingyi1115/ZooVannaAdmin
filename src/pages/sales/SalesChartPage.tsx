@@ -26,13 +26,13 @@ function SalesChartPage() {
   };
   return (
     <div className="p-10">
-      <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
-        <div className="mb-4 flex justify-between">
+      <div className="flex w-full flex-col gap-3 rounded-lg border border-stroke bg-white px-10 py-5 text-black shadow-default">
+        <div className="mb-1 flex justify-between">
           <span className="self-center text-title-xl font-bold">
-            Sales Graph
+            Sales Dashboard
           </span>
         </div>
-        <div className="mb-6 flex flex-col justify-start gap-6 lg:flex-row lg:gap-12">
+        <div className="mb-1 flex flex-col justify-start gap-6 lg:flex-row lg:gap-12">
           {/* Start Date */}
           <div className="card justify-content-centre flex flex-col">
             <div>Start Month</div>
@@ -62,21 +62,76 @@ function SalesChartPage() {
           </div>
         </div>
       </div>
-
-      <div className="flex gap-6 py-6">
-        <div className="w-1/2" id="barChartContainer">
-          <div className="h-full rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
-            <BarChart startDate={startDate} endDate={endDate} />
-          </div>
+      <div className="flex gap-2 pt-2">
+        <div className="flex w-full flex-col gap-3 rounded-lg border border-stroke bg-white p-5 px-10 text-black shadow-default ">
+          <h2 className="text-xl font-semibold">Revenue</h2>
         </div>
-        <div className="w-1/2" id="revenueChartContainer">
+      </div>
+
+      <RevenueChartFinal startDate={startDate} endDate={endDate} />
+
+      {/* <div className="flex gap-2 pt-2">
+        <div className="w-3/4" id="revenueChartContainer">
           <div className="h-full rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
             <RevenueChartFinal startDate={startDate} endDate={endDate} />
           </div>
         </div>
+        <div className="w-1/4" id="revenueChartContainer">
+          <div className="h-full rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
+            <RevenueChartFinal startDate={startDate} endDate={endDate} />
+          </div>
+        </div>
+      </div> */}
+
+      <div className="flex gap-2 pt-2">
+        <div className="flex w-full flex-col gap-3 rounded-lg border border-stroke bg-white p-5 px-10 text-black shadow-default ">
+          <h2 className="text-xl font-semibold">Number of Tickets</h2>
+        </div>
+      </div>
+
+      <div className="flex gap-2 pt-2">
+        <div className="w-1/2" id="barChartContainer">
+          <div className="h-full rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
+            <BarChart
+              startDate={startDate}
+              endDate={endDate}
+              groupBy={["month"]}
+            />
+          </div>
+        </div>
+        <div className="w-1/2" id="barChartContainer">
+          <div className="h-full rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
+            <BarChart
+              startDate={startDate}
+              endDate={endDate}
+              groupBy={["month", "listingId"]}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-2 pt-2">
+        <div className="w-1/2" id="barChartContainer">
+          <div className="h-full rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
+            <BarChart
+              startDate={startDate}
+              endDate={endDate}
+              groupBy={["listingId"]}
+            />
+          </div>
+        </div>
+
+        <div className="w-1/2" id="barChartContainer">
+          <div className="h-full rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
+            <BarChart
+              startDate={startDate}
+              endDate={endDate}
+              groupBy={["listingId", "month"]}
+            />
+          </div>
+        </div>
       </div>
     </div>
-
   );
 }
 

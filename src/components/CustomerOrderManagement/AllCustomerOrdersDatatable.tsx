@@ -139,7 +139,7 @@ function AllCustomerOrderDatatable() {
                 </Button>
               </NavLink> */}
               <span className=" self-center text-title-xl font-bold">
-                All CustomerOrders
+                All Customer Orders
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
