@@ -11,6 +11,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
+// Field validations
 function validateFacilityName(props: ValidityState) {
   if (props != undefined) {
     if (props.valueMissing) {
@@ -23,7 +24,24 @@ function validateFacilityName(props: ValidityState) {
   return null;
 }
 
+function validateImage(props: ValidityState) {
+  if (props != undefined) {
+    if (props.valueMissing) {
+      return (
+        <div className="font-medium text-danger">
+          * Please upload an image
+        </div>
+      );
+    }
+    // add any other cases here
+  }
+  return null;
+}
+
+// end field validations
+
 function CreateNewFacilityForm() {
+  const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
@@ -41,12 +59,15 @@ function CreateNewFacilityForm() {
     undefined); // dropdown
   const [facilityType, setFacilityType] = useState<string | undefined>(
     undefined); // dropdown
-  const [facilityDetailJson, setFacilityDetailJson] = useState<any>(
-    undefined); // dropdown
   const [formError, setFormError] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+    setImageFile(file);
+  }
 
-  async function handleSubmit(e: any) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
@@ -64,20 +85,47 @@ function CreateNewFacilityForm() {
         hasAirCon: Boolean(hasAirCon),
         facilityType: facilityType
       })
-    console.log(facilityDetailJson);
+    // const newFacility = {
+    //   facilityName: facilityName,
+    //   isSheltered: Boolean(isSheltered),
+    //   facilityDetail: facilityDetail,
+    //   facilityDetailJson: facilityDetailJson
+    // }
+    // console.log(newFacility);
 
-    const newFacility = {
-      facilityName: facilityName,
-      isSheltered: Boolean(isSheltered),
-      facilityDetail: facilityDetail,
-      facilityDetailJson: facilityDetailJson
-    }
-    console.log(newFacility);
+    // try {
+    //   const responseJson = await apiJson.post(
+    //     "http://localhost:3000/api/assetFacility/createFacility",
+    //     newFacility);
+    //   // success
+    //   toastShadcn({
+    //     description: "Successfully created facility",
+    //   });
+    //   navigate(-1);
+    // } catch (error: any) {
+    //   toastShadcn({
+    //     variant: "destructive",
+    //     title: "Uh oh! Something went wrong.",
+    //     description:
+    //       "An error has occurred while creating facility details: \n" +
+    //       error.message,
+    //   });
+    // }
+    // console.log(apiJson.result);
+    // handle success case or failurecase using apiJson
+
+    // Submit image
+    const formData = new FormData();
+    formData.append("facilityName", facilityName);
+    formData.append("isSheltered", isSheltered || "");
+    formData.append("facilityDetail", facilityDetail || "");
+    formData.append("facilityDetailJson", JSON.stringify(facilityDetailJson));
+    formData.append("file", imageFile || "");
 
     try {
-      const responseJson = await apiJson.post(
+      const responseJson = await apiFormData.post(
         "http://localhost:3000/api/assetFacility/createFacility",
-        newFacility);
+        formData);
       // success
       toastShadcn({
         description: "Successfully created facility",
@@ -92,9 +140,7 @@ function CreateNewFacilityForm() {
           error.message,
       });
     }
-    console.log(apiJson.result);
 
-    // handle success case or failurecase using apiJson
   }
 
   return (
@@ -121,6 +167,22 @@ function CreateNewFacilityForm() {
         </div>
         <Separator />
       </div>
+
+      <Form.Field
+        name="facilityImage"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">Facility Image</Form.Label>
+        <Form.Control
+          type="file"
+          required
+          accept=".png, .jpg, .jpeg, .webp"
+          onChange={handleFileChange}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        />
+        <Form.ValidityState>{validateImage}</Form.ValidityState>
+      </Form.Field>
+
       <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
         {/* Facility Name */}
         <FormFieldInput

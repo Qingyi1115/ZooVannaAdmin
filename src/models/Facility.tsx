@@ -7,6 +7,7 @@ interface Facility {
   yCoordinate: number;
   isSheltered: Boolean;
   showOnMap: boolean;
+  imageUrl: string;
   facilityDetail: string;
   facilityDetailJson: any;
   hubProcessors: HubProcessor[];

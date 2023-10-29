@@ -64,6 +64,11 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
         )} */}
 
       </div>
+      <img
+        src={"http://localhost:3000/" + curFacility.imageUrl}
+        alt="Current facility image"
+        className="my-4 aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
+      />
       <Table>
         <TableBody>
           <TableRow>
