@@ -1508,7 +1508,8 @@ function AnimalFeedingPlanSessionsSchedule(
                   </Button>
                 </>
               )}
-            {!sessionExists && (
+            {!sessionExists &&
+              (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")  && (
               <Button
                 type="button"
                 className="h-min px-2 py-1 text-sm"

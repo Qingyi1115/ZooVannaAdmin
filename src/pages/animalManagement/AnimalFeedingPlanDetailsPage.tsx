@@ -106,6 +106,12 @@ function AnimalFeedingPlanDetailsPage() {
                   </TableRow>
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
+                      Title
+                    </TableCell>
+                    <TableCell>{curFeedingPlan?.title}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="w-1/3 font-bold" colSpan={2}>
                       Description
                     </TableCell>
                     <TableCell>{curFeedingPlan?.feedingPlanDesc}</TableCell>

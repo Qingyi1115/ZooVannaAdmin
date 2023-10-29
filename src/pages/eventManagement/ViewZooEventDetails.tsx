@@ -132,6 +132,7 @@ function ViewZooEventDetails() {
     setInvolvedAnimalList(zooEvent.animals);
     setEventStartDateTime(new Date(zooEvent.eventStartDateTime));
     setEventNotificationDate(new Date(zooEvent.eventNotificationDate));
+    setInvolvedItemList(zooEvent?.animalActivity?.enrichmentItems);
 
   }
 
@@ -149,13 +150,6 @@ function ViewZooEventDetails() {
     };
     fetchZooEvent();
   }, [refreshSeed]);
-
-  // useEffect(() => {
-  //   if (curZooEvent?.animals && curZooEvent.enrichmentItems) {
-  //     setInvolvedAnimalList(curZooEvent?.animals);
-  //     setInvolvedItemList(curZooEvent?.enrichmentItems);
-  //   }
-  // }, [curZooEvent]);
 
   const animalImageBodyTemplate = (rowData: Animal) => {
     return (
@@ -297,7 +291,7 @@ function ViewZooEventDetails() {
       return;
     }
 
-    let _animals = involvedItemList.filter(
+    let _item = involvedItemList.filter(
       (val) => val.enrichmentItemId !== selectedItem?.enrichmentItemId
     );
 
@@ -322,7 +316,7 @@ function ViewZooEventDetails() {
             selectedItem.enrichmentItemName +
             " from the activity",
         });
-        setInvolvedItemList(_animals);
+        setInvolvedItemList(_item);
         setRemoveItemDialog(false);
         setSelectedItem(emptyItem);
       } catch (error: any) {
@@ -677,7 +671,7 @@ function ViewZooEventDetails() {
                         className="my-3">
                         View Animal Activity
                       </Button> :
-                      (!curZooEvent.eventIsPublic && < Button
+                      ((employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && !curZooEvent.eventIsPublic && < Button
                         onClick={() => {
                           showMakePublicDialog();
                         }}

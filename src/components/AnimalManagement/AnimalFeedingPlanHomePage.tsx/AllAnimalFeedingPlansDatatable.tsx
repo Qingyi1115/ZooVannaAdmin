@@ -224,12 +224,12 @@ function AllAnimalFeedingPlansDatatable(
             globalFilter={globalFilter}
             header={header}
           >
-            <Column
-              field="feedingPlanId"
-              header="ID"
-              sortable
-              style={{ minWidth: "4rem" }}
-            ></Column>
+          <Column
+            field="feedingPlanId"
+            header="ID"
+            sortable
+            style={{ minWidth: "4rem" }}
+          ></Column>
             <Column
               field="feedingPlanDesc"
               header="Description"

@@ -53,7 +53,7 @@ function ViewFacilityLogDetailsPage() {
   const [curFacilityLog, setCurFacilityLog] = useState<FacilityLog>(emptyFacilityLog);
 
   useEffect(() => {
-    apiJson.post(`http://localhost:3000/api/assetFacility/getFacilityLog/${logId}`, { includes: [] }).then(res => {
+    apiJson.post(`http://localhost:3000/api/assetFacility/getFacilityLog/${logId}`, { includes: ["inHouse", "generalStaffs"] }).then(res => {
       setCurFacilityLog(res.facilityLog as FacilityLog);
     });
   }, [refreshSeed]);
