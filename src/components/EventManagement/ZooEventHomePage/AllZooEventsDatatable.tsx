@@ -39,6 +39,7 @@ import ZooEvent from "../../../models/ZooEvent";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import Keeper from "../../../models/Keeper";
 
 let emptyZooEvent: ZooEvent = {
   zooEventId: 0,
@@ -227,6 +228,18 @@ function AllZooEventsDatatable(
     );
   };
 
+  const imageBodyTemplate = (rowData: ZooEvent) => {
+    return (
+      rowData.eventIsPublic ? (
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.eventName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        />)
+        : "No image"
+
+    );
+  };
 
   return (
     <div>
@@ -255,6 +268,13 @@ function AllZooEventsDatatable(
             // globalFilterFields={['eventIsPublic', 'eventType.valueOf()']}
             header={header}
           >
+            {/* <Column
+              field="enrichmentItemImageUrl"
+              header="Image"
+              frozen
+              body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
+            ></Column> */}
             <Column
               field="zooEventId"
               header="ID"
@@ -304,6 +324,16 @@ function AllZooEventsDatatable(
                 );
               }}
               header="Event Date"
+              sortable
+              style={{ minWidth: "8rem" }}
+            ></Column>
+            <Column
+              body={(zooEvent) => {
+                return (zooEvent.keepers != undefined && zooEvent.keepers?.length > 0) ?
+                  zooEvent.keepers?.map((keeper: Keeper) => keeper.employee.employeeName).join(", ") :
+                  "No keepers assigned!"
+              }}
+              header="Keepers"
               sortable
               style={{ minWidth: "8rem" }}
             ></Column>
