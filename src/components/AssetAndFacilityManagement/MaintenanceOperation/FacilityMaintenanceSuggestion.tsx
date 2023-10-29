@@ -117,16 +117,16 @@ function FacilityMaintenanceSuggestion() {
     facilityList.forEach((facility: any) => {
       obj.push({
         name: facility.facilityName,
-        description: (facility.isSheltered ? "Sheltered " : "Unsheltered ") + (facility.facilityDetail as string).toLocaleLowerCase(),
+        description: (facility.isSheltered ? "Sheltered " : "Unsheltered ") + (facility.facilityDetail == "thirdParty" ? "Third-party" : "In-house"),
         lastMaintenance: new Date(facility.facilityDetailJson["lastMaintained"]).toLocaleString(),
         suggestedMaintenance: facility.predictedMaintenanceDate ?
           new Date(facility.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Facility",
         id: facility.facilityId,
         repairRequired: facility.inHouse.facilityLogs?.find(log => log.generalStaffs?.find(gs => gs.employeeId == employee.employeeId)),
-        operationStaffString: facility.inHouse?.operationStaffs?.map((staff:GeneralStaff)=>staff.employee?.employeeName).join(", ") || "None Assigned",
-        maintenanceStaffString: facility.inHouse?.maintenanceStaffs?.map((staff:GeneralStaff)=>staff.employee?.employeeName).join(", ") || "None Assigned",
-        repairTicket : facility.inHouse?.facilityLogs?.find(log => log.facilityLogType == "ACTIVE_REPAIR_TICKET")? "True" : "False"
+        operationStaffString: facility.inHouse?.operationStaffs?.map((staff: GeneralStaff) => staff.employee?.employeeName).join(", ") || "None Assigned",
+        maintenanceStaffString: facility.inHouse?.maintenanceStaffs?.map((staff: GeneralStaff) => staff.employee?.employeeName).join(", ") || "None Assigned",
+        repairTicket: facility.inHouse?.facilityLogs?.find(log => log.facilityLogType == "ACTIVE_REPAIR_TICKET") ? "Yes" : "No"
       })
     })
     setObjectsList(obj)
@@ -581,7 +581,7 @@ function FacilityMaintenanceSuggestion() {
               field="description"
               header="Description"
               sortable
-              style={{ minWidth: "10rem" }}
+              style={{ minWidth: "13rem" }}
             ></Column>
             <Column
               field="lastMaintenance"
@@ -598,19 +598,19 @@ function FacilityMaintenanceSuggestion() {
             ></Column>
             <Column
               field="operationStaffString"
-              header="Operation Staffs"
+              header="Operation Staff"
               sortable
               style={{ minWidth: "13rem" }}
             ></Column>
             <Column
               field="maintenanceStaffString"
-              header="Maintenance Staffs"
+              header="Maintenance Staff"
               sortable
               style={{ minWidth: "13rem" }}
             ></Column>
             <Column
               field="repairTicket"
-              header="Has repair ticket"
+              header="Has Repair Ticket?"
               sortable
               style={{ minWidth: "13rem" }}
             ></Column>

@@ -278,15 +278,35 @@ function AllFacilityDatatable() {
             <Column
               field="facilityDetail"
               header="Owner Type"
+              body={(facility) => {
+                return facility.facilityDetail == "thirdParty" ?
+                  "Third-party" : "In-house"
+              }}
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
-            {/* <Column
+            <Column
               field="isSheltered"
               header="Shelter available"
+              body={(facility) => {
+                return facility.isSheltered ? "Yes" : "No"
+              }}
+              sortable
+              style={{ minWidth: "12rem" }
+              }
+            ></Column>
+            <Column
+              field=""
+              header="Operation Staff"
               sortable
               style={{ minWidth: "12rem" }}
-            ></Column> */}
+            ></Column>
+            <Column
+              field=""
+              header="Maintenance Staff"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
             <Column
               body={actionBodyTemplate}
               header="Actions"
