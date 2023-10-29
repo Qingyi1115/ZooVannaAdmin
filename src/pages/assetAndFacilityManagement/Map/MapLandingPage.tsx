@@ -391,18 +391,18 @@ function MapLandingPage() {
           </Button>
           {/* <Button onClick={testGetLocation}>Test get location</Button> */}
         </div>
-        <div className="flex gap-8">
-          <Card className="sticky top-30 h-[55vh] w-1/4">
-            <CardContent className="flex h-full flex-col justify-between">
-              <div className="pb-4 pt-8">
-                {!selectedFacility ? (
-                  <div className="text-center">No facility selected</div>
-                ) : (
-                  <div className="flex flex-col gap-4 pt-2 text-center">
+        <Card className="flex h-[15vh] items-center">
+          <CardContent className="flex h-full w-full items-center justify-between pb-0">
+            <div className="">
+              {selectedFacility.facilityId == -1 ? (
+                <div className="text-center">No facility selected</div>
+              ) : (
+                <div className="flex gap-12 text-start text-base">
+                  <div className="flex flex-col ">
                     <div className="text-xl font-medium">
                       {selectedFacility.facilityName}
                     </div>
-                    <div className="text-lg">
+                    <div className="text-base">
                       Type:{" "}
                       {
                         FacilityType[
@@ -411,51 +411,52 @@ function MapLandingPage() {
                         ]
                       }
                     </div>
+                  </div>
+                  <div>
+                    Current Coordinates:
                     <div>
-                      Current Coordinates:
-                      <div>
-                        X-Coordinates:{" "}
-                        <span className="font-medium">
-                          {selectedFacility.xCoordinate.toFixed(4)}
-                        </span>
-                      </div>
-                      <div>
-                        Y-Coordinates:{" "}
-                        <span className="font-medium">
-                          {selectedFacility.yCoordinate.toFixed(4)}
-                        </span>
-                      </div>
+                      X:{" "}
+                      <span className="font-medium">
+                        {selectedFacility.xCoordinate.toFixed(4)}
+                      </span>
                     </div>
                     <div>
-                      Show on map:{" "}
+                      Y:{" "}
                       <span className="font-medium">
-                        {selectedFacility.showOnMap ? (
-                          <span className="text-primary">Yes</span>
-                        ) : (
-                          <span className="text-destructive">No</span>
-                        )}
+                        {selectedFacility.yCoordinate.toFixed(4)}
                       </span>
                     </div>
                   </div>
-                )}
-              </div>
-              <Separator />
-              <div className="flex w-full flex-col items-center gap-2">
-                <div className="mb-2 flex items-center text-lg">
-                  Show on customer map:
-                  <Switch
-                    disabled={!selectedFacility}
-                    className="ml-2"
-                    checked={isShownOnMap}
-                    onCheckedChange={(checked) =>
-                      handleOnCheckedChangeShowOnMap(checked)
-                    }
-                  />
+                  <div>
+                    Show on map:{" "}
+                    <div className="font-medium">
+                      {selectedFacility.showOnMap ? (
+                        <span className="text-primary">Yes</span>
+                      ) : (
+                        <span className="text-destructive">No</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
+              )}
+            </div>
+            <div className="flex items-center gap-8">
+              <div className="flex items-center text-lg">
+                Show on customer map:
+                <Switch
+                  disabled={selectedFacility.facilityId == -1}
+                  className="ml-2"
+                  checked={isShownOnMap}
+                  onCheckedChange={(checked) =>
+                    handleOnCheckedChangeShowOnMap(checked)
+                  }
+                />
+              </div>
 
+              <div className="flex flex-col gap-4">
                 <Button
                   className="w-full"
-                  disabled={!selectedFacility}
+                  disabled={selectedFacility.facilityId == -1}
                   onClick={() =>
                     navigate(
                       `/assetfacility/changelocation/${selectedFacility?.facilityId}`
@@ -466,15 +467,74 @@ function MapLandingPage() {
                 </Button>
                 <Button
                   className="w-full"
-                  disabled={!selectedFacility}
+                  disabled={selectedFacility.facilityId == -1}
                   variant={"destructive"}
                   onClick={() => confirmDeleteLocationFromMap()}
                 >
                   Remove From Map
                 </Button>
               </div>
-            </CardContent>
+            </div>
+          </CardContent>
+        </Card>
+        <div className="flex gap-8">
+          <Card className="h-[50vh]">
+            <DataTable
+              ref={dt}
+              value={filteredFacilityList}
+              selection={selectedFacility}
+              onSelectionChange={(e) => {
+                if (Array.isArray(e.value)) {
+                  handleMarkerClick(e.value);
+                }
+              }}
+              dataKey="facilityId"
+              // paginator
+              rows={10}
+              scrollable
+              scrollHeight="100%"
+              selectionMode={"single"}
+              // rowsPerPageOptions={[5, 10, 25]}
+              // paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+              // currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facilities"
+              globalFilter={globalFilter}
+              header={header}
+              style={{ width: "25vw", height: "100%" }}
+            >
+              <Column
+                field="facilityId"
+                header="ID"
+                sortable
+                style={{ minWidth: "4rem" }}
+              ></Column>
+              <Column
+                field="facilityName"
+                header="Name"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="facilityDetail"
+                header="Owner Type"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="isSheltered"
+                header="Shelter available"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                body={actionBodyTemplate}
+                header="Actions"
+                frozen
+                alignFrozen="right"
+                exportable={false}
+              ></Column>
+            </DataTable>
           </Card>
+
           <div className="w-full space-y-4">
             <div className="flex h-[5vh] items-center gap-4">
               <div>Filters: </div>
@@ -543,7 +603,7 @@ function MapLandingPage() {
               />
             </div>
 
-            <Card>
+            {/* <Card>
               <DataTable
                 ref={dt}
                 value={filteredFacilityList}
@@ -596,7 +656,7 @@ function MapLandingPage() {
                   exportable={false}
                 ></Column>
               </DataTable>
-            </Card>
+            </Card> */}
           </div>
         </div>
       </div>
