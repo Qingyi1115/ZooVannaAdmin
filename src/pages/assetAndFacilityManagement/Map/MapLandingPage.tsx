@@ -325,8 +325,7 @@ function MapLandingPage() {
         <Button
           // variant={"outline"}
           onClick={() => {
-            setTableSelectedFacility(facility);
-            setSelectedFacility(tableSelectedFacility);
+            setSelectedFacility(facility);
           }}
           className="mr-1">
           <HiMapPin className="mr-1" />
