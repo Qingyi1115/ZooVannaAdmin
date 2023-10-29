@@ -72,10 +72,10 @@ function AllFacilityDatatable() {
         console.log(e);
       })
       .then((res) => {
-        console.log("req",res)
-        setFacilityList(res["facilities"].map(facility=>{
-          facility.opStaffStr = facility.facilityDetailJson.maintenanceStaffs?.map(staff=>staff.employee.employeeName).join(", ") || "No assigned Staffs"
-          facility.manStaffStr = facility.facilityDetailJson.operationStaffs?.map(staff=>staff.employee.employeeName).join(", ") || "No assigned Staffs"
+        console.log("req", res)
+        setFacilityList(res["facilities"].map(facility => {
+          facility.opStaffStr = facility.facilityDetailJson.operationStaffs?.map(staff => staff.employee.employeeName).join(", ") || "-"
+          facility.manStaffStr = facility.facilityDetailJson.maintenanceStaffs?.map(staff => staff.employee.employeeName).join(", ") || "-"
           return facility;
         }));
       });
