@@ -1,4 +1,4 @@
-import HubProcessor from "./Hub";
+import HubProcessor from "./HubProcessor";
 import InHouse from "./InHouse";
 
 interface Facility {

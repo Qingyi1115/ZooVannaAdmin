@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { SensorType } from "../../../../enums/SensorType";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
-import Hub from "../../../../models/Hub";
+import Hub from "../../../../models/HubProcessor";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 

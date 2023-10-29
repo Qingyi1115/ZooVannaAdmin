@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Hub from "../../../../models/Hub";
+import Hub from "../../../../models/HubProcessor";
 import { Separator } from "@radix-ui/react-select";
 import { useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";

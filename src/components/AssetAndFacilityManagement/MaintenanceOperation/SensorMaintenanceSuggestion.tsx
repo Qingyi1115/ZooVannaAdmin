@@ -82,6 +82,7 @@ function SensorMaintenanceSuggestion() {
       "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
     ).catch(error => {
     }).then(responseJson => {
+      console.log("responseJson",responseJson)
       let sortedList = responseJson["sensors"].sort((a: any, b: any) => {
         if (!a.predictedMaintenanceDate) return 1;
         if (!b.predictedMaintenanceDate) return -1;

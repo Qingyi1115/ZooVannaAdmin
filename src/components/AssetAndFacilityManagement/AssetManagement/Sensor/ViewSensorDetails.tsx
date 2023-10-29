@@ -35,6 +35,15 @@ function ViewSensorDetails(props: SensorDetailsProps) {
   return (
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
+
+          <Button className="mr-2" onClick={() => {
+            navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
+            navigate(`/assetfacility/viewfacilitydetails/${curSensor.hubProcessor.facilityId}`);
+          }}>
+            <HiPencil className="mx-auto" />
+            Facility
+          </Button>
+
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button className="mr-2" onClick={() => {
             navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });

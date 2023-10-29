@@ -4,7 +4,7 @@ import EditSensorForm from "../../../components/AssetAndFacilityManagement/Asset
 import useApiJson from "../../../hooks/useApiJson";
 import Sensor from "../../../models/Sensor";
 import { SensorType } from "../../../enums/SensorType";
-import Hub from "../../../models/Hub";
+import Hub from "../../../models/HubProcessor";
 import Facility from "../../../models/Facility";
 import { HubStatus } from "../../../enums/HubStatus";
 
