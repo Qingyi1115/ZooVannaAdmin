@@ -782,7 +782,11 @@ function ViewZooEventDetails() {
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Keepers
                         </TableCell>
-                        <TableCell>{curZooEvent.keepers?.map((keeper: Keeper) => keeper.employee.employeeName).join(", ")}</TableCell>
+                        <TableCell>
+                          {(curZooEvent.keepers != undefined && curZooEvent.keepers?.length > 0) ?
+                            curZooEvent.keepers?.map((keeper: Keeper) => keeper.employee.employeeName).join(", ") :
+                            "No keepers assigned to this event!"}
+                        </TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
