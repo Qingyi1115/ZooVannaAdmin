@@ -53,6 +53,18 @@ import { InputText } from "primereact/inputtext";
 import { HiMap, HiMapPin } from "react-icons/hi2";
 // import geolocation from "geolocation";
 
+let emptyFacility: FacilityWithSelected = {
+  facilityId: -1,
+  facilityName: "",
+  showOnMap: false,
+  xCoordinate: 0,
+  yCoordinate: 0,
+  facilityDetail: "",
+  facilityDetailJson: "",
+  isSheltered: false,
+  hubProcessors: [],
+  selected: false,
+};
 interface FacilityWithSelected extends Facility {
   selected: boolean;
 }
@@ -64,7 +76,7 @@ function MapLandingPage() {
 
   const [facilityList, setFacilityList] = useState<FacilityWithSelected[]>([]);
   const [selectedFacility, setSelectedFacility] =
-    useState<FacilityWithSelected | null>(null);
+    useState<FacilityWithSelected>(emptyFacility);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   const [deleteLocationFromMapDialog, setDeleteLocationFromMapDialog] =
@@ -108,7 +120,7 @@ function MapLandingPage() {
           const updatedFacility = facilityListWithLocation.find(
             (facility) => facility.facilityId === selectedFacility.facilityId
           );
-          setSelectedFacility(updatedFacility || null);
+          if (updatedFacility) setSelectedFacility(updatedFacility);
         }
       } catch (error: any) {
         console.log(error);
@@ -196,7 +208,7 @@ function MapLandingPage() {
       toastShadcn({
         description: "Successfully remove location map",
       });
-      setSelectedFacility(null);
+      setSelectedFacility(emptyFacility);
       setDeleteLocationFromMapDialog(false);
       setRefreshSeed(refreshSeed + 1);
     } catch (error: any) {
@@ -299,23 +311,12 @@ function MapLandingPage() {
   // end delete stuff
 
   // Datatable stuff
-  let emptyFacility: FacilityWithSelected = {
-    facilityId: -1,
-    facilityName: "",
-    showOnMap: false,
-    xCoordinate: 0,
-    yCoordinate: 0,
-    facilityDetail: "",
-    facilityDetailJson: "",
-    isSheltered: false,
-    hubProcessors: [],
-    selected: false,
-  };
 
-  const dt = useRef<DataTable<FacilityWithSelected[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [tableSelectedFacility, setTableSelectedFacility] =
     useState<FacilityWithSelected>(emptyFacility);
+
+  const dt = useRef<DataTable<FacilityWithSelected[]>>(null);
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -340,8 +341,7 @@ function MapLandingPage() {
         <Button
           // variant={"outline"}
           onClick={() => {
-            setTableSelectedFacility(facility);
-            setSelectedFacility(tableSelectedFacility);
+            handleMarkerClick(facility);
           }}
           className="mr-1"
         >
@@ -358,6 +358,17 @@ function MapLandingPage() {
       </React.Fragment>
     );
   };
+
+  function handleMarkerClick(selectedFacility: FacilityWithSelected) {
+    const tempFacilityList = facilityList.map((facility) =>
+      facility.facilityId === selectedFacility.facilityId
+        ? { ...facility, selected: !facility.selected }
+        : { ...facility, selected: false }
+    );
+    setSelectedFacility(selectedFacility);
+    setIsShownOnMap(selectedFacility.showOnMap);
+    setFilteredFacilityList(tempFacilityList);
+  }
 
   return (
     <div className="p-10">
@@ -535,11 +546,11 @@ function MapLandingPage() {
             <Card>
               <DataTable
                 ref={dt}
-                value={facilityList}
-                selection={tableSelectedFacility}
+                value={filteredFacilityList}
+                selection={selectedFacility}
                 onSelectionChange={(e) => {
                   if (Array.isArray(e.value)) {
-                    setTableSelectedFacility(e.value);
+                    handleMarkerClick(e.value);
                   }
                 }}
                 dataKey="facilityId"
