@@ -18,6 +18,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
+import beautifyText from "../../../../hooks/beautifyText";
 
 function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();
@@ -223,9 +224,10 @@ function AllAnimalFeedDatatable() {
 
             <Column
               field="animalFeedCategory"
+              body={(animalFeed: AnimalFeed) => beautifyText(animalFeed.animalFeedCategory)}
               header="Animal Feed Category"
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
 
             {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && (
