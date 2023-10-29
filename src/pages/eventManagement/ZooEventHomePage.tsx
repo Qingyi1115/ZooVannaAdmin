@@ -45,6 +45,8 @@ function ZooEventHomePage() {
   const [titleGroupList, setTitleGroupList] = useState<any>([]);
   const [selTitleGroupList, setSelTitleGroupList] = useState<any[]>([]);
 
+  const [newPage, setNewPage] = useState<boolean>(true);
+
   const [refresh, setRefresh] = useState<any>(0);
   const [zooEventsList, setZooEventsList] = useState<
     ZooEvent[]
@@ -105,21 +107,33 @@ function ZooEventHomePage() {
       setEventGroupList(allEventGroup);
       setTitleGroupList(allTitleGroups);
 
-      const newGp = allEventGroup.filter(gp => selEventGroupList.includes(gp));
-      if (selEventGroupList.length == 0 || newGp.length == 0) {
+      const historySelEventGroup = localStorage.getItem("selEventGroupList");
+      let newGp = allEventGroup.filter(gp => selEventGroupList.includes(gp));
+
+      if (selEventGroupList.length == 0 && historySelEventGroup){
+        newGp = allEventGroup.filter(gp => JSON.parse(historySelEventGroup).includes(gp));
+      }
+
+      if ( newGp.length == 0) {
         setSelEventGroupList(allEventGroup);
       } else {
         setSelEventGroupList(newGp);
       }
 
-      const newTi = allTitleGroups.filter(ti => selTitleGroupList.includes(ti));
-      console.log("newTi", newTi)
-      if (selTitleGroupList.length == 0 || newTi.length == 0) {
+
+      const historySelTitleGroupList = localStorage.getItem("selTitleGroupList");
+      let newTi = allTitleGroups.filter(ti => selTitleGroupList.includes(ti));
+
+      if (selEventGroupList.length == 0 && historySelTitleGroupList){
+        newTi = allTitleGroups.filter(ti => JSON.parse(historySelTitleGroupList).includes(ti));
+      }
+      
+      if (newTi.length == 0) {
         setSelTitleGroupList(allTitleGroups);
       } else {
         setSelTitleGroupList(newTi);
       }
-
+      setNewPage(false);
       setFilteredZooEventsList(a);
       return setZooEventsList(a);
 
@@ -149,6 +163,11 @@ function ZooEventHomePage() {
         }
       })
     )
+    if (!newPage){
+      console.log("set stuff", selEventGroupList , selTitleGroupList)
+      localStorage.setItem('selEventGroupList', JSON.stringify(selEventGroupList));
+      localStorage.setItem('selTitleGroupList', JSON.stringify(selTitleGroupList));
+    }
   }, [selEventGroupList, selTitleGroupList]);
 
   const menuLeft = useRef<Menu>(null);

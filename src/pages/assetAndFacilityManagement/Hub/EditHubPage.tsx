@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import EditHubForm from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/EditHubForm";
 import useApiJson from "../../../hooks/useApiJson";
-import Hub from "src/models/Hub";
+import Hub from "src/models/HubProcessor";
 import { HubStatus } from "../../../enums/HubStatus";
 import Facility from "../../../models/Facility";
 

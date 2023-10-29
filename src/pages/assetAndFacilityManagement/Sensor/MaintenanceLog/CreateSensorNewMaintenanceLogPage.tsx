@@ -5,7 +5,7 @@ import CreateNewMaintenanceLogForm from "../../../../components/AssetAndFacility
 import { SensorType } from "../../../../enums/SensorType";
 import { HubStatus } from "../../../../enums/HubStatus";
 import Facility from "../../../../models/Facility";
-import Hub from "../../../../models/Hub";
+import Hub from "../../../../models/HubProcessor";
 
 function CreateNewSensorMaintenanceLogPage() {
   const apiJson = useApiJson();

@@ -16,9 +16,10 @@ import { Button } from "@/components/ui/button";
 import { SensorType } from "../../../../enums/SensorType";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
-import Hub from "../../../../models/Hub";
+import Hub from "../../../../models/HubProcessor";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
+import GeneralStaff from "../../../../models/GeneralStaff";
 
 interface AllSensorDatatableProps {
   curHub: Hub,
@@ -36,10 +37,9 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
     dateOfActivation: new Date(),
     dateOfLastMaintained: new Date(),
     sensorType: SensorType.CAMERA,
-    hub: curHub,
+    hubProcessor: curHub,
     sensorReadings: [],
-    maintenanceLogs: [],
-    generalStaff: []
+    maintenanceLogs: []
   };
 
   const [sensorList, setSensorList] = useState<Sensor[]>(curHub.sensors);
@@ -234,6 +234,13 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>
+            {/* <Column
+              field="generalStaff"
+              body={(sensor: Sensor) => sensor.generalStaff.employee?.employeeName}
+              header="Maintenance Staff"
+              sortable
+              style={{ minWidth: "16rem" }}
+            ></Column> */}
             <Column
               body={actionBodyTemplate}
               header="Actions"
