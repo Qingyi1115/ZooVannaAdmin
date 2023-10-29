@@ -38,10 +38,9 @@ function ViewSensorDetails(props: SensorDetailsProps) {
 
           <Button className="mr-2" onClick={() => {
             navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
-            navigate(`/assetfacility/viewfacilitydetails/${curSensor.hubProcessor.facilityId}`);
+            navigate(`/assetfacility/viewfacilitydetails/${curSensor.hubProcessor?.facilityId}`);
           }}>
-            <HiPencil className="mx-auto" />
-            Facility
+            Facility Details
           </Button>
 
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
@@ -87,6 +86,12 @@ function ViewSensorDetails(props: SensorDetailsProps) {
               Name
             </TableCell>
             <TableCell>{String(curSensor.sensorName)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Facility
+            </TableCell>
+            <TableCell>{curSensor.hubProcessor?.facility?.facilityName}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
