@@ -236,7 +236,7 @@ function AllZooEventsDatatable(
           alt={rowData.eventName}
           className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
         />)
-        : "No image"
+        : "-"
 
     );
   };
@@ -331,7 +331,7 @@ function AllZooEventsDatatable(
               body={(zooEvent) => {
                 return (zooEvent.keepers != undefined && zooEvent.keepers?.length > 0) ?
                   zooEvent.keepers?.map((keeper: Keeper) => keeper.employee.employeeName).join(", ") :
-                  "No keepers assigned!"
+                  "-"
               }}
               header="Keepers"
               sortable
