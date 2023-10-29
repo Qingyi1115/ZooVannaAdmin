@@ -26,6 +26,7 @@ import FormFieldInput from "../../FormFieldInput";
 import * as Form from "@radix-ui/react-form";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import { BsWrenchAdjustable } from "react-icons/bs";
+import GeneralStaff from "../../../models/GeneralStaff";
 
 
 export function compareDates(d1: Date, d2: Date): number {
@@ -122,7 +123,10 @@ function FacilityMaintenanceSuggestion() {
           new Date(facility.predictedMaintenanceDate).toString() : "No suggested date",
         type: "Facility",
         id: facility.facilityId,
-        repairRequired: facility.inHouse.facilityLogs?.find(log => log.generalStaffs?.find(gs => gs.employeeId == employee.employeeId))
+        repairRequired: facility.inHouse.facilityLogs?.find(log => log.generalStaffs?.find(gs => gs.employeeId == employee.employeeId)),
+        operationStaffString: facility.inHouse?.operationStaffs?.map((staff:GeneralStaff)=>staff.employee?.employeeName).join(", ") || "None Assigned",
+        maintenanceStaffString: facility.inHouse?.maintenanceStaffs?.map((staff:GeneralStaff)=>staff.employee?.employeeName).join(", ") || "None Assigned",
+        repairTicket : facility.inHouse?.facilityLogs?.find(log => log.facilityLogType == "ACTIVE_REPAIR_TICKET")? "True" : "False"
       })
     })
     setObjectsList(obj)
@@ -589,6 +593,24 @@ function FacilityMaintenanceSuggestion() {
               field="suggestedMaintenance"
               header="Suggested Date of Maintenance"
               body={statusBodyTemplate}
+              sortable
+              style={{ minWidth: "13rem" }}
+            ></Column>
+            <Column
+              field="operationStaffString"
+              header="Operation Staffs"
+              sortable
+              style={{ minWidth: "13rem" }}
+            ></Column>
+            <Column
+              field="maintenanceStaffString"
+              header="Maintenance Staffs"
+              sortable
+              style={{ minWidth: "13rem" }}
+            ></Column>
+            <Column
+              field="repairTicket"
+              header="Has repair ticket"
               sortable
               style={{ minWidth: "13rem" }}
             ></Column>
