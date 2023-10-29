@@ -1289,7 +1289,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                     (isActive && "!text-white")
                                   }
                                 >
-                                  View Sales Chart
+                                  View Sales Dashboard
                                 </NavLink>
                               </li>
                             </ul>

@@ -9,7 +9,7 @@ function SalesChartPage() {
     new Date(new Date().setMonth(new Date().getMonth() - 3))
   );
   const [endDate, setEndDate] = useState<Date>(
-    new Date(new Date().setMonth(new Date().getMonth() + 3))
+    new Date(new Date().setMonth(new Date().getMonth()))
   );
 
   const handleEndDateChange = (e: CalendarChangeEvent) => {
