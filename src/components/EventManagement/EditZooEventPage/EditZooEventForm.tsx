@@ -41,6 +41,7 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import ZooEvent from "../../../models/ZooEvent";
 import { Nullable } from "primereact/ts-helpers";
 import { CheckIcon } from "lucide-react";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface EditZooEventFormProps {
   curZooEvent: ZooEvent;
@@ -337,7 +338,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
 
         {/* Event Type */}
         <div className="mb-1 block font-medium">
-          Event Type<br /> <b>{eventType}</b>
+          Event Type<br /> <b>{beautifyText(eventType)}</b>
         </div>
 
         {/* Event Description */}

@@ -138,7 +138,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
         </div>
         {/* Activity Type */}
         <div className="mb-1 block font-medium">
-          Activity Type<br /> <b>{beautifyText(activityType?.toString())}</b>
+          Activity Type<br /> <b>{beautifyText(activityType)}</b>
         </div>
         {/* <FormFieldSelect
           formFieldName="activityType"

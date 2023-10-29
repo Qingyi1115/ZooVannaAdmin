@@ -18,6 +18,7 @@ import { useAuthContext } from "../../../hooks/useAuthContext";
 import { set } from "date-fns";
 import AnimalActivityLog from "../../../models/AnimalActivityLog";
 import AnimalActivity from "../../../models/AnimalActivity";
+import beautifyText from "../../../hooks/beautifyText";
 
 interface CreateNewAnimalActivityLogProps {
   curAnimalActivity: AnimalActivity
@@ -127,7 +128,7 @@ function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) 
       </div>
       {/* Activity Type */}
       <div className="mb-1 block font-medium">
-        Activity Type<br /> <b>{activityType}</b>
+        Activity Type<br /> <b>{beautifyText(activityType)}</b>
       </div>
       {/* <FormFieldSelect
         formFieldName="activityType"
