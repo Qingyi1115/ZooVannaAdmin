@@ -113,7 +113,6 @@ function AllZooEventsFullCalendar(
           ze.eventTiming?.toString() || "",
           new Date(ze.eventStartDateTime)
         );
-        console.log("naming", zooEventsList)
 
         const naming: any = ze.eventType;
 
