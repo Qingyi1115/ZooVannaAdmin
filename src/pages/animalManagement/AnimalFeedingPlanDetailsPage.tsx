@@ -23,6 +23,7 @@ import AnimalFeedingPlanSessionsSchedule from "../../components/AnimalManagement
 import AnimalFeedingPlanInvolvedAnimalDatatable from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 import AllFeedingPlanFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllFeedingPlanFeedingLogsDatatable";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import RecommendedFeedingMethods from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/RecommendedFeedingMethods";
 
 function AnimalFeedingPlanDetailsPage() {
   const apiJson = useApiJson();
@@ -84,7 +85,8 @@ function AnimalFeedingPlanDetailsPage() {
         {curFeedingPlan && (
           <div>
             <div className="mb-4">
-              {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+              {(employee.superAdmin ||
+                employee.planningStaff?.plannerType == "CURATOR") && (
                 <Button
                   className="mb-4"
                   onClick={() => {
@@ -94,7 +96,8 @@ function AnimalFeedingPlanDetailsPage() {
                   }}
                 >
                   Edit Basic Info
-                </Button>}
+                </Button>
+              )}
               <div className="text-lg font-bold">Basic Information</div>
               <Table>
                 <TableBody>
@@ -172,6 +175,19 @@ function AnimalFeedingPlanDetailsPage() {
                   />
                 </TabsContent>
               </Tabs>
+            </div>
+            <br />
+            <div className="">
+              {curFeedingPlan.species && (
+                <>
+                  <div className="text-lg font-bold">
+                    Recommended Feeding Methods
+                  </div>
+                  <RecommendedFeedingMethods
+                    speciesCode={curFeedingPlan.species?.speciesCode}
+                  />
+                </>
+              )}
             </div>
           </div>
         )}

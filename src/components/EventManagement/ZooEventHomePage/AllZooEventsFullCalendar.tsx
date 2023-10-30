@@ -46,18 +46,14 @@ interface AllZooEventsFullCalendarProps {
   zooEventsList: ZooEvent[];
   setRefresh: any;
 }
-function AllZooEventsFullCalendar(
-  props: AllZooEventsFullCalendarProps
-) {
+function AllZooEventsFullCalendar(props: AllZooEventsFullCalendarProps) {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const calendarRef = useRef<FullCalendar>(null);
 
   const { zooEventsList, setRefresh } = props;
 
-  const [events, setEvents] = useState<any[]>(
-    []
-  );
+  const [events, setEvents] = useState<any[]>([]);
 
   // Full Calendar stuff
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -104,46 +100,45 @@ function AllZooEventsFullCalendar(
     return { startTime, endTime };
   }
 
-
   useEffect(() => {
-
     setEvents(
-      zooEventsList.map((ze) => {
-        const { startTime, endTime } = calculateSessionTimes(
-          ze.eventTiming?.toString() || "",
-          new Date(ze.eventStartDateTime)
-        );
+      zooEventsList
+        .map((ze) => {
+          const { startTime, endTime } = calculateSessionTimes(
+            ze.eventTiming?.toString() || "",
+            new Date(ze.eventStartDateTime)
+          );
 
-        const naming: any = ze.eventType;
+          const naming: any = ze.eventType;
 
-        return {
-          title: ze.eventName,
-          start: startTime, // Convert dateInMilliseconds to a Date object
-          end: endTime, // Convert dateInMilliseconds to a Date object
-          allDay: false,
-          // url: `http://localhost:5173/zooevent/viewzooeventdetails/${zooEvent.zooEventId}`,
-          extendedProps: {
-            zooEventUrl: `/zooevent/viewzooeventdetails/${ze.zooEventId}/details`,
-            eventType: ze.eventType,
-            eventDescription: ze.eventDescription,
-            eventDurationHrs: ze.eventDurationHrs,
-          },
-          classNames:
-            naming == "Training"
-              ? ["training overflow-hidden"]
-              : naming == "Enrichment"
+          return {
+            title: ze.eventName,
+            start: startTime, // Convert dateInMilliseconds to a Date object
+            end: endTime, // Convert dateInMilliseconds to a Date object
+            allDay: false,
+            // url: `http://localhost:5173/zooevent/viewzooeventdetails/${zooEvent.zooEventId}`,
+            extendedProps: {
+              zooEventUrl: `/zooevent/viewzooeventdetails/${ze.zooEventId}/details`,
+              eventType: ze.eventType,
+              eventDescription: ze.eventDescription,
+              eventDurationHrs: ze.eventDurationHrs,
+            },
+            classNames:
+              naming == "Training"
+                ? ["training overflow-hidden"]
+                : naming == "Enrichment"
                 ? ["enrichment overflow-hidden"]
                 : naming == "Observation"
-                  ? ["observation overflow-hidden"]
-                  : naming == "Employee Feeding"
-                    ? ["empfeeding overflow-hidden"]
-                    : naming == "Customer Feeding"
-                      ? ["cusfeeding overflow-hidden"]
-                      : [],
-        };
-      }).flat(1)
+                ? ["observation overflow-hidden"]
+                : naming == "Employee Feeding"
+                ? ["empfeeding overflow-hidden"]
+                : naming == "Customer Feeding"
+                ? ["cusfeeding overflow-hidden"]
+                : [],
+          };
+        })
+        .flat(1)
     );
-
   }, [zooEventsList]);
 
   interface CustomEventProps {
@@ -200,7 +195,7 @@ function AllZooEventsFullCalendar(
           <div className="flex justify-between overflow-hidden">
             {/* Legend */}
             <div className="mb-1 flex items-center gap-4 rounded border border-strokedark/20 px-4 text-sm">
-              <span>Legend: </span>
+              {/* <span>Legend: </span> */}
               <div className="flex items-center gap-2 text-[#0f3360]">
                 <div className="h-5 w-5 rounded bg-[#0f3360]" />
                 <span className="font-bold">Observation</span>
