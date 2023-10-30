@@ -230,7 +230,7 @@ function AllZooEventsDatatable(
 
   const imageBodyTemplate = (rowData: ZooEvent) => {
     return (
-      rowData.eventIsPublic ? (
+      (rowData.eventIsPublic && rowData.imageUrl) ? (
         <img
           src={"http://localhost:3000/" + rowData.imageUrl}
           alt={rowData.eventName}
@@ -268,13 +268,13 @@ function AllZooEventsDatatable(
             // globalFilterFields={['eventIsPublic', 'eventType.valueOf()']}
             header={header}
           >
-            {/* <Column
-              field="enrichmentItemImageUrl"
+            <Column
+              field="imageUrl"
               header="Image"
               frozen
               body={imageBodyTemplate}
               style={{ minWidth: "6rem" }}
-            ></Column> */}
+            ></Column>
             <Column
               field="zooEventId"
               header="ID"

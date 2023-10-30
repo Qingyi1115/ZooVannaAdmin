@@ -84,8 +84,8 @@ function EditZooEventForm(props: EditZooEventFormProps) {
   >(curZooEvent.requiredNumberOfKeeper);
 
   // Zoo event image
-  // const apiFormData = useApiFormData();
-  // const [imageFile, setImageFile] = useState<File | null>(null);
+  const apiFormData = useApiFormData();
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // validate functions
   function validateIdentifierType(props: ValidityState) {
@@ -200,10 +200,10 @@ function EditZooEventForm(props: EditZooEventFormProps) {
   // end validate functions
 
   // Zoo event image
-  // function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-  //   const file = event.target.files && event.target.files[0];
-  //   setImageFile(file);
-  // }
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+    setImageFile(file);
+  }
 
   // handle submit
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -227,30 +227,30 @@ function EditZooEventForm(props: EditZooEventFormProps) {
       if (updateFuture) {
 
         // Update future with image
-        // if (imageFile) {
-        //   const formData = new FormData();
-        //   formData.append("file", imageFile || "");
+        if (imageFile) {
+          const formData = new FormData();
+          formData.append("file", imageFile || "");
 
-        //   try {
-        //     const response = await apiFormData.put(
-        //       `http://localhost:3000/api/zooEvent/updateZooEventIncludeFutureImage/${curZooEvent?.zooEventId}`,
-        //       formData
-        //     );
-        //     // success
-        //     toastShadcn({
-        //       description: "Successfully updated event",
-        //     });
-        //     navigate(-1);
-        //   } catch (error: any) {
-        //     toastShadcn({
-        //       variant: "destructive",
-        //       title: "Uh oh! Something went wrong.",
-        //       description:
-        //         "An error has occurred while editing zoo event details: \n" +
-        //         error.message,
-        //     });
-        //   }
-        // }
+          // try {
+          //   const response = await apiFormData.put(
+          //     `http://localhost:3000/api/zooEvent/updateZooEventIncludeFutureImage/${curZooEvent?.zooEventId}`,
+          //     formData
+          //   );
+          //   // success
+          //   toastShadcn({
+          //     description: "Successfully updated event",
+          //   });
+          //   navigate(-1);
+          // } catch (error: any) {
+          //   toastShadcn({
+          //     variant: "destructive",
+          //     title: "Uh oh! Something went wrong.",
+          //     description:
+          //       "An error has occurred while editing zoo event details: \n" +
+          //       error.message,
+          //   });
+          // }
+        }
 
         const data = {
           eventName: eventName,
@@ -289,30 +289,30 @@ function EditZooEventForm(props: EditZooEventFormProps) {
       } else {
 
         // Update single with image
-        // if (imageFile) {
-        //   const formData = new FormData();
-        //   formData.append("file", imageFile || "");
+        if (imageFile) {
+          const formData = new FormData();
+          formData.append("file", imageFile || "");
 
-        //   try {
-        //     const response = await apiFormData.put(
-        //       `http://localhost:3000/api/zooEvent/updateZooEventSingleImage/${curZooEvent?.zooEventId}`,
-        //       formData
-        //     );
-        //     // success
-        //     toastShadcn({
-        //       description: "Successfully updated event",
-        //     });
-        //     navigate(-1);
-        //   } catch (error: any) {
-        //     toastShadcn({
-        //       variant: "destructive",
-        //       title: "Uh oh! Something went wrong.",
-        //       description:
-        //         "An error has occurred while editing zoo event details: \n" +
-        //         error.message,
-        //     });
-        //   }
-        // }
+          // try {
+          //   const response = await apiFormData.put(
+          //     `http://localhost:3000/api/zooEvent/updateZooEventSingleImage/${curZooEvent?.zooEventId}`,
+          //     formData
+          //   );
+          //   // success
+          //   toastShadcn({
+          //     description: "Successfully updated event",
+          //   });
+          //   navigate(-1);
+          // } catch (error: any) {
+          //   toastShadcn({
+          //     variant: "destructive",
+          //     title: "Uh oh! Something went wrong.",
+          //     description:
+          //       "An error has occurred while editing zoo event details: \n" +
+          //       error.message,
+          //   });
+          // }
+        }
 
         const zooEventDetails = {
           zooEventId: curZooEvent?.zooEventId,
@@ -393,7 +393,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
         </div>
 
         {/* Zoo Event Picture */}
-        {/* {curZooEvent.eventIsPublic &&
+        {curZooEvent.eventIsPublic &&
           <Form.Field
             name="zooEventImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
@@ -418,7 +418,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
               onChange={handleFileChange}
               className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
             />
-          </Form.Field>} */}
+          </Form.Field>}
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
           {/* Event Name */}
