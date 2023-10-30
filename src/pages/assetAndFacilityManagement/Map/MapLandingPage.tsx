@@ -51,11 +51,20 @@ import { dt } from "@fullcalendar/core/internal-common";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
 import { HiMap, HiMapPin } from "react-icons/hi2";
+import InHouse from "../../../models/InHouse";
 // import geolocation from "geolocation";
 
 let emptyFacility: FacilityWithSelected = {
   facilityId: -1,
   facilityName: "",
+  inHouse: {
+    lastMaintained: new Date(),
+    isPaid: false,
+    maxAccommodationSize: 0,
+    hasAirCon: false,
+    facilityType: FacilityType.AMPHITHEATRE,
+    facilityLogs: [],
+  },
   showOnMap: false,
   xCoordinate: 0,
   yCoordinate: 0,
@@ -409,8 +418,8 @@ function MapLandingPage() {
                       Type:{" "}
                       {
                         FacilityType[
-                        selectedFacility.facilityDetailJson
-                          .facilityType as keyof typeof FacilityType
+                          selectedFacility.facilityDetailJson
+                            .facilityType as keyof typeof FacilityType
                         ]
                       }
                     </div>
@@ -520,8 +529,9 @@ function MapLandingPage() {
                 field="facilityDetail"
                 header="Owner Type"
                 body={(facility) => {
-                  return facility.facilityDetail == "thirdParty" ?
-                    "Third-party" : "In-house"
+                  return facility.facilityDetail == "thirdParty"
+                    ? "Third-party"
+                    : "In-house";
                 }}
                 sortable
                 style={{ minWidth: "12rem" }}
@@ -530,11 +540,10 @@ function MapLandingPage() {
                 field="isSheltered"
                 header="Shelter available"
                 body={(facility) => {
-                  return facility.isSheltered ? "Yes" : "No"
+                  return facility.isSheltered ? "Yes" : "No";
                 }}
                 sortable
-                style={{ minWidth: "12rem" }
-                }
+                style={{ minWidth: "12rem" }}
               ></Column>
               <Column
                 body={actionBodyTemplate}
@@ -561,7 +570,7 @@ function MapLandingPage() {
                   <SelectValue placeholder="Facility type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectGroup id="facilityTypeFilterSelect">
+                  <SelectGroup className="h-64" id="facilityTypeFilterSelect">
                     <SelectLabel>Facility Type</SelectLabel>
                     <SelectItem key={"all"} value="All">
                       All
