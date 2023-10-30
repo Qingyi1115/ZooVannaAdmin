@@ -84,15 +84,16 @@ function AllPromotionDatatable() {
 
   const imageBodyTemplate = (rowData: Promotion) => {
     return (
-      <img
-        src={"http://localhost:3000/" + rowData.imageUrl}
-        alt={rowData.title}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      (rowData.imageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.title}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        /> : "-")
     );
   };
 
-  const navigateEditProduct = (promotion: Promotion) => {};
+  const navigateEditProduct = (promotion: Promotion) => { };
 
   const confirmDeletePromotion = (promotion: Promotion) => {
     setSelectedPromotion(promotion);
@@ -122,7 +123,7 @@ function AllPromotionDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/promotion/deletePromotion/" +
-            selectedPromotion.promotionId
+          selectedPromotion.promotionId
         );
 
         toastShadcn({

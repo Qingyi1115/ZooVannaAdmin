@@ -139,11 +139,13 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
   // Add parent stuff
   const imageBodyTemplate = (rowData: Animal) => {
     return (
-      <img
-        src={"http://localhost:3000/" + rowData.imageUrl}
-        alt={rowData.houseName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      (rowData.imageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.houseName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        />
+        : "-")
     );
   };
 

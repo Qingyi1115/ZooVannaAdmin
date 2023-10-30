@@ -97,11 +97,12 @@ function SpeciesEnclosureCompatibilities(
   // Datatable
   const imageBodyTemplate = (rowData: Species) => {
     return (
-      <img
-        src={"http://localhost:3000/" + rowData.imageUrl}
-        alt={rowData.commonName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      (rowData.imageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.commonName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        /> : "-")
     );
   };
 

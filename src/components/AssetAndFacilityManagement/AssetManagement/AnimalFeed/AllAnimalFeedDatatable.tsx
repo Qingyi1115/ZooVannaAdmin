@@ -57,11 +57,12 @@ function AllAnimalFeedDatatable() {
 
   const imageBodyTemplate = (rowData: AnimalFeed) => {
     return (
-      <img
-        src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
-        alt={rowData.animalFeedName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      (rowData.animalFeedImageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
+          alt={rowData.animalFeedName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        /> : "-")
     );
   };
 

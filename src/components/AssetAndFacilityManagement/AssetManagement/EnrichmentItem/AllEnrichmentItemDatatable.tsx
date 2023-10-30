@@ -63,11 +63,12 @@ function AllEnrichmentItemDatatable() {
 
   const imageBodyTemplate = (rowData: EnrichmentItem) => {
     return (
+      (rowData.enrichmentItemImageUrl ?
       <img
         src={"http://localhost:3000/" + rowData.enrichmentItemImageUrl}
         alt={rowData.enrichmentItemName}
         className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      /> : "-")
     );
   };
 

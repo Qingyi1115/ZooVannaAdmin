@@ -152,11 +152,12 @@ function OneParentCard(props: OneParentCardProps) {
   // change parent stuff
   const imageBodyTemplate = (rowData: Animal) => {
     return (
-      <img
-        src={"http://localhost:3000/" + rowData.imageUrl}
-        alt={rowData.houseName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      (rowData.imageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.houseName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        /> : "-")
     );
   };
 
@@ -301,14 +302,14 @@ function OneParentCard(props: OneParentCardProps) {
           <p className="text-sm">{parent.species.commonName}</p>
           <p
             className={`${parent.sex == "MALE"
-                ? "text-[#3b82f6]"
-                : parent.sex == "FEMALE"
-                  ? "text-[#ec4899]"
-                  : parent.sex == "UNKNOWN"
-                    ? "text-slate-900"
-                    : parent.sex == "ASEXUAL"
-                      ? "text-purple-600"
-                      : "text-black"
+              ? "text-[#3b82f6]"
+              : parent.sex == "FEMALE"
+                ? "text-[#ec4899]"
+                : parent.sex == "UNKNOWN"
+                  ? "text-slate-900"
+                  : parent.sex == "ASEXUAL"
+                    ? "text-purple-600"
+                    : "text-black"
               }`}
           >
             {parent.sex}
