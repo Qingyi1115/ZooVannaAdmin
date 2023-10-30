@@ -34,7 +34,11 @@ export default function AllSensorReadingDatatable(props: AllSensorReadingDatatab
       `http://localhost:3000/api/assetFacility/getSensorReading/${sensorId}`,
       { startDate: startDate, endDate: endDate }
     ).then(res => {
+      console.log("getSensorReading response",res)
       setMinDate(new Date(res.earlestDate));
+      if (res.sensorReading.length == 0){
+        setStartDate(res.earlestDate);
+      }
       const curSensor = res.sensor;
       const sensorReadings = (res.sensorReadings as SensorReading[]);
       const documentStyle = getComputedStyle(document.documentElement);

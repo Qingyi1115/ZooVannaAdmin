@@ -110,7 +110,7 @@ function FacilityMaintenanceSuggestion() {
         return compareDates(new Date(a.predictedMaintenanceDate), new Date(b.predictedMaintenanceDate));
       }));
     });
-  }, []);
+  }, [refreshSeed]);
 
   useEffect(() => {
     let obj: any = []
@@ -418,6 +418,7 @@ function FacilityMaintenanceSuggestion() {
               setAssignmentDialog(false);
               setBulkAssignmentDialog(false);
               setSelectedEmployees([]);
+              setRefreshSeed([])
             }).catch(err => { console.log(err) });
         }
         );
@@ -435,6 +436,7 @@ function FacilityMaintenanceSuggestion() {
             setAssignmentDialog(false);
             setBulkAssignmentDialog(false);
             setSelectedEmployees([]);
+            setRefreshSeed([]);
           }).catch(err => {
             toastShadcn({
               variant: "destructive",
@@ -508,6 +510,7 @@ function FacilityMaintenanceSuggestion() {
         toastShadcn({
           description: "Successfully created facility log for facility: " + facilityId.toString(),
         });
+        setRefreshSeed([]);
       } catch (error: any) {
         toastShadcn({
           variant: "destructive",
