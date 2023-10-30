@@ -81,15 +81,16 @@ function SensorMaintenanceSuggestion() {
   useEffect(() => {
     apiJson.get(
       "http://localhost:3000/api/assetFacility/getSensorMaintenanceSuggestions"
-    ).catch(error => {
-    }).then(responseJson => {
-      console.log("responseJson", responseJson)
+    ).then(responseJson => {
+      console.log("getSensorMaintenanceSuggestions response", responseJson)
       let sortedList = responseJson["sensors"].sort((a: any, b: any) => {
         if (!a.predictedMaintenanceDate) return 1;
         if (!b.predictedMaintenanceDate) return -1;
         return compareDates(new Date(a.predictedMaintenanceDate), new Date(b.predictedMaintenanceDate))
       });
       setSensorList(sortedList);
+    }).catch(error => {
+      console.log("error",error)
     });
   }, [refreshSeed]);
 
