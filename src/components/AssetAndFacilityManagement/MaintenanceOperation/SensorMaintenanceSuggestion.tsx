@@ -91,7 +91,7 @@ function SensorMaintenanceSuggestion() {
       });
       setSensorList(sortedList);
     });
-  }, []);
+  }, [refreshSeed]);
 
   useEffect(() => {
     let obj: any = []
