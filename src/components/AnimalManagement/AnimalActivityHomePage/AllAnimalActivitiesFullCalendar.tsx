@@ -165,10 +165,10 @@ function AllAnimalActivitiesFullCalendar(
             curActivityType == "TRAINING"
               ? ["training overflow-hidden"]
               : curActivityType == "ENRICHMENT"
-                ? ["enrichment overflow-hidden"]
-                : curActivityType == "OBSERVATION"
-                  ? ["observation overflow-hidden"]
-                  : [],
+              ? ["enrichment overflow-hidden"]
+              : curActivityType == "OBSERVATION"
+              ? ["observation overflow-hidden"]
+              : [],
         };
       });
       return eventsToReturn;
@@ -231,7 +231,7 @@ function AllAnimalActivitiesFullCalendar(
           <div className="flex justify-between">
             {/* Legend */}
             <div className="mb-1 flex items-center gap-4 rounded border border-strokedark/20 px-4 text-sm">
-              <span>Legend: </span>
+              {/* <span>Legend: </span> */}
               <div className="flex items-center gap-2 text-[#0f3360]">
                 <div className="h-5 w-5 rounded bg-[#0f3360]" />
                 <span className="font-bold">Observation</span>
