@@ -52,7 +52,7 @@ interface EditZooEventFormProps {
 function EditZooEventForm(props: EditZooEventFormProps) {
   const { curZooEvent, refreshSeed, setRefreshSeed } = props;
 
-  const apiFormData = useApiFormData();
+
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
@@ -82,6 +82,10 @@ function EditZooEventForm(props: EditZooEventFormProps) {
   const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
     number | undefined
   >(curZooEvent.requiredNumberOfKeeper);
+
+  // Zoo event image
+  // const apiFormData = useApiFormData();
+  // const [imageFile, setImageFile] = useState<File | null>(null);
 
   // validate functions
   function validateIdentifierType(props: ValidityState) {
@@ -195,6 +199,12 @@ function EditZooEventForm(props: EditZooEventFormProps) {
 
   // end validate functions
 
+  // Zoo event image
+  // function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+  //   const file = event.target.files && event.target.files[0];
+  //   setImageFile(file);
+  // }
+
   // handle submit
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -216,6 +226,32 @@ function EditZooEventForm(props: EditZooEventFormProps) {
 
       if (updateFuture) {
 
+        // Update future with image
+        // if (imageFile) {
+        //   const formData = new FormData();
+        //   formData.append("file", imageFile || "");
+
+        //   try {
+        //     const response = await apiFormData.put(
+        //       `http://localhost:3000/api/zooEvent/updateZooEventIncludeFutureImage/${curZooEvent?.zooEventId}`,
+        //       formData
+        //     );
+        //     // success
+        //     toastShadcn({
+        //       description: "Successfully updated event",
+        //     });
+        //     navigate(-1);
+        //   } catch (error: any) {
+        //     toastShadcn({
+        //       variant: "destructive",
+        //       title: "Uh oh! Something went wrong.",
+        //       description:
+        //         "An error has occurred while editing zoo event details: \n" +
+        //         error.message,
+        //     });
+        //   }
+        // }
+
         const data = {
           eventName: eventName,
           eventDescription: eventDescription,
@@ -231,16 +267,52 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           eventEndDateTime: curZooEvent?.eventEndDateTime,
         };
 
-        const response = await apiJson.put(
-          `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
-          data
-        );
-        // success
-        toastShadcn({
-          description: "Successfully updated event",
-        });
-        navigate(-1);
+        try {
+          const response = await apiJson.put(
+            `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
+            data
+          );
+          // success
+          toastShadcn({
+            description: "Successfully updated event",
+          });
+          navigate(-1);
+        } catch (error: any) {
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while editing zoo event details: \n" +
+              error.message,
+          });
+        }
       } else {
+
+        // Update single with image
+        // if (imageFile) {
+        //   const formData = new FormData();
+        //   formData.append("file", imageFile || "");
+
+        //   try {
+        //     const response = await apiFormData.put(
+        //       `http://localhost:3000/api/zooEvent/updateZooEventSingleImage/${curZooEvent?.zooEventId}`,
+        //       formData
+        //     );
+        //     // success
+        //     toastShadcn({
+        //       description: "Successfully updated event",
+        //     });
+        //     navigate(-1);
+        //   } catch (error: any) {
+        //     toastShadcn({
+        //       variant: "destructive",
+        //       title: "Uh oh! Something went wrong.",
+        //       description:
+        //         "An error has occurred while editing zoo event details: \n" +
+        //         error.message,
+        //     });
+        //   }
+        // }
 
         const zooEventDetails = {
           zooEventId: curZooEvent?.zooEventId,
@@ -319,6 +391,34 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             {curZooEvent.eventName}
           </span>
         </div>
+
+        {/* Zoo Event Picture */}
+        {/* {curZooEvent.eventIsPublic &&
+          <Form.Field
+            name="zooEventImage"
+            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          >
+            <span className="font-medium">Current Image</span>
+            <img
+              src={
+                "http://localhost:3000/" +
+                curZooEvent.imageUrl
+              }
+              alt="Current zoo event image"
+              className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"
+            />
+            <Form.Label className="font-medium">
+              Change Zoo Event Image
+            </Form.Label>
+            <Form.Control
+              type="file"
+              placeholder="Change image"
+              required={false}
+              accept=".png, .jpg, .jpeg, .webp"
+              onChange={handleFileChange}
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+            />
+          </Form.Field>} */}
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
           {/* Event Name */}
