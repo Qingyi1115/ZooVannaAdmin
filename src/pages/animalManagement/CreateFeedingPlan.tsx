@@ -198,13 +198,17 @@ function CreateFeedingPlan() {
             <div>
               {unit == "GRAM" ? (
                 <span>
-                  {recoAmountForSpecificAnimal.recoAmt?.toLocaleString()} (g)
+                  {recoAmountForSpecificAnimal.recoAmt &&
+                    Number(recoAmountForSpecificAnimal.recoAmt)
+                      .toFixed(2)
+                      .toLocaleString()}{" "}
+                  (g)
                 </span>
               ) : (
                 <span>
-                  {(
-                    Number(recoAmountForSpecificAnimal.recoAmt) / 1000
-                  ).toLocaleString()}{" "}
+                  {(Number(recoAmountForSpecificAnimal.recoAmt) / 1000)
+                    .toFixed(2)
+                    .toLocaleString()}{" "}
                   (kg)
                 </span>
               )}
@@ -258,8 +262,8 @@ function CreateFeedingPlan() {
     }, 0);
 
     return unit == "GRAM"
-      ? sum.toLocaleString() + " (g)"
-      : (sum / 1000).toLocaleString() + " (kg)";
+      ? sum.toFixed(2).toLocaleString() + " (g)"
+      : (sum / 1000).toFixed(2).toLocaleString() + " (kg)";
   }
 
   const handleAmountChangeNewFoodItem = (
@@ -398,8 +402,8 @@ function CreateFeedingPlan() {
           curRecoAmt.recoAmt == "No dietary data found!"
             ? Number(0)
             : unitOfMeasurementNewFoodItem == "KG"
-            ? Number(curRecoAmt.recoAmt) / 1000
-            : Number(curRecoAmt.recoAmt);
+            ? Number((Number(curRecoAmt.recoAmt) / 1000).toFixed(2))
+            : Number(Number(curRecoAmt.recoAmt).toFixed(2));
       }
     }
     setCurFeedingItemsNewFeedSession(tempFeedingItemsNewFeedSession);
@@ -838,7 +842,7 @@ function CreateFeedingPlan() {
                             {item.foodCategory}:{" "}
                             {item.amount != 0 ? (
                               <span>
-                                {item.amount}{" "}
+                                {item.amount?.toFixed(2)}{" "}
                                 <span className="text-xs">{item.unit}</span>
                               </span>
                             ) : (

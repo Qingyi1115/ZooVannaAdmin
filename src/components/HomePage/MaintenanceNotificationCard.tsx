@@ -190,174 +190,186 @@ function MaintenanceNotificationCard() {
 
       <CardContent>
         <Accordion multiple activeIndex={[0, 1, 2]}>
+
+          {(employee.superAdmin || employee.generalStaff || employee.planningStaff) && (
+
           <AccordionTab
-            header={(employee.superAdmin || employee.generalStaff || employee.planningStaff) &&
+          header={(employee.superAdmin || employee.generalStaff || employee.planningStaff) &&
+            <Link
+              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+              to="/assetfacility/maintenance/facilityMaintenance"
+            >
+              {facilityList.length ? (
+                <div className="flex flex-row gap-2 text-m">
+                  <BsHouseExclamation className="text-xl font-bold" />
+                  <div>
+                    <b>{facilityList.length}</b> Facilities to maintain
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-row gap-2 text-green-700 text-m">
+                  <BsHouseExclamation className="text-xl font-bold" />
+                  <p className="font-bold">
+                    Facilities are all maintained!
+                  </p>
+                </div>
+              )}
+
+            </Link>
+
+          }>
+          {(employee.superAdmin || employee.generalStaff || employee.planningStaff) && facilityList &&
+            facilityList.map((facility) => {
+              return (
+                <ul className="space-y-2" >
+                  <li key={facility.facilityId}>
+                    <Link
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to="/assetfacility/maintenance/facilityMaintenance"
+                    >
+                      <div className="flex flex-col gap-1 text-m">
+                        <div className="flex flex-row gap-2 text-m font-semibold">
+                          <BsHouseExclamation />
+                          <p className="text-sm">
+                            <span>
+                              {facility.facilityName}
+                            </span>
+                          </p>
+                        </div>
+                        <p className="text-sm text-amber-500 font-bold">
+                          {new Date(
+                            facility.predictedMaintenanceDate
+                          ).toLocaleDateString()}
+                          {/* <br />
+                        {statusBodyTemplate(facility)} */}
+                        </p>
+                        <p className="text-xs">Suggested Maintenance Date</p>
+                      </div>
+                    </Link>
+                  </li>
+                </ul>
+              );
+            })
+          }
+          </AccordionTab>
+          )}
+
+          {(employee.superAdmin || employee.generalStaff || employee.planningStaff) && (
+
+            <AccordionTab header={(employee.superAdmin || employee.generalStaff || employee.planningStaff) && (
               <Link
                 className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                to="/assetfacility/maintenance/facilityMaintenance"
+                to="/assetfacility/maintenance/sensorMaintenance"
               >
-                {facilityList.length ? (
+                {sensorList.length ? (
                   <div className="flex flex-row gap-2 text-m">
-                    <BsHouseExclamation className="text-xl font-bold" />
-                    <div>
-                      <b>{facilityList.length}</b> Facilities to maintain
-                    </div>
+                    <BsBroadcast className="text-xl font-bold" />
+                    <p>
+                      <b>{sensorList.length}</b> Sensors to maintain
+                    </p>
                   </div>
                 ) : (
                   <div className="flex flex-row gap-2 text-green-700 text-m">
-                    <BsHouseExclamation className="text-xl font-bold" />
+                    <BsBroadcast className="text-xl font-bold" />
                     <p className="font-bold">
-                      Facilities are all maintained!
+                      Sensors are all maintained!
                     </p>
                   </div>
                 )}
-
               </Link>
+            )}>
+              {
+                sensorList && sensorList.map((sensor) => {
+                  return (
+                    <ul className="space-y-2" >
+                      <li key={sensor.sensorId}>
+                        <Link
+                          className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                          to="/assetfacility/maintenance/sensorMaintenance"
+                        >
+                          <div className="flex flex-col gap-1 text-m">
+                            <div className="flex flex-row gap-2 text-m font-semibold">
+                              <BsBroadcast />
+                              <p className="text-sm">
+                                <span className="text-sm">
+                                  {sensor.sensorName}
+                                </span>
+                              </p>
+                            </div>
+                            <p className="text-sm text-amber-500 font-bold">
+                              {new Date(
+                                sensor.predictedMaintenanceDate
+                              ).toLocaleDateString()}
+                              {/* <br />
+                            {statusBodyTemplate(sensor)} */}
+                            </p>
+                            <p className="text-xs">Suggested Maintenance Date</p>
+                          </div>
+                        </Link>
+                      </li>
+                    </ul>
+                  );
+                })}
+            </AccordionTab>
+          )}
 
-            }>
-            {(employee.superAdmin || employee.generalStaff || employee.planningStaff) && facilityList &&
-              facilityList.map((facility) => {
-                return (
-                  <ul className="space-y-2" >
-                    <li key={facility.facilityId}>
-                      <Link
-                        className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                        to="/assetfacility/maintenance/facilityMaintenance"
-                      >
-                        <div className="flex flex-col gap-1 text-m">
-                          <div className="flex flex-row gap-2 text-m font-semibold">
-                            <BsHouseExclamation />
-                            <p className="text-sm">
-                              <span>
-                                {facility.facilityName}
-                              </span>
-                            </p>
-                          </div>
-                          <p className="text-sm text-amber-500 font-bold">
-                            {new Date(
-                              facility.predictedMaintenanceDate
-                            ).toLocaleDateString()}
-                            {/* <br />
-                          {statusBodyTemplate(facility)} */}
-                          </p>
-                          <p className="text-xs">Suggested Maintenance Date</p>
+          {(employee.superAdmin || employee.keeper || employee.planningStaff)
+              && eventList && (
+
+                <AccordionTab header={(employee.superAdmin || employee.keeper || employee.planningStaff) &&
+                  <Link
+                    className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                    to="/zooevent/viewallzooevents"
+                  >
+                    {eventList.length ? (
+                      <div className="flex flex-row gap-2 text-m">
+                        <BsCalendarWeek className="text-xl font-bold" />
+                        <div>
+                          Assigned to <b>{eventList.length}</b> events
                         </div>
-                      </Link>
-                    </li>
-                  </ul>
-                );
-              })
-            }
-          </AccordionTab>
-          <AccordionTab header={(employee.superAdmin || employee.generalStaff || employee.planningStaff) && (
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="/assetfacility/maintenance/sensorMaintenance"
-            >
-              {sensorList.length ? (
-                <div className="flex flex-row gap-2 text-m">
-                  <BsBroadcast className="text-xl font-bold" />
-                  <p>
-                    <b>{sensorList.length}</b> Sensors to maintain
-                  </p>
-                </div>
-              ) : (
-                <div className="flex flex-row gap-2 text-green-700 text-m">
-                  <BsBroadcast className="text-xl font-bold" />
-                  <p className="font-bold">
-                    Sensors are all maintained!
-                  </p>
-                </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-row gap-2 text-green-700 text-m">
+                        <BsCalendarWeek className="text-xl font-bold" />
+                        <p className="font-bold">
+                          No assigned events!
+                        </p>
+                      </div>
+                    )}
+                    <p className="text-xs">Today</p>
+                  </Link>
+                }>
+                  {eventList.map((event) => {
+                      return (
+                        <ul className="space-y-2" >
+                          <li key={event.zooEventId}>
+                            <Link
+                              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                              to={`zooevent/viewzooeventdetails/${event.zooEventId}`}
+                            >
+                              <div className="flex flex-col gap-1 text-m">
+                                <div className="flex flex-row gap-2 text-m font-semibold">
+                                  <BsCalendarWeek />
+                                  <p className="text-sm">
+                                    <span>
+                                      {event.eventName}
+                                    </span>
+                                  </p>
+                                </div>
+                                <p className="text-sm text-amber-500 font-bold">
+                                  {new Date(
+                                    event.eventStartDateTime
+                                  ).toLocaleDateString()}
+                                </p>
+                                <p className="text-xs">Start Date</p>
+                              </div>
+                            </Link>
+                          </li>
+                        </ul>
+                      );
+                    })}
+                </AccordionTab>
               )}
-            </Link>
-          )}>
-            {(employee.superAdmin || employee.generalStaff || employee.planningStaff) &&
-              sensorList && sensorList.map((sensor) => {
-                return (
-                  <ul className="space-y-2" >
-                    <li key={sensor.sensorId}>
-                      <Link
-                        className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                        to="/assetfacility/maintenance/sensorMaintenance"
-                      >
-                        <div className="flex flex-col gap-1 text-m">
-                          <div className="flex flex-row gap-2 text-m font-semibold">
-                            <BsBroadcast />
-                            <p className="text-sm">
-                              <span className="text-sm">
-                                {sensor.sensorName}
-                              </span>
-                            </p>
-                          </div>
-                          <p className="text-sm text-amber-500 font-bold">
-                            {new Date(
-                              sensor.predictedMaintenanceDate
-                            ).toLocaleDateString()}
-                            {/* <br />
-                          {statusBodyTemplate(sensor)} */}
-                          </p>
-                          <p className="text-xs">Suggested Maintenance Date</p>
-                        </div>
-                      </Link>
-                    </li>
-                  </ul>
-                );
-              })}
-          </AccordionTab>
-          <AccordionTab header={(employee.superAdmin || employee.keeper || employee.planningStaff) &&
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="/zooevent/viewallzooevents"
-            >
-              {eventList.length ? (
-                <div className="flex flex-row gap-2 text-m">
-                  <BsCalendarWeek className="text-xl font-bold" />
-                  <div>
-                    Assigned to <b>{eventList.length}</b> events
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-row gap-2 text-green-700 text-m">
-                  <BsCalendarWeek className="text-xl font-bold" />
-                  <p className="font-bold">
-                    No assigned events!
-                  </p>
-                </div>
-              )}
-              <p className="text-xs">Today</p>
-            </Link>
-          }>
-            {(employee.superAdmin || employee.keeper || employee.planningStaff)
-              && eventList && eventList.map((event) => {
-                return (
-                  <ul className="space-y-2" >
-                    <li key={event.zooEventId}>
-                      <Link
-                        className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                        to={`zooevent/viewzooeventdetails/${event.zooEventId}`}
-                      >
-                        <div className="flex flex-col gap-1 text-m">
-                          <div className="flex flex-row gap-2 text-m font-semibold">
-                            <BsCalendarWeek />
-                            <p className="text-sm">
-                              <span>
-                                {event.eventName}
-                              </span>
-                            </p>
-                          </div>
-                          <p className="text-sm text-amber-500 font-bold">
-                            {new Date(
-                              event.eventStartDateTime
-                            ).toLocaleDateString()}
-                          </p>
-                          <p className="text-xs">Start Date</p>
-                        </div>
-                      </Link>
-                    </li>
-                  </ul>
-                );
-              })}
-          </AccordionTab>
         </Accordion>
         <div>
         </div>
