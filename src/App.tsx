@@ -131,6 +131,9 @@ import ZooEventHomePage from "./pages/eventManagement/ZooEventHomePage";
 import RevenueChart2 from "./components/SalesManagement/RevenueChart2";
 import RevenueChartFinal from "./components/SalesManagement/RevenueChartFinal";
 
+// Enclosure management page
+import CreateZooEnclosurePage from "./pages/enclosureManagement/CreateZooEnclosurePage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -1055,6 +1058,38 @@ function App() {
                     user ? <ViewZooEventDetails /> : <Navigate to="/login" />
                   }
                 />
+
+                {/* Enclosure Management */}
+                <Route
+                  path="/zooEnclosure/createnewzooEnclosure"
+                  element={
+                    user ? <CreateZooEnclosurePage /> : <Navigate to="/login" />
+                  }
+                />
+                {/* <Route
+                  path="/zooEnclosure/viewallzooEnclosures"
+                  element={
+                    user ? <ZooEnclosureHomePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooEnclosure/editzooEnclosure/:zooEnclosureId"
+                  element={
+                    user ? <EditZooEnclosurePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooEnclosure/viewzooEnclosuredetails/:zooEnclosureId"
+                  element={
+                    user ? <ViewZooEnclosureDetails /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooEnclosure/viewzooEnclosuredetails/:zooEnclosureId/:tab"
+                  element={
+                    user ? <ViewZooEnclosureDetails /> : <Navigate to="/login" />
+                  }
+                /> */}
               </Route>
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
