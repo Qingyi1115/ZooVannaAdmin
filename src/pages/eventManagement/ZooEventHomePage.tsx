@@ -170,6 +170,44 @@ function ZooEventHomePage() {
     }
   }, [selEventGroupList, selTitleGroupList]);
 
+  useEffect(() => {
+    const ty_all :string[] = [];
+
+    zooEventsList.filter(ze => selEventGroupList.find(et => ze.eventType == et)).forEach(ze=>{
+
+      if (ze.animalActivity) {
+        if (ze.animalActivity?.title !== undefined && !ty_all.find(title => title == ze.animalActivity?.title)) {
+          ty_all.push(ze.animalActivity?.title);
+        }
+      } else if (ze.feedingPlanSessionDetail) {
+        if (ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && !ty_all.find(title => title == ze.feedingPlanSessionDetail?.feedingPlan?.title)) {
+          ty_all.push(ze.feedingPlanSessionDetail?.feedingPlan?.title);
+        }
+      } else if (ze) {
+
+      }
+    });
+
+    setTitleGroupList(
+      ty_all
+    );
+
+    setSelTitleGroupList(
+      selTitleGroupList.filter(ti => {
+        return zooEventsList.filter(ze => selEventGroupList.find(et => ze.eventType == et)).find(ze=>{
+
+            if (ze.animalActivity) {
+              return ze.animalActivity?.title !== undefined && ze.animalActivity.title == ti;
+            } else if (ze.feedingPlanSessionDetail) {
+              return ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && ze.feedingPlanSessionDetail?.feedingPlan?.title == ti;
+            } else if (ze) {
+    
+            }
+        });
+      })
+    );
+  },[selEventGroupList])
+
   const menuLeft = useRef<Menu>(null);
   let items = [
     {
