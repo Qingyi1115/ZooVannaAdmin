@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/card";
 import { NavLink } from "react-router-dom";
 import { HiChevronRight } from "react-icons/hi";
-import Enclosure from "../../../models/Enclosure";
+import ZooEnclosure from "../../../models/ZooEnclosure";
 
 interface EnclosureCardProps {
-  curEnclosure: Enclosure;
+  curEnclosure: ZooEnclosure;
 }
 
 function EnclosureCard() {
