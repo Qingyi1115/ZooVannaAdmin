@@ -569,7 +569,7 @@ function MapLandingPage() {
                   <SelectValue placeholder="Facility type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectGroup id="facilityTypeFilterSelect">
+                  <SelectGroup className="h-64" id="facilityTypeFilterSelect">
                     <SelectLabel>Facility Type</SelectLabel>
                     <SelectItem key={"all"} value="All">
                       All
