@@ -389,8 +389,8 @@ function ViewZooEventDetails() {
       const data = {
         eventName: curZooEvent?.eventName,
         eventDescription: curZooEvent?.eventDescription,
-        eventIsPublic: true,
-        eventType: curZooEvent?.eventType,
+        eventIsPublic: true, 
+        eventType: curZooEvent?.eventType == "EMPLOYEE_FEEDING" ? "CUSTOMER_FEEDING" : curZooEvent?.eventType,
         eventStartDateTime: eventStartDateTime?.getTime(),
         requiredNumberOfKeeper: curZooEvent?.requiredNumberOfKeeper,
 
@@ -411,6 +411,7 @@ function ViewZooEventDetails() {
           description: "Successfully updated event",
         });
         setMakePublicDialog(false);
+        setRefreshSeed([]);
       }).catch(error => {
         // got error
         toastShadcn({
@@ -424,9 +425,10 @@ function ViewZooEventDetails() {
     } else {
       const zooEventDetails = {
         zooEventId: curZooEvent?.zooEventId,
-        eventIsPublic: false,
+        eventIsPublic: true,
         eventNotificationDate: eventNotificationDate?.getTime(),
         eventEndDateTime: eventEndDateTime?.getTime(),
+        eventType: curZooEvent?.eventType == "EMPLOYEE_FEEDING" ? "CUSTOMER_FEEDING" : curZooEvent?.eventType,
         imageUrl
 
       };
@@ -440,6 +442,7 @@ function ViewZooEventDetails() {
           description: "Successfully updated event",
         });
         setMakePublicDialog(false);
+        setRefreshSeed([]);
       }).catch(error => {
         // got error
         toastShadcn({
