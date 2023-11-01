@@ -31,40 +31,35 @@ import Species from "../../../models/Species";
 
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { Nullable } from "primereact/ts-helpers";
+import Employee from "../../../models/Employee";
 
-function CreateZooEventForm() {
+interface CreateLeaveEventFormProps {
+  curEmployee: Employee;
+  refreshSeed: number;
+  setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function CreateLeaveEventForm(props: CreateLeaveEventFormProps) {
   const apiFormData = useApiFormData();
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
+  const { curEmployee, refreshSeed, setRefreshSeed } = props;
 
   const [activityType, setActivityType] = useState<string | undefined>(
     undefined
   );
-  const [title, setTitle] = useState<string>("");
-  const [details, setDetails] = useState<string>("");
-  const [date, setDate] = useState<Nullable<Date>>(null);
+  const [eventName, setEventName] = useState<string>("");
+  const [eventDescription, setEventDescription] = useState<string>("");
+  const [leaveDates, setLeaveDates] = useState<Date[]>([]);
   const [session, setSession] = useState<string | undefined>(undefined);
   const [durationInMinutes, setDurationInMinutes] = useState<
     number | undefined
   >(undefined);
 
   // validate functions
-  function validateIdentifierType(props: ValidityState) {
-    if (props != undefined) {
-      if (activityType == undefined) {
-        return (
-          <div className="font-medium text-danger">
-            * Please select an activity type!
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
 
-  function validateTitle(props: ValidityState) {
+  function validateEventName(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
@@ -76,12 +71,12 @@ function CreateZooEventForm() {
     return null;
   }
 
-  function validateDetails(props: ValidityState) {
+  function validateEventDescription(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
           <div className="font-medium text-danger">
-            * Please enter activity details!
+            * Please enter a valid reason
           </div>
         );
       }
@@ -92,29 +87,15 @@ function CreateZooEventForm() {
 
   function validateDate(props: ValidityState) {
     if (props != undefined) {
-      if (date == null) {
+      if (leaveDates == null) {
         return (
           <div className="font-medium text-danger">
-            * Please enter the date of the activity
+            * Please enter the leave dates
           </div>
         );
       }
     }
     // add any other cases here
-    return null;
-  }
-
-  function validateSession(props: ValidityState) {
-    if (props != undefined) {
-      if (session == undefined) {
-        return (
-          <div className="font-medium text-danger">
-            * Please select a session timing!
-          </div>
-        );
-      }
-      // add any other cases here
-    }
     return null;
   }
 
@@ -144,48 +125,36 @@ function CreateZooEventForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    let dateInMilliseconds = date?.getTime();
-
-    // if (date instanceof Date) {
-    //   const milliseconds = date.getTime(); // Convert to Unix epoch
-    //   console.log(milliseconds); // This will print the number of milliseconds
-    // } else {
-    //   console.error('Invalid date format.');
-    // }
-
-    const newZooEvent = {
-      activityType,
-      title,
-      details,
-      date: dateInMilliseconds,
-      session,
-      durationInMinutes,
+    const newLeaveEvent = {
+      eventName,
+      eventDescription,
+      eventStartDate: leaveDates[0].getTime(),
+      eventEndDate: leaveDates[1].getTime()
     };
 
-    const createZooEventApi = async () => {
+    const createLeaveEventApi = async () => {
       try {
-        const response = await apiJson.post(
-          "http://localhost:3000/api/zooevent/createZooEvent",
-          newZooEvent
+        const response = await apiJson.put(
+          `http://localhost:3000/api/zooevent/createEmployeeAbsence/${curEmployee.employeeId}`,
+          newLeaveEvent
         );
         // success
         toastShadcn({
-          description: "Successfully created a new event",
+          description: "Successfully recorded leave!",
         });
-        const redirectUrl = `/animal/animalactivities/`;
-        navigate(redirectUrl);
+        navigate(-1);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while creating new event: \n" +
+            "An error has occurred while recording leave: \n" +
             error.message,
         });
       }
     };
-    createZooEventApi();
+    createLeaveEventApi();
   }
 
   return (
@@ -197,7 +166,6 @@ function CreateZooEventForm() {
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            {/* <NavLink className="flex" to={`/animal/viewallanimals`}> */}
             <Button
               onClick={() => navigate(-1)}
               variant={"outline"}
@@ -206,115 +174,55 @@ function CreateZooEventForm() {
             >
               Back
             </Button>
-            {/* </NavLink> */}
-            <span className="self-center text-title-xl font-bold">
-              Create Event
+            <span className="self-center text-lg text-graydark">
+              Record Leave
             </span>
             <Button disabled className="invisible">
               Back
             </Button>
           </div>
           <Separator />
+          <span className="mt-4 self-center text-title-xl font-bold">
+            {curEmployee.employeeName}
+          </span>
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Title */}
+          {/* Event Name */}
           <FormFieldInput
             type="text"
-            formFieldName="title"
+            formFieldName="eventName"
             label="Title"
             required={true}
-            placeholder="e.g., Chase yoga ball, mud bath..."
+            placeholder=""
             pattern={undefined}
-            value={title}
-            setValue={setTitle}
-            validateFunction={validateTitle}
-          />
-
-          {/* Activity Type */}
-          <FormFieldSelect
-            formFieldName="activityType"
-            label="Activity Type"
-            required={true}
-            placeholder="Select an activity type..."
-            valueLabelPair={Object.keys(ActivityType).map((activiTypeKey) => [
-              ActivityType[
-                activiTypeKey as keyof typeof ActivityType
-              ].toString(),
-              ActivityType[
-                activiTypeKey as keyof typeof ActivityType
-              ].toString(),
-            ])}
-            value={activityType}
-            setValue={setActivityType}
-            validateFunction={validateIdentifierType}
+            value={eventName}
+            setValue={setEventName}
+            validateFunction={validateEventName}
           />
         </div>
-
-        {/* Details */}
-        <Form.Field
-          name="physicalDefiningCharacteristics"
-          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-        >
-          <Form.Label className="font-medium">Details</Form.Label>
-          <Form.Control
-            asChild
-            value={details}
-            required={true}
-            onChange={(e) => setDetails(e.target.value)}
-            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
-          >
-            <textarea
-              rows={3}
-              placeholder="e.g., Leave yoga ball in the pen and pushes it towards the tiger,..."
-            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
-            />
-          </Form.Control>
-          <Form.ValidityState>{validateDetails}</Form.ValidityState>
-        </Form.Field>
-
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Session */}
-          <FormFieldSelect
-            formFieldName="session"
-            label="Session"
-            required={true}
-            placeholder="Select a session timing..."
-            valueLabelPair={Object.keys(EventTimingType).map(
-              (eventTimingTypeKey) => [
-                EventTimingType[
-                  eventTimingTypeKey as keyof typeof EventTimingType
-                ].toString(),
-                EventTimingType[
-                  eventTimingTypeKey as keyof typeof EventTimingType
-                ].toString(),
-              ]
-            )}
-            value={session}
-            setValue={setSession}
-            validateFunction={validateSession}
-          />
-
-          {/* Date */}
+          {/* Start Date */}
           <Form.Field
             name="dateOfMeasure"
             id="dateField"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <Form.Label className="font-medium">Date</Form.Label>
+            <Form.Label className="font-medium">Leave Dates</Form.Label>
             <Form.Control
               className="hidden"
               type="text"
-              value={date?.toString()}
+              value={leaveDates?.toString()}
               required={true}
               onChange={() => null}
             ></Form.Control>
             <Calendar
-              value={date}
+              selectionMode="range"
+              value={leaveDates}
               className="w-fit"
               onChange={(e: any) => {
                 if (e && e.value !== undefined) {
-                  setDate(e.value);
+                  setLeaveDates(e.value);
 
                   const element = document.getElementById("dateField");
                   if (element) {
@@ -330,19 +238,28 @@ function CreateZooEventForm() {
             <Form.ValidityState>{validateDate}</Form.ValidityState>
           </Form.Field>
         </div>
+        {/* Event Description */}
+        <Form.Field
+          name="eventDescription"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">Reason</Form.Label>
+          <Form.Control
+            asChild
+            value={eventDescription}
+            required={true}
+            onChange={(e) => setEventDescription(e.target.value)}
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+          >
+            <textarea
+              rows={3}
+              placeholder="Sick, Maternity, Family Emergency etc..."
+            />
+          </Form.Control>
+          <Form.ValidityState>{validateEventDescription}</Form.ValidityState>
+        </Form.Field>
 
-        {/* Duration in minutes */}
-        <FormFieldInput
-          type="number"
-          formFieldName="durationInMinutes"
-          label={`Duration (minutes)`}
-          required={true}
-          pattern={undefined}
-          placeholder="e.g., 8"
-          value={durationInMinutes}
-          setValue={setDurationInMinutes}
-          validateFunction={validateDurationInMinutes}
-        />
+
 
         <Form.Submit asChild>
           <Button
@@ -357,4 +274,4 @@ function CreateZooEventForm() {
   );
 }
 
-export default CreateZooEventForm;
+export default CreateLeaveEventForm;

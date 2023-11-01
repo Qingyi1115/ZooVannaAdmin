@@ -5,12 +5,13 @@ import useApiJson from "../../hooks/useApiJson";
 import Employee from "src/models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
-import { NavLink } from "react-router-dom";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { NavLink, useNavigate } from "react-router-dom";
+import { HiCheck, HiClipboard, HiClipboardList, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
 import { Separator } from "@/components/ui/separator";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 {
   /*const toast = useRef<Toast>(null);*/
@@ -26,7 +27,7 @@ function AllEmployeesDatatable() {
     day: "2-digit",
   };
 
-  let employee: Employee = {
+  let emptyEmployee: Employee = {
     employeeId: -1,
     employeeName: "",
     employeeEmail: "",
@@ -43,12 +44,15 @@ function AllEmployeesDatatable() {
   const toast = useRef<Toast>(null);
 
   const [employeeList, setEmployeeList] = useState<Employee[]>([]);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee>(emptyEmployee);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeResignationDialog, setEmployeeResignationDialog] =
     useState<boolean>(false);
   const toastShadcn = useToast().toast;
+
+  const employee = useAuthContext().state.user?.employeeData;
+  const navigate = useNavigate();
 
   const exportCSV = () => {
     dt.current?.exportCSV();
@@ -145,18 +149,29 @@ function AllEmployeesDatatable() {
     setEmployeeResignationDialog(true);
   };
 
-  const actionBodyTemplate = (employee: Employee) => {
-    console.log(employee.dateOfResignation);
+  const actionBodyTemplate = (rowEmployee: Employee) => {
+    console.log(rowEmployee.dateOfResignation);
     return (
       <React.Fragment>
-        <NavLink
-          to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}
-        >
-          <Button className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
-          </Button>
-        </NavLink>
-        {employee.dateOfResignation ? (
+        <Button
+          onClick={() => {
+            navigate(`/employeeAccount/viewEmployees/`, { replace: true })
+            navigate(`/employeeAccount/viewEmployeeDetails/${rowEmployee.employeeId}`)
+          }}
+          className="mr-2">
+          <HiEye className="mx-auto" />
+        </Button>
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATION_MANAGER") &&
+          <Button
+            variant={"outline"}
+            onClick={() => {
+              navigate(`/employeeAccount/viewEmployees/`, { replace: true })
+              navigate(`/zooevent/createleaveevent/${rowEmployee.employeeId}`)
+            }}
+            className="mr-2">
+            <HiClipboardList className="mx-auto" />
+          </Button>}
+        {rowEmployee.dateOfResignation ? (
           <Button disabled variant={"destructive"}>
             <HiTrash className="mx-auto" />
             <span>Disabled</span>
@@ -165,7 +180,7 @@ function AllEmployeesDatatable() {
           <Button
             variant={"destructive"}
             className="mr-2"
-            onClick={() => confirmEmployeeResignation(employee)}
+            onClick={() => confirmEmployeeResignation(rowEmployee)}
           >
             <HiTrash className="mx-auto" />
           </Button>
@@ -260,7 +275,7 @@ function AllEmployeesDatatable() {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "9rem" }}
+              style={{ minWidth: "14rem" }}
             ></Column>
           </DataTable>
         </div>

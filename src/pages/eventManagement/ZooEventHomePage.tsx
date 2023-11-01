@@ -110,11 +110,11 @@ function ZooEventHomePage() {
       const historySelEventGroup = localStorage.getItem("selEventGroupList");
       let newGp = allEventGroup.filter(gp => selEventGroupList.includes(gp));
 
-      if (selEventGroupList.length == 0 && historySelEventGroup){
+      if (selEventGroupList.length == 0 && historySelEventGroup) {
         newGp = allEventGroup.filter(gp => JSON.parse(historySelEventGroup).includes(gp));
       }
 
-      if ( newGp.length == 0) {
+      if (newGp.length == 0) {
         setSelEventGroupList(allEventGroup);
       } else {
         setSelEventGroupList(newGp);
@@ -124,10 +124,10 @@ function ZooEventHomePage() {
       const historySelTitleGroupList = localStorage.getItem("selTitleGroupList");
       let newTi = allTitleGroups.filter(ti => selTitleGroupList.includes(ti));
 
-      if (selEventGroupList.length == 0 && historySelTitleGroupList){
+      if (selEventGroupList.length == 0 && historySelTitleGroupList) {
         newTi = allTitleGroups.filter(ti => JSON.parse(historySelTitleGroupList).includes(ti));
       }
-      
+
       if (newTi.length == 0) {
         setSelTitleGroupList(allTitleGroups);
       } else {
@@ -163,17 +163,17 @@ function ZooEventHomePage() {
         }
       })
     )
-    if (!newPage){
-      console.log("set stuff", selEventGroupList , selTitleGroupList)
+    if (!newPage) {
+      console.log("set stuff", selEventGroupList, selTitleGroupList)
       localStorage.setItem('selEventGroupList', JSON.stringify(selEventGroupList));
       localStorage.setItem('selTitleGroupList', JSON.stringify(selTitleGroupList));
     }
   }, [selEventGroupList, selTitleGroupList]);
 
   useEffect(() => {
-    const ty_all :string[] = [];
+    const ty_all: string[] = [];
 
-    zooEventsList.filter(ze => selEventGroupList.find(et => ze.eventType == et)).forEach(ze=>{
+    zooEventsList.filter(ze => selEventGroupList.find(et => ze.eventType == et)).forEach(ze => {
 
       if (ze.animalActivity) {
         if (ze.animalActivity?.title !== undefined && !ty_all.find(title => title == ze.animalActivity?.title)) {
@@ -194,19 +194,19 @@ function ZooEventHomePage() {
 
     setSelTitleGroupList(
       selTitleGroupList.filter(ti => {
-        return zooEventsList.filter(ze => selEventGroupList.find(et => ze.eventType == et)).find(ze=>{
+        return zooEventsList.filter(ze => selEventGroupList.find(et => ze.eventType == et)).find(ze => {
 
-            if (ze.animalActivity) {
-              return ze.animalActivity?.title !== undefined && ze.animalActivity.title == ti;
-            } else if (ze.feedingPlanSessionDetail) {
-              return ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && ze.feedingPlanSessionDetail?.feedingPlan?.title == ti;
-            } else if (ze) {
-    
-            }
+          if (ze.animalActivity) {
+            return ze.animalActivity?.title !== undefined && ze.animalActivity.title == ti;
+          } else if (ze.feedingPlanSessionDetail) {
+            return ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && ze.feedingPlanSessionDetail?.feedingPlan?.title == ti;
+          } else if (ze) {
+
+          }
         });
       })
     );
-  },[selEventGroupList])
+  }, [selEventGroupList])
 
   const menuLeft = useRef<Menu>(null);
   let items = [
@@ -230,14 +230,17 @@ function ZooEventHomePage() {
         }
       ]
     },
-    // {
-    //   label: 'Public',
-    //   items: [{
-    //     label: 'None',
-    //     icon: '',
-    //     command: () => { }
-    //   }]
-    // },
+    {
+      label: 'Public',
+      items: [{
+        label: 'Public Event',
+        icon: '',
+        command: () => {
+          navigate(`/zooevent/viewallzooevents/`, { replace: true })
+          navigate(`/zooevent/createpubliczooevent/`)
+        }
+      }]
+    },
   ];
 
   return (

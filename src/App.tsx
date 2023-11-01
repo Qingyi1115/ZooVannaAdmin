@@ -124,12 +124,14 @@ import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrde
 import SalesChartPage from "./pages/sales/SalesChartPage";
 
 //Event management page
-import CreateZooEventPage from "./pages/eventManagement/CreateZooEventPage";
+import CreateZooEventPage from "./pages/eventManagement/CreatePublicZooEventPage";
 import EditZooEventPage from "./pages/eventManagement/EditZooEventPage";
 import ViewZooEventDetails from "./pages/eventManagement/ViewZooEventDetails";
 import ZooEventHomePage from "./pages/eventManagement/ZooEventHomePage";
 import RevenueChart2 from "./components/SalesManagement/RevenueChart2";
 import RevenueChartFinal from "./components/SalesManagement/RevenueChartFinal";
+import CreateLeaveEventPage from "./pages/eventManagement/CreateLeaveEventPage";
+import CreatePublicZooEventPage from "./pages/eventManagement/CreatePublicZooEventPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -1026,9 +1028,15 @@ function App() {
                 />
                 {/* Event Management */}
                 <Route
-                  path="/zooevent/createnewzooevent"
+                  path="/zooevent/createleaveevent/:employeeId"
                   element={
-                    user ? <CreateZooEventPage /> : <Navigate to="/login" />
+                    user ? <CreateLeaveEventPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/createpubliczooevent"
+                  element={
+                    user ? <CreatePublicZooEventPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
