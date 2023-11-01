@@ -11,7 +11,7 @@ interface ZooEvent {
   eventName: string;
   eventDescription: string;
   eventIsPublic: boolean;
-  eventType?: EventType;
+  eventType?: EventType | string;
   eventStartDateTime: Date;
   requiredNumberOfKeeper: number;
 
