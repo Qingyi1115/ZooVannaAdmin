@@ -40,6 +40,7 @@ function MaintenanceNotificationCard() {
   const [speciesList, setSpeciesList] = useState<Species[]>([]);
   const [animalList, setAnimalList] = useState<Animal[]>([]);
   const [facilityList, setFacilityList] = useState<any[]>([]);
+  const [facilityReportList, setFacilityReportList] = useState<any[]>([]);
   const [sensorList, setSensorList] = useState<any[]>([]);
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
   const [eventList, setEventList] = useState<any[]>([]);
@@ -162,6 +163,27 @@ function MaintenanceNotificationCard() {
         });
         setEventList(assignedEvents);
         console.log(assignedEvents)
+      });
+  }, [refreshSeed]);
+
+  useEffect(() => {
+    if (
+      !(
+        employee.superAdmin ||
+        employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || 
+        employee.generalStaff 
+      )
+    )
+      return;
+    apiJson
+      .get(
+        "http://localhost:3000/api/assetFacility/getAllNonViewedCustomerReportLogs")
+      .catch((error) => {
+        console.log(error);
+      })
+      .then((responseJson) => {
+        console.log("getAllNonViewedCustomerReportLogs", responseJson)
+        setFacilityReportList(responseJson.customerReportLogs);
       });
   }, [refreshSeed]);
 
@@ -304,6 +326,62 @@ function MaintenanceNotificationCard() {
                             {statusBodyTemplate(sensor)} */}
                             </p>
                             <p className="text-xs">Suggested Maintenance Date</p>
+                          </div>
+                        </Link>
+                      </li>
+                    </ul>
+                  );
+                })}
+            </AccordionTab>
+          )}
+
+          {(employee.superAdmin || employee.generalStaff || employee.planningStaff) && (
+
+            <AccordionTab header={(employee.superAdmin || employee.generalStaff || employee.planningStaff) && (
+              <Link
+                className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                to="/assetfacility/maintenance/sensorMaintenance"
+              >
+                {facilityReportList.length ? (
+                  <div className="flex flex-row gap-2 text-m">
+                    <BsBroadcast className="text-xl font-bold" />
+                    <p>
+                      <b>{facilityReportList.length}</b> Customer Report Logs
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex flex-row gap-2 text-green-700 text-m">
+                    <BsBroadcast className="text-xl font-bold" />
+                    <p className="font-bold">
+                      No Customer Reports!
+                    </p>
+                  </div>
+                )}
+              </Link>
+            )}>
+              {
+                facilityReportList && facilityReportList.map((report) => {
+                  return (
+                    <ul className="space-y-2" >
+                      <li key={report.customerReportLogId}>
+                        <Link
+                          className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                          to="/assetfacility/maintenance/sensorMaintenance"
+                        >
+                          <div className="flex flex-col gap-1 text-m">
+                            <div className="flex flex-row gap-2 text-m font-semibold">
+                              <BsBroadcast />
+                              <p className="text-sm">
+                                <span className="text-sm">
+                                  {report.title}
+                                </span>
+                              </p>
+                            </div>
+                            <p className="text-sm font-bold">
+                              {new Date(
+                                report.dateTime
+                              ).toLocaleDateString()}
+                            </p>
                           </div>
                         </Link>
                       </li>
