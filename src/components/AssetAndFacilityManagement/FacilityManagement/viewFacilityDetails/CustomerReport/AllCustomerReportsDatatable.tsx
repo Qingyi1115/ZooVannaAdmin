@@ -42,13 +42,13 @@ function AllCustomerReportLogsDatatable(props: AllCustomerReportLogsDatatablePro
   const toastShadcn = useToast().toast;
 
   // Get all customer reports
-  // useEffect(() => {
-  //   apiJson.post("http://localhost:3000/api/assetFacility/getAllCustomerReportLog", { includes: [] }).catch(e => {
-  //     console.log(e);
-  //   }).then(res => {
-  //     setCustomerReportLogList(res["customerReportLogs"]);
-  //   })
-  // }, []);
+  useEffect(() => {
+    apiJson.get("http://localhost:3000/api/assetFacility/getAllCustomerReportLogs").catch(e => {
+      console.log(e);
+    }).then(res => {
+      setCustomerReportLogList(res["customerReportLogs"]);
+    })
+  }, []);
 
   //
   const exportCSV = () => {
