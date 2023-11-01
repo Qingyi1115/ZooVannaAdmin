@@ -8,7 +8,7 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import useApiJson from "../../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiOutlineMail, HiOutlineMailOpen, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink, useParams } from "react-router-dom";
@@ -16,6 +16,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import CustomerReportLog from "../../../../../models/CustomerReportLog";
 import Facility from "../../../../../models/Facility";
+import { ToggleButton } from "primereact/togglebutton";
+import { BsWrenchAdjustable } from "react-icons/bs";
 
 interface AllCustomerReportsDatatableByFacilityProps {
   curFacility: Facility;
@@ -40,6 +42,7 @@ function AllCustomerReportsDatatableByFacility(props: AllCustomerReportsDatatabl
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<CustomerReportLog[]>>(null);
   const toastShadcn = useToast().toast;
+  const [checkedList, setCheckedList] = useState([]);
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -54,6 +57,7 @@ function AllCustomerReportsDatatableByFacility(props: AllCustomerReportsDatatabl
     }).then(res => {
       console.log("getAllCustomerReportLogsByFacilityId", res)
       setCustomerReportLogList(res["customerReportLogs"]);
+      setCheckedList(res["customerReportLogs"].filter(log=>log.viewed).map(log=>log.customerReportLogId));
     })
   }, [curFacility]);
 
@@ -144,6 +148,34 @@ function AllCustomerReportsDatatableByFacility(props: AllCustomerReportsDatatabl
           <HiTrash className="mx-auto" />
 
         </Button>
+
+        
+        <ToggleButton
+                checked={checkedList.includes(customerReportLog.customerReportLogId)}
+                onChange={(e) => {
+                  if (!e.value){
+                    setCheckedList(
+                      checkedList.filter(id=>id  != customerReportLog.customerReportLogId)
+                    );
+                  }else{
+                    const a = []
+                    for (const i of checkedList) a.push(i);
+                    a.push(customerReportLog.customerReportLogId)
+                    setCheckedList(
+                      a
+                    );
+                  }
+                  apiJson.put("http://localhost:3000/api/assetFacility/markCustomerReportLogsViewed", {customerReportLogIds:[customerReportLog.customerReportLogId], viewed:e.value});
+                }}
+                onClick={() => {
+
+                }}
+                className="absolute top-5 right-20"
+                onIcon={<HiOutlineMail />}
+                offIcon={<HiOutlineMailOpen />}>
+                <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+        </ToggleButton >
+
       </React.Fragment>
     );
   };

@@ -44,6 +44,7 @@ function AllCustomerReportsDatatable() {
   const dt = useRef<DataTable<CustomerReportLog[]>>(null);
   const toastShadcn = useToast().toast;
   const [checked, setChecked] = useState(false);
+  const [checkedList, setCheckedList] = useState([]);
   const employee = useAuthContext().state.user?.employeeData;
 
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -59,6 +60,7 @@ function AllCustomerReportsDatatable() {
     }).then(res => {
       console.log("getAllNonViewedCustomerReportLogs", res)
       setCustomerReportLogList(res["customerReportLogs"]);
+      setCheckedList(res["customerReportLogs"].filter(log=>log.viewed).map(log=>log.customerReportLogId));
     })
   }, []);
 
@@ -225,8 +227,21 @@ function AllCustomerReportsDatatable() {
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
             (
               <ToggleButton
-                checked={customerReportLog.viewed}
-                onChange={(e) => setChecked(e.value)}
+                checked={checkedList.includes(customerReportLog.customerReportLogId)}
+                onChange={(e) => {
+                  if (!e.value){
+                    setCheckedList(
+                      checkedList.filter(id=>id  != customerReportLog.customerReportLogId)
+                    )
+                  }else{
+                    const a = []
+                    for (const i of checkedList) a.push(i);
+                    a.push(customerReportLog.customerReportLogId)
+                    setCheckedList(
+                      a
+                    )
+                  }
+                }}
                 onClick={() => {
 
                 }}
