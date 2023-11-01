@@ -623,7 +623,7 @@ function FacilityMaintenanceSuggestion() {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "9rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>
           <Dialog
