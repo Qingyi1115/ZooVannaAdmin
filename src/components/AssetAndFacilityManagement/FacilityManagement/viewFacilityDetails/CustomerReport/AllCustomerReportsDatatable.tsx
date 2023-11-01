@@ -43,12 +43,13 @@ function AllCustomerReportLogsDatatable(props: AllCustomerReportLogsDatatablePro
 
   // Get all customer reports
   useEffect(() => {
-    apiJson.get("http://localhost:3000/api/assetFacility/getAllCustomerReportLogs").catch(e => {
-      console.log(e);
+    apiJson.get(`http://localhost:3000/api/assetFacility/getAllCustomerReportLogsByFacilityId/${curFacility.facilityId}`).catch(e => {
+      console.log("error",e);
     }).then(res => {
+      console.log("getAllCustomerReportLogsByFacilityId", res)
       setCustomerReportLogList(res["customerReportLogs"]);
     })
-  }, []);
+  }, [curFacility]);
 
   //
   const exportCSV = () => {
