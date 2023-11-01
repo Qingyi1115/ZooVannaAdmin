@@ -63,7 +63,7 @@ function AllCustomerReportsDatatable() {
     }).then(res => {
       console.log("getAllNonViewedCustomerReportLogs", res)
       setCustomerReportLogList(res["customerReportLogs"]);
-      setCheckedList(res["customerReportLogs"].filter(log=>log.viewed).map(log=>log.customerReportLogId));
+      setCheckedList(res["customerReportLogs"].filter((customerReportLog: CustomerReportLog) => customerReportLog.viewed).map((customerReportLog: CustomerReportLog) => customerReportLog.customerReportLogId));
     })
   }, [refreshSeed]);
 
@@ -113,6 +113,7 @@ function AllCustomerReportsDatatable() {
         });
         setCustomerReportLogList(_customerReportLog);
         setSelectedCustomerReportLog(emptyCustomerReportLog);
+        setRefreshSeed([]);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -145,9 +146,9 @@ function AllCustomerReportsDatatable() {
       `http://localhost:3000/api/assetfacility/markCustomerReportLogsViewed/`, { customerReportLogIds: [selectedCustomerReportLog.customerReportLogId], viewed: true })
       .then(res => {
         console.log("markCustomerReportLogsViewed", res);
-        setRefreshSeed([]);
         hideViewedCustomerReportLogDialog();
         setSelectedCustomerReportLog(emptyCustomerReportLog);
+        setRefreshSeed([]);
       })
       .catch(e => console.log(e));
   }
@@ -168,25 +169,37 @@ function AllCustomerReportsDatatable() {
   const actionBodyTemplate = (customerReportLog: CustomerReportLog) => {
     return (
       <React.Fragment>
-        <NavLink to={`/assetcustomerReportLog/viewcustomerReportLogdetails/${customerReportLog.customerReportLogId}`}>
-          <Button variant={"outline"} className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
+        <ToggleButton
+          checked={checkedList.includes(customerReportLog.customerReportLogId)}
+          onChange={(e) => {
+            if (e.value) {
+              setCheckedList(
+                checkedList.filter(id => id != customerReportLog.customerReportLogId)
+              );
+            } else {
+              const a = []
+              for (const i of checkedList) a.push(i);
+              a.push(customerReportLog.customerReportLogId)
+              setCheckedList(a);
+            }
+            apiJson.put("http://localhost:3000/api/assetFacility/markCustomerReportLogsViewed", { customerReportLogIds: [customerReportLog.customerReportLogId], viewed: e.value });
+            setRefreshSeed([]);
+          }}
+          onClick={() => {
 
-          </Button>
-        </NavLink>
-        <NavLink to={`/assetcustomerReportLog/editcustomerReportLog/${customerReportLog.customerReportLogId}`}>
-          <Button className="mr-1">
-            <HiPencil className="mr-1" />
+          }}
+          className="mr-2 h-10"
+          onLabel=""
+          offLabel=""
+          onIcon="pi pi-exclamation-circle"
+          offIcon="pi pi-check-circle" />
 
-          </Button>
-        </NavLink>
         <Button
           variant={"destructive"}
           className="mr-2"
           onClick={() => confirmDeletecustomerReportLog(customerReportLog)}
         >
           <HiTrash className="mx-auto" />
-
         </Button>
       </React.Fragment>
     );
@@ -261,23 +274,14 @@ function AllCustomerReportsDatatable() {
             {customerReportLog.dateTime ? "Date created: " + new Date(customerReportLog.dateTime).toLocaleString() : ""}
             <p></p>{customerReportLog.inHouse?.facility ? "Reported for: " + customerReportLog.inHouse?.facility.facilityName : ""}
           </div>}>
-          {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
-            (
-              <ToggleButton
-                checked={checked}
-                onChange={(e) => setChecked(e.value)}
-                onClick={() => {
 
-                }}
-                className="absolute top-5 right-20 h-10"
-                onLabel="Mark as Viewed"
-                offLabel="Viewed"
-                onIcon="pi pi-exclamation-circle"
-                offIcon="pi pi-check-circle">
-              </ToggleButton >
-            )} */}
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
-            (
+            (customerReportLog.viewed ?
+              <Button
+                disabled
+                className="absolute top-5 right-20">
+                <BsCheckCircle className="mx-auto" />
+              </Button > :
               <Button
                 onClick={() => {
                   confirmViewedcustomerReportLog(customerReportLog);
@@ -320,7 +324,6 @@ function AllCustomerReportsDatatable() {
         <div className="">
 
           <div className="">
-
             <DataView
               value={customerReportLogList}
               itemTemplate={itemTemplate}
@@ -337,7 +340,9 @@ function AllCustomerReportsDatatable() {
             />
           </div>
 
-          {/* <DataTable
+          {/* 
+          <br/
+          <DataTable
             ref={dt}
             value={customerReportLogList}
             selection={selectedCustomerReportLog}
