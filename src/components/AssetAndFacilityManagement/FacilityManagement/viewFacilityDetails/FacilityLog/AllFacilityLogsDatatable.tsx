@@ -264,13 +264,13 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
       <div>
         <Card
           // className="my-4 relative"
-          className={(facilityLog.generalStaffs.find(generalStaff => generalStaff.employee.employeeId == employee.employeeId)) && facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET ? "my-4 relative bg-red-100 border-stroke" : "my-4 relative"}
+          className={(facilityLog.generalStaffs.find(generalStaff => generalStaff.employee?.employeeId == employee.employeeId)) && facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET ? "my-4 relative bg-red-100 border-stroke" : "my-4 relative"}
           title={facilityLog.title}
           subTitle={<div>
             {facilityLog.dateTime ? "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}
             <p></p>{facilityLog.staffName ? "Created by: " + facilityLog.staffName : ""}
             <p></p>{facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET && facilityLog.generalStaffs
-              ? "Assigned to: " + facilityLog.generalStaffs.map((generalStaff) => " " + generalStaff.employee.employeeName).toString() : ""}
+              ? "Assigned to: " + facilityLog.generalStaffs.map((generalStaff) => " " + generalStaff.employee?.employeeName).toString() : ""}
           </div>
 
           }>
@@ -292,7 +292,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <HiTrash className="mx-auto" />
             </Button>
           )}
-          {(employee.superAdmin || (facilityLog.generalStaffs.find(generalStaff => generalStaff.employee.employeeId == employee.employeeId))) && facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET &&
+          {(employee.superAdmin || (facilityLog.generalStaffs.find(generalStaff => generalStaff.employee?.employeeId == employee.employeeId))) && facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET &&
             (
               <Button
                 onClick={() => {

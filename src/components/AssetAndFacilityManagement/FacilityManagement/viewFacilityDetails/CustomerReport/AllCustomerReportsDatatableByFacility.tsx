@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { DataView } from 'primereact/dataview';
+
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 // import { ProductService } from './service/ProductService';
@@ -8,7 +8,7 @@ import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import useApiJson from "../../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiOutlineMail, HiOutlineMailOpen, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { NavLink, useParams } from "react-router-dom";
@@ -16,23 +16,20 @@ import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import CustomerReportLog from "../../../../../models/CustomerReportLog";
 import Facility from "../../../../../models/Facility";
-import { Card } from "primereact/card";
-import { BsWrenchAdjustable } from "react-icons/bs";
-import { useAuthContext } from "../../../../../hooks/useAuthContext";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import { ToggleButton } from "primereact/togglebutton";
 
+interface AllCustomerReportsDatatableByFacilityProps {
+  curFacility: Facility;
+}
 
-function AllCustomerReportsDatatable() {
+function AllCustomerReportsDatatableByFacility(props: AllCustomerReportsDatatableByFacilityProps) {
   const apiJson = useApiJson();
+  const { curFacility } = props;
   let emptyCustomerReportLog: CustomerReportLog = {
     customerReportLogId: -1,
     dateTime: new Date(),
     title: "",
     remarks: "",
-    viewed: false,
-    inHouse: null,
-    thirdParty: null
+    viewed: false
   };
 
   const [customerReportLogList, setCustomerReportLogList] = useState<CustomerReportLog[]>([]);
@@ -43,8 +40,6 @@ function AllCustomerReportsDatatable() {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<CustomerReportLog[]>>(null);
   const toastShadcn = useToast().toast;
-  const [checked, setChecked] = useState(false);
-  const employee = useAuthContext().state.user?.employeeData;
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -54,13 +49,13 @@ function AllCustomerReportsDatatable() {
 
   // Get all customer reports
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/assetFacility/getAllNonViewedCustomerReportLogs/`).catch(e => {
+    apiJson.get(`http://localhost:3000/api/assetFacility/getAllCustomerReportLogsByFacilityId/${curFacility.facilityId}`).catch(e => {
       console.log("error", e);
     }).then(res => {
-      console.log("getAllNonViewedCustomerReportLogs", res)
+      console.log("getAllCustomerReportLogsByFacilityId", res)
       setCustomerReportLogList(res["customerReportLogs"]);
     })
-  }, []);
+  }, [curFacility]);
 
   //
   const exportCSV = () => {
@@ -153,115 +148,23 @@ function AllCustomerReportsDatatable() {
     );
   };
 
-  interface SortOption {
-    label: string;
-    value: string;
-  }
-  const [sortKey, setSortKey] = useState<string>('');
-  const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(-1);
-  const [sortField, setSortField] = useState<string>('dateTime');
-  const sortOptions: SortOption[] = [
-    { label: 'Latest log', value: '!dateTime' },
-    { label: 'Earliest log', value: 'dateTime' },
-    { label: 'Title (A-Z)', value: 'title' },
-    { label: 'Title (Z-A)', value: '!title' }
-  ]
-
-  const onSortChange = (event: DropdownChangeEvent) => {
-    const value = event.value;
-
-    if (value.indexOf('!') === 0) {
-      setSortOrder(-1);
-      setSortField(value.substring(1, value.length));
-      setSortKey(value);
-    } else {
-      setSortOrder(1);
-      setSortField(value);
-      setSortKey(value);
-    }
-  };
-
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-        <h4 className="m-1">Manage Customer Reports</h4>
-        <Dropdown
-          options={sortOptions}
-          value={sortKey}
-          optionLabel="label"
-          placeholder="Sort By"
-          onChange={onSortChange}
+      <h4 className="m-1">Manage Customer Reports</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
         />
-        {/* <span className="p-input-icon-left">
-          <i className="pi pi-search" />
-
-          <InputText
-            type="search"
-            placeholder="Search..."
-            onInput={(e) => {
-              const target = e.target as HTMLInputElement;
-              setGlobalFilter(target.value);
-            }}
-          />
-        </span> */}
-
-      </div>
+      </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
-
-  const listItem = (customerReportLog: CustomerReportLog) => {
-    console.log(customerReportLog)
-
-    return (
-      <div>
-        <Card
-          // className="my-4 relative"
-          className={"my-4 relative"}
-          title={customerReportLog.title}
-          subTitle={<div>
-            {customerReportLog.dateTime ? "Date created: " + new Date(customerReportLog.dateTime).toLocaleString() : ""}
-            <p></p>{customerReportLog.inHouse?.facility ? "Reported for: " + customerReportLog.inHouse?.facility.facilityName : ""}
-          </div>}>
-          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
-            (
-              <ToggleButton
-                checked={customerReportLog.viewed}
-                onChange={(e) => setChecked(e.value)}
-                onClick={() => {
-
-                }}
-                className="absolute top-5 right-20"
-                onIcon={<HiOutlineMail />}
-                offIcon={<HiOutlineMailOpen />}>
-                <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
-              </ToggleButton >
-            )}
-          {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
-            <Button className="absolute top-5 right-5"
-              variant={"destructive"}
-              onClick={() => confirmDeletecustomerReportLog(customerReportLog)}
-            >
-              <HiTrash className="mx-auto" />
-            </Button>
-          )}
-          <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
-            <div>
-              <div className="text-xl font-bold text-900 indent-px">Remarks</div>
-              <p>{customerReportLog.remarks}</p>
-            </div>
-          </div>
-
-        </Card>
-      </div >
-    )
-  }
-
-  const itemTemplate = (customerReportLog: CustomerReportLog) => {
-    if (!customerReportLog) {
-      return;
-    }
-    return listItem(customerReportLog);
-  };
 
   return (
     <div>
@@ -269,25 +172,7 @@ function AllCustomerReportsDatatable() {
         <Toast ref={toast} />
         <div className="">
 
-          <div className="">
-
-            <DataView
-              value={customerReportLogList}
-              itemTemplate={itemTemplate}
-              layout="list"
-              dataKey="customerReportLogId"
-              header={header}
-              sortField={sortField}
-              sortOrder={sortOrder}
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} customer reports"
-              rows={10}
-              rowsPerPageOptions={[5, 10, 25]}
-              paginator
-              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            />
-          </div>
-
-          {/* <DataTable
+          <DataTable
             ref={dt}
             value={customerReportLogList}
             selection={selectedCustomerReportLog}
@@ -351,7 +236,7 @@ function AllCustomerReportsDatatable() {
               exportable={false}
               style={{ minWidth: "14rem" }}
             ></Column>
-          </DataTable> */}
+          </DataTable>
         </div>
       </div>
       <Dialog
@@ -380,4 +265,4 @@ function AllCustomerReportsDatatable() {
   );
 }
 
-export default AllCustomerReportsDatatable;
+export default AllCustomerReportsDatatableByFacility;
