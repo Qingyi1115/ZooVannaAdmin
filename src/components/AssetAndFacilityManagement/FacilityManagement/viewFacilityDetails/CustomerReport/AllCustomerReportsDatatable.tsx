@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import CustomerReportLog from "../../../../../models/CustomerReportLog";
 import Facility from "../../../../../models/Facility";
 import { Card } from "primereact/card";
-import { BsWrenchAdjustable } from "react-icons/bs";
+import { BsCheckCircle, BsWrenchAdjustable } from "react-icons/bs";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { ToggleButton } from "primereact/togglebutton";
@@ -39,12 +39,15 @@ function AllCustomerReportsDatatable() {
   const [selectedCustomerReportLog, setSelectedCustomerReportLog] = useState<CustomerReportLog>(emptyCustomerReportLog);
   const [deletecustomerReportLogDialog, setDeleteCustomerReportLogDialog] =
     useState<boolean>(false);
+  const [viewedcustomerReportLogDialog, setViewedCustomerReportLogDialog] =
+    useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<CustomerReportLog[]>>(null);
   const toastShadcn = useToast().toast;
   const [checked, setChecked] = useState(false);
   const employee = useAuthContext().state.user?.employeeData;
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -60,7 +63,7 @@ function AllCustomerReportsDatatable() {
       console.log("getAllNonViewedCustomerReportLogs", res)
       setCustomerReportLogList(res["customerReportLogs"]);
     })
-  }, []);
+  }, [refreshSeed]);
 
   //
   const exportCSV = () => {
@@ -75,6 +78,15 @@ function AllCustomerReportsDatatable() {
 
   const hideDeleteCustomerReportLogDialog = () => {
     setDeleteCustomerReportLogDialog(false);
+  };
+
+  const confirmViewedcustomerReportLog = (customerReportLog: CustomerReportLog) => {
+    setSelectedCustomerReportLog(customerReportLog);
+    setViewedCustomerReportLogDialog(true);
+  };
+
+  const hideViewedCustomerReportLogDialog = () => {
+    setViewedCustomerReportLogDialog(false);
   };
 
   // delete customerReportLog stuff
@@ -105,7 +117,7 @@ function AllCustomerReportsDatatable() {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting customerReportLog: \n" + apiJson.error,
+            "An error has occurred while deleting customer report: \n" + apiJson.error,
         });
       }
     };
@@ -125,6 +137,31 @@ function AllCustomerReportsDatatable() {
     </React.Fragment>
   );
   // end delete customerReportLog stuff
+
+  const markCustomerReportAsViewed = async () => {
+    apiJson.put(
+      `http://localhost:3000/api/assetfacility/markCustomerReportLogsViewed/`, { customerReportLogIds: [selectedCustomerReportLog.customerReportLogId], viewed: true })
+      .then(res => {
+        console.log("markCustomerReportLogsViewed", res);
+        setRefreshSeed([]);
+        hideViewedCustomerReportLogDialog();
+        setSelectedCustomerReportLog(emptyCustomerReportLog);
+      })
+      .catch(e => console.log(e));
+  }
+
+  const viewedCustomerReportLogDialogFooter = (
+    <React.Fragment>
+      <Button variant={"destructive"} onClick={hideViewedCustomerReportLogDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button onClick={markCustomerReportAsViewed}>
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
 
   const actionBodyTemplate = (customerReportLog: CustomerReportLog) => {
     return (
@@ -209,9 +246,9 @@ function AllCustomerReportsDatatable() {
     </div>
   );
 
+
   const listItem = (customerReportLog: CustomerReportLog) => {
     console.log(customerReportLog)
-
     return (
       <div>
         <Card
@@ -222,19 +259,30 @@ function AllCustomerReportsDatatable() {
             {customerReportLog.dateTime ? "Date created: " + new Date(customerReportLog.dateTime).toLocaleString() : ""}
             <p></p>{customerReportLog.inHouse?.facility ? "Reported for: " + customerReportLog.inHouse?.facility.facilityName : ""}
           </div>}>
-          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
+          {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
             (
               <ToggleButton
-                checked={customerReportLog.viewed}
+                checked={checked}
                 onChange={(e) => setChecked(e.value)}
                 onClick={() => {
 
                 }}
-                className="absolute top-5 right-20"
-                onIcon={<HiOutlineMail />}
-                offIcon={<HiOutlineMailOpen />}>
-                <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+                className="absolute top-5 right-20 h-10"
+                onLabel="Mark as Viewed"
+                offLabel="Viewed"
+                onIcon="pi pi-exclamation-circle"
+                offIcon="pi pi-check-circle">
               </ToggleButton >
+            )} */}
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
+            (
+              <Button
+                onClick={() => {
+                  confirmViewedcustomerReportLog(customerReportLog);
+                }}
+                className="absolute top-5 right-20">
+                <BsCheckCircle className="mx-auto" />
+              </Button >
             )}
           {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
             <Button className="absolute top-5 right-5"
@@ -372,6 +420,28 @@ function AllCustomerReportsDatatable() {
             <span>
               Are you sure you want to delete{" "}
               <b>{selectedCustomerReportLog.customerReportLogId}</b>?
+            </span>
+          )}
+        </div>
+      </Dialog>
+      <Dialog
+        visible={viewedcustomerReportLogDialog}
+        style={{ width: "32rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header="Confirm"
+        modal
+        footer={viewedCustomerReportLogDialogFooter}
+        onHide={hideViewedCustomerReportLogDialog}
+      >
+        <div className="confirmation-content">
+          <i
+            className="pi pi-exclamation-triangle mr-3"
+            style={{ fontSize: "2rem" }}
+          />
+          {selectedCustomerReportLog && (
+            <span>
+              Are you sure you want to mark{" "}
+              <b>{selectedCustomerReportLog.title}</b> {" "} as viewed?
             </span>
           )}
         </div>
