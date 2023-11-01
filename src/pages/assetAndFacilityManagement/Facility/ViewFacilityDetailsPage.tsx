@@ -11,7 +11,7 @@ import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/F
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Employee from "../../../models/Employee";
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
-import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
+import AllCustomerReportsDatatableByFacility from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatableByFacility";
 import AllFacilityLogsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/AllFacilityLogsDatatable";
 import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
 import { useAuthContext } from "../../../hooks/useAuthContext";
@@ -72,10 +72,10 @@ function ViewFacilityDetailsPage() {
           `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
           { includes: ["hubProcessors"] }
         );
-        for (const processor of responseJson.facility.hubProcessors){
-          if (processor.lastDataUpdate){
+        for (const processor of responseJson.facility.hubProcessors) {
+          if (processor.lastDataUpdate) {
             processor.lastDataUpdateString = new Date(processor.lastDataUpdate).toLocaleString();
-          }else{
+          } else {
             processor.lastDataUpdateString = "No last update!";
           }
         }
@@ -150,7 +150,7 @@ function ViewFacilityDetailsPage() {
             </TabsContent>
           )}
           <TabsContent value="customerReport">
-            <AllCustomerReportsDatatable curFacility={curFacility} />
+            <AllCustomerReportsDatatableByFacility curFacility={curFacility} />
           </TabsContent>
         </Tabs>
       </div>

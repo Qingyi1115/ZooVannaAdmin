@@ -161,7 +161,7 @@ function AllEmployeesDatatable() {
           className="mr-2">
           <HiEye className="mx-auto" />
         </Button>
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATION_MANAGER") &&
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
           <Button
             variant={"outline"}
             onClick={() => {
