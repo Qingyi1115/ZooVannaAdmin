@@ -1,72 +1,40 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState } from "react";
 import * as Form from "@radix-ui/react-form";
-import * as RadioGroup from "@radix-ui/react-radio-group";
-import * as Checkbox from "@radix-ui/react-checkbox";
-
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
-
 import useApiFormData from "../../../hooks/useApiFormData";
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
-import { HiCheck } from "react-icons/hi";
-
 import useApiJson from "../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
-import { NavLink } from "react-router-dom";
 import {
-  AcquisitionMethod,
-  ActivityType,
-  AnimalGrowthStage,
-  AnimalSex,
-  AnimalStatusType,
-  DayOfWeek,
-  EventTimingType,
-  IdentifierType,
-  RecurringPattern,
+  EventType,
 } from "../../../enums/Enumurated";
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import Species from "../../../models/Species";
+import { Calendar } from "primereact/calendar";
 
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { Nullable } from "primereact/ts-helpers";
+import beautifyText from "../../../hooks/beautifyText";
 
 function CreatePublicZooEventForm() {
   const apiFormData = useApiFormData();
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const [activityType, setActivityType] = useState<string | undefined>(
+  const [eventType, setEventType] = useState<string | undefined>(
     undefined
   );
-  const [title, setTitle] = useState<string>("");
-  const [details, setDetails] = useState<string>("");
-  const [date, setDate] = useState<Nullable<Date>>(null);
-  const [eventTimingType, setEventTimingType] = useState<string | undefined>(
-    undefined
-  );
-  const [durationInMinutes, setDurationInMinutes] = useState<
-    number | undefined
-  >(undefined);
-  const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
-    number | undefined
-  >(undefined);
-  const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
-    undefined
-  );
-  const [startDate, setStartDate] = useState<Nullable<Date>>(null);
-  const [endDate, setEndDate] = useState<Nullable<Date>>(null);
-  const [dayOfWeek, setDayOfWeek] = useState<string | undefined>(undefined);
-  const [dayOfMonth, setDayOfMonth] = useState<string | undefined>(undefined);
+  const [eventName, setEventName] = useState<string>("");
+  const [eventDescription, setEventDescription] = useState<string>("");
+  const [eventDates, setEventDates] = useState<Date[]>([]);
+  const [eventNotificationDate, setEventNotificationDate] = useState<Nullable<Date>>(null);
 
   // validate functions
   function validateIdentifierType(props: ValidityState) {
     if (props != undefined) {
-      if (activityType == undefined) {
+      if (eventType == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please select an activity type!
@@ -78,11 +46,11 @@ function CreatePublicZooEventForm() {
     return null;
   }
 
-  function validateTitle(props: ValidityState) {
+  function validateEventName(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="font-medium text-danger">* Please enter a title</div>
+          <div className="font-medium text-danger">* Please enter an event name</div>
         );
       }
       // add any other cases here
@@ -90,12 +58,12 @@ function CreatePublicZooEventForm() {
     return null;
   }
 
-  function validateDetails(props: ValidityState) {
+  function validateEventDescription(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
           <div className="font-medium text-danger">
-            * Please enter activity details!
+            * Please enter an event description
           </div>
         );
       }
@@ -104,12 +72,13 @@ function CreatePublicZooEventForm() {
     return null;
   }
 
-  function validateDate(props: ValidityState) {
+
+  function validateEventDates(props: ValidityState) {
     if (props != undefined) {
-      if (date == null) {
+      if (eventDates == null) {
         return (
           <div className="font-medium text-danger">
-            * Please enter the date of the activity
+            * Please enter the date range of event
           </div>
         );
       }
@@ -118,80 +87,19 @@ function CreatePublicZooEventForm() {
     return null;
   }
 
-  function validateEventTimingType(props: ValidityState) {
+  function validateEventNotificationDate(props: ValidityState) {
     if (props != undefined) {
-      if (eventTimingType == undefined) {
+      if (eventNotificationDate == null) {
         return (
           <div className="font-medium text-danger">
-            * Please select a session timing!
+            * Please enter the notification date of the event
           </div>
         );
       }
-      // add any other cases here
-    }
-    return null;
-  }
-
-  function validateDurationInMinutes(props: ValidityState) {
-    if (props != undefined) {
-      if (durationInMinutes == undefined) {
+      if (eventNotificationDate > eventDates[0]) {
         return (
           <div className="font-medium text-danger">
-            * Please enter a duration
-          </div>
-        );
-      } else if (durationInMinutes <= 0) {
-        return (
-          <div className="font-medium text-danger">
-            * Duration must be greater than 0
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
-
-  function validateRequiredNumberOfKeeper(props: ValidityState) {
-    if (props != undefined) {
-      if (requiredNumberOfKeeper == undefined) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter the number of keepers required
-          </div>
-        );
-      } else if (requiredNumberOfKeeper <= 0) {
-        return (
-          <div className="font-medium text-danger">
-            * Number of keepers must be greater than 0
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
-
-  function validateRecurringPattern(props: ValidityState) {
-    if (props != undefined) {
-      if (recurringPattern == undefined) {
-        return (
-          <div className="font-medium text-danger">
-            * Please select a recurring pattern!
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
-
-  function validateOneOffDate(props: ValidityState) {
-    if (props != undefined) {
-      if (startDate == null) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter the date for the activity
+            * Event notification date cannot be after the event start date
           </div>
         );
       }
@@ -200,92 +108,27 @@ function CreatePublicZooEventForm() {
     return null;
   }
 
-  function validateStartDate(props: ValidityState) {
+  function validateImage(props: ValidityState) {
     if (props != undefined) {
-      if (startDate == null) {
+      if (props.valueMissing) {
         return (
           <div className="font-medium text-danger">
-            * Please enter the start date of the period for the recurring
-            activity
+            * Please upload an image
           </div>
         );
       }
-    }
-
-    if (
-      startDate != null &&
-      endDate != null &&
-      new Date(startDate) > new Date(endDate)
-    ) {
-      return (
-        <div className="font-medium text-danger">
-          * Start Date must not be after End Date
-        </div>
-      );
-    }
-    // add any other cases here
-    return null;
-  }
-
-  function validateEndDate(props: ValidityState) {
-    if (props != undefined) {
-      if (endDate == null) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter the end date of the period for the recurring activity
-          </div>
-        );
-      }
-    }
-
-    if (
-      endDate != null &&
-      startDate != null &&
-      new Date(startDate) > new Date(endDate)
-    ) {
-      return (
-        <div className="font-medium text-danger">
-          * End Date must not be before Start Date
-        </div>
-      );
-    }
-    // add any other cases here
-    return null;
-  }
-
-  function validateDayOfWeek(props: ValidityState) {
-    if (recurringPattern == "WEEKLY") {
-      if (props != undefined) {
-        if (dayOfWeek == undefined) {
-          return (
-            <div className="font-medium text-danger">
-              * Please select a day of week for recurring activity!
-            </div>
-          );
-        }
-        // add any other cases here
-      }
-    }
-    return null;
-  }
-
-  function validateDayOfMonth(props: ValidityState) {
-    if (recurringPattern == "MONTHLY") {
-      if (props != undefined) {
-        if (dayOfMonth == undefined) {
-          return (
-            <div className="font-medium text-danger">
-              * Please select a day of month for recurring activity!
-            </div>
-          );
-        }
-        // add any other cases here
-      }
+      // add any other cases here
     }
     return null;
   }
 
   // end validate functions
+
+  // Zoo event image
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+    setImageFile(file);
+  }
 
   // handle submit
   const dummyValidityState: ValidityState = {
@@ -307,67 +150,38 @@ function CreatePublicZooEventForm() {
 
     // let dateInMilliseconds = date?.getTime();
 
-    if (validateDurationInMinutes(dummyValidityState) != null) {
-      return;
-    } else if (
-      (recurringPattern != "NON-RECURRING" &&
-        validateEndDate(dummyValidityState) != null &&
-        validateStartDate(dummyValidityState) != null) ||
-      (recurringPattern == "NON-RECURRING" &&
-        validateOneOffDate(dummyValidityState) != null) ||
-      (recurringPattern == "WEEKLY" &&
-        validateDayOfWeek(dummyValidityState) != null) ||
-      (recurringPattern == "MONTHLY" &&
-        validateDayOfMonth(dummyValidityState) != null)
-    ) {
-      return;
-    }
-
-    // if (date instanceof Date) {
-    //   const milliseconds = date.getTime(); // Convert to Unix epoch
-    //   console.log(milliseconds); // This will print the number of milliseconds
-    // } else {
-    //   console.error('Invalid date format.');
-    // }
-
-    const newAnimalActivity = {
-      activityType,
-      title,
-      details,
-      startDate: startDate?.getTime(),
-      endDate: endDate?.getTime(),
-      recurringPattern,
-      dayOfWeek,
-      dayOfMonth,
-      eventTimingType,
-      durationInMinutes,
-      requiredNumberOfKeeper
+    const newPublicZooEvent = {
+      eventIsPublic: true,
+      eventNotificationDate: eventNotificationDate,
+      eventStartDateTime: eventDates[0].getTime(),
+      eventEndDateTime: eventDates[1].getTime(),
+      eventName: eventName,
+      eventDescription: eventDescription
     };
 
-    const createAnimalActivityApi = async () => {
+    const createPublicZooEventApi = async () => {
       try {
         const response = await apiJson.post(
-          "http://localhost:3000/api/animal/createAnimalActivity",
-          newAnimalActivity
+          "http://localhost:3000/api/zooEvent/createPublicZooEvent",
+          newPublicZooEvent
         );
         // success
         toastShadcn({
-          description: "Successfully created a new animal activity",
+          description: "Successfully created a new public event!",
         });
-        const redirectUrl = `/animal/animalactivities/`;
-        navigate(redirectUrl);
+        navigate(-1);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while creating new animal activity: \n" +
+            "An error has occurred while creating new public event: \n" +
             error.message,
         });
       }
     };
-    createAnimalActivityApi();
+    createPublicZooEventApi();
   }
 
   return (
@@ -375,11 +189,10 @@ function CreatePublicZooEventForm() {
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
         onSubmit={handleSubmit}
-      // encType="multipart/form-data"
+        encType="multipart/form-data"
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            {/* <NavLink className="flex" to={`/animal/viewallanimals`}> */}
             <Button
               onClick={() => navigate(-1)}
               variant={"outline"}
@@ -388,8 +201,7 @@ function CreatePublicZooEventForm() {
             >
               Back
             </Button>
-            {/* </NavLink> */}
-            <span className="self-center text-title-xl font-bold">
+            <span className="mt-4 self-center text-title-xl font-bold">
               Create Public Event
             </span>
             <Button disabled className="invisible">
@@ -399,320 +211,157 @@ function CreatePublicZooEventForm() {
           <Separator />
         </div>
 
-        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Title */}
-          <FormFieldInput
-            type="text"
-            formFieldName="title"
-            label="Title"
-            required={true}
-            placeholder="e.g., Chase yoga ball, mud bath..."
-            pattern={undefined}
-            value={title}
-            setValue={setTitle}
-            validateFunction={validateTitle}
-          />
-
-          {/* Activity Type */}
-          <FormFieldSelect
-            formFieldName="activityType"
-            label="Activity Type"
-            required={true}
-            placeholder="Select an activity type..."
-            valueLabelPair={Object.keys(ActivityType).map((activiTypeKey) => [
-              ActivityType[
-                activiTypeKey as keyof typeof ActivityType
-              ].toString(),
-              ActivityType[
-                activiTypeKey as keyof typeof ActivityType
-              ].toString(),
-            ])}
-            value={activityType}
-            setValue={setActivityType}
-            validateFunction={validateIdentifierType}
-          />
-        </div>
-
-        {/* Details */}
+        {/* Zoo Event Picture */}
         <Form.Field
-          name="physicalDefiningCharacteristics"
+          name="zooEventImage"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
-          <Form.Label className="font-medium">Details</Form.Label>
+          <Form.Label className="font-medium">
+            Zoo Event Image
+          </Form.Label>
+          <Form.Control
+            type="file"
+            required
+            accept=".png, .jpg, .jpeg, .webp"
+            onChange={handleFileChange}
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+          />
+          <Form.ValidityState>{validateImage}</Form.ValidityState>
+        </Form.Field>
+
+        {/* Title */}
+        <FormFieldInput
+          type="text"
+          formFieldName="eventName"
+          label="Title"
+          required={true}
+          placeholder="Event title"
+          pattern={undefined}
+          value={eventName}
+          setValue={setEventName}
+          validateFunction={validateEventName}
+        />
+
+        {/* Event Type */}
+        <FormFieldSelect
+          formFieldName="eventType"
+          label="Event Type"
+          required={true}
+          placeholder="Select an event type..."
+          valueLabelPair={Object.keys(EventType).map((activiTypeKey) => [
+            EventType[
+              activiTypeKey as keyof typeof EventType
+            ].toString(),
+            beautifyText(EventType[
+              activiTypeKey as keyof typeof EventType
+            ]),
+          ])}
+          value={eventType}
+          setValue={setEventType}
+          validateFunction={validateIdentifierType}
+        />
+
+        {/* Event Description */}
+        <Form.Field
+          name="eventDescription"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">Description</Form.Label>
           <Form.Control
             asChild
-            value={details}
+            value={eventDescription}
             required={true}
-            onChange={(e) => setDetails(e.target.value)}
+            onChange={(e) => setEventDescription(e.target.value)}
             className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
           >
             <textarea
               rows={3}
-              placeholder="e.g., Leave yoga ball in the pen and pushes it towards the tiger,..."
+              placeholder="Event description"
             // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
-          <Form.ValidityState>{validateDetails}</Form.ValidityState>
+          <Form.ValidityState>{validateEventDescription}</Form.ValidityState>
         </Form.Field>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Session */}
-          <FormFieldSelect
-            formFieldName="session"
-            label="Shift Timing"
-            required={true}
-            placeholder="Select a session timing..."
-            valueLabelPair={Object.keys(EventTimingType).map(
-              (eventTimingTypeKey) => [
-                EventTimingType[
-                  eventTimingTypeKey as keyof typeof EventTimingType
-                ].toString(),
-                EventTimingType[
-                  eventTimingTypeKey as keyof typeof EventTimingType
-                ].toString(),
-              ]
-            )}
-            value={eventTimingType}
-            setValue={setEventTimingType}
-            validateFunction={validateEventTimingType}
-          />
 
-          {/* Duration in minutes */}
-          <FormFieldInput
-            type="number"
-            formFieldName="durationInMinutes"
-            label={`Duration (minutes)`}
-            required={true}
-            pattern={undefined}
-            placeholder="e.g., 8"
-            value={durationInMinutes}
-            setValue={setDurationInMinutes}
-            validateFunction={validateDurationInMinutes}
-          />
-        </div>
-
-        {/* Number of keepers required */}
-        <FormFieldInput
-          type="number"
-          formFieldName="durationInMinutes"
-          label={`Number of keepers required`}
-          required={true}
-          pattern={undefined}
-          placeholder="e.g., 2"
-          value={requiredNumberOfKeeper}
-          setValue={setRequiredNumberOfKeeper}
-          validateFunction={validateRequiredNumberOfKeeper}
-        />
-
-        {/* Recurring Pattern */}
-        <FormFieldSelect
-          formFieldName="recurringPattern"
-          label="Recurring Pattern"
-          required={true}
-          placeholder="Select a recurring pattern. Select NON-RECURRING if this is a one-off event. "
-          valueLabelPair={Object.keys(RecurringPattern).map(
-            (recurringPatternKey) => [
-              RecurringPattern[
-                recurringPatternKey as keyof typeof RecurringPattern
-              ].toString(),
-              RecurringPattern[
-                recurringPatternKey as keyof typeof RecurringPattern
-              ].toString(),
-            ]
-          )}
-          value={recurringPattern}
-          setValue={setRecurringPattern}
-          validateFunction={validateRecurringPattern}
-        />
-
-        {recurringPattern != undefined &&
-          recurringPattern == "NON-RECURRING" && (
-            <div>
-              {/* Specific Date for One Off Event */}
-              <Form.Field
-                name="startDate"
-                id="oneoffDateField"
-                className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-              >
-                <Form.Label className="font-medium">
-                  One-off Activity Date
-                </Form.Label>
-                <Form.Control
-                  className="hidden"
-                  type="text"
-                  value={startDate?.toString()}
-                  required={true}
-                  onChange={() => null}
-                ></Form.Control>
-                <Calendar
-                  value={startDate}
-                  className="w-full"
-                  onChange={(e: any) => {
-                    if (e && e.value !== undefined) {
-                      setStartDate(e.value);
-                      setEndDate(e.value);
-                      const element =
-                        document.getElementById("oneoffDateField");
-                      if (element) {
-                        const isDataInvalid =
-                          element.getAttribute("data-invalid");
-                        if (isDataInvalid == "true") {
-                          element.setAttribute("data-valid", "true");
-                          element.removeAttribute("data-invalid");
-                        }
-                      }
+          {/* Event Dates */}
+          <Form.Field
+            name="eventDates"
+            id="eventDatesDateField"
+            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          >
+            <Form.Label className="font-medium">
+              Event Dates
+            </Form.Label>
+            <Form.Control
+              className="hidden"
+              type="text"
+              value={eventDates?.toString()}
+              required={true}
+              onChange={() => null}
+            ></Form.Control>
+            <Calendar
+              selectionMode="range"
+              value={eventDates}
+              className="w-full"
+              onChange={(e: any) => {
+                if (e && e.value !== undefined) {
+                  setEventDates(e.value);
+                  const element =
+                    document.getElementById("eventDatesDateField");
+                  if (element) {
+                    const isDataInvalid =
+                      element.getAttribute("data-invalid");
+                    if (isDataInvalid == "true") {
+                      element.setAttribute("data-valid", "true");
+                      element.removeAttribute("data-invalid");
                     }
-                  }}
-                />
-                <Form.ValidityState>{validateOneOffDate}</Form.ValidityState>
-              </Form.Field>
-
-            </div>
-          )}
-
-        {recurringPattern != undefined &&
-          (recurringPattern == "DAILY" ||
-            recurringPattern == "WEEKLY" ||
-            recurringPattern == "MONTHLY") && (
-            <div>
-              {" "}
-              <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-                {/* Start Date */}
-                <Form.Field
-                  name="startDate"
-                  id="startDateField"
-                  className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-                >
-                  <Form.Label className="font-medium">
-                    Period Start Date
-                  </Form.Label>
-                  <Form.Control
-                    className="hidden"
-                    type="text"
-                    value={startDate?.toString()}
-                    required={true}
-                    onChange={() => null}
-                  ></Form.Control>
-                  <Calendar
-                    value={startDate}
-                    className="w-full"
-                    onChange={(e: any) => {
-                      if (e && e.value !== undefined) {
-                        setStartDate(e.value);
-                        const element =
-                          document.getElementById("startDateField");
-                        if (element) {
-                          if (
-                            startDate != null &&
-                            endDate != null &&
-                            new Date(startDate) > new Date(endDate)
-                          ) {
-                            const isDataInvalid =
-                              element.getAttribute("data-invalid");
-                            if (isDataInvalid == "true") {
-                              element.setAttribute("data-valid", "true");
-                              element.removeAttribute("data-invalid");
-                            }
-                          }
-                        }
-                      }
-                    }}
-                  />
-                  <Form.ValidityState>{validateStartDate}</Form.ValidityState>
-                </Form.Field>
-
-                {/* End Date */}
-                <Form.Field
-                  name="endDate"
-                  id="endDateField"
-                  className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-                >
-                  <Form.Label className="font-medium">
-                    Period End Date
-                  </Form.Label>
-                  <Form.Control
-                    className="hidden"
-                    type="text"
-                    value={endDate?.toString()}
-                    required={true}
-                    onChange={() => null}
-                  ></Form.Control>
-                  <Calendar
-                    value={endDate}
-                    className="w-full"
-                    onChange={(e: any) => {
-                      if (e && e.value !== undefined) {
-                        setEndDate(e.value);
-                        if (
-                          startDate != null &&
-                          endDate != null &&
-                          new Date(startDate) > new Date(endDate)
-                        ) {
-                          const element =
-                            document.getElementById("endDateField");
-                          if (element) {
-                            const isDataInvalid =
-                              element.getAttribute("data-invalid");
-                            if (isDataInvalid == "true") {
-                              element.setAttribute("data-valid", "true");
-                              element.removeAttribute("data-invalid");
-                            }
-                          }
-                        }
-                      }
-                    }}
-                  />
-                  <Form.ValidityState>{validateEndDate}</Form.ValidityState>
-                </Form.Field>
-              </div>
-            </div>
-          )}
-
-        {recurringPattern != undefined && recurringPattern == "WEEKLY" && (
-          <div>
-            {/* Day of Week */}
-            <FormFieldSelect
-              formFieldName="dayOfWeek"
-              label="Day of Week"
-              required={true}
-              placeholder="Select a day of the week for recurring event..."
-              valueLabelPair={Object.keys(DayOfWeek).map((dayOfWeekKey) => [
-                DayOfWeek[dayOfWeekKey as keyof typeof DayOfWeek].toString(),
-                DayOfWeek[dayOfWeekKey as keyof typeof DayOfWeek].toString(),
-              ])}
-              value={dayOfWeek}
-              setValue={setDayOfWeek}
-              validateFunction={validateDayOfWeek}
+                  }
+                }
+              }}
             />
-          </div>
-        )}
+            <Form.ValidityState>{validateEventDates}</Form.ValidityState>
+          </Form.Field>
 
-        {recurringPattern != undefined && recurringPattern == "MONTHLY" && (
-          <div>
-            {" "}
-            {/* Day of Month */}
-            <FormFieldSelect
-              formFieldName="dayOfMonth"
-              label="Day of Month"
+          {/* Event Notification Date */}
+          <Form.Field
+            name="eventNotificationDate"
+            id="eventNotificationDateField"
+            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          >
+            <Form.Label className="font-medium">
+              Event Notification Date
+            </Form.Label>
+            <Form.Control
+              className="hidden"
+              type="text"
+              value={eventNotificationDate?.toString()}
               required={true}
-              placeholder="Select a day of the month for recurring event..."
-              valueLabelPair={
-                Array.from({ length: 31 }, (_, i) => [
-                  (i + 1).toString(),
-                  (i + 1).toString(),
-                ])
-
-                //   Object.keys(DayOfWeek).map((dayOfWeekKey) => [
-                //   DayOfWeek[dayOfWeekKey as keyof typeof DayOfWeek].toString(),
-                //   DayOfWeek[dayOfWeekKey as keyof typeof DayOfWeek].toString(),
-                // ])
-              }
-              value={dayOfMonth}
-              setValue={setDayOfMonth}
-              validateFunction={validateDayOfMonth}
+              onChange={() => null}
+            ></Form.Control>
+            <Calendar
+              value={eventNotificationDate}
+              className="w-full"
+              onChange={(e: any) => {
+                if (e && e.value !== undefined) {
+                  setEventDates(e.value);
+                  const element =
+                    document.getElementById("eventNotificationDateField");
+                  if (element) {
+                    const isDataInvalid =
+                      element.getAttribute("data-invalid");
+                    if (isDataInvalid == "true") {
+                      element.setAttribute("data-valid", "true");
+                      element.removeAttribute("data-invalid");
+                    }
+                  }
+                }
+              }}
             />
-          </div>
-        )}
+            <Form.ValidityState>{validateEventDates}</Form.ValidityState>
+          </Form.Field>
+        </div>
 
         <Form.Submit asChild>
           <Button

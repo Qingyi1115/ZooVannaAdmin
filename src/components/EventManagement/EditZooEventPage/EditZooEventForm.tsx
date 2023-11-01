@@ -367,7 +367,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
         onSubmit={handleSubmit}
-      // encType="multipart/form-data"
+        encType="multipart/form-data"
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
