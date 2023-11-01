@@ -389,7 +389,7 @@ function ViewZooEventDetails() {
       const data = {
         eventName: curZooEvent?.eventName,
         eventDescription: curZooEvent?.eventDescription,
-        eventIsPublic: true, 
+        eventIsPublic: true,
         eventType: curZooEvent?.eventType == "EMPLOYEE_FEEDING" ? "CUSTOMER_FEEDING" : curZooEvent?.eventType,
         eventStartDateTime: eventStartDateTime?.getTime(),
         requiredNumberOfKeeper: curZooEvent?.requiredNumberOfKeeper,
@@ -709,11 +709,11 @@ function ViewZooEventDetails() {
                       }
                     </div>
 
-                    {/* {curZooEvent.eventIsPublic && <img
+                    {curZooEvent.eventIsPublic && <img
                       src={"http://localhost:3000/" + curZooEvent.imageUrl}
                       alt="Current event image"
                       className="my-4 self-center aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
-                    />} */}
+                    />}
 
                     <Table>
                       <TableBody>
