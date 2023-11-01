@@ -10,7 +10,7 @@ import { InputText } from "primereact/inputtext";
 
 import Sensor from "../../../../models/Sensor";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { HiCamera, HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
 import { SensorType } from "../../../../enums/SensorType";
@@ -122,6 +122,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
   const actionBodyTemplate = (sensor: Sensor) => {
     return (
       <React.Fragment>
+
         <Button
           // variant={"outline"}
           className="mb-1 mr-1" onClick={() => {
@@ -130,6 +131,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
           }}>
           <HiEye className="mx-auto" />
         </Button>
+
         {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <Button className="mr-2" onClick={()=>{ 
                 navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
@@ -138,6 +140,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
               <HiPencil className="mx-auto" />
             </Button>
         )} */}
+
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
             variant={"destructive"}
@@ -147,6 +150,15 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
             <HiTrash className="mx-auto" />
           </Button>
         )}
+
+        {sensor.sensorType == "CAMERA" && (<Button
+          variant={"outline"}
+          className="mb-1 mr-1" onClick={() => {
+            navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
+            navigate(`/assetfacility/viewcamera/${sensor.sensorId}`);
+          }}>
+          <HiCamera className="mx-auto" />
+        </Button>)}
       </React.Fragment>
     );
   };
