@@ -53,6 +53,9 @@ import CreateFeedingPlan from "./pages/animalManagement/CreateFeedingPlan";
 import AnimalFeedingPlanDetailsPage from "./pages/animalManagement/AnimalFeedingPlanDetailsPage";
 import EditFeedingPlanBasicInfoPage from "./pages/animalManagement/EditFeedingPlanBasicInfoPage";
 
+// Enclosure manage pages
+import ViewAllEnclosuresPage from "./pages/enclosureManagement/ViewAllEnclosuresPage";
+
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
 import EditFacilityPage from "./pages/assetAndFacilityManagement/Facility/EditFacilityPage";
@@ -515,6 +518,14 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+
+                {/* Enclosure Management */}
+                <Route
+                  path="/enclosure/viewallenclosures"
+                  element={
+                    user ? <ViewAllEnclosuresPage /> : <Navigate to="/login" />
                   }
                 />
 
