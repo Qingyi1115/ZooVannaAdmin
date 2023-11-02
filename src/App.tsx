@@ -5,6 +5,8 @@ import { useState } from "react";
 import { PrimeReactProvider } from "primereact/api";
 // import "@fullcalendar/daygrid/main.css";
 
+import EnclosureContextProvider from "./context/EnclosureContext";
+
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import MainLayout from "./components/MainLayout";
@@ -55,6 +57,9 @@ import EditFeedingPlanBasicInfoPage from "./pages/animalManagement/EditFeedingPl
 
 // Enclosure manage pages
 import ViewAllEnclosuresPage from "./pages/enclosureManagement/ViewAllEnclosuresPage";
+import ViewEnclosureDetailsPage from "./pages/enclosureManagement/ViewEnclosureDetailsPage";
+import EnclosureContextLayout from "./components/EnclosureManagement/EnclosureContextLayout";
+import EnclosureDesignDiagramPage from "./pages/enclosureManagement/EnclosureDesignDiagramPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -528,6 +533,30 @@ function App() {
                     user ? <ViewAllEnclosuresPage /> : <Navigate to="/login" />
                   }
                 />
+
+                <Route element={<EnclosureContextLayout />}>
+                  {/* These share a context containing currently selected enclosure */}
+                  <Route
+                    path="/enclosure/viewenclosuredetails/:enclosureId"
+                    element={
+                      user ? (
+                        <ViewEnclosureDetailsPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/enclosure/viewenclosuredetails/enclosuredesigndiagram"
+                    element={
+                      user ? (
+                        <EnclosureDesignDiagramPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                </Route>
 
                 {/* Asset and Facility Management */}
                 <Route

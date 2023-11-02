@@ -57,16 +57,16 @@ function ViewAnimalDetailsPage() {
           {/* header */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink className="flex" to={`/animal/viewallanimals/`}>
-                <Button
-                  variant={"outline"}
-                  type="button"
-                  className=""
-                  onClick={() => navigate(-1)}
-                >
-                  Back
-                </Button>
-              </NavLink>
+              {/* <NavLink className="flex" to={`/animal/viewallanimals/`}> */}
+              <Button
+                variant={"outline"}
+                type="button"
+                className=""
+                onClick={() => navigate(-1)}
+              >
+                Back
+              </Button>
+              {/* </NavLink> */}
               <span className="self-center text-lg text-graydark">
                 Animal Details
               </span>

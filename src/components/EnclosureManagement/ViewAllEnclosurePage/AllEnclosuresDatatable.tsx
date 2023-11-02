@@ -164,7 +164,9 @@ function AllEnclosuresDatatable() {
           <Button
             className="mr-2"
             onClick={() => {
-              navigate(`/animal/viewenclosuredetails/${enclosure.enclosureId}`);
+              navigate(
+                `/enclosure/viewenclosuredetails/${enclosure.enclosureId}`
+              );
             }}
           >
             <HiEye className="mr-auto" />
