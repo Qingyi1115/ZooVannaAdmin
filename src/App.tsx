@@ -117,6 +117,7 @@ import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
 import ViewCameraPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraPage";
+import ViewCameraFeedsPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraFeedsPage";
 
 //customer order management page
 import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
@@ -685,6 +686,11 @@ function App() {
                 <Route
                   path="/assetfacility/viewcamera/:sensorId"
                   element={user ? <ViewCameraPage /> : <Navigate to="/login" />}
+                />
+
+                <Route
+                  path="/assetfacility/viewcamerafeeds/:sensorId"
+                  element={user ? <ViewCameraFeedsPage /> : <Navigate to="/login" />}
                 />
 
                 <Route
