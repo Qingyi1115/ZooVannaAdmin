@@ -2,11 +2,12 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-let THREE = window.THREE || require("three");
+// let THREE = window.THREE || require("three");
+import * as THREE from "three";
 // let PointerLockControls;
 
 // module.exports = PointerLockControls = function ( camera ) {
-export default function (camera) {
+export default function PointerLockControls(camera) {
   let scope = this;
 
   camera.rotation.set(0, 0, 0);

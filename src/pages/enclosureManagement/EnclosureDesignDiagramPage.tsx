@@ -18,6 +18,7 @@ import immutableDevtools from "immutable-devtools";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 
+import MyCatalog from "../../../reactplannerassets/catalog/mycatalog";
 import ToolbarScreenshotButton from "../../../reactplannerassets/ui/toolbar-screenshot-button";
 
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -127,7 +128,7 @@ function EnclosureDesignDiagramPage() {
               {({ size }) => (
                 <ReactPlannerWrapper
                   store={store}
-                  catalog={null}
+                  catalog={MyCatalog}
                   width={size.width}
                   height={size.height || 900}
                   plugins={plugins}

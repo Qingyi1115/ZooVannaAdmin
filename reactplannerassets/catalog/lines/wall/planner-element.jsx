@@ -1,44 +1,49 @@
-import {ElementsFactories} from 'react-planner';
+import { ElementsFactories } from "../../../../reactplanner-src/index";
+
+import wallImage from "./wall.png";
+import bricksTexture from "./textures/bricks.jpg";
+import bricksNormal from "./textures/bricks-normal.jpg";
+import paintedTexture from "./textures/painted.jpg";
+import paintedNormal from "./textures/painted-normal.jpg";
 
 const info = {
-  title: 'wall',
-  tag: ['wall'],
-  description: 'Wall with bricks or painted',
-  image: require('./wall.png'),
+  title: "wall",
+  tag: ["wall"],
+  description: "Wall with bricks or painted",
+  image: wallImage,
   visibility: {
     catalog: true,
-    layerElementsVisible: true
-  }
+    layerElementsVisible: true,
+  },
 };
 
 const textures = {
   bricks: {
-    name: 'Bricks',
-    uri: require('./textures/bricks.jpg'),
+    name: "Bricks",
+    uri: bricksTexture,
     lengthRepeatScale: 0.01,
     heightRepeatScale: 0.01,
     normal: {
-      uri: require('./textures/bricks-normal.jpg'),
+      uri: bricksNormal,
       lengthRepeatScale: 0.01,
       heightRepeatScale: 0.01,
       normalScaleX: 0.8,
-      normalScaleY: 0.8
-    }
+      normalScaleY: 0.8,
+    },
   },
   painted: {
-    name:'Painted',
-    uri: require('./textures/painted.jpg'),
+    name: "Painted",
+    uri: paintedTexture,
     lengthRepeatScale: 0.01,
     heightRepeatScale: 0.01,
     normal: {
-      uri: require('./textures/painted-normal.jpg'),
+      uri: paintedNormal,
       lengthRepeatScale: 0.01,
       heightRepeatScale: 0.01,
       normalScaleX: 0.4,
-      normalScaleY: 0.4
-    }
+      normalScaleY: 0.4,
+    },
   },
 };
 
-export default ElementsFactories.WallFactory('wall', info, textures);
-
+export default ElementsFactories.WallFactory("wall", info, textures);

@@ -13,11 +13,12 @@
 //    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
 //    Pan - right mouse, or arrow keys / touch: three finter swipe
 
-let THREE = window.THREE || require("three");
-// let OrbitControls;
+// let THREE = window.THREE || require("three");
+import * as THREE from "three";
+let OrbitControls;
 
-// module.exports = OrbitControls = function (object, domElement) {
-export default function (object, domElement) {
+OrbitControls = function (object, domElement) {
+  // export default function (object, domElement) {
   this.object = object;
 
   this.domElement = domElement !== undefined ? domElement : document;
@@ -775,7 +776,7 @@ export default function (object, domElement) {
   // force an update at start
 
   this.update();
-}
+};
 
 OrbitControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 OrbitControls.prototype.constructor = OrbitControls;
@@ -886,3 +887,5 @@ Object.defineProperties(OrbitControls.prototype, {
     },
   },
 });
+
+export default OrbitControls;
