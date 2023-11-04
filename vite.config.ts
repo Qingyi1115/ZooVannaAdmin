@@ -11,4 +11,12 @@ export default defineConfig({
       "@/lib": path.resolve(__dirname, "./src/shadcn/lib"),
     },
   },
+  optimizeDeps: {
+    exclude: [''],
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx', // Specify the "jsx" loader
+      },
+    },
+  }
 })

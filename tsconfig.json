@@ -15,11 +15,14 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/shadcn/*"]
-    }
+      "@/*": ["./src/shadcn/*"],
+      "react-planner": ["./reactplanner-src/index/"]
+    },
+    "noImplicitAny": false
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": ["node_modules", "dist", "lib", "es", "docs"]
 }

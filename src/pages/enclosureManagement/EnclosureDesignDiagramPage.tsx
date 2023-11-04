@@ -10,6 +10,73 @@ import Enclosure from "../../models/Enclosure";
 
 import { useEnclosureContext } from "../../hooks/useEnclosureContext";
 
+// react planner stuff
+import { createRoot } from "react-dom/client";
+import { SizeMe } from "react-sizeme";
+import Immutable, { Map } from "immutable";
+import immutableDevtools from "immutable-devtools";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+
+import ToolbarScreenshotButton from "../../../reactplannerassets/ui/toolbar-screenshot-button";
+
+import { composeWithDevTools } from "redux-devtools-extension";
+
+import {
+  Models as PlannerModels,
+  reducer as PlannerReducer,
+  ReactPlannerWrapper,
+  Plugins as PlannerPlugins,
+} from "../../../reactplanner-src/index";
+
+// Define state
+let AppState = Map({
+  "react-planner": new PlannerModels.State(),
+});
+
+// Define reducer
+let reducer = (state, action) => {
+  state = state || AppState;
+  state = state.update("react-planner", (plannerState) =>
+    PlannerReducer(plannerState, action)
+  );
+  return state;
+};
+
+// Init store
+// let store = createStore(
+//   reducer,
+//   null,
+//   !isProduction && window.devToolsExtension ?
+//     window.devToolsExtension({
+//       features: {
+//         pause: true,
+//         lock: true,
+//         persist: true,
+//         export: true,
+//         import: 'custom',
+//         jump: true,
+//         skip: true,
+//         reorder: true,
+//         dispatch: true,
+//         test: true
+//       },
+//       actionsBlacklist: blackList,
+//       maxAge: 999999
+//     }) :
+//     f => f
+// );
+let store = createStore(reducer, composeWithDevTools());
+
+let plugins = [
+  PlannerPlugins.Keyboard(),
+  PlannerPlugins.Autosave("react-planner_v0"),
+  PlannerPlugins.ConsoleDebugger(),
+];
+
+let toolbarButtons = [ToolbarScreenshotButton];
+// end react planner stuff
+
 function EnclosureDesignDiagramPage() {
   const apiJson = useApiJson();
   const location = useLocation();
@@ -54,6 +121,23 @@ function EnclosureDesignDiagramPage() {
 
         {/* Body */}
         {/* <Button>View Design Diagram</Button> */}
+        <div>
+          <Provider store={store}>
+            <SizeMe>
+              {({ size }) => (
+                <ReactPlannerWrapper
+                  store={store}
+                  catalog={null}
+                  width={size.width}
+                  height={size.height || 900}
+                  plugins={plugins}
+                  toolbarButtons={toolbarButtons}
+                  stateExtractor={(state) => state.get("react-planner")}
+                />
+              )}
+            </SizeMe>
+          </Provider>
+        </div>
       </div>
     </div>
   );
