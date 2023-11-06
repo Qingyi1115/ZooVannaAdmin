@@ -20,6 +20,7 @@ function EditAnnouncementPage() {
   const [curAnnouncement, setCurAnnouncement] =
     useState<Announcement>(emptyAnnouncement);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  const [status, setStatus] = useState<string>("");
 
   useEffect(() => {
     const fetchAnnouncement = async () => {
@@ -28,6 +29,17 @@ function EditAnnouncementPage() {
           `http://localhost:3000/api/announcement/getAnnouncement/${announcementId}`
         );
         setCurAnnouncement(responseJson as Announcement);
+        let announcement = responseJson as Announcement;
+
+        if (!announcement.isPublished) {
+          setStatus("DISABLED");
+        } else if (announcement.scheduledStartPublish > new Date()) {
+          setStatus("UPCOMING");
+        } else if (announcement.scheduledEndPublish < new Date()) {
+          setStatus("EXPIRED");
+        } else {
+          setStatus("PUBLISHED");
+        }
       } catch (error: any) {
         console.log(error);
       }
@@ -43,6 +55,7 @@ function EditAnnouncementPage() {
           currAnnouncement={curAnnouncement}
           refreshSeed={refreshSeed}
           setRefreshSeed={setRefreshSeed}
+          status={status}
         />
       )}
     </div>

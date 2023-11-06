@@ -18,6 +18,7 @@ interface EditAnnouncementFormProps {
   currAnnouncement: Announcement;
   refreshSeed: number;
   setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
+  status: string;
 }
 
 function EditAnnouncementForm(props: EditAnnouncementFormProps) {
@@ -25,12 +26,12 @@ function EditAnnouncementForm(props: EditAnnouncementFormProps) {
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
-  const { currAnnouncement, refreshSeed, setRefreshSeed } = props;
+  const { currAnnouncement, refreshSeed, setRefreshSeed, status } = props;
 
   const [title, setTitle] = useState<string>(currAnnouncement.title);
   const [content, setContent] = useState<string>(currAnnouncement.content);
-  const [isPublished, setIsPublished] = useState<boolean>(
-    currAnnouncement.isPublished
+  const [isPublished, setIsPublished] = useState<string | undefined>(
+    currAnnouncement.isPublished.toString()
   );
   const [scheduledStartPublish, setScheduledStartPublish] = useState<
     string | Date | Date[] | null
@@ -60,8 +61,20 @@ function EditAnnouncementForm(props: EditAnnouncementFormProps) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
+          <div className="font-medium text-danger">* Please enter a title</div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateIsPublished(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
           <div className="font-medium text-danger">
-            * Please enter a announcement title
+            * Please select an announcement status
           </div>
         );
       }
@@ -74,9 +87,7 @@ function EditAnnouncementForm(props: EditAnnouncementFormProps) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="font-medium text-danger">
-            * Please enter a announcement content
-          </div>
+          <div className="font-medium text-danger">* Please enter content</div>
         );
       }
       // add any other cases here
@@ -164,7 +175,9 @@ function EditAnnouncementForm(props: EditAnnouncementFormProps) {
         updatedAnnouncement
       );
       // success
+      console.log("success");
       toastShadcn({
+        title: "Update successful",
         content: "Successfully edited announcement",
       });
       setRefreshSeed(refreshSeed + 1);
@@ -174,7 +187,7 @@ function EditAnnouncementForm(props: EditAnnouncementFormProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         content:
-          "An error has occurred while editing animal feed details: \n" +
+          "An error has occurred while editing announcement details: \n" +
           error.message,
       });
     }
@@ -188,14 +201,14 @@ function EditAnnouncementForm(props: EditAnnouncementFormProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           content:
-            "An error has occurred while editing Announcement details: \n" +
+            "An error has occurred while editing announcement details: \n" +
             apiJson.error,
         });
       } else if (apiJson.result) {
         // success
-        console.log("succes?");
+        console.log("success?");
         toastShadcn({
-          content: "Successfully edited Announcement details:",
+          content: "Successfully edited announcement details:",
         });
       }
     }
@@ -280,6 +293,22 @@ function EditAnnouncementForm(props: EditAnnouncementFormProps) {
             />
           </div>
         </div>
+
+        {status !== "EXPIRED" && (
+          <FormFieldSelect
+            formFieldName="isPublished"
+            label="Announcement Status"
+            required={true}
+            placeholder="Select an announcement status"
+            valueLabelPair={[
+              [true.toString(), "Active"],
+              [false.toString(), "Disabled"],
+            ]}
+            value={isPublished?.toString()}
+            setValue={setIsPublished}
+            validateFunction={validateIsPublished}
+          />
+        )}
 
         <Form.Submit asChild>
           <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
