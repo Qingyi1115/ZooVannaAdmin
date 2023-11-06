@@ -131,6 +131,9 @@ import ZooEventHomePage from "./pages/eventManagement/ZooEventHomePage";
 import RevenueChart2 from "./components/SalesManagement/RevenueChart2";
 import RevenueChartFinal from "./components/SalesManagement/RevenueChartFinal";
 
+//announcement
+import CreateNewAnnouncementPage from "./pages/announcement/CreateNewAnnouncementPage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -980,6 +983,17 @@ function App() {
                   path="/promotion/editpromotion/:promotionId"
                   element={
                     user ? <EditPromotionPage /> : <Navigate to="/login" />
+                  }
+                />
+
+                <Route
+                  path="/announcement/createnewannouncement"
+                  element={
+                    user ? (
+                      <CreateNewAnnouncementPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
 

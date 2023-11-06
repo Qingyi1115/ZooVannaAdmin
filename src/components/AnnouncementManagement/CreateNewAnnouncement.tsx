@@ -20,46 +20,25 @@ import FormTextareaInput from "../FormTextareaInput";
 import { min } from "date-fns";
 import { start } from "repl";
 
-function CreateNewPromotionForm() {
+function CreateNewAnnouncementForm() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
   const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [isPublished, setPublished] = useState<boolean>(true);
   const [publishDate, setPublishDate] = useState<string | Date | Date[] | null>(
     null
   );
-  const [startDate, setStartDate] = useState<string | Date | Date[] | null>(
-    null
-  );
-  const [endDate, setEndDate] = useState<string | Date | Date[] | null>(null);
-  const [percentage, setPercentage] = useState<number>(0);
-  const [minimumSpending, setMinimumSpending] = useState<number>(0);
-  const [promotionCode, setPromotionCode] = useState<string>("");
-  const [maxRedeemNum, setMaxRedeemNum] = useState<number>(0);
-
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [scheduledStartPublish, setScheduledStartPublish] = useState<
+    string | Date | Date[] | null
+  >(null);
+  const [scheduledEndPublish, setScheduledEndPublish] = useState<
+    string | Date | Date[] | null
+  >(null);
 
   const [formError, setFormError] = useState<string | null>(null);
-
-  const [newPromotionCreated, setNewPromotionCreated] =
-    useState<boolean>(false);
-
-  // field validations
-  function validateImage(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please upload an image
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
 
   function validateTitle(props: ValidityState) {
     if (props != undefined) {
@@ -73,12 +52,12 @@ function CreateNewPromotionForm() {
     return null;
   }
 
-  function validateDescription(props: ValidityState) {
+  function validateContent(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
           <div className="font-medium text-danger">
-            * Please enter a description
+            * Please enter a content
           </div>
         );
       }
@@ -87,15 +66,13 @@ function CreateNewPromotionForm() {
     return null;
   }
 
-  // Alias name is nullable
-
-  function validateStartDate(props: ValidityState) {
+  function validateScheduledStartPublish(props: ValidityState) {
     // console.log(props);
     if (props != undefined) {
-      if (startDate !== null) {
+      if (scheduledStartPublish !== null) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        if (startDate < today) {
+        if (scheduledStartPublish < today) {
           return "Start date cannot be before today"; // Validation error message
         }
       }
@@ -103,116 +80,15 @@ function CreateNewPromotionForm() {
     }
   }
 
-  function validateEndDate(props: ValidityState) {
+  function validateScheduledEndPublish(props: ValidityState) {
     if (props != undefined) {
-      if (startDate !== null && endDate !== null) {
-        if (endDate < startDate) {
+      if (scheduledStartPublish !== null && scheduledEndPublish !== null) {
+        if (scheduledEndPublish < scheduledStartPublish) {
           return "End date must be after or equal to start date"; // Validation error message
         }
       }
       return null;
     }
-  }
-
-  function validatePercentage(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter percentage value
-          </div>
-        );
-        // } else if (props.patternMismatch) {
-        //   return (
-        //     <div className="font-medium text-danger">
-        //       * Please enter only number
-        //     </div>
-        //   );
-      } else if (percentage <= 0) {
-        return (
-          <div className="font-medium text-danger">
-            * Discount must be greater than 0%
-          </div>
-        );
-      } else if (percentage > 100) {
-        return (
-          <div className="font-medium text-danger">
-            * Discount cannot be more than 100%
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
-
-  function validateMinimumSpending(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter minimum spending
-          </div>
-        );
-        // } else if (props.patternMismatch) {
-        //   return (
-        //     <div className="font-medium text-danger">
-        //       * Please enter only number
-        //     </div>
-        //   );
-      } else if (minimumSpending <= 0) {
-        return (
-          <div className="font-medium text-danger">
-            * Minimum spending must be greater than 0
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
-
-  function validatePromotionCode(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter a promotion code
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
-
-  function validateMaxRedeemNum(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">* Please enter a value</div>
-        );
-      } else if (props.patternMismatch) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter only number
-          </div>
-        );
-      } else if (maxRedeemNum <= 0) {
-        return (
-          <div className="font-medium text-danger">
-            * Maximum number of promotion redemption must be greater than 0
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
-
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files && event.target.files[0];
-    setImageFile(file);
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -257,102 +133,66 @@ function CreateNewPromotionForm() {
 
     let isoSingaporePublishDate;
 
-    // Convert startDate and endDate to Singapore time
+    // Convert scheduledStartPublish and scheduledEndPublish to Singapore time
     if (typeof publishDate == "string" || publishDate instanceof Date) {
       const singaporePublishDate = setToMidnightInSingapore(publishDate);
       isoSingaporePublishDate = singaporePublishDate.toISOString();
     }
 
-    let isoSingaporeStartDate;
+    let isoSingaporeScheduledStartPublish;
 
-    // Convert startDate and endDate to Singapore time
-    if (typeof startDate == "string" || startDate instanceof Date) {
-      const singaporeStartDate = setToMidnightInSingapore(startDate);
-      isoSingaporeStartDate = singaporeStartDate.toISOString();
+    // Convert scheduledStartPublish and scheduledEndPublish to Singapore time
+    if (
+      typeof scheduledStartPublish == "string" ||
+      scheduledStartPublish instanceof Date
+    ) {
+      const singaporeScheduledStartPublish = setToMidnightInSingapore(
+        scheduledStartPublish
+      );
+      isoSingaporeScheduledStartPublish =
+        singaporeScheduledStartPublish.toISOString();
     }
 
-    let isoSingaporeEndDate;
+    let isoSingaporeScheduledEndPublish;
 
-    // Convert startDate and endDate to Singapore time
-    if (typeof endDate == "string" || endDate instanceof Date) {
-      const singaporeEndDate = setToBeforeMidnightInSingapore(endDate);
-      isoSingaporeEndDate = singaporeEndDate.toISOString();
+    // Convert scheduledStartPublish and scheduledEndPublish to Singapore time
+    if (
+      typeof scheduledEndPublish == "string" ||
+      scheduledEndPublish instanceof Date
+    ) {
+      const singaporeScheduledEndPublish =
+        setToBeforeMidnightInSingapore(scheduledEndPublish);
+      isoSingaporeScheduledEndPublish =
+        singaporeScheduledEndPublish.toISOString();
     }
 
-    // let isoStartDate;
-
-    // if (startDate !== null) {
-    //   if (typeof startDate === 'string') {
-    //     // If startDate is a string, parse it to a Date object
-    //     const jsStartDate = new Date(startDate);
-    //     isoStartDate = jsStartDate.toISOString();
-    //   } else if (startDate instanceof Date) {
-    //     // If startDate is already a Date object, convert it directly to ISO string
-    //     isoStartDate = startDate.toISOString();
-    //   }
-    // }
-
-    // let isoEndDate;
-
-    // if (endDate !== null) {
-    //   if (typeof endDate === 'string') {
-    //     // If startDate is a string, parse it to a Date object
-    //     const jsEndDate = new Date(endDate);
-    //     isoEndDate = jsEndDate.toISOString();
-    //   } else if (endDate instanceof Date) {
-    //     // If startDate is already a Date object, convert it directly to ISO string
-    //     isoEndDate = endDate.toISOString();
-    //   }
-    // }
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append(
-      "publishDate",
-      isoSingaporePublishDate ? isoSingaporePublishDate : today.toISOString()
-    );
-    formData.append(
-      "startDate",
-      isoSingaporeStartDate ? isoSingaporeStartDate : today.toISOString()
-    );
-    formData.append(
-      "endDate",
-      isoSingaporeEndDate ? isoSingaporeEndDate : today.toISOString()
-    );
-    formData.append("percentage", percentage.toString());
-    formData.append("minimumSpending", minimumSpending.toString());
-    formData.append("promotionCode", promotionCode);
-    formData.append("maxRedeemNum", maxRedeemNum.toString());
-    formData.append("file", imageFile || "");
-
-    const createPromotion = async () => {
-      try {
-        const response = await apiFormData.post(
-          "http://localhost:3000/api/promotion/createPromotion",
-          formData
-        );
-        // success
-        console.log("create promo success");
-        toastShadcn({
-          description: "Successfully created a new promotion:",
-        });
-
-        // clearForm();
-        setNewPromotionCreated(true);
-        navigate("/promotion/viewallpromotions");
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while creating a new promotion: \n" +
-            error.message,
-        });
-      }
+    const newAnnouncement = {
+      title: title,
+      content: content,
+      isPublished: isPublished,
+      scheduledStartPublish: scheduledStartPublish,
+      scheduledEndPublish: scheduledEndPublish,
     };
-    createPromotion();
+
+    try {
+      const responseJson = await apiJson.post(
+        "http://localhost:3000/api/announcement/createAnnouncement",
+        newAnnouncement
+      );
+      toastShadcn({
+        description: "Successfully created new announcement!",
+      });
+      navigate("/announcement/viewallannouncement");
+    } catch (error: any) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while creating new announcement: \n" +
+          error.message,
+      });
+    }
+    // handle success case or failurecase using apiJson
   }
 
   return (
@@ -374,7 +214,7 @@ function CreateNewPromotionForm() {
               Back
             </Button>
             <span className="self-center text-title-xl font-bold">
-              Create Promotion
+              Create Announcement
             </span>
             <Button disabled className="invisible">
               Back
@@ -382,29 +222,6 @@ function CreateNewPromotionForm() {
           </div>
           <Separator />
         </div>
-        {/* Promotion Picture */}
-        <Form.Field
-          name="promotionImage"
-          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-        >
-          <Form.Label className="font-medium">Promotion Image</Form.Label>
-          <Form.Control
-            type="file"
-            required
-            asChild
-            // accept=".png, .jpg, .jpeg, .webp"
-            // onChange={handleFileChange}
-            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
-          >
-            <input
-              type="file"
-              id="promotionImage"
-              accept=".jpeg, .png, .jpg ,.webp"
-              onChange={handleFileChange}
-            />
-          </Form.Control>
-          <Form.ValidityState>{validateImage}</Form.ValidityState>
-        </Form.Field>
 
         {/* Title */}
         <FormFieldInput
@@ -412,59 +229,33 @@ function CreateNewPromotionForm() {
           formFieldName="title"
           label="Title"
           required={true}
-          placeholder="e.g., Birthday Sale"
+          placeholder="e.g., Closure of Panda Enclosure on 17 Aug 2023"
           pattern={undefined}
           value={title}
           setValue={setTitle}
           validateFunction={validateTitle}
         />
 
-        {/* Description */}
-        {/* <FormFieldInput
-            type="text"
-            formFieldName="description"
-            label="Description"
-            required={true}
-            placeholder="Describe the promotion, validity period, terms and conditions here"
-            pattern={undefined}
-            value={description}
-            setValue={setDescription}
-            validateFunction={validateDescription}
-          /> */}
-
         <FormTextareaInput
-          formFieldName="description"
-          label="Description"
+          formFieldName="content"
+          label="Content"
           required={true}
-          placeholder="Describe the promotion, terms and conditions here"
-          value={description}
-          setValue={setDescription}
-          validateFunction={validateDescription}
+          placeholder="Write the announcement content here"
+          value={content}
+          setValue={setContent}
+          validateFunction={validateContent}
         />
-
-        <div className="card justify-content-centre flex flex-col">
-          <div>Publish Date</div>
-          <Calendar
-            style={{ flexGrow: 1 }}
-            value={publishDate}
-            onChange={(e: CalendarChangeEvent) => {
-              if (e && e.value !== undefined) {
-                setPublishDate(e.value);
-              }
-            }}
-          />
-        </div>
 
         <div className="flex flex-col justify-start gap-6 lg:flex-row lg:gap-12">
           {/* Start Date */}
           <div className="card justify-content-centre flex flex-col">
-            <div>Start Date</div>
+            <div>Publish Date</div>
             <Calendar
               style={{ flexGrow: 1 }}
-              value={startDate}
+              value={scheduledStartPublish}
               onChange={(e: CalendarChangeEvent) => {
                 if (e && e.value !== undefined) {
-                  setStartDate(e.value);
+                  setScheduledStartPublish(e.value);
                 }
               }}
             />
@@ -474,81 +265,27 @@ function CreateNewPromotionForm() {
             <div>End Date</div>
             <Calendar
               style={{ flexGrow: 1 }}
-              value={endDate}
+              value={scheduledEndPublish}
               onChange={(e: CalendarChangeEvent) => {
                 if (e && e.value !== undefined) {
-                  setEndDate(e.value);
+                  setScheduledEndPublish(e.value);
                 }
               }}
             />
           </div>
         </div>
 
-        {/* <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12"> */}
-        {/* Percentage */}
-        <FormFieldInput
-          type="number"
-          formFieldName="percentage"
-          label="Discount (%)"
-          required={true}
-          placeholder="e.g. 20"
-          pattern={undefined}
-          value={percentage}
-          setValue={setPercentage}
-          validateFunction={validatePercentage}
-        />
-        {/* Minimum Spending */}
-        <FormFieldInput
-          type="number"
-          formFieldName="minimumSpending"
-          label="Minimum Spending ($)"
-          required={true}
-          placeholder="Enter minimum spending for this promotion to be eligible"
-          pattern={undefined}
-          value={minimumSpending}
-          setValue={setMinimumSpending}
-          validateFunction={validateMinimumSpending}
-        />
-        {/* </div> */}
-
-        {/* <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12"> */}
-        {/* Promo code */}
-        <FormFieldInput
-          type="text"
-          formFieldName="promotionCode"
-          label="Promotion Code"
-          required={true}
-          placeholder="e.g. ZOOVANNABIRTHDAY"
-          pattern={undefined}
-          value={promotionCode}
-          setValue={setPromotionCode}
-          validateFunction={validatePromotionCode}
-        />
-        {/* Maximum Redemption Number */}
-        <FormFieldInput
-          type="number"
-          formFieldName="maxRedeemNum"
-          label="Maximum Redemption Number"
-          required={true}
-          placeholder="Enter maximum total number of redemption for this promotion"
-          pattern={undefined}
-          value={maxRedeemNum}
-          setValue={setMaxRedeemNum}
-          validateFunction={validateMaxRedeemNum}
-        />
-        {/* </div> */}
-
         <Form.Submit asChild>
-          <Button
-            disabled={apiFormData.loading}
-            className="h-12 w-2/3 self-center rounded-full text-lg"
-          >
-            {!apiFormData.loading ? <div>Submit</div> : <div>Loading</div>}
-          </Button>
+          <button className="mt-10 h-12 w-2/3 self-center rounded-full border bg-primary text-lg text-whiten transition-all hover:bg-opacity-80">
+            Create Announcement
+          </button>
         </Form.Submit>
+        {formError && (
+          <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+        )}
       </Form.Root>
     </div>
   );
 }
 
-export default CreateNewPromotionForm;
+export default CreateNewAnnouncementForm;
