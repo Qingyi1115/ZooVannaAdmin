@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import React, { useEffect, useState } from "react";
 
 
-import FormFieldInput from "../../FormFieldInput";
-import useApiJson from "../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../../FormFieldSelect";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import AnimalObservationLog from "../../../models/AnimalObservationLog";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import Animal from "../../../models/Animal";
+import { useToast } from "@/components/ui/use-toast";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
-import { set } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import AnimalObservationLog from "../../../models/AnimalObservationLog";
+import FormFieldInput from "../../FormFieldInput";
+import FormFieldSelect from "../../FormFieldSelect";
 
 interface EditAnimalObservationLogFormProps {
   curAnimalObservationLog: AnimalObservationLog

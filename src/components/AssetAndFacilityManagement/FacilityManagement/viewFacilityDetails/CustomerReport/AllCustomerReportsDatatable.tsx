@@ -1,26 +1,20 @@
-import React, { useEffect, useState, useRef } from "react";
-import { DataView } from 'primereact/dataview';
 import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
+import { DataView } from 'primereact/dataview';
+import React, { useEffect, useRef, useState } from "react";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import { HiCheck, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiOutlineMail, HiOutlineMailOpen, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import CustomerReportLog from "../../../../../models/CustomerReportLog";
-import Facility from "../../../../../models/Facility";
 import { Card } from "primereact/card";
-import { BsCheckCircle, BsWrenchAdjustable } from "react-icons/bs";
-import { useAuthContext } from "../../../../../hooks/useAuthContext";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { ToggleButton } from "primereact/togglebutton";
+import { BsCheckCircle } from "react-icons/bs";
+import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import CustomerReportLog from "../../../../../models/CustomerReportLog";
 
 
 function AllCustomerReportsDatatable() {

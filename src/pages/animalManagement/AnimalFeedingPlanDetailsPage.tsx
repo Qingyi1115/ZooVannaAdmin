@@ -1,29 +1,25 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import { useParams } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import FeedingPlan from "../../models/FeedingPlan";
-import { Separator } from "@/components/ui/separator";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AnimalFeedingPlanSessionsSchedule from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanSessionsSchedule";
 import AnimalFeedingPlanInvolvedAnimalDatatable from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
+import AnimalFeedingPlanSessionsSchedule from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanSessionsSchedule";
+import RecommendedFeedingMethods from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/RecommendedFeedingMethods";
 import AllFeedingPlanFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllFeedingPlanFeedingLogsDatatable";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import RecommendedFeedingMethods from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/RecommendedFeedingMethods";
 
 function AnimalFeedingPlanDetailsPage() {
   const apiJson = useApiJson();

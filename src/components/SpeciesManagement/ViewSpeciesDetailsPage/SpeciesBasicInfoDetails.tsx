@@ -1,18 +1,13 @@
-import React from "react";
 import Species from "../../../models/Species";
 
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import beautifyText from "../../../hooks/beautifyText";
 interface SpeciesBasicInfoDetailsProps {
   curSpecies: Species;

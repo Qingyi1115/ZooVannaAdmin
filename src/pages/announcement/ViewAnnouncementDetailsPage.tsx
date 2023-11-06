@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import useApiJson from "../../hooks/useApiJson";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import ViewAnnouncementDetails from "../../components/AnnouncementManagement/ViewAnnouncementDetails";
+import useApiJson from "../../hooks/useApiJson";
 import Announcement from "../../models/Announcement";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 

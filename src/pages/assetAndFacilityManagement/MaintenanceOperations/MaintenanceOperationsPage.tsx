@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import SensorMaintenanceSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
-import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import FactilityMaintenanceSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/FacilityMaintenanceSuggestion";
+import { useParams } from "react-router-dom";
 import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
+import FactilityMaintenanceSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/FacilityMaintenanceSuggestion";
+import SensorMaintenanceSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
 
 
 function MaintenanceOperationSuggestionPage() {

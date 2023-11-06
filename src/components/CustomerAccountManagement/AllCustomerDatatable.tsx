@@ -1,22 +1,21 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
-import Customer from "../../models/Customer";
+import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import Customer from "../../models/Customer";
 
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
 import { NavLink } from "react-router-dom";
 import { Country } from "../../enums/Country";
-import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
 
 function AllCustomerDatatable() {
   const apiJson = useApiJson();

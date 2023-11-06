@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../components/Deprecated/Sidebar";
 
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
+import AllEventsFullCalendar from "../components/EventManagement/ZooEventHomePage/AllZooEventsFullCalendar";
 import FatAnimalsCard from "../components/HomePage/FatAnimalsCard";
 import MaintenanceNotificationCard from "../components/HomePage/MaintenanceNotificationCard";
-import { useAuthContext } from "../hooks/useAuthContext";
-import AllEventsFullCalendar from "../components/EventManagement/ZooEventHomePage/AllZooEventsFullCalendar";
-import ZooEvent from "../models/ZooEvent";
 import beautifyText from "../hooks/beautifyText";
 import useApiJson from "../hooks/useApiJson";
+import { useAuthContext } from "../hooks/useAuthContext";
+import ZooEvent from "../models/ZooEvent";
 
 
 function HomePage() {

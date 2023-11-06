@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import CreateNewAnimalFeedingLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/CreateNewAnimalFeedingLogForm";
 import useApiJson from "../../hooks/useApiJson";
-import { useParams } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import FeedingPlan from "../../models/FeedingPlan";
 

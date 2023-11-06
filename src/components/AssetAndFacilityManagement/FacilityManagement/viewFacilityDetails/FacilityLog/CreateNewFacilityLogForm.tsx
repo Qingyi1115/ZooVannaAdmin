@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import * as Form from "@radix-ui/react-form";
-import FormFieldRadioGroup from "../../../../FormFieldRadioGroup";
-import FormFieldInput from "../../../../FormFieldInput";
-import FormFieldSelect from "../../../../FormFieldSelect";
-import useApiJson from "../../../../../hooks/useApiJson";
-import useApiFormData from "../../../../../hooks/useApiFormData";
-import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import Facility from "../../../../../models/Facility";
-import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import { useToast } from "@/components/ui/use-toast";
+import * as Form from "@radix-ui/react-form";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FacilityLogType } from "../../../../../enums/FacilityLogType";
+import useApiJson from "../../../../../hooks/useApiJson";
+import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import Facility from "../../../../../models/Facility";
+import FormFieldInput from "../../../../FormFieldInput";
 
 interface CreateNewFacilityLogProps {
   curFacility: Facility;

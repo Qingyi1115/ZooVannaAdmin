@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
-import CreateNewAnimalActivityLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/CreateNewAnimalActivityLogForm";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import CreateNewAnimalActivityLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/CreateNewAnimalActivityLogForm";
+import { AcquisitionMethod, ActivityType, AnimalGrowthStage, AnimalSex, EventTimingType, KeeperType, RecurringPattern, Specialization } from "../../enums/Enumurated";
 import useApiJson from "../../hooks/useApiJson";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import AnimalActivityLog from "../../models/AnimalActivityLog";
-import { Rating } from "../../enums/Rating";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization, ActivityType, EventTimingType, RecurringPattern } from "../../enums/Enumurated";
-import { Reaction } from "../../enums/Reaction";
 import Animal from "../../models/Animal";
+import AnimalActivity from "../../models/AnimalActivity";
 import Employee from "../../models/Employee";
 import Keeper from "../../models/Keeper";
 import Species from "../../models/Species";
-import AnimalActivity from "../../models/AnimalActivity";
 
 function CreateAnimalActivityLogPage() {
   const apiJson = useApiJson();

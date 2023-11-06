@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from "react";
-import useApiJson from "../../../hooks/useApiJson";
-import Species from "../../../models/Species";
-import {
-  AnimalFeedCategory,
-  AnimalGrowthStage,
-  PresentationContainer,
-  PresentationLocation,
-  PresentationMethod,
-} from "../../../enums/Enumurated";
-import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import PhysioRefNormDatatable from "./PhysioRefNormDatatable";
+import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
 import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
+import Species from "../../../models/Species";
+import PhysioRefNormDatatable from "./PhysioRefNormDatatable";
 
 import { Chart } from "primereact/chart";
 

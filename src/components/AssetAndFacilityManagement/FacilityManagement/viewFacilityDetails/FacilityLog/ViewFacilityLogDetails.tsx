@@ -7,8 +7,8 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table";
-import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
+import { NavLink } from "react-router-dom";
 import FacilityLog from "../../../../../models/FacilityLog";
 
 interface ViewFacilityLogDetailsProps {

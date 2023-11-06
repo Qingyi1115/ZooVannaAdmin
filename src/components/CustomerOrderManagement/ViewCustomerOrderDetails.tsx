@@ -1,26 +1,17 @@
-import React, { useState, useRef, useEffect } from "react";
-import CustomerOrder from "../../models/CustomerOrder";
-import { Button } from "@/components/ui/button";
-import useApiJson from "../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { Toast } from "primereact/toast";
-import { Dialog } from "primereact/dialog";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
-import FormFieldSelect from "../FormFieldSelect";
-import * as Form from "@radix-ui/react-form";
 import * as moment from "moment-timezone";
-import OrderItem from "../../models/OrderItem";
+import { useEffect, useState } from "react";
+import useApiJson from "../../hooks/useApiJson";
+import CustomerOrder from "../../models/CustomerOrder";
 import Listing from "../../models/Listing";
-import beautifyText from "../../hooks/beautifyText";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 interface ListingInfo {

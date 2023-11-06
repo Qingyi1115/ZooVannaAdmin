@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
-import EditSensorForm from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/EditSensorForm";
-import useApiJson from "../../../hooks/useApiJson";
-import { Button } from "@/components/ui/button";
-import { HiPencil } from "react-icons/hi";
 import ViewCameraFeeds from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/ViewCameraFeeds";
+import useApiJson from "../../../hooks/useApiJson";
 
 function ViewCameraFeedsPage() {
   const apiJson = useApiJson();

@@ -1,32 +1,27 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useApiJson from "../../../hooks/useApiJson";
 import Species from "../../../models/Species";
 
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/components/ui/use-toast";
 
-import { Separator } from "@/components/ui/separator";
-import { Label } from "@/components/ui/label";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 
 interface SpeciesEnclosureCompatibilitiesProps {

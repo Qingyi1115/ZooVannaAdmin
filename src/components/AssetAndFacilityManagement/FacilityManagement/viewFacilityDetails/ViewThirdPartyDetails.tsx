@@ -1,14 +1,11 @@
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+    TableRow
 } from "@/components/ui/table";
-import ThirdParty from "../../../../models/ThirdParty";
 import beautifyText from "../../../../hooks/beautifyText";
+import ThirdParty from "../../../../models/ThirdParty";
 
 interface ThirdPartyProps {
     curThirdParty: ThirdParty;

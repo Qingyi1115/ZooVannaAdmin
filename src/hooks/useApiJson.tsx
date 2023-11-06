@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
-import { useToast } from "@/components/ui/use-toast";
 
 // in functional component, example:
 /*

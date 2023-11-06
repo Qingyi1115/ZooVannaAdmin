@@ -1,45 +1,27 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 
-import { classNames } from "primereact/utils";
-import { DataTable, DataTableExpandedRows, DataTableFilterMeta } from "primereact/datatable";
 import { Column, ColumnFilterElementTemplateOptions } from "primereact/column";
+import { DataTable, DataTableFilterMeta } from "primereact/datatable";
+import { classNames } from "primereact/utils";
 // import { Toast } from "primereact/toast";
-import { TriStateCheckbox, TriStateCheckboxChangeEvent } from 'primereact/tristatecheckbox';
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
-import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
+import { TriStateCheckbox, TriStateCheckboxChangeEvent } from 'primereact/tristatecheckbox';
 
-import Species from "../../../models/Species";
+import { HiCheck, HiEye, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../hooks/useApiJson";
-import { ColumnGroup } from "primereact/columngroup";
-import { Row } from "primereact/row";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import Animal from "../../../models/Animal";
-import {
-  AcquisitionMethod,
-  ActivityType,
-  AnimalGrowthStage,
-  AnimalSex,
-  EventTimingType,
-  EventType,
-} from "../../../enums/Enumurated";
-import { useNavigate } from "react-router-dom";
-import ZooEvent from "../../../models/ZooEvent";
-import { FilterMatchMode, FilterOperator } from "primereact/api";
+import { FilterMatchMode } from "primereact/api";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
+import { useNavigate } from "react-router-dom";
+import {
+  EventType
+} from "../../../enums/Enumurated";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import Keeper from "../../../models/Keeper";
+import ZooEvent from "../../../models/ZooEvent";
 
 let emptyZooEvent: ZooEvent = {
   zooEventId: 0,

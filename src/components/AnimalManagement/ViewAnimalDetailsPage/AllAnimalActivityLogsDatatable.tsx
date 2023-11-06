@@ -1,32 +1,28 @@
-import React, { useEffect, useState, useRef } from "react";
-import { DataView } from 'primereact/dataview';
 import { DataTable } from "primereact/datatable";
+import React, { useEffect, useRef, useState } from "react";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import AnimalActivityLog from "../../../models/AnimalActivityLog";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import { Card } from "primereact/card";
+import { Column } from "primereact/column";
+import { DropdownChangeEvent } from "primereact/dropdown";
+import { useNavigate } from "react-router-dom";
+import AnimalActivity from "src/models/AnimalActivity";
+import { AcquisitionMethod, ActivityType, AnimalGrowthStage, AnimalSex, EventTimingType, KeeperType, RecurringPattern, Specialization } from "../../../enums/Enumurated";
+import { Rating } from "../../../enums/Rating";
+import { Reaction } from "../../../enums/Reaction";
+import beautifyText from "../../../hooks/beautifyText";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import Animal from "../../../models/Animal";
-import Species from "../../../models/Species";
-import { ActivityType, AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization, EventTimingType, RecurringPattern } from "../../../enums/Enumurated";
-import { Rating } from "../../../enums/Rating";
+import AnimalActivityLog from "../../../models/AnimalActivityLog";
 import Employee from "../../../models/Employee";
-import { Column } from "primereact/column";
 import Keeper from "../../../models/Keeper";
-import { Reaction } from "../../../enums/Reaction";
-import AnimalActivity from "src/models/AnimalActivity";
-import { HiMiniListBullet } from "react-icons/hi2";
-import beautifyText from "../../../hooks/beautifyText";
+import Species from "../../../models/Species";
 
 interface AllAnimalActivityLogsDatatableProps {
   speciesCode: string;

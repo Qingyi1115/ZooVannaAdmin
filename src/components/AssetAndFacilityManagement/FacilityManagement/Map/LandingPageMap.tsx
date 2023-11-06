@@ -1,20 +1,15 @@
 import L, {
-  CRS,
   LatLng,
   LatLngBounds,
-  LatLngBoundsLiteral,
-  LatLngExpression,
+  LatLngExpression
 } from "leaflet";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
+  ImageOverlay,
   MapContainer,
   Marker,
-  Popup,
-  useMap,
-  useMapEvents,
-  ImageOverlay,
-  TileLayer,
+  TileLayer
 } from "react-leaflet";
 import Facility from "../../../../models/Facility";
 

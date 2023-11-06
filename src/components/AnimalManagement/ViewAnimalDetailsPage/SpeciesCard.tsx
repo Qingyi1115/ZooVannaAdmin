@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from "react";
 import Species from "../../../models/Species";
 
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  CardContent
 } from "@/components/ui/card";
-import { NavLink } from "react-router-dom";
 import { HiChevronRight } from "react-icons/hi";
+import { NavLink } from "react-router-dom";
 
 interface SpeciesCardProps {
   curSpecies: Species;

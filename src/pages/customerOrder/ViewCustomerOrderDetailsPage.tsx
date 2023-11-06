@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useApiJson from "../../hooks/useApiJson";
 import ViewCustomerOrderDetails from "../../components/CustomerOrderManagement/ViewCustomerOrderDetails";
 import ViewOrderItemDetails from "../../components/CustomerOrderManagement/ViewOrderItemDetails";
+import useApiJson from "../../hooks/useApiJson";
 
 import {
   Accordion,
@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import CustomerOrder from "../../models/CustomerOrder";
 import { OrderStatus } from "../../enums/OrderStatus";
 import { PaymentStatus } from "../../enums/PaymentStatus";
+import CustomerOrder from "../../models/CustomerOrder";
 
 function ViewEmployeeDetailsPage() {
   const apiJson = useApiJson();

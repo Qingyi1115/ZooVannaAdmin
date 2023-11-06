@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import React, { useEffect, useState } from "react";
 
-import { MultiSelectChangeEvent } from "primereact/multiselect";
 
-import FormFieldInput from "../FormFieldInput";
-import useApiJson from "../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../FormFieldSelect";
-import Announcement from "../../models/Announcement";
-import { Navigate, useNavigate } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import FormTextareaInput from "../FormTextareaInput";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../hooks/useApiJson";
+import Announcement from "../../models/Announcement";
+import FormFieldInput from "../FormFieldInput";
+import FormFieldSelect from "../FormFieldSelect";
+import FormTextareaInput from "../FormTextareaInput";
 
 interface EditAnnouncementFormProps {
   currAnnouncement: Announcement;

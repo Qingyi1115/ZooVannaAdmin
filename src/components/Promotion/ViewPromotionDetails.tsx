@@ -1,19 +1,14 @@
-import React from "react";
 import Promotion from "../../models/Promotion";
 
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import * as moment from "moment-timezone";
+import { NavLink } from "react-router-dom";
 
 interface PromotionDetailsProps {
   curPromotion: Promotion;

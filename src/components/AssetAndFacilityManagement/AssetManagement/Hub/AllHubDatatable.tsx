@@ -1,26 +1,24 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
-import Hub from "../../../../models/HubProcessor";
+import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import Hub from "../../../../models/HubProcessor";
 
 import { Button } from "@/components/ui/button";
-import { HubStatus } from "../../../../enums/HubStatus";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import Facility from "../../../../models/Facility";
-import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
-import HubProcessor from "../../../../models/HubProcessor";
+import { HubStatus } from "../../../../enums/HubStatus";
 import beautifyText from "../../../../hooks/beautifyText";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
+import Facility from "../../../../models/Facility";
+import HubProcessor from "../../../../models/HubProcessor";
 
 interface AllHubDatatableProps {
   curFacility: Facility;

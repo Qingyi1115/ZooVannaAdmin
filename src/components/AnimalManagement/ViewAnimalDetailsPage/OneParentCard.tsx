@@ -2,52 +2,33 @@ import React, { useEffect, useState } from "react";
 import useApiJson from "../../../hooks/useApiJson";
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import { Dialog as PrimeReactDialog } from "primereact/dialog";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 
-import { NavLink } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   HiCheck,
-  HiChevronRight,
   HiEye,
   HiPencil,
-  HiPlus,
   HiTrash,
-  HiX,
+  HiX
 } from "react-icons/hi";
+import { NavLink } from "react-router-dom";
 import Animal from "../../../models/Animal";
-import Species from "../../../models/Species";
-import {
-  AcquisitionMethod,
-  AnimalGrowthStage,
-  AnimalSex,
-} from "../../../enums/Enumurated";
-import AnimalBasicInformation from "../../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
-import AnimalWeightInfo from "../../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 
-import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 import beautifyText from "../../../hooks/beautifyText";
 
 interface OneParentCardProps {

@@ -1,4 +1,3 @@
-import React from "react";
 import CreateAnimalActivityForm from "../../components/AnimalManagement/CreateAnimalActivityPage/CreateAnimalActivityForm";
 
 function CreateAnimalActivityPage() {

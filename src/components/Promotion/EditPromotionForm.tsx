@@ -1,21 +1,16 @@
-import React, { useState, useEffect } from "react";
 import * as Form from "@radix-ui/react-form";
-import * as RadioGroup from "@radix-ui/react-radio-group";
-import * as Checkbox from "@radix-ui/react-checkbox";
+import React, { useEffect, useState } from "react";
 
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
+import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import useApiFormData from "../../hooks/useApiFormData";
 import useApiJson from "../../hooks/useApiJson";
 import Promotion from "../../models/Promotion";
-import useApiFormData from "../../hooks/useApiFormData";
 import FormFieldInput from "../FormFieldInput";
-import FormFieldSelect from "../FormFieldSelect";
-import FormFieldRadioGroup from "../FormFieldRadioGroup";
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { NavLink, useNavigate } from "react-router-dom";
 import FormTextareaInput from "../FormTextareaInput";
 
 interface EditPromotionFormProps {

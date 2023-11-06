@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from "react";
 import { DataView } from 'primereact/dataview';
+import { useEffect, useState } from "react";
 
-import * as Form from "@radix-ui/react-form";
-import FormFieldRadioGroup from "../../../../FormFieldRadioGroup";
-import FormFieldInput from "../../../../FormFieldInput";
-import FormFieldSelect from "../../../../FormFieldSelect";
-import useApiJson from "../../../../../hooks/useApiJson";
-import useApiFormData from "../../../../../hooks/useApiFormData";
-import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import Facility from "../../../../../models/Facility";
-import FacilityLog from "../../../../../models/FacilityLog";
-import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import { useToast } from "@/components/ui/use-toast";
+import * as Form from "@radix-ui/react-form";
 import { Card } from "primereact/card";
+import { useLocation, useNavigate } from "react-router-dom";
 import beautifyText from "../../../../../hooks/beautifyText";
+import useApiJson from "../../../../../hooks/useApiJson";
+import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import FacilityLog from "../../../../../models/FacilityLog";
+import FormFieldInput from "../../../../FormFieldInput";
 
 interface CreateNewFacilityMaintenanceLogFormProps {
   // curFacility: Facility;

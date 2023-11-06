@@ -1,27 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Animal from "../../../models/Animal";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import SpeciesCard from "./SpeciesCard";
-import EnclosureCard from "./EnclosureCard";
 import AnimalWeightDatatable from "./AnimalWeightDatatable";
 
 import useApiJson from "../../../hooks/useApiJson";
 
-import { Chart } from "primereact/chart";
-import { useToast } from "@/components/ui/use-toast";
-import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
-import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { Chart } from "primereact/chart";
+import { NavLink } from "react-router-dom";
 import AnimalWeight from "../../../models/AnimalWeight";
+import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
 
 const customPhysioRefNormsSortFunction = (
   a: PhysiologicalReferenceNorms,

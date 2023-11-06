@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import * as Form from "@radix-ui/react-form";
-import useApiFormData from "../../../hooks/useApiFormData";
-import FormFieldInput from "../../FormFieldInput";
-import FormFieldSelect from "../../FormFieldSelect";
-import useApiJson from "../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import * as Form from "@radix-ui/react-form";
+import { Calendar } from "primereact/calendar";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   EventType,
 } from "../../../enums/Enumurated";
-import { Calendar } from "primereact/calendar";
+import useApiFormData from "../../../hooks/useApiFormData";
+import useApiJson from "../../../hooks/useApiJson";
+import FormFieldInput from "../../FormFieldInput";
+import FormFieldSelect from "../../FormFieldSelect";
 
 import { Nullable } from "primereact/ts-helpers";
 import beautifyText from "../../../hooks/beautifyText";

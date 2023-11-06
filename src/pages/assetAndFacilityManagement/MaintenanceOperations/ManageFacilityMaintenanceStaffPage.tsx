@@ -1,11 +1,9 @@
 
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useApiJson from "../../../hooks/useApiJson";
 import Employee from "src/models/Employee";
 import ViewAllFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ViewAllFacilityMaintenanceStaff";
-import RemoveFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/RemoveFacilityMaintenanceStaff";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import useApiJson from "../../../hooks/useApiJson";
 
 
 

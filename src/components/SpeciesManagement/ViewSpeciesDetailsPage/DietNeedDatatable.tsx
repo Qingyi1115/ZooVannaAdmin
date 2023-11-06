@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import useApiJson from "../../../hooks/useApiJson";
+import React, { useRef, useState } from "react";
 import {
   AnimalFeedCategory,
   AnimalGrowthStage,
@@ -7,29 +6,22 @@ import {
   PresentationLocation,
   PresentationMethod,
 } from "../../../enums/Enumurated";
+import useApiJson from "../../../hooks/useApiJson";
 
-import { classNames } from "primereact/utils";
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
-import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 import SpeciesDietNeed from "../../../models/SpeciesDietNeed";
 
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import Species from "../../../models/Species";
+import { NavLink } from "react-router-dom";
 import beautifyText from "../../../hooks/beautifyText";
+import Species from "../../../models/Species";
 
 interface DietNeedDatatableProps {
   dietNeedsList: SpeciesDietNeed[];
