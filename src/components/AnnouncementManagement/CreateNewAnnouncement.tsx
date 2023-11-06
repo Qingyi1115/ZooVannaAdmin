@@ -131,14 +131,6 @@ function CreateNewAnnouncementForm() {
       return singaporeDate;
     }
 
-    let isoSingaporePublishDate;
-
-    // Convert scheduledStartPublish and scheduledEndPublish to Singapore time
-    if (typeof publishDate == "string" || publishDate instanceof Date) {
-      const singaporePublishDate = setToMidnightInSingapore(publishDate);
-      isoSingaporePublishDate = singaporePublishDate.toISOString();
-    }
-
     let isoSingaporeScheduledStartPublish;
 
     // Convert scheduledStartPublish and scheduledEndPublish to Singapore time
@@ -170,8 +162,8 @@ function CreateNewAnnouncementForm() {
       title: title,
       content: content,
       isPublished: isPublished,
-      scheduledStartPublish: scheduledStartPublish,
-      scheduledEndPublish: scheduledEndPublish,
+      scheduledStartPublish: isoSingaporeScheduledStartPublish,
+      scheduledEndPublish: isoSingaporeScheduledEndPublish,
     };
 
     try {
