@@ -5,9 +5,9 @@ import EditSensorForm from "../../../components/AssetAndFacilityManagement/Asset
 import useApiJson from "../../../hooks/useApiJson";
 import { Button } from "@/components/ui/button";
 import { HiPencil } from "react-icons/hi";
-import ViewCamera from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/ViewCamera";
+import ViewCameraFeeds from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/ViewCameraFeeds";
 
-function ViewCameraPage() {
+function ViewCameraFeedsPage() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const { sensorId } = useParams<{ sensorId: string }>();
@@ -35,23 +35,20 @@ function ViewCameraPage() {
           <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
-          <span className="self-center text-lg text-graydark">
-            View Camera
+          <span className="self-center text-title-xl font-bold">
+            View Camera Feeds
           </span>
           <Button disabled className="invisible">
             Back
           </Button>
         </div>
         <hr className="bg-stroke opacity-20" />
-        <span className=" self-center text-title-xl font-bold">
-          {authorization?.sensorName}
-        </span>
         {authorization && (
-          <ViewCamera authorization={authorization} />
+          <ViewCameraFeeds authorization={authorization} />
         )}
       </div>
     </div>
   );
 }
 
-export default ViewCameraPage;
+export default ViewCameraFeedsPage;

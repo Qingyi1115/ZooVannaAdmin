@@ -90,7 +90,7 @@ function SensorMaintenanceSuggestion() {
       });
       setSensorList(sortedList);
     }).catch(error => {
-      console.log("error",error)
+      console.log("error", error)
     });
   }, [refreshSeed]);
 
@@ -504,7 +504,7 @@ function SensorMaintenanceSuggestion() {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "9rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>
         </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+
 import { DataView } from 'primereact/dataview';
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -16,15 +17,19 @@ import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import CustomerReportLog from "../../../../../models/CustomerReportLog";
 import Facility from "../../../../../models/Facility";
-import { Card } from "primereact/card";
+import { ToggleButton } from "primereact/togglebutton";
 import { BsCheckCircle, BsWrenchAdjustable } from "react-icons/bs";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import { Card } from "primereact/card";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import { ToggleButton } from "primereact/togglebutton";
 
+interface AllCustomerReportsDatatableByFacilityProps {
+  curFacility: Facility;
+}
 
-function AllCustomerReportsDatatable() {
+function AllCustomerReportsDatatableByFacility(props: AllCustomerReportsDatatableByFacilityProps) {
   const apiJson = useApiJson();
+  const { curFacility } = props;
   let emptyCustomerReportLog: CustomerReportLog = {
     customerReportLogId: -1,
     dateTime: new Date(),
@@ -45,7 +50,6 @@ function AllCustomerReportsDatatable() {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<CustomerReportLog[]>>(null);
   const toastShadcn = useToast().toast;
-  const [checked, setChecked] = useState(false);
   const [checkedList, setCheckedList] = useState([]);
   const employee = useAuthContext().state.user?.employeeData;
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
@@ -58,14 +62,13 @@ function AllCustomerReportsDatatable() {
 
   // Get all customer reports
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/assetFacility/getAllNonViewedCustomerReportLogs/`).catch(e => {
+    apiJson.get(`http://localhost:3000/api/assetFacility/getAllCustomerReportLogsByFacilityId/${curFacility.facilityId}`).catch(e => {
       console.log("error", e);
     }).then(res => {
-      console.log("getAllNonViewedCustomerReportLogs", res)
-      setCustomerReportLogList(res["customerReportLogs"]);
-      setCheckedList(res["customerReportLogs"].filter((customerReportLog: CustomerReportLog) => customerReportLog.viewed).map((customerReportLog: CustomerReportLog) => customerReportLog.customerReportLogId));
+      console.log("getAllCustomerReportLogsByFacilityId", res)
+      setCustomerReportLogList(res["customerReportLogs"]); setCheckedList(res["customerReportLogs"].filter((customerReportLog: CustomerReportLog) => customerReportLog.viewed).map((customerReportLog: CustomerReportLog) => customerReportLog.customerReportLogId));
     })
-  }, [refreshSeed]);
+  }, [curFacility, refreshSeed]);
 
   //
   const exportCSV = () => {
@@ -120,7 +123,7 @@ function AllCustomerReportsDatatable() {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting customer report: \n" + apiJson.error,
+            "An error has occurred while deleting customerReportLog: \n" + apiJson.error,
         });
       }
     };
@@ -189,8 +192,8 @@ function AllCustomerReportsDatatable() {
 
           }}
           className="mr-2 h-10"
-          onLabel=""
-          offLabel=""
+          onLabel="Unviewed"
+          offLabel="Viewed"
           onIcon="pi pi-exclamation-circle"
           offIcon="pi pi-check-circle" />
 
@@ -274,11 +277,11 @@ function AllCustomerReportsDatatable() {
             {customerReportLog.dateTime ? "Date created: " + new Date(customerReportLog.dateTime).toLocaleString() : ""}
             <p></p>{customerReportLog.inHouse?.facility ? "Reported for: " + customerReportLog.inHouse?.facility.facilityName : ""}
           </div>}>
-
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") &&
             (customerReportLog.viewed ?
               <Button
                 disabled
+                variant={"outline"}
                 className="absolute top-5 right-20">
                 <BsCheckCircle className="mx-auto" />
               </Button > :
@@ -317,6 +320,24 @@ function AllCustomerReportsDatatable() {
     return listItem(customerReportLog);
   };
 
+  const tableHeader = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h4 className="m-1">Manage Customer Reports</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
+    </div>
+  );
+
   return (
     <div>
       <div>
@@ -340,8 +361,7 @@ function AllCustomerReportsDatatable() {
             />
           </div>
 
-          {/* 
-          <br/
+          <br />
           <DataTable
             ref={dt}
             value={customerReportLogList}
@@ -360,7 +380,7 @@ function AllCustomerReportsDatatable() {
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} customer reports"
             globalFilter={globalFilter}
-            header={header}
+            header={tableHeader}
           >
             <Column
               field="customerReportLogId"
@@ -395,6 +415,9 @@ function AllCustomerReportsDatatable() {
             <Column
               field="viewed"
               header="Viewed?"
+              body={(customerReport) => {
+                return customerReport.viewed ? "Yes" : "No"
+              }}
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -404,9 +427,9 @@ function AllCustomerReportsDatatable() {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "14rem" }}
+              style={{ minWidth: "15rem" }}
             ></Column>
-          </DataTable> */}
+          </DataTable>
         </div>
       </div>
       <Dialog
@@ -457,4 +480,4 @@ function AllCustomerReportsDatatable() {
   );
 }
 
-export default AllCustomerReportsDatatable;
+export default AllCustomerReportsDatatableByFacility;

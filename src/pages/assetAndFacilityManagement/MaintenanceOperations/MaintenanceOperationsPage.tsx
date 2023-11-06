@@ -3,6 +3,7 @@ import SensorMaintenanceSuggestion from "../../../components/AssetAndFacilityMan
 import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FactilityMaintenanceSuggestion from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/FacilityMaintenanceSuggestion";
+import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
 
 
 function MaintenanceOperationSuggestionPage() {
@@ -17,12 +18,16 @@ function MaintenanceOperationSuggestionPage() {
         ><TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
             <TabsTrigger value="facilityMaintenance">Facility Maintenance</TabsTrigger>
             <TabsTrigger value="sensorMaintenance">Sensor Maintenance</TabsTrigger>
+            <TabsTrigger value="customerReports">Customer Reports</TabsTrigger>
           </TabsList>
           <TabsContent value="facilityMaintenance">
             <FactilityMaintenanceSuggestion />
           </TabsContent>
           <TabsContent value="sensorMaintenance">
             <SensorMaintenanceSuggestion />
+          </TabsContent>
+          <TabsContent value="customerReports">
+            <AllCustomerReportsDatatable />
           </TabsContent></Tabs>
       </div>
     </div>

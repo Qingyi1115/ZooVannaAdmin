@@ -117,6 +117,7 @@ import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage
 import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
 import ViewCameraPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraPage";
+import ViewCameraFeedsPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraFeedsPage";
 
 //customer order management page
 import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
@@ -124,12 +125,14 @@ import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrde
 import SalesChartPage from "./pages/sales/SalesChartPage";
 
 //Event management page
-import CreateZooEventPage from "./pages/eventManagement/CreateZooEventPage";
+import CreateZooEventPage from "./pages/eventManagement/CreatePublicZooEventPage";
 import EditZooEventPage from "./pages/eventManagement/EditZooEventPage";
 import ViewZooEventDetails from "./pages/eventManagement/ViewZooEventDetails";
 import ZooEventHomePage from "./pages/eventManagement/ZooEventHomePage";
 import RevenueChart2 from "./components/SalesManagement/RevenueChart2";
 import RevenueChartFinal from "./components/SalesManagement/RevenueChartFinal";
+import CreateLeaveEventPage from "./pages/eventManagement/CreateLeaveEventPage";
+import CreatePublicZooEventPage from "./pages/eventManagement/CreatePublicZooEventPage";
 
 //announcement
 import CreateNewAnnouncementPage from "./pages/announcement/CreateNewAnnouncementPage";
@@ -692,6 +695,11 @@ function App() {
                 />
 
                 <Route
+                  path="/assetfacility/viewcamerafeeds/:sensorId"
+                  element={user ? <ViewCameraFeedsPage /> : <Navigate to="/login" />}
+                />
+
+                <Route
                   path="/assetfacility/createhub"
                   element={
                     user ? <CreateNewHubForm /> : <Navigate to="/login" />
@@ -1070,9 +1078,15 @@ function App() {
                 />
                 {/* Event Management */}
                 <Route
-                  path="/zooevent/createnewzooevent"
+                  path="/zooevent/createleaveevent/:employeeId"
                   element={
-                    user ? <CreateZooEventPage /> : <Navigate to="/login" />
+                    user ? <CreateLeaveEventPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/createpubliczooevent"
+                  element={
+                    user ? <CreatePublicZooEventPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route
