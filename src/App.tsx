@@ -135,6 +135,7 @@ import RevenueChartFinal from "./components/SalesManagement/RevenueChartFinal";
 import CreateNewAnnouncementPage from "./pages/announcement/CreateNewAnnouncementPage";
 import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsPage";
 import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
+import EditAnnouncementPage from "./pages/announcement/EditAnnouncementPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -1017,6 +1018,12 @@ function App() {
                     ) : (
                       <Navigate to="/login" />
                     )
+                  }
+                />
+                <Route
+                  path="/announcement/editannouncement/:announcementId"
+                  element={
+                    user ? <EditAnnouncementPage /> : <Navigate to="/login" />
                   }
                 />
 
