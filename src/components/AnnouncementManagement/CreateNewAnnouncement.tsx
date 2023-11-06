@@ -182,7 +182,7 @@ function CreateNewAnnouncementForm() {
       toastShadcn({
         description: "Successfully created new announcement!",
       });
-      navigate("/announcement/viewallannouncement");
+      navigate("/announcement/viewallannouncements");
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
