@@ -133,6 +133,12 @@ import RevenueChartFinal from "./components/SalesManagement/RevenueChartFinal";
 import CreateLeaveEventPage from "./pages/eventManagement/CreateLeaveEventPage";
 import CreatePublicZooEventPage from "./pages/eventManagement/CreatePublicZooEventPage";
 
+//announcement
+import CreateNewAnnouncementPage from "./pages/announcement/CreateNewAnnouncementPage";
+import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsPage";
+import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
+import EditAnnouncementPage from "./pages/announcement/EditAnnouncementPage";
+
 function App() {
   const { state } = useAuthContext();
   const { user } = state;
@@ -982,6 +988,44 @@ function App() {
                   path="/promotion/editpromotion/:promotionId"
                   element={
                     user ? <EditPromotionPage /> : <Navigate to="/login" />
+                  }
+                />
+
+                <Route
+                  path="/announcement/createnewannouncement"
+                  element={
+                    user ? (
+                      <CreateNewAnnouncementPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
+                <Route
+                  path="/announcement/viewallannouncements"
+                  element={
+                    user ? (
+                      <ViewAllAnnouncementsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/announcement/viewannouncement/:announcementId"
+                  element={
+                    user ? (
+                      <ViewAnnouncementDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/announcement/editannouncement/:announcementId"
+                  element={
+                    user ? <EditAnnouncementPage /> : <Navigate to="/login" />
                   }
                 />
 
