@@ -107,31 +107,31 @@ function AllAnnouncementsDatatable() {
       });
   };
 
-  const enableAnnouncement = () => {
-    hideannouncementDisableDialog();
-    console.log(selectedAnnouncement);
-    apiJson
-      .del(
-        `http://localhost:3000/api/announcement/togglePublishAnnouncement/${selectedAnnouncement.announcementId}`
-      )
-      .catch((error) =>
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while enabling announcement: \n" + error,
-        })
-      )
-      .then(() => {
-        toastShadcn({
-          // variant: "destructive",
-          title: "Enable Successful",
-          description:
-            "Successfully enabled announcement: " + selectedAnnouncement.title,
-        });
-        fetchannouncements();
-      });
-  };
+  // const enableAnnouncement = () => {
+  //   hideannouncementDisableDialog();
+  //   console.log(selectedAnnouncement);
+  //   apiJson
+  //     .del(
+  //       `http://localhost:3000/api/announcement/togglePublishAnnouncement/${selectedAnnouncement.announcementId}`
+  //     )
+  //     .catch((error) =>
+  //       toastShadcn({
+  //         variant: "destructive",
+  //         title: "Uh oh! Something went wrong.",
+  //         description:
+  //           "An error has occurred while enabling announcement: \n" + error,
+  //       })
+  //     )
+  //     .then(() => {
+  //       toastShadcn({
+  //         // variant: "destructive",
+  //         title: "Enable Successful",
+  //         description:
+  //           "Successfully enabled announcement: " + selectedAnnouncement.title,
+  //       });
+  //       fetchannouncements();
+  //     });
+  // };
 
   //   useEffect(() => {
   //     if (isInitialRender.current) {
@@ -298,8 +298,30 @@ function AllAnnouncementsDatatable() {
   };
 
   const confirmannouncementEnable = (announcement: Announcement) => {
-    setSelectedAnnouncement(announcement);
-    enableAnnouncement();
+    // setSelectedAnnouncement(announcement);
+    hideannouncementDisableDialog();
+    console.log(selectedAnnouncement);
+    apiJson
+      .del(
+        `http://localhost:3000/api/announcement/togglePublishAnnouncement/${announcement.announcementId}`
+      )
+      .catch((error) =>
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while enabling announcement: \n" + error,
+        })
+      )
+      .then(() => {
+        toastShadcn({
+          // variant: "destructive",
+          title: "Enable Successful",
+          description:
+            "Successfully enabled announcement: " + announcement.title,
+        });
+        fetchannouncements();
+      });
   };
 
   const actionBodyTemplate = (announcement: Announcement) => {
@@ -334,6 +356,41 @@ function AllAnnouncementsDatatable() {
           </Button>
         )}
       </div>
+    );
+  };
+
+  const statusTemplate = (announcement: Announcement) => {
+    let status;
+    if (!announcement.isPublished) {
+      status = "DISABLED";
+    } else if (announcement.scheduledStartPublish > new Date()) {
+      status = "UPCOMING";
+    } else if (announcement.scheduledEndPublish < new Date()) {
+      status = "EXPIRED";
+    } else {
+      status = "PUBLISHED";
+    }
+
+    return (
+      <React.Fragment>
+        <div className="flex flex-col gap-1 pr-15">
+          <div
+            className={
+              status === "PUBLISHED"
+                ? "flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] text-sm font-bold text-emerald-900"
+                : status === "DISABLED"
+                ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
+                : status === "UPCOMING"
+                ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
+                : status === "EXPIRED"
+                ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
+                : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
+            }
+          >
+            {status}
+          </div>
+        </div>
+      </React.Fragment>
     );
   };
 
@@ -378,19 +435,30 @@ function AllAnnouncementsDatatable() {
               field="title"
               header="Title"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{
+                minWidth: "12rem",
+                maxWidth: "15rem",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
             ></Column>
             <Column
               field="content"
               header="Content"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{
+                minWidth: "12rem",
+                maxWidth: "15rem",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
             ></Column>
             <Column
-              field="isPublished"
-              header="Published?"
+              body={statusTemplate}
+              header="Status"
               sortable
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "5rem" }}
             ></Column>
             <Column
               body={(announcement) => {
