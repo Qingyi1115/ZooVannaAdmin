@@ -5,24 +5,18 @@ import Species from "../../../models/Species";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import { TwoThumbSlider } from "@/components/ui/two-thumb-slider";
-import { Slider } from "@/components/ui/slider";
 
 import { Dialog } from "primereact/dialog";
 
-import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
-import { TwoThumbSliderWithNumber } from "../TwoThumbSliderWithNumber";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { HiCheck, HiX } from "react-icons/hi";
+import { NavLink } from "react-router-dom";
+import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
+import { TwoThumbSliderWithNumber } from "../TwoThumbSliderWithNumber";
 
 interface SpeciesEnclosureRequirementsProps {
   curSpecies: Species;

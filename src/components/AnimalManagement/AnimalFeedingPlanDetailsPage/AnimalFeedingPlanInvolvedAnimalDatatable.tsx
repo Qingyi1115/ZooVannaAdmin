@@ -1,16 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 
-import { classNames } from "primereact/utils";
-import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
+import { DataTable } from "primereact/datatable";
 
-import useApiJson from "../../../hooks/useApiJson";
 
-import { useToast } from "@/components/ui/use-toast";
-import Animal from "../../../models/Animal";
 import beautifyText from "../../../hooks/beautifyText";
+import Animal from "../../../models/Animal";
 
 interface AnimalFeedingPlanInvolvedAnimalDatatableProps {
   involvedAnimalList: Animal[];

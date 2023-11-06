@@ -1,15 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import Animal from "../../../models/Animal";
+import { useEffect, useRef, useState } from "react";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
@@ -20,27 +10,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import useApiJson from "../../../hooks/useApiJson";
 import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
 
-import { Chart } from "primereact/chart";
-import { useToast } from "@/components/ui/use-toast";
-import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
-import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
 
 // import "@fullcalendar/common/main.css";
 // import "@fullcalendar/daygrid/main.css";
 // import "@fullcalendar/timegrid/main.css";
 
-import ZooEvent from "../../../models/ZooEvent";
-import { HiChevronLeft } from "react-icons/hi";
 import { EventContentArg, EventInput } from "@fullcalendar/core";
+import ZooEvent from "../../../models/ZooEvent";
 
 interface AllZooEventsFullCalendarProps {
   zooEventsList: ZooEvent[];
@@ -104,7 +88,7 @@ function AllZooEventsFullCalendar(props: AllZooEventsFullCalendarProps) {
     setEvents(
       zooEventsList
         .map((ze) => {
-          const { startTime, endTime } = calculateSessionTimes(
+          const { startTime, endTime } = ze.eventType == "Employee Absence"? {startTime:new Date(ze.eventStartDateTime), endTime:new Date(ze.eventEndDateTime || Date.now())} : calculateSessionTimes(
             ze.eventTiming?.toString() || "",
             new Date(ze.eventStartDateTime)
           );
@@ -134,7 +118,9 @@ function AllZooEventsFullCalendar(props: AllZooEventsFullCalendarProps) {
                 ? ["empfeeding overflow-hidden"]
                 : naming == "Customer Feeding"
                 ? ["cusfeeding overflow-hidden"]
-                : [],
+                : naming == "Employee Absence"
+                ? ["empAbs overflow-hidden"]
+                : ["overflow-hidden"],
           };
         })
         .flat(1)
@@ -215,6 +201,10 @@ function AllZooEventsFullCalendar(props: AllZooEventsFullCalendarProps) {
               <div className="flex items-center gap-2 text-[#CC5A71]">
                 <div className="h-5 w-5 rounded bg-[#CC5A71]" />
                 <span className="font-bold">Employee Feeding</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#494249]">
+                <div className="h-5 w-5 rounded bg-[#494249]" />
+                <span className="font-bold">Employee Absence</span>
               </div>
             </div>
             <div className="mb-2 flex justify-end gap-2">

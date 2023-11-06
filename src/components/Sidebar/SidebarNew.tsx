@@ -3,18 +3,16 @@ import { NavLink, useLocation } from "react-router-dom";
 // import Logo from "../images/logo/logo.svg";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 
+import { AiOutlineNotification } from "react-icons/ai";
 import { BsBuildingGear, BsCalendarWeek } from "react-icons/bs";
 import { GiLion } from "react-icons/gi";
-import { FiPercent, FiShoppingCart } from "react-icons/fi";
 import {
-  HiOutlineUserGroup,
-  HiOutlineUserAdd,
-  HiOutlineTicket,
   HiOutlineDocumentReport,
+  HiOutlineTicket,
+  HiOutlineUserAdd
 } from "react-icons/hi";
-import { AiOutlineNotification } from "react-icons/ai";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import { IoPawOutline } from "react-icons/io5";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 interface SidebarProps {
   sidebarOpen: boolean;

@@ -1,23 +1,21 @@
-import React, { useState, useRef, useEffect } from "react";
-import Employee from "../../models/Employee";
 import { Button } from "@/components/ui/button";
-import useApiJson from "../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { Toast } from "primereact/toast";
-import { Dialog } from "primereact/dialog";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
-import FormFieldSelect from "../FormFieldSelect";
 import * as Form from "@radix-ui/react-form";
+import { Dialog } from "primereact/dialog";
+import React, { useState } from "react";
+import { HiCheck, HiX } from "react-icons/hi";
+import useApiJson from "../../hooks/useApiJson";
+import Employee from "../../models/Employee";
+import FormFieldSelect from "../FormFieldSelect";
 
 
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
-    TableRow,
+    TableRow
 } from "@/components/ui/table";
 import beautifyText from "../../hooks/beautifyText";
 

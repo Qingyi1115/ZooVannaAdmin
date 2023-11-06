@@ -1,7 +1,6 @@
-import React, { Component } from "react";
 import FamilyTree from "@balkangraph/familytree.js";
+import React, { Component } from "react";
 
-import { useNavigate } from "react-router-dom";
 
 interface ChartProps {
   nodes: any[]; // Replace 'any' with the actual type of 'nodes'

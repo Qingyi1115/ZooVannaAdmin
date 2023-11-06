@@ -1,19 +1,15 @@
-import React, { useState, useRef } from "react";
-import Listing from "../../models/Listing";
-import { Button } from "@/components/ui/button";
-import useApiJson from "../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { Toast } from "primereact/toast";
 import * as moment from "moment-timezone";
+import useApiJson from "../../hooks/useApiJson";
+import Listing from "../../models/Listing";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import beautifyText from "../../hooks/beautifyText";
 

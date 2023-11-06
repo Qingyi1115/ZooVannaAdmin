@@ -1,26 +1,19 @@
-import React, { useState, useRef } from "react";
-import Employee from "../../../../models/Employee";
 import { Button } from "@/components/ui/button";
-import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { Toast } from "primereact/toast";
+import useApiJson from "../../../../hooks/useApiJson";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import Sensor from "src/models/Sensor";
-import { Separator } from "@radix-ui/react-select";
-import { useNavigate } from "react-router-dom";
-import { HiCamera, HiPencil } from "react-icons/hi";
-import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { BsWrenchAdjustable } from "react-icons/bs";
+import { HiCamera, HiPencil } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import Sensor from "src/models/Sensor";
 import beautifyText from "../../../../hooks/beautifyText";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 interface SensorDetailsProps {
   curSensor: Sensor;
@@ -39,7 +32,7 @@ function ViewSensorDetails(props: SensorDetailsProps) {
 
         <Button className="mr-2" onClick={() => {
           navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
-          navigate(`/assetfacility/viewfacilitydetails/${curSensor.hubProcessor?.facilityId}`);
+          navigate(`/assetfacility/viewfacilitydetails/${curSensor.hubProcessor?.facility.facilityId}`);
         }}>
           Facility Details
         </Button>

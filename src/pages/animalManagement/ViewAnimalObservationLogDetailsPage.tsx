@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import AnimalObservationLog from "../../models/AnimalObservationLog";
 
 import { Button } from "@/components/ui/button";
-import Employee from "../../models/Employee";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization, ActivityType, EventTimingType, RecurringPattern } from "../../enums/Enumurated";
-import Animal from "../../models/Animal";
-import Species from "../../models/Species";
-import { Rating } from "../../enums/Rating";
 import ViewAnimalObservationLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalObservationLogDetails";
-import Keeper from "../../models/Keeper";
+import { AcquisitionMethod, ActivityType, AnimalGrowthStage, AnimalSex, EventTimingType, KeeperType, RecurringPattern, Specialization } from "../../enums/Enumurated";
+import { Rating } from "../../enums/Rating";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import Animal from "../../models/Animal";
 import AnimalActivity from "../../models/AnimalActivity";
+import Employee from "../../models/Employee";
+import Keeper from "../../models/Keeper";
+import Species from "../../models/Species";
 
 
 

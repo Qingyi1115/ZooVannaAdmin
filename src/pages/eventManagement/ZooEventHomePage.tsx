@@ -1,29 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 
-import { NavLink, useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 import { Button } from 'primereact/button';
 import { HiPlus } from "react-icons/hi";
-import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
 // import FullCalendar from "@fullcalendar/react";
 // import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import { Toggle } from "@/components/ui/toggle";
-import useApiJson from "../../hooks/useApiJson";
 import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
+import useApiJson from "../../hooks/useApiJson";
 
 import ZooEvent from "../../models/ZooEvent";
 
 import { HiCalendarDays, HiTableCells } from "react-icons/hi2";
 
+import { Menu } from "primereact/menu";
+import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import AllEventsDatatable from "../../components/EventManagement/ZooEventHomePage/AllZooEventsDatatable";
 import AllEventsFullCalendar from "../../components/EventManagement/ZooEventHomePage/AllZooEventsFullCalendar";
-import { SplitButton } from "primereact/splitbutton";
-import { Toast } from 'primereact/toast';
-import { compareDates } from '../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion';
-import FormFieldSelect from "../../components/FormFieldSelect";
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
-import { Menu } from "primereact/menu";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import beautifyText from "../../hooks/beautifyText";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 
 const YEAR_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 365
@@ -75,7 +71,7 @@ function ZooEventHomePage() {
     }
     ).then(responseJson => {
 
-      console.log("responseJson", responseJson)
+      console.log("getAllZooEvents", responseJson)
 
       const allEventGroup: any[] = [];
       const allTitleGroups: any[] = [];
@@ -94,10 +90,11 @@ function ZooEventHomePage() {
           if (ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && !allTitleGroups.find(title => title == ze.feedingPlanSessionDetail?.feedingPlan?.title)) {
             allTitleGroups.push(ze.feedingPlanSessionDetail?.feedingPlan?.title);
           }
-        } else if (ze) {
-
+        } else if (ze.eventType == "Employee Absence") {
+          if (ze.eventName !== undefined && !allTitleGroups.find(title => title == ze.eventName)) {
+            allTitleGroups.push(ze.eventName);
+          }
         }
-
 
         if (!allEventGroup.find(et => et == ze.eventType)) {
           allEventGroup.push(ze.eventType);
@@ -110,11 +107,11 @@ function ZooEventHomePage() {
       const historySelEventGroup = localStorage.getItem("selEventGroupList");
       let newGp = allEventGroup.filter(gp => selEventGroupList.includes(gp));
 
-      if (selEventGroupList.length == 0 && historySelEventGroup){
+      if (selEventGroupList.length == 0 && historySelEventGroup) {
         newGp = allEventGroup.filter(gp => JSON.parse(historySelEventGroup).includes(gp));
       }
 
-      if ( newGp.length == 0) {
+      if (newGp.length == 0) {
         setSelEventGroupList(allEventGroup);
       } else {
         setSelEventGroupList(newGp);
@@ -124,10 +121,10 @@ function ZooEventHomePage() {
       const historySelTitleGroupList = localStorage.getItem("selTitleGroupList");
       let newTi = allTitleGroups.filter(ti => selTitleGroupList.includes(ti));
 
-      if (selEventGroupList.length == 0 && historySelTitleGroupList){
+      if (selEventGroupList.length == 0 && historySelTitleGroupList) {
         newTi = allTitleGroups.filter(ti => JSON.parse(historySelTitleGroupList).includes(ti));
       }
-      
+
       if (newTi.length == 0) {
         setSelTitleGroupList(allTitleGroups);
       } else {
@@ -158,17 +155,56 @@ function ZooEventHomePage() {
           return selTitleGroupList.find(ti => ti == ze.animalActivity?.title);
         } else if (ze.feedingPlanSessionDetail) {
           return selTitleGroupList.find(ti => ti == ze.feedingPlanSessionDetail?.feedingPlan?.title);
-        } else if (ze) {
-
+        } else if (ze.eventType == "Employee Absence") {
+          return selTitleGroupList.find(ti => ti == ze.eventName);
         }
       })
     )
-    if (!newPage){
-      console.log("set stuff", selEventGroupList , selTitleGroupList)
+    if (!newPage) {
       localStorage.setItem('selEventGroupList', JSON.stringify(selEventGroupList));
       localStorage.setItem('selTitleGroupList', JSON.stringify(selTitleGroupList));
     }
   }, [selEventGroupList, selTitleGroupList]);
+
+  useEffect(() => {
+    const ty_all: string[] = [];
+
+    zooEventsList.filter(ze => selEventGroupList.find(et => ze.eventType == et)).forEach(ze => {
+
+      if (ze.animalActivity) {
+        if (ze.animalActivity?.title !== undefined && !ty_all.find(title => title == ze.animalActivity?.title)) {
+          ty_all.push(ze.animalActivity?.title);
+        }
+      } else if (ze.feedingPlanSessionDetail) {
+        if (ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && !ty_all.find(title => title == ze.feedingPlanSessionDetail?.feedingPlan?.title)) {
+          ty_all.push(ze.feedingPlanSessionDetail?.feedingPlan?.title);
+        }
+      } else if (ze.eventType == "Employee Absence") {
+        if (ze.eventName !== undefined && !ty_all.find(title => title == ze.eventName)) {
+          ty_all.push(ze.eventName);
+        }
+      }
+    });
+
+    setTitleGroupList(
+      ty_all
+    );
+
+    setSelTitleGroupList(
+      selTitleGroupList.filter(ti => {
+        return zooEventsList.filter(ze => selEventGroupList.find(et => ze.eventType == et)).find(ze => {
+
+          if (ze.animalActivity) {
+            return ze.animalActivity?.title !== undefined && ze.animalActivity.title == ti;
+          } else if (ze.feedingPlanSessionDetail) {
+            return ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && ze.feedingPlanSessionDetail?.feedingPlan?.title == ti;
+          } else if (ze.eventType == "Employee Absence") {
+            return ze.eventName !== undefined && ze.eventName == ti;
+          }
+        });
+      })
+    );
+  }, [selEventGroupList])
 
   const menuLeft = useRef<Menu>(null);
   let items = [
@@ -192,14 +228,17 @@ function ZooEventHomePage() {
         }
       ]
     },
-    // {
-    //   label: 'Public',
-    //   items: [{
-    //     label: 'None',
-    //     icon: '',
-    //     command: () => { }
-    //   }]
-    // },
+    {
+      label: 'Public',
+      items: [{
+        label: 'Public Event',
+        icon: '',
+        command: () => {
+          navigate(`/zooevent/viewallzooevents/`, { replace: true })
+          navigate(`/zooevent/createpubliczooevent/`)
+        }
+      }]
+    },
   ];
 
   return (

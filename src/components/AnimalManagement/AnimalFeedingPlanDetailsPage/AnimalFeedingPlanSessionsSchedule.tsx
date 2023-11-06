@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useApiJson from "../../../hooks/useApiJson";
 import FeedingPlan from "../../../models/FeedingPlan";
 
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import {
   Tooltip,
@@ -17,23 +17,21 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import FeedingPlanSessionDetail from "../../../models/FeedingPlanSessionDetail";
-import FeedingItem from "../../../models/FeedingItem";
-import Animal from "../../../models/Animal";
-import { Button } from "@/components/ui/button";
-import { Dialog } from "primereact/dialog";
-import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { HiCheck, HiOutlineExclamationCircle, HiX } from "react-icons/hi";
+import { Dialog } from "primereact/dialog";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import {
   InputNumber,
   InputNumberValueChangeEvent,
 } from "primereact/inputnumber";
-import SpeciesDietNeed from "../../../models/SpeciesDietNeed";
+import { HiCheck, HiOutlineExclamationCircle, HiX } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 import { AnimalFeedCategory, FoodUnit } from "../../../enums/Enumurated";
-import { MultiSelect } from "primereact/multiselect";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import Animal from "../../../models/Animal";
+import FeedingItem from "../../../models/FeedingItem";
+import FeedingPlanSessionDetail from "../../../models/FeedingPlanSessionDetail";
+import SpeciesDietNeed from "../../../models/SpeciesDietNeed";
 
 interface AnimalFeedingPlanSessionsScheduleProps {
   curFeedingPlan: FeedingPlan;

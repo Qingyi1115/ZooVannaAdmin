@@ -1,4 +1,4 @@
-import { PlannerType, Specialization} from "src/enums/Enumurated";
+import { PlannerType, Specialization } from "src/enums/Enumurated";
 
 interface PlanningStaff {
     id: number;

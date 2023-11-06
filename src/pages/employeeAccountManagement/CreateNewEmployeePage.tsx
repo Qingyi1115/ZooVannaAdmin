@@ -1,4 +1,3 @@
-import React from "react";
 import CreateNewEmployeeForm from "../../components/EmployeeAccountManagement/CreateNewEmployeeForm";
 
 function CreateNewEmployeePage() {

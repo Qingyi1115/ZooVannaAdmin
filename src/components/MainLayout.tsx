@@ -1,7 +1,4 @@
 import React from "react";
-import Sidebar from "./Deprecated/Sidebar";
-import { Outlet } from "react-router-dom";
-import Header from "./Deprecated/Header";
 import HeaderNew from "./Header/HeaderNew";
 import SidebarNew from "./Sidebar/SidebarNew";
 

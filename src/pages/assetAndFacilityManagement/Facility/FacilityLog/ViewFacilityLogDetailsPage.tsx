@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../../../hooks/useApiJson";
 import Facility from "../../../../models/Facility";
 
-import FacilityLog from "../../../../models/FacilityLog";
 import ViewFacilityLogDetails from "../../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/ViewFacilityLogDetails";
 import { FacilityLogType } from "../../../../enums/FacilityLogType";
-import InHouse from "../../../../models/InHouse";
 import { FacilityType } from "../../../../enums/FacilityType";
+import FacilityLog from "../../../../models/FacilityLog";
+import InHouse from "../../../../models/InHouse";
 
 
 

@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import * as Form from "@radix-ui/react-form";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
-import FormFieldInput from "../../FormFieldInput";
-import FormFieldSelect from "../../FormFieldSelect";
-import useApiJson from "../../../hooks/useApiJson";
-import useApiFormData from "../../../hooks/useApiFormData";
-import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import * as Form from "@radix-ui/react-form";
+import { NavLink, useNavigate } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
+import FormFieldInput from "../../FormFieldInput";
+import FormFieldSelect from "../../FormFieldSelect";
 
 function validateFacilityName(props: ValidityState) {
   if (props != undefined) {

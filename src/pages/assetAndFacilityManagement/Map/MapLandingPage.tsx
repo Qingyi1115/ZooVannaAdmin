@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LandingPageMap from "../../../components/AssetAndFacilityManagement/FacilityManagement/Map/LandingPageMap";
 
-import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/components/ui/use-toast";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import {
   Select,
@@ -18,40 +18,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  MapContainer,
-  Marker,
-  useMap,
-  useMapEvents,
-  ImageOverlay,
-  Polygon,
-  SVGOverlay,
-} from "react-leaflet";
-import { TileLayer } from "react-leaflet";
-import L, {
-  LatLng,
-  LatLngBounds,
-  LatLngBoundsLiteral,
-  LatLngExpression,
-} from "leaflet";
-import Facility from "../../../models/Facility";
-import useApiJson from "../../../hooks/useApiJson";
-import { FacilityType } from "../../../enums/FacilityType";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
+import { InputText } from "primereact/inputtext";
 import {
   HiCheck,
-  HiEye,
   HiInformationCircle,
-  HiPlus,
-  HiX,
+  HiX
 } from "react-icons/hi";
-import { IdentifierType } from "../../../enums/Enumurated";
-import { DataTable } from "primereact/datatable";
-import { dt } from "@fullcalendar/core/internal-common";
-import { Column } from "primereact/column";
-import { InputText } from "primereact/inputtext";
-import { HiMap, HiMapPin } from "react-icons/hi2";
-import InHouse from "../../../models/InHouse";
+import { HiMapPin } from "react-icons/hi2";
+import { FacilityType } from "../../../enums/FacilityType";
+import useApiJson from "../../../hooks/useApiJson";
+import Facility from "../../../models/Facility";
 // import geolocation from "geolocation";
 
 let emptyFacility: FacilityWithSelected = {

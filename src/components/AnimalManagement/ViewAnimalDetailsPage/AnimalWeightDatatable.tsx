@@ -1,35 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 
-import { classNames } from "primereact/utils";
-import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 // import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
-import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 
-import Species from "../../../models/Species";
+import { HiCheck, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../hooks/useApiJson";
-import { ColumnGroup } from "primereact/columngroup";
-import { Row } from "primereact/row";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
 import Animal from "../../../models/Animal";
-import {
-  AcquisitionMethod,
-  AnimalGrowthStage,
-  AnimalSex,
-} from "../../../enums/Enumurated";
 import AnimalWeight from "../../../models/AnimalWeight";
 
 let emptyAnimalWeight: AnimalWeight = {

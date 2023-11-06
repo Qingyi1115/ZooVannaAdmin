@@ -1,26 +1,23 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
-import Sensor from "../../../../models/Sensor";
+import { HiCamera, HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import Sensor from "../../../../models/Sensor";
 
 import { Button } from "@/components/ui/button";
-import { SensorType } from "../../../../enums/SensorType";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import Hub from "../../../../models/HubProcessor";
-import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
-import GeneralStaff from "../../../../models/GeneralStaff";
+import { SensorType } from "../../../../enums/SensorType";
 import beautifyText from "../../../../hooks/beautifyText";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
+import Hub from "../../../../models/HubProcessor";
 
 interface AllSensorDatatableProps {
   curHub: Hub,
@@ -123,6 +120,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
   const actionBodyTemplate = (sensor: Sensor) => {
     return (
       <React.Fragment>
+
         <Button
           // variant={"outline"}
           className="mb-1 mr-1" onClick={() => {
@@ -131,6 +129,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
           }}>
           <HiEye className="mx-auto" />
         </Button>
+
         {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <Button className="mr-2" onClick={()=>{ 
                 navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
@@ -139,6 +138,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
               <HiPencil className="mx-auto" />
             </Button>
         )} */}
+
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
             variant={"destructive"}
@@ -148,6 +148,15 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
             <HiTrash className="mx-auto" />
           </Button>
         )}
+
+        {sensor.sensorType == "CAMERA" && (<Button
+          variant={"outline"}
+          className="mb-1 mr-1" onClick={() => {
+            navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
+            navigate(`/assetfacility/viewcamera/${sensor.sensorId}`);
+          }}>
+          <HiCamera className="mx-auto" />
+        </Button>)}
       </React.Fragment>
     );
   };

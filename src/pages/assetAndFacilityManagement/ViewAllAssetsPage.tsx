@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useParams } from "react-router-dom";
 import AllAnimalFeedDatatable from "../../components/AssetAndFacilityManagement/AssetManagement/AnimalFeed/AllAnimalFeedDatatable";
 import AllEnrichmentItemDatatable from "../../components/AssetAndFacilityManagement/AssetManagement/EnrichmentItem/AllEnrichmentItemDatatable";
 

@@ -1,15 +1,14 @@
-import Animal from "./Animal";
 import {
   ActivityType,
   DayOfWeek,
   EventTimingType,
   RecurringPattern,
 } from "../enums/Enumurated";
-import EnrichmentItem from "./EnrichmentItem";
-import Employee from "./Employee";
-import ZooEvent from "./ZooEvent";
+import Animal from "./Animal";
 import AnimalActivityLog from "./AnimalActivityLog";
 import AnimalObservationLog from "./AnimalObservationLog";
+import EnrichmentItem from "./EnrichmentItem";
+import ZooEvent from "./ZooEvent";
 
 interface AnimalActivity {
   animalActivityId: number;

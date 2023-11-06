@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useApiJson from "../../hooks/useApiJson";
-import Animal from "../../models/Animal";
 import CreateNewAnimalObservationLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/CreateNewAnimalObservationLogForm";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, ActivityType, EventTimingType, RecurringPattern } from "../../enums/Enumurated";
-import Species from "../../models/Species";
+import { ActivityType, EventTimingType, RecurringPattern } from "../../enums/Enumurated";
+import useApiJson from "../../hooks/useApiJson";
 import AnimalActivity from "../../models/AnimalActivity";
 import Employee from "../../models/Employee";
+import Species from "../../models/Species";
 
 function CreateNewAnimalObservationLogPage() {
   const apiJson = useApiJson();

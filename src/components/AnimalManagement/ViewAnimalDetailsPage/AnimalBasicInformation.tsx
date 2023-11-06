@@ -1,36 +1,21 @@
 import React from "react";
 import Animal from "../../../models/Animal";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import SpeciesCard from "./SpeciesCard";
-import EnclosureCard from "./EnclosureCard";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import AnimalParentsCard from "./AnimalParentsCard";
-import UpdateStatusFormDialog from "./UpdateStatusFormDialog";
-import { Separator } from "@/components/ui/separator";
-import DeclareDeathFormDialog from "./DeclareDeathFormDialog";
-import { useNavigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
+import { NavLink, useNavigate } from "react-router-dom";
 import beautifyText from "../../../hooks/beautifyText";
+import AnimalParentsCard from "./AnimalParentsCard";
+import EnclosureCard from "./EnclosureCard";
+import SpeciesCard from "./SpeciesCard";
+import UpdateStatusFormDialog from "./UpdateStatusFormDialog";
 
 interface AnimalBasicInformationProps {
   curAnimal: Animal;

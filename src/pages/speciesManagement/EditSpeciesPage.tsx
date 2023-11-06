@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import EditSpeciesForm from "../../components/SpeciesManagement/EditSpeciesPage/EditSpeciesForm";
 import useApiJson from "../../hooks/useApiJson";
