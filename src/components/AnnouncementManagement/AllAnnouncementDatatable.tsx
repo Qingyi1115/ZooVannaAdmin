@@ -57,6 +57,9 @@ function AllAnnouncementsDatatable() {
   let [count, setCount] = useState<number | null>(null);
   const isInitialRender = useRef(true);
 
+  const [deleteAnnouncementDialog, setDeleteAnnouncementDialog] =
+    useState<boolean>(false);
+
   const fetchannouncements = async () => {
     try {
       const responseJson = await apiJson.get(
@@ -355,9 +358,75 @@ function AllAnnouncementsDatatable() {
             <HiBan className="" />
           </Button>
         )}
+        <Button
+          variant={"destructive"}
+          className="ml-1"
+          onClick={() => confirmDeleteAnnouncement(announcement)}
+        >
+          <HiTrash className="mx-auto" />
+        </Button>
       </div>
     );
   };
+
+  const deleteAnnouncement = async () => {
+    let _announcement = announcementList.filter(
+      (val) => val.announcementId !== selectedAnnouncement?.announcementId
+    );
+
+    const selectedAnnouncementTitle = selectedAnnouncement.title;
+
+    const deleteAnnouncementApi = async () => {
+      try {
+        const responseJson = await apiJson.del(
+          "http://localhost:3000/api/announcement/deleteAnnouncement/" +
+            selectedAnnouncement.announcementId
+        );
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Deletion Successful",
+          description:
+            "Successfully deleted announcement: " + selectedAnnouncementTitle,
+        });
+        setAnnouncementList(_announcement);
+        setDeleteAnnouncementDialog(false);
+        setSelectedAnnouncement(announcement);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while deleting announcement: \n" +
+            apiJson.error,
+        });
+      }
+    };
+    deleteAnnouncementApi();
+  };
+
+  const confirmDeleteAnnouncement = (announcement: Announcement) => {
+    setSelectedAnnouncement(announcement);
+    setDeleteAnnouncementDialog(true);
+  };
+
+  const hideDeleteAnnouncementDialog = () => {
+    setDeleteAnnouncementDialog(false);
+  };
+
+  const deleteAnnouncementDialogFooter = (
+    <React.Fragment>
+      <Button onClick={hideDeleteAnnouncementDialog}>
+        <HiX className="mr-2" />
+        No
+      </Button>
+      <Button variant={"destructive"} onClick={deleteAnnouncement}>
+        <HiCheck className="mr-2" />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
 
   const statusTemplate = (announcement: Announcement) => {
     let status;
@@ -497,7 +566,7 @@ function AllAnnouncementsDatatable() {
               exportable={false}
               frozen
               alignFrozen="right"
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "15rem" }}
             ></Column>
           </DataTable>
         </div>
@@ -517,7 +586,29 @@ function AllAnnouncementsDatatable() {
             />
             {selectedAnnouncement && (
               <span>
-                Are you sure you want to disable{" "}
+                Are you sure you want to unpublish{" "}
+                <b>{selectedAnnouncement.title}</b>?
+              </span>
+            )}
+          </div>
+        </Dialog>
+        <Dialog
+          visible={deleteAnnouncementDialog}
+          style={{ width: "32rem" }}
+          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+          header="Confirm"
+          modal
+          footer={deleteAnnouncementDialogFooter}
+          onHide={hideDeleteAnnouncementDialog}
+        >
+          <div className="confirmation-content">
+            <i
+              className="pi pi-exclamation-triangle mr-3"
+              style={{ fontSize: "2rem" }}
+            />
+            {selectedAnnouncement && (
+              <span>
+                Are you sure you want to delete{" "}
                 <b>{selectedAnnouncement.title}</b>?
               </span>
             )}
