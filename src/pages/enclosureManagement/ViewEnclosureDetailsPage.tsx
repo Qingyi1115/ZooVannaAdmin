@@ -17,6 +17,7 @@ function ViewEnclosureDetailsPage() {
   const { state, dispatch } = useEnclosureContext();
 
   const { enclosureId } = useParams<{ enclosureId: string }>();
+  const { tab } = useParams<{ tab: string }>();
 
   //   const [curEnclosure, setCurEnclosure] = useState<Enclosure | null>(null);
   const curEnclosure = state.curEnclosure;
