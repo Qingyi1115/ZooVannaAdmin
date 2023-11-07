@@ -1,28 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import * as Form from "@radix-ui/react-form";
 
 import useApiJson from "../../../hooks/useApiJson";
 import FormFieldInput from "../../FormFieldInput";
-import FormFieldSelect from "../../FormFieldSelect";
-import { ContinentEnum } from "../../../enums/ContinentEnum";
-import { HiCheck } from "react-icons/hi";
-import { BiomeEnum } from "../../../enums/BiomeEnum";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import Species from "../../../models/Species";
-import { NavLink } from "react-router-dom";
-import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
-import {
-  AnimalFeedCategory,
-  AnimalGrowthStage,
-  PresentationContainer,
-  PresentationLocation,
-  PresentationMethod,
-} from "../../../enums/Enumurated";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { NavLink } from "react-router-dom";
 
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 

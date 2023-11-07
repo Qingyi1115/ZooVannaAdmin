@@ -1,4 +1,3 @@
-import React from "react";
 import CreateNewPromotionForm from "../../components/Promotion/CreateNewPromotionForm";
 
 function CreateNewPromotionPage() {

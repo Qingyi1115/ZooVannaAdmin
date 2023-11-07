@@ -1,4 +1,3 @@
-import React from "react";
 import AllAnimalsDatatable from "../../components/AnimalManagement/ViewAllAnimalsPage/AllAnimalsDatatable";
 
 function ViewAllAnimalsPage() {

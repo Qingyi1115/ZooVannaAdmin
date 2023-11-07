@@ -1,25 +1,23 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
+import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { MdOutlineAssignmentInd } from "react-icons/md";
 import facility from "src/models/Facility";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
-import { MdOutlineAssignmentInd } from "react-icons/md";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useParams } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
-import Facility from "../../../../models/Facility";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { NavLink, useParams } from "react-router-dom";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-import { BsWrenchAdjustable } from "react-icons/bs";
+import Facility from "../../../../models/Facility";
 
 function AllFacilityDatatable() {
   const apiJson = useApiJson();

@@ -1,25 +1,20 @@
-import React, { useState, useEffect } from "react";
 import * as Form from "@radix-ui/react-form";
-import * as RadioGroup from "@radix-ui/react-radio-group";
-import * as Checkbox from "@radix-ui/react-checkbox";
+import React, { useEffect, useState } from "react";
 
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
 import useApiFormData from "../../../hooks/useApiFormData";
 import useApiJson from "../../../hooks/useApiJson";
 
-import FormFieldInput from "../../FormFieldInput";
-import FormFieldSelect from "../../FormFieldSelect";
-import { ContinentEnum } from "../../../enums/ContinentEnum";
-import { HiCheck } from "react-icons/hi";
-import { BiomeEnum } from "../../../enums/BiomeEnum";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 import Species from "src/models/Species";
+import FormFieldInput from "../../FormFieldInput";
+import FormFieldRadioGroup from "../../FormFieldRadioGroup";
+import FormFieldSelect from "../../FormFieldSelect";
 
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { NavLink } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
 

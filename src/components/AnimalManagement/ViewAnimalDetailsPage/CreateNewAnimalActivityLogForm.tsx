@@ -1,24 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import * as Form from "@radix-ui/react-form";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
-import FormFieldInput from "../../FormFieldInput";
-import FormFieldSelect from "../../FormFieldSelect";
-import useApiJson from "../../../hooks/useApiJson";
-import useApiFormData from "../../../hooks/useApiFormData";
-import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import Animal from "../../../models/Animal";
+import { useToast } from "@/components/ui/use-toast";
+import * as Form from "@radix-ui/react-form";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
-import Employee from "../../../models/Employee";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import { set } from "date-fns";
-import AnimalActivityLog from "../../../models/AnimalActivityLog";
-import AnimalActivity from "../../../models/AnimalActivity";
+import { useNavigate } from "react-router-dom";
 import beautifyText from "../../../hooks/beautifyText";
+import useApiJson from "../../../hooks/useApiJson";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import Animal from "../../../models/Animal";
+import AnimalActivity from "../../../models/AnimalActivity";
+import FormFieldInput from "../../FormFieldInput";
+import FormFieldSelect from "../../FormFieldSelect";
 
 interface CreateNewAnimalActivityLogProps {
   curAnimalActivity: AnimalActivity

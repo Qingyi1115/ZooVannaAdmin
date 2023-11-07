@@ -1,4 +1,3 @@
-import React from "react";
 import AllListingsDatatable from "../../components/ListingManagement/AllListingsDatatable";
 
 function ViewAllListingsPage() {

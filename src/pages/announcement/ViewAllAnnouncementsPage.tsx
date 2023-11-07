@@ -1,4 +1,3 @@
-import React from "react";
 import AllAnnouncementsDatatable from "../../components/AnnouncementManagement/AllAnnouncementDatatable";
 
 function ViewAllAnnouncementsPage() {

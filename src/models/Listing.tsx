@@ -1,5 +1,4 @@
-import { ListingType } from "src/enums/Enumurated";
-import { ListingStatus } from "src/enums/Enumurated";
+import { ListingStatus, ListingType } from "src/enums/Enumurated";
 
 interface Listing {
   listingId: number;

@@ -1,20 +1,17 @@
-import { Toast } from "primereact/toast";
-import React, { useEffect, useState, useRef, forwardRef } from "react";
-import { DataTable } from "primereact/datatable";
-import useApiJson from "../../../../../hooks/useApiJson";
-import Employee from "../../../../../models/Employee";
-import { InputText } from "primereact/inputtext";
-import { Column } from "primereact/column";
-import { useNavigate } from "react-router-dom";
-import { HiCheck, HiClipboard, HiEye, HiMinus, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Checkbox, CheckboxClickEvent } from "primereact/checkbox";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
-import GeneralStaff from "../../../../../models/GeneralStaff";
-import { Toolbar } from "primereact/toolbar";
-import { Separator } from "@/components/ui/separator";
+import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import React, { useEffect, useRef, useState } from "react";
+import { HiCheck, HiEye, HiMinus, HiPlus, HiX } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../../../hooks/useApiJson";
+import Employee from "../../../../../models/Employee";
 import Facility from "../../../../../models/Facility";
-import { Checkbox, CheckboxChangeEvent, CheckboxClickEvent } from "primereact/checkbox";
 
 interface ViewAllFacilityMaintenanceStaffProps {
   facilityId: number;

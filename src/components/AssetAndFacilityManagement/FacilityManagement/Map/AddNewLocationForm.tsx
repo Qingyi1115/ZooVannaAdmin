@@ -1,34 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { useEffect, useRef, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 import useApiJson from "../../../../hooks/useApiJson";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 
 import Facility from "../../../../models/Facility";
 
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  useMap,
-  useMapEvents,
-  ImageOverlay,
-  TileLayer,
-} from "react-leaflet";
 import L, {
-  CRS,
   LatLng,
   LatLngBounds,
-  LatLngBoundsLiteral,
-  LatLngExpression,
+  LatLngExpression
 } from "leaflet";
+import {
+  ImageOverlay,
+  MapContainer,
+  Marker,
+  TileLayer,
+  useMapEvents
+} from "react-leaflet";
 
 function iconFunction(facilityType: string) {
   let iconUrl = `../../../../../src/assets/mapicons/1.png`;

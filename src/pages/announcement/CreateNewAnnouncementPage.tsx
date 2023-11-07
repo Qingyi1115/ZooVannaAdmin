@@ -1,4 +1,3 @@
-import React from "react";
 import CreateNewAnnouncementForm from "../../components/AnnouncementManagement/CreateNewAnnouncement";
 
 function CreateNewAnnouncementPage() {

@@ -7,13 +7,12 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table";
-import { NavLink, useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
-import AnimalActivityLog from "../../../models/AnimalActivityLog";
-import Animal from "../../../models/Animal";
-import AnimalFeedingPlanInvolvedAnimalDatatable from "../AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
-import { useAuthContext } from "../../../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 import beautifyText from "../../../hooks/beautifyText";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import AnimalActivityLog from "../../../models/AnimalActivityLog";
+import AnimalFeedingPlanInvolvedAnimalDatatable from "../AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 
 interface ViewAnimalActivityLogDetailsProps {
   curAnimalActivityLog: AnimalActivityLog

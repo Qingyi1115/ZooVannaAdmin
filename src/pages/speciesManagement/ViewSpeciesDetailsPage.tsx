@@ -1,24 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import Species from "../../models/Species";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import SpeciesBasicInfoDetails from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesBasicInfoDetails";
-import SpeciesEduContentDetails from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEduContentDetails";
-import SpeciesEnclosureRequirements from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEnclosureRequirements";
-import SpeciesDietaryRequirements from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesDietaryRequirements";
-import { NavLink } from "react-router-dom";
-import SpeciesEnclosureCompatibilities from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEnclosureCompatibilities";
 import { Separator } from "@/components/ui/separator";
+import { NavLink } from "react-router-dom";
+import SpeciesBasicInfoDetails from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesBasicInfoDetails";
+import SpeciesDietaryRequirements from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesDietaryRequirements";
+import SpeciesEduContentDetails from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEduContentDetails";
+import SpeciesEnclosureCompatibilities from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEnclosureCompatibilities";
+import SpeciesEnclosureRequirements from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesEnclosureRequirements";
 import SpeciesPhysiologicalRefNorms from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/SpeciesPhysiologicalRefNorms";
 
 function ViewSpeciesDetailsPage() {

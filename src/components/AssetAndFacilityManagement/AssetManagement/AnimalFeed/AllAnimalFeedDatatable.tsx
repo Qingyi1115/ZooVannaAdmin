@@ -1,21 +1,21 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
-import AnimalFeed from "../../../../models/AnimalFeed";
+import { HiCheck, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import AnimalFeed from "../../../../models/AnimalFeed";
 
 import { Button } from "@/components/ui/button";
-import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
+import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
+import beautifyText from "../../../../hooks/beautifyText";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import beautifyText from "../../../../hooks/beautifyText";
@@ -57,11 +57,12 @@ function AllAnimalFeedDatatable() {
 
   const imageBodyTemplate = (rowData: AnimalFeed) => {
     return (
-      <img
-        src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
-        alt={rowData.animalFeedName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      (rowData.animalFeedImageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.animalFeedImageUrl}
+          alt={rowData.animalFeedName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        /> : "-")
     );
   };
 

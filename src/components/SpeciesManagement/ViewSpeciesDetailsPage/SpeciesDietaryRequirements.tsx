@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Species from "../../../models/Species";
 import SpeciesDietNeed from "../../../models/SpeciesDietNeed";
-import {
-  AnimalFeedCategory,
-  AnimalGrowthStage,
-  PresentationContainer,
-  PresentationLocation,
-  PresentationMethod,
-} from "../../../enums/Enumurated";
 import DietNeedDatatable from "./DietNeedDatatable";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
 interface SpeciesDietaryRequirementsProps {
   curSpecies: Species;

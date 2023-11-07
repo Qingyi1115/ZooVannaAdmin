@@ -1,29 +1,19 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { classNames } from "primereact/utils";
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
-import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 
-import Promotion from "../../models/Promotion";
+import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../hooks/useApiJson";
-import { ColumnGroup } from "primereact/columngroup";
-import { Row } from "primereact/row";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import Promotion from "../../models/Promotion";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { NavLink } from "react-router-dom";
 
 import * as moment from "moment-timezone";
 
@@ -84,15 +74,16 @@ function AllPromotionDatatable() {
 
   const imageBodyTemplate = (rowData: Promotion) => {
     return (
-      <img
-        src={"http://localhost:3000/" + rowData.imageUrl}
-        alt={rowData.title}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      (rowData.imageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.title}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        /> : "-")
     );
   };
 
-  const navigateEditProduct = (promotion: Promotion) => {};
+  const navigateEditProduct = (promotion: Promotion) => { };
 
   const confirmDeletePromotion = (promotion: Promotion) => {
     setSelectedPromotion(promotion);
@@ -122,7 +113,7 @@ function AllPromotionDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/promotion/deletePromotion/" +
-            selectedPromotion.promotionId
+          selectedPromotion.promotionId
         );
 
         toastShadcn({

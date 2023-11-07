@@ -1,4 +1,3 @@
-import React from "react";
 import AllEmployeesDatatable from "../../components/EmployeeAccountManagement/AllEmployeesDatatable";
 
 function ViewAllEmployeesPage() {

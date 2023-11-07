@@ -95,6 +95,12 @@
   border: 1px solid #976405;
 }
 
+.fc-event.empAbs,
+.fc-v-event.empAbs {
+  background-color: #494249;
+  border: 1px solid #0e383d;
+}
+
 /* 
 .fc-event:hover,
 .fc-v-event:hover {
@@ -154,6 +160,15 @@
   background: #960069;
   /* Adjust the color and opacity as needed */
   color: #24341c;
+  cursor: pointer;
+}
+
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.empAbs:hover {
+  background: #00000060;
+  /* Adjust the color and opacity as needed */
+  color: #57eb0e;
   cursor: pointer;
 }
 

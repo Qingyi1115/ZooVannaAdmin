@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import EditEventForm from "../../components/EventManagement/EditZooEventPage/EditZooEventForm";
 import useApiJson from "../../hooks/useApiJson";
 import ZooEvent from "../../models/Event";
-import EditEventForm from "../../components/EventManagement/EditZooEventPage/EditZooEventForm";
 
 function EditZooEventPage() {
   const apiJson = useApiJson();

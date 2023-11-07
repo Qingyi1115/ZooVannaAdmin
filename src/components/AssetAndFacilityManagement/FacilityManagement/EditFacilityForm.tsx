@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import React, { useState } from "react";
 
-import { MultiSelectChangeEvent } from "primereact/multiselect";
 
-import useApiFormData from "../../../hooks/useApiFormData";
-import FormFieldInput from "../../FormFieldInput";
-import Facility from "../../../models/Facility";
-import useApiJson from "../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../../../components/FormFieldSelect";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { useLocation, useNavigate } from "react-router-dom";
+import FormFieldSelect from "../../../components/FormFieldSelect";
+import useApiJson from "../../../hooks/useApiJson";
+import Facility from "../../../models/Facility";
+import FormFieldInput from "../../FormFieldInput";
 
 interface EditFacilityFormProps {
   curFacility: Facility;

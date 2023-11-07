@@ -1,27 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Animal from "../../models/Animal";
-import Species from "../../models/Species";
-import {
-  AcquisitionMethod,
-  AnimalGrowthStage,
-  AnimalSex,
-} from "../../enums/Enumurated";
-import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
-import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
 import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
 import AnimalActivityInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalActivityInfo";
+import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
+import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
+import Animal from "../../models/Animal";
 
-import AllAnimalFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalFeedingLogsDatatable";
 import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalActivityLogsDatatable";
+import AllAnimalFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalFeedingLogsDatatable";
 
 function ViewAnimalDetailsPage() {
   const apiJson = useApiJson();
