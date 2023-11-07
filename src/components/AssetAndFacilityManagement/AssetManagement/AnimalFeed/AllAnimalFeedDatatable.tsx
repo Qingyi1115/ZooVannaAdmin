@@ -17,8 +17,6 @@ import { useNavigate } from "react-router-dom";
 import { AnimalFeedCategory } from "../../../../enums/AnimalFeedCategory";
 import beautifyText from "../../../../hooks/beautifyText";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-import { useNavigate } from "react-router-dom";
-import beautifyText from "../../../../hooks/beautifyText";
 
 function AllAnimalFeedDatatable() {
   const apiJson = useApiJson();
