@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
 import * as Form from "@radix-ui/react-form";
+import { Calendar } from "primereact/calendar";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  ActivityType,
+} from "../../../enums/Enumurated";
 import useApiFormData from "../../../hooks/useApiFormData";
+import useApiJson from "../../../hooks/useApiJson";
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
-import useApiJson from "../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
-import {
-  EventType,
-} from "../../../enums/Enumurated";
-import { Calendar } from "primereact/calendar";
 
-import { Nullable } from "primereact/ts-helpers";
+import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import beautifyText from "../../../hooks/beautifyText";
+import Animal from "../../../models/Animal";
+import Employee from "../../../models/Employee";
+import Facility from "../../../models/Facility";
 
 function CreatePublicZooEventForm() {
   const apiFormData = useApiFormData();
@@ -23,18 +26,59 @@ function CreatePublicZooEventForm() {
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const [eventType, setEventType] = useState<string | undefined>(
+  const [activityType, setActivityType] = useState<string | undefined>(
     undefined
   );
-  const [eventName, setEventName] = useState<string>("");
-  const [eventDescription, setEventDescription] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [details, setDetails] = useState<string>("");
   const [eventDates, setEventDates] = useState<Date[]>([]);
-  const [eventNotificationDate, setEventNotificationDate] = useState<Nullable<Date>>(null);
+  // const [eventNotificationDate, setEventNotificationDate] = useState<Nullable<Date>>(null);
+
+  const [curAnimalList, setCurAnimalList] = useState<any>(null);
+  const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
+
+  const [curKeeperList, setCurKeeperList] = useState<any>(null);
+  const [selectedKeepers, setSelectedKeepers] = useState<Employee[]>([]);
+
+  const [curInHouseList, setCurInHouseList] = useState<any>(null);
+  const [selectedInHouse, setSelectedInHouse] = useState<Facility[]>([]);
+
+  useEffect(() => {
+    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+      setCurAnimalList(res as Animal[]);
+      console.log(res);
+    });
+  }, []);
+
+  useEffect(() => {
+    apiJson.post(
+      "http://localhost:3000/api/employee/getAllEmployees",
+      { includes: ["keeper", "generalStaff", "planningStaff"] }
+    ).then(res => {
+      const allKeepers: Employee[] = []
+      console.log(res.employees);
+      setCurKeeperList(res["employees"]);
+    });
+  }, []);
+
+   useEffect(() => {
+    apiJson
+      .post("http://localhost:3000/api/assetFacility/getAllFacility", {
+        includes: ["facilityDetail"],
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+      .then((res) => {
+        console.log("req", res)
+        setCurInHouseList(res["facilities"].filter((facility: Facility) => facility.facilityDetail == "inHouse"));
+      });
+  }, []);
 
   // validate functions
   function validateIdentifierType(props: ValidityState) {
     if (props != undefined) {
-      if (eventType == undefined) {
+      if (activityType == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please select an activity type!
@@ -46,7 +90,7 @@ function CreatePublicZooEventForm() {
     return null;
   }
 
-  function validateEventName(props: ValidityState) {
+  function validateTitle(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
@@ -58,7 +102,7 @@ function CreatePublicZooEventForm() {
     return null;
   }
 
-  function validateEventDescription(props: ValidityState) {
+  function validateDetails(props: ValidityState) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
@@ -87,26 +131,26 @@ function CreatePublicZooEventForm() {
     return null;
   }
 
-  function validateEventNotificationDate(props: ValidityState) {
-    if (props != undefined) {
-      if (eventNotificationDate == null) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter the notification date of the event
-          </div>
-        );
-      }
-      if (eventNotificationDate > eventDates[0]) {
-        return (
-          <div className="font-medium text-danger">
-            * Event notification date cannot be after the event start date
-          </div>
-        );
-      }
-    }
-    // add any other cases here
-    return null;
-  }
+  // function validateEventNotificationDate(props: ValidityState) {
+  //   if (props != undefined) {
+  //     if (eventNotificationDate == null) {
+  //       return (
+  //         <div className="font-medium text-danger">
+  //           * Please enter the notification date of the event
+  //         </div>
+  //       );
+  //     }
+  //     if (eventNotificationDate > eventDates[0]) {
+  //       return (
+  //         <div className="font-medium text-danger">
+  //           * Event notification date cannot be after the event start date
+  //         </div>
+  //       );
+  //     }
+  //   }
+  //   // add any other cases here
+  //   return null;
+  // }
 
   function validateImage(props: ValidityState) {
     if (props != undefined) {
@@ -114,6 +158,48 @@ function CreatePublicZooEventForm() {
         return (
           <div className="font-medium text-danger">
             * Please upload an image
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateAnimals(props: ValidityState) {
+    if (props != undefined) {
+      if (selectedAnimals.length == 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select at least one animal
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateKeepers(props: ValidityState) {
+    if (props != undefined) {
+      if (selectedKeepers.length == 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select at least one keeper
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateInHouse(props: ValidityState) {
+    if (props != undefined) {
+      if (selectedInHouse.length == 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select at least one in-house facility
           </div>
         );
       }
@@ -151,19 +237,34 @@ function CreatePublicZooEventForm() {
     // let dateInMilliseconds = date?.getTime();
 
     const newPublicZooEvent = {
-      eventIsPublic: true,
-      eventNotificationDate: eventNotificationDate,
-      eventStartDateTime: eventDates[0].getTime(),
-      eventEndDateTime: eventDates[1].getTime(),
-      eventName: eventName,
-      eventDescription: eventDescription
+      title: title,
+      activityType: activityType,
+      details: details,
+      startDate: eventDates[0].getTime(),
+      endDate: eventDates[1].getTime(),
+      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode),
+      keeperEmployeeIds: [selectedKeepers.map((keeper: Employee) => keeper.employeeId)],
+      inHouseId: selectedInHouse[0].facilityId.toString()
     };
+    
+    console.log("newEvent", newPublicZooEvent)
 
+    const formData = new FormData();
+    formData.append("file", imageFile || "");
+    formData.append("title", title);
+    formData.append("activityType", activityType || "");
+    formData.append("details", details);
+    formData.append("startDate", eventDates[0].getTime().toString());
+    formData.append("endDate", eventDates[1].getTime().toString());
+    formData.append("animalCodes", selectedAnimals.map((animal: Animal) => animal.animalCode).toString());
+    formData.append("keeperEmployeeIds", selectedKeepers.map((keeper: Employee) => keeper.employeeId).toString());
+    formData.append("inHouseId", selectedInHouse[0].facilityId.toString());
+    
     const createPublicZooEventApi = async () => {
       try {
-        const response = await apiJson.post(
-          "http://localhost:3000/api/zooEvent/createPublicZooEvent",
-          newPublicZooEvent
+        const response = await apiFormData.post(
+          "http://localhost:3000/api/zooEvent/createPublicEvent",
+          formData
         );
         // success
         toastShadcn({
@@ -232,55 +333,55 @@ function CreatePublicZooEventForm() {
         {/* Title */}
         <FormFieldInput
           type="text"
-          formFieldName="eventName"
+          formFieldName="title"
           label="Title"
           required={true}
           placeholder="Event title"
           pattern={undefined}
-          value={eventName}
-          setValue={setEventName}
-          validateFunction={validateEventName}
+          value={title}
+          setValue={setTitle}
+          validateFunction={validateTitle}
         />
 
-        {/* Event Type */}
+        {/* Activity Type */}
         <FormFieldSelect
-          formFieldName="eventType"
-          label="Event Type"
+          formFieldName="activityType"
+          label="Activity Type"
           required={true}
-          placeholder="Select an event type..."
-          valueLabelPair={Object.keys(EventType).map((activiTypeKey) => [
-            EventType[
-              activiTypeKey as keyof typeof EventType
+          placeholder="Select an Activity type..."
+          valueLabelPair={Object.keys(ActivityType).map((activiTypeKey) => [
+            ActivityType[
+              activiTypeKey as keyof typeof ActivityType
             ].toString(),
-            beautifyText(EventType[
-              activiTypeKey as keyof typeof EventType
+            beautifyText(ActivityType[
+              activiTypeKey as keyof typeof ActivityType
             ]),
           ])}
-          value={eventType}
-          setValue={setEventType}
+          value={activityType}
+          setValue={setActivityType}
           validateFunction={validateIdentifierType}
         />
 
         {/* Event Description */}
         <Form.Field
-          name="eventDescription"
+          name="details"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
-          <Form.Label className="font-medium">Description</Form.Label>
+          <Form.Label className="font-medium">Details</Form.Label>
           <Form.Control
             asChild
-            value={eventDescription}
+            value={details}
             required={true}
-            onChange={(e) => setEventDescription(e.target.value)}
+            onChange={(e) => setDetails(e.target.value)}
             className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
           >
             <textarea
               rows={3}
-              placeholder="Event description"
+              placeholder="Details"
             // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
-          <Form.ValidityState>{validateEventDescription}</Form.ValidityState>
+          <Form.ValidityState>{validateDetails}</Form.ValidityState>
         </Form.Field>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -324,8 +425,10 @@ function CreatePublicZooEventForm() {
             <Form.ValidityState>{validateEventDates}</Form.ValidityState>
           </Form.Field>
 
+         
+
           {/* Event Notification Date */}
-          <Form.Field
+          {/* <Form.Field
             name="eventNotificationDate"
             id="eventNotificationDateField"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
@@ -360,8 +463,100 @@ function CreatePublicZooEventForm() {
               }}
             />
             <Form.ValidityState>{validateEventDates}</Form.ValidityState>
-          </Form.Field>
+          </Form.Field> */}
         </div>
+
+        {/* Animals */}  
+         <Form.Field
+        name="animals"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">
+          Animals
+        </Form.Label>
+        {/* <Form.Control
+          asChild
+          value={selectedAnimals.toString()}
+          required={true}
+          onChange={(e) => setSelectedAnimals(e.target.value)}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        /> */}
+         <MultiSelect
+        value={selectedAnimals}
+        onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
+        options={curAnimalList}
+        optionLabel="houseName"
+        filter
+        display="chip"
+        placeholder="Select Animals"
+        // maxSelectedLabels={3}
+        className="w-full md:w-20rem" />
+        <Form.ValidityState>
+          {validateAnimals}
+        </Form.ValidityState>
+        </Form.Field>
+
+      {/* Keepers */}  
+         <Form.Field
+        name="keepers"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">
+          Keepers
+        </Form.Label>
+        {/* <Form.Control
+          asChild
+          value={selectedKeepers.toString()}
+          required={true}
+          onChange={(e) => setSelectedAnimals(e.target.value)}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        /> */}
+         <MultiSelect
+        value={selectedKeepers}
+        onChange={(e: MultiSelectChangeEvent) => setSelectedKeepers(e.value)}
+        options={curKeeperList}
+        optionLabel="employeeName"
+        filter
+        display="chip"
+        placeholder="Select Keepers"
+        // maxSelectedLabels={3}
+        className="w-full md:w-20rem" />
+        <Form.ValidityState>
+          {validateKeepers}
+        </Form.ValidityState>
+        </Form.Field>  
+        
+         {/* Facility */}  
+         <Form.Field
+        name="facility"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">
+          Facility
+        </Form.Label>
+        {/* <Form.Control
+          asChild
+          value={selectedKeepers.toString()}
+          required={true}
+          onChange={(e) => setSelectedAnimals(e.target.value)}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        /> */}
+         <MultiSelect
+        value={selectedInHouse}
+        onChange={(e: MultiSelectChangeEvent) => setSelectedInHouse(e.value)}
+        options={curInHouseList}
+        optionLabel="facilityName"
+        filter
+        display="chip"
+        selectionLimit={1}
+        placeholder="Select Facility"
+        // maxSelectedLabels={3}
+        className="w-full md:w-20rem" />
+        <Form.ValidityState>
+          {validateInHouse}
+        </Form.ValidityState>
+      </Form.Field>  
+  
 
         <Form.Submit asChild>
           <Button

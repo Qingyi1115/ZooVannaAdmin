@@ -75,7 +75,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
         //   }
 
         // }
-        console.log("AddFacilityMaintenanceStaff", res);
+        console.log("AddEventKeepers", res);
         setAvailableEmployees(res["availiableKeepers"].map(keeper => {
           const emp = keeper.employee
           keeper.employee = undefined
