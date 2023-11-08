@@ -5,9 +5,6 @@ import * as Form from "@radix-ui/react-form";
 import { Calendar } from "primereact/calendar";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  EventType,
-} from "../../../enums/Enumurated";
 import useApiFormData from "../../../hooks/useApiFormData";
 import useApiJson from "../../../hooks/useApiJson";
 import FormFieldInput from "../../FormFieldInput";
@@ -19,6 +16,15 @@ import Animal from "../../../models/Animal";
 import Employee from "../../../models/Employee";
 import Facility from "../../../models/Facility";
 
+// Only local
+enum EventType {
+  SHOW = "SHOW",
+  TALK = "TALK",
+  ENRICHMENT = "ENRICHMENT",
+  OBSERVATION = "OBSERVATION",
+  ANIMAL_CHECKUP = "ANIMAL_CHECKUP",
+}
+
 function CreatePublicZooEventForm() {
   const apiFormData = useApiFormData();
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -26,7 +32,7 @@ function CreatePublicZooEventForm() {
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const [activityType, setActivityType] = useState<string | undefined>(
+  const [eventType, setEventType] = useState<string | undefined>(
     undefined
   );
   const [title, setTitle] = useState<string>("");
@@ -61,7 +67,7 @@ function CreatePublicZooEventForm() {
     });
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     apiJson
       .post("http://localhost:3000/api/assetFacility/getAllFacility", {
         includes: ["facilityDetail"],
@@ -78,7 +84,7 @@ function CreatePublicZooEventForm() {
   // validate functions
   function validateIdentifierType(props: ValidityState) {
     if (props != undefined) {
-      if (activityType == undefined) {
+      if (eventType == undefined) {
         return (
           <div className="font-medium text-danger">
             * Please select an activity type!
@@ -238,7 +244,7 @@ function CreatePublicZooEventForm() {
 
     const newPublicZooEvent = {
       title: title,
-      activityType: activityType,
+      eventType: eventType,
       details: details,
       startDate: eventDates[0].getTime(),
       endDate: eventDates[1].getTime(),
@@ -246,20 +252,20 @@ function CreatePublicZooEventForm() {
       keeperEmployeeIds: [selectedKeepers.map((keeper: Employee) => keeper.employeeId)],
       inHouseId: selectedInHouse[0].facilityId.toString()
     };
-    
+
     console.log("newEvent", newPublicZooEvent)
 
     const formData = new FormData();
     formData.append("file", imageFile || "");
     formData.append("title", title);
-    formData.append("activityType", activityType || "");
+    formData.append("eventType", eventType || "");
     formData.append("details", details);
     formData.append("startDate", eventDates[0].getTime().toString());
     formData.append("endDate", eventDates[1].getTime().toString());
     formData.append("animalCodes", selectedAnimals.map((animal: Animal) => animal.animalCode).toString());
     formData.append("keeperEmployeeIds", selectedKeepers.map((keeper: Employee) => keeper.employeeId).toString());
     formData.append("inHouseId", selectedInHouse[0].facilityId.toString());
-    
+
     const createPublicZooEventApi = async () => {
       try {
         const response = await apiFormData.post(
@@ -345,20 +351,20 @@ function CreatePublicZooEventForm() {
 
         {/* Activity Type */}
         <FormFieldSelect
-          formFieldName="activityType"
+          formFieldName="eventType"
           label="Activity Type"
           required={true}
           placeholder="Select an Activity type..."
-          valueLabelPair={Object.keys(ActivityType).map((activiTypeKey) => [
-            ActivityType[
-              activiTypeKey as keyof typeof ActivityType
+          valueLabelPair={Object.keys(EventType).map((activiTypeKey) => [
+            EventType[
+              activiTypeKey as keyof typeof EventType
             ].toString(),
-            beautifyText(ActivityType[
-              activiTypeKey as keyof typeof ActivityType
+            beautifyText(EventType[
+              activiTypeKey as keyof typeof EventType
             ]),
           ])}
-          value={activityType}
-          setValue={setActivityType}
+          value={eventType}
+          setValue={setEventType}
           validateFunction={validateIdentifierType}
         />
 
@@ -425,7 +431,7 @@ function CreatePublicZooEventForm() {
             <Form.ValidityState>{validateEventDates}</Form.ValidityState>
           </Form.Field>
 
-         
+
 
           {/* Event Notification Date */}
           {/* <Form.Field
@@ -466,97 +472,97 @@ function CreatePublicZooEventForm() {
           </Form.Field> */}
         </div>
 
-        {/* Animals */}  
-         <Form.Field
-        name="animals"
-        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-      >
-        <Form.Label className="font-medium">
-          Animals
-        </Form.Label>
-        {/* <Form.Control
+        {/* Animals */}
+        <Form.Field
+          name="animals"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">
+            Animals
+          </Form.Label>
+          {/* <Form.Control
           asChild
           value={selectedAnimals.toString()}
           required={true}
           onChange={(e) => setSelectedAnimals(e.target.value)}
           className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
         /> */}
-         <MultiSelect
-        value={selectedAnimals}
-        onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
-        options={curAnimalList}
-        optionLabel="houseName"
-        filter
-        display="chip"
-        placeholder="Select Animals"
-        // maxSelectedLabels={3}
-        className="w-full md:w-20rem" />
-        <Form.ValidityState>
-          {validateAnimals}
-        </Form.ValidityState>
+          <MultiSelect
+            value={selectedAnimals}
+            onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
+            options={curAnimalList}
+            optionLabel="houseName"
+            filter
+            display="chip"
+            placeholder="Select Animals"
+            // maxSelectedLabels={3}
+            className="w-full md:w-20rem" />
+          <Form.ValidityState>
+            {validateAnimals}
+          </Form.ValidityState>
         </Form.Field>
 
-      {/* Keepers */}  
-         <Form.Field
-        name="keepers"
-        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-      >
-        <Form.Label className="font-medium">
-          Keepers
-        </Form.Label>
-        {/* <Form.Control
+        {/* Keepers */}
+        <Form.Field
+          name="keepers"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">
+            Keepers
+          </Form.Label>
+          {/* <Form.Control
           asChild
           value={selectedKeepers.toString()}
           required={true}
           onChange={(e) => setSelectedAnimals(e.target.value)}
           className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
         /> */}
-         <MultiSelect
-        value={selectedKeepers}
-        onChange={(e: MultiSelectChangeEvent) => setSelectedKeepers(e.value)}
-        options={curKeeperList}
-        optionLabel="employeeName"
-        filter
-        display="chip"
-        placeholder="Select Keepers"
-        // maxSelectedLabels={3}
-        className="w-full md:w-20rem" />
-        <Form.ValidityState>
-          {validateKeepers}
-        </Form.ValidityState>
-        </Form.Field>  
-        
-         {/* Facility */}  
-         <Form.Field
-        name="facility"
-        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-      >
-        <Form.Label className="font-medium">
-          Facility
-        </Form.Label>
-        {/* <Form.Control
+          <MultiSelect
+            value={selectedKeepers}
+            onChange={(e: MultiSelectChangeEvent) => setSelectedKeepers(e.value)}
+            options={curKeeperList}
+            optionLabel="employeeName"
+            filter
+            display="chip"
+            placeholder="Select Keepers"
+            // maxSelectedLabels={3}
+            className="w-full md:w-20rem" />
+          <Form.ValidityState>
+            {validateKeepers}
+          </Form.ValidityState>
+        </Form.Field>
+
+        {/* Facility */}
+        <Form.Field
+          name="facility"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">
+            Facility
+          </Form.Label>
+          {/* <Form.Control
           asChild
           value={selectedKeepers.toString()}
           required={true}
           onChange={(e) => setSelectedAnimals(e.target.value)}
           className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
         /> */}
-         <MultiSelect
-        value={selectedInHouse}
-        onChange={(e: MultiSelectChangeEvent) => setSelectedInHouse(e.value)}
-        options={curInHouseList}
-        optionLabel="facilityName"
-        filter
-        display="chip"
-        selectionLimit={1}
-        placeholder="Select Facility"
-        // maxSelectedLabels={3}
-        className="w-full md:w-20rem" />
-        <Form.ValidityState>
-          {validateInHouse}
-        </Form.ValidityState>
-      </Form.Field>  
-  
+          <MultiSelect
+            value={selectedInHouse}
+            onChange={(e: MultiSelectChangeEvent) => setSelectedInHouse(e.value)}
+            options={curInHouseList}
+            optionLabel="facilityName"
+            filter
+            display="chip"
+            selectionLimit={1}
+            placeholder="Select Facility"
+            // maxSelectedLabels={3}
+            className="w-full md:w-20rem" />
+          <Form.ValidityState>
+            {validateInHouse}
+          </Form.ValidityState>
+        </Form.Field>
+
 
         <Form.Submit asChild>
           <Button
