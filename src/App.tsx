@@ -549,6 +549,16 @@ function App() {
                     }
                   />
                   <Route
+                    path="/enclosure/viewenclosuredetails/:enclosureId/:tab"
+                    element={
+                      user ? (
+                        <ViewEnclosureDetailsPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
                     path="/enclosure/viewenclosuredetails/enclosuredesigndiagram"
                     element={
                       user ? (

@@ -9,6 +9,10 @@ import { useParams } from "react-router-dom";
 import Enclosure from "../../models/Enclosure";
 import { useEnclosureContext } from "../../hooks/useEnclosureContext";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import EnclosureBasicInformation from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureBasicInformation";
+import EnclosureAnimalList from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureAnimalList";
+
 function ViewEnclosureDetailsPage() {
   const apiJson = useApiJson();
   const location = useLocation();
@@ -74,6 +78,37 @@ function ViewEnclosureDetailsPage() {
         >
           View Design Diagram
         </Button>
+        <Tabs defaultValue={tab ? `${tab}` : "basicinfo"} className="w-full">
+          <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
+            <span className="invisible">_____</span>
+            <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
+            <TabsTrigger value="layoutdesign">Layout & Design</TabsTrigger>
+            <TabsTrigger value="animalslist">Animals List</TabsTrigger>
+            <TabsTrigger value="environment">Environment</TabsTrigger>
+            <TabsTrigger value="safety">Safety</TabsTrigger>
+            {/* <TabsTrigger value="medical">Medical</TabsTrigger> */}
+          </TabsList>
+          <TabsContent value="basicinfo">
+            {curEnclosure && (
+              <EnclosureBasicInformation curEnclosure={curEnclosure} />
+            )}
+          </TabsContent>
+          <TabsContent value="layoutdesign">test</TabsContent>
+          <TabsContent value="animalslist">
+            {curEnclosure && (
+              <EnclosureAnimalList curEnclosure={curEnclosure} />
+            )}
+          </TabsContent>
+          <TabsContent value="environment">
+            <div>test</div>
+          </TabsContent>
+          <TabsContent value="safety">
+            <div>test</div>
+          </TabsContent>
+          {/* <TabsContent value="medical">
+              Medical Logs and whatever else here
+            </TabsContent> */}
+        </Tabs>
       </div>
     </div>
   );
