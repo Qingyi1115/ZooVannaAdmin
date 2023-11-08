@@ -1,5 +1,5 @@
 import { Accordion, AccordionTab } from "primereact/accordion";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Authorization {
   authorization: any;

@@ -1,6 +1,6 @@
-import SpeciesEnclosureNeed from "./SpeciesEnclosureNeed";
-import SpeciesDietNeed from "./SpeciesDietNeed";
 import PhysiologicalReferenceNorms from "./PhysiologicalReferenceNorms";
+import SpeciesDietNeed from "./SpeciesDietNeed";
+import SpeciesEnclosureNeed from "./SpeciesEnclosureNeed";
 interface Species {
   speciesId: number;
   speciesCode: string;

@@ -1,33 +1,18 @@
-import { Toast } from "primereact/toast";
-import React, { useEffect, useState, useRef } from "react";
-import { DataTable } from "primereact/datatable";
-import useApiJson from "../../hooks/useApiJson";
-import Employee from "src/models/Employee";
-import { InputText } from "primereact/inputtext";
-import { Column } from "primereact/column";
-import * as Form from "@radix-ui/react-form";
-import {
-  HiCheck,
-  HiEye,
-  HiOutlineCog,
-  HiOutlineLockOpen,
-  HiPencil,
-  HiTrash,
-  HiX,
-} from "react-icons/hi";
 import { Button } from "@/components/ui/button";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { NavLink } from "react-router-dom";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
+import {
+  HiOutlineCog,
+  HiOutlineLockOpen
+} from "react-icons/hi";
+import { NavLink } from "react-router-dom";
+import Employee from "src/models/Employee";
+import useApiJson from "../../hooks/useApiJson";
 
 {
   /*const toast = useRef<Toast>(null);*/

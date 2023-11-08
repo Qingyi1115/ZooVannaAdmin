@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useApiJson from "../../../../hooks/useApiJson";
-import Facility from "../../../../models/Facility";
-import MaintenanceLog from "../../../../models/MaintenanceLog";
 import EditMaintenanceLogForm from "../../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/EditMaintenanceLogForm";
 import { HubStatus } from "../../../../enums/HubStatus";
 import { SensorType } from "../../../../enums/SensorType";
-import Hub from "../../../../models/HubProcessor";
-import Sensor from "../../../../models/Sensor";
+import useApiJson from "../../../../hooks/useApiJson";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import Facility from "../../../../models/Facility";
+import Hub from "../../../../models/HubProcessor";
+import MaintenanceLog from "../../../../models/MaintenanceLog";
+import Sensor from "../../../../models/Sensor";
 
 function EditMaintenanceLogPage() {
   const apiJson = useApiJson();

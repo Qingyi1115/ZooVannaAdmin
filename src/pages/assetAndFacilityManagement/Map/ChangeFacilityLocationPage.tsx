@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ChangeFacilityLocationForm from "../../../components/AssetAndFacilityManagement/FacilityManagement/Map/ChangeFacilityLocationForm";
-import Facility from "../../../models/Facility";
 import useApiJson from "../../../hooks/useApiJson";
+import Facility from "../../../models/Facility";
 
 function ChangeFacilityLocationPage() {
   const navigate = useNavigate();

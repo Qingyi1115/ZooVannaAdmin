@@ -1,32 +1,23 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
-import { Link, useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
-import { DataTable } from "primereact/datatable";
-import { Column, ColumnFilterElementTemplateOptions } from "primereact/column";
-import { InputText } from "primereact/inputtext";
 
-import Animal from "../../models/Animal";
-import { HiEye } from "react-icons/hi";
-import { MultiSelect } from "primereact/multiselect";
-import Species from "../../models/Species";
-import { BsBroadcast, BsCalendarWeek, BsHouseExclamation } from "react-icons/bs";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
-import ZooEvent from "src/models/ZooEvent";
-import { Tag } from "primereact/tag";
 import { Accordion, AccordionTab } from "primereact/accordion";
+import { Tag } from "primereact/tag";
+import { BsBroadcast, BsCalendarWeek, BsHouseExclamation } from "react-icons/bs";
+import ZooEvent from "src/models/ZooEvent";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import Animal from "../../models/Animal";
+import Species from "../../models/Species";
 
 
 function MaintenanceNotificationCard() {

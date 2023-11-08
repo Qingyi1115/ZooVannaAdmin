@@ -1,22 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useApiJson from "../../hooks/useApiJson";
-import Species from "../../models/Species";
-import EditEnclosureRequirementsForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/EditEnclosureRequirementsForm";
-import SpeciesEnclosureNeed from "../../models/SpeciesEnclosureNeed";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import CreateDietaryRequirementsForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/CreateDietaryRequirementsForm";
-import Animal from "../../models/Animal";
 import CreateWeightRecordForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/CreateWeightRecordForm";
+import useApiJson from "../../hooks/useApiJson";
+import Animal from "../../models/Animal";
+import Species from "../../models/Species";
 
 import {
   AcquisitionMethod,
   AnimalGrowthStage,
   AnimalSex,
 } from "../../enums/Enumurated";
-import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
-import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
 
 let emptySpecies: Species = {
   speciesId: -1,

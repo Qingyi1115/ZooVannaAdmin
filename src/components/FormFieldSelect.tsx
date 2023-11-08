@@ -1,8 +1,8 @@
-import React, { forwardRef, useRef } from "react";
 import * as Form from "@radix-ui/react-form";
 import * as Select from "@radix-ui/react-select";
+import React, { forwardRef, useRef } from "react";
 
-import { HiChevronDown, HiChevronUp, HiCheck } from "react-icons/hi";
+import { HiCheck, HiChevronDown, HiChevronUp } from "react-icons/hi";
 
 interface PropsType {
   formFieldName: string;

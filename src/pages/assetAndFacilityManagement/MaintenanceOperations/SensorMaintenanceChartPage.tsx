@@ -1,9 +1,5 @@
 
-import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import useApiJson from "../../../hooks/useApiJson";
-import Employee from "src/models/Employee";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SensorMaintenanceChart from "../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceChart";
 
 

@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import React, { useEffect, useState } from "react";
 
 import { MultiSelectChangeEvent } from "primereact/multiselect";
 
-import useApiFormData from "../../../../hooks/useApiFormData";
-import FormFieldInput from "../../../FormFieldInput";
-import Sensor from "../../../../models/Sensor";
-import useApiJson from "../../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../../../FormFieldSelect";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import useApiFormData from "../../../../hooks/useApiFormData";
+import useApiJson from "../../../../hooks/useApiJson";
+import Sensor from "../../../../models/Sensor";
+import FormFieldInput from "../../../FormFieldInput";
+import FormFieldSelect from "../../../FormFieldSelect";
 
 interface EditSensorFormProps {
   curSensor: Sensor;

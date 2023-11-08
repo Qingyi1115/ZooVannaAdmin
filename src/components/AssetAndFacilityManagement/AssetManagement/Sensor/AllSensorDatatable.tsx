@@ -1,25 +1,23 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
-import Sensor from "../../../../models/Sensor";
+import { HiCamera, HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCamera, HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import Sensor from "../../../../models/Sensor";
 
 import { Button } from "@/components/ui/button";
-import { SensorType } from "../../../../enums/SensorType";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import Hub from "../../../../models/HubProcessor";
-import { useAuthContext } from "../../../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
-import GeneralStaff from "../../../../models/GeneralStaff";
+import { SensorType } from "../../../../enums/SensorType";
+import beautifyText from "../../../../hooks/beautifyText";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
+import Hub from "../../../../models/HubProcessor";
 
 interface AllSensorDatatableProps {
   curHub: Hub,
@@ -243,6 +241,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
             <Column
               field="sensorType"
               header="Sensor Type"
+              body={(sensor: Sensor) => beautifyText(sensor.sensorType)}
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>

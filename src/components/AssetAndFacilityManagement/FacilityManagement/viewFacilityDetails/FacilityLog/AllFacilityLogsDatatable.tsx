@@ -1,29 +1,26 @@
-import React, { useEffect, useState, useRef } from "react";
-import { DataView } from 'primereact/dataview';
 import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
+import { DataView } from 'primereact/dataview';
+import React, { useEffect, useRef, useState } from "react";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import { HiCheck, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
-import FacilityLog from "../../../../../models/FacilityLog";
-import Facility from "../../../../../models/Facility";
-import InHouse from "../../../../../models/InHouse";
-import { FacilityType } from "../../../../../enums/FacilityType";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { useToast } from "@/components/ui/use-toast";
 import { Card } from "primereact/card";
-import { ScrollPanel } from "primereact/scrollpanel";
-import { useAuthContext } from "../../../../../hooks/useAuthContext";
-import { FacilityLogType } from "../../../../../enums/FacilityLogType";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { BsWrenchAdjustable } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { FacilityLogType } from "../../../../../enums/FacilityLogType";
+import { FacilityType } from "../../../../../enums/FacilityType";
+import beautifyText from "../../../../../hooks/beautifyText";
+import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import Facility from "../../../../../models/Facility";
+import FacilityLog from "../../../../../models/FacilityLog";
+import InHouse from "../../../../../models/InHouse";
 
 interface AllFacilityLogsDatatableProps {
   facilityId: number;
@@ -316,7 +313,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             </div>
             <div>
               <div className="text-xl font-bold text-900 indent-px">Log Type </div>
-              {facilityLog.facilityLogType}
+              {beautifyText(facilityLog.facilityLogType)}
             </div>
           </div>
 

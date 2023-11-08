@@ -1,28 +1,21 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
-import Sensor from "../../../models/Sensor";
-import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiClipboardList, HiEye, HiOutlinePresentationChartLine, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
-import { SensorType } from "../../../enums/SensorType";
-import { Separator } from "@/components/ui/separator";
-import { Tag } from "primereact/tag";
-import ManageSensorMaintenanceStaff from "../AssetManagement/Sensor/GeneralStaff/ManageSensorMaintenanceStaff";
-import Employee from "../../../models/Employee";
-import { Checkbox, CheckboxChangeEvent, CheckboxClickEvent } from "primereact/checkbox";
 import { useToast } from "@/components/ui/use-toast";
+import { Checkbox, CheckboxClickEvent } from "primereact/checkbox";
+import { Tag } from "primereact/tag";
+import { HiCheck, HiClipboardList, HiEye, HiOutlinePresentationChartLine, HiPlus, HiX } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
 import { useAuthContext } from "../../../hooks/useAuthContext";
-import { BsWrenchAdjustable } from "react-icons/bs";
-import GeneralStaff from "../../../models/GeneralStaff";
+import Employee from "../../../models/Employee";
 
 export function compareDates(d1: Date, d2: Date): number {
   let date1 = d1.getTime();

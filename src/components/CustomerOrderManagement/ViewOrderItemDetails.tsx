@@ -1,26 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
-import CustomerOrder from "../../models/CustomerOrder";
-import { Button } from "@/components/ui/button";
-import useApiJson from "../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { Toast } from "primereact/toast";
-import { Dialog } from "primereact/dialog";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
-import FormFieldSelect from "../FormFieldSelect";
-import * as Form from "@radix-ui/react-form";
 import * as moment from "moment-timezone";
-import OrderItem from "../../models/OrderItem";
+import React, { useEffect, useState } from "react";
+import useApiJson from "../../hooks/useApiJson";
+import CustomerOrder from "../../models/CustomerOrder";
 import Listing from "../../models/Listing";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
+import beautifyText from "../../hooks/beautifyText";
 
 interface ListingInfo {
   listingName: string;
@@ -123,7 +116,7 @@ function ViewCustomerOrderDetailsEntry(props: CustomerOrderInfoDetailsProps) {
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Order Status
               </TableCell>
-              <TableCell>{curCustomerOrder.orderStatus}</TableCell>
+              <TableCell>{beautifyText(curCustomerOrder.orderStatus)}</TableCell>
             </TableRow>
             {/* <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>

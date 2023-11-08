@@ -1,25 +1,17 @@
-import React, { useState, useRef } from "react";
-import Employee from "../../../../models/Employee";
 import { Button } from "@/components/ui/button";
-import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { Toast } from "primereact/toast";
+import useApiJson from "../../../../hooks/useApiJson";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import Facility from "src/models/Facility";
-import { Separator } from "@radix-ui/react-select";
-import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
+import { NavLink } from "react-router-dom";
+import Facility from "src/models/Facility";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-import { BsWrenchAdjustable } from "react-icons/bs";
 
 interface FacilityDetailsProps {
   curFacility: Facility;

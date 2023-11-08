@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useApiJson from "../../hooks/useApiJson";
-import Species from "../../models/Species";
-import EditEnclosureRequirementsForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/EditEnclosureRequirementsForm";
-import SpeciesEnclosureNeed from "../../models/SpeciesEnclosureNeed";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import CreateDietaryRequirementsForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/CreateDietaryRequirementsForm";
-import CreatePhysiologicalRefNormForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/CreatePhysiologicalRefNormForm";
-import PhysiologicalReferenceNorms from "../../models/PhysiologicalReferenceNorms";
 import EditPhysioRefNormForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/EditPhysioRefNormForm";
+import useApiJson from "../../hooks/useApiJson";
+import PhysiologicalReferenceNorms from "../../models/PhysiologicalReferenceNorms";
+import Species from "../../models/Species";
 
 function EditPhysioRefNormPage() {
   const apiJson = useApiJson();

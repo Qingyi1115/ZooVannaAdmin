@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
-import AllAnimalActivitiesDatatable from "../../components/AnimalManagement/AnimalActivityHomePage/AllAnimalActivitiesDatatable";
-import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { HiPlus } from "react-icons/hi";
 import { Separator } from "@/components/ui/separator";
+import { HiPlus } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import AllAnimalActivitiesDatatable from "../../components/AnimalManagement/AnimalActivityHomePage/AllAnimalActivitiesDatatable";
 // import FullCalendar from "@fullcalendar/react";
 // import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import { Toggle } from "@/components/ui/toggle";
@@ -14,10 +14,6 @@ import AnimalActivity from "../../models/AnimalActivity";
 
 import { HiCalendarDays, HiTableCells } from "react-icons/hi2";
 
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
 import AllAnimalActivitiesFullCalendar from "../../components/AnimalManagement/AnimalActivityHomePage/AllAnimalActivitiesFullCalendar";
 import { useAuthContext } from "../../hooks/useAuthContext";
 

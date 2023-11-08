@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react"; import { useParams } from "react-router-dom";
-import useApiJson from "../../../../hooks/useApiJson";
-import Sensor from "../../../../models/Sensor";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import CreateNewMaintenanceLogForm from "../../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/CreateNewMaintenanceLogForm";
-import { SensorType } from "../../../../enums/SensorType";
 import { HubStatus } from "../../../../enums/HubStatus";
+import { SensorType } from "../../../../enums/SensorType";
+import useApiJson from "../../../../hooks/useApiJson";
 import Facility from "../../../../models/Facility";
 import Hub from "../../../../models/HubProcessor";
+import Sensor from "../../../../models/Sensor";
 
 function CreateNewSensorMaintenanceLogPage() {
   const apiJson = useApiJson();

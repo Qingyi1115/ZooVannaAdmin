@@ -1,29 +1,26 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import { useParams } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
-import useApiJson from "../../hooks/useApiJson";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import useApiJson from "../../hooks/useApiJson";
 
-import Species from "../../models/Species";
 import Animal from "../../models/Animal";
+import Species from "../../models/Species";
 
 import * as Form from "@radix-ui/react-form";
-import { PickList } from "primereact/picklist";
-import { Nullable } from "primereact/ts-helpers";
 import { Calendar } from "primereact/calendar";
+import { Nullable } from "primereact/ts-helpers";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 // import {
 //   Dialog,
@@ -34,41 +31,28 @@ import {
 //   DialogTitle,
 //   DialogTrigger,
 // } from "@/components/ui/dialog";
-import { Dialog } from "primereact/dialog";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Dialog } from "primereact/dialog";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import FeedingPlanSessionDetail from "../../models/FeedingPlanSessionDetail";
-import FeedingItem from "../../models/FeedingItem";
+  InputNumber,
+  InputNumberValueChangeEvent,
+} from "primereact/inputnumber";
 import { MultiSelect } from "primereact/multiselect";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+import AnimalFeedingPlanInvolvedAnimalDatatable from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 import {
   AnimalFeedCategory,
   DayOfWeek,
   EventTimingType,
   FoodUnit,
 } from "../../enums/Enumurated";
-import FormFieldSelect from "../../components/FormFieldSelect";
 import SpeciesDietNeed from "../../models/SpeciesDietNeed";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import {
-  InputNumber,
-  InputNumberValueChangeEvent,
-} from "primereact/inputnumber";
-import { Item } from "@radix-ui/react-accordion";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
-import AnimalFeedingPlanInvolvedAnimalDatatable from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 
 function CreateFeedingPlan() {
   const apiJson = useApiJson();

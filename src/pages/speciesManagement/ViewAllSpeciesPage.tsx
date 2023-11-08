@@ -1,7 +1,4 @@
-import React, { useState } from "react";
 
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 import AllSpeciesDatatable from "../../components/SpeciesManagement/ViewAllSpeciesPage/AllSpeciesDatatable";
 
 interface Product {

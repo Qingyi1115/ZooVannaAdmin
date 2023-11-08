@@ -3,51 +3,24 @@ import useApiJson from "../../../hooks/useApiJson";
 
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  CardContent
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Dialog as PrimeReactDialog } from "primereact/dialog";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 
-import { NavLink } from "react-router-dom";
-import {
-  HiCheck,
-  HiChevronRight,
-  HiEye,
-  HiPencil,
-  HiPlus,
-  HiTrash,
-  HiX,
-} from "react-icons/hi";
-import Animal from "../../../models/Animal";
-import Species from "../../../models/Species";
-import {
-  AcquisitionMethod,
-  AnimalGrowthStage,
-  AnimalSex,
-} from "../../../enums/Enumurated";
-import AnimalBasicInformation from "../../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
-import AnimalWeightInfo from "../../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import {
+  HiPlus
+} from "react-icons/hi";
+import { NavLink } from "react-router-dom";
+import Animal from "../../../models/Animal";
 
-import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import beautifyText from "../../../hooks/beautifyText";
 import OneParentCard from "./OneParentCard";
 interface AnimalParentsCardProps {
   curAnimal: Animal;
@@ -138,11 +111,13 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
   // Add parent stuff
   const imageBodyTemplate = (rowData: Animal) => {
     return (
-      <img
-        src={"http://localhost:3000/" + rowData.imageUrl}
-        alt={rowData.houseName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      (rowData.imageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.houseName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        />
+        : "-")
     );
   };
 
@@ -246,6 +221,7 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
           <Column
             field="sex"
             header="Sex"
+            body={(animal: Animal) => beautifyText(animal.sex)}
             sortable
             style={{ minWidth: "7rem" }}
           ></Column>

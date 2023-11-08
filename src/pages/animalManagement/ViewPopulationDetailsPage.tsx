@@ -1,21 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import Species from "../../models/Species";
-import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { NavLink, useParams } from "react-router-dom";
-import Animal from "../../models/Animal";
 import AnimalsBySpeciesDatatable from "../../components/AnimalManagement/ViewPopulationDetailsPage.tsx/AnimalsBySpeciesDatatable";
+import Animal from "../../models/Animal";
 
 import { Chart } from "primereact/chart";
-import {
-  AcquisitionMethod,
-  AnimalGrowthStage,
-  AnimalSex,
-} from "../../enums/Enumurated";
-import { HiPlus } from "react-icons/hi";
 import DeceasedReleasedAnimalsBySpeciesDatatable from "../../components/AnimalManagement/ViewPopulationDetailsPage.tsx/DeceasedReleasedAnimalsBySpeciesDatatable";
 
 function ViewPopulationDetailsPage() {

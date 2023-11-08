@@ -3,10 +3,10 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import * as Form from "@radix-ui/react-form";
 import { Calendar } from "primereact/calendar";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ActivityType,
+  EventType,
 } from "../../../enums/Enumurated";
 import useApiFormData from "../../../hooks/useApiFormData";
 import useApiJson from "../../../hooks/useApiJson";

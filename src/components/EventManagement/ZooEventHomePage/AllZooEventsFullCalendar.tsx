@@ -1,15 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import Animal from "../../../models/Animal";
+import { useEffect, useRef, useState } from "react";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
@@ -20,27 +10,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import useApiJson from "../../../hooks/useApiJson";
 import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
 
-import { Chart } from "primereact/chart";
-import { useToast } from "@/components/ui/use-toast";
-import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
-import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
 
 // import "@fullcalendar/common/main.css";
 // import "@fullcalendar/daygrid/main.css";
 // import "@fullcalendar/timegrid/main.css";
 
-import ZooEvent from "../../../models/ZooEvent";
-import { HiChevronLeft } from "react-icons/hi";
 import { EventContentArg, EventInput } from "@fullcalendar/core";
+import ZooEvent from "../../../models/ZooEvent";
 
 interface AllZooEventsFullCalendarProps {
   zooEventsList: ZooEvent[];

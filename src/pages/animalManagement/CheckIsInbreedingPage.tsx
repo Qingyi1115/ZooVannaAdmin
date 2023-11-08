@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 import { useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
-import Species from "../../models/Species";
 import Animal from "../../models/Animal";
+import Species from "../../models/Species";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { ImSpinner2 } from "react-icons/im";
-import { clear } from "console";
 
 let emptySpecies: Species = {
   speciesId: -1,

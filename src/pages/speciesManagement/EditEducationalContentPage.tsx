@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import EditEducationalContentForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/EditEducationalContentForm";
 import useApiJson from "../../hooks/useApiJson";
 import Species from "../../models/Species";
-import EditEnclosureRequirementsForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/EditEnclosureRequirementsForm";
-import SpeciesEnclosureNeed from "../../models/SpeciesEnclosureNeed";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import EditEducationalContentForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/EditEducationalContentForm";
 
 function EditEducationalContentPage() {
   const apiJson = useApiJson();

@@ -1,46 +1,25 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import ZooEvent from "../../models/ZooEvent";
-import Animal from "../../models/Animal";
-import Species from "../../models/Species";
-import EnrichmentItem from "../../models/EnrichmentItem";
 
-import * as Form from "@radix-ui/react-form";
-import * as RadioGroup from "@radix-ui/react-radio-group";
-import * as Checkbox from "@radix-ui/react-checkbox";
 
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
-import useApiFormData from "../../hooks/useApiFormData";
-import { HiCheck } from "react-icons/hi";
 
-import useApiJson from "../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
-import { NavLink } from "react-router-dom";
-import {
-  AcquisitionMethod,
-  AnimalGrowthStage,
-  AnimalSex,
-  AnimalStatusType,
-  IdentifierType,
-} from "../../enums/Enumurated";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../hooks/useApiJson";
 
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import AddAnimalToEventForm from "../../components/EventManagement/CreateZooEventPage/AddAnimalToZooEventForm";
+import beautifyText from "../../hooks/beautifyText";
 
 function AddAnimalToZooEventPage() {
   const apiJson = useApiJson();
@@ -112,7 +91,7 @@ function AddAnimalToZooEventPage() {
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     Type
                   </TableCell>
-                  <TableCell>{curZooEvent.eventType}</TableCell>
+                  <TableCell>{beautifyText(curZooEvent.eventType)}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>

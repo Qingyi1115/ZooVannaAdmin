@@ -1,23 +1,12 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { NavLink } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Animal from "../../models/Animal";
-import Species from "../../models/Species";
-import {
-  AcquisitionMethod,
-  AnimalGrowthStage,
-  AnimalSex,
-} from "../../enums/Enumurated";
-import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
-import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
 import FamilyTree from "../../components/AnimalManagement/ViewAnimalDetailsPage/MyTree";
-import { clone } from "chart.js/dist/helpers/helpers.core";
+import Animal from "../../models/Animal";
 
 import { ImSpinner2 } from "react-icons/im";
 
