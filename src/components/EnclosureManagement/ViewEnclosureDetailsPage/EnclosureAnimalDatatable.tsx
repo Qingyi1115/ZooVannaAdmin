@@ -807,6 +807,10 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
               current enclosure?
             </span>
           )}
+          <div className="mt-2 font-medium text-red-800">
+            Note: Animals that are not compatible with added animals will{" "}
+            <span className="underline">still be added</span>
+          </div>
         </div>
       </Dialog>
       <Dialog
