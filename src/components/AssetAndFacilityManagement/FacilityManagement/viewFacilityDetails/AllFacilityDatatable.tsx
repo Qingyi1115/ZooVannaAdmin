@@ -49,6 +49,7 @@ function AllFacilityDatatable() {
     facilityDetailJson: facilityDetailJson,
     isSheltered: false,
     hubProcessors: [],
+    imageUrl: ""
   };
 
   const [facilityList, setFacilityList] = useState<facility[]>([]);
@@ -162,8 +163,8 @@ function AllFacilityDatatable() {
               to={`/assetfacility/viewfacilitydetails/${facility.facilityId}/manageOperations`}
               state={{ prev: `/assetfacility/viewallfacilities` }}
             >
-              <Button variant={"outline"} className="mr-1">
-                <MdOutlineAssignmentInd className="mr-1" />
+              <Button variant={"outline"} className="mb-1 mr-1">
+                <MdOutlineAssignmentInd className="mx-auto" />
               </Button>
             </NavLink>
           )}
@@ -217,6 +218,18 @@ function AllFacilityDatatable() {
     </div>
   );
 
+  const imageBodyTemplate = (rowData: Facility) => {
+    return (
+      rowData.imageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.facilityName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        /> :
+        "-"
+    );
+  };
+
   return (
     <div>
       <div>
@@ -266,6 +279,13 @@ function AllFacilityDatatable() {
             globalFilter={globalFilter}
             header={header}
           >
+            <Column
+              field="imageUrl"
+              header="Image"
+              frozen
+              body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
+            ></Column>
             <Column
               field="facilityId"
               header="ID"

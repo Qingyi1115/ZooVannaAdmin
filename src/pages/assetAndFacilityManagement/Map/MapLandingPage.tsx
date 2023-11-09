@@ -52,6 +52,7 @@ let emptyFacility: FacilityWithSelected = {
   isSheltered: false,
   hubProcessors: [],
   selected: false,
+  imageUrl: ""
 };
 interface FacilityWithSelected extends Facility {
   selected: boolean;
@@ -622,6 +623,13 @@ function MapLandingPage() {
                 globalFilter={globalFilter}
                 header={header}
               >
+                <Column
+                  field="imageUrl"
+                  header="Image"
+                  frozen
+                  body={imageBodyTemplate}
+                  style={{ minWidth: "6rem" }}
+                ></Column>
                 <Column
                   field="facilityId"
                   header="ID"
