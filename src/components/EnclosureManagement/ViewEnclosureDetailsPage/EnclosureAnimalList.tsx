@@ -45,11 +45,13 @@ function EnclosureAnimalList(props: EnclosureAnimalListProps) {
 
   return (
     <div>
-      <Button>Add Animal</Button>
+      {/* <Button className="mb-4">Add Animal</Button> */}
       <EnclosureAnimalDatatable
         curEnclosure={curEnclosure}
         animalList={animalList}
         setAnimalList={setAnimalList}
+        refreshSeed={refreshSeed}
+        setRefreshSeed={setRefreshSeed}
       />
     </div>
   );

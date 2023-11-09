@@ -29,6 +29,7 @@ import {
   AnimalGrowthStage,
   AnimalSex,
 } from "../../../enums/Enumurated";
+import { Checkbox, CheckboxClickEvent } from "primereact/checkbox";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -86,11 +87,32 @@ interface EnclosureAnimalDatatableProps {
   curEnclosure: Enclosure;
   animalList: Animal[];
   setAnimalList: any;
+  refreshSeed: number;
+  setRefreshSeed: any;
 }
 function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
   const apiJson = useApiJson();
 
-  const { curEnclosure, animalList, setAnimalList } = props;
+  const {
+    curEnclosure,
+    animalList,
+    setAnimalList,
+    refreshSeed,
+    setRefreshSeed,
+  } = props;
+  const [speciesCodeSet, setSpeciesCodeSet] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const newSpeciesCodeSet = new Set<string>();
+
+    animalList.forEach((animal) => {
+      if (animal.species && animal.species.speciesCode) {
+        newSpeciesCodeSet.add(animal.species.speciesCode);
+      }
+    });
+
+    setSpeciesCodeSet(newSpeciesCodeSet);
+  }, [animalList]);
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -108,31 +130,20 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
     DataTableExpandedRows | Animal[]
   >([]);
 
+  // add animal vars
+  const [animalBulkAssignmentDialog, setAnimalBulkAssignmentDialog] =
+    useState<boolean>(false);
+  const [availableAnimals, setAvailableAnimals] = useState<Animal[]>([]);
+  const [selectedAvailableAnimals, setSelectedAvailableAnimals] = useState<
+    Animal[]
+  >([]);
+  const [animalAssignmentDialog, setAnimalAssignmentDialog] =
+    useState<boolean>(false);
+  //
+
   const dt = useRef<DataTable<Animal[]>>(null);
 
   const toastShadcn = useToast().toast;
-
-  //   useEffect(() => {
-  //     const fetchAnimals = async () => {
-  //       try {
-  //         const responseJson = await apiJson.get(
-  //           `http://localhost:3000/api/enclosure/getanimalsofenclosure/${curEnclosure.enclosureId}`
-  //         );
-  //         const animalListNoDeceasedOrReleased = (
-  //           responseJson.animalsList as Animal[]
-  //         ).filter((animal) => {
-  //           let statuses = animal.animalStatus.split(",");
-  //           return !(
-  //             statuses.includes("DECEASED") || statuses.includes("RELEASED")
-  //           );
-  //         });
-  //         setAnimalList(animalListNoDeceasedOrReleased);
-  //       } catch (error: any) {
-  //         console.log(error);
-  //       }
-  //     };
-  //     fetchAnimals();
-  //   }, []);
 
   function calculateAge(dateOfBirth: Date): string {
     const dob = dateOfBirth;
@@ -250,7 +261,13 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Individuals/Groups </h4>
+      {/* <h4 className="m-1">Manage Individuals/Groups </h4> */}
+      <Button
+        onClick={() => setAnimalBulkAssignmentDialog(true)}
+        disabled={availableAnimals.length == 0}
+      >
+        Add Animal To Enclosure
+      </Button>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -294,43 +311,7 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
               {animal.species.commonName} ({animal.species.speciesCode})
             </span>
           </span>
-          <div>
-            <Button
-              onClick={() =>
-                navigate(
-                  `/animal/feedingplanhome/${animal.species.speciesCode}`
-                )
-              }
-              className="mr-2"
-            >
-              Feeding Plans
-            </Button>
-            <Button
-              onClick={() =>
-                navigate(
-                  `/animal/checkisinbreeding/${animal.species.speciesCode}`
-                )
-              }
-              className="mr-2"
-            >
-              Check Possible Inbreeding
-            </Button>
-            <Button
-              onClick={() =>
-                navigate(
-                  `/animal/viewpopulationdetails/${animal.species.speciesCode}`
-                )
-              }
-              className="mr-2"
-            >
-              View Population Details
-            </Button>
-            {/* <NavLink
-              to={`/animal/viewpopulationdetails/${animal.species.speciesCode}`}
-            >
-              <Button>View Population Details</Button>
-            </NavLink> */}
-          </div>
+          <div>{/* anything on the right side of row group header here */}</div>
         </span>
       </React.Fragment>
     );
@@ -383,6 +364,141 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
       </React.Fragment>
     );
   };
+
+  // add animal stuff
+
+  useEffect(() => {
+    const fetchAvailableAnimals = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/animal/getAllAnimals`
+        );
+        const allAnimalsList = responseJson as Animal[];
+
+        console.log("haha");
+        console.log(animalList);
+        const availableAnimalsList = allAnimalsList.filter(
+          (animal) =>
+            !animalList.some(
+              (existingAnimal) =>
+                existingAnimal.animalCode === animal.animalCode
+            )
+        );
+        setAvailableAnimals(availableAnimalsList);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchAvailableAnimals();
+  }, [animalList]);
+
+  const hideAnimalBulkAssignmentDialog = () => {
+    setAnimalBulkAssignmentDialog(false);
+  };
+
+  const bulkAssignmentHeader = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      {/* <h4 className="m-1">Manage Maintenance Staff</h4> */}
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+      {/* <Button onClick={exportCSV}>Export to .csv</Button> */}
+    </div>
+  );
+
+  const onSelectedAvailableAnimalsOnClick = (e: CheckboxClickEvent) => {
+    let _selectedAvailableAnimals = [...selectedAvailableAnimals];
+    if (e.checked) {
+      _selectedAvailableAnimals.push(e.value);
+    } else {
+      _selectedAvailableAnimals.splice(
+        _selectedAvailableAnimals.indexOf(e.value),
+        1
+      );
+    }
+    setSelectedAvailableAnimals(_selectedAvailableAnimals);
+  };
+
+  const availableAnimalCheckbox = (animal: Animal) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignAnimals"
+            value={animal}
+            onChange={onSelectedAvailableAnimalsOnClick}
+            checked={selectedAvailableAnimals.includes(animal)}
+          ></Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const hideAnimalAssignmentDialog = () => {
+    setAnimalAssignmentDialog(false);
+  };
+
+  const confirmAssignment = () => {
+    setAnimalAssignmentDialog(true);
+  };
+
+  const bulkAssignAnimals = async () => {
+    selectedAvailableAnimals.forEach(async (animal) => {
+      try {
+        const assignAnimalApiObj = {
+          enclosureId: curEnclosure.enclosureId,
+          animalCode: animal.animalCode,
+        };
+        const responseJson = await apiJson
+          .put(
+            `http://localhost:3000/api/enclosure/assignAnimalToEnclosure/`,
+            assignAnimalApiObj
+          )
+          .then((res) => {
+            setRefreshSeed([]);
+          })
+          .catch((err) => console.log("err", err));
+
+        toastShadcn({
+          title: "Assignment Successful",
+          description: "Successfully assigned selected animals ",
+        });
+        setAnimalAssignmentDialog(false);
+        setAnimalBulkAssignmentDialog(false);
+        setSelectedAvailableAnimals([]);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while assigning maintenance staff: \n" +
+            apiJson.error,
+        });
+      }
+    });
+  };
+
+  const animalAssignmentDialogFooter = (
+    <React.Fragment>
+      <Button variant={"destructive"} onClick={hideAnimalAssignmentDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button onClick={bulkAssignAnimals}>
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
 
   return (
     <div>
@@ -479,20 +595,6 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
           }}
           field="identifierValue"
           header="Identifier Value"
-          sortable
-          style={{ minWidth: "5rem" }}
-        ></Column>
-
-        <Column
-          body={(animal) => {
-            if (!animal.location || animal.location == "") {
-              <span className="flex justify-center">—</span>;
-            } else {
-              return animal.location;
-            }
-          }}
-          // field="location"
-          header="Current Location"
           sortable
           style={{ minWidth: "5rem" }}
         ></Column>
@@ -614,6 +716,105 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
               from the current enclosure? ?
             </span>
           )}
+        </div>
+      </Dialog>
+      {/* Dialogs to add animal */}
+      <Dialog
+        visible={animalAssignmentDialog}
+        style={{ width: "32rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header="Confirm"
+        modal
+        footer={animalAssignmentDialogFooter}
+        onHide={hideAnimalAssignmentDialog}
+      >
+        <div className="confirmation-content">
+          <i
+            className="pi pi-exclamation-triangle mr-3"
+            style={{ fontSize: "2rem" }}
+          />
+          {selectedAnimal && (
+            <span>
+              Are you sure you want to assign the selected animals to the
+              current enclosure?
+            </span>
+          )}
+        </div>
+      </Dialog>
+      <Dialog
+        visible={animalBulkAssignmentDialog}
+        style={{ width: "50vw", height: "70vh" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header="Assign Animal"
+        footer={
+          <Button
+            onClick={confirmAssignment}
+            disabled={selectedAvailableAnimals.length == 0}
+          >
+            Assign Selected Animal
+          </Button>
+        }
+        onHide={hideAnimalBulkAssignmentDialog}
+      >
+        <div className="confirmation-content">
+          <div>
+            {Array.from(speciesCodeSet).map((speciesCode, index) => (
+              <li key={index}>{speciesCode}</li>
+            ))}
+          </div>
+          <DataTable
+            ref={dt}
+            value={availableAnimals}
+            selection={selectedAnimal}
+            onSelectionChange={(e) => {
+              if (Array.isArray(e.value)) {
+                setSelectedAnimal(e.value);
+              }
+            }}
+            dataKey="animalCode"
+            rowGroupMode="subheader"
+            groupRowsBy="species.commonName"
+            rowGroupHeaderTemplate={rowGroupHeaderTemplate}
+            paginator
+            rows={10}
+            scrollable
+            selectionMode={"single"}
+            rowsPerPageOptions={[5, 10, 25]}
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animals"
+            globalFilter={globalFilter}
+            header={bulkAssignmentHeader}
+          >
+            <Column
+              body={availableAnimalCheckbox}
+              //   header={allAvailableAnimalsCheckbox}
+            ></Column>
+            <Column
+              field="animalCode"
+              header="Code"
+              sortable
+              style={{ minWidth: "4rem" }}
+            ></Column>
+            <Column
+              field="houseName"
+              header="House Name"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="species.commonName"
+              header="Species"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            {/* <Column
+              body={availableActionBodyTemplate}
+              header="Actions"
+              frozen
+              alignFrozen="right"
+              exportable={false}
+            ></Column> */}
+          </DataTable>
         </div>
       </Dialog>
     </div>
