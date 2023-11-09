@@ -317,6 +317,74 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
     );
   };
 
+  // function isSpeciesCompatibleWithEnclosure(speciesCode: string) {
+  //   // fetch species compatibility or smthing
+  //   const fetchCheckCompatibility = async () => {
+  //     try {
+  //       const responseJson = await apiJson.get(
+  //         `http://localhost:3000/api/enclosure/getSpeciesCompatibilityInEnclosure/${curEnclosure.enclosureId}/${speciesCode}`
+  //       );
+  //       const isSpeciesCompatibleWithEnclosure =
+  //         responseJson.isCompatible as boolean;
+  //       return isSpeciesCompatibleWithEnclosure;
+  //     } catch (error: any) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   return fetchCheckCompatibility();
+  //   // const isCompatible = await fetchCheckCompatibility();
+  //   // return false;
+  // }
+
+  const assignAnimalRowGroupHeaderTemplate = (animal: Animal) => {
+    const [isCompatible, setIsCompatible] = useState<boolean | undefined>(
+      undefined
+    );
+
+    useEffect(() => {
+      const fetchCheckCompatibility = async () => {
+        try {
+          const responseJson = await apiJson.get(
+            `http://localhost:3000/api/enclosure/getSpeciesCompatibilityInEnclosure/${curEnclosure.enclosureId}/${animal.species.speciesCode}`
+          );
+          const isSpeciesCompatibleWithEnclosure =
+            responseJson.isCompatible as boolean;
+          setIsCompatible(isSpeciesCompatibleWithEnclosure);
+        } catch (error: any) {
+          console.log(error);
+        }
+      };
+      fetchCheckCompatibility();
+    }, [animal]);
+
+    return (
+      <React.Fragment>
+        <span className="flex justify-between">
+          <span className="flex items-center gap-4 ">
+            <img
+              alt={animal.species?.commonName}
+              src={"http://localhost:3000/" + animal.species?.imageUrl}
+              className="aspect-square w-10 rounded-full border border-white object-cover shadow-4"
+            />
+            <span className="text-lg font-bold">
+              {animal.species.commonName} ({animal.species.speciesCode})
+            </span>
+            {isCompatible != undefined && isCompatible ? (
+              <span className="flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] px-2 text-base font-bold text-emerald-900">
+                COMPATIBLE
+              </span>
+            ) : (
+              <span className="flex items-center justify-center rounded bg-red-100 p-[0.1rem] px-2 text-base font-bold text-red-900">
+                INCOMPATIBLE
+              </span>
+            )}
+          </span>
+          <div>{/* anything on the right side of row group header here */}</div>
+        </span>
+      </React.Fragment>
+    );
+  };
+
   const rowGroupFooterTemplate = (animal: Animal) => {
     return (
       <React.Fragment>
@@ -375,8 +443,8 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
         );
         const allAnimalsList = responseJson as Animal[];
 
-        console.log("haha");
-        console.log(animalList);
+        // console.log("haha");
+        // console.log(animalList);
         const availableAnimalsList = allAnimalsList.filter(
           (animal) =>
             !animalList.some(
@@ -757,11 +825,6 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
         onHide={hideAnimalBulkAssignmentDialog}
       >
         <div className="confirmation-content">
-          <div>
-            {Array.from(speciesCodeSet).map((speciesCode, index) => (
-              <li key={index}>{speciesCode}</li>
-            ))}
-          </div>
           <DataTable
             ref={dt}
             value={availableAnimals}
@@ -774,12 +837,12 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
             dataKey="animalCode"
             rowGroupMode="subheader"
             groupRowsBy="species.commonName"
-            rowGroupHeaderTemplate={rowGroupHeaderTemplate}
+            rowGroupHeaderTemplate={assignAnimalRowGroupHeaderTemplate}
             paginator
             rows={10}
             scrollable
             selectionMode={"single"}
-            rowsPerPageOptions={[5, 10, 25]}
+            // rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animals"
             globalFilter={globalFilter}
