@@ -138,6 +138,8 @@ import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPa
 import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
 import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
 import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
+import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSessionDetailsPage";
+import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -1145,6 +1147,22 @@ function App() {
                   ) : (
                     <Navigate to="/login" />
                   )
+                }
+              />
+              <Route
+                path="/zooevent/viewpubliceventsessiondetails/:publicEventSessionId"
+                element={
+                  user ? (
+                    <PublicEventSessionDetailsPage />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/zooevent/createpubliceventsession/:publicEventId"
+                element={
+                  user ? <CreatePublicEventSessionForm /> : <Navigate to="/login" />
                 }
               />
 

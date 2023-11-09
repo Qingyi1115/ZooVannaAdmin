@@ -23,6 +23,7 @@ import AnimalActivityLog from "../../models/AnimalActivityLog";
 import Employee from "../../models/Employee";
 import Keeper from "../../models/Keeper";
 import Species from "../../models/Species";
+import PublicEventSession from "../../models/PublicEventSession";
 
 interface AllPublicEventSessionDatatableProps {
   publicEventId: string;
@@ -36,13 +37,13 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
   const employee = useAuthContext().state.user?.employeeData;
 
 
-  const [publicEventSessionList, setPublicEventSessionList] = useState<AnimalActivityLog[]>([]);
-  const [selectedAnimalActivityLog, setSelectedAnimalActivityLog] = useState<AnimalActivityLog>();
+  const [publicEventSessionList, setPublicEventSessionList] = useState<PublicEventSession[]>([]);
+  const [setPublicEventSession, setSelectedPublicEventSession] = useState<PublicEventSession>();
   const [deletepublicEventSessionDialog, setDeleteAnimalActivityLogDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<AnimalActivityLog[]>>(null);
+  const dt = useRef<DataTable<PublicEventSession[]>>(null);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
@@ -62,8 +63,8 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
     dt.current?.exportCSV();
   };
 
-  const confirmDeleteAnimalActivityLog = (publicEventSession: AnimalActivityLog) => {
-    setSelectedAnimalActivityLog(publicEventSession);
+  const confirmDeleteAnimalActivityLog = (publicEventSession: PublicEventSession) => {
+    setSelectedPublicEventSession(publicEventSession);
     setDeleteAnimalActivityLogDialog(true);
   };
 
@@ -74,7 +75,7 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
   // delete publicEventSession stuff
   const deleteAnimalActivityLog = async () => {
     let _publicEventSession = publicEventSessionList.filter(
-      (val) => val.publicEventSessionId !== selectedAnimalActivityLog?.publicEventSessionId
+      (val) => val.publicEventSessionId !== setPublicEventSession?.publicEventSessionId
     );
 
     const deleteAnimalActivityLog = async () => {
@@ -82,17 +83,17 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
         setDeleteAnimalActivityLogDialog(false);
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteAnimalActivityLogById/" +
-          selectedAnimalActivityLog.publicEventSessionId
+          setPublicEventSession?.publicEventSessionId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted animal activity log: " + selectedAnimalActivityLog.publicEventSessionId,
+            "Successfully deleted animal activity log: " + setPublicEventSession?.publicEventSessionId,
         });
-        setAnimalActivityLogList(_publicEventSession);
-        setSelectedAnimalActivityLog(emptyAnimalActivityLog);
+        // setAnimalActivityLogList(_publicEventSession);
+        // setSelectedPublicEventSession(emptyAnimalActivityLog);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -121,7 +122,7 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
   );
   // end delete publicEventSession stuff
 
-  const actionBodyTemplate = (publicEventSession: AnimalActivityLog) => {
+  const actionBodyTemplate = (publicEventSession: PublicEventSession) => {
     return (
       <React.Fragment>
         <div>
@@ -129,8 +130,8 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
             // variant={"outline"}
             className="mb-1 mr-1"
             onClick={() => {
-              navigate(`/zooEvent/viewpubliceventdetails/${publicEventId}/publicEventSessions`, { replace: true })
-              navigate(`/zooEvent/viewpubliceventsessiondetails/${publicEventSession.publicEventSessionId}`)
+              navigate(`/zooevent/viewpubliceventdetails/${publicEventId}/publicEventSessions`, { replace: true })
+              navigate(`/zooevent/viewpubliceventsessiondetails/${publicEventSession.publicEventSessionId}`)
             }}>
             <HiEye className="mx-auto" />
           </Button> <Button
@@ -204,15 +205,15 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
             }}
           />
         </span>
-        {(animalActivitySearch && ((employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR" ||
+        {(((employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR" ||
           employee.keeper)) &&
           <Button className="mr-2"
             onClick={() => {
-              navigate(`/animal/viewanimalactivitydetails/`, { replace: true })
-              navigate(`/animal/createAnimalActivityLog`)
+              navigate(`/zooevent/viewpubliceventdetails/${publicEventId}/publicEventSessions`, { replace: true })
+              navigate(`/zooevent/createpubliceventsession/${publicEventId}`)
             }}>
             <HiPlus className="mr-auto" />
-            Add Animal Activity Log
+            Add Session
           </Button>
         )}
         <Button onClick={exportCSV}>Export to .csv</Button>
@@ -229,10 +230,10 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
           <DataTable
             ref={dt}
             value={publicEventSessionList}
-            selection={selectedAnimalActivityLog}
+            selection={setPublicEventSession}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedAnimalActivityLog(e.value);
+                setSelectedPublicEventSession(e.value);
               }
             }}
             dataKey="publicEventSessionId"
@@ -343,10 +344,10 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedAnimalActivityLog && (
+          {setPublicEventSession && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedAnimalActivityLog.publicEventSessionId}</b>?
+              <b>{setPublicEventSession.publicEventSessionId}</b>?
             </span>
           )}
         </div>
