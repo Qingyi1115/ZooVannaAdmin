@@ -1,51 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
-import ZooEvent from "../../models/ZooEvent";
 import Animal from "../../models/Animal";
-import Species from "../../models/Species";
 import EnrichmentItem from "../../models/EnrichmentItem";
+import Species from "../../models/Species";
+import ZooEvent from "../../models/ZooEvent";
 
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import { NavLink } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
 import { HiCheck, HiEye, HiTrash, HiX } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import * as Checkbox from '@radix-ui/react-checkbox';
+import * as Form from "@radix-ui/react-form";
+import { CheckIcon } from "lucide-react";
+import { Calendar } from "primereact/calendar";
+import { Dialog } from "primereact/dialog";
+import { Nullable } from "primereact/ts-helpers";
+import AllEventEmployeesDatatable from "../../components/EventManagement/ViewZooEventDetails/AllEventEmployeesDatatable";
 import {
   AcquisitionMethod,
   AnimalGrowthStage,
   AnimalSex,
   EventType,
 } from "../../enums/Enumurated";
-import { Dialog } from "primereact/dialog";
-import { Nullable } from "primereact/ts-helpers";
-import * as Form from "@radix-ui/react-form";
-import FormFieldInput from "src/components/FormFieldInput";
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import * as Checkbox from '@radix-ui/react-checkbox';
-import { CheckIcon } from "lucide-react";
-import { set } from "date-fns";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AllEventEmployeesDatatable from "../../components/EventManagement/ViewZooEventDetails/AllEventEmployeesDatatable";
+import beautifyText from "../../hooks/beautifyText";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Keeper from "../../models/Keeper";
-import beautifyText from "../../hooks/beautifyText";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -389,7 +383,7 @@ function ViewZooEventDetails() {
       const data = {
         eventName: curZooEvent?.eventName,
         eventDescription: curZooEvent?.eventDescription,
-        eventIsPublic: true, 
+        eventIsPublic: true,
         eventType: curZooEvent?.eventType == "EMPLOYEE_FEEDING" ? "CUSTOMER_FEEDING" : curZooEvent?.eventType,
         eventStartDateTime: eventStartDateTime?.getTime(),
         requiredNumberOfKeeper: curZooEvent?.requiredNumberOfKeeper,
@@ -709,11 +703,11 @@ function ViewZooEventDetails() {
                       }
                     </div>
 
-                    {/* {curZooEvent.eventIsPublic && <img
+                    {curZooEvent.eventIsPublic && <img
                       src={"http://localhost:3000/" + curZooEvent.imageUrl}
                       alt="Current event image"
                       className="my-4 self-center aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
-                    />} */}
+                    />}
 
                     <Table>
                       <TableBody>

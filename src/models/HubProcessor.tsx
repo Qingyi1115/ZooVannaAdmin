@@ -1,6 +1,6 @@
 import { HubStatus } from "src/enums/HubStatus";
-import Sensor from "./Sensor";
 import Facility from "./Facility";
+import Sensor from "./Sensor";
 
 interface HubProcessor {
     hubProcessorId: number;

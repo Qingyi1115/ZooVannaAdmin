@@ -1,9 +1,6 @@
-import Animal from "./Animal";
 import { EventTimingType, EventType } from "../enums/Enumurated";
-import EnrichmentItem from "./EnrichmentItem";
-import Employee from "./Employee";
-import Keeper from "./Keeper";
 import Hub from "./HubProcessor";
+import Keeper from "./Keeper";
 import PlanningStaff from "./PlanningStaff";
 
 interface ZooEvent {

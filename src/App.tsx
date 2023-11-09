@@ -1,95 +1,95 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useAuthContext } from "./hooks/useAuthContext";
 import { useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useAuthContext } from "./hooks/useAuthContext";
 
 import { PrimeReactProvider } from "primereact/api";
 // import "@fullcalendar/daygrid/main.css";
 
-import EnclosureContextProvider from "./context/EnclosureContext";
 
+
+import MainLayout from "./components/MainLayout";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import MainLayout from "./components/MainLayout";
 
 import NotFoundPage from "./pages/NotFoundPage";
 
 // Species
-import ViewAllSpeciesPage from "./pages/speciesManagement/ViewAllSpeciesPage";
-import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage";
-import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
-import ViewSpeciesDetailsPage from "./pages/speciesManagement/ViewSpeciesDetailsPage";
 import CreateNewDietaryRequirementsPage from "./pages/speciesManagement/CreateNewDietaryRequirementsPage";
+import CreateNewSpeciesPage from "./pages/speciesManagement/CreateNewSpeciesPage";
 import EditDietaryRequirementsPage from "./pages/speciesManagement/EditDietaryRequirementsPage";
+import EditSpeciesPage from "./pages/speciesManagement/EditSpeciesPage";
+import ViewAllSpeciesPage from "./pages/speciesManagement/ViewAllSpeciesPage";
+import ViewSpeciesDetailsPage from "./pages/speciesManagement/ViewSpeciesDetailsPage";
 
-import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import CreatePhysiologicalRefNormPage from "./pages/speciesManagement/CreatePhysiologicalRefNormPage";
+import EditEducationalContentPage from "./pages/speciesManagement/EditEducationalContentPage";
 import EditPhysioRefNormPage from "./pages/speciesManagement/EditPhysioRefNormPage";
 
 // Animal
-import CreateNewAnimalPage from "./pages/animalManagement/CreateNewAnimalPage";
-import ViewAllAnimalsPage from "./pages/animalManagement/ViewAllAnimalsPage";
-import ViewAnimalDetailsPage from "./pages/animalManagement/ViewAnimalDetailsPage";
-import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDetailsPage";
-import CreateNewWeightRecord from "./pages/animalManagement/CreateNewWeightRecord";
-import ViewAnimalFullLineage from "./pages/animalManagement/ViewAnimalFullLineage";
-import EditAnimalPage from "./pages/animalManagement/EditAnimalPage";
-import AnimalActivityHomePage from "./pages/animalManagement/AnimalActivityHomePage";
-import CreateAnimalActivityPage from "./pages/animalManagement/CreateAnimalActivityPage";
-import ViewAnimalActivityDetails from "./pages/animalManagement/ViewAnimalActivityDetails";
-import EditAnimalActivityPage from "./pages/animalManagement/EditAnimalActivityPage";
 import AddAnimalToActivityPage from "./pages/animalManagement/AddAnimalToActivityPage";
 import AddItemToActivityPage from "./pages/animalManagement/AddItemToActivityPage";
-import DeclareDeathPage from "./pages/animalManagement/DeclareDeathPage";
+import AnimalActivityHomePage from "./pages/animalManagement/AnimalActivityHomePage";
+import AnimalFeedingPlanDetailsPage from "./pages/animalManagement/AnimalFeedingPlanDetailsPage";
+import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
 import CheckIsInbreedingPage from "./pages/animalManagement/CheckIsInbreedingPage";
-import CreateNewAnimalObservationLogPage from "./pages/animalManagement/CreateNewAnimalObservationLogPage";
-import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
-import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
+import CreateAnimalActivityPage from "./pages/animalManagement/CreateAnimalActivityPage";
+import CreateFeedingPlan from "./pages/animalManagement/CreateFeedingPlan";
 import CreateNewAnimalActivityLogPage from "./pages/animalManagement/CreateNewAnimalActivityLogPage";
 import CreateNewAnimalFeedingLogPage from "./pages/animalManagement/CreateNewAnimalFeedingLogPage";
+import CreateNewAnimalObservationLogPage from "./pages/animalManagement/CreateNewAnimalObservationLogPage";
+import CreateNewAnimalPage from "./pages/animalManagement/CreateNewAnimalPage";
+import CreateNewWeightRecord from "./pages/animalManagement/CreateNewWeightRecord";
+import DeclareDeathPage from "./pages/animalManagement/DeclareDeathPage";
 import EditAnimalActivityLogPage from "./pages/animalManagement/EditAnimalActivityLogPage";
+import EditAnimalActivityPage from "./pages/animalManagement/EditAnimalActivityPage";
 import EditAnimalFeedingLogPage from "./pages/animalManagement/EditAnimalFeedingLogPage";
-import ViewAnimalActivityLogDetailsPage from "./pages/animalManagement/ViewAnimalActivityLogDetailsPage";
-import ViewAnimalFeedingLogDetailsPage from "./pages/animalManagement/ViewAnimalFeedingLogDetailsPage";
-import AnimalFeedingPlanHomePage from "./pages/animalManagement/AnimalFeedingPlanHomePage";
-import CreateFeedingPlan from "./pages/animalManagement/CreateFeedingPlan";
-import AnimalFeedingPlanDetailsPage from "./pages/animalManagement/AnimalFeedingPlanDetailsPage";
+import EditAnimalObservationLogPage from "./pages/animalManagement/EditAnimalObservationLogPage";
+import EditAnimalPage from "./pages/animalManagement/EditAnimalPage";
 import EditFeedingPlanBasicInfoPage from "./pages/animalManagement/EditFeedingPlanBasicInfoPage";
+import ViewAllAnimalsPage from "./pages/animalManagement/ViewAllAnimalsPage";
+import ViewAnimalActivityDetails from "./pages/animalManagement/ViewAnimalActivityDetails";
+import ViewAnimalActivityLogDetailsPage from "./pages/animalManagement/ViewAnimalActivityLogDetailsPage";
+import ViewAnimalDetailsPage from "./pages/animalManagement/ViewAnimalDetailsPage";
+import ViewAnimalFeedingLogDetailsPage from "./pages/animalManagement/ViewAnimalFeedingLogDetailsPage";
+import ViewAnimalFullLineage from "./pages/animalManagement/ViewAnimalFullLineage";
+import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
+import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDetailsPage";
 
 // Enclosure manage pages
-import ViewAllEnclosuresPage from "./pages/enclosureManagement/ViewAllEnclosuresPage";
-import ViewEnclosureDetailsPage from "./pages/enclosureManagement/ViewEnclosureDetailsPage";
 import EnclosureContextLayout from "./components/EnclosureManagement/EnclosureContextLayout";
 import EnclosureDesignDiagramPage from "./pages/enclosureManagement/EnclosureDesignDiagramPage";
+import ViewAllEnclosuresPage from "./pages/enclosureManagement/ViewAllEnclosuresPage";
+import ViewEnclosureDetailsPage from "./pages/enclosureManagement/ViewEnclosureDetailsPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
 import EditFacilityPage from "./pages/assetAndFacilityManagement/Facility/EditFacilityPage";
-import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilitiesPage";
-import ViewFacilityLogDetailsPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/ViewFacilityLogDetailsPage";
 import CreateNewFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/CreateNewFacilityLogPage";
 import EditFacilityLogPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/EditFacilityLogPage";
+import ViewFacilityLogDetailsPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/ViewFacilityLogDetailsPage";
+import ViewAllFacilitiesPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilitiesPage";
 
 //assets
+import CreateNewHubForm from "./components/AssetAndFacilityManagement/AssetManagement/Hub/CreateNewHubForm";
+import CreateNewSensorForm from "./components/AssetAndFacilityManagement/AssetManagement/Sensor/CreateNewSensorForm";
 import CreateNewAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/CreateNewAnimalFeedPage";
-import CreateNewEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/CreateNewEnrichmentItemPage";
 import EditAnimalFeedPage from "./pages/assetAndFacilityManagement/AnimalFeed/EditAnimalFeedPage";
+import CreateNewEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/CreateNewEnrichmentItemPage";
 import EditEnrichmentItemPage from "./pages/assetAndFacilityManagement/EnrichmentItem/EditEnrichmentItemPage";
 import ViewAllEnrichmentItemsPage from "./pages/assetAndFacilityManagement/EnrichmentItem/ViewAllEnrichmentItemsPage";
-import EditSensorPage from "./pages/assetAndFacilityManagement/Sensor/EditSensorPage";
+import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
 import EditHubPage from "./pages/assetAndFacilityManagement/Hub/EditHubPage";
 import ViewAllHubsPage from "./pages/assetAndFacilityManagement/Hub/ViewAllHubsPage";
 import ViewHubDetailsPage from "./pages/assetAndFacilityManagement/Hub/ViewHubDetailsPage";
-import ViewSensorDetailsPage from "./pages/assetAndFacilityManagement/Sensor/ViewSensorDetailsPage";
-import CreateNewHubForm from "./components/AssetAndFacilityManagement/AssetManagement/Hub/CreateNewHubForm";
-import CreateNewSensorForm from "./components/AssetAndFacilityManagement/AssetManagement/Sensor/CreateNewSensorForm";
+import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
+import AddNewLocationPage from "./pages/assetAndFacilityManagement/Map/AddNewLocationPage";
+import ChangeFacilityLocationPage from "./pages/assetAndFacilityManagement/Map/ChangeFacilityLocationPage";
+import MapLandingPage from "./pages/assetAndFacilityManagement/Map/MapLandingPage";
+import EditSensorPage from "./pages/assetAndFacilityManagement/Sensor/EditSensorPage";
 import CreateNewSensorMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/CreateSensorNewMaintenanceLogPage";
 import EditMaintenanceLogPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/EditMaintenanceLogPage";
 import ViewMaintenanceLogDetailsPage from "./pages/assetAndFacilityManagement/Sensor/MaintenanceLog/ViewMaintenanceLogDetailsPage";
-import MaintenanceOperationSuggestionPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/MaintenanceOperationsPage";
-import ViewFacilityDetailsPage from "./pages/assetAndFacilityManagement/Facility/ViewFacilityDetailsPage";
-import MapLandingPage from "./pages/assetAndFacilityManagement/Map/MapLandingPage";
-import AddNewLocationPage from "./pages/assetAndFacilityManagement/Map/AddNewLocationPage";
-import ChangeFacilityLocationPage from "./pages/assetAndFacilityManagement/Map/ChangeFacilityLocationPage";
+import ViewSensorDetailsPage from "./pages/assetAndFacilityManagement/Sensor/ViewSensorDetailsPage";
 
 //customer account management page
 import CreateNewCustomerPage from "./pages/customerAccountManagement/CreateNewCustomerPage";
@@ -97,34 +97,33 @@ import EditCustomerPage from "./pages/customerAccountManagement/EditCustomerPage
 import ViewAllCustomerPage from "./pages/customerAccountManagement/ViewAllCustomerPage";
 
 //employee account management page
-import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
 import CreateNewEmployeePage from "./pages/employeeAccountManagement/CreateNewEmployeePage";
+import ViewAllEmployeesPage from "./pages/employeeAccountManagement/ViewAllEmployeesPage";
+import ViewEmployeeDetailsPage from "./pages/employeeAccountManagement/ViewEmployeeDetailsPage";
+import EditPasswordPage from "./pages/employeeCommonInfra/EditPasswordPage";
+import ProfilePage from "./pages/employeeCommonInfra/ProfilePage";
+import UpdateProfilePage from "./pages/employeeCommonInfra/UpdateProfilePage";
 import CreateNewEnclosureRequirementsPage from "./pages/speciesManagement/CreateNewEnclosureRequirementsPage";
 import EditEnclosureRequirementsPage from "./pages/speciesManagement/EditEnclosureRequirementsPage";
-import ViewEmployeeDetailsPage from "./pages/employeeAccountManagement/ViewEmployeeDetailsPage";
-import ProfilePage from "./pages/employeeCommonInfra/ProfilePage";
-import EditPasswordPage from "./pages/employeeCommonInfra/EditPasswordPage";
-import UpdateProfilePage from "./pages/employeeCommonInfra/UpdateProfilePage";
 //import AssignMaintenanceStaffPage from "./pages/assetAndFacilityManagement/Facility/AssignMaintenanceStaffPage";
-import CreateNewListingPage from "./pages/listingManagement/CreateNewListingPage";
-import ViewAllListingsPage from "./pages/listingManagement/ViewAllListingsPage";
-import EditListingPage from "./pages/listingManagement/EditListingPage";
-import ViewListingDetailsPage from "./pages/listingManagement/ViewListingDetailsPage";
-import RemoveMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageOperationStaffPage";
+import CreateNewFacilityMaintenanceLogPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/CreateNewFacilityMaintenanceLogPage";
+import FacilityMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/FacilityMaintenanceChartPage";
 import ManageFacilityMaintenanceStaffPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/ManageFacilityMaintenanceStaffPage";
 import SensorMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/SensorMaintenanceChartPage";
-import FacilityMaintenanceChartPage from "./pages/assetAndFacilityManagement/MaintenanceOperations/FacilityMaintenanceChartPage";
-import CreateNewFacilityMaintenanceLogPage from "./pages/assetAndFacilityManagement/Facility/FacilityLog/CreateNewFacilityMaintenanceLogPage";
-import EditEmployeePage from "./pages/employeeAccountManagement/EditEmployeePage";
 import ViewAllAssetsPage from "./pages/assetAndFacilityManagement/ViewAllAssetsPage";
+import CreateNewListingPage from "./pages/listingManagement/CreateNewListingPage";
+import EditListingPage from "./pages/listingManagement/EditListingPage";
+import ViewAllListingsPage from "./pages/listingManagement/ViewAllListingsPage";
+import ViewListingDetailsPage from "./pages/listingManagement/ViewListingDetailsPage";
 
 //promotion management page
+import ViewCameraFeedsPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraFeedsPage";
+import ViewCameraPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraPage";
+import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
 import CreateNewPromotionPage from "./pages/promotion/CreateNewPromotionPage";
+import EditPromotionPage from "./pages/promotion/EditPromotionPage";
 import ViewAllPromotionsPage from "./pages/promotion/ViewAllPromotionsPage";
 import ViewPromotionDetailsPage from "./pages/promotion/ViewPromotionDetailsPage";
-import EditPromotionPage from "./pages/promotion/EditPromotionPage";
-import ResetPasswordPage from "./pages/employeeCommonInfra/ResetPasswordPage";
-import ViewCameraPage from "./pages/assetAndFacilityManagement/Sensor/ViewCameraPage";
 
 //customer order management page
 import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrdersPage";
@@ -132,12 +131,17 @@ import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrde
 import SalesChartPage from "./pages/sales/SalesChartPage";
 
 //Event management page
-import CreateZooEventPage from "./pages/eventManagement/CreateZooEventPage";
+import CreateLeaveEventPage from "./pages/eventManagement/CreateLeaveEventPage";
+import CreatePublicZooEventPage from "./pages/eventManagement/CreatePublicZooEventPage";
 import EditZooEventPage from "./pages/eventManagement/EditZooEventPage";
 import ViewZooEventDetails from "./pages/eventManagement/ViewZooEventDetails";
 import ZooEventHomePage from "./pages/eventManagement/ZooEventHomePage";
-import RevenueChart2 from "./components/SalesManagement/RevenueChart2";
-import RevenueChartFinal from "./components/SalesManagement/RevenueChartFinal";
+
+//announcement
+import CreateNewAnnouncementPage from "./pages/announcement/CreateNewAnnouncementPage";
+import EditAnnouncementPage from "./pages/announcement/EditAnnouncementPage";
+import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsPage";
+import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -726,6 +730,11 @@ function App() {
                 />
 
                 <Route
+                  path="/assetfacility/viewcamerafeeds/:sensorId"
+                  element={user ? <ViewCameraFeedsPage /> : <Navigate to="/login" />}
+                />
+
+                <Route
                   path="/assetfacility/createhub"
                   element={
                     user ? <CreateNewHubForm /> : <Navigate to="/login" />
@@ -1024,6 +1033,44 @@ function App() {
                 />
 
                 <Route
+                  path="/announcement/createnewannouncement"
+                  element={
+                    user ? (
+                      <CreateNewAnnouncementPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+
+                <Route
+                  path="/announcement/viewallannouncements"
+                  element={
+                    user ? (
+                      <ViewAllAnnouncementsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/announcement/viewannouncement/:announcementId"
+                  element={
+                    user ? (
+                      <ViewAnnouncementDetailsPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="/announcement/editannouncement/:announcementId"
+                  element={
+                    user ? <EditAnnouncementPage /> : <Navigate to="/login" />
+                  }
+                />
+
+                <Route
                   path="/profile"
                   element={user ? <ProfilePage /> : <Navigate to="/login" />}
                 />
@@ -1066,9 +1113,15 @@ function App() {
                 />
                 {/* Event Management */}
                 <Route
-                  path="/zooevent/createnewzooevent"
+                  path="/zooevent/createleaveevent/:employeeId"
                   element={
-                    user ? <CreateZooEventPage /> : <Navigate to="/login" />
+                    user ? <CreateLeaveEventPage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/zooevent/createpubliczooevent"
+                  element={
+                    user ? <CreatePublicZooEventPage /> : <Navigate to="/login" />
                   }
                 />
                 <Route

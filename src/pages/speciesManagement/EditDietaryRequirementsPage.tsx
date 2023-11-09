@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import EditDietaryRequirementsForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/EditDietaryRequirementsForm";
 import useApiJson from "../../hooks/useApiJson";
 import Species from "../../models/Species";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import EditDietaryRequirementsForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/EditDietaryRequirementsForm";
 import SpeciesDietNeed from "../../models/SpeciesDietNeed";
 
 function EditDietaryRequirementsPage() {

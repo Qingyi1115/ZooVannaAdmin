@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import React, { useEffect, useState } from "react";
 
-import { MultiSelectChangeEvent } from "primereact/multiselect";
 
-import FormFieldInput from "../FormFieldInput";
-import useApiJson from "../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../FormFieldSelect";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../hooks/useApiJson";
 import Listing from "../../models/Listing";
-import { ListingStatus, ListingType } from "src/enums/Enumurated";
-import { Navigate, useNavigate } from "react-router-dom";
+import FormFieldInput from "../FormFieldInput";
+import FormFieldSelect from "../FormFieldSelect";
 
 interface EditListingFormProps {
   currListing: Listing;

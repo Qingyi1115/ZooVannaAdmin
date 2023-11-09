@@ -1,15 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 import { Chart } from 'primereact/chart';
-import { addQuarters } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import Sensor from '../../../../../models/Sensor';
-import { render } from 'react-dom';
+import { useEffect, useState } from 'react';
+import SensorReading from '../../../../../../src/models/SensorReading';
 import { compareDates } from '../../../../../components/AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion';
 import useApiJson from '../../../../../hooks/useApiJson';
-import SensorReading from '../../../../../../src/models/SensorReading';
-import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 
 interface AllSensorReadingDatatableProps {
   sensorId: string;

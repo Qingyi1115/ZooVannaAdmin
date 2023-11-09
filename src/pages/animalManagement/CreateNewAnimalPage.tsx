@@ -1,4 +1,3 @@
-import React from "react";
 import CreateNewAnimalForm from "../../components/AnimalManagement/CreateNewAnimalPage/CreateNewAnimalForm";
 
 function CreateNewAnimalPage() {

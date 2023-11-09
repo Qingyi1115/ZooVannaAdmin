@@ -1,37 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import * as Form from "@radix-ui/react-form";
-import * as RadioGroup from "@radix-ui/react-radio-group";
-import * as Checkbox from "@radix-ui/react-checkbox";
 
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
 import useApiFormData from "../../../hooks/useApiFormData";
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
-import { HiCheck } from "react-icons/hi";
 
-import useApiJson from "../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
-import { NavLink } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { Calendar } from "primereact/calendar";
+import { useNavigate } from "react-router-dom";
 import {
-  AcquisitionMethod,
   ActivityType,
-  AnimalGrowthStage,
-  AnimalSex,
-  AnimalStatusType,
   DayOfWeek,
   EventTimingType,
-  IdentifierType,
-  RecurringPattern,
+  RecurringPattern
 } from "../../../enums/Enumurated";
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import Species from "../../../models/Species";
+import useApiJson from "../../../hooks/useApiJson";
 
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { Nullable } from "primereact/ts-helpers";
 
 function CreateAnimalActivityForm() {

@@ -1,9 +1,9 @@
-import { Rating } from "../enums/Rating";
-import Animal from "./Animal";
-import Keeper from "./Keeper";
 import { ActivityType } from "../enums/ActivityType";
+import { Rating } from "../enums/Rating";
 import { Reaction } from "../enums/Reaction";
+import Animal from "./Animal";
 import AnimalActivity from "./AnimalActivity";
+import Keeper from "./Keeper";
 
 interface AnimalActivityLog {
   animalActivityLogId: number;

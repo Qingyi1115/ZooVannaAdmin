@@ -1,47 +1,31 @@
-import React, { useState, useEffect } from "react";
-import * as Form from "@radix-ui/react-form";
-import * as RadioGroup from "@radix-ui/react-radio-group";
 import * as Checkbox from "@radix-ui/react-checkbox";
+import * as Form from "@radix-ui/react-form";
+import React, { useState } from "react";
 
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
 import useApiFormData from "../../../hooks/useApiFormData";
 import useApiJson from "../../../hooks/useApiJson";
 
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
-import { ContinentEnum } from "../../../enums/ContinentEnum";
-import { HiCheck } from "react-icons/hi";
-import { BiomeEnum } from "../../../enums/BiomeEnum";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
 
 import { useNavigate } from "react-router-dom";
-import Animal from "../../../models/Animal";
 
 import {
-  AcquisitionMethod,
-  EventType,
-  AnimalGrowthStage,
-  AnimalSex,
-  AnimalStatusType,
-  EventTimingType,
-  IdentifierType,
+  EventTimingType
 } from "../../../enums/Enumurated";
 
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import Species from "../../../models/Species";
+import { Calendar } from "primereact/calendar";
 
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
-import ZooEvent from "../../../models/ZooEvent";
-import { Nullable } from "primereact/ts-helpers";
 import { CheckIcon } from "lucide-react";
+import { Nullable } from "primereact/ts-helpers";
 import beautifyText from "../../../hooks/beautifyText";
+import ZooEvent from "../../../models/ZooEvent";
 
 interface EditZooEventFormProps {
   curZooEvent: ZooEvent;
@@ -52,7 +36,7 @@ interface EditZooEventFormProps {
 function EditZooEventForm(props: EditZooEventFormProps) {
   const { curZooEvent, refreshSeed, setRefreshSeed } = props;
 
-  const apiFormData = useApiFormData();
+
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
@@ -82,6 +66,10 @@ function EditZooEventForm(props: EditZooEventFormProps) {
   const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
     number | undefined
   >(curZooEvent.requiredNumberOfKeeper);
+
+  // Zoo event image
+  const apiFormData = useApiFormData();
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // validate functions
   function validateIdentifierType(props: ValidityState) {
@@ -195,6 +183,12 @@ function EditZooEventForm(props: EditZooEventFormProps) {
 
   // end validate functions
 
+  // Zoo event image
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+    setImageFile(file);
+  }
+
   // handle submit
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -216,6 +210,32 @@ function EditZooEventForm(props: EditZooEventFormProps) {
 
       if (updateFuture) {
 
+        // Update future with image
+        if (imageFile) {
+          const formData = new FormData();
+          formData.append("file", imageFile || "");
+
+          // try {
+          //   const response = await apiFormData.put(
+          //     `http://localhost:3000/api/zooEvent/updateZooEventIncludeFutureImage/${curZooEvent?.zooEventId}`,
+          //     formData
+          //   );
+          //   // success
+          //   toastShadcn({
+          //     description: "Successfully updated event",
+          //   });
+          //   navigate(-1);
+          // } catch (error: any) {
+          //   toastShadcn({
+          //     variant: "destructive",
+          //     title: "Uh oh! Something went wrong.",
+          //     description:
+          //       "An error has occurred while editing zoo event details: \n" +
+          //       error.message,
+          //   });
+          // }
+        }
+
         const data = {
           eventName: eventName,
           eventDescription: eventDescription,
@@ -231,16 +251,52 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           eventEndDateTime: curZooEvent?.eventEndDateTime,
         };
 
-        const response = await apiJson.put(
-          `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
-          data
-        );
-        // success
-        toastShadcn({
-          description: "Successfully updated event",
-        });
-        navigate(-1);
+        try {
+          const response = await apiJson.put(
+            `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
+            data
+          );
+          // success
+          toastShadcn({
+            description: "Successfully updated event",
+          });
+          navigate(-1);
+        } catch (error: any) {
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while editing zoo event details: \n" +
+              error.message,
+          });
+        }
       } else {
+
+        // Update single with image
+        if (imageFile) {
+          const formData = new FormData();
+          formData.append("file", imageFile || "");
+
+          // try {
+          //   const response = await apiFormData.put(
+          //     `http://localhost:3000/api/zooEvent/updateZooEventSingleImage/${curZooEvent?.zooEventId}`,
+          //     formData
+          //   );
+          //   // success
+          //   toastShadcn({
+          //     description: "Successfully updated event",
+          //   });
+          //   navigate(-1);
+          // } catch (error: any) {
+          //   toastShadcn({
+          //     variant: "destructive",
+          //     title: "Uh oh! Something went wrong.",
+          //     description:
+          //       "An error has occurred while editing zoo event details: \n" +
+          //       error.message,
+          //   });
+          // }
+        }
 
         const zooEventDetails = {
           zooEventId: curZooEvent?.zooEventId,
@@ -295,7 +351,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
         onSubmit={handleSubmit}
-      // encType="multipart/form-data"
+        encType="multipart/form-data"
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
@@ -319,6 +375,34 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             {curZooEvent.eventName}
           </span>
         </div>
+
+        {/* Zoo Event Picture */}
+        {curZooEvent.eventIsPublic &&
+          <Form.Field
+            name="zooEventImage"
+            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          >
+            <span className="font-medium">Current Image</span>
+            <img
+              src={
+                "http://localhost:3000/" +
+                curZooEvent.imageUrl
+              }
+              alt="Current zoo event image"
+              className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"
+            />
+            <Form.Label className="font-medium">
+              Change Zoo Event Image
+            </Form.Label>
+            <Form.Control
+              type="file"
+              placeholder="Change image"
+              required={false}
+              accept=".png, .jpg, .jpeg, .webp"
+              onChange={handleFileChange}
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+            />
+          </Form.Field>}
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
           {/* Event Name */}

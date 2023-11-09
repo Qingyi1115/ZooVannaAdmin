@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useApiJson from "../../hooks/useApiJson";
 import Listing from "src/models/Listing";
-import { ListingStatus, ListingType } from "../../enums/Enumurated";
 import EditListingForm from "../../components/ListingManagement/EditListingForm";
+import { ListingStatus, ListingType } from "../../enums/Enumurated";
+import useApiJson from "../../hooks/useApiJson";
 
 function EditListingPage() {
   const apiJson = useApiJson();

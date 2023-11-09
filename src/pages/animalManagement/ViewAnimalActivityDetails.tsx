@@ -1,45 +1,41 @@
-import React, { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
-import AnimalActivity from "../../models/AnimalActivity";
 import Animal from "../../models/Animal";
-import Species from "../../models/Species";
+import AnimalActivity from "../../models/AnimalActivity";
 import EnrichmentItem from "../../models/EnrichmentItem";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Species from "../../models/Species";
 
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { NavLink } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
 import { HiCheck, HiTrash, HiX } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
+import { Dialog } from "primereact/dialog";
+import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalActivityLogsDatatable";
+import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
 import {
   AcquisitionMethod,
   ActivityType,
   AnimalGrowthStage,
   AnimalSex,
 } from "../../enums/Enumurated";
-import { Dialog } from "primereact/dialog";
-import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalActivityLogsDatatable";
-import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
-import { Activity } from "lucide-react";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import beautifyText from "../../hooks/beautifyText";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 let emptySpecies: Species = {
   speciesId: -1,

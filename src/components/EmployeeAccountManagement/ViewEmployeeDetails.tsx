@@ -1,18 +1,16 @@
-import React, { useState, useRef } from "react";
-import Employee from "../../models/Employee";
 import { Button } from "@/components/ui/button";
-import useApiJson from "../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { Toast } from "primereact/toast";
+import React from "react";
+import useApiJson from "../../hooks/useApiJson";
+import Employee from "../../models/Employee";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 interface EmployeeInfoDetailsProps {

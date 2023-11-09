@@ -1,14 +1,13 @@
-import React, { useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import React, { useState } from "react";
 
 import { MultiSelectChangeEvent } from "primereact/multiselect";
 
+import { Button } from "@/components/ui/button";
+import Customer from "src/models/Customer";
 import useApiFormData from "../../hooks/useApiFormData";
 import FormFieldInput from "../FormFieldInput";
-import FormFieldRadioGroup from "../FormFieldRadioGroup";
-import Customer from "src/models/Customer";
 import FormFieldSelect from "../FormFieldSelect";
-import { Button } from "@/components/ui/button";
 
 interface EditCustomerFormProps {
   curCustomer: Customer;

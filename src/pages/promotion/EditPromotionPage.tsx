@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import EditPromotionForm from "../../components/Promotion/EditPromotionForm";
 import useApiJson from "../../hooks/useApiJson";
 import Promotion from "../../models/Promotion";
-import EditPromotionForm from "../../components/Promotion/EditPromotionForm";
 
 function EditSpeciesPage() {
   const apiJson = useApiJson();

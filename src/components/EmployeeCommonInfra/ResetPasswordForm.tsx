@@ -1,7 +1,7 @@
+import { useToast } from "@/components/ui/use-toast";
+import * as Form from "@radix-ui/react-form";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import * as Form from "@radix-ui/react-form";
-import { useToast } from "@/components/ui/use-toast";
 import useApiJson from "../../hooks/useApiJson";
 
 function ResetPasswordForm() {

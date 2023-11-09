@@ -1,4 +1,3 @@
-import React from "react";
 import CreateNewSpeciesForm from "../../components/SpeciesManagement/CreateNewSpeciesPage/CreateNewSpeciesForm";
 
 function CreateNewSpeciesPage() {

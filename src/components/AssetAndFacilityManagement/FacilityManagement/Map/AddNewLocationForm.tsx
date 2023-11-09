@@ -1,34 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { useEffect, useRef, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 import useApiJson from "../../../../hooks/useApiJson";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 
 import Facility from "../../../../models/Facility";
 
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  useMap,
-  useMapEvents,
-  ImageOverlay,
-  TileLayer,
-} from "react-leaflet";
 import L, {
-  CRS,
   LatLng,
   LatLngBounds,
-  LatLngBoundsLiteral,
-  LatLngExpression,
+  LatLngExpression
 } from "leaflet";
+import {
+  ImageOverlay,
+  MapContainer,
+  Marker,
+  TileLayer,
+  useMapEvents
+} from "react-leaflet";
 
 function iconFunction(facilityType: string) {
   let iconUrl = `../../../../../src/assets/mapicons/1.png`;
@@ -97,18 +92,18 @@ const facilityDetail = "thirdParty";
 const facilityDetailJson =
   facilityDetail == "thirdParty"
     ? {
-        ownership: "",
-        ownerContact: "",
-        maxAccommodationSize: "",
-        hasAirCon: "",
-        facilityType: "",
-      }
+      ownership: "",
+      ownerContact: "",
+      maxAccommodationSize: "",
+      hasAirCon: "",
+      facilityType: "",
+    }
     : {
-        isPaid: "",
-        maxAccommodationSize: "",
-        hasAirCon: "",
-        facilityType: "",
-      };
+      isPaid: "",
+      maxAccommodationSize: "",
+      hasAirCon: "",
+      facilityType: "",
+    };
 
 let emptyFacility: Facility = {
   facilityId: -1,
@@ -120,6 +115,7 @@ let emptyFacility: Facility = {
   facilityDetailJson: facilityDetailJson,
   isSheltered: false,
   hubProcessors: [],
+  imageUrl: ""
 };
 
 const merlioncenter: LatLngExpression = [1.295, 103.775887811];
@@ -222,6 +218,16 @@ function AddNewLocationForm() {
     }
   }
 
+  const imageBodyTemplate = (rowData: Facility) => {
+    return (
+      <img
+        src={"http://localhost:3000/" + rowData.imageUrl}
+        alt={rowData.facilityName}
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+      />
+    );
+  };
+
   return (
     <div>
       <div className="mb-2 text-xl font-medium">
@@ -297,6 +303,13 @@ function AddNewLocationForm() {
             dataKey="facilityId"
             className="h-1/2 overflow-hidden rounded border border-graydark/30"
           >
+            <Column
+              field="imageUrl"
+              header="Image"
+              frozen
+              body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
+            ></Column>
             <Column
               field="facilityId"
               header="ID"

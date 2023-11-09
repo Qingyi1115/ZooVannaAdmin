@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useApiJson from "../../../../hooks/useApiJson";
-import Facility from "../../../../models/Facility";
-import MaintenanceLog from "../../../../models/MaintenanceLog";
+import ViewMaintenanceLogDetails from "../../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/ViewMaintenanceLogDetails";
 import { HubStatus } from "../../../../enums/HubStatus";
 import { SensorType } from "../../../../enums/SensorType";
+import useApiJson from "../../../../hooks/useApiJson";
+import Facility from "../../../../models/Facility";
 import Hub from "../../../../models/HubProcessor";
+import MaintenanceLog from "../../../../models/MaintenanceLog";
 import Sensor from "../../../../models/Sensor";
-import ViewMaintenanceLogDetails from "../../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/ViewMaintenanceLogDetails";
 
 
 

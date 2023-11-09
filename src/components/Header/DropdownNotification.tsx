@@ -1,19 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import * as dotenv from "dotenv";
-import useApiJson from "../../hooks/useApiJson";
 import {
   BsBroadcast,
   BsCalendarWeek,
-  BsFillHouseExclamationFill,
-  BsHouseExclamation,
+  BsHouseExclamation
 } from "react-icons/bs";
-import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import { HiClipboardList } from "react-icons/hi";
-import Sensor from "../../models/Sensor";
+import { Link } from "react-router-dom";
+import useApiJson from "../../hooks/useApiJson";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import ZooEvent from "../../models/ZooEvent";
-import { set } from "date-fns";
+import { compareDates } from "../AssetAndFacilityManagement/MaintenanceOperation/SensorMaintenanceSuggestion";
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);

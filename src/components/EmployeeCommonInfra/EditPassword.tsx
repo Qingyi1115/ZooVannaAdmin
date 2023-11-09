@@ -1,20 +1,11 @@
-import { Toast } from "primereact/toast";
-import * as Form from "@radix-ui/react-form";
-import React, { useEffect, useState, useRef } from "react";
-import { DataTable } from "primereact/datatable";
-import useApiJson from "../../hooks/useApiJson";
-import Employee from "src/models/Employee";
-import { InputText } from "primereact/inputtext";
-import { Column } from "primereact/column";
-import { NavLink } from "react-router-dom";
-import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
-import FormFieldInput from "../FormFieldInput";
-import FormFieldSelect from "../FormFieldSelect";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import * as Form from "@radix-ui/react-form";
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import useApiJson from "../../hooks/useApiJson";
+import FormFieldInput from "../FormFieldInput";
 
 {
   /*const toast = useRef<Toast>(null);*/
