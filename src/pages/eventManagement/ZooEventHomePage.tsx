@@ -90,7 +90,7 @@ function ZooEventHomePage() {
           if (ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && !allTitleGroups.find(title => title == ze.feedingPlanSessionDetail?.feedingPlan?.title)) {
             allTitleGroups.push(ze.feedingPlanSessionDetail?.feedingPlan?.title);
           }
-        } else if (ze.eventType == "Employee Absence") {
+        } else {
           if (ze.eventName !== undefined && !allTitleGroups.find(title => title == ze.eventName)) {
             allTitleGroups.push(ze.eventName);
           }
@@ -155,7 +155,7 @@ function ZooEventHomePage() {
           return selTitleGroupList.find(ti => ti == ze.animalActivity?.title);
         } else if (ze.feedingPlanSessionDetail) {
           return selTitleGroupList.find(ti => ti == ze.feedingPlanSessionDetail?.feedingPlan?.title);
-        } else if (ze.eventType == "Employee Absence") {
+        } else {
           return selTitleGroupList.find(ti => ti == ze.eventName);
         }
       })
@@ -179,7 +179,7 @@ function ZooEventHomePage() {
         if (ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && !ty_all.find(title => title == ze.feedingPlanSessionDetail?.feedingPlan?.title)) {
           ty_all.push(ze.feedingPlanSessionDetail?.feedingPlan?.title);
         }
-      } else if (ze.eventType == "Employee Absence") {
+      } else {
         if (ze.eventName !== undefined && !ty_all.find(title => title == ze.eventName)) {
           ty_all.push(ze.eventName);
         }
@@ -198,7 +198,7 @@ function ZooEventHomePage() {
             return ze.animalActivity?.title !== undefined && ze.animalActivity.title == ti;
           } else if (ze.feedingPlanSessionDetail) {
             return ze.feedingPlanSessionDetail?.feedingPlan?.title !== undefined && ze.feedingPlanSessionDetail?.feedingPlan?.title == ti;
-          } else if (ze.eventType == "Employee Absence") {
+          } else {
             return ze.eventName !== undefined && ze.eventName == ti;
           }
         });

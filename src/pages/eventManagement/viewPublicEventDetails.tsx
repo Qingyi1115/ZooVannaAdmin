@@ -38,6 +38,7 @@ import beautifyText from "../../hooks/beautifyText";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import AllPublicEventSessionDatatable from "../../components/EventManagement/AllPublicEventSessionsDatatable";
 import PublicEvent from "../../models/PublicEvent";
+import ViewAllPublicEventKeepers from "../../components/EventManagement/ViewAllPublicEventKeepers";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -160,7 +161,6 @@ function ViewPublicEventDetails() {
     );
   };
 
-  /////
   // remove animal stuff
   const [selectedAnimal, setSelectedAnimal] = useState<Animal>(emptyAnimal);
   const [removeAnimalDialog, setRemoveAnimalDialog] = useState<boolean>(false);
@@ -507,7 +507,7 @@ function ViewPublicEventDetails() {
               </TabsContent>
 
               <TabsContent value="keepers">
-                <AllPublicEventSessionDatatable
+                <ViewAllPublicEventKeepers
                   publicEventId={publicEventId || ""}
                 />
               </TabsContent>
