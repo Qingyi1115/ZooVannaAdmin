@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { DataView } from 'primereact/dataview';
 // import { ProductService } from './service/ProductService';
@@ -358,7 +357,7 @@ function AllCustomerReportsDatatableByFacility(props: AllCustomerReportsDatatabl
             />
           </div>
 
-          <br />
+          {/* <br />
           <DataTable
             ref={dt}
             value={customerReportLogList}
@@ -426,7 +425,7 @@ function AllCustomerReportsDatatableByFacility(props: AllCustomerReportsDatatabl
               exportable={false}
               style={{ minWidth: "15rem" }}
             ></Column>
-          </DataTable>
+          </DataTable> */}
         </div>
       </div>
       <Dialog
