@@ -43,7 +43,7 @@ function ViewAllPublicEventPage() {
           <div className="mb-4 flex justify-between">
             {/* <NavLink className="flex" to={(-1)}> */}
             <Button
-              onClick={() => navigate("/animal/viewallanimals/")}
+              onClick={() => navigate(-1)}
               variant={"outline"}
               type="button"
               className=""

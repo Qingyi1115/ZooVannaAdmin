@@ -136,6 +136,8 @@ import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsP
 import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
 import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPage";
 import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
+import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
+import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -1127,6 +1129,22 @@ function App() {
                 path="/zooevent/viewpubliceventdetails/:publicEventId/:tab"
                 element={
                   user ? <ViewPublicEventDetails /> : <Navigate to="/login" />
+                }
+              />
+              <Route
+                path="/zooevent/editpublicevent/:publicEventId"
+                element={
+                  user ? <EditPublicEventPage /> : <Navigate to="/login" />
+                }
+              />
+              <Route
+                path="/zooevent/assignanimalstopublicevent/:publicEventId"
+                element={
+                  user ? (
+                    <AddAnimalToPublicEventPage />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
                 }
               />
 

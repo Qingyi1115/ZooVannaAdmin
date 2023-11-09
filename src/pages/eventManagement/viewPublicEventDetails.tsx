@@ -37,6 +37,7 @@ import {
 import beautifyText from "../../hooks/beautifyText";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import AllPublicEventSessionDatatable from "../../components/EventManagement/AllPublicEventSessionsDatatable";
+import PublicEvent from "../../models/PublicEvent";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -103,8 +104,8 @@ function ViewPublicEventDetails() {
 
   const { publicEventId } = useParams<{ publicEventId: string }>();
 
-  const [curAnimalActivity, setCurAnimalActivity] =
-    useState<AnimalActivity | null>(null);
+  const [curPublicEvent, setCurPublicEvent] =
+    useState<PublicEvent | null>(null);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   const [involvedAnimalList, setInvolvedAnimalList] = useState<Animal[]>();
@@ -125,7 +126,7 @@ function ViewPublicEventDetails() {
           `http://localhost:3000/api/zooEvent/getPublicEventById/${publicEventId}`
         );
         console.log("getPublicEventById", responseJson);
-        setCurAnimalActivity(responseJson.publicEvent);
+        setCurPublicEvent(responseJson.publicEvent);
       } catch (error: any) {
         console.log(error);
       }
@@ -134,11 +135,10 @@ function ViewPublicEventDetails() {
   }, [refreshSeed]);
 
   useEffect(() => {
-    if (curAnimalActivity?.animals && curAnimalActivity.enrichmentItems) {
-      setInvolvedAnimalList(curAnimalActivity?.animals);
-      setInvolvedItemList(curAnimalActivity?.enrichmentItems);
+    if (curPublicEvent?.animals) {
+      setInvolvedAnimalList(curPublicEvent?.animals);
     }
-  }, [curAnimalActivity]);
+  }, [curPublicEvent]);
 
   const animalImageBodyTemplate = (rowData: Animal) => {
     return (
@@ -187,16 +187,15 @@ function ViewPublicEventDetails() {
       (val) => val.animalId !== selectedAnimal?.animalId
     );
 
-    let animalCode = selectedAnimal.animalCode;
     const animalToRemoveApiObj = {
-      animalActivityId,
-      animalCode,
+      ...curPublicEvent,
+      animalCodes: _animals.map(animal => animal.animalCode),
     };
 
     const removeAnimalApi = async () => {
       try {
         const responseJson = await apiJson.put(
-          "http://localhost:3000/api/animal/removeAnimalFromActivity/",
+          `http://localhost:3000/api/zooEvent/updatePublicEventById/${curPublicEvent?.publicEventId}`,
           animalToRemoveApiObj
         );
 
@@ -268,70 +267,6 @@ function ViewPublicEventDetails() {
     setRemoveItemDialog(false);
   };
 
-  const removeItem = async () => {
-    if (involvedItemList == undefined) {
-      toastShadcn({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Involved animal list is invalid",
-      });
-      return;
-    }
-
-    let _animals = involvedItemList.filter(
-      (val) => val.enrichmentItemId !== selectedItem?.enrichmentItemId
-    );
-
-    let enrichmentItemId = selectedItem.enrichmentItemId;
-    const animalToRemoveApiObj = {
-      animalActivityId,
-      enrichmentItemId,
-    };
-
-    const removeItemApi = async () => {
-      try {
-        const responseJson = await apiJson.put(
-          "http://localhost:3000/api/animal/removeItemFromActivity/",
-          animalToRemoveApiObj
-        );
-
-        toastShadcn({
-          // variant: "destructive",
-          title: "Deletion Successful",
-          description:
-            "Successfully removed animal: " +
-            selectedItem.enrichmentItemName +
-            " from the activity",
-        });
-        setInvolvedItemList(_animals);
-        setRemoveItemDialog(false);
-        setSelectedItem(emptyItem);
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while removing animal from activity: \n" +
-            error.message,
-        });
-      }
-    };
-    removeItemApi();
-  };
-
-  const removeItemDialogFooter = (
-    <React.Fragment>
-      <Button onClick={hideRemoveItemDialog}>
-        <HiX className="mr-2" />
-        No
-      </Button>
-      <Button variant={"destructive"} onClick={removeItem}>
-        <HiCheck className="mr-2" />
-        Yes
-      </Button>
-    </React.Fragment>
-  );
   ////
   const itemActionBodyTemplate = (item: EnrichmentItem) => {
     return (
@@ -351,7 +286,7 @@ function ViewPublicEventDetails() {
 
   return (
     <div className="p-10">
-      {curAnimalActivity && (
+      {curPublicEvent && (
         <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
           {/* Header */}
           <div className="flex flex-col">
@@ -375,21 +310,23 @@ function ViewPublicEventDetails() {
             </div>
             <Separator />
             <span className="mt-4 self-center text-title-xl font-bold">
-              {curAnimalActivity.title}
+              {curPublicEvent.title}
             </span>
+
+            <img
+              src={"http://localhost:3000/" + curPublicEvent.imageUrl}
+              alt="Current animal image"
+              className="my-4 aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
+            />
           </div>
           {/* body */}
           <div>
             <Tabs defaultValue={tab ? `${tab}` : "details"} className="w-full">
               <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
                 <TabsTrigger value="details">Basic Information</TabsTrigger>
-                {curAnimalActivity.activityType == ActivityType.OBSERVATION ? (
-                  <TabsTrigger value="observationlogs">
-                    Observation Logs
-                  </TabsTrigger>
-                ) : (
-                  <TabsTrigger value="publicEventSessions">Sessions</TabsTrigger>
-                )}
+
+                <TabsTrigger value="publicEventSessions">Sessions</TabsTrigger>
+                <TabsTrigger value="keepers">Keepers</TabsTrigger>
               </TabsList>
 
               <TabsContent value="details">
@@ -397,11 +334,17 @@ function ViewPublicEventDetails() {
                   {(employee.superAdmin ||
                     employee.planningStaff?.plannerType == "CURATOR") && (
                       <NavLink
-                        to={`/animal/editanimalactivity/${curAnimalActivity.animalActivityId}`}
+                        to={`/zooevent/editpublicevent/${curPublicEvent.publicEventId}`}
                       >
                         <Button className="my-3">Edit Basic Information</Button>
                       </NavLink>
                     )}
+                  {"   "}
+                  <NavLink
+                    to={`/assetfacility/viewfacilitydetails/${curPublicEvent.inHouseId}`}
+                  >
+                    <Button className="my-3">View In House</Button>
+                  </NavLink>
                   <Table>
                     <TableBody>
                       <TableRow>
@@ -409,21 +352,29 @@ function ViewPublicEventDetails() {
                           ID
                         </TableCell>
                         <TableCell>
-                          {curAnimalActivity.animalActivityId}
+                          {curPublicEvent.publicEventId}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Title
                         </TableCell>
-                        <TableCell>{curAnimalActivity.title}</TableCell>
+                        <TableCell>{curPublicEvent.title}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Type
                         </TableCell>
                         <TableCell>
-                          {beautifyText(curAnimalActivity.activityType)}
+                          {beautifyText(curPublicEvent.eventType)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          In House
+                        </TableCell>
+                        <TableCell>
+                          {curPublicEvent.inHouse?.facility?.facilityName}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -431,70 +382,23 @@ function ViewPublicEventDetails() {
                           Period Start Date
                         </TableCell>
                         <TableCell>
-                          {new Date(curAnimalActivity.startDate).toDateString()}
+                          {new Date(curPublicEvent.startDate).toDateString()}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Period End Date
                         </TableCell>
-                        <TableCell>
-                          {new Date(curAnimalActivity.endDate).toDateString()}
-                        </TableCell>
-                      </TableRow>
 
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Recurring Pattern
-                        </TableCell>
                         <TableCell>
-                          {beautifyText(curAnimalActivity.recurringPattern)}
-                        </TableCell>
-                      </TableRow>
-                      {curAnimalActivity.recurringPattern == "WEEKLY" && (
-                        <TableRow>
-                          <TableCell className="w-1/3 font-bold" colSpan={2}>
-                            Day Of Week
-                          </TableCell>
-                          <TableCell>
-                            {beautifyText(curAnimalActivity.dayOfWeek)}
-                          </TableCell>
-                        </TableRow>
-                      )}
-                      {curAnimalActivity.recurringPattern == "MONTHLY" && (
-                        <TableRow>
-                          <TableCell className="w-1/3 font-bold" colSpan={2}>
-                            Day Of Month
-                          </TableCell>
-                          <TableCell>
-                            {curAnimalActivity.dayOfMonth &&
-                              beautifyText(
-                                Number(curAnimalActivity.dayOfMonth).toString()
-                              )}
-                          </TableCell>
-                        </TableRow>
-                      )}
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Session Timing
-                        </TableCell>
-                        <TableCell>
-                          {beautifyText(curAnimalActivity.eventTimingType)}
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="w-1/3 font-bold" colSpan={2}>
-                          Duration (Minutes)
-                        </TableCell>
-                        <TableCell>
-                          {curAnimalActivity.durationInMinutes}
+                          {curPublicEvent.endDate ? new Date(curPublicEvent.endDate).toDateString() : "NIL"}
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                           Details
                         </TableCell>
-                        <TableCell>{curAnimalActivity.details}</TableCell>
+                        <TableCell>{curPublicEvent.details}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -519,7 +423,7 @@ function ViewPublicEventDetails() {
                           <Button
                             onClick={() =>
                               navigate(
-                                `/animal/assignanimalstoactivity/${curAnimalActivity.animalActivityId}`
+                                `/zooevent/assignanimalstopublicevent/${curPublicEvent.publicEventId}`
                               )
                             }
                             type="button"
@@ -594,108 +498,15 @@ function ViewPublicEventDetails() {
                       </div>
                     </Dialog>
                   </div>
-                  <div className="w-full">
-                    <div className="mb-2 text-xl font-medium">
-                      Item(s) to be used:
-                    </div>
-                    <div className="flex justify-between">
-                      <InputText
-                        type="search"
-                        placeholder="Search..."
-                        onInput={(e) => {
-                          const target = e.target as HTMLInputElement;
-                          setInvolvedItemGlobalFilter(target.value);
-                        }}
-                        className="mb-2 h-min w-60"
-                      />
-                      {(employee.superAdmin ||
-                        employee.planningStaff?.plannerType == "CURATOR") && (
-                          <Button
-                            onClick={() =>
-                              navigate(
-                                `/animal/assignitemstoactivity/${curAnimalActivity.animalActivityId}`
-                              )
-                            }
-                            type="button"
-                            className="h-12 w-60"
-                          >
-                            Assign Item(s)
-                          </Button>
-                        )}
-                    </div>
-                    <DataTable
-                      value={involvedItemList}
-                      scrollable
-                      scrollHeight="100%"
-                      // selection={selectedAnimalToBecomeParent!}
-                      selectionMode="single"
-                      globalFilter={involvedItemGlobalFiler}
-                      // onSelectionChange={(e) =>
-                      //   setSelectedAnimalToBecomeParent(e.value)
-                      // }
-                      // onRowClick={(event) =>
-                      //   navigate(
-                      //     `/animal/viewanimaldetails/${event.data.animalCode}`
-                      //   )
-                      // }
-                      dataKey="enrichmentItemid"
-                      style={{ height: "50vh" }}
-                      className="h-1/2 overflow-hidden rounded border border-graydark/30"
-                    >
-                      <Column
-                        field="enrichmentItemImageUrl"
-                        body={enrichmentItemImageBodyTemplate}
-                        style={{ minWidth: "3rem" }}
-                      ></Column>
-                      <Column
-                        field="enrichmentItemId"
-                        header="ID"
-                        sortable
-                        style={{ minWidth: "3rem" }}
-                      ></Column>
-                      <Column
-                        field="enrichmentItemName"
-                        header="Name"
-                        sortable
-                        style={{ minWidth: "5rem" }}
-                      ></Column>
-                      {(employee.superAdmin ||
-                        employee.planningStaff?.plannerType == "CURATOR") && (
-                          <Column
-                            body={itemActionBodyTemplate}
-                            header="Actions"
-                            exportable={false}
-                            style={{ minWidth: "3rem" }}
-                          ></Column>
-                        )}
-                    </DataTable>
-                    <Dialog
-                      visible={removeItemDialog}
-                      style={{ width: "32rem" }}
-                      breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-                      header="Confirm"
-                      modal
-                      footer={removeItemDialogFooter}
-                      onHide={hideRemoveItemDialog}
-                    >
-                      <div className="confirmation-content">
-                        <i
-                          className="pi pi-exclamation-triangle mr-3"
-                          style={{ fontSize: "2rem" }}
-                        />
-                        {selectedItem && (
-                          <span>
-                            Are you sure you want to remove{" "}
-                            {selectedItem.enrichmentItemName} from the current
-                            activity? ?
-                          </span>
-                        )}
-                      </div>
-                    </Dialog>
-                  </div>
                 </div>
               </TabsContent>
               <TabsContent value="publicEventSessions">
+                <AllPublicEventSessionDatatable
+                  publicEventId={publicEventId || ""}
+                />
+              </TabsContent>
+
+              <TabsContent value="keepers">
                 <AllPublicEventSessionDatatable
                   publicEventId={publicEventId || ""}
                 />

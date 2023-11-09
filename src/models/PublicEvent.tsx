@@ -1,4 +1,5 @@
 import { ActivityType } from "../enums/ActivityType";
+import { EventType } from "../enums/Enumurated";
 import Animal from "./Animal";
 import Customer from "./Customer";
 import InHouse from "./InHouse";
@@ -7,16 +8,17 @@ import PublicEventSession from "./PublicEventSession";
 
 interface PublicEvent {
   publicEventId: number;
-  activityType: ActivityType;
+  eventType: EventType;
   title: string;
   details: string;
   imageUrl: string;
   startDate: Date;
   endDate: Date | null;
- 
+
   animals: Animal[];
   keepers: Keeper[];
-  inhouse: InHouse;
+  inHouse: InHouse;
+  inHouseId: string;
   publicEventSessions: PublicEventSession[];
   customers: Customer[];
 }

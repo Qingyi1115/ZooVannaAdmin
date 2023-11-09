@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import * as Form from "@radix-ui/react-form";
 import { Calendar } from "primereact/calendar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useApiFormData from "../../../hooks/useApiFormData";
 import useApiJson from "../../../hooks/useApiJson";
@@ -15,6 +15,9 @@ import beautifyText from "../../../hooks/beautifyText";
 import Animal from "../../../models/Animal";
 import Employee from "../../../models/Employee";
 import Facility from "../../../models/Facility";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Tooltip from '@mui/material/Tooltip';
 
 // Only local
 enum EventType {
@@ -49,23 +52,23 @@ function CreatePublicZooEventForm() {
   const [curInHouseList, setCurInHouseList] = useState<any>(null);
   const [selectedInHouse, setSelectedInHouse] = useState<Facility[]>([]);
 
-  useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
-      setCurAnimalList(res as Animal[]);
-      console.log(res);
-    });
-  }, []);
+  // useEffect(() => {
+  //   apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+  //     setCurAnimalList(res as Animal[]);
+  //     console.log(res);
+  //   });
+  // }, []);
 
-  useEffect(() => {
-    apiJson.post(
-      "http://localhost:3000/api/employee/getAllEmployees",
-      { includes: ["keeper", "generalStaff", "planningStaff"] }
-    ).then(res => {
-      const allKeepers: Employee[] = []
-      console.log(res.employees);
-      setCurKeeperList(res["employees"]);
-    });
-  }, []);
+  // useEffect(() => {
+  //   apiJson.post(
+  //     "http://localhost:3000/api/employee/getAllEmployees",
+  //     { includes: ["keeper", "generalStaff", "planningStaff"] }
+  //   ).then(res => {
+  //     const allKeepers: Employee[] = []
+  //     console.log(res.employees);
+  //     setCurKeeperList(res["employees"]);
+  //   });
+  // }, []);
 
   useEffect(() => {
     apiJson
@@ -241,13 +244,12 @@ function CreatePublicZooEventForm() {
     e.preventDefault();
 
     // let dateInMilliseconds = date?.getTime();
-
     const newPublicZooEvent = {
       title: title,
       eventType: eventType,
       details: details,
       startDate: eventDates[0].getTime(),
-      endDate: eventDates[1].getTime(),
+      endDate: eventDates[1] !== null ? eventDates[1].getTime() : null,
       animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode),
       keeperEmployeeIds: [selectedKeepers.map((keeper: Employee) => keeper.employeeId)],
       inHouseId: selectedInHouse[0].facilityId.toString()
@@ -261,7 +263,9 @@ function CreatePublicZooEventForm() {
     formData.append("eventType", eventType || "");
     formData.append("details", details);
     formData.append("startDate", eventDates[0].getTime().toString());
-    formData.append("endDate", eventDates[1].getTime().toString());
+    if (eventDates[1] !== null) {
+      formData.append("endDate", eventDates[1].getTime().toString());
+    }
     formData.append("animalCodes", selectedAnimals.map((animal: Animal) => animal.animalCode).toString());
     formData.append("keeperEmployeeIds", selectedKeepers.map((keeper: Employee) => keeper.employeeId).toString());
     formData.append("inHouseId", selectedInHouse[0].facilityId.toString());
@@ -399,8 +403,17 @@ function CreatePublicZooEventForm() {
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <Form.Label className="font-medium">
-              Event Dates
+              <Box sx={{ width: 500 }}>
+                <Grid item container xs={6} alignItems="flex-end" direction="column">
+                  <Grid item>
+                    <Tooltip title="Select start date, Select end date if neccessary" placement="right">
+                      Event Dates [Info]
+                    </Tooltip>
+                  </Grid>
+                </Grid>
+              </Box>
             </Form.Label>
+
             <Form.Control
               className="hidden"
               type="text"
@@ -473,21 +486,21 @@ function CreatePublicZooEventForm() {
         </div>
 
         {/* Animals */}
-        <Form.Field
+        {/* <Form.Field
           name="animals"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-        >
-          <Form.Label className="font-medium">
+        > */}
+        {/* <Form.Label className="font-medium">
             Animals
-          </Form.Label>
-          {/* <Form.Control
+          </Form.Label> */}
+        {/* <Form.Control
           asChild
           value={selectedAnimals.toString()}
           required={true}
           onChange={(e) => setSelectedAnimals(e.target.value)}
           className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
         /> */}
-          <MultiSelect
+        {/* <MultiSelect
             value={selectedAnimals}
             onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
             options={curAnimalList}
@@ -500,23 +513,23 @@ function CreatePublicZooEventForm() {
           <Form.ValidityState>
             {validateAnimals}
           </Form.ValidityState>
-        </Form.Field>
+        </Form.Field> */}
 
         {/* Keepers */}
-        <Form.Field
+        {/* <Form.Field
           name="keepers"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
           <Form.Label className="font-medium">
             Keepers
           </Form.Label>
-          {/* <Form.Control
-          asChild
-          value={selectedKeepers.toString()}
-          required={true}
-          onChange={(e) => setSelectedAnimals(e.target.value)}
-          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
-        /> */}
+          <Form.Control
+            asChild
+            value={selectedKeepers.toString()}
+            required={true}
+            onChange={(e) => setSelectedAnimals(e.target.value)}
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+          />
           <MultiSelect
             value={selectedKeepers}
             onChange={(e: MultiSelectChangeEvent) => setSelectedKeepers(e.value)}
@@ -530,7 +543,7 @@ function CreatePublicZooEventForm() {
           <Form.ValidityState>
             {validateKeepers}
           </Form.ValidityState>
-        </Form.Field>
+        </Form.Field> */}
 
         {/* Facility */}
         <Form.Field

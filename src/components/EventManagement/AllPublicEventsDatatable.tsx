@@ -161,7 +161,7 @@ function AllAnimalFeedingPlansDatatable(
             <div className="mb-4 flex justify-between">
               <Button
                 onClick={() =>
-                  navigate(`/zooevent/createpublicevent`)
+                  navigate(`/zooevent/createpubliczooevent`)
                 }
                 className=""
               >
@@ -225,10 +225,11 @@ function AllAnimalFeedingPlansDatatable(
             ></Column>
             <Column
               body={(feedingPlan) => {
-                return new Date(feedingPlan.endDate).toLocaleDateString(
+
+                return feedingPlan.endDate ? new Date(feedingPlan.endDate).toLocaleDateString(
                   "en-SG",
                   dateOptions
-                );
+                ) : "Forever";
               }}
               // field="date"
               header="End Date"
