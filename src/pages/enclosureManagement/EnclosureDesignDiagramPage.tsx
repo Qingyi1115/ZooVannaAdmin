@@ -260,7 +260,10 @@ function EnclosureDesignDiagramPage() {
               variant={"outline"}
               type="button"
               className=""
-              onClick={() => navigate(-1)}
+              onClick={() => {
+                newProject();
+                navigate(-1);
+              }}
             >
               Back
             </Button>
