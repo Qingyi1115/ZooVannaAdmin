@@ -78,11 +78,11 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
       (val) => val.publicEventSessionId !== setPublicEventSession?.publicEventSessionId
     );
 
-    const deleteAnimalActivityLog = async () => {
+    const deleteAnimalActivityLogWrapper = async () => {
       try {
         setDeleteAnimalActivityLogDialog(false);
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/animal/deleteAnimalActivityLogById/" +
+          "http://localhost:3000/api/zooEvent/deletePublicEventSessionById/" +
           setPublicEventSession?.publicEventSessionId
         );
 
@@ -90,7 +90,7 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted animal activity log: " + setPublicEventSession?.publicEventSessionId,
+            "Successfully deleted public event session: " + setPublicEventSession?.publicEventSessionId,
         });
         // setAnimalActivityLogList(_publicEventSession);
         // setSelectedPublicEventSession(emptyAnimalActivityLog);
@@ -100,11 +100,11 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting animal activity log: \n" + apiJson.error,
+            "An error has occurred while deleting public event session: \n" + apiJson.error,
         });
       }
     };
-    deleteAnimalActivityLog();
+    deleteAnimalActivityLogWrapper();
   };
 
   const deleteAnimalActivityLogDialogFooter = (
