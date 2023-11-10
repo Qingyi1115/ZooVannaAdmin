@@ -1,9 +1,13 @@
+import "./init";
+
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useAuthContext } from "./hooks/useAuthContext";
 
 import { PrimeReactProvider } from "primereact/api";
 // import "@fullcalendar/daygrid/main.css";
+
+import EnclosureContextProvider from "./context/EnclosureContext";
 
 import MainLayout from "./components/MainLayout";
 import HomePage from "./pages/HomePage";
@@ -52,6 +56,12 @@ import ViewAnimalFeedingLogDetailsPage from "./pages/animalManagement/ViewAnimal
 import ViewAnimalFullLineage from "./pages/animalManagement/ViewAnimalFullLineage";
 import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAnimalObservationLogDetailsPage";
 import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDetailsPage";
+
+// Enclosure manage pages
+import ViewAllEnclosuresPage from "./pages/enclosureManagement/ViewAllEnclosuresPage";
+import ViewEnclosureDetailsPage from "./pages/enclosureManagement/ViewEnclosureDetailsPage";
+import EnclosureContextLayout from "./components/EnclosureManagement/EnclosureContextLayout";
+import EnclosureDesignDiagramPage from "./pages/enclosureManagement/EnclosureDesignDiagramPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -522,6 +532,48 @@ function App() {
                   }
                 />
 
+                {/* Enclosure Management */}
+                <Route
+                  path="/enclosure/viewallenclosures"
+                  element={
+                    user ? <ViewAllEnclosuresPage /> : <Navigate to="/login" />
+                  }
+                />
+
+                <Route element={<EnclosureContextLayout />}>
+                  {/* These share a context containing currently selected enclosure */}
+                  <Route
+                    path="/enclosure/viewenclosuredetails/:enclosureId"
+                    element={
+                      user ? (
+                        <ViewEnclosureDetailsPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/enclosure/viewenclosuredetails/:enclosureId/:tab"
+                    element={
+                      user ? (
+                        <ViewEnclosureDetailsPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/enclosure/viewenclosuredetails/enclosuredesigndiagram"
+                    element={
+                      user ? (
+                        <EnclosureDesignDiagramPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                </Route>
+
                 {/* Asset and Facility Management */}
                 <Route
                   path="/assetfacility/createfacility"
@@ -691,7 +743,9 @@ function App() {
 
                 <Route
                   path="/assetfacility/viewcamerafeeds/:sensorId"
-                  element={user ? <ViewCameraFeedsPage /> : <Navigate to="/login" />}
+                  element={
+                    user ? <ViewCameraFeedsPage /> : <Navigate to="/login" />
+                  }
                 />
 
                 <Route
@@ -1081,7 +1135,11 @@ function App() {
                 <Route
                   path="/zooevent/createpubliczooevent"
                   element={
-                    user ? <CreatePublicZooEventPage /> : <Navigate to="/login" />
+                    user ? (
+                      <CreatePublicZooEventPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
