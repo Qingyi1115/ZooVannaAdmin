@@ -15,13 +15,14 @@ import Facility from "../../models/Facility";
 import PublicEvent from "../../models/PublicEvent";
 
 interface ViewAllPublicEventKeepersProps {
-  publicEventId: string;
+  publicEvent: PublicEvent;
+  setRefreshSeed: Function;
 }
 
 function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
   const apiJson = useApiJson();
 
-  const { publicEventId } = props;
+  const { publicEvent, setRefreshSeed } = props;
 
   let employee: Employee = {
     employeeId: -1,
@@ -52,7 +53,6 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
 
   const [assignedEmployees, setAssignedEmployees] = useState<Employee[]>([]);
   const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
-  const [refreshSeed, setRefreshSeed] = useState<any>(0);
   const [curPublciEvent, setCurPublciEvent] = useState<PublicEvent>();
 
   useEffect(() => {
@@ -89,35 +89,28 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
 
     const wrapper = async () => {
       try {
-
-        const res = await apiJson.get(
-          `http://localhost:3000/api/zooEvent/getPublicEventById/${publicEventId}`
-        )
-
-        const resKeeper = await apiJson.get(
-          `http://localhost:3000/api/zooEvent/getPublicEventKeepersById/${publicEventId}`
-        )
-
         const allEmp = await apiJson.get(
           `http://localhost:3000/api/employee/getAllKeepers`
         );
-        console.log("ViewAllPublicEventKeepers", res, allEmp.employees, resKeeper)
 
-        setCurPublciEvent(res.publicEvent);
+        console.log("ViewAllPublicEventKeepers", publicEvent, allEmp)
+
+        setCurPublciEvent(publicEvent);
         const assignedStaff = [];
         const availableStaff = [];
 
-        for (const keeper of resKeeper.keepers) {
-          let emp = keeper.employee;
-          keeper.employee = undefined;
-          emp["keeper"] = keeper;
+        for (const keeper of publicEvent.keepers) {
+          let emp = { ...keeper.employee };
+          emp["keeper"] = { ...keeper, employee: undefined };
           emp.currentlyAssigned = true;
-          assignedStaff.push(keeper);
+          assignedStaff.push(emp);
         }
-        for (const keeper of allEmp.employees) {
+        for (const keeper of allEmp.keepers) {
           if (!assignedStaff.find(emp => emp.employeeId == keeper.employeeId)) {
+            let emp = { ...keeper.employee };
+            emp["keeper"] = { ...keeper, employee: undefined };
             keeper.currentlyAssigned = false;
-            availableStaff.push(keeper);
+            availableStaff.push(emp);
           }
         }
         console.log("availableEmployees", availableStaff)
@@ -127,80 +120,11 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
       } catch (err) {
         console.log(err);
       }
-
-
     }
     wrapper();
 
 
-  }, [refreshSeed]);
-
-  const assignEmployee = async () => {
-    const selectedEmployeeName = selectedEmployee.employeeName;
-
-    try {
-
-      const ids = curPublciEvent?.keepers.map(kp => kp.employee.employeeId);
-      ids?.push(selectedEmployee.employeeId);
-      const responseJson = await apiJson.put(
-        `http://localhost:3000/api/zooEvent/updatePublicEventImageById/${publicEventId}`,
-        { ...curPublciEvent, keeperEmployeeIds: ids }
-      ).then(res => {
-        setRefreshSeed([]);
-      }).catch(err => console.log("err", err));
-
-      toastShadcn({
-        // variant: "destructive",
-        title: "Assignment Successful",
-        description:
-          "Successfully assigned maintenance staff: " + selectedEmployeeName,
-      });
-      setSelectedEmployee(employee);
-      setAssignmentDialog(false);
-      // window.location.reload();
-    } catch (error: any) {
-      // got error
-      toastShadcn({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description:
-          "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
-      });
-    }
-
-  }
-
-  const removeMaintenanceStaff = async () => {
-    const selectedEmployeeName = selectedEmployee.employeeName;
-
-    try {
-      const ids = curPublciEvent?.keepers.map(kp => kp.employee.employeeId)
-        .filter(id => id != selectedEmployee.employeeId);
-
-      const responseJson = await apiJson.put(
-        `http://localhost:3000/api/zooEvent/updatePublicEventImageById/${publicEventId}`,
-        { ...curPublciEvent, keeperEmployeeIds: ids });
-      setRefreshSeed([]);
-      toastShadcn({
-        // variant: "destructive",
-        title: "Removal Successful",
-        description:
-          "Successfully removed maintenance staff: " + selectedEmployeeName,
-      });
-      setSelectedEmployee(employee);
-      setEmployeeRemovalDialog(false);
-      // window.location.reload();
-    } catch (error: any) {
-      // got error
-      toastShadcn({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description:
-          "An error has occurred while removing maintenance staff: \n" + apiJson.error,
-      });
-    }
-
-  }
+  }, [publicEvent]);
 
   const showBulkAssignment = () => {
     setBulkAssignmentDialog(true);
@@ -252,7 +176,7 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
           <Button
             variant={"outline"}
             className="mr-2" onClick={() => {
-              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageMaintenance`, { replace: true });
+              navigate(`/zooevent/viewpubliceventdetails/${publicEvent.publicEventId}/publicEventSessions`, { replace: true });
               navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
             }}>
             <HiEye className="mx-auto" />
@@ -414,34 +338,33 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
   }
 
   const bulkAssignEmployees = async () => {
-    selectedAvailableEmployees.forEach(async (employeeId) => {
-      try {
-        const ids = selectedAvailableEmployees.concat(assignedEmployees.map(emp => emp.employeeId));
-        const responseJson = await apiJson.put(
-          `http://localhost:3000/api/zooEvent/updatePublicEventById/${publicEventId}`,
-          { ...curPublciEvent, keeperEmployeeIds: ids }).then(res => {
-            setRefreshSeed([]);
-          }).catch(err => console.log("err", err));
+    try {
+      const ids = selectedAvailableEmployees.concat(assignedEmployees.map(emp => emp.employeeId));
+      const responseJson = await apiJson.put(
+        `http://localhost:3000/api/zooEvent/updatePublicEventById/${publicEvent.publicEventId}`,
+        { ...curPublciEvent, keeperEmployeeIds: ids }).then(res => {
+          setRefreshSeed([]);
+        }).catch(err => console.log("err", err));
 
-        toastShadcn({
-          // variant: "destructive",
-          title: "Assignment Successful",
-          description:
-            "Successfully assigned maintenance staff: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
-        });
-        setAssignmentDialog(false);
-        setBulkAssignmentDialog(false);
-        setSelectedAvailableEmployees([]);
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
-        });
-      }
-    });
+      toastShadcn({
+        // variant: "destructive",
+        title: "Assignment Successful",
+        description:
+          "Successfully assigned maintenance staff: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId))
+            .map((employee) => " " + employee.employeeName).toString(),
+      });
+      setAssignmentDialog(false);
+      setBulkAssignmentDialog(false);
+      setSelectedAvailableEmployees([]);
+    } catch (error: any) {
+      // got error
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
+      });
+    }
   }
 
   const employeeAssignmentDialogFooter = (
@@ -458,32 +381,32 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
   );
 
   const bulkRemoveMaintenanceStaff = async () => {
-    selectedAssignedEmployees.forEach(async (employeeId) => {
-      try {
-        const responseJson = await apiJson.del(
-          `http://localhost:3000/api/assetFacility/removeMaintenanceStaffFromFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
-            setRefreshSeed([]);
-          }).catch(err => console.log("err", err));
+    try {
+      const ids = assignedEmployees.filter(emp => !selectedAssignedEmployees.includes(emp.employeeId)).map(emp => emp.employeeId);
+      const responseJson = await apiJson.put(
+        `http://localhost:3000/api/zooEvent/updatePublicEventById/${publicEvent.publicEventId}`,
+        { ...curPublciEvent, keeperEmployeeIds: ids }).then(res => {
+          setRefreshSeed([]);
+        }).catch(err => console.log("err", err));
 
-        toastShadcn({
-          // variant: "destructive",
-          title: "Removal Successful",
-          description:
-            "Successfully removed maintenance staff: " + selectedAssignedEmployees.toString(),
-        });
-        setEmployeeRemovalDialog(false);
-        setBulkAssignmentDialog(false);
-        setSelectedAssignedEmployees([]);
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while removing maintenance staff: \n" + apiJson.error,
-        });
-      }
-    });
+      toastShadcn({
+        // variant: "destructive",
+        title: "Removal Successful",
+        description:
+          "Successfully removed maintenance staff: " + selectedAssignedEmployees.toString(),
+      });
+      setEmployeeRemovalDialog(false);
+      setBulkAssignmentDialog(false);
+      setRefreshSeed([]);
+    } catch (error: any) {
+      // got error
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while removing maintenance staff: \n" + apiJson.error,
+      });
+    }
   }
 
   const hideEmployeeRemovalDialog = () => {

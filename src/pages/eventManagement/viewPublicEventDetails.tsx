@@ -508,7 +508,8 @@ function ViewPublicEventDetails() {
 
               <TabsContent value="keepers">
                 <ViewAllPublicEventKeepers
-                  publicEventId={publicEventId || ""}
+                  publicEvent={curPublicEvent || ""}
+                  setRefreshSeed={setRefreshSeed}
                 />
               </TabsContent>
             </Tabs>
