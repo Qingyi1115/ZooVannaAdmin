@@ -226,7 +226,7 @@ function AllAnimalFeedDatatable() {
               body={(animalFeed: AnimalFeed) => beautifyText(animalFeed.animalFeedCategory)}
               header="Animal Feed Category"
               sortable
-              style={{ minWidth: "16rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
 
             {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && (

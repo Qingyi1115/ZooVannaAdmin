@@ -92,18 +92,18 @@ const facilityDetail = "thirdParty";
 const facilityDetailJson =
   facilityDetail == "thirdParty"
     ? {
-        ownership: "",
-        ownerContact: "",
-        maxAccommodationSize: "",
-        hasAirCon: "",
-        facilityType: "",
-      }
+      ownership: "",
+      ownerContact: "",
+      maxAccommodationSize: "",
+      hasAirCon: "",
+      facilityType: "",
+    }
     : {
-        isPaid: "",
-        maxAccommodationSize: "",
-        hasAirCon: "",
-        facilityType: "",
-      };
+      isPaid: "",
+      maxAccommodationSize: "",
+      hasAirCon: "",
+      facilityType: "",
+    };
 
 let emptyFacility: Facility = {
   facilityId: -1,
@@ -115,6 +115,7 @@ let emptyFacility: Facility = {
   facilityDetailJson: facilityDetailJson,
   isSheltered: false,
   hubProcessors: [],
+  imageUrl: ""
 };
 
 const merlioncenter: LatLngExpression = [1.295, 103.775887811];
@@ -217,6 +218,16 @@ function AddNewLocationForm() {
     }
   }
 
+  const imageBodyTemplate = (rowData: Facility) => {
+    return (
+      <img
+        src={"http://localhost:3000/" + rowData.imageUrl}
+        alt={rowData.facilityName}
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+      />
+    );
+  };
+
   return (
     <div>
       <div className="mb-2 text-xl font-medium">
@@ -292,6 +303,13 @@ function AddNewLocationForm() {
             dataKey="facilityId"
             className="h-1/2 overflow-hidden rounded border border-graydark/30"
           >
+            <Column
+              field="imageUrl"
+              header="Image"
+              frozen
+              body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
+            ></Column>
             <Column
               field="facilityId"
               header="ID"
