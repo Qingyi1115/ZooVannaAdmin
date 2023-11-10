@@ -101,6 +101,16 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
     setRefreshSeed,
   } = props;
   const [speciesCodeSet, setSpeciesCodeSet] = useState<Set<string>>(new Set());
+  const [allSpeciesCodeSet, setAllSpeciesCodeSet] = useState<Set<string>>(
+    new Set()
+  );
+  // hashmap to store species compatibilities
+  // const [speciesCompatibilityMap, setSpeciesCompatibilityMap] = useState<{
+  //   [code: string]: boolean;
+  // }>({});
+  const [speciesCompatibilityMap, setSpeciesCompatibilityMap] = useState<
+    Map<string, boolean>
+  >(new Map());
 
   useEffect(() => {
     const newSpeciesCodeSet = new Set<string>();
@@ -119,6 +129,32 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
     month: "short",
     day: "2-digit",
   };
+
+  // useeffect to populate compatibilities
+  useEffect(() => {
+    const tempCompatibilityMap = new Map<string, boolean>();
+    allSpeciesCodeSet.forEach(async (speciesCode) => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/enclosure/getSpeciesCompatibilityInEnclosure/${curEnclosure.enclosureId}/${speciesCode}`
+        );
+        const isSpeciesCompatibleWithEnclosure =
+          responseJson.isCompatible as boolean;
+        console.log("check compatibility, " + speciesCode);
+        console.log(isSpeciesCompatibleWithEnclosure);
+        tempCompatibilityMap.set(speciesCode, isSpeciesCompatibleWithEnclosure);
+        // setSpeciesCompatibilityMap((prevCompatibilityMap) => ({
+        //   ...prevCompatibilityMap,
+        //   [speciesCode]: isSpeciesCompatibleWithEnclosure,
+        // }));
+      } catch (error: any) {
+        console.log(error);
+      }
+    });
+    console.log("tempmap");
+    console.log(tempCompatibilityMap);
+    setSpeciesCompatibilityMap(tempCompatibilityMap);
+  }, [speciesCodeSet]);
 
   //   const [animalList, setAnimalList] = useState<Animal[]>([]);
   const [selectedAnimal, setSelectedAnimal] = useState<Animal>(emptyAnimal);
@@ -139,6 +175,9 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
   >([]);
   const [animalAssignmentDialog, setAnimalAssignmentDialog] =
     useState<boolean>(false);
+  const [isCompatibleOnlyFilter, setIsCompatibleOnlyFilter] = useState<
+    boolean | undefined
+  >(false);
   //
 
   const dt = useRef<DataTable<Animal[]>>(null);
@@ -337,25 +376,25 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
   // }
 
   const assignAnimalRowGroupHeaderTemplate = (animal: Animal) => {
-    const [isCompatible, setIsCompatible] = useState<boolean | undefined>(
-      undefined
-    );
+    // const [isCompatible, setIsCompatible] = useState<boolean | undefined>(
+    //   undefined
+    // );
 
-    useEffect(() => {
-      const fetchCheckCompatibility = async () => {
-        try {
-          const responseJson = await apiJson.get(
-            `http://localhost:3000/api/enclosure/getSpeciesCompatibilityInEnclosure/${curEnclosure.enclosureId}/${animal.species.speciesCode}`
-          );
-          const isSpeciesCompatibleWithEnclosure =
-            responseJson.isCompatible as boolean;
-          setIsCompatible(isSpeciesCompatibleWithEnclosure);
-        } catch (error: any) {
-          console.log(error);
-        }
-      };
-      fetchCheckCompatibility();
-    }, [animal]);
+    // useEffect(() => {
+    //   const fetchCheckCompatibility = async () => {
+    //     try {
+    //       const responseJson = await apiJson.get(
+    //         `http://localhost:3000/api/enclosure/getSpeciesCompatibilityInEnclosure/${curEnclosure.enclosureId}/${animal.species.speciesCode}`
+    //       );
+    //       const isSpeciesCompatibleWithEnclosure =
+    //         responseJson.isCompatible as boolean;
+    //       setIsCompatible(isSpeciesCompatibleWithEnclosure);
+    //     } catch (error: any) {
+    //       console.log(error);
+    //     }
+    //   };
+    //   fetchCheckCompatibility();
+    // }, [animal]);
 
     return (
       <React.Fragment>
@@ -369,7 +408,9 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
             <span className="text-lg font-bold">
               {animal.species.commonName} ({animal.species.speciesCode})
             </span>
-            {isCompatible != undefined && isCompatible ? (
+            {speciesCompatibilityMap.get(animal.species.speciesCode) !=
+              undefined &&
+            speciesCompatibilityMap.get(animal.species.speciesCode) == true ? (
               <span className="flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] px-2 text-base font-bold text-emerald-900">
                 COMPATIBLE
               </span>
@@ -443,6 +484,13 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
         );
         const allAnimalsList = responseJson as Animal[];
 
+        // set speciesCodeSet
+        const tempAllSpeciesCodeSet = new Set<string>();
+        allAnimalsList.forEach((animal) => {
+          tempAllSpeciesCodeSet.add(animal.species.speciesCode);
+        });
+        setAllSpeciesCodeSet(tempAllSpeciesCodeSet);
+
         // console.log("haha");
         // console.log(animalList);
         const availableAnimalsList = allAnimalsList.filter(
@@ -452,13 +500,25 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
                 existingAnimal.animalCode === animal.animalCode
             )
         );
-        setAvailableAnimals(availableAnimalsList);
+        let availableAnimalsListFilterdCompatibility = availableAnimalsList;
+        if (isCompatibleOnlyFilter) {
+          availableAnimalsListFilterdCompatibility =
+            availableAnimalsListFilterdCompatibility.filter(async (animal) => {
+              const responseJson = await apiJson.get(
+                `http://localhost:3000/api/enclosure/getSpeciesCompatibilityInEnclosure/${curEnclosure.enclosureId}/${animal.species.speciesCode}`
+              );
+              const isSpeciesCompatibleWithEnclosure =
+                responseJson.isCompatible as boolean;
+              return isSpeciesCompatibleWithEnclosure;
+            });
+        }
+        setAvailableAnimals(availableAnimalsListFilterdCompatibility);
       } catch (error: any) {
         console.log(error);
       }
     };
     fetchAvailableAnimals();
-  }, [animalList]);
+  }, [animalList, isCompatibleOnlyFilter]);
 
   const hideAnimalBulkAssignmentDialog = () => {
     setAnimalBulkAssignmentDialog(false);
@@ -467,6 +527,14 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
   const bulkAssignmentHeader = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       {/* <h4 className="m-1">Manage Maintenance Staff</h4> */}
+      <div>
+        <Checkbox
+          onChange={(e) => setIsCompatibleOnlyFilter(e.checked)}
+          checked={isCompatibleOnlyFilter ? isCompatibleOnlyFilter : false}
+          className="mr-2"
+        ></Checkbox>
+        <span>Compatible Only</span>
+      </div>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -478,6 +546,7 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
           }}
         />
       </span>
+
       {/* <Button onClick={exportCSV}>Export to .csv</Button> */}
     </div>
   );
