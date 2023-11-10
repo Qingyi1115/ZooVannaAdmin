@@ -1,7 +1,6 @@
-import BarChart from "../../components/SalesManagement/BarChart";
-import AllCustomerOrdersDatatable from "../../components/CustomerOrderManagement/AllCustomerOrdersDatatable";
-import { useState } from "react";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import { useState } from "react";
+import BarChart from "../../components/SalesManagement/BarChart";
 import RevenueChartFinal from "../../components/SalesManagement/RevenueChartFinal";
 
 function SalesChartPage() {

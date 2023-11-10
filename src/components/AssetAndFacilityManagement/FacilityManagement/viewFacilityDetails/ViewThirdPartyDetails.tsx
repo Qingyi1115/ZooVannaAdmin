@@ -1,12 +1,10 @@
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+    TableRow
 } from "@/components/ui/table";
+import beautifyText from "../../../../hooks/beautifyText";
 import ThirdParty from "../../../../models/ThirdParty";
 
 interface ThirdPartyProps {
@@ -54,7 +52,7 @@ function ViewThirdPartyDetails(props: ThirdPartyProps) {
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
                             Type
                         </TableCell>
-                        <TableCell>{curThirdParty.facilityType}</TableCell>
+                        <TableCell>{beautifyText(curThirdParty.facilityType)}</TableCell>
                     </TableRow>
 
                 </TableBody>

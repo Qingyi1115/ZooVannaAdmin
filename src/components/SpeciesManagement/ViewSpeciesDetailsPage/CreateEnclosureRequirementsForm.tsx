@@ -1,22 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import * as Form from "@radix-ui/react-form";
 
 import useApiJson from "../../../hooks/useApiJson";
 import FormFieldInput from "../../FormFieldInput";
-import FormFieldSelect from "../../FormFieldSelect";
-import { ContinentEnum } from "../../../enums/ContinentEnum";
-import { HiCheck } from "react-icons/hi";
-import { BiomeEnum } from "../../../enums/BiomeEnum";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import Species from "../../../models/Species";
-import { TwoThumbSliderWithNumber } from "../TwoThumbSliderWithNumber";
-import { NavLink } from "react-router-dom";
-import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { NavLink } from "react-router-dom";
+import Species from "../../../models/Species";
+import SpeciesEnclosureNeed from "../../../models/SpeciesEnclosureNeed";
+import { TwoThumbSliderWithNumber } from "../TwoThumbSliderWithNumber";
 
 import { useNavigate } from "react-router-dom";
 

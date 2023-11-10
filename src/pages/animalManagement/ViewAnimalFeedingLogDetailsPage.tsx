@@ -1,18 +1,17 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import AnimalFeedingLog from "../../models/AnimalFeedingLog";
 
 import { Button } from "@/components/ui/button";
-import Employee from "../../models/Employee";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
-import Animal from "../../models/Animal";
-import Species from "../../models/Species";
-import { Rating } from "../../enums/Rating";
 import ViewAnimalFeedingLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalFeedingLogDetails";
-import Keeper from "../../models/Keeper";
+import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, KeeperType, Specialization } from "../../enums/Enumurated";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import Animal from "../../models/Animal";
+import Employee from "../../models/Employee";
 import FeedingPlan from "../../models/FeedingPlan";
+import Keeper from "../../models/Keeper";
+import Species from "../../models/Species";
 
 
 

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useApiJson from "../../hooks/useApiJson";
-import Species from "../../models/Species";
-import Animal from "../../models/Animal";
+import EditAnimalForm from "../../components/AnimalManagement/EditAnimalPage/EditAnimalForm";
 import {
   AcquisitionMethod,
   AnimalGrowthStage,
   AnimalSex,
 } from "../../enums/Enumurated";
-import EditAnimalForm from "../../components/AnimalManagement/EditAnimalPage/EditAnimalForm";
+import useApiJson from "../../hooks/useApiJson";
+import Animal from "../../models/Animal";
+import Species from "../../models/Species";
 
 let emptySpecies: Species = {
   speciesId: -1,

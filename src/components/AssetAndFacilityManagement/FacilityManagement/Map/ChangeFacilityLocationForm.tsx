@@ -1,31 +1,25 @@
-import React, { useEffect, useState } from "react";
-import * as Form from "@radix-ui/react-form";
+import { useState } from "react";
 
-import { MultiSelectChangeEvent } from "primereact/multiselect";
 
-import useApiJson from "../../../../hooks/useApiJson";
-import Facility from "../../../../models/Facility";
-import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../../hooks/useApiJson";
+import Facility from "../../../../models/Facility";
 
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  useMap,
-  useMapEvents,
-  ImageOverlay,
-  TileLayer,
-} from "react-leaflet";
 import L, {
-  CRS,
   LatLng,
   LatLngBounds,
-  LatLngBoundsLiteral,
-  LatLngExpression,
+  LatLngExpression
 } from "leaflet";
+import {
+  ImageOverlay,
+  MapContainer,
+  Marker,
+  TileLayer,
+  useMapEvents
+} from "react-leaflet";
 
 interface ChangeFacilityLocationFormProps {
   curFacility: Facility;

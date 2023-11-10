@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import React, { useState } from "react";
 
-import { MultiSelectChangeEvent } from "primereact/multiselect";
 
-import useApiFormData from "../../../hooks/useApiFormData";
-import FormFieldInput from "../../FormFieldInput";
-import Facility from "../../../models/Facility";
-import useApiJson from "../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../../../components/FormFieldSelect";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { useLocation, useNavigate } from "react-router-dom";
+import FormFieldSelect from "../../../components/FormFieldSelect";
+import useApiFormData from "../../../hooks/useApiFormData";
+import useApiJson from "../../../hooks/useApiJson";
+import Facility from "../../../models/Facility";
+import FormFieldInput from "../../FormFieldInput";
 
 interface EditFacilityFormProps {
   curFacility: Facility;
@@ -20,6 +19,7 @@ interface EditFacilityFormProps {
 }
 
 function EditFacilityForm(props: EditFacilityFormProps) {
+  const apiFormData = useApiFormData();
   const location = useLocation();
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
@@ -43,6 +43,7 @@ function EditFacilityForm(props: EditFacilityFormProps) {
     curFacility.isSheltered ? "true" : "false"); // dropdown
   const [facilityType, setFacilityType] = useState<string | undefined>(
     curFacility.facilityDetailJson.facilityType); // dropdown 
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
 
   const [formError, setFormError] = useState<string | null>(null);
@@ -60,6 +61,10 @@ function EditFacilityForm(props: EditFacilityFormProps) {
     return null;
   }
 
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+    setImageFile(file);
+  }
 
   // end field validations
 
@@ -92,16 +97,47 @@ function EditFacilityForm(props: EditFacilityFormProps) {
     }
     console.log(updatedFacility);
 
+    // try {
+    //   const responseJson = await apiJson.put(
+    //     `http://localhost:3000/api/assetFacility/updateFacility/${curFacility.facilityId}`,
+    //     updatedFacility
+    //   );
+    //   // success
+    //   toastShadcn({
+    //     description: "Successfully edited facility",
+    //   });
+    //   setRefreshSeed(refreshSeed + 1);
+    // } catch (error: any) {
+    //   toastShadcn({
+    //     variant: "destructive",
+    //     title: "Uh oh! Something went wrong.",
+    //     description:
+    //       "An error has occurred while editing facility details: \n" +
+    //       error.message,
+    //   });
+    // }
+
+    // Submit image
+    const formData = new FormData();
+    formData.append("file", imageFile || "");
+
     try {
-      const responseJson = await apiJson.put(
+      await apiJson.put(
         `http://localhost:3000/api/assetFacility/updateFacility/${curFacility.facilityId}`,
         updatedFacility
       );
+
+      if (imageFile) {
+        await apiFormData.put(
+          `http://localhost:3000/api/assetFacility/updateFacilityImage/${curFacility.facilityId}`,
+          formData);
+      }
       // success
       toastShadcn({
         description: "Successfully edited facility",
       });
       setRefreshSeed(refreshSeed + 1);
+      navigate(-1);
     } catch (error: any) {
       toastShadcn({
         variant: "destructive",
@@ -140,6 +176,33 @@ function EditFacilityForm(props: EditFacilityFormProps) {
               {curFacility.facilityName}
             </span>
           </div>
+
+          {/* Facility Picture */}
+          <Form.Field
+            name="facilityImage"
+            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          >
+            <span className="font-medium">Current Image</span>
+            <img
+              src={
+                "http://localhost:3000/" +
+                curFacility.imageUrl
+              }
+              alt="Current facility image"
+              className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"
+            />
+            <Form.Label className="font-medium">
+              Change Facility Image
+            </Form.Label>
+            <Form.Control
+              type="file"
+              placeholder="Change image"
+              required={false}
+              accept=".png, .jpg, .jpeg, .webp"
+              onChange={handleFileChange}
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+            />
+          </Form.Field>
 
 
           <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">

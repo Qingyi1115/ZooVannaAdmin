@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import Promotion from "../../models/Promotion";
 
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import ViewPromotionDetails from "../../components/Promotion/ViewPromotionDetails";
-import { NavLink } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { NavLink } from "react-router-dom";
+import ViewPromotionDetails from "../../components/Promotion/ViewPromotionDetails";
 
 function ViewPromotionDetailsPage() {
   const apiJson = useApiJson();

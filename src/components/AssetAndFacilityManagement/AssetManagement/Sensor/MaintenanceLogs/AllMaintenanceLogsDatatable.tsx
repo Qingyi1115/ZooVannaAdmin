@@ -1,24 +1,22 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { DataView } from "primereact/dataview";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import { HiCheck, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { useNavigate, useParams } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
-import MaintenanceLog from "../../../../../models/MaintenanceLog";
-import Sensor from "../../../../../models/Sensor";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { useToast } from "@/components/ui/use-toast";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import MaintenanceLog from "../../../../../models/MaintenanceLog";
+import Sensor from "../../../../../models/Sensor";
 
 interface AllMaintenanceLogsDatatableProps {
   sensorId: number;

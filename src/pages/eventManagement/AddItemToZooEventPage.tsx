@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import ZooEvent from "../../models/ZooEvent";
@@ -6,10 +6,7 @@ import ZooEvent from "../../models/ZooEvent";
 
 
 
-import useApiJson from "../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -17,8 +14,12 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../hooks/useApiJson";
 
 import AddItemToEventForm from "../../components/EventManagement/CreateZooEventPage/AddItemToZooEventForm";
+import beautifyText from "../../hooks/beautifyText";
 
 function AddItemToZooEventPage() {
   const apiJson = useApiJson();
@@ -90,7 +91,7 @@ function AddItemToZooEventPage() {
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     Type
                   </TableCell>
-                  <TableCell>{curZooEvent.eventType}</TableCell>
+                  <TableCell>{beautifyText(curZooEvent.eventType)}}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>

@@ -1,9 +1,5 @@
 import {
-  AnimalFeedCategory,
-  AnimalGrowthStage,
-  PresentationContainer,
-  PresentationLocation,
-  PresentationMethod,
+  AnimalGrowthStage
 } from "../enums/Enumurated";
 import Species from "./Species";
 interface PhysiologicalReferenceNorms {

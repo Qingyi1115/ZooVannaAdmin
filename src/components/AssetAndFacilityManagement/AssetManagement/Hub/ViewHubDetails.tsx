@@ -1,24 +1,18 @@
-import React, { useState, useRef } from "react";
-import Employee from "../../../../models/Employee";
 import { Button } from "@/components/ui/button";
-import useApiJson from "../../../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { Toast } from "primereact/toast";
+import React from "react";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import Hub from "../../../../models/HubProcessor";
-import { Separator } from "@radix-ui/react-select";
-import { useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import beautifyText from "../../../../hooks/beautifyText";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import Hub from "../../../../models/HubProcessor";
 
 interface HubDetailsProps {
   curHub: Hub;
@@ -103,7 +97,7 @@ function ViewHubDetails(props: HubDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Hub Status
             </TableCell>
-            <TableCell>{curHub.hubStatus}</TableCell>
+            <TableCell>{beautifyText(curHub.hubStatus)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

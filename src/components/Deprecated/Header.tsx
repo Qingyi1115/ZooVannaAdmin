@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import LogoutButton from "../Header/LogoutButton";
 
 interface PropsType {

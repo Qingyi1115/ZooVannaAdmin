@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useApiJson from "../../hooks/useApiJson";
-import { Rating } from "../../enums/Rating";
 import EditAnimalActivityLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalActivityLogForm";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization, RecurringPattern, EventTimingType } from "../../enums/Enumurated";
+import { ActivityType } from "../../enums/ActivityType";
+import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, EventTimingType, KeeperType, RecurringPattern, Specialization } from "../../enums/Enumurated";
+import { Rating } from "../../enums/Rating";
+import { Reaction } from "../../enums/Reaction";
+import useApiJson from "../../hooks/useApiJson";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
+import AnimalActivity from "../../models/AnimalActivity";
 import AnimalActivityLog from "../../models/AnimalActivityLog";
 import Employee from "../../models/Employee";
-import Species from "../../models/Species";
 import Keeper from "../../models/Keeper";
-import { ActivityType } from "../../enums/ActivityType";
-import { Reaction } from "../../enums/Reaction";
-import AnimalActivity from "../../models/AnimalActivity";
+import Species from "../../models/Species";
 
 function EditAnimalActivityLogPage() {
   const apiJson = useApiJson();

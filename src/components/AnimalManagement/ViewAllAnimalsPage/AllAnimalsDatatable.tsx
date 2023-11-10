@@ -1,35 +1,26 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { classNames } from "primereact/utils";
-import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 // import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
-import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 
-import Species from "../../../models/Species";
+import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../hooks/useApiJson";
-import { ColumnGroup } from "primereact/columngroup";
-import { Row } from "primereact/row";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import Species from "../../../models/Species";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
-import Animal from "../../../models/Animal";
+import { useToast } from "@/components/ui/use-toast";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   AcquisitionMethod,
   AnimalGrowthStage,
   AnimalSex,
 } from "../../../enums/Enumurated";
+import beautifyText from "../../../hooks/beautifyText";
+import Animal from "../../../models/Animal";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -156,11 +147,13 @@ function AllAnimalsDatatable() {
 
   const imageBodyTemplate = (rowData: Species) => {
     return (
-      <img
-        src={"http://localhost:3000/" + rowData.imageUrl}
-        alt={rowData.commonName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-      />
+      (rowData.imageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.commonName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        />
+        : "-")
     );
   };
 
@@ -184,7 +177,7 @@ function AllAnimalsDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteAnimal/" +
-            selectedAnimal.animalCode
+          selectedAnimal.animalCode
         );
 
         toastShadcn({
@@ -365,18 +358,18 @@ function AllAnimalsDatatable() {
                 status === "NORMAL"
                   ? "flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] text-sm font-bold text-emerald-900"
                   : status === "PREGNANT"
-                  ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
-                  : status === "SICK"
-                  ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
-                  : status === "INJURED"
-                  ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
-                  : status === "OFFSITE"
-                  ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
-                  : status === "RELEASED"
-                  ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
-                  : status === "DECEASED"
-                  ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
-                  : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
+                    ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
+                    : status === "SICK"
+                      ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
+                      : status === "INJURED"
+                        ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
+                        : status === "OFFSITE"
+                          ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
+                          : status === "RELEASED"
+                            ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
+                            : status === "DECEASED"
+                              ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
+                              : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
               }
             >
               {status}
@@ -468,7 +461,7 @@ function AllAnimalsDatatable() {
                 return animal.sex == "" || animal.sex == null ? (
                   <span className="flex justify-center ">—</span>
                 ) : (
-                  animal.sex
+                  beautifyText(animal.sex)
                 );
               }}
               field="sex"
@@ -528,6 +521,7 @@ function AllAnimalsDatatable() {
             <Column
               field="growthStage"
               header="Growth Stage"
+              body={(animal: Animal) => beautifyText(animal.growthStage)}
               sortable
               style={{ minWidth: "7rem", display: "none" }}
             ></Column>
@@ -568,6 +562,7 @@ function AllAnimalsDatatable() {
             <Column
               field="acquisitionMethod"
               header="Acquisition Method"
+
               sortable
               style={{ minWidth: "7rem", display: "none" }}
             ></Column>

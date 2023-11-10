@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
-import Facility from "../../../models/Facility";
-import useApiJson from "../../../hooks/useApiJson";
 import { useParams } from "react-router-dom";
+import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
+import useApiJson from "../../../hooks/useApiJson";
+import Facility from "../../../models/Facility";
 
 function ViewAllHubPage() {
   const apiJson = useApiJson();

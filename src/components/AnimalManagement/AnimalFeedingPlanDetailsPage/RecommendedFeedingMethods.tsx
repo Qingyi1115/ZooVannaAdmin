@@ -1,26 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
 
-import { useParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
-import { Separator } from "@/components/ui/separator";
 
-import Species from "../../../models/Species";
-import Animal from "../../../models/Animal";
-import SpeciesDietNeed from "../../../models/SpeciesDietNeed";
 import { AnimalFeedCategory } from "../../../enums/Enumurated";
+import SpeciesDietNeed from "../../../models/SpeciesDietNeed";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 interface RecommendedFeedingMethodsProps {
