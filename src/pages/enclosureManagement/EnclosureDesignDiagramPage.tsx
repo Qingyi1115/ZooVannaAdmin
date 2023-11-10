@@ -7,6 +7,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Enclosure from "../../models/Enclosure";
+import { useToast } from "@/components/ui/use-toast";
 
 import { useEnclosureContext } from "../../hooks/useEnclosureContext";
 
@@ -31,262 +32,9 @@ import {
 } from "../../../reactplanner-src/index";
 
 // test data
-const testMapJson = {
+const emptyDiagramJson = {
   unit: "cm",
-  layers: {
-    TNV491szj: {
-      id: "TNV491szj",
-      altitude: 0,
-      order: 0,
-      opacity: 1,
-      name: "layer TNV491szj",
-      visible: false,
-      vertices: {
-        K9VOA6vq3CU: {
-          id: "K9VOA6vq3CU",
-          type: "",
-          prototype: "vertices",
-          name: "Vertex",
-          misc: {},
-          selected: false,
-          properties: {},
-          visible: true,
-          x: 168.72729520981437,
-          y: 1606.8444650233664,
-          lines: ["v4GJEzWw5xk", "GXXmu_EO_As"],
-          areas: [],
-        },
-        GQXl7jD5Ku4: {
-          id: "GQXl7jD5Ku4",
-          type: "",
-          prototype: "vertices",
-          name: "Vertex",
-          misc: {},
-          selected: false,
-          properties: {},
-          visible: true,
-          x: 197.48599352701066,
-          y: 1796.1725622782421,
-          lines: ["v4GJEzWw5xk", "saMZMlZHp"],
-          areas: [],
-        },
-        "RRQ0Nq-dlz7": {
-          id: "RRQ0Nq-dlz7",
-          type: "",
-          prototype: "vertices",
-          name: "Vertex",
-          misc: {},
-          selected: false,
-          properties: {},
-          visible: true,
-          x: 480.2798603127744,
-          y: 1630.8100469543633,
-          lines: ["GXXmu_EO_As", "saMZMlZHp"],
-          areas: [],
-        },
-      },
-      lines: {
-        v4GJEzWw5xk: {
-          id: "v4GJEzWw5xk",
-          type: "wall",
-          prototype: "lines",
-          name: "Wall",
-          misc: {},
-          selected: false,
-          properties: {
-            height: { length: 300 },
-            thickness: { length: 20 },
-            textureA: "bricks",
-            textureB: "bricks",
-          },
-          visible: true,
-          vertices: ["K9VOA6vq3CU", "GQXl7jD5Ku4"],
-          holes: [],
-        },
-        GXXmu_EO_As: {
-          id: "GXXmu_EO_As",
-          type: "wall",
-          prototype: "lines",
-          name: "Wall",
-          misc: {},
-          selected: false,
-          properties: {
-            height: { length: 300 },
-            thickness: { length: 20 },
-            textureA: "bricks",
-            textureB: "bricks",
-          },
-          visible: true,
-          vertices: ["K9VOA6vq3CU", "RRQ0Nq-dlz7"],
-          holes: [],
-        },
-        saMZMlZHp: {
-          id: "saMZMlZHp",
-          type: "wall",
-          prototype: "lines",
-          name: "Wall",
-          misc: {},
-          selected: false,
-          properties: {
-            height: { length: 300 },
-            thickness: { length: 20 },
-            textureA: "bricks",
-            textureB: "bricks",
-          },
-          visible: true,
-          vertices: ["GQXl7jD5Ku4", "RRQ0Nq-dlz7"],
-          holes: [],
-        },
-      },
-      holes: {},
-      areas: {
-        uxXtMIQ2A6: {
-          id: "uxXtMIQ2A6",
-          type: "area",
-          prototype: "areas",
-          name: "Area",
-          misc: {},
-          selected: false,
-          properties: {
-            patternColor: "#F5F4F4",
-            thickness: { length: 0 },
-            texture: "none",
-          },
-          visible: true,
-          vertices: ["K9VOA6vq3CU", "RRQ0Nq-dlz7", "GQXl7jD5Ku4"],
-          holes: [],
-        },
-      },
-      items: {},
-      selected: { vertices: [], lines: [], holes: [], areas: [], items: [] },
-    },
-    "7yPP7OfAr": {
-      id: "7yPP7OfAr",
-      altitude: 0,
-      order: 0,
-      opacity: 1,
-      name: "layer 7yPP7OfAr",
-      visible: true,
-      vertices: {
-        bqkDCpIhD0b: {
-          id: "bqkDCpIhD0b",
-          type: "",
-          prototype: "vertices",
-          name: "Vertex",
-          misc: {},
-          selected: false,
-          properties: {},
-          visible: true,
-          x: 221,
-          y: 1521,
-          lines: ["NX15VAy_yZ_", "DFLhwK4GgkA"],
-          areas: [],
-        },
-        YVBe2HU0J6G: {
-          id: "YVBe2HU0J6G",
-          type: "",
-          prototype: "vertices",
-          name: "Vertex",
-          misc: {},
-          selected: false,
-          properties: {},
-          visible: true,
-          x: 320,
-          y: 1784,
-          lines: ["NX15VAy_yZ_", "mwqN_0trE5"],
-          areas: [],
-        },
-        hXA_V2UpC4I: {
-          id: "hXA_V2UpC4I",
-          type: "",
-          prototype: "vertices",
-          name: "Vertex",
-          misc: {},
-          selected: false,
-          properties: {},
-          visible: true,
-          x: 416,
-          y: 1544,
-          lines: ["DFLhwK4GgkA", "mwqN_0trE5"],
-          areas: [],
-        },
-      },
-      lines: {
-        NX15VAy_yZ_: {
-          id: "NX15VAy_yZ_",
-          type: "wall",
-          prototype: "lines",
-          name: "Wall",
-          misc: {},
-          selected: false,
-          properties: {
-            height: { length: 300 },
-            thickness: { length: 20 },
-            textureA: "bricks",
-            textureB: "bricks",
-          },
-          visible: true,
-          vertices: ["bqkDCpIhD0b", "YVBe2HU0J6G"],
-          holes: [],
-        },
-        DFLhwK4GgkA: {
-          id: "DFLhwK4GgkA",
-          type: "wall",
-          prototype: "lines",
-          name: "Wall",
-          misc: {},
-          selected: false,
-          properties: {
-            height: { length: 300 },
-            thickness: { length: 20 },
-            textureA: "bricks",
-            textureB: "bricks",
-          },
-          visible: true,
-          vertices: ["bqkDCpIhD0b", "hXA_V2UpC4I"],
-          holes: [],
-        },
-        mwqN_0trE5: {
-          id: "mwqN_0trE5",
-          type: "wall",
-          prototype: "lines",
-          name: "Wall",
-          misc: {},
-          selected: false,
-          properties: {
-            height: { length: 300 },
-            thickness: { length: 20 },
-            textureA: "bricks",
-            textureB: "bricks",
-          },
-          visible: true,
-          vertices: ["YVBe2HU0J6G", "hXA_V2UpC4I"],
-          holes: [],
-        },
-      },
-      holes: {},
-      areas: {
-        NmGGRLQyox: {
-          id: "NmGGRLQyox",
-          type: "area",
-          prototype: "areas",
-          name: "Area",
-          misc: {},
-          selected: false,
-          properties: {
-            patternColor: "#F5F4F4",
-            thickness: { length: 0 },
-            texture: "none",
-          },
-          visible: true,
-          vertices: ["bqkDCpIhD0b", "hXA_V2UpC4I", "YVBe2HU0J6G"],
-          holes: [],
-        },
-      },
-      items: {},
-      selected: { vertices: [], lines: [], holes: [], areas: [], items: [] },
-    },
-  },
+  layers: {},
   grids: {
     h1: {
       id: "h1",
@@ -305,7 +53,7 @@ const testMapJson = {
       },
     },
   },
-  selectedLayer: "TNV491szj",
+  selectedLayer: null,
   groups: {},
   width: 3000,
   height: 2000,
@@ -374,7 +122,7 @@ let store = createStore(reducer, composeWithDevTools());
 
 let plugins = [
   PlannerPlugins.Keyboard(),
-  PlannerPlugins.Autosave("react-planner_v0"),
+  // PlannerPlugins.Autosave("react-planner_v0"),
   PlannerPlugins.ConsoleDebugger(),
 ];
 
@@ -385,6 +133,7 @@ function EnclosureDesignDiagramPage() {
   const apiJson = useApiJson();
   const location = useLocation();
   const navigate = useNavigate();
+  const toastShadcn = useToast().toast;
 
   const { state, dispatch } = useEnclosureContext();
 
@@ -394,7 +143,41 @@ function EnclosureDesignDiagramPage() {
   const curEnclosure = state.curEnclosure;
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
-  // useEffect to fetch enclosure
+  // useEffect to fetch and set enclosure diagram
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (curEnclosure?.designDiagramJsonUrl) {
+          const response = await fetch(
+            `http://localhost:3000/${curEnclosure?.designDiagramJsonUrl}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            console.log("fetching diagram");
+            console.log(data);
+            loadDiagram(data);
+          } else {
+            console.error(
+              "Failed to fetch enclosure data:",
+              response.status,
+              response.statusText
+            );
+          }
+        } else {
+          // no design diagram, start from scratch
+          // loadDiagram(emptyDiagramJson);
+          console.log("no design diagram!");
+          store.dispatch({
+            type: "NEW_PROJECT",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching enclosure data:", error);
+      }
+    };
+
+    fetchData();
+  }, [curEnclosure]);
 
   if (curEnclosure == null) {
     return (
@@ -417,10 +200,18 @@ function EnclosureDesignDiagramPage() {
     );
   }
 
-  function handleLoad() {
+  function loadDiagram(sceneJson: any) {
+    console.log(sceneJson);
     store.dispatch({
       type: "LOAD_PROJECT",
-      sceneJSON: testMapJson,
+      // sceneJSON: emptyMapJson,
+      sceneJSON: sceneJson,
+    });
+  }
+
+  function newProject() {
+    store.dispatch({
+      type: "NEW_PROJECT",
     });
   }
 
@@ -428,6 +219,35 @@ function EnclosureDesignDiagramPage() {
     console.log(
       JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
     );
+
+    const updateDesignDiagramObj = {
+      designDiagramJson: JSON.stringify(
+        JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
+      ),
+    };
+
+    const updateDesignDiagramApi = async () => {
+      try {
+        const response = await apiJson.put(
+          `http://localhost:3000/api/enclosure/updateDesignDiagram/${curEnclosure?.enclosureId}`,
+          updateDesignDiagramObj
+        );
+        // success
+        toastShadcn({
+          description: "Successfully updated design diagram!",
+        });
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while updating design diagram: \n" +
+            error.message,
+        });
+      }
+    };
+    updateDesignDiagramApi();
   }
 
   return (
@@ -462,8 +282,13 @@ function EnclosureDesignDiagramPage() {
         <div>
           <Button onClick={handleSave}>Test Handle Save</Button>
         </div>
+        {/* <div>
+          <Button onClick={newProject}>New Project</Button>
+        </div> */}
         <div>
-          <Button onClick={handleLoad}>Test Handle Load</Button>
+          <Button onClick={() => loadDiagram(emptyDiagramJson)}>
+            Test Handle Load Empty Diagram
+          </Button>
         </div>
         <div>
           <Provider store={store}>

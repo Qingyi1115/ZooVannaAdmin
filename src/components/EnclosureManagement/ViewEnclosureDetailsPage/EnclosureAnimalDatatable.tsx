@@ -140,8 +140,8 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
         );
         const isSpeciesCompatibleWithEnclosure =
           responseJson.isCompatible as boolean;
-        console.log("check compatibility, " + speciesCode);
-        console.log(isSpeciesCompatibleWithEnclosure);
+        // console.log("check compatibility, " + speciesCode);
+        // console.log(isSpeciesCompatibleWithEnclosure);
         tempCompatibilityMap.set(speciesCode, isSpeciesCompatibleWithEnclosure);
         // setSpeciesCompatibilityMap((prevCompatibilityMap) => ({
         //   ...prevCompatibilityMap,
@@ -151,8 +151,8 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
         console.log(error);
       }
     });
-    console.log("tempmap");
-    console.log(tempCompatibilityMap);
+    // console.log("tempmap");
+    // console.log(tempCompatibilityMap);
     setSpeciesCompatibilityMap(tempCompatibilityMap);
   }, [speciesCodeSet]);
 

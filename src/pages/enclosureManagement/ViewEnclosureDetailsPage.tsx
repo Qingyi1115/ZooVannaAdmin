@@ -12,6 +12,7 @@ import { useEnclosureContext } from "../../hooks/useEnclosureContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EnclosureBasicInformation from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureBasicInformation";
 import EnclosureAnimalList from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureAnimalList";
+import EnclosureLayoutDesign from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureLayoutDesign";
 
 function ViewEnclosureDetailsPage() {
   const apiJson = useApiJson();
@@ -71,13 +72,7 @@ function ViewEnclosureDetailsPage() {
         </div>
 
         {/* Body */}
-        <Button
-          onClick={() =>
-            navigate("/enclosure/viewenclosuredetails/enclosuredesigndiagram")
-          }
-        >
-          View Design Diagram
-        </Button>
+
         <Tabs defaultValue={tab ? `${tab}` : "basicinfo"} className="w-full">
           <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
             <span className="invisible">_____</span>
@@ -93,7 +88,11 @@ function ViewEnclosureDetailsPage() {
               <EnclosureBasicInformation curEnclosure={curEnclosure} />
             )}
           </TabsContent>
-          <TabsContent value="layoutdesign">test</TabsContent>
+          <TabsContent value="layoutdesign">
+            {curEnclosure && (
+              <EnclosureLayoutDesign curEnclosure={curEnclosure} />
+            )}
+          </TabsContent>
           <TabsContent value="animalslist">
             {curEnclosure && (
               <EnclosureAnimalList curEnclosure={curEnclosure} />
