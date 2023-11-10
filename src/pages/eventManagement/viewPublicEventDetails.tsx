@@ -503,6 +503,7 @@ function ViewPublicEventDetails() {
               <TabsContent value="publicEventSessions">
                 <AllPublicEventSessionDatatable
                   publicEventId={publicEventId || ""}
+                  setRefreshSeed={setRefreshSeed}
                 />
               </TabsContent>
 

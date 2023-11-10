@@ -27,11 +27,12 @@ import PublicEventSession from "../../models/PublicEventSession";
 
 interface AllPublicEventSessionDatatableProps {
   publicEventId: string;
+  setRefreshSeed: Function;
 }
 
 function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatableProps) {
   const apiJson = useApiJson();
-  const { publicEventId } = props;
+  const { publicEventId, setRefreshSeed } = props;
   const [animalActivitySearch, setAnimalActivitySearch] =
     useState<boolean>();
   const employee = useAuthContext().state.user?.employeeData;
@@ -46,6 +47,7 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
   const dt = useRef<DataTable<PublicEventSession[]>>(null);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+  const [innerRefresh, setInnerRefresh] = useState<any[]>([]);
 
   useEffect(() => {
     apiJson.get(
@@ -56,7 +58,7 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
       })
       .catch(e => console.log(e));
 
-  }, [publicEventId]);
+  }, [publicEventId, innerRefresh]);
 
 
   const exportCSV = () => {
@@ -94,6 +96,8 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
         });
         // setAnimalActivityLogList(_publicEventSession);
         // setSelectedPublicEventSession(emptyAnimalActivityLog);
+        setRefreshSeed({});
+        setInnerRefresh([]);
       } catch (error: any) {
         // got error
         toastShadcn({
