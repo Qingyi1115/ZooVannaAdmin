@@ -24,6 +24,8 @@ import ToolbarScreenshotButton from "../../../reactplannerassets/ui/toolbar-scre
 
 import { composeWithDevTools } from "redux-devtools-extension";
 
+import areapolygon from "area-polygon";
+
 import {
   Models as PlannerModels,
   reducer as PlannerReducer,
@@ -123,7 +125,7 @@ let store = createStore(reducer, composeWithDevTools());
 let plugins = [
   PlannerPlugins.Keyboard(),
   // PlannerPlugins.Autosave("react-planner_v0"),
-  PlannerPlugins.ConsoleDebugger(),
+  // PlannerPlugins.ConsoleDebugger(),
 ];
 
 let toolbarButtons = [ToolbarScreenshotButton];
@@ -154,7 +156,7 @@ function EnclosureDesignDiagramPage() {
           if (response.ok) {
             const data = await response.json();
             console.log("fetching diagram");
-            console.log(data);
+            console.log(curEnclosure?.designDiagramJsonUrl);
             loadDiagram(data);
           } else {
             console.error(
@@ -213,6 +215,59 @@ function EnclosureDesignDiagramPage() {
     store.dispatch({
       type: "NEW_PROJECT",
     });
+  }
+
+  function calculateSelectedAreaSize() {
+    console.log("ahahhaha");
+    console.log(
+      JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
+    );
+    console.log("egegegege");
+    console.log(
+      JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
+        .selectedLayer
+    );
+    const curSelectedLayerName = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene.selectedLayer;
+    const curSelectedLayer = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene.layers[curSelectedLayerName];
+
+    const selectedAreaId = Object.keys(curSelectedLayer.areas).find(
+      (areaId) => curSelectedLayer.areas[areaId].selected === true
+    );
+
+    if (selectedAreaId == undefined) {
+      return;
+    }
+
+    const selectedArea = curSelectedLayer.areas[selectedAreaId];
+    console.log(selectedArea);
+    console.log("-------");
+    console.log(selectedArea.vertices);
+    console.log("===========");
+    console.log(curSelectedLayer.vertices);
+    var polygon = selectedArea.vertices.map(function (vertexID) {
+      var _layer$vertices$get = curSelectedLayer.vertices[vertexID],
+        x = _layer$vertices$get.x,
+        y = _layer$vertices$get.y;
+      return [x, y];
+    });
+
+    var areaSize = areapolygon(polygon, false);
+
+    console.log("area size: " + areaSize);
+
+    // console.log("okokokok");
+    // console.log(
+    //   JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene.layers
+    // );
+    // console.log("wuwuwuwuwu");
+    // console.log(
+    //   JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
+    //     .layers[curSelectedAreaName]
+    // );
   }
 
   async function handleSave() {
@@ -285,6 +340,10 @@ function EnclosureDesignDiagramPage() {
         <div>
           <Button onClick={handleSave}>Test Handle Save</Button>
         </div>
+        <div>
+          <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
+        </div>
+
         {/* <div>
           <Button onClick={newProject}>New Project</Button>
         </div> */}
