@@ -14,6 +14,7 @@ interface Enclosure {
   width: number;
   height: number;
   enclosureStatus: EnclosureStatus;
+  designDiagramJsonUrl: string | null;
 
   // Terrain Distribution
   longGrassPercent: number | null;

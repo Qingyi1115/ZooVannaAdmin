@@ -17,9 +17,12 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/shadcn/*"]
-    }
+      "@/*": ["./src/shadcn/*"],
+      "react-planner": ["./reactplanner-src/index.js"]
+    },
+    "noImplicitAny": false
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src", "reactplanner-src"],
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": ["node_modules", "dist", "lib", "es", "docs"]
 }

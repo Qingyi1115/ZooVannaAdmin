@@ -1,3 +1,5 @@
+import "./init";
+
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useAuthContext } from "./hooks/useAuthContext";
@@ -5,7 +7,7 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import { PrimeReactProvider } from "primereact/api";
 // import "@fullcalendar/daygrid/main.css";
 
-
+import EnclosureContextProvider from "./context/EnclosureContext";
 
 import MainLayout from "./components/MainLayout";
 import HomePage from "./pages/HomePage";
@@ -551,6 +553,16 @@ function App() {
                     }
                   />
                   <Route
+                    path="/enclosure/viewenclosuredetails/:enclosureId/:tab"
+                    element={
+                      user ? (
+                        <ViewEnclosureDetailsPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
                     path="/enclosure/viewenclosuredetails/enclosuredesigndiagram"
                     element={
                       user ? (
@@ -731,7 +743,9 @@ function App() {
 
                 <Route
                   path="/assetfacility/viewcamerafeeds/:sensorId"
-                  element={user ? <ViewCameraFeedsPage /> : <Navigate to="/login" />}
+                  element={
+                    user ? <ViewCameraFeedsPage /> : <Navigate to="/login" />
+                  }
                 />
 
                 <Route
@@ -1121,7 +1135,11 @@ function App() {
                 <Route
                   path="/zooevent/createpubliczooevent"
                   element={
-                    user ? <CreatePublicZooEventPage /> : <Navigate to="/login" />
+                    user ? (
+                      <CreatePublicZooEventPage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
                   }
                 />
                 <Route
