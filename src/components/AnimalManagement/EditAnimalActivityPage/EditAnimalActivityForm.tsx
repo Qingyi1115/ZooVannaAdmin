@@ -1,47 +1,31 @@
-import React, { useState, useEffect } from "react";
 import * as Form from "@radix-ui/react-form";
-import * as RadioGroup from "@radix-ui/react-radio-group";
-import * as Checkbox from "@radix-ui/react-checkbox";
+import React, { useState } from "react";
 
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
 import useApiFormData from "../../../hooks/useApiFormData";
 import useApiJson from "../../../hooks/useApiJson";
 
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
-import { ContinentEnum } from "../../../enums/ContinentEnum";
-import { HiCheck } from "react-icons/hi";
-import { BiomeEnum } from "../../../enums/BiomeEnum";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
 
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
 
 import { useNavigate } from "react-router-dom";
-import Animal from "../../../models/Animal";
 
 import {
-  AcquisitionMethod,
-  ActivityType,
-  AnimalGrowthStage,
-  AnimalSex,
-  AnimalStatusType,
   DayOfWeek,
   EventTimingType,
-  IdentifierType,
-  RecurringPattern,
+  RecurringPattern
 } from "../../../enums/Enumurated";
 
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import Species from "../../../models/Species";
+import { Calendar } from "primereact/calendar";
 
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
-import AnimalActivity from "../../../models/AnimalActivity";
 import { Nullable } from "primereact/ts-helpers";
+import beautifyText from "../../../hooks/beautifyText";
+import AnimalActivity from "../../../models/AnimalActivity";
 
 interface EditAnimalActivityFormProps {
   curAnimalActivity: AnimalActivity;
@@ -72,10 +56,11 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
   const [durationInMinutes, setDurationInMinutes] = useState<
     number | undefined
   >(curAnimalActivity.durationInMinutes);
+  const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
+    number | undefined
+  >(curAnimalActivity.requiredNumberOfKeeper);
   const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
-    RecurringPattern[
-      curAnimalActivity.recurringPattern as keyof typeof RecurringPattern
-    ]
+    curAnimalActivity.recurringPattern
   );
   const [startDate, setStartDate] = useState<Nullable<Date>>(
     new Date(curAnimalActivity.startDate)
@@ -292,6 +277,26 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
     return null;
   }
 
+  function validateRequiredNumberOfKeeper(props: ValidityState) {
+    if (props != undefined) {
+      if (requiredNumberOfKeeper == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the number of keepers required
+          </div>
+        );
+      } else if (requiredNumberOfKeeper <= 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Number of keepers must be greater than 0
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
   // end validate functions
 
   // handle submit
@@ -341,6 +346,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
       dayOfMonth,
       eventTimingType,
       durationInMinutes,
+      requiredNumberOfKeeper
     };
 
     console.log(updatedAnimalActivity);
@@ -376,7 +382,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
         onSubmit={handleSubmit}
-        // encType="multipart/form-data"
+      // encType="multipart/form-data"
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
@@ -390,7 +396,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
               Back
             </Button>
             {/* </NavLink> */}
-            <span className="self-center text-title-xl font-bold">
+            <span className="self-center text-lg text-graydark">
               Update Animal Activity
             </span>
             <Button disabled className="invisible">
@@ -398,6 +404,9 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             </Button>
           </div>
           <Separator />
+          <span className="mt-4 self-center text-title-xl font-bold">
+            {curAnimalActivity.title}
+          </span>
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
@@ -414,8 +423,8 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             validateFunction={validateTitle}
           />
 
-          {/* Activity Type */}
-          <FormFieldSelect
+
+          {/* <FormFieldSelect
             formFieldName="activityType"
             label="Activity Type"
             required={true}
@@ -431,9 +440,12 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             value={activityType}
             setValue={setActivityType}
             validateFunction={validateIdentifierType}
-          />
+          /> */}
         </div>
-
+        {/* Activity Type */}
+        <div className="mb-1 block font-medium">
+          Activity Type<br /> <b>{beautifyText(activityType)}</b>
+        </div>
         {/* Details */}
         <Form.Field
           name="physicalDefiningCharacteristics"
@@ -450,7 +462,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
             <textarea
               rows={3}
               placeholder="e.g., Leave yoga ball in the pen and pushes it towards the tiger,..."
-              // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
           <Form.ValidityState>{validateDetails}</Form.ValidityState>
@@ -460,7 +472,7 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
           {/* Session */}
           <FormFieldSelect
             formFieldName="session"
-            label="Session Timing"
+            label="Shift Timing"
             required={true}
             placeholder="Select a session timing..."
             valueLabelPair={Object.keys(EventTimingType).map(
@@ -492,6 +504,19 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
           />
         </div>
 
+        {/* Number of keepers required */}
+        <FormFieldInput
+          type="number"
+          formFieldName="durationInMinutes"
+          label={`Number of keepers required`}
+          required={true}
+          pattern={undefined}
+          placeholder="e.g., 2"
+          value={requiredNumberOfKeeper}
+          setValue={setRequiredNumberOfKeeper}
+          validateFunction={validateRequiredNumberOfKeeper}
+        />
+
         {/* Recurring Pattern */}
         <FormFieldSelect
           formFieldName="recurringPattern"
@@ -499,14 +524,16 @@ function EditAnimalActivityForm(props: EditAnimalActivityFormProps) {
           required={true}
           placeholder="Select a recurring pattern. Select NON-RECURRING if this is a one-off event. "
           valueLabelPair={Object.keys(RecurringPattern).map(
-            (recurringPatternKey) => [
-              RecurringPattern[
-                recurringPatternKey as keyof typeof RecurringPattern
-              ].toString(),
-              RecurringPattern[
-                recurringPatternKey as keyof typeof RecurringPattern
-              ].toString(),
-            ]
+            (recurringPatternKey) => {
+              return [
+                RecurringPattern[
+                  recurringPatternKey as keyof typeof RecurringPattern
+                ].toString(),
+                RecurringPattern[
+                  recurringPatternKey as keyof typeof RecurringPattern
+                ].toString(),
+              ];
+            }
           )}
           value={recurringPattern}
           setValue={setRecurringPattern}

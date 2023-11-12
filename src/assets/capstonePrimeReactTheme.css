@@ -860,6 +860,7 @@
   background: rgba(0, 0, 0, 0);
   transition: box-shadow 0.2s;
   border-radius: 0;
+  z-index: 9999;
 }
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
   color: #74c549;
@@ -3871,6 +3872,11 @@
 }
 .p-column-filter-overlay-menu .p-column-filter-buttonbar {
   padding: 1.25rem;
+}
+.p-column-filter-buttonbar button[aria-label="Apply"] {
+  background-color: #84985a; /* Your desired background color */
+  color: #fff; /* Your desired text color */
+  /* Add more styles as needed */
 }
 .fc.fc-unthemed .fc-view-container th {
   background: #ebebeb;

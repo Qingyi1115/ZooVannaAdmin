@@ -1,27 +1,26 @@
-import React, { useEffect, useState, useRef } from "react";
-import { DataView } from 'primereact/dataview';
 import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
+import { DataView } from 'primereact/dataview';
+import React, { useEffect, useRef, useState } from "react";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import { HiCheck, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
-import FacilityLog from "../../../../../models/FacilityLog";
-import Facility from "../../../../../models/Facility";
-import InHouse from "../../../../../models/InHouse";
-import { FacilityType } from "../../../../../enums/FacilityType";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { useToast } from "@/components/ui/use-toast";
 import { Card } from "primereact/card";
-import { ScrollPanel } from "primereact/scrollpanel";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { BsWrenchAdjustable } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { FacilityLogType } from "../../../../../enums/FacilityLogType";
+import { FacilityType } from "../../../../../enums/FacilityType";
+import beautifyText from "../../../../../hooks/beautifyText";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import Facility from "../../../../../models/Facility";
+import FacilityLog from "../../../../../models/FacilityLog";
+import InHouse from "../../../../../models/InHouse";
 
 interface AllFacilityLogsDatatableProps {
   facilityId: number;
@@ -31,14 +30,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   const apiJson = useApiJson();
   const { facilityId } = props;
   const employee = useAuthContext().state.user?.employeeData;
-  let emptyInHouse: InHouse = {
-    isPaid: false,
-    lastMaintained: new Date(),
-    maxAccommodationSize: 0,
-    hasAirCon: false,
-    facilityType: FacilityType.AED,
-    facilityLogs: []
-  };
+
 
   let emptyFacility: Facility = {
     facilityId: -1,
@@ -46,9 +38,20 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     xCoordinate: 0,
     yCoordinate: 0,
     facilityDetail: "",
-    facilityDetailJson: emptyInHouse,
+    facilityDetailJson: "",
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
+    showOnMap: false
+  };
+
+  let emptyInHouse: InHouse = {
+    isPaid: false,
+    lastMaintained: new Date(),
+    maxAccommodationSize: 0,
+    hasAirCon: false,
+    facilityType: FacilityType.AED,
+    facilityLogs: [],
+    facility: {} as any
   };
 
   let emptyFacilityLog: FacilityLog = {
@@ -58,8 +61,10 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
     title: "",
     details: "",
     remarks: "",
-    facility: emptyFacility,
-    staffName: ""
+    inHouse: emptyInHouse,
+    staffName: "",
+    facilityLogType: FacilityLogType.OPERATION_LOG,
+    generalStaffs: []
   };
 
   const [facilityLogList, setFacilityLogList] = useState<FacilityLog[]>([]);
@@ -210,7 +215,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
           placeholder="Sort By"
           onChange={onSortChange}
         />
-        <span className="p-input-icon-left">
+        {/* <span className="p-input-icon-left">
           <i className="pi pi-search" />
 
           <InputText
@@ -221,17 +226,28 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               setGlobalFilter(target.value);
             }}
           />
-        </span>
+        </span> */}
         {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
+          employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") &&
           <Button className="mr-2"
             onClick={() => {
               navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
-              navigate(`/assetfacility/createfacilitylog/${facilityId}`)
+              navigate(`/assetfacility/createfacilitylog/${facilityId}/MAINTENANCE_LOG`)
             }}
           >
             <HiPlus className="mr-auto" />
-            Add Facility Log
+            Create Maintenance Log
+          </Button>
+        )}
+        {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
+          <Button
+            onClick={() => {
+              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
+              navigate(`/assetfacility/createfacilitylog/${facilityId}/OPERATION_LOG`)
+            }}
+            className="mr-2">
+            <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+            Create Operations Log
           </Button>
         )}
       </div>
@@ -239,21 +255,25 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
   );
 
   const listItem = (facilityLog: FacilityLog) => {
+    console.log(facilityLog)
 
     return (
       <div>
-        <Card className="my-4 relative"
+        <Card
+          // className="my-4 relative"
+          className={(facilityLog.generalStaffs.find(generalStaff => generalStaff.employee?.employeeId == employee.employeeId)) && facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET ? "my-4 relative bg-red-100 border-stroke" : "my-4 relative"}
           title={facilityLog.title}
           subTitle={<div>
             {facilityLog.dateTime ? "Date created: " + new Date(facilityLog.dateTime).toLocaleString() : ""}
             <p></p>{facilityLog.staffName ? "Created by: " + facilityLog.staffName : ""}
+            <p></p>{facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET && facilityLog.generalStaffs
+              ? "Assigned to: " + facilityLog.generalStaffs.map((generalStaff) => " " + generalStaff.employee?.employeeName).toString() : ""}
           </div>
 
           }>
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || facilityLog.staffName == employee.employeeName) &&
             <Button
-
-              className="absolute top-5 right-20"
+              className="absolute top-5 right-35"
               onClick={() => {
                 navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
                 navigate(`/assetfacility/editfacilityLog/${facilityLog.facilityLogId}`)
@@ -262,13 +282,24 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
               <HiPencil className="mx-auto" />
             </Button>}
           {((employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || facilityLog.staffName == employee.employeeName) &&
-            <Button className="absolute top-5 right-5"
+            <Button className="absolute top-5 right-20"
               variant={"destructive"}
               onClick={() => confirmDeletefacilityLog(facilityLog)}
             >
               <HiTrash className="mx-auto" />
             </Button>
           )}
+          {(employee.superAdmin || (facilityLog.generalStaffs.find(generalStaff => generalStaff.employee?.employeeId == employee.employeeId))) && facilityLog.facilityLogType == FacilityLogType.ACTIVE_REPAIR_TICKET &&
+            (
+              <Button
+                onClick={() => {
+                  navigate(`/assetfacility/viewfacilitydetails/${facilityId}/facilityLog`, { replace: true })
+                  navigate(`/assetfacility/completeFacilityRepair/${facilityLog.facilityLogId}`)
+                }}
+                className="absolute top-5 right-5">
+                <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+              </Button>
+            )}
 
           <div className="flex flex-col justify-left gap-6 lg:flex-row lg:gap-12">
             <div>
@@ -282,7 +313,7 @@ function AllFacilityLogsDatatable(props: AllFacilityLogsDatatableProps) {
             </div>
             <div>
               <div className="text-xl font-bold text-900 indent-px">Log Type </div>
-              {(facilityLog.isMaintenance ? "Maintenance Log" : "Operation Log")}
+              {beautifyText(facilityLog.facilityLogType)}
             </div>
           </div>
 

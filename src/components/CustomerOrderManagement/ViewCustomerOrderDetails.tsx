@@ -1,25 +1,17 @@
-import React, { useState, useRef, useEffect } from "react";
-import CustomerOrder from "../../models/CustomerOrder";
-import { Button } from "@/components/ui/button";
-import useApiJson from "../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { Toast } from "primereact/toast";
-import { Dialog } from "primereact/dialog";
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
-import FormFieldSelect from "../FormFieldSelect";
-import * as Form from "@radix-ui/react-form";
 import * as moment from "moment-timezone";
-import OrderItem from "../../models/OrderItem";
+import { useEffect, useState } from "react";
+import useApiJson from "../../hooks/useApiJson";
+import CustomerOrder from "../../models/CustomerOrder";
 import Listing from "../../models/Listing";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
 interface ListingInfo {
@@ -106,16 +98,16 @@ function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
+              <TableCell className="w-1/2 font-bold" colSpan={2}>
                 ID
               </TableCell>
               <TableCell>{curCustomerOrder.customerOrderId}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell className="w-1/3 font-bold" colSpan={2}>
+              <TableCell className="w-1/2 font-bold" colSpan={2}>
                 Booking Reference
               </TableCell>
-              <TableCell className="w-2/3">
+              <TableCell className="w-1/2">
                 {curCustomerOrder.bookingReference}
               </TableCell>
             </TableRow>
@@ -140,7 +132,7 @@ function ViewCustomerOrderDetails(props: CustomerOrderInfoDetailsProps) {
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Order Status
               </TableCell>
-              <TableCell>{curCustomerOrder.orderStatus}</TableCell>
+              <TableCell>{beautifyText(curCustomerOrder.orderStatus)}</TableCell>
             </TableRow> */}
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>

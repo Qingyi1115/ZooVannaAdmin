@@ -1,14 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 
-import { classNames } from "primereact/utils";
-import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
+import { DataTable } from "primereact/datatable";
 
-import useApiJson from "../../../hooks/useApiJson";
 
-import { useToast } from "@/components/ui/use-toast";
+import beautifyText from "../../../hooks/beautifyText";
 import Animal from "../../../models/Animal";
 
 interface AnimalFeedingPlanInvolvedAnimalDatatableProps {
@@ -33,7 +29,7 @@ function AnimalFeedingPlanInvolvedAnimalDatatable(
       <img
         src={"http://localhost:3000/" + rowData.imageUrl}
         alt={rowData.houseName}
-        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        className="aspect-square h-10 w-10 rounded-full border border-white object-cover shadow-4"
       />
     );
   };
@@ -51,18 +47,18 @@ function AnimalFeedingPlanInvolvedAnimalDatatable(
                 status === "NORMAL"
                   ? "flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] text-sm font-bold text-emerald-900"
                   : status === "PREGNANT"
-                  ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
-                  : status === "SICK"
-                  ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
-                  : status === "INJURED"
-                  ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
-                  : status === "OFFSITE"
-                  ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
-                  : status === "RELEASED"
-                  ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
-                  : status === "DECEASED"
-                  ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
-                  : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
+                    ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
+                    : status === "SICK"
+                      ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
+                      : status === "INJURED"
+                        ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
+                        : status === "OFFSITE"
+                          ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
+                          : status === "RELEASED"
+                            ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
+                            : status === "DECEASED"
+                              ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
+                              : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
               }
             >
               {status}
@@ -85,9 +81,9 @@ function AnimalFeedingPlanInvolvedAnimalDatatable(
         // onSelectionChange={(e) =>
         //   setSelectedAnimalToBecomeParent(e.value)
         // }
-        style={{ height: "30vh" }}
+        style={{ height: "35vh" }}
         dataKey="animalCode"
-        className="h-1/2 overflow-hidden rounded border border-graydark/30"
+        className="h-1/2 rounded border border-graydark/30"
       >
         <Column
           field="imageUrl"
@@ -122,6 +118,7 @@ function AnimalFeedingPlanInvolvedAnimalDatatable(
         <Column
           field="growthStage"
           header="Growth Stage"
+          body={(animal: Animal) => beautifyText(animal.growthStage)}
           sortable
           style={{ minWidth: "7rem" }}
         ></Column>

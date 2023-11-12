@@ -1,34 +1,31 @@
-import React, { useEffect, useState, useRef } from "react";
-import { DataView } from "primereact/dataview";
 import { DataTable } from "primereact/datatable";
+import React, { useEffect, useRef, useState } from "react";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import AnimalFeedingLog from "../../../models/AnimalFeedingLog";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import { Card } from "primereact/card";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import Animal from "../../../models/Animal";
-import Species from "../../../models/Species";
+import { Column } from "primereact/column";
+import { DropdownChangeEvent } from "primereact/dropdown";
+import { useNavigate } from "react-router-dom";
 import {
-  AnimalSex,
   AcquisitionMethod,
   AnimalGrowthStage,
+  AnimalSex,
   KeeperType,
   Specialization,
 } from "../../../enums/Enumurated";
-import { Rating } from "../../../enums/Rating";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import Animal from "../../../models/Animal";
+import AnimalFeedingLog from "../../../models/AnimalFeedingLog";
 import Employee from "../../../models/Employee";
-import { Column } from "primereact/column";
+import FeedingPlan from "../../../models/FeedingPlan";
 import Keeper from "../../../models/Keeper";
+import Species from "../../../models/Species";
 
 interface AllAnimalFeedingLogsDatatableProps {
   speciesCode: string;
@@ -41,6 +38,7 @@ function AllAnimalFeedingLogsDatatable(
   const apiJson = useApiJson();
   const { speciesCode, animalCode } = props;
   const employee = useAuthContext().state.user?.employeeData;
+
   let emptySpecies: Species = {
     speciesId: -1,
     speciesCode: "",
@@ -114,13 +112,28 @@ function AllAnimalFeedingLogsDatatable(
     employee: emptyEmployee,
   };
 
+  let emptyFeedingPlan: FeedingPlan = {
+    feedingPlanId: -1,
+    feedingPlanDesc: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    animals: [],
+    feedingPlanSessionDetails: [],
+    title: "",
+  };
+
   let emptyAnimalFeedingLog: AnimalFeedingLog = {
     animalFeedingLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    details: "",
+    amountOffered: "",
+    amountConsumed: "",
+    amountLeftovers: "",
+    presentationMethod: "",
+    extraRemarks: "",
     animals: [],
     keeper: emptyKeeper,
+    feedingPlan: emptyFeedingPlan,
   };
 
   const [animalFeedingLogList, setAnimalFeedingLogList] = useState<
@@ -152,7 +165,7 @@ function AllAnimalFeedingLogsDatatable(
     dt.current?.exportCSV();
   };
 
-  const confirmDeleteanimalFeedingLog = (
+  const confirmDeleteAnimalFeedingLog = (
     animalFeedingLog: AnimalFeedingLog
   ) => {
     setSelectedAnimalFeedingLog(animalFeedingLog);
@@ -232,21 +245,19 @@ function AllAnimalFeedingLogsDatatable(
         >
           <HiEye className="mx-auto" />
         </Button>
-        {/* <Button
-          className="mr-1"
-          onClick={() => {
-            navigate(`/animal/viewAnimalDetails/${animalCode}/feedinglogs`, { replace: true })
-            navigate(`/animal/editAnimalFeedingLog/${animalFeedingLog.animalFeedingLogId}`)
-          }}>
-          <HiPencil className="mr-1" />
-        </Button> */}
-        <Button
-          variant={"destructive"}
-          className="mr-2"
-          onClick={() => confirmDeleteanimalFeedingLog(animalFeedingLog)}
-        >
-          <HiTrash className="mx-auto" />
-        </Button>
+
+        {(animalFeedingLog.keeper.employee.employeeName ==
+          employee.employeeName ||
+          employee.superAdmin ||
+          employee.planningStaff?.plannerType == "CURATOR") && (
+          <Button
+            variant={"destructive"}
+            className="mr-2"
+            onClick={() => confirmDeleteAnimalFeedingLog(animalFeedingLog)}
+          >
+            <HiTrash className="mx-auto" />
+          </Button>
+        )}
       </React.Fragment>
     );
   };
@@ -307,88 +318,31 @@ function AllAnimalFeedingLogsDatatable(
             }}
           />
         </span>
+        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
+          <Button
+            className="mr-2"
+            onClick={() => {
+              navigate(`/animal/viewAnimalDetails/${animalCode}/feedinglogs`, {
+                replace: true,
+              });
+              navigate(`/animal/createAnimalFeedingLog/${speciesCode}`);
+            }}
+          >
+            <HiPlus className="mr-auto" />
+            Add Animal Feeding Log
+          </Button>
+        )}
+        <Button onClick={exportCSV}>Export to .csv</Button>
       </div>
     </div>
   );
-
-  const listItem = (animalFeedingLog: AnimalFeedingLog) => {
-    return (
-      <div>
-        <Card
-          className="relative my-4"
-          title={animalFeedingLog.animalFeedingLogId}
-          subTitle={
-            animalFeedingLog.dateTime
-              ? "Date created: " +
-                new Date(animalFeedingLog.dateTime).toLocaleString()
-              : ""
-          }
-        >
-          {/* {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && 
-          <Button className="absolute top-5 right-5"
-            variant={"destructive"}
-            onClick={() => confirmDeleteanimalFeedingLog(animalFeedingLog)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
-          )} */}
-          <div className="justify-left flex flex-col gap-6 lg:flex-row lg:gap-12">
-            <div>
-              <div className="text-900 text-xl font-bold">
-                Duration In Minutes
-              </div>
-              <p>{animalFeedingLog.durationInMinutes}</p>
-            </div>
-            <Separator orientation="vertical" />
-            <div>
-              <div className="text-900 text-xl font-bold">Details</div>
-              <p>{animalFeedingLog.details}</p>
-            </div>
-          </div>
-        </Card>
-      </div>
-    );
-  };
-
-  const itemTemplate = (animalFeedingLog: AnimalFeedingLog) => {
-    if (!animalFeedingLog) {
-      return;
-    }
-    return listItem(animalFeedingLog);
-  };
 
   return (
     <div>
       <div>
         <Toast ref={toast} />
         <div className="">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              {employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-              employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS" ? (
-                <Button
-                  className="mr-2"
-                  onClick={() => {
-                    navigate(
-                      `/animal/viewAnimalDetails/${animalCode}/feedinglogs`,
-                      { replace: true }
-                    );
-                    navigate(`/animal/createAnimalFeedingLog/${speciesCode}`);
-                  }}
-                >
-                  <HiPlus className="mr-auto" />
-                  Add Animal Feeding Log
-                </Button>
-              ) : (
-                <Button disabled className="invisible">
-                  Add Log
-                </Button>
-              )}
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
           <DataTable
             ref={dt}
             value={animalFeedingLogList}
@@ -405,7 +359,7 @@ function AllAnimalFeedingLogsDatatable(
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} facilities"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal feeding logs"
             globalFilter={globalFilter}
             header={header}
           >
@@ -434,8 +388,38 @@ function AllAnimalFeedingLogsDatatable(
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
-              field="details"
-              header="Details"
+              field="amountOffered"
+              header="Amount Offered"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="amountConsumed"
+              header="Amount Consumed"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="amountLeftovers"
+              header="Amount Leftovers"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="presentationMethod"
+              header="Presentation Method"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="extraRemarks"
+              header="Extra Remarks"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="keeper.employee.employeeName"
+              header="Keeper"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -446,16 +430,7 @@ function AllAnimalFeedingLogsDatatable(
               style={{ display: "none" }}
               filter
               filterPlaceholder="Search by animal code"
-            ></Column>
-            <Column
-              // body={(animalFeedingLog) => {
-              //   return animalFeedingLog.keeper.employeeId;
-              // }}
-              field="keeper.employee.employeeName"
-              header="Keeper"
-              sortable
-              style={{ minWidth: "12rem" }}
-            ></Column> */}
+            ></Column>*/}
             <Column
               body={actionBodyTemplate}
               header="Actions"

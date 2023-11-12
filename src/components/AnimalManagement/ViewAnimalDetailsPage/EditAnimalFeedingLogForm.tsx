@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import React, { useEffect, useState } from "react";
 
 
-import FormFieldInput from "../../FormFieldInput";
-import useApiJson from "../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../../FormFieldSelect";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import AnimalFeedingLog from "../../../models/AnimalFeedingLog";
+import { useToast } from "@/components/ui/use-toast";
+import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import Animal from "../../../models/Animal";
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
-import { set } from "date-fns";
+import AnimalFeedingLog from "../../../models/AnimalFeedingLog";
+import FormFieldInput from "../../FormFieldInput";
 
 interface EditAnimalFeedingLogFormProps {
   curAnimalFeedingLog: AnimalFeedingLog
@@ -25,7 +22,11 @@ function EditAnimalFeedingLogForm(props: EditAnimalFeedingLogFormProps) {
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
-  const [details, setDetails] = useState<string>(""); // text input
+  const [amountOffered, setAmountOffered] = useState<string>(""); // text input
+  const [amountConsumed, setAmountConsumed] = useState<string>(""); // text input
+  const [amountLeftovers, setAmountLeftovers] = useState<string>(""); // text input
+  const [presentationMethod, setPresentationMethod] = useState<string>(""); // text input
+  const [extraRemarks, setExtraRemarks] = useState<string>(""); // text input
   const { curAnimalFeedingLog } = props;
   const [dateTime, setDateTime] = useState<
     string | Date | Date[] | null
@@ -46,7 +47,11 @@ function EditAnimalFeedingLogForm(props: EditAnimalFeedingLogFormProps) {
 
   useEffect(() => {
     setDurationInMinutes(String(curAnimalFeedingLog.durationInMinutes))
-    setDetails(curAnimalFeedingLog.details);
+    setAmountOffered(curAnimalFeedingLog.amountOffered);
+    setAmountConsumed(curAnimalFeedingLog.amountConsumed);
+    setAmountLeftovers(curAnimalFeedingLog.amountLeftovers);
+    setPresentationMethod(curAnimalFeedingLog.presentationMethod);
+    setExtraRemarks(curAnimalFeedingLog.extraRemarks);
     setDateTime(new Date(curAnimalFeedingLog.dateTime))
     console.log(curAnimalFeedingLog.animals);
 
@@ -73,8 +78,12 @@ function EditAnimalFeedingLogForm(props: EditAnimalFeedingLogFormProps) {
     const newAnimalFeedingLog = {
       dateTime: dateTime,
       durationInMinutes: durationInMinutes,
-      details: details,
-      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
+      amountOffered: amountOffered,
+      amountConsumed: amountConsumed,
+      amountLeftovers: amountLeftovers,
+      presentationMethod: presentationMethod,
+      extraRemarks: extraRemarks,
+      // animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalFeedingLog);
 
@@ -115,7 +124,7 @@ function EditAnimalFeedingLogForm(props: EditAnimalFeedingLogFormProps) {
             <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
               Back
             </Button>
-            <span className="self-center text-lg text-graydark">
+            <span className="self-center text-title-xl font-bold">
               Edit Animal Feeding Log
             </span>
             <Button disabled className="invisible">
@@ -151,27 +160,142 @@ function EditAnimalFeedingLogForm(props: EditAnimalFeedingLogFormProps) {
           pattern={undefined}
         />
 
-        {/* Details */}
-        <FormFieldInput
-          type="text"
-          formFieldName="details"
-          label="Details"
-          required={true}
-          placeholder=""
-          value={details}
-          setValue={setDetails}
-          validateFunction={validateAnimalFeedingLogName}
-          pattern={undefined}
-        />
+        {/* Amount Offered */}
+        <Form.Field
+          name="amountOffered"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">
+            Amount Offered
+          </Form.Label>
+          <Form.Control
+            asChild
+            value={amountOffered}
+            required={true}
+            onChange={(e) => setAmountOffered(e.target.value)}
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+          >
+            <textarea
+              rows={6}
+              placeholder="eg: 2kg beef offered to Pang Pang,... 3kg xyz offered to......."
+            />
+          </Form.Control>
+          <Form.ValidityState>
+            {validateAnimalFeedingLogName}
+          </Form.ValidityState>
+        </Form.Field>
+
+        {/* Amount Consumed */}
+        <Form.Field
+          name="amountConsumed"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">
+            Amount Consumed
+          </Form.Label>
+          <Form.Control
+            asChild
+            value={amountConsumed}
+            required={true}
+            onChange={(e) => setAmountConsumed(e.target.value)}
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+          >
+            <textarea
+              rows={6}
+              placeholder="eg: 2kg beef consumed by Pang Pang,... 3kg xyz consumed by..."
+            />
+          </Form.Control>
+          <Form.ValidityState>
+            {validateAnimalFeedingLogName}
+          </Form.ValidityState>
+        </Form.Field>
+
+        {/* Amount Leftovers */}
+        <Form.Field
+          name="amountLeftovers"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">
+            Amount Leftovers
+          </Form.Label>
+          <Form.Control
+            asChild
+            value={amountLeftovers}
+            required={true}
+            onChange={(e) => setAmountLeftovers(e.target.value)}
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+          >
+            <textarea
+              rows={6}
+              placeholder="eg: 2kg beef left over...."
+            />
+          </Form.Control>
+          <Form.ValidityState>
+            {validateAnimalFeedingLogName}
+          </Form.ValidityState>
+        </Form.Field>
+
+        {/* Presentation Method */}
+        <Form.Field
+          name="presentationMethod"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">
+            Presentation Method
+          </Form.Label>
+          <Form.Control
+            asChild
+            value={presentationMethod}
+            required={true}
+            onChange={(e) => setPresentationMethod(e.target.value)}
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+          >
+            <textarea
+              rows={6}
+              placeholder="Presentation methods..."
+            />
+          </Form.Control>
+          <Form.ValidityState>
+            {validateAnimalFeedingLogName}
+          </Form.ValidityState>
+        </Form.Field>
+
+        {/* Extra Remarks */}
+        <Form.Field
+          name="extraRemarks"
+          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+        >
+          <Form.Label className="font-medium">
+            Extra Remarks
+          </Form.Label>
+          <Form.Control
+            asChild
+            value={extraRemarks}
+            required={true}
+            onChange={(e) => setExtraRemarks(e.target.value)}
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+          >
+            <textarea
+              rows={6}
+              placeholder="Additional remarks..."
+            />
+          </Form.Control>
+          <Form.ValidityState>
+            {validateAnimalFeedingLogName}
+          </Form.ValidityState>
+        </Form.Field>
+
         {/* Animals */}
-        <MultiSelect
+        {/* <MultiSelect
           value={selectedAnimals}
           onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
           options={curAnimalList}
           optionLabel="houseName"
           filter
           placeholder="Select Animals"
-          className="w-full md:w-20rem" />
+          className="w-full md:w-20rem" /> */}
+
+
         <Form.Submit asChild>
           <Button
             disabled={apiJson.loading}

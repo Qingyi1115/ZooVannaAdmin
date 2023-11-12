@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import * as Form from "@radix-ui/react-form";
-import FormFieldRadioGroup from "../../../../FormFieldRadioGroup";
-import FormFieldInput from "../../../../FormFieldInput";
-import FormFieldSelect from "../../../../FormFieldSelect";
-import useApiJson from "../../../../../hooks/useApiJson";
-import useApiFormData from "../../../../../hooks/useApiFormData";
-import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import Sensor from "../../../../../models/Sensor";
+import { useToast } from "@/components/ui/use-toast";
+import * as Form from "@radix-ui/react-form";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../../../hooks/useApiJson";
 import { useAuthContext } from "../../../../../hooks/useAuthContext";
+import Sensor from "../../../../../models/Sensor";
+import FormFieldInput from "../../../../FormFieldInput";
 
 interface CreateNewMaintenanceLogProps {
   curSensor: Sensor;
@@ -60,8 +57,8 @@ function CreateNewMaintenanceLogForm(props: CreateNewMaintenanceLogProps) {
         description: "Successfully created sensor maintenance log",
       });
       (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")
-        ? navigate(-1)
-        : navigate("/assetfacility/maintenance/sensorMaintenance");
+        ? navigate("/assetfacility/maintenance/sensorMaintenance")
+        : navigate(-1);
       console.log(responseJson);
     } catch (error: any) {
       toastShadcn({

@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import { useParams } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
-import useApiJson from "../../hooks/useApiJson";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import useApiJson from "../../hooks/useApiJson";
 import Species from "../../models/Species";
 
-import { DataTable, DataTableExpandedRows } from "primereact/datatable";
-import { Column } from "primereact/column";
-import FeedingPlan from "../../models/FeedingPlan";
 import AllAnimalFeedingPlansDatatable from "../../components/AnimalManagement/AnimalFeedingPlanHomePage.tsx/AllAnimalFeedingPlansDatatable";
+import FeedingPlan from "../../models/FeedingPlan";
 
 function AnimalFeedingPlanHomePage() {
   const apiJson = useApiJson();
@@ -84,17 +81,20 @@ function AnimalFeedingPlanHomePage() {
         </div>
 
         {/*  */}
-        <Button
+        {/* <Button
           onClick={() => navigate(`/animal/createfeedingplan/${speciesCode}`)}
           className=""
         >
           Create New Feeding Plan
-        </Button>
+        </Button> */}
         <div>
-          <AllAnimalFeedingPlansDatatable
-            feedingPlansList={feedingPlansList}
-            setFeedingPlansList={setFeedingPlansList}
-          />
+          {speciesCode && (
+            <AllAnimalFeedingPlansDatatable
+              feedingPlansList={feedingPlansList}
+              setFeedingPlansList={setFeedingPlansList}
+              speciesCode={speciesCode}
+            />
+          )}
         </div>
       </div>
     </div>

@@ -1,37 +1,23 @@
-import React, { useEffect, useState, useRef } from "react";
-import useApiJson from "../../../hooks/useApiJson";
+import React, { useRef, useState } from "react";
 import {
-  AnimalFeedCategory,
-  AnimalGrowthStage,
-  AnimalGrowthState,
-  PresentationContainer,
-  PresentationLocation,
-  PresentationMethod,
+  AnimalGrowthStage
 } from "../../../enums/Enumurated";
+import useApiJson from "../../../hooks/useApiJson";
 
-import { classNames } from "primereact/utils";
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
-import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
-import SpeciesDietNeed from "../../../models/SpeciesDietNeed";
 
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import Species from "../../../models/Species";
+import { NavLink, useNavigate } from "react-router-dom";
+import beautifyText from "../../../hooks/beautifyText";
 import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
-import { useNavigate } from "react-router-dom";
+import Species from "../../../models/Species";
 
 interface PhysioRefNormDatatableProps {
   physiologicalRefNormsList: PhysiologicalReferenceNorms[];
@@ -97,7 +83,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deletePhysiologicalReferenceNorms/" +
-            selectedPhysioRefNorm?.physiologicalRefId
+          selectedPhysioRefNorm?.physiologicalRefId
         );
 
         toastShadcn({
@@ -209,6 +195,7 @@ function PhysioRefNormDatatable(props: PhysioRefNormDatatableProps) {
         <Column
           field="growthStage"
           header="Growth Stage"
+          body={(physiologicalReferenceNorm: PhysiologicalReferenceNorms) => beautifyText(physiologicalReferenceNorm.growthStage)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>

@@ -1,15 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Animal from "../../../models/Animal";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
@@ -19,31 +10,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import SpeciesCard from "./SpeciesCard";
-import EnclosureCard from "./EnclosureCard";
-import AnimalWeightDatatable from "./AnimalWeightDatatable";
 
-import useApiJson from "../../../hooks/useApiJson";
 import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
 
-import { Chart } from "primereact/chart";
-import { useToast } from "@/components/ui/use-toast";
-import PhysiologicalReferenceNorms from "../../../models/PhysiologicalReferenceNorms";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
-import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
 
 // import "@fullcalendar/common/main.css";
 // import "@fullcalendar/daygrid/main.css";
 // import "@fullcalendar/timegrid/main.css";
 
-import AnimalActivity from "../../../models/AnimalActivity";
-import { HiChevronLeft } from "react-icons/hi";
 import { EventContentArg, EventInput } from "@fullcalendar/core";
+import AnimalActivity from "../../../models/AnimalActivity";
 
 interface AnimalActivityInfoProps {
   curAnimal: Animal;
@@ -173,6 +155,14 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
             details: animalActivity.details,
             durationInMinutes: animalActivity.durationInMinutes,
           },
+          classNames:
+            animalActivity.activityType == "TRAINING"
+              ? ["training overflow-hidden"]
+              : animalActivity.activityType == "ENRICHMENT"
+              ? ["enrichment overflow-hidden"]
+              : animalActivity.activityType == "OBSERVATION"
+              ? ["observation overflow-hidden"]
+              : [],
         };
       });
       return eventsToReturn;
@@ -232,64 +222,80 @@ function AnimalActivityInfo(props: AnimalActivityInfoProps) {
     <div>
       <div className="flex w-full justify-center">
         <div className="w-full">
-          <div className="mb-2 flex justify-end gap-2">
-            {/* Month selection control */}
-            <Select
-              value={currentMonth.toString()}
-              onValueChange={(value) => setCurrentMonth(parseInt(value))}
-            >
-              <SelectTrigger className="w-36 border-none bg-primary text-primary-foreground">
-                <SelectValue placeholder="Month" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Months</SelectLabel>
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <SelectItem key={i} value={i.toString()}>
-                      {new Date(currentYear, i, 1).toLocaleDateString(
-                        "default",
-                        {
-                          month: "long",
-                        }
-                      )}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            {/* Year selection control */}
-            <Select
-              value={currentYear.toString()}
-              onValueChange={(value) => setCurrentYear(parseInt(value))}
-            >
-              <SelectTrigger className="w-36 border-none bg-primary text-primary-foreground">
-                <SelectValue placeholder="Month" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Months</SelectLabel>
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <SelectItem key={i} value={i.toString()}>
-                      {new Date(currentYear, i, 1).toLocaleDateString(
-                        "default",
-                        {
-                          month: "long",
-                        }
-                      )}
-                    </SelectItem>
-                  ))}
-                  {Array.from({ length: 10 }, (_, i) => (
-                    <SelectItem
-                      key={i}
-                      value={(new Date().getFullYear() + i).toString()}
-                    >
-                      {new Date().getFullYear() + i}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+          <div className="flex justify-between">
+            <div className="mb-1 flex items-center gap-4 rounded border border-strokedark/20 px-4 text-sm">
+              <span>Legend: </span>
+              <div className="flex items-center gap-2 text-[#0f3360]">
+                <div className="h-5 w-5 rounded bg-[#0f3360]" />
+                <span className="font-bold">Observation</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#6c0063]">
+                <div className="h-5 w-5 rounded bg-[#6c0063]" />
+                <span className="font-bold">Training</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#976405]">
+                <div className="h-5 w-5 rounded bg-[#976405]" />
+                <span className="font-bold">Enrichment</span>
+              </div>
+            </div>
+            <div className="mb-2 flex justify-end gap-2">
+              {/* Month selection control */}
+              <Select
+                value={currentMonth.toString()}
+                onValueChange={(value) => setCurrentMonth(parseInt(value))}
+              >
+                <SelectTrigger className="w-36 border-none bg-primary text-primary-foreground">
+                  <SelectValue placeholder="Month" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Months</SelectLabel>
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <SelectItem key={i} value={i.toString()}>
+                        {new Date(currentYear, i, 1).toLocaleDateString(
+                          "default",
+                          {
+                            month: "long",
+                          }
+                        )}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {/* Year selection control */}
+              <Select
+                value={currentYear.toString()}
+                onValueChange={(value) => setCurrentYear(parseInt(value))}
+              >
+                <SelectTrigger className="w-36 border-none bg-primary text-primary-foreground">
+                  <SelectValue placeholder="Month" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Months</SelectLabel>
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <SelectItem key={i} value={i.toString()}>
+                        {new Date(currentYear, i, 1).toLocaleDateString(
+                          "default",
+                          {
+                            month: "long",
+                          }
+                        )}
+                      </SelectItem>
+                    ))}
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <SelectItem
+                        key={i}
+                        value={(new Date().getFullYear() + i).toString()}
+                      >
+                        {new Date().getFullYear() + i}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           <FullCalendar
             ref={calendarRef}

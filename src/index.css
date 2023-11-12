@@ -39,8 +39,10 @@
   }
 
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 
   .scrollbar-gutter {
@@ -50,6 +52,7 @@
   .chat-height {
     @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
   }
+
   .inbox-height {
     @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
   }
@@ -61,14 +64,111 @@
   border: 1px solid #84985a;
   transition: background-color 0.3s ease;
 }
+
+.fc-event.observation,
+.fc-v-event.observation {
+  background-color: #0f3360;
+  border: 1px solid #0f3360;
+}
+
+.fc-event.training,
+.fc-v-event.training {
+  background-color: #6c0063;
+  border: 1px solid #6c0063;
+}
+
+.fc-event.cusfeeding,
+.fc-v-event.cusfeeding {
+  background-color: #087e8b;
+  border: 1px solid #087e8b;
+}
+
+.fc-event.empfeeding,
+.fc-v-event.empfeeding {
+  background-color: #cc5a71;
+  border: 1px solid #cc5a71;
+}
+
+.fc-event.enrichment,
+.fc-v-event.enrichment {
+  background-color: #976405;
+  border: 1px solid #976405;
+}
+
+.fc-event.empAbs,
+.fc-v-event.empAbs {
+  background-color: #494249;
+  border: 1px solid #0e383d;
+}
+
 /* 
 .fc-event:hover,
 .fc-v-event:hover {
   background-color: rgba(132, 152, 90, 0.9);
 } */
+/* below "background" changes hover color for full calendar event pill */
 .fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event:hover {
   background: #84985a95;
   color: #24341c;
+  cursor: pointer;
+}
+
+/* Hover state styles for pills with the "observation" class */
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.observation:hover {
+  background: #0f336060;
+  /* Adjust the color and opacity as needed */
+  color: #24341c;
+  cursor: pointer;
+}
+
+/* Hover state styles for pills with the "training" class */
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.training:hover {
+  background: #6c0063;
+  /* Adjust the color and opacity as needed */
+  color: #24341c;
+  cursor: pointer;
+}
+
+/* Hover state styles for pills with the "enrichment" class */
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.enrichment:hover {
+  background: #97640560;
+  /* Adjust the color and opacity as needed */
+  color: #24341c;
+  cursor: pointer;
+}
+
+/* Hover state styles for pills with the "enrichment" class */
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.cusfeeding:hover {
+  background: #4000ff60;
+  /* Adjust the color and opacity as needed */
+  color: #24341c;
+  cursor: pointer;
+}
+
+/* Hover state styles for pills with the "enrichment" class */
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.empfeeding:hover {
+  background: #960069;
+  /* Adjust the color and opacity as needed */
+  color: #24341c;
+  cursor: pointer;
+}
+
+.fc.fc-theme-standard
+  .fc-view-harness
+  .fc-event.fc-daygrid-dot-event.empAbs:hover {
+  background: #00000060;
+  /* Adjust the color and opacity as needed */
+  color: #57eb0e;
   cursor: pointer;
 }
 
@@ -80,19 +180,25 @@
 
 .p-picklist-source-controls,
 .p-picklist-target-controls {
-  background-color: #ffffff; /* Set desired background color */
-  color: #f5f9f1; /* Set text color */
+  background-color: #ffffff;
+  /* Set desired background color */
+  color: #f5f9f1;
+  /* Set text color */
 }
 
 /* Style the buttons */
 .p-picklist-buttons button {
-  background-color: #84985a; /* Set desired button background color */
-  color: #f7fdf5; /* Set button text color */
+  background-color: #84985a;
+  /* Set desired button background color */
+  color: #f7fdf5;
+  /* Set button text color */
 
   transition: background-color 0.2s;
 }
+
 .p-picklist-buttons button:hover {
-  background-color: #ff000080; /* Set desired hover background color */
+  background-color: #ff000080;
+  /* Set desired hover background color */
 }
 
 /* Leaflet Map */
@@ -102,11 +208,20 @@
   background-color: #f7fdf5;
   /* background-color: red; */
 }
+
 .leaflet-control {
   z-index: 0 !important;
 }
+
 .leaflet-pane {
   z-index: 0 !important;
+}
+
+.selected-icon {
+  /* Define the styles for selected markers here */
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+  filter: invert(7%) sepia(92%) saturate(4329%) hue-rotate(343deg)
+    brightness(91%) contrast(94%);
 }
 
 /* animations */
@@ -114,6 +229,7 @@
   from {
     height: 0;
   }
+
   to {
     height: var(--radix-accordion-content-height);
   }
@@ -123,6 +239,7 @@
   from {
     height: var(--radix-accordion-content-height);
   }
+
   to {
     height: 0;
   }

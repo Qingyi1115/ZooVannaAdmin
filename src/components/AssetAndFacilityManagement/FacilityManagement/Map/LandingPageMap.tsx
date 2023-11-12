@@ -1,20 +1,15 @@
 import L, {
-  CRS,
   LatLng,
   LatLngBounds,
-  LatLngBoundsLiteral,
-  LatLngExpression,
+  LatLngExpression
 } from "leaflet";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
+  ImageOverlay,
   MapContainer,
   Marker,
-  Popup,
-  useMap,
-  useMapEvents,
-  ImageOverlay,
-  TileLayer,
+  TileLayer
 } from "react-leaflet";
 import Facility from "../../../../models/Facility";
 
@@ -33,109 +28,85 @@ const backgroundbounds: LatLngBounds = new LatLngBounds(
 );
 
 // map icons
-function iconFunction(facilityType: string) {
-  console.log("facil type icon: " + facilityType);
+function iconFunction(selected: boolean, facilityType: string) {
+  let iconUrl = `../../../../../src/assets/mapicons/1.png`;
   switch (facilityType) {
     case "INFORMATION_CENTRE":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/1.png`;
+      break;
     case "ZOO_DIRECTORY":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/3.png`;
+      break;
     case "AMPHITHEATRE":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/4.png`;
+      break;
+
     case "GAZEBO":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/5.png`;
+      break;
+
     case "AED":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/6.png`;
+      break;
+
     case "RESTROOM":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/7.png`;
+      break;
+
     case "NURSERY":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/8.png`;
+      break;
+
     case "FIRST_AID":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/9.png`;
+      break;
     case "BENCHES":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/10.png`;
+      break;
     case "PLAYGROUND":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/11.png`;
+      break;
     case "TRAMSTOP":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/13.png`;
+      break;
     case "PARKING":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/14.png`;
+      break;
     case "RESTAURANT":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/15.png`;
+      break;
     case "SHOP_SOUVENIR":
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/16.png`;
+      break;
     default:
-      return new L.Icon({
-        iconUrl: "../../../../src/assets/mapicons/parking.png",
-        iconSize: [31, 40],
-        iconAnchor: [15, 40],
-      });
+      iconUrl = `../../../../../src/assets/mapicons/17.png`;
+      break;
   }
-  // return new L.Icon({
-  //   iconUrl: "../../../../src/assets/mapicons/parking.png",
-  //   iconSize: [31, 40],
-  //   iconAnchor: [15, 40],
-  // });
+
+  if (selected) {
+    return new L.Icon({
+      iconUrl,
+      iconSize: [50, 51], // Adjust the size as needed
+      iconAnchor: [20, 50],
+      className: "selected-icon", // Add your custom class
+      // Additional selected marker styles
+    });
+  }
+
+  return new L.Icon({
+    iconUrl,
+    iconSize: [40, 41], // Adjust the size as needed
+    iconAnchor: [15, 40], // Adjust the anchor point as needed
+    // Additional selected marker styles
+  });
 }
 
+interface FacilityWithSelected extends Facility {
+  selected: boolean;
+}
 interface LandingPageMapProps {
-  facilityList: Facility[];
+  facilityList: FacilityWithSelected[];
+  setFacilityList: any;
   selectedFacility: Facility | null;
   setSelectedFacility: any;
   setIsShownOnMap: any;
@@ -147,11 +118,22 @@ function LandingPageMap(props: LandingPageMapProps) {
     lng: number;
   } | null>(null);
 
-  const { facilityList, setSelectedFacility, setIsShownOnMap } = props;
+  const {
+    facilityList,
+    setFacilityList,
+    setSelectedFacility,
+    setIsShownOnMap,
+  } = props;
 
-  function handleMarkerClick(facility: Facility) {
-    setSelectedFacility(facility);
-    setIsShownOnMap(facility.showOnMap);
+  function handleMarkerClick(selectedFacility: FacilityWithSelected) {
+    const tempFacilityList = facilityList.map((facility) =>
+      facility.facilityId === selectedFacility.facilityId
+        ? { ...facility, selected: !facility.selected }
+        : { ...facility, selected: false }
+    );
+    setSelectedFacility(selectedFacility);
+    setIsShownOnMap(selectedFacility.showOnMap);
+    setFacilityList(tempFacilityList);
   }
 
   return (
@@ -206,7 +188,10 @@ function LandingPageMap(props: LandingPageMapProps) {
           {facilityList.map((facility, idx) => (
             <Marker
               key={`marker-${idx}`}
-              icon={iconFunction(facility.facilityDetailJson.facilityType)}
+              icon={iconFunction(
+                facility.selected,
+                facility.facilityDetailJson.facilityType
+              )}
               eventHandlers={{
                 click: () => handleMarkerClick(facility),
                 // mouseover: onHoverMarker,

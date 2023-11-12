@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import EditSensorForm from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/EditSensorForm";
-import useApiJson from "../../../hooks/useApiJson";
-import Sensor from "../../../models/Sensor";
-import { SensorType } from "../../../enums/SensorType";
-import Hub from "../../../models/Hub";
-import Facility from "../../../models/Facility";
 import { HubStatus } from "../../../enums/HubStatus";
+import { SensorType } from "../../../enums/SensorType";
+import useApiJson from "../../../hooks/useApiJson";
+import Facility from "../../../models/Facility";
+import Hub from "../../../models/HubProcessor";
+import Sensor from "../../../models/Sensor";
 
 function EditSensorPage() {
   const apiJson = useApiJson();

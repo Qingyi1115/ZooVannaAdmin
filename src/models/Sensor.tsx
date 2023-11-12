@@ -1,8 +1,8 @@
 import { SensorType } from "src/enums/SensorType";
-import Hub from "./Hub";
-import SensorReading from "./SensorReading";
-import Employee from "./Employee";
+import GeneralStaff from "./GeneralStaff";
+import HubProcessor from "./HubProcessor";
 import MaintenanceLog from "./MaintenanceLog";
+import SensorReading from "./SensorReading";
 
 interface Sensor {
     sensorId: number;
@@ -10,9 +10,9 @@ interface Sensor {
     dateOfActivation: Date | null;
     dateOfLastMaintained: Date | null;
     sensorType: SensorType,
-    hub: Hub
+    hubProcessor: HubProcessor
     sensorReadings: SensorReading[]
     maintenanceLogs: MaintenanceLog[],
-    generalStaff: Employee[]
+    generalStaff: GeneralStaff
 }
 export default Sensor;

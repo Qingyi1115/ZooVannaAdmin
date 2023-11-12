@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
 
 import { Button } from "@/components/ui/button";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import AddSensorMaintenanceStaff from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/GeneralStaff/ManageSensorMaintenanceStaff";
+import AllMaintenanceLogsDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/AllMaintenanceLogsDatatable";
+import AllSensorReadingDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/SensorReadings/AllSensorReadingsDatatable";
 import ViewSensorDetails from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/ViewSensorDetails";
-import Hub from "../../../models/Hub";
 import { HubStatus } from "../../../enums/HubStatus";
 import { SensorType } from "../../../enums/SensorType";
-import Sensor from "../../../models/Sensor";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AllSensorReadingDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/SensorReadings/AllSensorReadingsDatatable";
-import AllMaintenanceLogsDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/MaintenanceLogs/AllMaintenanceLogsDatatable";
 import { useAuthContext } from "../../../hooks/useAuthContext";
-import AddSensorMaintenanceStaff from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/GeneralStaff/AddSensorMaintenanceStaff";
+import Hub from "../../../models/HubProcessor";
+import Sensor from "../../../models/Sensor";
 
 function ViewSensorDetailsPage() {
   const apiJson = useApiJson();
@@ -67,7 +67,8 @@ function ViewSensorDetailsPage() {
   useEffect(() => {
     apiJson.post(
       `http://localhost:3000/api/assetFacility/getSensor/${sensorId}`,
-      { includes: ["hubProcessor", "maintenanceLogs", "generalStaff"] }).then(res => {
+      { includes: ["hubProcessor", "generalStaff"] }).then(res => {
+        console.log("res",res)
         setCurSensor(res.sensor as Sensor);
       }).catch(e => console.log(e));
   }, []);

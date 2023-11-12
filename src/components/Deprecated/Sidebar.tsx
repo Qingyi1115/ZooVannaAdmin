@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { NavLink, useLocation } from "react-router-dom";
 
 import * as Accordion from "@radix-ui/react-accordion";
 import { HiChevronDown } from "react-icons/hi";

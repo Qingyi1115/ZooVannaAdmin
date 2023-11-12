@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useApiJson from "../../hooks/useApiJson";
-import { Rating } from "../../enums/Rating";
 import EditAnimalObservationLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalObservationLogForm";
+<<<<<<< HEAD
 import {
   AnimalSex,
   AcquisitionMethod,
@@ -10,12 +9,17 @@ import {
   KeeperType,
   Specialization,
 } from "../../enums/Enumurated";
+=======
+import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, KeeperType, Specialization } from "../../enums/Enumurated";
+import { Rating } from "../../enums/Rating";
+import useApiJson from "../../hooks/useApiJson";
+>>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
 import AnimalObservationLog from "../../models/AnimalObservationLog";
 import Employee from "../../models/Employee";
-import Species from "../../models/Species";
 import Keeper from "../../models/Keeper";
+import Species from "../../models/Species";
 
 function EditAnimalObservationLogPage() {
   const apiJson = useApiJson();

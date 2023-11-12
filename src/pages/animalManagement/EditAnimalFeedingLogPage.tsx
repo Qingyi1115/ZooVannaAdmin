@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useApiJson from "../../hooks/useApiJson";
-import { Rating } from "../../enums/Rating";
 import EditAnimalFeedingLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalFeedingLogForm";
+<<<<<<< HEAD
 import {
   AnimalSex,
   AcquisitionMethod,
@@ -10,12 +9,17 @@ import {
   KeeperType,
   Specialization,
 } from "../../enums/Enumurated";
+=======
+import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, KeeperType, Specialization } from "../../enums/Enumurated";
+import useApiJson from "../../hooks/useApiJson";
+>>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
 import AnimalFeedingLog from "../../models/AnimalFeedingLog";
 import Employee from "../../models/Employee";
-import Species from "../../models/Species";
+import FeedingPlan from "../../models/FeedingPlan";
 import Keeper from "../../models/Keeper";
+import Species from "../../models/Species";
 
 function EditAnimalFeedingLogPage() {
   const apiJson = useApiJson();
@@ -95,13 +99,31 @@ function EditAnimalFeedingLogPage() {
     employee: emptyEmployee,
   };
 
+  let emptyFeedingPlan: FeedingPlan = {
+    feedingPlanId: -1,
+    feedingPlanDesc: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    animals: [],
+    feedingPlanSessionDetails: [],
+    title: "",
+  };
+
   let emptyAnimalFeedingLog: AnimalFeedingLog = {
     animalFeedingLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    details: "",
+    amountOffered: "",
+    amountConsumed: "",
+    amountLeftovers: "",
+    presentationMethod: "",
+    extraRemarks: "",
     animals: [],
     keeper: emptyKeeper,
+<<<<<<< HEAD
+=======
+    feedingPlan: emptyFeedingPlan
+>>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
   };
 
   const [curAnimalFeedingLog, setCurAnimalFeedingLog] =

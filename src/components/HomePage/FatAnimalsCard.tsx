@@ -1,25 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
-import { DataTable } from "primereact/datatable";
 import { Column, ColumnFilterElementTemplateOptions } from "primereact/column";
-import { InputText } from "primereact/inputtext";
+import { DataTable } from "primereact/datatable";
 
-import Animal from "../../models/Animal";
-import { HiEye } from "react-icons/hi";
 import { MultiSelect } from "primereact/multiselect";
+import { HiEye } from "react-icons/hi";
+import Animal from "../../models/Animal";
 import Species from "../../models/Species";
 
 function FatAnimalsCard() {
@@ -119,7 +116,7 @@ function FatAnimalsCard() {
   };
 
   return (
-    <Card className="h-max w-max">
+    <Card className="shrink h-max w-max">
       {" "}
       <CardHeader>
         <CardTitle>Abnormal Weight Warning!</CardTitle>
@@ -153,7 +150,7 @@ function FatAnimalsCard() {
           style={{ height: "40vh", width: "25vw" }}
           dataKey="animalCode"
           className="h-1/2 overflow-hidden rounded border border-graydark/30"
-          //   filterDisplay="row"
+        //   filterDisplay="row"
         >
           <Column
             field="imageUrl"

@@ -7,10 +7,12 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table";
-import { NavLink, useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import beautifyText from "../../../hooks/beautifyText";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import AnimalActivityLog from "../../../models/AnimalActivityLog";
-import Animal from "../../../models/Animal";
+import AnimalFeedingPlanInvolvedAnimalDatatable from "../AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 
 interface ViewAnimalActivityLogDetailsProps {
   curAnimalActivityLog: AnimalActivityLog
@@ -20,18 +22,23 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
   const { curAnimalActivityLog } = props;
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
+  const employee = useAuthContext().state.user?.employeeData;
 
   return (
     <div className="flex flex-col">
       <div>
-        <Button className="mr-2"
-          onClick={() => {
-            navigate(`/animal/viewAnimalActivityLogDetails/${curAnimalActivityLog.animalActivityLogId}`, { replace: true })
-            navigate(`/animal/editAnimalActivityLog/${curAnimalActivityLog.animalActivityLogId}`)
-          }}>
-          <HiPencil className="mx-auto" />
-          Edit Animal Activity Log Details
-        </Button>
+        {(curAnimalActivityLog.keeper.employee.employeeName == employee.employeeName
+          || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
+        ) &&
+          <Button className="mr-2"
+            onClick={() => {
+              navigate(`/animal/viewAnimalActivityLogDetails/${curAnimalActivityLog.animalActivityLogId}`, { replace: true })
+              navigate(`/animal/editAnimalActivityLog/${curAnimalActivityLog.animalActivityLogId}`)
+            }}>
+            <HiPencil className="mx-auto" />
+            Edit Animal Activity Log Details
+          </Button>
+        }
       </div>
 
 
@@ -47,7 +54,7 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Activity Type
             </TableCell>
-            <TableCell>{curAnimalActivityLog.activityType}</TableCell>
+            <TableCell>{beautifyText(curAnimalActivityLog.activityType)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -65,13 +72,13 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Session Rating
             </TableCell>
-            <TableCell>{curAnimalActivityLog.sessionRating}</TableCell>
+            <TableCell>{beautifyText(curAnimalActivityLog.sessionRating)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Animal Reaction
             </TableCell>
-            <TableCell>{curAnimalActivityLog.animalReaction}</TableCell>
+            <TableCell>{beautifyText(curAnimalActivityLog.animalReaction)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -79,20 +86,23 @@ function ViewAnimalActivityLogDetails(props: ViewAnimalActivityLogDetailsProps) 
             </TableCell>
             <TableCell>{curAnimalActivityLog.details}</TableCell>
           </TableRow>
-          <TableRow>
+          {/* <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Animals
             </TableCell>
             <TableCell>{curAnimalActivityLog.animals.map((animal: Animal) => animal.houseName).join(", ")}</TableCell>
-          </TableRow>
+          </TableRow> */}
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Keeper
             </TableCell>
-            <TableCell>{curAnimalActivityLog.keeper.employee.employeeName}</TableCell>
+            <TableCell>{beautifyText(curAnimalActivityLog.keeper.employee.employeeName)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
+      <br />
+      <span className="text-lg font-medium">Involved Animals:</span>
+      <AnimalFeedingPlanInvolvedAnimalDatatable involvedAnimalList={curAnimalActivityLog.animals} />
     </div>
   )
 }

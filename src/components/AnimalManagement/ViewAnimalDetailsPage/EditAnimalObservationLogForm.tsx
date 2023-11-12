@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import React, { useEffect, useState } from "react";
 
 
-import FormFieldInput from "../../FormFieldInput";
-import useApiJson from "../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../../FormFieldSelect";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import AnimalObservationLog from "../../../models/AnimalObservationLog";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import Animal from "../../../models/Animal";
+import { useToast } from "@/components/ui/use-toast";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
-import { set } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import AnimalObservationLog from "../../../models/AnimalObservationLog";
+import FormFieldInput from "../../FormFieldInput";
+import FormFieldSelect from "../../FormFieldSelect";
 
 interface EditAnimalObservationLogFormProps {
   curAnimalObservationLog: AnimalObservationLog
@@ -34,15 +31,15 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
   const [formError, setFormError] = useState<string | null>(null);
 
 
-  const [curAnimalList, setCurAnimalList] = useState<any>(null);
-  const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
+  // const [curAnimalList, setCurAnimalList] = useState<any>(null);
+  // const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
 
-  useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
-      setCurAnimalList(res as Animal[]);
-      setSelectedAnimals(res.filter((animal: Animal) => curAnimalObservationLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
-    });
-  }, [curAnimalObservationLog]);
+  // useEffect(() => {
+  //   apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+  //     setCurAnimalList(res as Animal[]);
+  //     setSelectedAnimals(res.filter((animal: Animal) => curAnimalObservationLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
+  //   });
+  // }, [curAnimalObservationLog]);
 
   useEffect(() => {
     setDurationInMinutes(String(curAnimalObservationLog.durationInMinutes));
@@ -76,7 +73,6 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details,
-      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalObservationLog);
 
@@ -182,7 +178,7 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
           validateFunction={validateAnimalObservationLogName}
           pattern={undefined}
         />
-        {/* Animals */}
+        {/* Animals
         <MultiSelect
           value={selectedAnimals}
           onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
@@ -190,7 +186,7 @@ function EditAnimalObservationLogForm(props: EditAnimalObservationLogFormProps) 
           optionLabel="houseName"
           filter
           placeholder="Select Animals"
-          className="w-full md:w-20rem" />
+          className="w-full md:w-20rem" /> */}
         <Form.Submit asChild>
           <Button
             disabled={apiJson.loading}

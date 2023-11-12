@@ -7,10 +7,11 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table";
-import { NavLink, useNavigate } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import AnimalFeedingLog from "../../../models/AnimalFeedingLog";
-import Animal from "../../../models/Animal";
+import AnimalFeedingPlanInvolvedAnimalDatatable from "../AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 
 interface ViewAnimalFeedingLogDetailsProps {
   curAnimalFeedingLog: AnimalFeedingLog
@@ -20,18 +21,23 @@ function ViewAnimalFeedingLogDetails(props: ViewAnimalFeedingLogDetailsProps) {
   const { curAnimalFeedingLog } = props;
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
+  const employee = useAuthContext().state.user?.employeeData;
 
   return (
     <div className="flex flex-col">
       <div>
-        <Button className="mr-2"
-          onClick={() => {
-            navigate(`/animal/viewAnimalFeedingLogDetails/${curAnimalFeedingLog.animalFeedingLogId}`, { replace: true })
-            navigate(`/animal/editAnimalFeedingLog/${curAnimalFeedingLog.animalFeedingLogId}`)
-          }}>
-          <HiPencil className="mx-auto" />
-          Edit Animal Feeding Log Details
-        </Button>
+        {(curAnimalFeedingLog.keeper.employee.employeeName == employee.employeeName
+          || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
+        ) &&
+          <Button className="mr-2"
+            onClick={() => {
+              navigate(`/animal/viewAnimalFeedingLogDetails/${curAnimalFeedingLog.animalFeedingLogId}`, { replace: true })
+              navigate(`/animal/editAnimalFeedingLog/${curAnimalFeedingLog.animalFeedingLogId}`)
+            }}>
+            <HiPencil className="mx-auto" />
+            Edit Animal Feeding Log Details
+          </Button>
+        }
       </div>
 
 
@@ -57,16 +63,40 @@ function ViewAnimalFeedingLogDetails(props: ViewAnimalFeedingLogDetailsProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Details
+              Amount Offered
             </TableCell>
-            <TableCell>{curAnimalFeedingLog.details}</TableCell>
+            <TableCell>{curAnimalFeedingLog.amountOffered}</TableCell>
           </TableRow>
           <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Amount Consumed
+            </TableCell>
+            <TableCell>{curAnimalFeedingLog.amountConsumed}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Amount Leftovers
+            </TableCell>
+            <TableCell>{curAnimalFeedingLog.amountLeftovers}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Presentation Method
+            </TableCell>
+            <TableCell>{curAnimalFeedingLog.presentationMethod}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="w-1/3 font-bold" colSpan={2}>
+              Extra Remarks
+            </TableCell>
+            <TableCell>{curAnimalFeedingLog.extraRemarks}</TableCell>
+          </TableRow>
+          {/* <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Animals
             </TableCell>
             <TableCell>{curAnimalFeedingLog.animals.map((animal: Animal) => animal.houseName).join(", ")}</TableCell>
-          </TableRow>
+          </TableRow> */}
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Keeper
@@ -75,7 +105,11 @@ function ViewAnimalFeedingLogDetails(props: ViewAnimalFeedingLogDetailsProps) {
           </TableRow>
         </TableBody>
       </Table>
+      <br />
+      <span className="text-lg font-medium">Involved Animals:</span>
+      <AnimalFeedingPlanInvolvedAnimalDatatable involvedAnimalList={curAnimalFeedingLog.animals} />
     </div>
+
   )
 }
 

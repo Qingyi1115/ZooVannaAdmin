@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useApiJson from "../../hooks/useApiJson";
 import EditAnimalActivityForm from "../../components/AnimalManagement/EditAnimalActivityPage/EditAnimalActivityForm";
+import useApiJson from "../../hooks/useApiJson";
 import AnimalActivity from "../../models/AnimalActivity";
 
 function EditAnimalActivityPage() {

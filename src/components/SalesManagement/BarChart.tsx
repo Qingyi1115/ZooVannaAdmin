@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { Chart } from "primereact/chart";
-import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
+import React, { useEffect, useState } from "react";
 import useApiJson from "../../hooks/useApiJson";
 import Listing from "../../models/Listing";
 
@@ -23,19 +21,25 @@ interface JSONData1 {
   [key: string]: number;
 }
 
-const BarChart: React.FC = () => {
+interface BarChartProps {
+  startDate: Date;
+  endDate: Date;
+  groupBy: string[];
+}
+
+const BarChart: React.FC<BarChartProps> = ({ startDate, endDate, groupBy }) => {
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [],
   });
   const apiJson = useApiJson();
 
-  const [startDate, setStartDate] = useState<string | Date | Date[] | null>(
-    new Date(new Date().setMonth(new Date().getMonth() - 3))
-  );
-  const [endDate, setEndDate] = useState<string | Date | Date[] | null>(
-    new Date(new Date().setMonth(new Date().getMonth() + 3))
-  );
+  // const [startDate, setStartDate] = useState<string | Date | Date[] | null>(
+  //   new Date(new Date().setMonth(new Date().getMonth() - 3))
+  // );
+  // const [endDate, setEndDate] = useState<string | Date | Date[] | null>(
+  //   new Date(new Date().setMonth(new Date().getMonth() + 3))
+  // );
 
   //   const [startDate, setStartDate] = useState(
   //     new Date().setMonth(new Date().getMonth() - 3)
@@ -44,23 +48,24 @@ const BarChart: React.FC = () => {
   //     new Date().setMonth(new Date().getMonth() + 3)
   //   );
 
-  const [groupBy, setGroupBy] = useState<string[]>(["listingId"]);
+  // const [groupBy, setGroupBy] = useState<string[]>(["month"]);
 
-  const handleCheckboxChange = (event: CheckboxChangeEvent, value: string) => {
-    if (event.checked !== undefined) {
-      if (event.checked) {
-        setGroupBy((prevGroupBy) => [...prevGroupBy, value]);
-      } else {
-        setGroupBy((prevGroupBy) =>
-          prevGroupBy.filter((item) => item !== value)
-        );
-      }
-    }
-  };
+  // const handleCheckboxChange = (event: CheckboxChangeEvent, value: string) => {
+  //   if (event.checked !== undefined) {
+  //     if (event.checked) {
+  //       setGroupBy((prevGroupBy) => [...prevGroupBy, value]);
+  //     } else {
+  //       setGroupBy((prevGroupBy) =>
+  //         prevGroupBy.filter((item) => item !== value)
+  //       );
+  //     }
+  //   }
+  // };
 
   const fetchListingNames = async (listingIds: string[]) => {
     const listingNames = [];
     for (const listingId of listingIds) {
+      console.log(listingId);
       const listingResponse = await apiJson.get(
         `http://localhost:3000/api/listing/getListing/${listingId}`
       );
@@ -199,68 +204,93 @@ const BarChart: React.FC = () => {
     fetchSalesData();
   }, [groupBy, startDate, endDate]);
 
+  const displayLegend =
+    groupBy.toString() === "month" || groupBy.toString() === "listingId"
+      ? false
+      : true;
+
   const chartOptions = {
-    responsive: true, // Make the chart responsive
-    maintainAspectRatio: true, // Allow the chart to adjust aspect ratio
-    // Additional chart options
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        display: displayLegend,
+        labels: {
+          boxWidth: 12,
+        },
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Months",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "No. of tickets",
+        },
+      },
+    },
   };
 
-  const handleEndDateChange = (e: CalendarChangeEvent) => {
-    if (e.value !== null) {
-      // Get the current date
-      const selectedDate = new Date(e.value as Date);
+  // const handleEndDateChange = (e: CalendarChangeEvent) => {
+  //   if (e.value !== null) {
+  //     // Get the current date
+  //     const selectedDate = new Date(e.value as Date);
 
-      // Set the date to the last day of the month
-      selectedDate.setMonth(selectedDate.getMonth() + 1, 0);
+  //     // Set the date to the last day of the month
+  //     selectedDate.setMonth(selectedDate.getMonth() + 1, 0);
 
-      // Update the state with the last day of the month
-      setEndDate(selectedDate);
-    }
-  };
+  //     // Update the state with the last day of the month
+  //     setEndDate(selectedDate);
+  //   }
+  // };
+  // const handleGroupButtonClick = (value: string[]) => {
+  //   setGroupBy(value);
+  // };
 
   return (
     <div>
-      <div className="mb-4 flex justify-between">
-        {/* <NavLink to={"/customerOrder/createnewcustomerOrder"}>
-                <Button className="mr-2">
-                  <HiPlus className="mr-auto" />
-                  Add CustomerOrder
-                </Button>
-              </NavLink> */}
-        <span className=" self-center text-title-xl font-bold">
-          Sales Graph
-        </span>
-      </div>
+      <h2 className="text-l font-semibold">
+        {groupBy.toString() == "month"
+          ? "Per month"
+          : groupBy.toString() == "listingId"
+          ? "By listing"
+          : groupBy.toString() == "month,listingId"
+          ? "Breakdown of listing per month"
+          : "Breakdown of month per listing"}
+      </h2>
       <div className="mb-6 flex flex-col justify-start gap-6 lg:flex-row lg:gap-12">
-        {/* Start Date */}
-        <div className="card justify-content-centre flex flex-col">
-          <div>Start Month</div>
-          <Calendar
-            style={{ flexGrow: 1 }}
-            value={startDate}
-            onChange={(e: CalendarChangeEvent) => {
-              if (e && e.value !== undefined) {
-                setStartDate(e.value);
-              }
-            }}
-            view="month"
-            dateFormat="mm/yy"
-          />
-        </div>
-        {/* End Date */}
-        <div className="card justify-content-center flex flex-col">
-          <div>End Month</div>
-          <Calendar
-            style={{ flexGrow: 1 }}
-            value={endDate}
-            onChange={handleEndDateChange}
-            view="month"
-            dateFormat="mm/yy"
-          />
-        </div>
-        <div>
+        {/* <div>
           <h2>Group by:</h2>
-          <div>
+          <Button
+            className="mr-1"
+            onClick={() => handleGroupButtonClick(["month"])}
+          >
+            Month
+          </Button>
+          <Button
+            className="m-1"
+            onClick={() => handleGroupButtonClick(["listingId"])}
+          >
+            Listing ID
+          </Button>
+          <Button
+            className="m-1"
+            onClick={() => handleGroupButtonClick(["month", "listingId"])}
+          >
+            Month and Listing ID
+          </Button>
+          <Button
+            className="ml-1"
+            onClick={() => handleGroupButtonClick(["listingId", "month"])}
+          >
+            Listing ID and Month
+          </Button> */}
+        {/* <div>
             <Checkbox
               inputId="listingIdCheckbox"
               value="listingId"
@@ -278,11 +308,13 @@ const BarChart: React.FC = () => {
               onChange={(e) => handleCheckboxChange(e, "month")}
             />
             <label htmlFor="monthCheckbox">Month</label>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
       </div>
 
-      <Chart type="bar" data={chartData} options={chartOptions} />
+      {chartData.labels.length > 0 && (
+        <Chart type="bar" data={chartData} options={chartOptions} />
+      )}
     </div>
   );
 };

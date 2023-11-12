@@ -1,24 +1,24 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
-import Hub from "../../../../models/Hub";
+import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import Hub from "../../../../models/HubProcessor";
 
 import { Button } from "@/components/ui/button";
-import { HubStatus } from "../../../../enums/HubStatus";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import Facility from "../../../../models/Facility";
+import { useNavigate } from "react-router-dom";
+import { HubStatus } from "../../../../enums/HubStatus";
+import beautifyText from "../../../../hooks/beautifyText";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-import { useNavigate  } from "react-router-dom";
+import Facility from "../../../../models/Facility";
+import HubProcessor from "../../../../models/HubProcessor";
 
 interface AllHubDatatableProps {
   curFacility: Facility;
@@ -123,15 +123,15 @@ function AllHubDatatable(props: AllHubDatatableProps) {
   const actionBodyTemplate = (hub: Hub) => {
     return (
       <React.Fragment>
-          <Button
-            variant={"outline"}
-            className="mb-1 mr-1" onClick={()=>{ 
-              navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
-              navigate(`/assetfacility/viewhubdetails/${hub.hubProcessorId}`);
-            }}>
-            <HiEye className="mx-auto" />
-          </Button>
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        <Button
+          // variant={"outline"}
+          className="mb-1 mr-1" onClick={() => {
+            navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
+            navigate(`/assetfacility/viewhubdetails/${hub.hubProcessorId}`);
+          }}>
+          <HiEye className="mx-auto" />
+        </Button>
+        {/* {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
 
             <Button className="mr-2" onClick={()=>{ 
                 navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
@@ -140,7 +140,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
               <HiPencil className="mx-auto" />
             </Button>
 
-        )}
+        )} */}
         {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
           <Button
             variant={"destructive"}
@@ -170,13 +170,13 @@ function AllHubDatatable(props: AllHubDatatableProps) {
       </span>
       {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
 
-          <Button className="mr-2" onClick={()=>{ 
-                navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
-                navigate(`/assetfacility/createhub/${curFacility.facilityId}`);
-              }}>
-            <HiPlus className="mr-auto" />
-            Add Hub
-          </Button>
+        <Button className="mr-2" onClick={() => {
+          navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });
+          navigate(`/assetfacility/createhub/${curFacility.facilityId}`);
+        }}>
+          <HiPlus className="mr-auto" />
+          Add Hub
+        </Button>
 
       )}
       <Button onClick={exportCSV}>Export to .csv</Button>
@@ -188,7 +188,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
       <div>
         <Toast ref={toast} />
         <div className="">
-         
+
           <DataTable
             ref={dt}
             value={hubList}
@@ -236,6 +236,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
             <Column
               field="hubStatus"
               header="Hub Status"
+              body={(hubProcessor: HubProcessor) => beautifyText(hubProcessor.hubStatus)}
               sortable
               style={{ minWidth: "16rem" }}
             ></Column>

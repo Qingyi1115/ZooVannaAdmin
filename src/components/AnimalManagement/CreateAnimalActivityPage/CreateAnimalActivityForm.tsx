@@ -1,37 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import * as Form from "@radix-ui/react-form";
-import * as RadioGroup from "@radix-ui/react-radio-group";
-import * as Checkbox from "@radix-ui/react-checkbox";
 
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
 import useApiFormData from "../../../hooks/useApiFormData";
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
-import { HiCheck } from "react-icons/hi";
 
-import useApiJson from "../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
-import { NavLink } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { Calendar } from "primereact/calendar";
+import { useNavigate } from "react-router-dom";
 import {
-  AcquisitionMethod,
   ActivityType,
-  AnimalGrowthStage,
-  AnimalSex,
-  AnimalStatusType,
   DayOfWeek,
   EventTimingType,
-  IdentifierType,
-  RecurringPattern,
+  RecurringPattern
 } from "../../../enums/Enumurated";
-import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import Species from "../../../models/Species";
+import useApiJson from "../../../hooks/useApiJson";
 
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { Nullable } from "primereact/ts-helpers";
 
 function CreateAnimalActivityForm() {
@@ -50,6 +38,9 @@ function CreateAnimalActivityForm() {
     undefined
   );
   const [durationInMinutes, setDurationInMinutes] = useState<
+    number | undefined
+  >(undefined);
+  const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
     number | undefined
   >(undefined);
   const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
@@ -141,6 +132,26 @@ function CreateAnimalActivityForm() {
         return (
           <div className="font-medium text-danger">
             * Duration must be greater than 0
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  function validateRequiredNumberOfKeeper(props: ValidityState) {
+    if (props != undefined) {
+      if (requiredNumberOfKeeper == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter the number of keepers required
+          </div>
+        );
+      } else if (requiredNumberOfKeeper <= 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Number of keepers must be greater than 0
           </div>
         );
       }
@@ -318,6 +329,7 @@ function CreateAnimalActivityForm() {
       dayOfMonth,
       eventTimingType,
       durationInMinutes,
+      requiredNumberOfKeeper
     };
 
     const createAnimalActivityApi = async () => {
@@ -351,7 +363,7 @@ function CreateAnimalActivityForm() {
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
         onSubmit={handleSubmit}
-        // encType="multipart/form-data"
+      // encType="multipart/form-data"
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
@@ -425,7 +437,7 @@ function CreateAnimalActivityForm() {
             <textarea
               rows={3}
               placeholder="e.g., Leave yoga ball in the pen and pushes it towards the tiger,..."
-              // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
           <Form.ValidityState>{validateDetails}</Form.ValidityState>
@@ -435,7 +447,7 @@ function CreateAnimalActivityForm() {
           {/* Session */}
           <FormFieldSelect
             formFieldName="session"
-            label="Session Timing"
+            label="Shift Timing"
             required={true}
             placeholder="Select a session timing..."
             valueLabelPair={Object.keys(EventTimingType).map(
@@ -466,6 +478,19 @@ function CreateAnimalActivityForm() {
             validateFunction={validateDurationInMinutes}
           />
         </div>
+
+        {/* Number of keepers required */}
+        <FormFieldInput
+          type="number"
+          formFieldName="durationInMinutes"
+          label={`Number of keepers required`}
+          required={true}
+          pattern={undefined}
+          placeholder="e.g., 2"
+          value={requiredNumberOfKeeper}
+          setValue={setRequiredNumberOfKeeper}
+          validateFunction={validateRequiredNumberOfKeeper}
+        />
 
         {/* Recurring Pattern */}
         <FormFieldSelect
@@ -529,6 +554,7 @@ function CreateAnimalActivityForm() {
                 />
                 <Form.ValidityState>{validateOneOffDate}</Form.ValidityState>
               </Form.Field>
+
             </div>
           )}
 

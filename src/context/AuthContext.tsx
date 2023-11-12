@@ -1,9 +1,8 @@
 import React, {
+  ReactNode,
   createContext,
   useEffect,
-  useReducer,
-  ReactElement,
-  ReactNode,
+  useReducer
 } from "react";
 
 // Structure of objects that can be accessed

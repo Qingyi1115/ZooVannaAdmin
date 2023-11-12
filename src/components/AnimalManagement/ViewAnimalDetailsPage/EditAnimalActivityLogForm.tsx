@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
+import React, { useEffect, useState } from "react";
 
 
-import FormFieldInput from "../../FormFieldInput";
-import useApiJson from "../../../hooks/useApiJson";
-import { useToast } from "@/components/ui/use-toast";
-import FormFieldSelect from "../../FormFieldSelect";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import AnimalActivityLog from "../../../models/AnimalActivityLog";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import Animal from "../../../models/Animal";
+import { useToast } from "@/components/ui/use-toast";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
-import { set } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import beautifyText from "../../../hooks/beautifyText";
+import useApiJson from "../../../hooks/useApiJson";
+import { useAuthContext } from "../../../hooks/useAuthContext";
+import AnimalActivityLog from "../../../models/AnimalActivityLog";
+import FormFieldInput from "../../FormFieldInput";
+import FormFieldSelect from "../../FormFieldSelect";
 
 interface EditAnimalActivityLogFormProps {
   curAnimalActivityLog: AnimalActivityLog
@@ -37,15 +35,15 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
 
 
-  const [curAnimalList, setCurAnimalList] = useState<any>(null);
-  const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
+  // const [curAnimalList, setCurAnimalList] = useState<any>(null);
+  // const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
 
-  useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
-      setCurAnimalList(res as Animal[]);
-      setSelectedAnimals(res.filter((animal: Animal) => curAnimalActivityLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
-    });
-  }, [curAnimalActivityLog]);
+  // useEffect(() => {
+  //   apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+  //     setCurAnimalList(res as Animal[]);
+  //     setSelectedAnimals(res.filter((animal: Animal) => curAnimalActivityLog.animals.map((animal: Animal) => animal.animalCode).includes(animal.animalCode)));
+  //   });
+  // }, [curAnimalActivityLog]);
 
   useEffect(() => {
     setActivityType(String(curAnimalActivityLog.activityType))
@@ -83,7 +81,7 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
       sessionRating: sessionRating,
       details: details,
       animalReaction: animalReaction,
-      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
+      // animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalActivityLog);
 
@@ -136,7 +134,10 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           </span>
         </div>
         {/* Activity Type */}
-        <FormFieldSelect
+        <div className="mb-1 block font-medium">
+          Activity Type<br /> <b>{beautifyText(activityType)}</b>
+        </div>
+        {/* <FormFieldSelect
           formFieldName="activityType"
           label="Activity Type"
           required={true}
@@ -148,7 +149,11 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           value={activityType}
           setValue={setActivityType}
           validateFunction={validateAnimalActivityLogName}
-        />
+        /> */}
+        {/* Keeper */}
+        {/* <div className="mb-1 block font-medium">
+          Keeper<br /> <b>{curAnimalActivityLog.keeper.employee.employeeName}</b>
+        </div> */}
 
         {/* DateTime */}
         <div className="card justify-content-center block ">
@@ -235,14 +240,15 @@ function EditAnimalActivityLogForm(props: EditAnimalActivityLogFormProps) {
           pattern={undefined}
         />
         {/* Animals */}
-        <MultiSelect
+        {/* <MultiSelect
           value={selectedAnimals}
           onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
           options={curAnimalList}
           optionLabel="houseName"
           filter
           placeholder="Select Animals"
-          className="w-full md:w-20rem" />
+          className="w-full md:w-20rem" /> */}
+
         <Form.Submit asChild>
           <Button
             disabled={apiJson.loading}

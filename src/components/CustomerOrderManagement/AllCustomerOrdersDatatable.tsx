@@ -1,33 +1,23 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { classNames } from "primereact/utils";
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
-import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
-import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 
-import CustomerOrder from "../../models/CustomerOrder";
+import { HiEye } from "react-icons/hi";
 import useApiJson from "../../hooks/useApiJson";
-import { ColumnGroup } from "primereact/columngroup";
-import { Row } from "primereact/row";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import CustomerOrder from "../../models/CustomerOrder";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { NavLink } from "react-router-dom";
 
 import * as moment from "moment-timezone";
 import { OrderStatus } from "../../enums/Enumurated";
 import { PaymentStatus } from "../../enums/PaymentStatus";
+import beautifyText from "../../hooks/beautifyText";
 
 function AllCustomerOrderDatatable() {
   const apiJson = useApiJson();
@@ -139,7 +129,7 @@ function AllCustomerOrderDatatable() {
                 </Button>
               </NavLink> */}
               <span className=" self-center text-title-xl font-bold">
-                All CustomerOrders
+                All Customer Orders
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
@@ -189,6 +179,7 @@ function AllCustomerOrderDatatable() {
             <Column
               field="orderStatus"
               header="Order Status"
+              body={(customerOrder: CustomerOrder) => beautifyText(customerOrder.orderStatus)}
               sortable
               style={{ minWidth: "7rem" }}
             ></Column>

@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import AnimalFeedingLog from "../../models/AnimalFeedingLog";
 
 import { Button } from "@/components/ui/button";
+<<<<<<< HEAD
 import Employee from "../../models/Employee";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import {
@@ -16,8 +17,16 @@ import {
 import Animal from "../../models/Animal";
 import Species from "../../models/Species";
 import { Rating } from "../../enums/Rating";
+=======
+>>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
 import ViewAnimalFeedingLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalFeedingLogDetails";
+import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, KeeperType, Specialization } from "../../enums/Enumurated";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import Animal from "../../models/Animal";
+import Employee from "../../models/Employee";
+import FeedingPlan from "../../models/FeedingPlan";
 import Keeper from "../../models/Keeper";
+import Species from "../../models/Species";
 
 function ViewAnimalFeedingLogDetailsPage() {
   const apiJson = useApiJson();
@@ -101,13 +110,31 @@ function ViewAnimalFeedingLogDetailsPage() {
     employee: emptyEmployee,
   };
 
+  let emptyFeedingPlan: FeedingPlan = {
+    feedingPlanId: -1,
+    feedingPlanDesc: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    animals: [],
+    feedingPlanSessionDetails: [],
+    title: "",
+  };
+
   let emptyAnimalFeedingLog: AnimalFeedingLog = {
     animalFeedingLogId: 0,
     dateTime: new Date(),
     durationInMinutes: 0,
-    details: "",
+    amountOffered: "",
+    amountConsumed: "",
+    amountLeftovers: "",
+    presentationMethod: "",
+    extraRemarks: "",
     animals: [],
     keeper: emptyKeeper,
+<<<<<<< HEAD
+=======
+    feedingPlan: emptyFeedingPlan
+>>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
   };
 
   const [curAnimalFeedingLog, setCurAnimalFeedingLog] =
@@ -115,11 +142,18 @@ function ViewAnimalFeedingLogDetailsPage() {
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
+<<<<<<< HEAD
     apiJson
       .get(
         `http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`
       )
       .then((res) => {
+=======
+    apiJson.get(
+      `http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`)
+      .then(res => {
+        console.log("res", res);
+>>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
         setCurAnimalFeedingLog(res.animalFeedingLog as AnimalFeedingLog);
       })
       .catch((e) => console.log(e));
@@ -138,7 +172,7 @@ function ViewAnimalFeedingLogDetailsPage() {
           >
             Back
           </Button>
-          <span className="self-center text-lg text-graydark">
+          <span className="self-center text-title-xl font-bold">
             View Animal Feeding Log Details
           </span>
           <Button disabled className="invisible">

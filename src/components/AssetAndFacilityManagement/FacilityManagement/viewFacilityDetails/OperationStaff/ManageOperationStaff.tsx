@@ -1,27 +1,16 @@
-import { Toast } from "primereact/toast";
-import React, { useEffect, useState, useRef, forwardRef } from "react";
-import { DataTable } from "primereact/datatable";
-import useApiJson from "../../../../../hooks/useApiJson";
-import Employee from "../../../../../models/Employee";
-import { InputText } from "primereact/inputtext";
-import { Column } from "primereact/column";
-import { NavLink, useNavigate } from "react-router-dom";
-import {
-  HiCheck,
-  HiClipboard,
-  HiEye,
-  HiMinus,
-  HiPencil,
-  HiPlus,
-  HiTrash,
-  HiX,
-} from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Checkbox, CheckboxClickEvent } from "primereact/checkbox";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
-import GeneralStaff from "../../../../../models/GeneralStaff";
-import { Toolbar } from "primereact/toolbar";
-import { Separator } from "@/components/ui/separator";
+import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import React, { useEffect, useRef, useState } from "react";
+import { HiCheck, HiEye, HiMinus, HiPlus, HiX } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../../../hooks/useApiJson";
+import Employee from "../../../../../models/Employee";
 
 interface ManageOperationStaffProps {
   facilityId: number;
@@ -48,16 +37,25 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   const toast = useRef<Toast>(null);
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
+  const [selectedAssignedEmployees, setSelectedAssignedEmployees] = useState<
+    number[]
+  >([]);
+  const [selectedAvailableEmployees, setSelectedAvailableEmployees] = useState<
+    number[]
+  >([]);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [employeeAssignmentDialog, setAssignmentDialog] =
     useState<boolean>(false);
   const [employeeRemovalDialog, setEmployeeRemovalDialog] =
     useState<boolean>(false);
+  const [employeeBulkAssignmentDialog, setBulkAssignmentDialog] =
+    useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
-  const [employeeList, setEmployeeList] = useState<Employee[]>([]);
+  const [assignedEmployees, setAssignedEmployees] = useState<Employee[]>([]);
+  const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   useEffect(() => {
@@ -72,7 +70,8 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
       })
       .catch((e) => console.log("err", e))
       .then((res) => {
-        const allStaffs: Employee[] = [];
+        const assignedStaff: Employee[] = [];
+        const availableStaff: Employee[] = [];
         for (const staff of res["generalStaffs"]) {
           if (staff.generalStaffType == "ZOO_OPERATIONS") {
             let emp = staff.employee;
@@ -80,24 +79,17 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             emp["generalStaff"] = staff;
             emp.currentlyAssigned =
               emp.generalStaff.operatedFacility?.facilityId == facilityId;
-            allStaffs.push(emp);
+            if (emp.currentlyAssigned) {
+              assignedStaff.push(emp);
+            } else {
+              availableStaff.push(emp);
+            }
           }
         }
-        setEmployeeList(allStaffs);
+        setAssignedEmployees(assignedStaff);
+        setAvailableEmployees(availableStaff);
       });
   }, [refreshSeed]);
-
-  const hideEmployeeAssignmentDialog = () => {
-    setAssignmentDialog(false);
-  };
-
-  const hideEmployeeRemovalDialog = () => {
-    setEmployeeRemovalDialog(false);
-  };
-
-  const exportCSV = () => {
-    dt.current?.exportCSV();
-  };
 
   const assignEmployee = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
@@ -134,19 +126,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     }
   };
 
-  const employeeAssignmentDialogFooter = (
-    <React.Fragment>
-      <Button variant={"destructive"} onClick={hideEmployeeAssignmentDialog}>
-        <HiX />
-        No
-      </Button>
-      <Button onClick={assignEmployee}>
-        <HiCheck />
-        Yes
-      </Button>
-    </React.Fragment>
-  );
-
   const removeOperationStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
@@ -178,18 +157,13 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     }
   };
 
-  const employeeRemovalDialogFooter = (
-    <React.Fragment>
-      <Button onClick={hideEmployeeRemovalDialog}>
-        <HiX />
-        No
-      </Button>
-      <Button variant={"destructive"} onClick={removeOperationStaff}>
-        <HiCheck />
-        Yes
-      </Button>
-    </React.Fragment>
-  );
+  const showBulkAssignment = () => {
+    setBulkAssignmentDialog(true);
+  };
+
+  const exportCSV = () => {
+    dt.current?.exportCSV();
+  };
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -205,18 +179,25 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           }}
         />
       </span>
+      <Button
+        onClick={showBulkAssignment}
+        disabled={availableEmployees.length == 0}
+      >
+        <HiPlus />
+        Assign Operation Staff
+      </Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
-  const confirmAssignment = (employee: Employee) => {
-    setSelectedEmployee(employee);
+  const confirmAssignment = () => {
     setAssignmentDialog(true);
   };
 
-  const confirmEmployeeRemoval = (employee: Employee) => {
-    setSelectedEmployee(employee);
-    setEmployeeRemovalDialog(true);
+  const confirmEmployeeRemoval = () => {
+    if (selectedAssignedEmployees.length != 0) {
+      setEmployeeRemovalDialog(true);
+    }
   };
 
   const actionBodyTemplate = (employee: any) => {
@@ -242,7 +223,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             <span>Removed</span>
           ) : (
             <div>
-              <Button
+              {/* <Button
                 name="assignButton"
                 variant={"default"}
                 className="mr-2"
@@ -253,8 +234,8 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
-              </Button>
-              {employee.dateOfResignation ? (
+              </Button> */}
+              {/* {employee.dateOfResignation ?
                 <span>Removed</span>
               ) : (
                 <Button
@@ -265,13 +246,258 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 >
                   <HiMinus className="mx-auto" />
                 </Button>
-              )}
+              } */}
             </div>
           )}
         </div>
       </React.Fragment>
     );
   };
+
+  const bulkAssignmentHeader = (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h4 className="m-1">Manage Operation Staff</h4>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          type="search"
+          placeholder="Search..."
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            setGlobalFilter(target.value);
+          }}
+        />
+      </span>
+      <Button onClick={exportCSV}>Export to .csv</Button>
+    </div>
+  );
+
+  const hideEmployeeBulkAssignmentDialog = () => {
+    setBulkAssignmentDialog(false);
+  };
+
+  const onSelectedAssignedEmployeesOnClick = (e: CheckboxClickEvent) => {
+    let _selectedAssignedEmployees = [...selectedAssignedEmployees];
+    if (e.checked) {
+      _selectedAssignedEmployees.push(e.value);
+    } else {
+      _selectedAssignedEmployees.splice(
+        _selectedAssignedEmployees.indexOf(e.value),
+        1
+      );
+    }
+    setSelectedAssignedEmployees(_selectedAssignedEmployees);
+  };
+
+  const assignedEmployeeCheckbox = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignEmployees"
+            value={employee.employeeId}
+            onChange={onSelectedAssignedEmployeesOnClick}
+            checked={selectedAssignedEmployees.includes(employee.employeeId)}
+          ></Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const onAllAssignedEmployeesOnClick = (e: CheckboxClickEvent) => {
+    if (e.checked) {
+      setSelectedAssignedEmployees(
+        assignedEmployees.map((employee: Employee) => employee.employeeId)
+      );
+    } else {
+      setSelectedAssignedEmployees([]);
+    }
+    console.log(selectedAssignedEmployees);
+  };
+
+  const allAssignedEmployeesCheckbox = (employees: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignEmployees"
+            onClick={onAllAssignedEmployeesOnClick}
+            checked={
+              selectedAssignedEmployees.length > 0 &&
+              selectedAssignedEmployees.length == assignedEmployees.length
+            }
+          ></Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const onSelectedAvailableEmployeesOnClick = (e: CheckboxClickEvent) => {
+    let _selectedAvailableEmployees = [...selectedAvailableEmployees];
+    if (e.checked) {
+      _selectedAvailableEmployees.push(e.value);
+    } else {
+      _selectedAvailableEmployees.splice(
+        _selectedAvailableEmployees.indexOf(e.value),
+        1
+      );
+    }
+    setSelectedAvailableEmployees(_selectedAvailableEmployees);
+  };
+
+  const availableEmployeeCheckbox = (employee: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignEmployees"
+            value={employee.employeeId}
+            onChange={onSelectedAvailableEmployeesOnClick}
+            checked={selectedAvailableEmployees.includes(employee.employeeId)}
+          ></Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const onAllAvailableEmployeesOnClick = (e: CheckboxClickEvent) => {
+    if (e.checked) {
+      setSelectedAvailableEmployees(
+        availableEmployees.map((employee: Employee) => employee.employeeId)
+      );
+    } else {
+      setSelectedAvailableEmployees([]);
+    }
+    console.log(selectedAvailableEmployees);
+  };
+
+  const allAvailableEmployeesCheckbox = (employees: any) => {
+    return (
+      <React.Fragment>
+        <div className="mb-4 flex">
+          <Checkbox
+            name="toAssignEmployees"
+            onClick={onAllAvailableEmployeesOnClick}
+            checked={
+              selectedAvailableEmployees.length > 0 &&
+              selectedAvailableEmployees.length == availableEmployees.length
+            }
+          ></Checkbox>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const hideEmployeeAssignmentDialog = () => {
+    setAssignmentDialog(false);
+  };
+
+  const bulkAssignEmployees = async () => {
+    selectedAvailableEmployees.forEach(async (employeeId) => {
+      try {
+        const responseJson = await apiJson
+          .put(
+            `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`,
+            { employeeIds: [employeeId] }
+          )
+          .then((res) => {
+            setRefreshSeed([]);
+          })
+          .catch((err) => console.log("err", err));
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Assignment Successful",
+          description:
+            "Successfully assigned operation staff: " +
+            availableEmployees
+              .filter((emp) =>
+                selectedAvailableEmployees.includes(emp.employeeId)
+              )
+              .map((employee) => " " + employee.employeeName)
+              .toString(),
+        });
+        setAssignmentDialog(false);
+        setBulkAssignmentDialog(false);
+        setSelectedAvailableEmployees([]);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while assigning operation staff: \n" +
+            apiJson.error,
+        });
+      }
+    });
+  };
+
+  const employeeAssignmentDialogFooter = (
+    <React.Fragment>
+      <Button variant={"destructive"} onClick={hideEmployeeAssignmentDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button onClick={bulkAssignEmployees}>
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
+
+  const bulkRemoveEmployees = async () => {
+    selectedAssignedEmployees.forEach(async (employeeId) => {
+      try {
+        const responseJson = await apiJson
+          .del(
+            `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`,
+            { employeeIds: [employeeId] }
+          )
+          .then((res) => {
+            setRefreshSeed([]);
+          })
+          .catch((err) => console.log("err", err));
+
+        toastShadcn({
+          // variant: "destructive",
+          title: "Removal Successful",
+          description:
+            "Successfully removed operation staff: " +
+            selectedAssignedEmployees.toString(),
+        });
+        setEmployeeRemovalDialog(false);
+        setBulkAssignmentDialog(false);
+        setSelectedAssignedEmployees([]);
+      } catch (error: any) {
+        // got error
+        toastShadcn({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "An error has occurred while removing operation staff: \n" +
+            apiJson.error,
+        });
+      }
+    });
+  };
+
+  const hideEmployeeRemovalDialog = () => {
+    setEmployeeRemovalDialog(false);
+  };
+
+  const employeeRemovalDialogFooter = (
+    <React.Fragment>
+      <Button onClick={hideEmployeeRemovalDialog}>
+        <HiX />
+        No
+      </Button>
+      <Button variant={"destructive"} onClick={bulkRemoveEmployees}>
+        <HiCheck />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
 
   return (
     <div>
@@ -280,7 +506,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         <div className="">
           <DataTable
             ref={dt}
-            value={employeeList}
+            value={assignedEmployees}
             selection={selectedEmployee}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
@@ -298,6 +524,10 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             globalFilter={globalFilter}
             header={header}
           >
+            <Column
+              body={assignedEmployeeCheckbox}
+              header={allAssignedEmployeesCheckbox}
+            ></Column>
             <Column
               field="employeeId"
               header="ID"
@@ -340,9 +570,16 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "13rem" }}
             ></Column>
           </DataTable>
+          <Button
+            variant={"destructive"}
+            onClick={confirmEmployeeRemoval}
+            disabled={selectedAssignedEmployees.length == 0}
+          >
+            <HiMinus />
+            Remove Selected Staff
+          </Button>
         </div>
         <Dialog
           visible={employeeAssignmentDialog}
@@ -361,7 +598,15 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             {selectedEmployee && (
               <span>
                 Are you sure you want to assign this facility to{" "}
-                <b>{selectedEmployee.employeeName}?</b>
+                <b>
+                  {availableEmployees
+                    .filter((emp) =>
+                      selectedAvailableEmployees.includes(emp.employeeId)
+                    )
+                    .map((employee) => " " + employee.employeeName)
+                    .toString()}
+                  ?
+                </b>
               </span>
             )}
           </div>
@@ -383,9 +628,95 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             {selectedEmployee && (
               <span>
                 Are you sure you want to remove{" "}
-                <b>{selectedEmployee.employeeName}</b>?
+                <b>{selectedAssignedEmployees.toString()}</b>?
               </span>
             )}
+          </div>
+        </Dialog>
+        <Dialog
+          visible={employeeBulkAssignmentDialog}
+          style={{ width: "50rem" }}
+          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+          header="Assign Operation Staff"
+          footer={
+            <Button
+              onClick={confirmAssignment}
+              disabled={selectedAvailableEmployees.length == 0}
+            >
+              Assign Selected Staff
+            </Button>
+          }
+          onHide={hideEmployeeBulkAssignmentDialog}
+        >
+          <div className="confirmation-content">
+            <DataTable
+              ref={dt}
+              value={availableEmployees}
+              selection={selectedEmployee}
+              onSelectionChange={(e) => {
+                if (Array.isArray(e.value)) {
+                  setSelectedEmployee(e.value);
+                }
+              }}
+              dataKey="employeeId"
+              paginator
+              rows={10}
+              scrollable
+              selectionMode={"single"}
+              rowsPerPageOptions={[5, 10, 25]}
+              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employees"
+              globalFilter={globalFilter}
+              header={bulkAssignmentHeader}
+            >
+              <Column
+                body={availableEmployeeCheckbox}
+                header={allAvailableEmployeesCheckbox}
+              ></Column>
+              <Column
+                field="employeeId"
+                header="ID"
+                sortable
+                style={{ minWidth: "4rem" }}
+              ></Column>
+              <Column
+                field="employeeName"
+                header="Name"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="generalStaff.operatedFacilityName"
+                header="Current Facility Name"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="employeeEmail"
+                header="Email"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="employeePhoneNumber"
+                header="Phone Number"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                field="employeeEducation"
+                header="Education"
+                sortable
+                style={{ minWidth: "12rem" }}
+              ></Column>
+              <Column
+                body={actionBodyTemplate}
+                header="Actions"
+                frozen
+                alignFrozen="right"
+                exportable={false}
+              ></Column>
+            </DataTable>
           </div>
         </Dialog>
       </div>

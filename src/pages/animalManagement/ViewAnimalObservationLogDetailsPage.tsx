@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import AnimalObservationLog from "../../models/AnimalObservationLog";
 
 import { Button } from "@/components/ui/button";
+<<<<<<< HEAD
 import Employee from "../../models/Employee";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import {
@@ -16,8 +17,17 @@ import {
 import Animal from "../../models/Animal";
 import Species from "../../models/Species";
 import { Rating } from "../../enums/Rating";
+=======
+>>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
 import ViewAnimalObservationLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalObservationLogDetails";
+import { AcquisitionMethod, ActivityType, AnimalGrowthStage, AnimalSex, EventTimingType, KeeperType, RecurringPattern, Specialization } from "../../enums/Enumurated";
+import { Rating } from "../../enums/Rating";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import Animal from "../../models/Animal";
+import AnimalActivity from "../../models/AnimalActivity";
+import Employee from "../../models/Employee";
 import Keeper from "../../models/Keeper";
+import Species from "../../models/Species";
 
 function ViewAnimalObservationLogDetailsPage() {
   const apiJson = useApiJson();
@@ -103,6 +113,22 @@ function ViewAnimalObservationLogDetailsPage() {
     employee: emptyEmployee,
   };
 
+  let emptyAnimalActivity: AnimalActivity = {
+    animalActivityId: -1,
+    activityType: ActivityType.TRAINING,
+    title: "",
+    details: "",
+    recurringPattern: RecurringPattern.DAILY,
+    dayOfMonth: null,
+    dayOfWeek: null,
+    startDate: new Date(),
+    endDate: new Date(),
+    eventTimingType: EventTimingType.AFTERNOON,
+    durationInMinutes: -1,
+    animalActivityLogs: [],
+    requiredNumberOfKeeper: 0
+  };
+
   let emptyAnimalObservationLog: AnimalObservationLog = {
     animalObservationLogId: 0,
     dateTime: new Date(),
@@ -111,6 +137,10 @@ function ViewAnimalObservationLogDetailsPage() {
     details: "",
     animals: [],
     keeper: emptyKeeper,
+<<<<<<< HEAD
+=======
+    animalActivity: emptyAnimalActivity
+>>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
   };
 
   const [curAnimalObservationLog, setCurAnimalObservationLog] =
@@ -143,7 +173,7 @@ function ViewAnimalObservationLogDetailsPage() {
           >
             Back
           </Button>
-          <span className="self-center text-lg text-graydark">
+          <span className="self-center text-title-xl font-bold">
             View Animal Observation Log Details
           </span>
           <Button disabled className="invisible">

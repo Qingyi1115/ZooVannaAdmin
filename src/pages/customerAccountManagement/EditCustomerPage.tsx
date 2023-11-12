@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useApiJson from "../../hooks/useApiJson";
 import Customer from "src/models/Customer";
-import { Country } from "../../enums/Country";
 import EditCustomerForm from "../../components/CustomerAccountManagement/EditCustomerForm";
+import { Country } from "../../enums/Country";
+import useApiJson from "../../hooks/useApiJson";
 
 
 function EditCustomerPage() {

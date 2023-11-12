@@ -1,39 +1,24 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { classNames } from "primereact/utils";
-import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
-import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 
-import Species from "../../../models/Species";
+import { HiCheck, HiEye, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../hooks/useApiJson";
-import { ColumnGroup } from "primereact/columngroup";
-import { Row } from "primereact/row";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import Animal from "../../../models/Animal";
-import {
-  AcquisitionMethod,
-  ActivityType,
-  AnimalGrowthStage,
-  AnimalSex,
-  EventTimingType,
-  RecurringPattern,
-} from "../../../enums/Enumurated";
 import { useNavigate } from "react-router-dom";
+import {
+  ActivityType,
+  EventTimingType,
+  RecurringPattern
+} from "../../../enums/Enumurated";
+import beautifyText from "../../../hooks/beautifyText";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import AnimalActivity from "../../../models/AnimalActivity";
 
 let emptyAnimalActivity: AnimalActivity = {
@@ -48,6 +33,8 @@ let emptyAnimalActivity: AnimalActivity = {
   endDate: new Date(),
   eventTimingType: EventTimingType.AFTERNOON,
   durationInMinutes: -1,
+  animalActivityLogs: [],
+  requiredNumberOfKeeper: 0
 };
 
 interface AllAnimalActivitiesDatatableProps {
@@ -77,6 +64,7 @@ function AllAnimalActivitiesDatatable(
 
   const dt = useRef<DataTable<AnimalActivity[]>>(null);
 
+  const employee = useAuthContext().state.user?.employeeData;
   const toastShadcn = useToast().toast;
 
   useEffect(() => {
@@ -117,7 +105,7 @@ function AllAnimalActivitiesDatatable(
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteAnimalActivity/" +
-            selectedAnimalActivity.animalActivityId
+          selectedAnimalActivity.animalActivityId
         );
 
         toastShadcn({
@@ -168,13 +156,15 @@ function AllAnimalActivitiesDatatable(
           >
             <HiEye className="mr-auto" />
           </Button>
-          <Button
-            variant={"destructive"}
-            className="mr-2"
-            onClick={() => confirmDeleteAnimalActivity(animalActivity)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
+          {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") &&
+            <Button
+              variant={"destructive"}
+              className="mr-2"
+              onClick={() => confirmDeleteAnimalActivity(animalActivity)}
+            >
+              <HiTrash className="mx-auto" />
+            </Button>
+          }
         </div>
       </React.Fragment>
     );
@@ -194,6 +184,8 @@ function AllAnimalActivitiesDatatable(
           }}
         />
       </span>
+
+      <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
 
@@ -201,16 +193,6 @@ function AllAnimalActivitiesDatatable(
     <div>
       <div>
         <div className="rounded-lg bg-white p-4">
-          {/* Title Header and back button */}
-          <div className="flex flex-col">
-            <div className="mb-4 flex justify-between">
-              <Button className="invisible"></Button>
-              <span className="invisible">All Animal Activities</span>
-              <Button onClick={exportCSV}>Export to .csv</Button>
-            </div>
-            <Separator />
-          </div>
-
           <DataTable
             ref={dt}
             value={animalActivitiesList}
@@ -228,7 +210,7 @@ function AllAnimalActivitiesDatatable(
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} species"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal activities"
             globalFilter={globalFilter}
             header={header}
           >
@@ -245,14 +227,20 @@ function AllAnimalActivitiesDatatable(
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
+              body={(animalActivity) => {
+                return beautifyText(animalActivity.activityType)
+              }}
               field="activityType"
               header="Type"
               sortable
               style={{ minWidth: "10rem" }}
             ></Column>
             <Column
+              body={(animalActivity) => {
+                return beautifyText(animalActivity.recurringPattern)
+              }}
               field="recurringPattern"
-              header="Type"
+              header="Recurrence"
               sortable
               style={{ minWidth: "10rem" }}
             ></Column>
@@ -281,6 +269,9 @@ function AllAnimalActivitiesDatatable(
               style={{ minWidth: "8rem" }}
             ></Column>
             <Column
+              body={(animalActivity) => {
+                return beautifyText(animalActivity.eventTimingType)
+              }}
               field="eventTimingType"
               header="Session Timing"
               sortable

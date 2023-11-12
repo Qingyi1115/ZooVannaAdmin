@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useApiJson from "../../hooks/useApiJson";
+import Employee from "src/models/Employee";
 import ViewEmployeeDetails from "../../components/EmployeeAccountManagement/ViewEmployeeDetails";
 import ViewEmployeeRoleDetails from "../../components/EmployeeAccountManagement/ViewEmployeeRoleDetails";
-import Employee from "src/models/Employee";
-import Keeper from "src/models/Keeper";
-import GeneralStaff from "src/models/GeneralStaff";
-import PlanningStaff from "src/models/PlanningStaff";
+import useApiJson from "../../hooks/useApiJson";
 
 import {
   Accordion,
@@ -56,22 +53,7 @@ function ViewEmployeeDetailsPage() {
 
     fetchEmployees();
   }, [refreshSeed]);
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const responseJson = await apiJson.get(
-          `http://localhost:3000/api/employee/getEmployee/${employeeId}`
-        );
-        console.log(responseJson);
-        setCurEmployee(responseJson.employee as Employee);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-
-    fetchEmployees();
-  }, [refreshSeed]);
-
+  
   return (
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default">

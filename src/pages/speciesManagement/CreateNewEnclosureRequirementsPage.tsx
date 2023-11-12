@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CreateEnclosureRequirementsForm from "../../components/SpeciesManagement/ViewSpeciesDetailsPage/CreateEnclosureRequirementsForm";
 import useApiJson from "../../hooks/useApiJson";

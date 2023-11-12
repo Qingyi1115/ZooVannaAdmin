@@ -1,4 +1,5 @@
-import HubProcessor from "./Hub";
+import HubProcessor from "./HubProcessor";
+import InHouse from "./InHouse";
 
 interface Facility {
   facilityId: number;
@@ -7,9 +8,11 @@ interface Facility {
   yCoordinate: number;
   isSheltered: Boolean;
   showOnMap: boolean;
+  imageUrl: string;
   facilityDetail: string;
   facilityDetailJson: any;
   hubProcessors: HubProcessor[];
+  inHouse: InHouse;
 }
 
 export default Facility;

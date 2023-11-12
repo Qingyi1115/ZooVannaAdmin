@@ -1,24 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
-import * as Form from "@radix-ui/react-form";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
-import FormFieldInput from "../../FormFieldInput";
-import FormFieldSelect from "../../FormFieldSelect";
-import useApiJson from "../../../hooks/useApiJson";
-import useApiFormData from "../../../hooks/useApiFormData";
-import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import Animal from "../../../models/Animal";
+import { useToast } from "@/components/ui/use-toast";
+import * as Form from "@radix-ui/react-form";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
-import Employee from "../../../models/Employee";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import AnimalActivity from "../../../models/AnimalActivity";
+import FormFieldInput from "../../FormFieldInput";
+import FormFieldSelect from "../../FormFieldSelect";
 
-// interface CreateNewAnimalObservationLogProps {
-//   speciesCode: string;
-// }
+interface CreateNewAnimalObservationLogProps {
+  curAnimalActivity: AnimalActivity;
+}
 
 function validateAnimalObservationLogName(props: ValidityState) {
   if (props != undefined) {
@@ -32,10 +28,12 @@ function validateAnimalObservationLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalObservationLogForm() {
+function CreateNewAnimalObservationLogForm(props: CreateNewAnimalObservationLogProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+
+  const { curAnimalActivity } = props;
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
   const [observationQuality, setObservationQuality] = useState<string | undefined>(
     undefined); // dropdown
@@ -45,26 +43,27 @@ function CreateNewAnimalObservationLogForm() {
   const [formError, setFormError] = useState<string | null>(null);
 
 
-  const [curAnimalList, setCurAnimalList] = useState<any>(null);
-  const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
+  // const [curAnimalList, setCurAnimalList] = useState<any>(null);
+  // const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
 
-  useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
-      setCurAnimalList(res as Animal[]);
-      console.log(res);
-    });
-  }, []);
+  // useEffect(() => {
+  //   apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+  //     setCurAnimalList(res as Animal[]);
+  //     console.log(res);
+  //   });
+  // }, []);
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
 
     const newAnimalObservationLog = {
+      animalActivityId: curAnimalActivity.animalActivityId,
       dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
       observationQuality: observationQuality,
       details: details,
-      animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
+      // animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
     console.log(newAnimalObservationLog);
 
@@ -152,19 +151,33 @@ function CreateNewAnimalObservationLogForm() {
         setValue={setObservationQuality}
         validateFunction={validateAnimalObservationLogName}
       />
+
       {/* Details */}
-      <FormFieldInput
-        type="text"
-        formFieldName="details"
-        label="Details"
-        required={true}
-        placeholder=""
-        value={details}
-        setValue={setDetails}
-        validateFunction={validateAnimalObservationLogName}
-        pattern={undefined}
-      />
-      {/* Animals */}
+      <Form.Field
+        name="details"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">
+          Details
+        </Form.Label>
+        <Form.Control
+          asChild
+          value={details}
+          required={true}
+          onChange={(e) => setDetails(e.target.value)}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        >
+          <textarea
+            rows={6}
+            placeholder="Observation details..."
+          />
+        </Form.Control>
+        <Form.ValidityState>
+          {validateAnimalObservationLogName}
+        </Form.ValidityState>
+      </Form.Field>
+
+      {/* Animals
       <MultiSelect
         value={selectedAnimals}
         onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
@@ -173,7 +186,7 @@ function CreateNewAnimalObservationLogForm() {
         filter
         placeholder="Select Animals"
         maxSelectedLabels={3}
-        className="w-full md:w-20rem" />
+        className="w-full md:w-20rem" /> */}
 
       <Form.Submit asChild>
         <Button

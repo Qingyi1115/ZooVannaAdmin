@@ -7,8 +7,8 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table";
-import { NavLink } from "react-router-dom";
 import { HiPencil } from "react-icons/hi";
+import { NavLink } from "react-router-dom";
 import MaintenanceLog from "../../../../../models/MaintenanceLog";
 
 interface ViewMaintenanceLogDetailsProps {
@@ -24,7 +24,7 @@ function ViewMaintenanceLogDetails(props: ViewMaintenanceLogDetailsProps) {
   return (
     <div className="flex flex-col">
 
-      <NavLink to={`/assetfacility/editfacilitylog/${curMaintenanceLog.logId}`}>
+      <NavLink to={`/assetfacility/editfacilitylog/${curMaintenanceLog.maintenanceLogId}`}>
         <Button className="mr-2">
           <HiPencil className="mx-auto" />
         </Button>
@@ -36,7 +36,7 @@ function ViewMaintenanceLogDetails(props: ViewMaintenanceLogDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Maintenance Log ID
             </TableCell>
-            <TableCell>{curMaintenanceLog.logId}</TableCell>
+            <TableCell>{curMaintenanceLog.maintenanceLogId}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

@@ -1,26 +1,25 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import { useParams } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import FeedingPlan from "../../models/FeedingPlan";
-import { Separator } from "@/components/ui/separator";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AnimalFeedingPlanSessionsSchedule from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanSessionsSchedule";
 import AnimalFeedingPlanInvolvedAnimalDatatable from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
+import AnimalFeedingPlanSessionsSchedule from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanSessionsSchedule";
+import RecommendedFeedingMethods from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/RecommendedFeedingMethods";
+import AllFeedingPlanFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllFeedingPlanFeedingLogsDatatable";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 function AnimalFeedingPlanDetailsPage() {
   const apiJson = useApiJson();
@@ -31,21 +30,26 @@ function AnimalFeedingPlanDetailsPage() {
   const [curFeedingPlan, setCurFeedingPlan] = useState<FeedingPlan | null>(
     null
   );
+  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  const employee = useAuthContext().state.user?.employeeData;
+  const { tab } = useParams<{ tab: string }>();
 
   useEffect(() => {
-    const fetchSpecies = async () => {
+    const fetchFeedingPlan = async () => {
       try {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/animal/getFeedingPlanById/${feedingPlanId}`
         );
         setCurFeedingPlan(responseJson as FeedingPlan);
+        console.log("aaaa test");
+        console.log(responseJson as FeedingPlan);
       } catch (error: any) {
         console.log(error);
       }
     };
 
-    fetchSpecies();
-  }, []);
+    fetchFeedingPlan();
+  }, [refreshSeed]);
 
   return (
     <div className="p-10">
@@ -76,8 +80,20 @@ function AnimalFeedingPlanDetailsPage() {
 
         {curFeedingPlan && (
           <div>
-            <div>
-              <Button>Edit Details and Involved Animals</Button>
+            <div className="mb-4">
+              {(employee.superAdmin ||
+                employee.planningStaff?.plannerType == "CURATOR") && (
+                <Button
+                  className="mb-4"
+                  onClick={() => {
+                    navigate(
+                      `/animal/editfeedingplanbasicinfo/${curFeedingPlan.feedingPlanId}`
+                    );
+                  }}
+                >
+                  Edit Basic Info
+                </Button>
+              )}
               <div className="text-lg font-bold">Basic Information</div>
               <Table>
                 <TableBody>
@@ -90,6 +106,12 @@ function AnimalFeedingPlanDetailsPage() {
                   <TableRow>
                     <TableCell className="w-1/3 font-bold" colSpan={2}>
                       Title
+                    </TableCell>
+                    <TableCell>{curFeedingPlan?.title}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="w-1/3 font-bold" colSpan={2}>
+                      Description
                     </TableCell>
                     <TableCell>{curFeedingPlan?.feedingPlanDesc}</TableCell>
                   </TableRow>
@@ -113,7 +135,7 @@ function AnimalFeedingPlanDetailsPage() {
               </Table>
               <br />
               <div className="">
-                <div className="text-lg font-bold">Involved Animal List.</div>
+                <div className="text-lg font-bold">Involved Animal List</div>
                 <AnimalFeedingPlanInvolvedAnimalDatatable
                   involvedAnimalList={
                     curFeedingPlan.animals ? curFeedingPlan.animals : []
@@ -123,7 +145,10 @@ function AnimalFeedingPlanDetailsPage() {
             </div>
             <div>
               <div className="text-lg font-bold">Schedule and Logs</div>
-              <Tabs defaultValue={"sessionSchedule"} className="w-full">
+              <Tabs
+                defaultValue={tab ? `${tab}` : "sessionSchedule"}
+                className="w-full"
+              >
                 <TabsList className="no-scrollbar my-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
                   <TabsTrigger value="sessionSchedule">
                     Session Schedule
@@ -131,17 +156,34 @@ function AnimalFeedingPlanDetailsPage() {
                   <TabsTrigger value="feedingLogs">Feeding Logs</TabsTrigger>
                 </TabsList>
                 <TabsContent value="sessionSchedule">
-                  Sessions Schedule Calendar showing sessions and items.
-                  Hm...after updating animal, need to remove items that contains
-                  that animal. For
-                  <Button>Edit Sessions</Button>
+                  {/* <Button>Edit Sessions</Button> */}
                   <AnimalFeedingPlanSessionsSchedule
                     curFeedingPlan={curFeedingPlan}
                     setCurFeedingPlan={setCurFeedingPlan}
+                    refreshSeed={refreshSeed}
+                    setRefreshSeed={setRefreshSeed}
                   />
                 </TabsContent>
-                <TabsContent value="feedingLogs">Feeding Logs</TabsContent>
+                <TabsContent value="feedingLogs">
+                  <AllFeedingPlanFeedingLogsDatatable
+                    feedingPlanId={curFeedingPlan.feedingPlanId}
+                    feedingPlan={curFeedingPlan}
+                  />
+                </TabsContent>
               </Tabs>
+            </div>
+            <br />
+            <div className="">
+              {curFeedingPlan.species && (
+                <>
+                  <div className="text-lg font-bold">
+                    Recommended Feeding Methods
+                  </div>
+                  <RecommendedFeedingMethods
+                    speciesCode={curFeedingPlan.species?.speciesCode}
+                  />
+                </>
+              )}
             </div>
           </div>
         )}

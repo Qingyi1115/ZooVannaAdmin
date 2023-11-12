@@ -1,4 +1,3 @@
-import Listing from "./Listing";
 
 interface OrderItem {
   orderItemId: number;

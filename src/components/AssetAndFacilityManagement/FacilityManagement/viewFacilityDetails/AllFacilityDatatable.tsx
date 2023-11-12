@@ -1,43 +1,43 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { ProductService } from './service/ProductService';
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
 
+import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { MdOutlineAssignmentInd } from "react-icons/md";
 import facility from "src/models/Facility";
 import useApiJson from "../../../../hooks/useApiJson";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useParams } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
-import Facility from "../../../../models/Facility";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { NavLink, useParams } from "react-router-dom";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import Facility from "../../../../models/Facility";
 
-function AllfacilityDatatable() {
+function AllFacilityDatatable() {
   const apiJson = useApiJson();
   const employee = useAuthContext().state.user?.employeeData;
   const { facilityDetail } = useParams<{ facilityDetail: string }>();
   const facilityDetailJson =
     facilityDetail == "thirdParty"
       ? {
-          ownership: "",
-          ownerContact: "",
-          maxAccommodationSize: "",
-          hasAirCon: "",
-          facilityType: "",
-        }
+        ownership: "",
+        ownerContact: "",
+        maxAccommodationSize: "",
+        hasAirCon: "",
+        facilityType: "",
+      }
       : {
-          isPaid: "",
-          maxAccommodationSize: "",
-          hasAirCon: "",
-          facilityType: "",
-        };
+        isPaid: "",
+        maxAccommodationSize: "",
+        hasAirCon: "",
+        facilityType: "",
+      };
 
   let emptyFacility: Facility = {
     facilityId: -1,
@@ -49,6 +49,7 @@ function AllfacilityDatatable() {
     facilityDetailJson: facilityDetailJson,
     isSheltered: false,
     hubProcessors: [],
+    imageUrl: ""
   };
 
   const [facilityList, setFacilityList] = useState<facility[]>([]);
@@ -70,7 +71,12 @@ function AllfacilityDatatable() {
         console.log(e);
       })
       .then((res) => {
-        setFacilityList(res["facilities"]);
+        console.log("req", res)
+        setFacilityList(res["facilities"].map(facility => {
+          facility.opStaffStr = facility.facilityDetailJson.operationStaffs?.map(staff => staff.employee.employeeName).join(", ") || "-"
+          facility.manStaffStr = facility.facilityDetailJson.maintenanceStaffs?.map(staff => staff.employee.employeeName).join(", ") || "-"
+          return facility;
+        }));
       });
   }, []);
 
@@ -98,7 +104,7 @@ function AllfacilityDatatable() {
     const responseJson = await apiJson
       .del(
         "http://localhost:3000/api/assetFacility/deleteFacility/" +
-          selectedFacility.facilityId
+        selectedFacility.facilityId
       )
       .then(() => {
         toastShadcn({
@@ -129,7 +135,7 @@ function AllfacilityDatatable() {
       <Button
         variant={"destructive"}
         onClick={deleteFacility}
-        // disabled={}
+      // disabled={}
       >
         <HiCheck />
         Yes
@@ -145,38 +151,59 @@ function AllfacilityDatatable() {
           to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
           state={{ prev: `/assetfacility/viewallfacilities` }}
         >
-          <Button variant={"outline"} className="mb-1 mr-1">
+          <Button
+            // variant={"outline"}
+            className="mb-1 mr-1">
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
         {(employee.superAdmin ||
           employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <NavLink
-            to={`/assetfacility/editfacility/${facility.facilityId}`}
-            state={{ prev: `/assetfacility/viewallfacilities` }}
-          >
-            <Button className="mr-1">
-              <HiPencil className="mr-1" />
-            </Button>
-          </NavLink>
-        )}
+            <NavLink
+              to={`/assetfacility/viewfacilitydetails/${facility.facilityId}/manageOperations`}
+              state={{ prev: `/assetfacility/viewallfacilities` }}
+            >
+              <Button variant={"outline"} className="mb-1 mr-1">
+                <MdOutlineAssignmentInd className="mx-auto" />
+              </Button>
+            </NavLink>
+          )}
+        {/* {(employee.superAdmin ||
+          employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+            <NavLink
+              to={`/assetfacility/editfacility/${facility.facilityId}`}
+              state={{ prev: `/assetfacility/viewallfacilities` }}
+            >
+              <Button className="mr-1">
+                <HiPencil className="mr-1" />
+              </Button>
+            </NavLink>
+          )} */}
         {(employee.superAdmin ||
           employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <Button
-            variant={"destructive"}
-            className="mr-2"
-            onClick={() => confirmDeletefacility(facility)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
-        )}
+            <Button
+              variant={"destructive"}
+              className="mr-2"
+              onClick={() => confirmDeletefacility(facility)}
+            >
+              <HiTrash className="mx-auto" />
+            </Button>
+          )}
+        {/* {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
+          <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}/facilityLog`}
+            state={{ prev: `/assetfacility/viewallfacilities` }}>
+            <Button className="mr-2">
+              <BsWrenchAdjustable className="mx-auto" ></BsWrenchAdjustable>
+            </Button>
+          </NavLink>
+        )} */}
       </React.Fragment>
     );
   };
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage facilities</h4>
+      <h4 className="m-1">Manage Facilities</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -191,6 +218,18 @@ function AllfacilityDatatable() {
     </div>
   );
 
+  const imageBodyTemplate = (rowData: Facility) => {
+    return (
+      rowData.imageUrl ?
+        <img
+          src={"http://localhost:3000/" + rowData.imageUrl}
+          alt={rowData.facilityName}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        /> :
+        "-"
+    );
+  };
+
   return (
     <div>
       <div>
@@ -200,7 +239,7 @@ function AllfacilityDatatable() {
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
               {employee.superAdmin ||
-              employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ? (
+                employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ? (
                 <NavLink to={"/assetfacility/createfacility"}>
                   <Button className="mr-2">
                     <HiPlus className="mr-auto" />
@@ -241,6 +280,13 @@ function AllfacilityDatatable() {
             header={header}
           >
             <Column
+              field="imageUrl"
+              header="Image"
+              frozen
+              body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
+            ></Column>
+            <Column
               field="facilityId"
               header="ID"
               sortable
@@ -255,12 +301,32 @@ function AllfacilityDatatable() {
             <Column
               field="facilityDetail"
               header="Owner Type"
+              body={(facility) => {
+                return facility.facilityDetail == "thirdParty" ?
+                  "Third-party" : "In-house"
+              }}
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
             <Column
               field="isSheltered"
               header="Shelter available"
+              body={(facility) => {
+                return facility.isSheltered ? "Yes" : "No"
+              }}
+              sortable
+              style={{ minWidth: "12rem" }
+              }
+            ></Column>
+            <Column
+              field="opStaffStr"
+              header="Operation Staff"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="manStaffStr"
+              header="Maintenance Staff"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -270,7 +336,7 @@ function AllfacilityDatatable() {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "12rem" }}
+              style={{ minWidth: "15rem" }}
             ></Column>
           </DataTable>
         </div>
@@ -301,4 +367,4 @@ function AllfacilityDatatable() {
   );
 }
 
-export default AllfacilityDatatable;
+export default AllFacilityDatatable;

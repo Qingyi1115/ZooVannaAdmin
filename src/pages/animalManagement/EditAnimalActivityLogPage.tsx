@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useApiJson from "../../hooks/useApiJson";
-import { Rating } from "../../enums/Rating";
 import EditAnimalActivityLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalActivityLogForm";
+<<<<<<< HEAD
 import {
   AnimalSex,
   AcquisitionMethod,
@@ -10,14 +9,20 @@ import {
   KeeperType,
   Specialization,
 } from "../../enums/Enumurated";
+=======
+import { ActivityType } from "../../enums/ActivityType";
+import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, EventTimingType, KeeperType, RecurringPattern, Specialization } from "../../enums/Enumurated";
+import { Rating } from "../../enums/Rating";
+import { Reaction } from "../../enums/Reaction";
+import useApiJson from "../../hooks/useApiJson";
+>>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
+import AnimalActivity from "../../models/AnimalActivity";
 import AnimalActivityLog from "../../models/AnimalActivityLog";
 import Employee from "../../models/Employee";
-import Species from "../../models/Species";
 import Keeper from "../../models/Keeper";
-import { ActivityType } from "../../enums/ActivityType";
-import { Reaction } from "../../enums/Reaction";
+import Species from "../../models/Species";
 
 function EditAnimalActivityLogPage() {
   const apiJson = useApiJson();
@@ -97,6 +102,22 @@ function EditAnimalActivityLogPage() {
     employee: emptyEmployee,
   };
 
+  let emptyAnimalActivity: AnimalActivity = {
+    animalActivityId: -1,
+    activityType: ActivityType.ENRICHMENT,
+    title: "",
+    details: "",
+    recurringPattern: RecurringPattern.DAILY,
+    dayOfMonth: null,
+    dayOfWeek: null,
+    startDate: new Date(),
+    endDate: new Date(),
+    eventTimingType: EventTimingType.AFTERNOON,
+    durationInMinutes: -1,
+    animalActivityLogs: [],
+    requiredNumberOfKeeper: 0
+  };
+
   let emptyAnimalActivityLog: AnimalActivityLog = {
     animalActivityLogId: 0,
     dateTime: new Date(),
@@ -107,6 +128,10 @@ function EditAnimalActivityLogPage() {
     keeper: emptyKeeper,
     activityType: ActivityType.TRAINING,
     animalReaction: Reaction.POSITIVE_RESPONSE,
+<<<<<<< HEAD
+=======
+    animalActivity: emptyAnimalActivity
+>>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
   };
 
   const [curAnimalActivityLog, setCurAnimalActivityLog] =

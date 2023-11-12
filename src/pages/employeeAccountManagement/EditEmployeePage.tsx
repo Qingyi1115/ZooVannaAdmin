@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import useApiJson from "../../hooks/useApiJson";
 import Employee from "src/models/Employee";
-import { Country } from "../../enums/Country";
 import EditEmployeeForm from "../../components/EmployeeAccountManagement/EditEmployeeForm";
+import useApiJson from "../../hooks/useApiJson";
 
 function EditEmployeePage() {
   const apiJson = useApiJson();

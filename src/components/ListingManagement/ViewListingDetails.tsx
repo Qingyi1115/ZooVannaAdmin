@@ -1,20 +1,17 @@
-import React, { useState, useRef } from "react";
-import Listing from "../../models/Listing";
-import { Button } from "@/components/ui/button";
-import useApiJson from "../../hooks/useApiJson";
 import { useToast } from "@/components/ui/use-toast";
-import { Toast } from "primereact/toast";
 import * as moment from "moment-timezone";
+import useApiJson from "../../hooks/useApiJson";
+import Listing from "../../models/Listing";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
+import beautifyText from "../../hooks/beautifyText";
 
 interface ListingInfoDetailsProps {
   curListing: Listing;
@@ -67,14 +64,14 @@ function ViewListingDetails(props: ListingInfoDetailsProps) {
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Listing Type
               </TableCell>
-              <TableCell>{curListing.listingType}</TableCell>
+              <TableCell>{beautifyText(curListing.listingType)}</TableCell>
             </TableRow>
 
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Listing Status
               </TableCell>
-              <TableCell>{curListing.listingStatus}</TableCell>
+              <TableCell>{beautifyText(curListing.listingStatus)}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>

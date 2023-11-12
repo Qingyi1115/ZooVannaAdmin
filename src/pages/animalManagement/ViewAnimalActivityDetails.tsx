@@ -1,38 +1,41 @@
-import React, { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
-import AnimalActivity from "../../models/AnimalActivity";
 import Animal from "../../models/Animal";
-import Species from "../../models/Species";
+import AnimalActivity from "../../models/AnimalActivity";
 import EnrichmentItem from "../../models/EnrichmentItem";
+import Species from "../../models/Species";
 
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 import { NavLink } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
 import { HiCheck, HiTrash, HiX } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
+import { Dialog } from "primereact/dialog";
+import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalActivityLogsDatatable";
+import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
 import {
   AcquisitionMethod,
+  ActivityType,
   AnimalGrowthStage,
   AnimalSex,
 } from "../../enums/Enumurated";
-import { Dialog } from "primereact/dialog";
+import beautifyText from "../../hooks/beautifyText";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -106,7 +109,8 @@ function ViewAnimalActivityDetails() {
   const [involvedAnimalList, setInvolvedAnimalList] = useState<Animal[]>();
   const [involvedAnimalGlobalFiler, setInvolvedAnimalGlobalFilter] =
     useState<string>("");
-
+  const { tab } = useParams<{ tab: string }>();
+  const employee = useAuthContext().state.user?.employeeData;
   const [involvedItemList, setInvolvedItemList] = useState<EnrichmentItem[]>(
     []
   );
@@ -360,7 +364,7 @@ function ViewAnimalActivityDetails() {
                 Back
               </Button>
               {/* </NavLink> */}
-              <span className="mt-4 self-center text-title-xl font-bold">
+              <span className="self-center text-lg text-graydark">
                 Animal Activity Details
               </span>
               <Button disabled className="invisible">
@@ -368,278 +372,344 @@ function ViewAnimalActivityDetails() {
               </Button>
             </div>
             <Separator />
+            <span className="mt-4 self-center text-title-xl font-bold">
+              {curAnimalActivity.title}
+            </span>
           </div>
           {/* body */}
           <div>
-            <div className="mb-10">
-              <div className="text-xl font-medium">Basic Information:</div>
-              <NavLink
-                to={`/animal/editanimalactivity/${curAnimalActivity.animalActivityId}`}
-              >
-                <Button className="my-3">Edit Basic Information</Button>
-              </NavLink>
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      ID
-                    </TableCell>
-                    <TableCell>{curAnimalActivity.animalActivityId}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Title
-                    </TableCell>
-                    <TableCell>{curAnimalActivity.title}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Type
-                    </TableCell>
-                    <TableCell>{curAnimalActivity.activityType}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Period Start Date
-                    </TableCell>
-                    <TableCell>
-                      {new Date(curAnimalActivity.startDate).toDateString()}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Period End Date
-                    </TableCell>
-                    <TableCell>
-                      {new Date(curAnimalActivity.endDate).toDateString()}
-                    </TableCell>
-                  </TableRow>
+            <Tabs defaultValue={tab ? `${tab}` : "details"} className="w-full">
+              <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
+                <TabsTrigger value="details">Basic Information</TabsTrigger>
+                {curAnimalActivity.activityType == ActivityType.OBSERVATION ? (
+                  <TabsTrigger value="observationlogs">
+                    Observation Logs
+                  </TabsTrigger>
+                ) : (
+                  <TabsTrigger value="activitylogs">Activity Logs</TabsTrigger>
+                )}
+              </TabsList>
+              <TabsContent value="details">
+                <div className="mb-10">
+                  {(employee.superAdmin ||
+                    employee.planningStaff?.plannerType == "CURATOR") && (
+                    <NavLink
+                      to={`/animal/editanimalactivity/${curAnimalActivity.animalActivityId}`}
+                    >
+                      <Button className="my-3">Edit Basic Information</Button>
+                    </NavLink>
+                  )}
+                  <Table>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          ID
+                        </TableCell>
+                        <TableCell>
+                          {curAnimalActivity.animalActivityId}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Title
+                        </TableCell>
+                        <TableCell>{curAnimalActivity.title}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Type
+                        </TableCell>
+                        <TableCell>
+                          {beautifyText(curAnimalActivity.activityType)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Period Start Date
+                        </TableCell>
+                        <TableCell>
+                          {new Date(curAnimalActivity.startDate).toDateString()}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Period End Date
+                        </TableCell>
+                        <TableCell>
+                          {new Date(curAnimalActivity.endDate).toDateString()}
+                        </TableCell>
+                      </TableRow>
 
-                  <TableRow>
-                    <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Recurring Pattern
-                    </TableCell>
-                    <TableCell>{curAnimalActivity.recurringPattern}</TableCell>
-                  </TableRow>
-                  {curAnimalActivity.recurringPattern == "WEEKLY" && (
-                    <TableRow>
-                      <TableCell className="w-1/3 font-bold" colSpan={2}>
-                        Day Of Week
-                      </TableCell>
-                      <TableCell>{curAnimalActivity.dayOfWeek}</TableCell>
-                    </TableRow>
-                  )}
-                  {curAnimalActivity.recurringPattern == "MONTHLY" && (
-                    <TableRow>
-                      <TableCell className="w-1/3 font-bold" colSpan={2}>
-                        Day Of Month
-                      </TableCell>
-                      <TableCell>{curAnimalActivity.dayOfMonth}</TableCell>
-                    </TableRow>
-                  )}
-                  <TableRow>
-                    <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Session Timing
-                    </TableCell>
-                    <TableCell>{curAnimalActivity.eventTimingType}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Duration (Minutes)
-                    </TableCell>
-                    <TableCell>{curAnimalActivity.durationInMinutes}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="w-1/3 font-bold" colSpan={2}>
-                      Details
-                    </TableCell>
-                    <TableCell>{curAnimalActivity.details}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
-            <div className="flex w-full gap-20">
-              <div className="w-full">
-                <div className="mb-2 text-xl font-medium">
-                  Involved Animal(s):
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Recurring Pattern
+                        </TableCell>
+                        <TableCell>
+                          {beautifyText(curAnimalActivity.recurringPattern)}
+                        </TableCell>
+                      </TableRow>
+                      {curAnimalActivity.recurringPattern == "WEEKLY" && (
+                        <TableRow>
+                          <TableCell className="w-1/3 font-bold" colSpan={2}>
+                            Day Of Week
+                          </TableCell>
+                          <TableCell>
+                            {beautifyText(curAnimalActivity.dayOfWeek)}
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      {curAnimalActivity.recurringPattern == "MONTHLY" && (
+                        <TableRow>
+                          <TableCell className="w-1/3 font-bold" colSpan={2}>
+                            Day Of Month
+                          </TableCell>
+                          <TableCell>
+                            {curAnimalActivity.dayOfMonth &&
+                              beautifyText(
+                                Number(curAnimalActivity.dayOfMonth).toString()
+                              )}
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Session Timing
+                        </TableCell>
+                        <TableCell>
+                          {beautifyText(curAnimalActivity.eventTimingType)}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Duration (Minutes)
+                        </TableCell>
+                        <TableCell>
+                          {curAnimalActivity.durationInMinutes}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Details
+                        </TableCell>
+                        <TableCell>{curAnimalActivity.details}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </div>
-                <div className="flex justify-between">
-                  <InputText
-                    type="search"
-                    placeholder="Search..."
-                    onInput={(e) => {
-                      const target = e.target as HTMLInputElement;
-                      setInvolvedAnimalGlobalFilter(target.value);
-                    }}
-                    className="mb-2 h-full w-60"
-                  />
-                  <Button
-                    onClick={() =>
-                      navigate(
-                        `/animal/assignanimalstoactivity/${curAnimalActivity.animalActivityId}`
-                      )
-                    }
-                    type="button"
-                    className="h-12 w-60"
-                  >
-                    Assign Animal(s)
-                  </Button>
-                </div>
-                <DataTable
-                  value={involvedAnimalList}
-                  scrollable
-                  scrollHeight="100%"
-                  // selection={selectedAnimalToBecomeParent!}
-                  selectionMode="single"
-                  globalFilter={involvedAnimalGlobalFiler}
-                  // onSelectionChange={(e) =>
-                  //   setSelectedAnimalToBecomeParent(e.value)
-                  // }
-                  style={{ height: "50vh" }}
-                  dataKey="animalCode"
-                  className="h-1/2 overflow-hidden rounded border border-graydark/30"
-                >
-                  <Column
-                    field="imageUrl"
-                    body={animalImageBodyTemplate}
-                    style={{ minWidth: "3rem" }}
-                  ></Column>
-                  <Column
-                    field="animalCode"
-                    header="Code"
-                    sortable
-                    style={{ minWidth: "7rem" }}
-                  ></Column>
-                  <Column
-                    field="houseName"
-                    header="House Name"
-                    sortable
-                    style={{ minWidth: "5rem" }}
-                  ></Column>
-                  <Column
-                    body={animalActionBodyTemplate}
-                    header="Actions"
-                    exportable={false}
-                    style={{ minWidth: "3rem" }}
-                  ></Column>
-                </DataTable>
-                <Dialog
-                  visible={removeAnimalDialog}
-                  style={{ width: "32rem" }}
-                  breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-                  header="Confirm"
-                  modal
-                  footer={removeAnimalDialogFooter}
-                  onHide={hideRemoveAnimalDialog}
-                >
-                  <div className="confirmation-content">
-                    <i
-                      className="pi pi-exclamation-triangle mr-3"
-                      style={{ fontSize: "2rem" }}
-                    />
-                    {selectedAnimal && (
-                      <span>
-                        Are you sure you want to remove{" "}
-                        {selectedAnimal.houseName} from the current activity? ?
-                      </span>
-                    )}
+                <div className="flex w-full gap-20">
+                  <div className="w-full">
+                    <div className="mb-2 text-xl font-medium">
+                      Involved Animal(s):
+                    </div>
+                    <div className="flex justify-between">
+                      <InputText
+                        type="search"
+                        placeholder="Search..."
+                        onInput={(e) => {
+                          const target = e.target as HTMLInputElement;
+                          setInvolvedAnimalGlobalFilter(target.value);
+                        }}
+                        className="mb-2 h-full w-60"
+                      />
+                      {(employee.superAdmin ||
+                        employee.planningStaff?.plannerType == "CURATOR") && (
+                        <Button
+                          onClick={() =>
+                            navigate(
+                              `/animal/assignanimalstoactivity/${curAnimalActivity.animalActivityId}`
+                            )
+                          }
+                          type="button"
+                          className="h-12 w-60"
+                        >
+                          Assign Animal(s)
+                        </Button>
+                      )}
+                    </div>
+                    <DataTable
+                      value={involvedAnimalList}
+                      scrollable
+                      scrollHeight="100%"
+                      // selection={selectedAnimalToBecomeParent!}
+                      selectionMode="single"
+                      globalFilter={involvedAnimalGlobalFiler}
+                      // onSelectionChange={(e) =>
+                      //   setSelectedAnimalToBecomeParent(e.value)
+                      // }
+                      style={{ height: "50vh" }}
+                      dataKey="animalCode"
+                      className="h-1/2 overflow-hidden rounded border border-graydark/30"
+                    >
+                      <Column
+                        field="imageUrl"
+                        body={animalImageBodyTemplate}
+                        style={{ minWidth: "3rem" }}
+                      ></Column>
+                      <Column
+                        field="animalCode"
+                        header="Code"
+                        sortable
+                        style={{ minWidth: "7rem" }}
+                      ></Column>
+                      <Column
+                        field="houseName"
+                        header="House Name"
+                        sortable
+                        style={{ minWidth: "5rem" }}
+                      ></Column>
+                      {(employee.superAdmin ||
+                        employee.planningStaff?.plannerType == "CURATOR") && (
+                        <Column
+                          body={animalActionBodyTemplate}
+                          header="Actions"
+                          exportable={false}
+                          style={{ minWidth: "3rem" }}
+                        ></Column>
+                      )}
+                    </DataTable>
+                    <Dialog
+                      visible={removeAnimalDialog}
+                      style={{ width: "32rem" }}
+                      breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+                      header="Confirm"
+                      modal
+                      footer={removeAnimalDialogFooter}
+                      onHide={hideRemoveAnimalDialog}
+                    >
+                      <div className="confirmation-content">
+                        <i
+                          className="pi pi-exclamation-triangle mr-3"
+                          style={{ fontSize: "2rem" }}
+                        />
+                        {selectedAnimal && (
+                          <span>
+                            Are you sure you want to remove{" "}
+                            {selectedAnimal.houseName} from the current
+                            activity? ?
+                          </span>
+                        )}
+                      </div>
+                    </Dialog>
                   </div>
-                </Dialog>
-              </div>
-              <div className="w-full">
-                <div className="mb-2 text-xl font-medium">
-                  Item(s) to be used:
-                </div>
-                <div className="flex justify-between">
-                  <InputText
-                    type="search"
-                    placeholder="Search..."
-                    onInput={(e) => {
-                      const target = e.target as HTMLInputElement;
-                      setInvolvedItemGlobalFilter(target.value);
-                    }}
-                    className="mb-2 h-min w-60"
-                  />
-                  <Button
-                    onClick={() =>
-                      navigate(
-                        `/animal/assignitemstoactivity/${curAnimalActivity.animalActivityId}`
-                      )
-                    }
-                    type="button"
-                    className="h-12 w-60"
-                  >
-                    Assign Item(s)
-                  </Button>
-                </div>
-                <DataTable
-                  value={involvedItemList}
-                  scrollable
-                  scrollHeight="100%"
-                  // selection={selectedAnimalToBecomeParent!}
-                  selectionMode="single"
-                  globalFilter={involvedItemGlobalFiler}
-                  // onSelectionChange={(e) =>
-                  //   setSelectedAnimalToBecomeParent(e.value)
-                  // }
-                  // onRowClick={(event) =>
-                  //   navigate(
-                  //     `/animal/viewanimaldetails/${event.data.animalCode}`
-                  //   )
-                  // }
-                  dataKey="enrichmentItemid"
-                  style={{ height: "50vh" }}
-                  className="h-1/2 overflow-hidden rounded border border-graydark/30"
-                >
-                  <Column
-                    field="enrichmentItemImageUrl"
-                    body={enrichmentItemImageBodyTemplate}
-                    style={{ minWidth: "3rem" }}
-                  ></Column>
-                  <Column
-                    field="enrichmentItemId"
-                    header="ID"
-                    sortable
-                    style={{ minWidth: "3rem" }}
-                  ></Column>
-                  <Column
-                    field="enrichmentItemName"
-                    header="Name"
-                    sortable
-                    style={{ minWidth: "5rem" }}
-                  ></Column>
-                  <Column
-                    body={itemActionBodyTemplate}
-                    header="Actions"
-                    exportable={false}
-                    style={{ minWidth: "3rem" }}
-                  ></Column>
-                </DataTable>
-                <Dialog
-                  visible={removeItemDialog}
-                  style={{ width: "32rem" }}
-                  breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-                  header="Confirm"
-                  modal
-                  footer={removeItemDialogFooter}
-                  onHide={hideRemoveItemDialog}
-                >
-                  <div className="confirmation-content">
-                    <i
-                      className="pi pi-exclamation-triangle mr-3"
-                      style={{ fontSize: "2rem" }}
-                    />
-                    {selectedItem && (
-                      <span>
-                        Are you sure you want to remove{" "}
-                        {selectedItem.enrichmentItemName} from the current
-                        activity? ?
-                      </span>
-                    )}
+                  <div className="w-full">
+                    <div className="mb-2 text-xl font-medium">
+                      Item(s) to be used:
+                    </div>
+                    <div className="flex justify-between">
+                      <InputText
+                        type="search"
+                        placeholder="Search..."
+                        onInput={(e) => {
+                          const target = e.target as HTMLInputElement;
+                          setInvolvedItemGlobalFilter(target.value);
+                        }}
+                        className="mb-2 h-min w-60"
+                      />
+                      {(employee.superAdmin ||
+                        employee.planningStaff?.plannerType == "CURATOR") && (
+                        <Button
+                          onClick={() =>
+                            navigate(
+                              `/animal/assignitemstoactivity/${curAnimalActivity.animalActivityId}`
+                            )
+                          }
+                          type="button"
+                          className="h-12 w-60"
+                        >
+                          Assign Item(s)
+                        </Button>
+                      )}
+                    </div>
+                    <DataTable
+                      value={involvedItemList}
+                      scrollable
+                      scrollHeight="100%"
+                      // selection={selectedAnimalToBecomeParent!}
+                      selectionMode="single"
+                      globalFilter={involvedItemGlobalFiler}
+                      // onSelectionChange={(e) =>
+                      //   setSelectedAnimalToBecomeParent(e.value)
+                      // }
+                      // onRowClick={(event) =>
+                      //   navigate(
+                      //     `/animal/viewanimaldetails/${event.data.animalCode}`
+                      //   )
+                      // }
+                      dataKey="enrichmentItemid"
+                      style={{ height: "50vh" }}
+                      className="h-1/2 overflow-hidden rounded border border-graydark/30"
+                    >
+                      <Column
+                        field="enrichmentItemImageUrl"
+                        body={enrichmentItemImageBodyTemplate}
+                        style={{ minWidth: "3rem" }}
+                      ></Column>
+                      <Column
+                        field="enrichmentItemId"
+                        header="ID"
+                        sortable
+                        style={{ minWidth: "3rem" }}
+                      ></Column>
+                      <Column
+                        field="enrichmentItemName"
+                        header="Name"
+                        sortable
+                        style={{ minWidth: "5rem" }}
+                      ></Column>
+                      {(employee.superAdmin ||
+                        employee.planningStaff?.plannerType == "CURATOR") && (
+                        <Column
+                          body={itemActionBodyTemplate}
+                          header="Actions"
+                          exportable={false}
+                          style={{ minWidth: "3rem" }}
+                        ></Column>
+                      )}
+                    </DataTable>
+                    <Dialog
+                      visible={removeItemDialog}
+                      style={{ width: "32rem" }}
+                      breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+                      header="Confirm"
+                      modal
+                      footer={removeItemDialogFooter}
+                      onHide={hideRemoveItemDialog}
+                    >
+                      <div className="confirmation-content">
+                        <i
+                          className="pi pi-exclamation-triangle mr-3"
+                          style={{ fontSize: "2rem" }}
+                        />
+                        {selectedItem && (
+                          <span>
+                            Are you sure you want to remove{" "}
+                            {selectedItem.enrichmentItemName} from the current
+                            activity? ?
+                          </span>
+                        )}
+                      </div>
+                    </Dialog>
                   </div>
-                </Dialog>
-              </div>
-            </div>
+                </div>
+              </TabsContent>
+              {curAnimalActivity.activityType == ActivityType.OBSERVATION ? (
+                <TabsContent value="observationlogs">
+                  <AllAnimalObservationLogsDatatable
+                    speciesCode={""}
+                    animalCode={""}
+                    animalActivityId={curAnimalActivity.animalActivityId}
+                  />
+                </TabsContent>
+              ) : (
+                <TabsContent value="activitylogs">
+                  <AllAnimalActivityLogsDatatable
+                    speciesCode={""}
+                    animalCode={""}
+                    animalActivityId={curAnimalActivity.animalActivityId}
+                  />
+                </TabsContent>
+              )}
+            </Tabs>
           </div>
         </div>
       )}

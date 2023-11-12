@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import useApiJson from "../../../hooks/useApiJson";
+import React, { useRef, useState } from "react";
 import {
   AnimalFeedCategory,
   AnimalGrowthStage,
@@ -7,27 +6,21 @@ import {
   PresentationLocation,
   PresentationMethod,
 } from "../../../enums/Enumurated";
+import useApiJson from "../../../hooks/useApiJson";
 
-import { classNames } from "primereact/utils";
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
-import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 import SpeciesDietNeed from "../../../models/SpeciesDietNeed";
 
-import { HiCheck, HiEye, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { NavLink } from "react-router-dom";
+import beautifyText from "../../../hooks/beautifyText";
 import Species from "../../../models/Species";
 
 interface DietNeedDatatableProps {
@@ -85,7 +78,7 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/species/deleteDietNeed/" +
-            selectedDietNeeds?.speciesDietNeedId
+          selectedDietNeeds?.speciesDietNeedId
         );
 
         toastShadcn({
@@ -190,23 +183,37 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
         <Column
           field="growthStage"
           header="Growth Stage"
+          body={(dietNeed: SpeciesDietNeed) => beautifyText(dietNeed.growthStage)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
           field="animalFeedCategory"
           header="Feed Category"
+          body={(dietNeed: SpeciesDietNeed) => beautifyText(dietNeed.animalFeedCategory)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="amountPerMealGram"
+          field="amountPerMealGramMale"
           header="Amount Per Meal (grams)"
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
-          field="amountPerWeekGram"
+          field="amountPerWeekGramMale"
+          header="Amount Per Week (grams)"
+          sortable
+          style={{ minWidth: "10rem" }}
+        ></Column>
+        <Column
+          field="amountPerMealGramFemale"
+          header="Amount Per Meal (grams)"
+          sortable
+          style={{ minWidth: "10rem" }}
+        ></Column>
+        <Column
+          field="amountPerWeekGramFemale"
           header="Amount Per Week (grams)"
           sortable
           style={{ minWidth: "10rem" }}
@@ -214,18 +221,21 @@ function DietNeedDatatable(props: DietNeedDatatableProps) {
         <Column
           field="presentationContainer"
           header="Recommended Container"
+          body={(dietNeed: SpeciesDietNeed) => beautifyText(dietNeed.presentationContainer)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
           field="presentationMethod"
           header="Recommended Method"
+          body={(dietNeed: SpeciesDietNeed) => beautifyText(dietNeed.presentationMethod)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>
         <Column
           field="presentationLocation"
           header="Feed Location"
+          body={(dietNeed: SpeciesDietNeed) => beautifyText(dietNeed.presentationLocation)}
           sortable
           style={{ minWidth: "10rem" }}
         ></Column>

@@ -1,51 +1,109 @@
-import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { useEffect, useRef, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 import useApiJson from "../../../../hooks/useApiJson";
 
-import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 
 import Facility from "../../../../models/Facility";
 
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  useMap,
-  useMapEvents,
-  ImageOverlay,
-  TileLayer,
-} from "react-leaflet";
 import L, {
-  CRS,
   LatLng,
   LatLngBounds,
-  LatLngBoundsLiteral,
-  LatLngExpression,
+  LatLngExpression
 } from "leaflet";
+import {
+  ImageOverlay,
+  MapContainer,
+  Marker,
+  TileLayer,
+  useMapEvents
+} from "react-leaflet";
+
+function iconFunction(facilityType: string) {
+  let iconUrl = `../../../../../src/assets/mapicons/1.png`;
+  switch (facilityType) {
+    case "INFORMATION_CENTRE":
+      iconUrl = `../../../../../src/assets/mapicons/1.png`;
+      break;
+    case "ZOO_DIRECTORY":
+      iconUrl = `../../../../../src/assets/mapicons/3.png`;
+      break;
+    case "AMPHITHEATRE":
+      iconUrl = `../../../../../src/assets/mapicons/4.png`;
+      break;
+
+    case "GAZEBO":
+      iconUrl = `../../../../../src/assets/mapicons/5.png`;
+      break;
+
+    case "AED":
+      iconUrl = `../../../../../src/assets/mapicons/6.png`;
+      break;
+
+    case "RESTROOM":
+      iconUrl = `../../../../../src/assets/mapicons/7.png`;
+      break;
+
+    case "NURSERY":
+      iconUrl = `../../../../../src/assets/mapicons/8.png`;
+      break;
+
+    case "FIRST_AID":
+      iconUrl = `../../../../../src/assets/mapicons/9.png`;
+      break;
+    case "BENCHES":
+      iconUrl = `../../../../../src/assets/mapicons/10.png`;
+      break;
+    case "PLAYGROUND":
+      iconUrl = `../../../../../src/assets/mapicons/11.png`;
+      break;
+    case "TRAMSTOP":
+      iconUrl = `../../../../../src/assets/mapicons/13.png`;
+      break;
+    case "PARKING":
+      iconUrl = `../../../../../src/assets/mapicons/14.png`;
+      break;
+    case "RESTAURANT":
+      iconUrl = `../../../../../src/assets/mapicons/15.png`;
+      break;
+    case "SHOP_SOUVENIR":
+      iconUrl = `../../../../../src/assets/mapicons/16.png`;
+      break;
+    default:
+      iconUrl = `../../../../../src/assets/mapicons/new.png`;
+      break;
+  }
+
+  return new L.Icon({
+    iconUrl,
+    iconSize: [40, 41], // Adjust the size as needed
+    iconAnchor: [15, 40], // Adjust the anchor point as needed
+    // Additional selected marker styles
+  });
+}
 
 const facilityDetail = "thirdParty";
 const facilityDetailJson =
   facilityDetail == "thirdParty"
     ? {
-        ownership: "",
-        ownerContact: "",
-        maxAccommodationSize: "",
-        hasAirCon: "",
-        facilityType: "",
-      }
+      ownership: "",
+      ownerContact: "",
+      maxAccommodationSize: "",
+      hasAirCon: "",
+      facilityType: "",
+    }
     : {
-        isPaid: "",
-        maxAccommodationSize: "",
-        hasAirCon: "",
-        facilityType: "",
-      };
+      isPaid: "",
+      maxAccommodationSize: "",
+      hasAirCon: "",
+      facilityType: "",
+    };
 
 let emptyFacility: Facility = {
   facilityId: -1,
@@ -57,6 +115,7 @@ let emptyFacility: Facility = {
   facilityDetailJson: facilityDetailJson,
   isSheltered: false,
   hubProcessors: [],
+  imageUrl: ""
 };
 
 const merlioncenter: LatLngExpression = [1.295, 103.775887811];
@@ -159,13 +218,23 @@ function AddNewLocationForm() {
     }
   }
 
+  const imageBodyTemplate = (rowData: Facility) => {
+    return (
+      <img
+        src={"http://localhost:3000/" + rowData.imageUrl}
+        alt={rowData.facilityName}
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+      />
+    );
+  };
+
   return (
     <div>
       <div className="mb-2 text-xl font-medium">
         {/* <div className="mb-4">Selected First Animal:</div> */}
 
-        <div className="flex h-max w-full rounded-md border border-strokedark/70 p-4">
-          <div className="flex w-full flex-col items-center justify-center gap-4 text-lg">
+        <div className="mb-4 flex h-max w-full rounded-md border border-strokedark/20 p-2">
+          <div className="flex w-full items-center justify-center gap-4 text-lg">
             <span className="font-bold">Selected facility: </span>
             <div className="w-max rounded border border-stroke px-8 py-2">
               {selectedFacility ? (
@@ -211,7 +280,7 @@ function AddNewLocationForm() {
           </div>
         </div>
       </div>
-      <Separator className="mx-auto my-8 w-1/2" />
+      {/* <Separator className="mx-auto my-8 w-1/2" /> */}
       <div className="flex h-full w-full gap-10">
         <div className="flex w-1/3 flex-col gap-4">
           <InputText
@@ -234,6 +303,13 @@ function AddNewLocationForm() {
             dataKey="facilityId"
             className="h-1/2 overflow-hidden rounded border border-graydark/30"
           >
+            <Column
+              field="imageUrl"
+              header="Image"
+              frozen
+              body={imageBodyTemplate}
+              style={{ minWidth: "6rem" }}
+            ></Column>
             <Column
               field="facilityId"
               header="ID"
@@ -277,7 +353,14 @@ function AddNewLocationForm() {
               bounds={bounds}
             />
             {yCoordinate && xCoordinate && (
-              <Marker position={[yCoordinate, xCoordinate]}></Marker>
+              <Marker
+                icon={iconFunction(
+                  selectedFacility
+                    ? selectedFacility.facilityDetailJson.facilityType
+                    : ""
+                )}
+                position={[yCoordinate, xCoordinate]}
+              ></Marker>
             )}
             <DummyMapChildren />
           </MapContainer>

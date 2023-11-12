@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import DropdownNotification from "./DropdownNotification";
 import DropdownUser from "./DropdownUser";
 // import Logo from "../images/logo/logo-icon.svg";
 // import DarkModeSwitcher from './DarkModeSwitcher';
@@ -72,7 +71,7 @@ const Header = (props: {
         <div className="2xsm:gap-7 flex items-center gap-3">
           <ul className="2xsm:gap-4 flex items-center gap-2">
             {/* <!-- Notification Menu Area --> */}
-            <DropdownNotification />
+            {/* <DropdownNotification /> */}
             {/* <!-- Notification Menu Area --> */}
           </ul>
 

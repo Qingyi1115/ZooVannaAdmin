@@ -1,11 +1,6 @@
 
-import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import useApiJson from "../../../hooks/useApiJson";
-import Employee from "src/models/Employee";
 import ManageOperationStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/OperationStaff/ManageOperationStaff";
-import RemoveOperationStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/OperationStaff/RemoveOperationStaff";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
 

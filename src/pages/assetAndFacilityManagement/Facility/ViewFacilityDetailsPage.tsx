@@ -1,21 +1,20 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
 
-import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import ViewFacilityDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewFacilityDetails";
-import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewThirdPartyDetails";
-import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Employee from "../../../models/Employee";
 import AllHubDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/AllHubDatatable";
-import AllCustomerReportsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatable";
+import AllCustomerReportsDatatableByFacility from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/CustomerReport/AllCustomerReportsDatatableByFacility";
 import AllFacilityLogsDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/FacilityLog/AllFacilityLogsDatatable";
-import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
+import ViewAllFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/ViewAllFacilityMaintenanceStaff";
+import ViewFacilityDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewFacilityDetails";
+import ViewInHouseDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewInHouseDetails";
+import ViewThirdPartyDetails from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/ViewThirdPartyDetails";
 import { useAuthContext } from "../../../hooks/useAuthContext";
-import AddFacilityMaintenanceStaff from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/MaintenanceStaff/AddFacilityMaintenanceStaff";
+import Employee from "../../../models/Employee";
+import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
 
 
 
@@ -54,7 +53,8 @@ function ViewFacilityDetailsPage() {
     facilityDetail: "",
     facilityDetailJson: undefined,
     isSheltered: false,
-    hubProcessors: []
+    hubProcessors: [],
+    showOnMap: false
   };
 
   const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
@@ -71,10 +71,10 @@ function ViewFacilityDetailsPage() {
           `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
           { includes: ["hubProcessors"] }
         );
-        for (const processor of responseJson.facility.hubProcessors){
-          if (processor.lastDataUpdate){
+        for (const processor of responseJson.facility.hubProcessors) {
+          if (processor.lastDataUpdate) {
             processor.lastDataUpdateString = new Date(processor.lastDataUpdate).toLocaleString();
-          }else{
+          } else {
             processor.lastDataUpdateString = "No last update!";
           }
         }
@@ -140,7 +140,7 @@ function ViewFacilityDetailsPage() {
           </TabsContent>
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <TabsContent value="manageMaintenance">
-              <AddFacilityMaintenanceStaff facilityId={Number(facilityId)} />
+              <ViewAllFacilityMaintenanceStaff facilityId={Number(facilityId)} />
             </TabsContent>
           )}
           {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
@@ -149,7 +149,7 @@ function ViewFacilityDetailsPage() {
             </TabsContent>
           )}
           <TabsContent value="customerReport">
-            <AllCustomerReportsDatatable curFacility={curFacility} />
+            <AllCustomerReportsDatatableByFacility curFacility={curFacility} />
           </TabsContent>
         </Tabs>
       </div>

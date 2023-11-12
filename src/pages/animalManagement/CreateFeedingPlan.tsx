@@ -1,72 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import { useParams } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
-import useApiJson from "../../hooks/useApiJson";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import useApiJson from "../../hooks/useApiJson";
 
-import Species from "../../models/Species";
 import Animal from "../../models/Animal";
+import Species from "../../models/Species";
 
 import * as Form from "@radix-ui/react-form";
-import { PickList } from "primereact/picklist";
-import { Nullable } from "primereact/ts-helpers";
 import { Calendar } from "primereact/calendar";
+import { Nullable } from "primereact/ts-helpers";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogFooter,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from "@/components/ui/dialog";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Dialog } from "primereact/dialog";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import FeedingPlanSessionDetail from "../../models/FeedingPlanSessionDetail";
-import FeedingItem from "../../models/FeedingItem";
+  InputNumber,
+  InputNumberValueChangeEvent,
+} from "primereact/inputnumber";
 import { MultiSelect } from "primereact/multiselect";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+import AnimalFeedingPlanInvolvedAnimalDatatable from "../../components/AnimalManagement/AnimalFeedingPlanDetailsPage/AnimalFeedingPlanInvolvedAnimalDatatable";
 import {
   AnimalFeedCategory,
   DayOfWeek,
   EventTimingType,
   FoodUnit,
 } from "../../enums/Enumurated";
-import FormFieldSelect from "../../components/FormFieldSelect";
 import SpeciesDietNeed from "../../models/SpeciesDietNeed";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import {
-  InputNumber,
-  InputNumberValueChangeEvent,
-} from "primereact/inputnumber";
-import { Item } from "@radix-ui/react-accordion";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 function CreateFeedingPlan() {
   const apiJson = useApiJson();
@@ -97,6 +83,9 @@ function CreateFeedingPlan() {
     eventTimingType: string;
     feedingItems: DummyFeedingItem[];
     durationInMinutes: number;
+    isPublic: boolean;
+    publicEventStartTime: string | null;
+    requiredNumberOfKeeper: number;
   }
   const [feedingPlanSessions, setFeedingPlanSessions] = useState<
     DummyFeedingPlanSessionDetail[]
@@ -125,12 +114,16 @@ function CreateFeedingPlan() {
     useState<string | null>(null);
   const [durationInMinutesNewFoodItem, setDurationInMinutesNewFoodItem] =
     useState<number | null>(null);
+  const [
+    requiredNumberOfKeeperNewFoodItem,
+    setRequiredNumberOfKeeperNewFoodItem,
+  ] = useState<number | null>(1);
   // below is the list of feeding items for new session(s) to be added
   const [curFeedingItemsNewFeedSession, setCurFeedingItemsNewFeedSession] =
     useState<DummyFeedingItem[]>(
-      animalTargetList.map((animal) => ({
+      animalSourceList.map((animal) => ({
         foodCategory: "",
-        amount: null,
+        amount: 0,
         unit: "",
         animal: animal,
       }))
@@ -171,7 +164,8 @@ function CreateFeedingPlan() {
   function getRecoAmountAnimal(
     animalFeedCategory: string,
     weekOrMeal: string,
-    animalCode: string
+    animalCode: string,
+    unit: string
   ) {
     const recoAmountForSpecificAnimal = animalRecoAmounts.find((recoAmount) => {
       return (
@@ -186,10 +180,25 @@ function CreateFeedingPlan() {
         <>
           {recoAmountForSpecificAnimal.recoAmt != "No dietary data found!" ? (
             <div>
-              {recoAmountForSpecificAnimal.recoAmt?.toLocaleString()} grams (g)
+              {unit == "GRAM" ? (
+                <span>
+                  {recoAmountForSpecificAnimal.recoAmt &&
+                    Number(recoAmountForSpecificAnimal.recoAmt)
+                      .toFixed(2)
+                      .toLocaleString()}{" "}
+                  (g)
+                </span>
+              ) : (
+                <span>
+                  {(Number(recoAmountForSpecificAnimal.recoAmt) / 1000)
+                    .toFixed(2)
+                    .toLocaleString()}{" "}
+                  (kg)
+                </span>
+              )}
             </div>
           ) : (
-            recoAmountForSpecificAnimal.recoAmt
+            <div className="text-danger">No data found</div>
           )}
         </>
       );
@@ -217,7 +226,8 @@ function CreateFeedingPlan() {
 
   function getAmountFoodAlreadyAddedPerWeekInGrams(
     animalCode: string,
-    animalFeedCategory: string
+    animalFeedCategory: string,
+    unit: string
   ) {
     const sum = feedingPlanSessions.reduce((total, session) => {
       const filteredItems = session.feedingItems.filter((item) => {
@@ -235,9 +245,9 @@ function CreateFeedingPlan() {
       return total + sessionSum;
     }, 0);
 
-    return (
-      sum.toLocaleString() + " (g) | " + (sum / 1000).toLocaleString() + " (kg)"
-    );
+    return unit == "GRAM"
+      ? sum.toFixed(2).toLocaleString() + " (g)"
+      : (sum / 1000).toFixed(2).toLocaleString() + " (kg)";
   }
 
   const handleAmountChangeNewFoodItem = (
@@ -252,9 +262,10 @@ function CreateFeedingPlan() {
     setCurFeedingItemsNewFeedSession(updatedCurFeedingItemsToBeAdded);
   };
 
+  // update feedingItemsNewFeedSession array when animals change
   useEffect(() => {
     setCurFeedingItemsNewFeedSession(
-      animalTargetList.map((animal) => {
+      animalSourceList.map((animal) => {
         const existingItem = curFeedingItemsNewFeedSession.find((feedingItem) =>
           feedingItem.animal
             ? feedingItem.animal.animalCode === animal.animalCode
@@ -272,7 +283,24 @@ function CreateFeedingPlan() {
         }
       })
     );
-  }, [animalTargetList]);
+
+    // update cur feeding sessions also, to remove all items containing animal that were removed
+    const tempFeedingPlanSessions = [...feedingPlanSessions];
+    const animalCodes = animalSourceList.map((animal) => {
+      return animal.animalCode;
+    });
+
+    const updatedFeedingPlanSessions = feedingPlanSessions.map((session) => ({
+      ...session,
+      feedingItems: session.feedingItems
+        .map((item) => ({
+          ...item,
+          animalCode: item.animal.animalCode,
+        }))
+        .filter((item) => animalCodes.includes(item.animalCode)),
+    }));
+    setFeedingPlanSessions(updatedFeedingPlanSessions);
+  }, [animalSourceList]);
 
   function clearNewFoodSessionFormBox() {
     setSelectedCurFeedCategoryNewFoodItem(null);
@@ -310,6 +338,8 @@ function CreateFeedingPlan() {
           const existingItem = itemsMap.get(key);
           if (item.amount !== null) {
             existingItem.amount = item.amount;
+          } else {
+            item.amount = 0;
           }
         } else {
           // Item with a new combination of foodCategory and animalCode, add it to the map
@@ -319,6 +349,48 @@ function CreateFeedingPlan() {
     });
 
     return Array.from(itemsMap.values());
+  }
+
+  function autoAddSuggestedFeedingAmount() {
+    if (!selectedCurFeedCategoryNewFoodItem) {
+      return;
+    }
+
+    if (
+      curFeedingItemsNewFeedSession.length == 0 &&
+      !unitOfMeasurementNewFoodItem
+    ) {
+      return;
+    }
+
+    const tempFeedingItemsNewFeedSession = [...curFeedingItemsNewFeedSession];
+    // use animalRecoAmounts to fill
+    for (var feedingItem of tempFeedingItemsNewFeedSession) {
+      // const curRecoAmt = getRecoAmountAnimal(
+      //   selectedCurFeedCategoryNewFoodItem,
+      //   "meal",
+      //   feedingItem.animal.animalCode
+      // );
+      const curRecoAmt = animalRecoAmounts.find((recoAmount) => {
+        return (
+          recoAmount.animalCode === feedingItem.animal.animalCode &&
+          recoAmount.animalFeedCategory ===
+            selectedCurFeedCategoryNewFoodItem &&
+          recoAmount.weekOrMeal === "meal"
+        );
+      });
+      // if (curRecoAmt && unitOfMeasurementNewFoodItem == "KG") {
+      // }
+      if (curRecoAmt) {
+        feedingItem.amount =
+          curRecoAmt.recoAmt == "No dietary data found!"
+            ? Number(0)
+            : unitOfMeasurementNewFoodItem == "KG"
+            ? Number((Number(curRecoAmt.recoAmt) / 1000).toFixed(2))
+            : Number(Number(curRecoAmt.recoAmt).toFixed(2));
+      }
+    }
+    setCurFeedingItemsNewFeedSession(tempFeedingItemsNewFeedSession);
   }
 
   function addNewFoodSessionToPlan() {
@@ -342,10 +414,11 @@ function CreateFeedingPlan() {
     const newFeedingItemsListWithUomAndCategory =
       curFeedingItemsNewFeedSession.map((item) => ({
         ...item,
+        amount: item.amount == null ? 0 : item.amount,
         foodCategory: selectedCurFeedCategoryNewFoodItem,
         unit: unitOfMeasurementNewFoodItem,
       }));
-    console.log(newFeedingItemsListWithUomAndCategory);
+    // console.log(newFeedingItemsListWithUomAndCategory);
 
     const updatedFeedingPlanSessions = [...feedingPlanSessions];
 
@@ -353,7 +426,8 @@ function CreateFeedingPlan() {
     if (
       selectedDaysOfWeekNewFoodItem != undefined &&
       selectedSessionTimingNewFoodItem != undefined &&
-      durationInMinutesNewFoodItem != null
+      durationInMinutesNewFoodItem != null &&
+      requiredNumberOfKeeperNewFoodItem != null
     ) {
       for (const day of selectedDaysOfWeekNewFoodItem as string[]) {
         console.log("here, " + day);
@@ -363,6 +437,9 @@ function CreateFeedingPlan() {
           eventTimingType: selectedSessionTimingNewFoodItem,
           feedingItems: newFeedingItemsListWithUomAndCategory,
           durationInMinutes: durationInMinutesNewFoodItem,
+          isPublic: false,
+          publicEventStartTime: null,
+          requiredNumberOfKeeper: requiredNumberOfKeeperNewFoodItem,
         };
 
         // check inside feedingPlanSessions,
@@ -390,6 +467,11 @@ function CreateFeedingPlan() {
               existingSession.feedingItems,
               newFeedingSessionObject.feedingItems
             );
+
+            // update attributes
+            existingSession.durationInMinutes = durationInMinutesNewFoodItem;
+            existingSession.requiredNumberOfKeeper =
+              requiredNumberOfKeeperNewFoodItem;
           } else if (newFeedingSessionObject.feedingItems) {
             // If the existing session has no feedingItems, assign the new items
             existingSession.feedingItems = newFeedingSessionObject.feedingItems;
@@ -404,8 +486,8 @@ function CreateFeedingPlan() {
       }
       setFeedingPlanSessions(updatedFeedingPlanSessions);
     }
-    console.log("end of here");
-    console.log(feedingPlanSessions);
+    // console.log("end of here");
+    // console.log(feedingPlanSessions);
   }
 
   function groupFeedingItemsByAnimal(
@@ -512,8 +594,8 @@ function CreateFeedingPlan() {
           for (var feedCategory of recommendedFeedSet) {
             const recoAmoutsCurFeedcatory =
               await getRecoAmountsFeedCategoryForSpecies(feedCategory);
-            console.log("aaaaa: " + feedCategory);
-            console.log(recoAmoutsCurFeedcatory);
+            // console.log("aaaaa: " + feedCategory);
+            // console.log(recoAmoutsCurFeedcatory);
 
             if (recoAmoutsCurFeedcatory) {
               // tempRecoAmounts.concat(recoAmoutsCurFeedcatory);
@@ -521,8 +603,8 @@ function CreateFeedingPlan() {
                 ...tempRecoAmounts,
                 ...recoAmoutsCurFeedcatory,
               ];
-              console.log("getting reco amounts");
-              console.log(tempRecoAmounts);
+              // console.log("getting reco amounts");
+              // console.log(tempRecoAmounts);
             }
           }
 
@@ -716,7 +798,10 @@ function CreateFeedingPlan() {
               //     {item.foodCategory}
               //   </div>
               // ))
-              <div key={session.dayOfTheWeek + session.eventTimingType}>
+              <div
+                key={session.dayOfTheWeek + session.eventTimingType}
+                className="max-h-[16em] overflow-y-auto py-2"
+              >
                 {Object.values(groupFeedingItemsByAnimal(session)).map(
                   (
                     group: {
@@ -725,7 +810,10 @@ function CreateFeedingPlan() {
                     },
                     index
                   ) => (
-                    <div key={`animal-${group.animal.animalId}`}>
+                    <div
+                      key={`animal-${group.animal.animalId}`}
+                      className="mb-2 text-sm"
+                    >
                       <div className="font-medium">
                         {group.animal.houseName}:
                       </div>
@@ -733,11 +821,13 @@ function CreateFeedingPlan() {
                         {group.items.map((item, itemIndex) => (
                           <li
                             key={`feeding-item-${item.animal?.animalId}-${itemIndex}`}
+                            className="ml-4 font-normal"
                           >
-                            • {item.foodCategory}:{" "}
+                            {item.foodCategory}:{" "}
                             {item.amount != 0 ? (
                               <span>
-                                {item.amount} {item.unit}
+                                {item.amount?.toFixed(2)}{" "}
+                                <span className="text-xs">{item.unit}</span>
                               </span>
                             ) : (
                               <span>None!</span>
@@ -783,12 +873,32 @@ function CreateFeedingPlan() {
         session.eventTimingType === curEventTimingType
     );
 
+    const curSession = feedingPlanSessions.find(
+      (session) =>
+        session.dayOfTheWeek === curDayOfTheWeek &&
+        session.eventTimingType === curEventTimingType
+    );
+
     return (
       <TableCell className="min-h-[8rem] w-1/3 align-top font-medium hover:bg-muted/50">
-        <div className="flex justify-between">
+        <div className="mb-1 flex justify-between">
           <div className="font-bold">
-            {curEventTimingType.charAt(0).toUpperCase() +
-              curEventTimingType.slice(1).toLowerCase()}
+            <div>
+              {curEventTimingType.charAt(0).toUpperCase() +
+                curEventTimingType.slice(1).toLowerCase()}{" "}
+              {curSession && (
+                <span className="text-sm font-normal">
+                  ({curSession?.durationInMinutes} minutes)
+                </span>
+              )}
+            </div>
+            <div>
+              {curSession && (
+                <div>
+                  No. Required Keepers: {curSession?.requiredNumberOfKeeper}
+                </div>
+              )}
+            </div>
           </div>
           <div>
             {isSessionExist(curDayOfTheWeek, curEventTimingType) && (
@@ -802,7 +912,18 @@ function CreateFeedingPlan() {
                 >
                   Clear
                 </Button>
-                {editSessionDialog(curDayOfTheWeek, curEventTimingType)}
+                <Button
+                  variant={"outline"}
+                  type="button"
+                  className="h-min bg-white px-2 py-1 text-sm"
+                  onClick={() => {
+                    setSelectedSessionToEditDayOfWeek(curDayOfTheWeek);
+                    setSelectedSessionToEditTiming(curEventTimingType);
+                    setOpenEditSessionDialog(true);
+                  }}
+                >
+                  Edit
+                </Button>
               </>
             )}
           </div>
@@ -819,100 +940,152 @@ function CreateFeedingPlan() {
   // Edit session dialog
   const [openEditSessionDialog, setOpenEditSessionDialog] =
     useState<boolean>(false);
-  const editSessionDialog = (
-    curDayOfTheWeek: string,
-    curEventTimingType: string
-  ) => {
-    // const [selectedSessionToEdit, setSelectedSessionToEdit] =
-    //   useState<DummyFeedingPlanSessionDetail | null>(null);
+  const [selectedSessionToEditDayOfWeek, setSelectedSessionToEditDayOfWeek] =
+    useState<string | null>(null);
+  const [selectedSessionToEditTiming, setSelectedSessionToEditTiming] =
+    useState<string | null>(null);
+  // const [selectedSessionToEdit, setSelectedSessionToEdit] =
+  //   useState<DummyFeedingPlanSessionDetail | null>(null);
+  const editSessionDialog = () =>
+    // curDayOfTheWeek: string,
+    // curEventTimingType: string
+    {
+      const [selectedSessionToEdit, setSelectedSessionToEdit] =
+        useState<DummyFeedingPlanSessionDetail | null>(null);
+      const dropdownRef = useRef<Dropdown>(null);
 
-    const tempFeedingPlanSessions = [...feedingPlanSessions];
+      const tempFeedingPlanSessions = [...feedingPlanSessions];
 
-    // find selected session
-    const existingSessionIndex = [...feedingPlanSessions].findIndex(
-      (session) =>
-        session.dayOfTheWeek === curDayOfTheWeek &&
-        session.eventTimingType === curEventTimingType
-    );
+      // find selected session
+      const existingSessionIndex = [...feedingPlanSessions].findIndex(
+        (session) =>
+          session.dayOfTheWeek === selectedSessionToEditDayOfWeek &&
+          session.eventTimingType === selectedSessionToEditTiming
+      );
 
-    // const [curSessionToEdit, setCurSessionToEdit] =
-    //   useState<DummyFeedingPlanSessionDetail | null>(
-    //     [...feedingPlanSessions][existingSessionIndex]
-    //   );
-    let curSessionToEdit: DummyFeedingPlanSessionDetail;
-    if (existingSessionIndex != -1) {
-      curSessionToEdit = tempFeedingPlanSessions[existingSessionIndex];
-    } else {
-      return;
-    }
+      // const [curSessionToEdit, setCurSessionToEdit] =
+      //   useState<DummyFeedingPlanSessionDetail | null>(
+      //     [...feedingPlanSessions][existingSessionIndex]
+      //   );
+      let curSessionToEdit: DummyFeedingPlanSessionDetail;
 
-    const handleDurationChangeEditSession = (newDurationInMinutes: number) => {
-      if (!curSessionToEdit) {
+      if (existingSessionIndex != -1) {
+        curSessionToEdit = tempFeedingPlanSessions[existingSessionIndex];
+      } else {
         return;
       }
-      curSessionToEdit.durationInMinutes = newDurationInMinutes;
-    };
 
-    const handleAmountChangeEditSession = (
-      index: number,
-      amount: number | null
-    ) => {
-      if (!curSessionToEdit) {
-        return;
-      }
-      if (curSessionToEdit.feedingItems == undefined) {
-        return;
-      }
-      const updatedCurSessionFeedingItemsToBeEdited = [
-        ...curSessionToEdit.feedingItems,
-      ];
-      updatedCurSessionFeedingItemsToBeEdited[index] = {
-        ...updatedCurSessionFeedingItemsToBeEdited[index],
-        amount,
+      const handleDurationChangeEditSession = (
+        newDurationInMinutes: number
+      ) => {
+        if (!curSessionToEdit) {
+          return;
+        }
+        curSessionToEdit.durationInMinutes = newDurationInMinutes;
       };
-      curSessionToEdit.feedingItems = updatedCurSessionFeedingItemsToBeEdited;
-      // setCurSessionToEdit({
-      //   ...curSessionToEdit,
-      //   feedingItems: updatedCurSessionFeedingItemsToBeEdited,
-      // });
-    };
 
-    function handleEditSession() {
-      // const existingSessionIndexInRealPlan = feedingPlanSessions.findIndex(
-      //   (session) =>
-      //     session.dayOfTheWeek === curDayOfTheWeek &&
-      //     session.eventTimingType === curEventTimingType
-      // );
-      setFeedingPlanSessions(tempFeedingPlanSessions);
-      setOpenEditSessionDialog(false);
-    }
+      const handleNumKeeperChangeEditSession = (
+        newRequiredNumberOfKeeper: number
+      ) => {
+        if (!curSessionToEdit) {
+          return;
+        }
+        curSessionToEdit.requiredNumberOfKeeper = newRequiredNumberOfKeeper;
+      };
 
-    return (
-      <React.Fragment>
-        <Dialog
-          open={openEditSessionDialog}
-          onOpenChange={setOpenEditSessionDialog}
-        >
-          <DialogTrigger asChild>
+      const handleUnitChangeEditSession = (index: number, unit: string) => {
+        if (!curSessionToEdit) {
+          return;
+        }
+        if (curSessionToEdit.feedingItems == undefined) {
+          return;
+        }
+        const updatedCurSessionFeedingItemsToBeEdited = [
+          ...curSessionToEdit.feedingItems,
+        ];
+        updatedCurSessionFeedingItemsToBeEdited[index] = {
+          ...updatedCurSessionFeedingItemsToBeEdited[index],
+          unit,
+        };
+        curSessionToEdit.feedingItems = updatedCurSessionFeedingItemsToBeEdited;
+        console.log("edit unit");
+        console.log(curSessionToEdit.feedingItems[index].unit);
+        // setCurSessionToEditUseState(curSessionToEdit);
+      };
+
+      const handleAmountChangeEditSession = (
+        index: number,
+        amount: number | null
+      ) => {
+        if (!curSessionToEdit) {
+          return;
+        }
+        if (curSessionToEdit.feedingItems == undefined) {
+          return;
+        }
+        const updatedCurSessionFeedingItemsToBeEdited = [
+          ...curSessionToEdit.feedingItems,
+        ];
+        updatedCurSessionFeedingItemsToBeEdited[index] = {
+          ...updatedCurSessionFeedingItemsToBeEdited[index],
+          amount,
+        };
+        curSessionToEdit.feedingItems = updatedCurSessionFeedingItemsToBeEdited;
+        // setCurSessionToEdit({
+        //   ...curSessionToEdit,
+        //   feedingItems: updatedCurSessionFeedingItemsToBeEdited,
+        // });
+      };
+
+      function handleEditSession() {
+        // const existingSessionIndexInRealPlan = feedingPlanSessions.findIndex(
+        //   (session) =>
+        //     session.dayOfTheWeek === curDayOfTheWeek &&
+        //     session.eventTimingType === curEventTimingType
+        // );
+        setFeedingPlanSessions(tempFeedingPlanSessions);
+        setOpenEditSessionDialog(false);
+      }
+
+      const footerContent = (
+        <Button type="button" onClick={handleEditSession}>
+          Save changes
+        </Button>
+      );
+
+      return (
+        <React.Fragment>
+          <Dialog
+            visible={openEditSessionDialog}
+            header={"Edit Session Details"}
+            onHide={() => setOpenEditSessionDialog(false)}
+            // onOpenChange={setOpenEditSessionDialog}
+            footer={footerContent}
+            style={{
+              width: "60vw",
+              height: "70vh",
+            }}
+          >
+            {/* <DialogTrigger asChild>
             <Button
               variant={"outline"}
               className="h-min bg-white px-2 py-1 text-sm"
             >
               Edit
             </Button>
-          </DialogTrigger>
-          <DialogContent className="ml-[10%] max-w-[60vw]">
-            <DialogHeader>
+          </DialogTrigger> */}
+            {/* <DialogContent className="ml-[10%] max-h-[70vh] max-w-[60vw] overflow-auto"> */}
+            {/* <DialogHeader>
               <DialogTitle>Edit Session Details</DialogTitle>
               <DialogDescription>
                 Edit Session Info or Food Amount
               </DialogDescription>
-            </DialogHeader>
+            </DialogHeader> */}
             {curSessionToEdit && (
-              <div>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
+              <div className="flex flex-col gap-4">
+                <Table className="">
+                  <TableHeader className="">
+                    <TableRow className="">
                       <TableHead>Day</TableHead>
                       <TableHead>Session Timing</TableHead>
                       {/* <TableHead>Duration (minutes)</TableHead> */}
@@ -941,18 +1114,21 @@ function CreateFeedingPlan() {
                     className="w-full"
                   />
                 </div>
-                {/* <div>
-                  {curSessionToEdit.feedingItems &&
-                    curSessionToEdit.feedingItems.map((feedingItem) => (
-                      <div>
-                        <div>{feedingItem.animal.houseName}</div>
-                        <div>
-                          {feedingItem.foodCategory}: {feedingItem.amount}
-                        </div>
-                      </div>
-                    ))}
-                </div> */}
                 <div>
+                  <div>Required Number of Keepers:</div>
+                  <InputNumber
+                    placeholder="Required number of keepers"
+                    value={curSessionToEdit.requiredNumberOfKeeper}
+                    onValueChange={(e: InputNumberValueChangeEvent) =>
+                      handleNumKeeperChangeEditSession(e.value as number)
+                    }
+                    className="w-full"
+                  />
+                </div>
+                <div className="mt-2 font-bold">
+                  Edit specific amounts below
+                </div>
+                <div className="flex flex-col gap-4">
                   {Object.values(
                     groupFeedingItemsByAnimal(curSessionToEdit)
                   ).map(
@@ -963,25 +1139,151 @@ function CreateFeedingPlan() {
                       },
                       index
                     ) => (
-                      <div key={group.animal.animalCode}>
-                        <div>{group.animal.houseName}</div>
-                        <div>
-                          {group.items.map((item) => (
+                      <div
+                        key={group.animal.animalCode}
+                        className="rounded-md border border-strokedark/30 p-4 shadow-sm"
+                      >
+                        {/* first row, animal stuff */}
+                        <div className="mb-4 flex gap-4">
+                          <img
+                            className="aspect-square h-12 w-12 rounded-full border border-white object-cover shadow-4"
+                            src={`http://localhost:3000/${group.animal.imageUrl}`}
+                            alt={group.animal.houseName}
+                          />
+                          <div>
+                            <div className="mb-1 flex gap-2">
+                              <div>{group.animal.houseName}</div>
+                              {(group.animal.animalStatus
+                                .split(",")
+                                .includes("PREGNANT") ||
+                                group.animal.animalStatus
+                                  .split(",")
+                                  .includes("SICK")) && (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger type="button">
+                                      <HiOutlineExclamationCircle className="h-6 w-6 animate-pulse stroke-danger" />
+                                    </TooltipTrigger>
+                                    <TooltipContent className="border-strokedark/40">
+                                      Please note that sick, pregnant, and
+                                      possibly injured animals may require{" "}
+                                      <span className="font-bold">
+                                        special diets!
+                                      </span>{" "}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )}
+                            </div>
                             <div>
-                              {item.foodCategory}: {item.amount}
-                              <div>Amount of food to be given:</div>
-                              <InputNumber
-                                placeholder="Amount of food"
-                                value={item.amount}
-                                onValueChange={(
-                                  e: InputNumberValueChangeEvent
-                                ) =>
-                                  handleAmountChangeEditSession(
-                                    index,
-                                    e.value as number | null
-                                  )
-                                }
-                              />
+                              {animalStatusTemplate(
+                                group.animal.animalStatus.split(",")
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-4 text-sm">
+                          {group.items.map((item) => (
+                            <div className="h-full">
+                              <div className="flex gap-8">
+                                <div className="flex gap-4">
+                                  <div className="">
+                                    <div className="">{item.foodCategory}:</div>
+                                    {/* <div>Amount of food to be given:</div> */}
+                                    <InputNumber
+                                      placeholder="Amount of food"
+                                      value={item.amount}
+                                      onValueChange={(
+                                        e: InputNumberValueChangeEvent
+                                      ) =>
+                                        handleAmountChangeEditSession(
+                                          index,
+                                          e.value as number | null
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                  <div className="">
+                                    <span className="">Unit: </span>
+                                    <div className="flex h-12 items-center">
+                                      {item.unit}
+                                    </div>
+                                  </div>
+                                </div>
+                                {/* reco amounts stuff */}
+                                <div className="flex w-full justify-between gap-8">
+                                  <div>
+                                    <span className="font-medium ">
+                                      Recommended Amount:
+                                    </span>{" "}
+                                    <div className="flex gap-8">
+                                      <div>
+                                        Per meal: <br />
+                                        <div
+                                          className={`rounded bg-slate-200 p-1 ${
+                                            !selectedCurFeedCategoryNewFoodItem &&
+                                            "animate-pulse p-2"
+                                          }`}
+                                        >
+                                          <span className="text-sm font-bold">
+                                            {item.foodCategory &&
+                                              item.unit &&
+                                              getRecoAmountAnimal(
+                                                item.foodCategory,
+                                                "meal",
+                                                group.animal.animalCode,
+                                                item.unit
+                                              )}
+                                          </span>
+                                        </div>
+                                      </div>
+                                      <div>
+                                        Per week: <br />
+                                        <div
+                                          className={`rounded bg-slate-200 p-1 ${
+                                            !selectedCurFeedCategoryNewFoodItem &&
+                                            "animate-pulse p-2"
+                                          }`}
+                                        >
+                                          <span className="text-sm font-bold">
+                                            {item.foodCategory &&
+                                              item.unit &&
+                                              getRecoAmountAnimal(
+                                                item.foodCategory,
+                                                "week",
+                                                group.animal.animalCode,
+                                                item.unit
+                                              )}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="w-1/3">
+                                    <span className="font-medium">
+                                      Amount Added:
+                                    </span>
+                                    <div>
+                                      <div
+                                        className={`w-full rounded bg-slate-200 p-1 text-center ${
+                                          !selectedCurFeedCategoryNewFoodItem &&
+                                          "animate-pulse p-2"
+                                        }`}
+                                      >
+                                        <span className="w-full text-sm font-bold">
+                                          {item.foodCategory &&
+                                            item.unit &&
+                                            getAmountFoodAlreadyAddedPerWeekInGrams(
+                                              group.animal.animalCode,
+                                              item.foodCategory,
+                                              item.unit
+                                            )}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -991,16 +1293,11 @@ function CreateFeedingPlan() {
                 </div>
               </div>
             )}
-            <DialogFooter>
-              <Button type="button" onClick={handleEditSession}>
-                Save changes
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </React.Fragment>
-    );
-  };
+            {/* </DialogContent> */}
+          </Dialog>
+        </React.Fragment>
+      );
+    };
 
   ///
 
@@ -1010,13 +1307,14 @@ function CreateFeedingPlan() {
 
     // any validations
 
-    const animalCodes = animalTargetList.map((animal) => animal.animalCode);
+    const animalCodes = animalSourceList.map((animal) => animal.animalCode);
 
     const updatedFeedingPlanSessions = feedingPlanSessions.map((session) => ({
       ...session,
       feedingItems: session?.feedingItems.map((item) => ({
         ...item,
         animalCode: item.animal.animalCode,
+        animal: null,
       })),
     }));
 
@@ -1066,7 +1364,7 @@ function CreateFeedingPlan() {
           <div className="mb-4 flex justify-between">
             {/* <NavLink className="flex" to={(-1)}> */}
             <Button
-              onClick={() => navigate("/animal/viewallanimals/")}
+              onClick={() => navigate(-1)}
               variant={"outline"}
               type="button"
               className=""
@@ -1092,7 +1390,7 @@ function CreateFeedingPlan() {
           className="flex w-full flex-col gap-6 rounded-lg bg-white text-black"
           onSubmit={handleSubmit}
         >
-          <Form.Field
+          {/* <Form.Field
             name="selectedAnimals"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
@@ -1130,7 +1428,13 @@ function CreateFeedingPlan() {
             <div className="self-center">
               <Form.ValidityState>{validateSelectAnimal}</Form.ValidityState>
             </div>
-          </Form.Field>
+          </Form.Field> */}
+          <div>
+            <div className="text-lg font-medium">Involved Animal List:</div>
+            <AnimalFeedingPlanInvolvedAnimalDatatable
+              involvedAnimalList={animalSourceList ? animalSourceList : []}
+            />
+          </div>
 
           <Separator />
 
@@ -1139,7 +1443,7 @@ function CreateFeedingPlan() {
             name="physicalDefiningCharacteristics"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <Form.Label className="font-medium">Details</Form.Label>
+            <Form.Label className="font-medium">Description</Form.Label>
             <Form.Control
               asChild
               value={feedingPlanDesc}
@@ -1303,6 +1607,18 @@ function CreateFeedingPlan() {
             </div>
 
             <div>
+              <div>Required Number of Keepers:</div>
+              <InputNumber
+                placeholder="Required number of keepers"
+                value={requiredNumberOfKeeperNewFoodItem}
+                onValueChange={(e: InputNumberValueChangeEvent) =>
+                  setRequiredNumberOfKeeperNewFoodItem(e.value as number | null)
+                }
+                className="w-full"
+              />
+            </div>
+
+            <div>
               <div>Select Feed Category</div>
               <Dropdown
                 value={selectedCurFeedCategoryNewFoodItem}
@@ -1342,7 +1658,7 @@ function CreateFeedingPlan() {
             </div>
 
             <div className="my-4 rounded-lg border border-strokedark/20 bg-white p-6">
-              {animalTargetList.length > 0 ? (
+              {animalSourceList.length > 0 ? (
                 <div>
                   <div className="flex justify-center gap-2 text-center text-lg font-bold">
                     Feed Amount for Each Animal
@@ -1372,10 +1688,19 @@ function CreateFeedingPlan() {
                     </div>
                   )}
                   <div className="my-4 flex w-full justify-center">
-                    <Button>Auto-fill Suggested Amounts</Button>
+                    <Button
+                      disabled={
+                        !selectedCurFeedCategoryNewFoodItem ||
+                        !unitOfMeasurementNewFoodItem
+                      }
+                      type="button"
+                      onClick={autoAddSuggestedFeedingAmount}
+                    >
+                      Auto-fill Suggested Amounts
+                    </Button>
                   </div>
-                  <div className="flex flex-col gap-4">
-                    {animalTargetList.map((curAnimal, idx) => (
+                  <div className="flex max-h-[40vh] flex-col gap-4 overflow-auto pb-4 pr-4">
+                    {animalSourceList.map((curAnimal, idx) => (
                       <div
                         key={curAnimal.animalCode}
                         className="rounded-md border border-strokedark/30 p-4 shadow-sm"
@@ -1402,12 +1727,11 @@ function CreateFeedingPlan() {
                                       <HiOutlineExclamationCircle className="h-6 w-6 animate-pulse stroke-danger" />
                                     </TooltipTrigger>
                                     <TooltipContent className="border-strokedark/40">
-                                      Sick, pregnant, and possibly injured
-                                      animals may require{" "}
+                                      Please note that sick, pregnant, and
+                                      possibly injured animals may require{" "}
                                       <span className="font-bold">
-                                        more food
+                                        special diets!
                                       </span>{" "}
-                                      given to them!
                                     </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
@@ -1443,47 +1767,75 @@ function CreateFeedingPlan() {
                           {/* reco amounts stuff */}
                           <div className="flex w-full justify-between gap-8">
                             <div>
-                              <span className="font-medium ">
+                              <span className="font-medium">
                                 Recommended Amount:
                               </span>{" "}
-                              <div className="flex gap-8">
+                              <div className="flex items-end gap-8">
                                 <div>
-                                  Per meal: <br />
-                                  <span className="text-lg">
-                                    {selectedCurFeedCategoryNewFoodItem &&
-                                      getRecoAmountAnimal(
-                                        selectedCurFeedCategoryNewFoodItem,
-                                        "meal",
-                                        curAnimal.animalCode
-                                      )}
+                                  <span className="text-sm">
+                                    Per meal: <br />
                                   </span>
+                                  <div
+                                    className={`rounded bg-slate-200 p-1 ${
+                                      !selectedCurFeedCategoryNewFoodItem &&
+                                      "animate-pulse p-2"
+                                    }`}
+                                  >
+                                    <span className="text-base font-bold">
+                                      {selectedCurFeedCategoryNewFoodItem &&
+                                        unitOfMeasurementNewFoodItem &&
+                                        getRecoAmountAnimal(
+                                          selectedCurFeedCategoryNewFoodItem,
+                                          "meal",
+                                          curAnimal.animalCode,
+                                          unitOfMeasurementNewFoodItem
+                                        )}
+                                    </span>
+                                  </div>
                                 </div>
                                 <div>
-                                  Per week: <br />
-                                  <span className="text-lg">
-                                    {selectedCurFeedCategoryNewFoodItem &&
-                                      getRecoAmountAnimal(
-                                        selectedCurFeedCategoryNewFoodItem,
-                                        "week",
-                                        curAnimal.animalCode
-                                      )}
-                                  </span>
+                                  <div className="text-sm">
+                                    Per week: <br />
+                                  </div>
+                                  <div
+                                    className={`rounded bg-slate-200 p-1 ${
+                                      !selectedCurFeedCategoryNewFoodItem &&
+                                      "animate-pulse p-2"
+                                    }`}
+                                  >
+                                    <span className="text-base font-bold">
+                                      {selectedCurFeedCategoryNewFoodItem &&
+                                        unitOfMeasurementNewFoodItem &&
+                                        getRecoAmountAnimal(
+                                          selectedCurFeedCategoryNewFoodItem,
+                                          "week",
+                                          curAnimal.animalCode,
+                                          unitOfMeasurementNewFoodItem
+                                        )}
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                             <div className="w-1/3">
-                              <span className="font-medium">
-                                Amount already added <br />
-                                per week:
-                              </span>
+                              <span className="font-medium">Added Amount:</span>
                               <div>
-                                <span className="text-lg">
-                                  {selectedCurFeedCategoryNewFoodItem &&
-                                    getAmountFoodAlreadyAddedPerWeekInGrams(
-                                      curAnimal.animalCode,
-                                      selectedCurFeedCategoryNewFoodItem
-                                    )}
-                                </span>
+                                <div
+                                  className={`w-full rounded bg-slate-200 p-1 text-center ${
+                                    !selectedCurFeedCategoryNewFoodItem &&
+                                    "animate-pulse p-2"
+                                  }`}
+                                >
+                                  <span className="w-full text-base font-bold">
+                                    {selectedCurFeedCategoryNewFoodItem &&
+                                      unitOfMeasurementNewFoodItem &&
+                                      getAmountFoodAlreadyAddedPerWeekInGrams(
+                                        curAnimal.animalCode,
+                                        selectedCurFeedCategoryNewFoodItem,
+                                        unitOfMeasurementNewFoodItem
+                                      )}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -1525,6 +1877,13 @@ function CreateFeedingPlan() {
             <div className="flex gap-12">
               <Button
                 type="button"
+                disabled={
+                  !selectedCurFeedCategoryNewFoodItem ||
+                  !selectedDaysOfWeekNewFoodItem ||
+                  !selectedSessionTimingNewFoodItem ||
+                  !unitOfMeasurementNewFoodItem ||
+                  !durationInMinutesNewFoodItem
+                }
                 onClick={addNewFoodSessionToPlan}
                 className="w-full"
               >
@@ -1542,6 +1901,8 @@ function CreateFeedingPlan() {
 
             {/* end add food box */}
           </div>
+
+          <div>{editSessionDialog()}</div>
           <Button
             variant={"destructive"}
             type="button"
@@ -1562,6 +1923,7 @@ function CreateFeedingPlan() {
                 <TableHead className="">Sunday</TableHead>
               </TableRow>
             </TableHeader> */}
+
             <TableBody>
               <TableRow className="bg-muted/20">
                 <TableCell className="font-medium" colSpan={3}>

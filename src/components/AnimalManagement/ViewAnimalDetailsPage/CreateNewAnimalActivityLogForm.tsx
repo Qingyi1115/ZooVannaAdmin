@@ -1,25 +1,22 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import * as Form from "@radix-ui/react-form";
-import FormFieldRadioGroup from "../../FormFieldRadioGroup";
-import FormFieldInput from "../../FormFieldInput";
-import FormFieldSelect from "../../FormFieldSelect";
-import useApiJson from "../../../hooks/useApiJson";
-import useApiFormData from "../../../hooks/useApiFormData";
-import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import Animal from "../../../models/Animal";
+import { useToast } from "@/components/ui/use-toast";
+import * as Form from "@radix-ui/react-form";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
-import Employee from "../../../models/Employee";
+import { useNavigate } from "react-router-dom";
+import beautifyText from "../../../hooks/beautifyText";
+import useApiJson from "../../../hooks/useApiJson";
 import { useAuthContext } from "../../../hooks/useAuthContext";
-import { set } from "date-fns";
+import Animal from "../../../models/Animal";
+import AnimalActivity from "../../../models/AnimalActivity";
+import FormFieldInput from "../../FormFieldInput";
+import FormFieldSelect from "../../FormFieldSelect";
 
-// interface CreateNewAnimalActivityLogProps {
-//   speciesCode: string;
-// }
+interface CreateNewAnimalActivityLogProps {
+  curAnimalActivity: AnimalActivity
+}
 
 function validateAnimalActivityLogName(props: ValidityState) {
   if (props != undefined) {
@@ -33,12 +30,13 @@ function validateAnimalActivityLogName(props: ValidityState) {
   return null;
 }
 
-function CreateNewAnimalActivityLogForm() {
+function CreateNewAnimalActivityLogForm(props: CreateNewAnimalActivityLogProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
+  const { curAnimalActivity } = props;
   const [activityType, setActivityType] = useState<string | undefined>(
-    undefined); // dropdown
+    curAnimalActivity.activityType); // dropdown
   const [durationInMinutes, setDurationInMinutes] = useState<string>(""); // text input
   const [sessionRating, setSessionRating] = useState<string | undefined>(
     undefined); // dropdown
@@ -53,16 +51,21 @@ function CreateNewAnimalActivityLogForm() {
   const [selectedAnimals, setSelectedAnimals] = useState<Animal[]>([]);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
-      setCurAnimalList(res as Animal[]);
-      console.log(res);
-    });
+    if (curAnimalActivity.animals != undefined && curAnimalActivity.animals?.length > 0) {
+      setCurAnimalList(curAnimalActivity.animals)
+    } else {
+      apiJson.get(`http://localhost:3000/api/animal/getAllAnimals/`).then(res => {
+        setCurAnimalList(res as Animal[]);
+        console.log(res);
+      });
+    }
   }, []);
 
   async function handleSubmit(e: any) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
-    const newAnimalActivityLog = {
+    const newAnimalActivity = {
+      animalActivityId: curAnimalActivity.animalActivityId,
       activityType: activityType,
       dateTime: dateTime?.getTime(),
       durationInMinutes: durationInMinutes,
@@ -71,12 +74,12 @@ function CreateNewAnimalActivityLogForm() {
       details: details,
       animalCodes: selectedAnimals.map((animal: Animal) => animal.animalCode)
     }
-    console.log(newAnimalActivityLog);
+    console.log(newAnimalActivity);
 
     try {
       const responseJson = await apiJson.post(
-        `http://localhost:3000/api/animal/createAnimalActivityLog`,
-        newAnimalActivityLog);
+        `http://localhost:3000/api/animal/createAnimalActivityLog/`,
+        newAnimalActivity);
       // success
       toastShadcn({
         description: "Successfully created animal activity log",
@@ -118,19 +121,23 @@ function CreateNewAnimalActivityLogForm() {
         <Separator />
       </div>
       {/* Activity Type */}
-      <FormFieldSelect
+      <div className="mb-1 block font-medium">
+        Activity Type<br /> <b>{beautifyText(activityType)}</b>
+      </div>
+      {/* <FormFieldSelect
         formFieldName="activityType"
         label="Activity Type"
         required={true}
         placeholder="Select an activity type..."
         valueLabelPair={[
           ["TRAINING", "Training"],
-          ["ENRICHMENT", "Enrichment"]
+          ["ENRICHMENT", "Enrichment"],
+          // ["OBSERVATION", "Observation"]
         ]}
         value={activityType}
         setValue={setActivityType}
         validateFunction={validateAnimalActivityLogName}
-      />
+      /> */}
       {/* DateTime */}
       <div className="card justify-content-center block ">
         <div className="mb-1 block font-medium">Date</div>
@@ -203,28 +210,31 @@ function CreateNewAnimalActivityLogForm() {
         setValue={setAnimalReaction}
         validateFunction={validateAnimalActivityLogName}
       />
+
       {/* Details */}
-      <FormFieldInput
-        type="text"
-        formFieldName="details"
-        label="Details"
-        required={true}
-        placeholder=""
-        value={details}
-        setValue={setDetails}
-        validateFunction={validateAnimalActivityLogName}
-        pattern={undefined}
-      />
-      {/* Animals */}
-      <MultiSelect
-        value={selectedAnimals}
-        onChange={(e: MultiSelectChangeEvent) => setSelectedAnimals(e.value)}
-        options={curAnimalList}
-        optionLabel="houseName"
-        filter
-        placeholder="Select Animals"
-        maxSelectedLabels={3}
-        className="w-full md:w-20rem" />
+      <Form.Field
+        name="details"
+        className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+      >
+        <Form.Label className="font-medium">
+          Details
+        </Form.Label>
+        <Form.Control
+          asChild
+          value={details}
+          required={true}
+          onChange={(e) => setDetails(e.target.value)}
+          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium shadow-md outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+        >
+          <textarea
+            rows={6}
+            placeholder="Activity details..."
+          />
+        </Form.Control>
+        <Form.ValidityState>
+          {validateAnimalActivityLogName}
+        </Form.ValidityState>
+      </Form.Field>
 
       <Form.Submit asChild>
         <Button

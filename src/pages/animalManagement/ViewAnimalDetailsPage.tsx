@@ -1,27 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Animal from "../../models/Animal";
-import Species from "../../models/Species";
-import {
-  AcquisitionMethod,
-  AnimalGrowthStage,
-  AnimalSex,
-} from "../../enums/Enumurated";
-import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
-import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
 import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
 import AnimalActivityInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalActivityInfo";
+import AnimalBasicInformation from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalBasicInformation";
+import AnimalWeightInfo from "../../components/AnimalManagement/ViewAnimalDetailsPage/AnimalWeightInfo";
+import Animal from "../../models/Animal";
 
-import AllAnimalFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalFeedingLogsDatatable";
 import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalActivityLogsDatatable";
+import AllAnimalFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalFeedingLogsDatatable";
 
 function ViewAnimalDetailsPage() {
   const apiJson = useApiJson();
@@ -57,16 +49,16 @@ function ViewAnimalDetailsPage() {
           {/* header */}
           <div className="flex flex-col">
             <div className="mb-4 flex justify-between">
-              <NavLink className="flex" to={`/animal/viewallanimals/`}>
-                <Button
-                  variant={"outline"}
-                  type="button"
-                  className=""
-                  onClick={() => navigate(-1)}
-                >
-                  Back
-                </Button>
-              </NavLink>
+              {/* <NavLink className="flex" to={`/animal/viewallanimals/`}> */}
+              <Button
+                variant={"outline"}
+                type="button"
+                className=""
+                onClick={() => navigate(-1)}
+              >
+                Back
+              </Button>
+              {/* </NavLink> */}
               <span className="self-center text-lg text-graydark">
                 Animal Details
               </span>
@@ -104,11 +96,9 @@ function ViewAnimalDetailsPage() {
               <TabsTrigger value="weight">Weight</TabsTrigger>
               <TabsTrigger value="feeding">Feeding</TabsTrigger>
               <TabsTrigger value="trainingenrichmentactivity">
-                Training and Enrichment Activity
+                Activities
               </TabsTrigger>
-              <TabsTrigger value="behaviour">
-                Observation Logs
-              </TabsTrigger>
+              <TabsTrigger value="behaviour">Observation Logs</TabsTrigger>
               <TabsTrigger value="activitylogs">Activity Logs</TabsTrigger>
               <TabsTrigger value="feedinglogs">Feeding Logs</TabsTrigger>
               {/* <TabsTrigger value="medical">Medical</TabsTrigger> */}
@@ -141,6 +131,7 @@ function ViewAnimalDetailsPage() {
                 <AllAnimalObservationLogsDatatable
                   speciesCode={curAnimal.species.speciesCode}
                   animalCode={curAnimal.animalCode}
+                  animalActivityId={-1}
                 />
               </div>
             </TabsContent>
@@ -157,6 +148,7 @@ function ViewAnimalDetailsPage() {
                 <AllAnimalActivityLogsDatatable
                   speciesCode={curAnimal.species.speciesCode}
                   animalCode={curAnimal.animalCode}
+                  animalActivityId={-1}
                 />
               </div>
             </TabsContent>

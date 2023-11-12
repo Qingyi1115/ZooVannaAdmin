@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import useApiJson from "../../../hooks/useApiJson";
-import Hub from "../../../models/Hub";
 import { Button } from "@/components/ui/button";
-import { HubStatus } from "../../../enums/HubStatus";
-import ViewHubDetails from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/ViewHubDetails";
-import Facility from "../../../models/Facility";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import ViewHubDetails from "../../../components/AssetAndFacilityManagement/AssetManagement/Hub/ViewHubDetails";
 import AllSensorDatatable from "../../../components/AssetAndFacilityManagement/AssetManagement/Sensor/AllSensorDatatable";
+import { HubStatus } from "../../../enums/HubStatus";
+import useApiJson from "../../../hooks/useApiJson";
+import Facility from "../../../models/Facility";
+import Hub from "../../../models/HubProcessor";
 
 
 function ViewHubDetailsPage() {
