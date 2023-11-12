@@ -85,13 +85,19 @@ function AllZooEventsFullCalendar(props: AllZooEventsFullCalendarProps) {
   }
 
   useEffect(() => {
+    console.log("zooEventsList", zooEventsList)
     setEvents(
       zooEventsList
         .map((ze) => {
-          const { startTime, endTime } = ze.eventType == "Employee Absence"? {startTime:new Date(ze.eventStartDateTime), endTime:new Date(ze.eventEndDateTime || Date.now())} : calculateSessionTimes(
-            ze.eventTiming?.toString() || "",
-            new Date(ze.eventStartDateTime)
-          );
+          const { startTime, endTime } = ze.eventEndDateTime ?
+            {
+              startTime: new Date(ze.eventStartDateTime),
+              endTime: new Date(ze.eventEndDateTime || Date.now())
+            } :
+            calculateSessionTimes(
+              ze.eventTiming?.toString() || "",
+              new Date(ze.eventStartDateTime)
+            );
 
           const naming: any = ze.eventType;
 
@@ -111,16 +117,16 @@ function AllZooEventsFullCalendar(props: AllZooEventsFullCalendarProps) {
               naming == "Training"
                 ? ["training overflow-hidden"]
                 : naming == "Enrichment"
-                ? ["enrichment overflow-hidden"]
-                : naming == "Observation"
-                ? ["observation overflow-hidden"]
-                : naming == "Employee Feeding"
-                ? ["empfeeding overflow-hidden"]
-                : naming == "Customer Feeding"
-                ? ["cusfeeding overflow-hidden"]
-                : naming == "Employee Absence"
-                ? ["empAbs overflow-hidden"]
-                : ["overflow-hidden"],
+                  ? ["enrichment overflow-hidden"]
+                  : naming == "Observation"
+                    ? ["observation overflow-hidden"]
+                    : naming == "Employee Feeding"
+                      ? ["empfeeding overflow-hidden"]
+                      : naming == "Customer Feeding"
+                        ? ["cusfeeding overflow-hidden"]
+                        : naming == "Employee Absence"
+                          ? ["empAbs overflow-hidden"]
+                          : ["overflow-hidden"],
           };
         })
         .flat(1)

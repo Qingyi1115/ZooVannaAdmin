@@ -66,7 +66,7 @@ export default function AreaFactory(name, info, textures) {
 
   };
 
-  if (textures && textures !== {}) {
+  if (textures && textures != {}) {
 
     let textureValues = { 'none': 'None' };
 

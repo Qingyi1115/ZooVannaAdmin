@@ -144,6 +144,12 @@ import CreateNewAnnouncementPage from "./pages/announcement/CreateNewAnnouncemen
 import EditAnnouncementPage from "./pages/announcement/EditAnnouncementPage";
 import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsPage";
 import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
+import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPage";
+import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
+import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
+import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
+import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSessionDetailsPage";
+import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -1167,12 +1173,64 @@ function App() {
                   }
                 />
               </Route>
+              <Route
+                path="/zooevent/viewallpublicevents"
+                element={
+                  user ? <ViewAllPublicEventPage /> : <Navigate to="/login" />
+                }
+              />
+              <Route
+                path="/zooevent/viewpubliceventdetails/:publicEventId"
+                element={
+                  user ? <ViewPublicEventDetails /> : <Navigate to="/login" />
+                }
+              />
+              <Route
+                path="/zooevent/viewpubliceventdetails/:publicEventId/:tab"
+                element={
+                  user ? <ViewPublicEventDetails /> : <Navigate to="/login" />
+                }
+              />
+              <Route
+                path="/zooevent/editpublicevent/:publicEventId"
+                element={
+                  user ? <EditPublicEventPage /> : <Navigate to="/login" />
+                }
+              />
+              <Route
+                path="/zooevent/assignanimalstopublicevent/:publicEventId"
+                element={
+                  user ? (
+                    <AddAnimalToPublicEventPage />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/zooevent/viewpubliceventsessiondetails/:publicEventSessionId"
+                element={
+                  user ? (
+                    <PublicEventSessionDetailsPage />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/zooevent/createpubliceventsession/:publicEventId"
+                element={
+                  user ? <CreatePublicEventSessionForm /> : <Navigate to="/login" />
+                }
+              />
+
+
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </MainLayout>
         </BrowserRouter>
       </div>
-    </PrimeReactProvider>
+    </PrimeReactProvider >
   );
 }
 
