@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import EditAnimalFeedingLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalFeedingLogForm";
-import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, KeeperType, Specialization } from "../../enums/Enumurated";
+import {
+  AcquisitionMethod,
+  AnimalGrowthStage,
+  AnimalSex,
+  KeeperType,
+  Specialization,
+} from "../../enums/Enumurated";
 import useApiJson from "../../hooks/useApiJson";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
@@ -79,7 +85,6 @@ function EditAnimalFeedingLogPage() {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   let emptyKeeper: Keeper = {
@@ -87,8 +92,8 @@ function EditAnimalFeedingLogPage() {
     keeperType: KeeperType.SENIOR_KEEPER,
     specialization: Specialization.MAMMAL,
     isDisabled: false,
-    employee: emptyEmployee
-  }
+    employee: emptyEmployee,
+  };
 
   let emptyFeedingPlan: FeedingPlan = {
     feedingPlanId: -1,
@@ -111,15 +116,20 @@ function EditAnimalFeedingLogPage() {
     extraRemarks: "",
     animals: [],
     keeper: emptyKeeper,
-    feedingPlan: emptyFeedingPlan
+    feedingPlan: emptyFeedingPlan,
   };
 
-  const [curAnimalFeedingLog, setCurAnimalFeedingLog] = useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
+  const [curAnimalFeedingLog, setCurAnimalFeedingLog] =
+    useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`).then(res => {
-      setCurAnimalFeedingLog(res["animalFeedingLog"]);
-    });
+    apiJson
+      .get(
+        `http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`
+      )
+      .then((res) => {
+        setCurAnimalFeedingLog(res["animalFeedingLog"]);
+      });
   }, [0]);
 
   return (

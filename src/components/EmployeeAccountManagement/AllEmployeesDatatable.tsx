@@ -38,7 +38,6 @@ function AllEmployeesDatatable() {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   const toast = useRef<Toast>(null);

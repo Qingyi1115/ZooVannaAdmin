@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import EditAnimalActivityLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalActivityLogForm";
 import { ActivityType } from "../../enums/ActivityType";
-import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, EventTimingType, KeeperType, RecurringPattern, Specialization } from "../../enums/Enumurated";
+import {
+  AcquisitionMethod,
+  AnimalGrowthStage,
+  AnimalSex,
+  EventTimingType,
+  KeeperType,
+  RecurringPattern,
+  Specialization,
+} from "../../enums/Enumurated";
 import { Rating } from "../../enums/Rating";
 import { Reaction } from "../../enums/Reaction";
 import useApiJson from "../../hooks/useApiJson";
@@ -82,7 +90,6 @@ function EditAnimalActivityLogPage() {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   let emptyKeeper: Keeper = {
@@ -90,8 +97,8 @@ function EditAnimalActivityLogPage() {
     keeperType: KeeperType.SENIOR_KEEPER,
     specialization: Specialization.MAMMAL,
     isDisabled: false,
-    employee: emptyEmployee
-  }
+    employee: emptyEmployee,
+  };
 
   let emptyAnimalActivity: AnimalActivity = {
     animalActivityId: -1,
@@ -106,7 +113,7 @@ function EditAnimalActivityLogPage() {
     eventTimingType: EventTimingType.AFTERNOON,
     durationInMinutes: -1,
     animalActivityLogs: [],
-    requiredNumberOfKeeper: 0
+    requiredNumberOfKeeper: 0,
   };
 
   let emptyAnimalActivityLog: AnimalActivityLog = {
@@ -119,22 +126,30 @@ function EditAnimalActivityLogPage() {
     keeper: emptyKeeper,
     activityType: ActivityType.TRAINING,
     animalReaction: Reaction.POSITIVE_RESPONSE,
-    animalActivity: emptyAnimalActivity
+    animalActivity: emptyAnimalActivity,
   };
 
-  const [curAnimalActivityLog, setCurAnimalActivityLog] = useState<AnimalActivityLog>(emptyAnimalActivityLog);
+  const [curAnimalActivityLog, setCurAnimalActivityLog] =
+    useState<AnimalActivityLog>(emptyAnimalActivityLog);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAnimalActivityLogById/${animalActivityLogId}`).then(res => {
-      setCurAnimalActivityLog(res["animalActivityLog"]);
-    });
+    apiJson
+      .get(
+        `http://localhost:3000/api/animal/getAnimalActivityLogById/${animalActivityLogId}`
+      )
+      .then((res) => {
+        setCurAnimalActivityLog(res["animalActivityLog"]);
+      });
   }, [0]);
 
   return (
     <div className="p-10">
-      {curAnimalActivityLog && curAnimalActivityLog.animalActivityLogId != -1 && (
-        <EditAnimalActivityLogForm curAnimalActivityLog={curAnimalActivityLog} />
-      )}
+      {curAnimalActivityLog &&
+        curAnimalActivityLog.animalActivityLogId != -1 && (
+          <EditAnimalActivityLogForm
+            curAnimalActivityLog={curAnimalActivityLog}
+          />
+        )}
     </div>
   );
 }
