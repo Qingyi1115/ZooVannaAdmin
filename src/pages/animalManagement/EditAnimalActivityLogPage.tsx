@@ -3,7 +3,13 @@ import { useParams } from "react-router";
 import useApiJson from "../../hooks/useApiJson";
 import { Rating } from "../../enums/Rating";
 import EditAnimalActivityLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalActivityLogForm";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
+import {
+  AnimalSex,
+  AcquisitionMethod,
+  AnimalGrowthStage,
+  KeeperType,
+  Specialization,
+} from "../../enums/Enumurated";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
 import AnimalActivityLog from "../../models/AnimalActivityLog";
@@ -81,7 +87,6 @@ function EditAnimalActivityLogPage() {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   let emptyKeeper: Keeper = {
@@ -89,8 +94,8 @@ function EditAnimalActivityLogPage() {
     keeperType: KeeperType.SENIOR_KEEPER,
     specialization: Specialization.MAMMAL,
     isDisabled: false,
-    employee: emptyEmployee
-  }
+    employee: emptyEmployee,
+  };
 
   let emptyAnimalActivityLog: AnimalActivityLog = {
     animalActivityLogId: 0,
@@ -101,22 +106,30 @@ function EditAnimalActivityLogPage() {
     animals: [],
     keeper: emptyKeeper,
     activityType: ActivityType.TRAINING,
-    animalReaction: Reaction.POSITIVE_RESPONSE
+    animalReaction: Reaction.POSITIVE_RESPONSE,
   };
 
-  const [curAnimalActivityLog, setCurAnimalActivityLog] = useState<AnimalActivityLog>(emptyAnimalActivityLog);
+  const [curAnimalActivityLog, setCurAnimalActivityLog] =
+    useState<AnimalActivityLog>(emptyAnimalActivityLog);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAnimalActivityLogById/${animalActivityLogId}`).then(res => {
-      setCurAnimalActivityLog(res["animalActivityLog"]);
-    });
+    apiJson
+      .get(
+        `http://localhost:3000/api/animal/getAnimalActivityLogById/${animalActivityLogId}`
+      )
+      .then((res) => {
+        setCurAnimalActivityLog(res["animalActivityLog"]);
+      });
   }, [0]);
 
   return (
     <div className="p-10">
-      {curAnimalActivityLog && curAnimalActivityLog.animalActivityLogId != -1 && (
-        <EditAnimalActivityLogForm curAnimalActivityLog={curAnimalActivityLog} />
-      )}
+      {curAnimalActivityLog &&
+        curAnimalActivityLog.animalActivityLogId != -1 && (
+          <EditAnimalActivityLogForm
+            curAnimalActivityLog={curAnimalActivityLog}
+          />
+        )}
     </div>
   );
 }

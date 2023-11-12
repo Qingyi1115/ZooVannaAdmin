@@ -6,7 +6,14 @@ import Employee from "../../../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiCheck, HiEye, HiMinus, HiPencil, HiTrash, HiX } from "react-icons/hi";
+import {
+  HiCheck,
+  HiEye,
+  HiMinus,
+  HiPencil,
+  HiTrash,
+  HiX,
+} from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
@@ -39,7 +46,6 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   const toast = useRef<Toast>(null);
@@ -47,27 +53,32 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const [employeeRemovalDialog, setEmployeeRemovalDialog] = useState<boolean>(false);
+  const [employeeRemovalDialog, setEmployeeRemovalDialog] =
+    useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
   const hideEmployeeRemovalDialog = () => {
     setEmployeeRemovalDialog(false);
-  }
+  };
 
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
 
-
   const removeOperationStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
-      const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
-          setRefreshSeed([])
-        }).catch(err => console.log("err", err));
+      const responseJson = await apiJson
+        .del(
+          `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`,
+          { employeeIds: [selectedEmployee.employeeId] }
+        )
+        .then((res) => {
+          setRefreshSeed([]);
+        })
+        .catch((err) => console.log("err", err));
 
       toastShadcn({
         // variant: "destructive",
@@ -84,11 +95,11 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while removing operation staff: \n" + apiJson.error,
+          "An error has occurred while removing operation staff: \n" +
+          apiJson.error,
       });
     }
-
-  }
+  };
 
   const employeeRemovalDialogFooter = (
     <React.Fragment>
@@ -129,16 +140,16 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
   const actionBodyTemplate = (employee: Employee) => {
     return (
       <React.Fragment>
-        <NavLink to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}>
-          <Button
-            variant={"outline"}
-            className="mb-1 mr-1">
+        <NavLink
+          to={`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`}
+        >
+          <Button variant={"outline"} className="mb-1 mr-1">
             <HiEye className="mx-auto" />
           </Button>
         </NavLink>
-        {employee.dateOfResignation ?
+        {employee.dateOfResignation ? (
           <span>Removed</span>
-          :
+        ) : (
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -146,7 +157,7 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
           >
             <HiMinus className="mx-auto" />
           </Button>
-        }
+        )}
       </React.Fragment>
     );
   };
@@ -156,7 +167,6 @@ function RemoveOperationStaff(props: RemoveOperationStaffProps) {
       <div>
         <Toast ref={toast} />
         <div className="">
-
           <DataTable
             ref={dt}
             value={employeeList}

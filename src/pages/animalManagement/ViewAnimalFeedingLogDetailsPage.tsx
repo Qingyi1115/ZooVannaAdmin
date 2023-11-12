@@ -6,14 +6,18 @@ import AnimalFeedingLog from "../../models/AnimalFeedingLog";
 import { Button } from "@/components/ui/button";
 import Employee from "../../models/Employee";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
+import {
+  AnimalSex,
+  AcquisitionMethod,
+  AnimalGrowthStage,
+  KeeperType,
+  Specialization,
+} from "../../enums/Enumurated";
 import Animal from "../../models/Animal";
 import Species from "../../models/Species";
 import { Rating } from "../../enums/Rating";
 import ViewAnimalFeedingLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalFeedingLogDetails";
 import Keeper from "../../models/Keeper";
-
-
 
 function ViewAnimalFeedingLogDetailsPage() {
   const apiJson = useApiJson();
@@ -87,7 +91,6 @@ function ViewAnimalFeedingLogDetailsPage() {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   let emptyKeeper: Keeper = {
@@ -95,8 +98,8 @@ function ViewAnimalFeedingLogDetailsPage() {
     keeperType: KeeperType.SENIOR_KEEPER,
     specialization: Specialization.MAMMAL,
     isDisabled: false,
-    employee: emptyEmployee
-  }
+    employee: emptyEmployee,
+  };
 
   let emptyAnimalFeedingLog: AnimalFeedingLog = {
     animalFeedingLogId: 0,
@@ -104,28 +107,35 @@ function ViewAnimalFeedingLogDetailsPage() {
     durationInMinutes: 0,
     details: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
   };
 
-  const [curAnimalFeedingLog, setCurAnimalFeedingLog] = useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
+  const [curAnimalFeedingLog, setCurAnimalFeedingLog] =
+    useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
-    apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`)
-      .then(res => {
+    apiJson
+      .get(
+        `http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`
+      )
+      .then((res) => {
         setCurAnimalFeedingLog(res.animalFeedingLog as AnimalFeedingLog);
       })
-      .catch(e => console.log(e));
+      .catch((e) => console.log(e));
     console.log(curAnimalFeedingLog);
   }, []);
-
 
   return (
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         <div className="flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+          <Button
+            variant={"outline"}
+            type="button"
+            onClick={() => navigate(-1)}
+            className=""
+          >
             Back
           </Button>
           <span className="self-center text-lg text-graydark">
@@ -140,27 +150,12 @@ function ViewAnimalFeedingLogDetailsPage() {
         {/* <span className=" self-center text-title-xl font-bold">
           {curAnimalFeedingLog.animalFeedingLogId}
         </span> */}
-        <ViewAnimalFeedingLogDetails curAnimalFeedingLog={curAnimalFeedingLog} />
-
+        <ViewAnimalFeedingLogDetails
+          curAnimalFeedingLog={curAnimalFeedingLog}
+        />
       </div>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export default ViewAnimalFeedingLogDetailsPage;

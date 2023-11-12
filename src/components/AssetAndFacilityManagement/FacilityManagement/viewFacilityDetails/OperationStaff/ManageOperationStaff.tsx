@@ -6,7 +6,16 @@ import Employee from "../../../../../models/Employee";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiCheck, HiClipboard, HiEye, HiMinus, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import {
+  HiCheck,
+  HiClipboard,
+  HiEye,
+  HiMinus,
+  HiPencil,
+  HiPlus,
+  HiTrash,
+  HiX,
+} from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog } from "primereact/dialog";
@@ -34,7 +43,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   const toast = useRef<Toast>(null);
@@ -42,8 +50,10 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const [employeeAssignmentDialog, setAssignmentDialog] = useState<boolean>(false);
-  const [employeeRemovalDialog, setEmployeeRemovalDialog] = useState<boolean>(false);
+  const [employeeAssignmentDialog, setAssignmentDialog] =
+    useState<boolean>(false);
+  const [employeeRemovalDialog, setEmployeeRemovalDialog] =
+    useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
@@ -51,31 +61,39 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   useEffect(() => {
-    apiJson.post(
-      "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-    ).catch(e => console.log("err", e)).then(res => {
-      const allStaffs: Employee[] = []
-      for (const staff of res["generalStaffs"]) {
-        if (staff.generalStaffType == "ZOO_OPERATIONS") {
-          let emp = staff.employee;
-          staff.employee = undefined;
-          emp["generalStaff"] = staff
-          emp.currentlyAssigned = emp.generalStaff.operatedFacility?.facilityId == facilityId;
-          allStaffs.push(emp)
+    apiJson
+      .post("http://localhost:3000/api/employee/getAllGeneralStaffs", {
+        includes: [
+          "maintainedFacilities",
+          "operatedFacility",
+          "sensors",
+          "employee",
+        ],
+      })
+      .catch((e) => console.log("err", e))
+      .then((res) => {
+        const allStaffs: Employee[] = [];
+        for (const staff of res["generalStaffs"]) {
+          if (staff.generalStaffType == "ZOO_OPERATIONS") {
+            let emp = staff.employee;
+            staff.employee = undefined;
+            emp["generalStaff"] = staff;
+            emp.currentlyAssigned =
+              emp.generalStaff.operatedFacility?.facilityId == facilityId;
+            allStaffs.push(emp);
+          }
         }
-      }
-      setEmployeeList(allStaffs);
-
-    });
+        setEmployeeList(allStaffs);
+      });
   }, [refreshSeed]);
 
   const hideEmployeeAssignmentDialog = () => {
     setAssignmentDialog(false);
-  }
+  };
 
   const hideEmployeeRemovalDialog = () => {
     setEmployeeRemovalDialog(false);
-  }
+  };
 
   const exportCSV = () => {
     dt.current?.exportCSV();
@@ -85,10 +103,15 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
-      const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
+      const responseJson = await apiJson
+        .put(
+          `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`,
+          { employeeIds: [selectedEmployee.employeeId] }
+        )
+        .then((res) => {
           setRefreshSeed([]);
-        }).catch(err => console.log("err", err));
+        })
+        .catch((err) => console.log("err", err));
 
       toastShadcn({
         // variant: "destructive",
@@ -105,11 +128,11 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while assigning operation staff: \n" + apiJson.error,
+          "An error has occurred while assigning operation staff: \n" +
+          apiJson.error,
       });
     }
-
-  }
+  };
 
   const employeeAssignmentDialogFooter = (
     <React.Fragment>
@@ -129,7 +152,9 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
     try {
       const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
+        `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`,
+        { employeeIds: [selectedEmployee.employeeId] }
+      );
       setRefreshSeed([]);
 
       toastShadcn({
@@ -147,11 +172,11 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while removing operation staff: \n" + apiJson.error,
+          "An error has occurred while removing operation staff: \n" +
+          apiJson.error,
       });
     }
-
-  }
+  };
 
   const employeeRemovalDialogFooter = (
     <React.Fragment>
@@ -202,26 +227,36 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             variant={"outline"}
             className="mr-2"
             onClick={() => {
-              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageOperations`, { replace: true });
-              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
-            }}>
+              navigate(
+                `/assetfacility/viewfacilitydetails/${facilityId}/manageOperations`,
+                { replace: true }
+              );
+              navigate(
+                `/employeeAccount/viewEmployeeDetails/${employee.employeeId}`
+              );
+            }}
+          >
             <HiEye className="mx-auto" />
           </Button>
-          {employee.dateOfResignation ?
+          {employee.dateOfResignation ? (
             <span>Removed</span>
-            : <div>
+          ) : (
+            <div>
               <Button
                 name="assignButton"
                 variant={"default"}
                 className="mr-2"
-                disabled={employee.generalStaff?.operatedFacility !== null || employee.currentlyAssigned}
+                disabled={
+                  employee.generalStaff?.operatedFacility !== null ||
+                  employee.currentlyAssigned
+                }
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
               </Button>
-              {employee.dateOfResignation ?
+              {employee.dateOfResignation ? (
                 <span>Removed</span>
-                :
+              ) : (
                 <Button
                   variant={"destructive"}
                   className="mr-2"
@@ -230,10 +265,9 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 >
                   <HiMinus className="mx-auto" />
                 </Button>
-              }
+              )}
             </div>
-
-          }
+          )}
         </div>
       </React.Fragment>
     );
@@ -244,7 +278,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
       <div>
         <Toast ref={toast} />
         <div className="">
-
           <DataTable
             ref={dt}
             value={employeeList}

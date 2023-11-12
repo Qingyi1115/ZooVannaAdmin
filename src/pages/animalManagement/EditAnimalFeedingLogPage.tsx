@@ -3,7 +3,13 @@ import { useParams } from "react-router";
 import useApiJson from "../../hooks/useApiJson";
 import { Rating } from "../../enums/Rating";
 import EditAnimalFeedingLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalFeedingLogForm";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
+import {
+  AnimalSex,
+  AcquisitionMethod,
+  AnimalGrowthStage,
+  KeeperType,
+  Specialization,
+} from "../../enums/Enumurated";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
 import AnimalFeedingLog from "../../models/AnimalFeedingLog";
@@ -79,7 +85,6 @@ function EditAnimalFeedingLogPage() {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   let emptyKeeper: Keeper = {
@@ -87,8 +92,8 @@ function EditAnimalFeedingLogPage() {
     keeperType: KeeperType.SENIOR_KEEPER,
     specialization: Specialization.MAMMAL,
     isDisabled: false,
-    employee: emptyEmployee
-  }
+    employee: emptyEmployee,
+  };
 
   let emptyAnimalFeedingLog: AnimalFeedingLog = {
     animalFeedingLogId: 0,
@@ -96,15 +101,20 @@ function EditAnimalFeedingLogPage() {
     durationInMinutes: 0,
     details: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
   };
 
-  const [curAnimalFeedingLog, setCurAnimalFeedingLog] = useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
+  const [curAnimalFeedingLog, setCurAnimalFeedingLog] =
+    useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`).then(res => {
-      setCurAnimalFeedingLog(res["animalFeedingLog"]);
-    });
+    apiJson
+      .get(
+        `http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`
+      )
+      .then((res) => {
+        setCurAnimalFeedingLog(res["animalFeedingLog"]);
+      });
   }, [0]);
 
   return (

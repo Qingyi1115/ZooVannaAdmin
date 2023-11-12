@@ -19,7 +19,6 @@ function EditEmployeePage() {
     dateOfResignation: null,
     employeeDoorAccessCode: "",
     isAccountManager: false,
-    employeeProfileUrl: "",
   };
 
   const { employeeId } = useParams<{ employeeId: string }>();

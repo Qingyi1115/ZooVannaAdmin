@@ -13,7 +13,6 @@ interface Employee {
   employeeBirthDate: Date | null;
   isAccountManager: boolean;
   dateOfResignation: Date | null;
-  employeeProfileUrl: string | null;
   keeper?: Keeper | null;
   planningStaff?: PlanningStaff | null;
   generalStaff?: GeneralStaff | null;

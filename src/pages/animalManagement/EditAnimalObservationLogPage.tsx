@@ -3,7 +3,13 @@ import { useParams } from "react-router";
 import useApiJson from "../../hooks/useApiJson";
 import { Rating } from "../../enums/Rating";
 import EditAnimalObservationLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalObservationLogForm";
-import { AnimalSex, AcquisitionMethod, AnimalGrowthStage, KeeperType, Specialization } from "../../enums/Enumurated";
+import {
+  AnimalSex,
+  AcquisitionMethod,
+  AnimalGrowthStage,
+  KeeperType,
+  Specialization,
+} from "../../enums/Enumurated";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
 import AnimalObservationLog from "../../models/AnimalObservationLog";
@@ -13,7 +19,9 @@ import Keeper from "../../models/Keeper";
 
 function EditAnimalObservationLogPage() {
   const apiJson = useApiJson();
-  const { animalObservationLogId } = useParams<{ animalObservationLogId: string }>();
+  const { animalObservationLogId } = useParams<{
+    animalObservationLogId: string;
+  }>();
   const employee = useAuthContext().state.user?.employeeData;
 
   let emptySpecies: Species = {
@@ -79,7 +87,6 @@ function EditAnimalObservationLogPage() {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   let emptyKeeper: Keeper = {
@@ -87,8 +94,8 @@ function EditAnimalObservationLogPage() {
     keeperType: KeeperType.SENIOR_KEEPER,
     specialization: Specialization.MAMMAL,
     isDisabled: false,
-    employee: emptyEmployee
-  }
+    employee: emptyEmployee,
+  };
 
   let emptyAnimalObservationLog: AnimalObservationLog = {
     animalObservationLogId: 0,
@@ -97,22 +104,30 @@ function EditAnimalObservationLogPage() {
     observationQuality: Rating.NOT_RECORDED,
     details: "",
     animals: [],
-    keeper: emptyKeeper
+    keeper: emptyKeeper,
   };
 
-  const [curAnimalObservationLog, setCurAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
+  const [curAnimalObservationLog, setCurAnimalObservationLog] =
+    useState<AnimalObservationLog>(emptyAnimalObservationLog);
 
   useEffect(() => {
-    apiJson.get(`http://localhost:3000/api/animal/getAnimalObservationLogById/${animalObservationLogId}`).then(res => {
-      setCurAnimalObservationLog(res["animalObservationLog"]);
-    });
+    apiJson
+      .get(
+        `http://localhost:3000/api/animal/getAnimalObservationLogById/${animalObservationLogId}`
+      )
+      .then((res) => {
+        setCurAnimalObservationLog(res["animalObservationLog"]);
+      });
   }, [0]);
 
   return (
     <div className="p-10">
-      {curAnimalObservationLog && curAnimalObservationLog.animalObservationLogId != -1 && (
-        <EditAnimalObservationLogForm curAnimalObservationLog={curAnimalObservationLog} />
-      )}
+      {curAnimalObservationLog &&
+        curAnimalObservationLog.animalObservationLogId != -1 && (
+          <EditAnimalObservationLogForm
+            curAnimalObservationLog={curAnimalObservationLog}
+          />
+        )}
     </div>
   );
 }
