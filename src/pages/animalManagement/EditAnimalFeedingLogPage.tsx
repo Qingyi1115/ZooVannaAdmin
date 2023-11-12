@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import EditAnimalFeedingLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalFeedingLogForm";
-<<<<<<< HEAD
 import {
-  AnimalSex,
   AcquisitionMethod,
   AnimalGrowthStage,
+  AnimalSex,
   KeeperType,
   Specialization,
 } from "../../enums/Enumurated";
-=======
-import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, KeeperType, Specialization } from "../../enums/Enumurated";
 import useApiJson from "../../hooks/useApiJson";
->>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
 import AnimalFeedingLog from "../../models/AnimalFeedingLog";
@@ -120,10 +116,7 @@ function EditAnimalFeedingLogPage() {
     extraRemarks: "",
     animals: [],
     keeper: emptyKeeper,
-<<<<<<< HEAD
-=======
-    feedingPlan: emptyFeedingPlan
->>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
+    feedingPlan: emptyFeedingPlan,
   };
 
   const [curAnimalFeedingLog, setCurAnimalFeedingLog] =

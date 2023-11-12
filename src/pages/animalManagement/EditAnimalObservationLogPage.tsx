@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import EditAnimalObservationLogForm from "../../components/AnimalManagement/ViewAnimalDetailsPage/EditAnimalObservationLogForm";
-<<<<<<< HEAD
 import {
-  AnimalSex,
   AcquisitionMethod,
   AnimalGrowthStage,
+  AnimalSex,
   KeeperType,
   Specialization,
 } from "../../enums/Enumurated";
-=======
-import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, KeeperType, Specialization } from "../../enums/Enumurated";
 import { Rating } from "../../enums/Rating";
 import useApiJson from "../../hooks/useApiJson";
->>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
 import AnimalObservationLog from "../../models/AnimalObservationLog";

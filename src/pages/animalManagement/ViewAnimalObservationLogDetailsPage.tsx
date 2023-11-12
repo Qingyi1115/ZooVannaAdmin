@@ -4,23 +4,17 @@ import useApiJson from "../../hooks/useApiJson";
 import AnimalObservationLog from "../../models/AnimalObservationLog";
 
 import { Button } from "@/components/ui/button";
-<<<<<<< HEAD
-import Employee from "../../models/Employee";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import ViewAnimalObservationLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalObservationLogDetails";
 import {
-  AnimalSex,
   AcquisitionMethod,
+  ActivityType,
   AnimalGrowthStage,
+  AnimalSex,
+  EventTimingType,
   KeeperType,
+  RecurringPattern,
   Specialization,
 } from "../../enums/Enumurated";
-import Animal from "../../models/Animal";
-import Species from "../../models/Species";
-import { Rating } from "../../enums/Rating";
-=======
->>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
-import ViewAnimalObservationLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalObservationLogDetails";
-import { AcquisitionMethod, ActivityType, AnimalGrowthStage, AnimalSex, EventTimingType, KeeperType, RecurringPattern, Specialization } from "../../enums/Enumurated";
 import { Rating } from "../../enums/Rating";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
@@ -126,7 +120,7 @@ function ViewAnimalObservationLogDetailsPage() {
     eventTimingType: EventTimingType.AFTERNOON,
     durationInMinutes: -1,
     animalActivityLogs: [],
-    requiredNumberOfKeeper: 0
+    requiredNumberOfKeeper: 0,
   };
 
   let emptyAnimalObservationLog: AnimalObservationLog = {
@@ -137,10 +131,7 @@ function ViewAnimalObservationLogDetailsPage() {
     details: "",
     animals: [],
     keeper: emptyKeeper,
-<<<<<<< HEAD
-=======
-    animalActivity: emptyAnimalActivity
->>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
+    animalActivity: emptyAnimalActivity,
   };
 
   const [curAnimalObservationLog, setCurAnimalObservationLog] =

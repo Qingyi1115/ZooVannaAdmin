@@ -4,23 +4,14 @@ import useApiJson from "../../hooks/useApiJson";
 import AnimalFeedingLog from "../../models/AnimalFeedingLog";
 
 import { Button } from "@/components/ui/button";
-<<<<<<< HEAD
-import Employee from "../../models/Employee";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import ViewAnimalFeedingLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalFeedingLogDetails";
 import {
-  AnimalSex,
   AcquisitionMethod,
   AnimalGrowthStage,
+  AnimalSex,
   KeeperType,
   Specialization,
 } from "../../enums/Enumurated";
-import Animal from "../../models/Animal";
-import Species from "../../models/Species";
-import { Rating } from "../../enums/Rating";
-=======
->>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
-import ViewAnimalFeedingLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalFeedingLogDetails";
-import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, KeeperType, Specialization } from "../../enums/Enumurated";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
 import Employee from "../../models/Employee";
@@ -131,10 +122,7 @@ function ViewAnimalFeedingLogDetailsPage() {
     extraRemarks: "",
     animals: [],
     keeper: emptyKeeper,
-<<<<<<< HEAD
-=======
-    feedingPlan: emptyFeedingPlan
->>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
+    feedingPlan: emptyFeedingPlan,
   };
 
   const [curAnimalFeedingLog, setCurAnimalFeedingLog] =
@@ -142,18 +130,12 @@ function ViewAnimalFeedingLogDetailsPage() {
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
-<<<<<<< HEAD
     apiJson
       .get(
         `http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`
       )
       .then((res) => {
-=======
-    apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalFeedingLogById/${animalFeedingLogId}`)
-      .then(res => {
         console.log("res", res);
->>>>>>> ed3fa67af0c56d8b0ecfa75d9d9b76bcc68344e4
         setCurAnimalFeedingLog(res.animalFeedingLog as AnimalFeedingLog);
       })
       .catch((e) => console.log(e));
