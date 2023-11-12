@@ -6,7 +6,7 @@ enum KeeperType {
 enum ActivityType {
   TRAINING = "TRAINING",
   ENRICHMENT = "ENRICHMENT",
-  OBSERVATION = "OBSERVATION"
+  OBSERVATION = "OBSERVATION",
 }
 
 enum PlannerType {
@@ -15,6 +15,7 @@ enum PlannerType {
   MARKETING = "MARKETING",
   OPERATIONS_MANAGER = "OPERATIONS_MANAGER",
   CUSTOMER_OPERATIONS = "CUSTOMER_OPERATIONS",
+  NUTRITIONIST = "NUTRITIONIST",
 }
 
 enum GeneralStaffType {
@@ -266,9 +267,38 @@ enum RecurringPattern {
 }
 
 export {
-  AcquisitionMethod, ActivityType, AnimalFeedCategory, AnimalGrowthStage, AnimalGrowthState,
-  AnimalSex, AnimalStatus, AnimalStatusType, Biome, ConservationStatus,
-  Continent, DayOfWeek, EnclosureStatus, EventTimingType, EventType, FoodUnit, GeneralStaffType, GroupSexualDynamic, HubStatus, IdentifierType, KeeperType, ListingStatus, ListingType, MedicalSupplyType, OrderStatus, PaymentStatus,
-  PaymentType, PlannerType, PresentationContainer, PresentationLocation, PresentationMethod, RecurringPattern, RepeatPattern, Specialization
+  AcquisitionMethod,
+  ActivityType,
+  AnimalFeedCategory,
+  AnimalGrowthStage,
+  AnimalGrowthState,
+  AnimalSex,
+  AnimalStatus,
+  AnimalStatusType,
+  Biome,
+  ConservationStatus,
+  Continent,
+  DayOfWeek,
+  EnclosureStatus,
+  EventTimingType,
+  EventType,
+  FoodUnit,
+  GeneralStaffType,
+  GroupSexualDynamic,
+  HubStatus,
+  IdentifierType,
+  KeeperType,
+  ListingStatus,
+  ListingType,
+  MedicalSupplyType,
+  OrderStatus,
+  PaymentStatus,
+  PaymentType,
+  PlannerType,
+  PresentationContainer,
+  PresentationLocation,
+  PresentationMethod,
+  RecurringPattern,
+  RepeatPattern,
+  Specialization,
 };
-
