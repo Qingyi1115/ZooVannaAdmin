@@ -126,7 +126,9 @@ function AllZooEventsFullCalendar(props: AllZooEventsFullCalendarProps) {
                         ? ["cusfeeding overflow-hidden"]
                         : naming == "Employee Absence"
                           ? ["empAbs overflow-hidden"]
-                          : ["overflow-hidden"],
+                          : naming == "Show" || naming == "Talk"
+                            ? ["publicEvt overflow-hidden"]
+                            : ["overflow-hidden"],
           };
         })
         .flat(1)
@@ -211,6 +213,10 @@ function AllZooEventsFullCalendar(props: AllZooEventsFullCalendarProps) {
               <div className="flex items-center gap-2 text-[#494249]">
                 <div className="h-5 w-5 rounded bg-[#494249]" />
                 <span className="font-bold">Employee Absence</span>
+              </div>
+              <div className="flex items-center gap-2 text-[#494249]">
+                <div className="h-5 w-5 rounded bg-[#99a008]" />
+                <span className="font-bold">Public Events</span>
               </div>
             </div>
             <div className="mb-2 flex justify-end gap-2">

@@ -25,14 +25,14 @@
   }
 } */
 
-#tree > svg {
+#tree>svg {
   background-color: #f0f0f0;
 }
 
-@layer components {
-}
+@layer components {}
 
 @layer utilities {
+
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -101,6 +101,13 @@
   border: 1px solid #0e383d;
 }
 
+.fc-event.publicEvt,
+.fc-v-event.publicEvt {
+  background-color: #99a008;
+  border: 1px solid #fbff02;
+}
+
+
 /* 
 .fc-event:hover,
 .fc-v-event:hover {
@@ -114,9 +121,7 @@
 }
 
 /* Hover state styles for pills with the "observation" class */
-.fc.fc-theme-standard
-  .fc-view-harness
-  .fc-event.fc-daygrid-dot-event.observation:hover {
+.fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event.observation:hover {
   background: #0f336060;
   /* Adjust the color and opacity as needed */
   color: #24341c;
@@ -124,9 +129,7 @@
 }
 
 /* Hover state styles for pills with the "training" class */
-.fc.fc-theme-standard
-  .fc-view-harness
-  .fc-event.fc-daygrid-dot-event.training:hover {
+.fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event.training:hover {
   background: #6c0063;
   /* Adjust the color and opacity as needed */
   color: #24341c;
@@ -134,9 +137,7 @@
 }
 
 /* Hover state styles for pills with the "enrichment" class */
-.fc.fc-theme-standard
-  .fc-view-harness
-  .fc-event.fc-daygrid-dot-event.enrichment:hover {
+.fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event.enrichment:hover {
   background: #97640560;
   /* Adjust the color and opacity as needed */
   color: #24341c;
@@ -144,9 +145,7 @@
 }
 
 /* Hover state styles for pills with the "enrichment" class */
-.fc.fc-theme-standard
-  .fc-view-harness
-  .fc-event.fc-daygrid-dot-event.cusfeeding:hover {
+.fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event.cusfeeding:hover {
   background: #4000ff60;
   /* Adjust the color and opacity as needed */
   color: #24341c;
@@ -154,25 +153,28 @@
 }
 
 /* Hover state styles for pills with the "enrichment" class */
-.fc.fc-theme-standard
-  .fc-view-harness
-  .fc-event.fc-daygrid-dot-event.empfeeding:hover {
+.fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event.empfeeding:hover {
   background: #960069;
   /* Adjust the color and opacity as needed */
   color: #24341c;
   cursor: pointer;
 }
 
-.fc.fc-theme-standard
-  .fc-view-harness
-  .fc-event.fc-daygrid-dot-event.empAbs:hover {
+.fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event.empAbs:hover {
   background: #00000060;
   /* Adjust the color and opacity as needed */
   color: #57eb0e;
   cursor: pointer;
 }
 
-.p-rowgroup-header > :first-child {
+.fc.fc-theme-standard .fc-view-harness .fc-event.fc-daygrid-dot-event.publicEvt:hover {
+  background: #00000060;
+  /* Adjust the color and opacity as needed */
+  color: #57eb0e;
+  cursor: pointer;
+}
+
+.p-rowgroup-header> :first-child {
   /* display: inline-block; */
   /* flex: 1; */
   /* width: 100%; */
@@ -220,8 +222,7 @@
 .selected-icon {
   /* Define the styles for selected markers here */
   filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
-  filter: invert(7%) sepia(92%) saturate(4329%) hue-rotate(343deg)
-    brightness(91%) contrast(94%);
+  filter: invert(7%) sepia(92%) saturate(4329%) hue-rotate(343deg) brightness(91%) contrast(94%);
 }
 
 /* animations */
