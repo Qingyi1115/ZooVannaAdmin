@@ -136,7 +136,7 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Maintenance Staff</h4>
+      <h4 className="m-1">Manage Regular Keepers</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -152,7 +152,7 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
         onClick={showBulkAssignment}
       // disabled={availableEmployees.length == 0}
       >
-        <HiPlus />Assign Maintenance Staff
+        <HiPlus />Assign Keeper
       </Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
@@ -211,7 +211,7 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
 
   const bulkAssignmentHeader = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="m-1">Manage Maintenance Staff</h4>
+      <h4 className="m-1">Manage Regular Keepers</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -508,7 +508,7 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
             variant={"destructive"}
             onClick={confirmEmployeeRemoval}
             disabled={selectedAssignedEmployees.length == 0}>
-            <HiMinus />Remove Selected Staff
+            <HiMinus />Remove Selected Keepers
           </Button>
         </div>
         <Dialog
@@ -559,12 +559,12 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
           visible={employeeBulkAssignmentDialog}
           style={{ width: "50rem" }}
           breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-          header="Assign Maintenance Staff"
+          header="Assign Keeper"
           footer={
             <Button
               onClick={confirmAssignment}
               disabled={selectedAvailableEmployees.length == 0}>
-              Assign Selected Staff
+              Assign Selected Keeper
             </Button>}
           onHide={hideEmployeeBulkAssignmentDialog}>
           <div className="confirmation-content">

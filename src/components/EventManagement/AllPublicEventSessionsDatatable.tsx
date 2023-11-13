@@ -189,7 +189,7 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="flex flex-row justify-center gap-6 lg:flex-row lg:gap-12">
-        <h4 className="m-1">Manage Animal Activity Logs</h4>
+        <h4 className="m-1">Manage Sessions</h4>
         {/* <Dropdown
           options={sortOptions}
           value={sortKey}

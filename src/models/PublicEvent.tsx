@@ -14,6 +14,7 @@ interface PublicEvent {
   imageUrl: string;
   startDate: Date;
   endDate: Date | null;
+  isDisabled: boolean;
 
   animals: Animal[];
   keepers: Keeper[];

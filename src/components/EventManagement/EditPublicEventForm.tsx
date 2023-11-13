@@ -362,6 +362,7 @@ function EditPublicEventForm(props: EditPublicEventFormProps) {
     // ) {
     //   return;
     // }
+    console.log("eventDates.length", eventDates.length, eventDates)
 
     const updatedPublicEvent = {
       publicEventId,
@@ -369,7 +370,7 @@ function EditPublicEventForm(props: EditPublicEventFormProps) {
       title,
       details,
       startDate: eventDates[0].getTime(),
-      endDate: eventDates.length == 2 ? eventDates[1].getTime() : null,
+      endDate: eventDates.length == 2 && eventDates[1] ? eventDates[1].getTime() : null,
     };
 
     console.log(updatedPublicEvent);
@@ -391,7 +392,7 @@ function EditPublicEventForm(props: EditPublicEventFormProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while updating animal activity: \n" +
+            "An error has occurred while updating Public Event: \n" +
             error.message,
         });
       }
@@ -491,7 +492,7 @@ function EditPublicEventForm(props: EditPublicEventFormProps) {
         </div>
         {/* Activity Type */}
         <div className="mb-1 block font-medium">
-          Activity Type<br /> <b>{beautifyText(eventType)}</b>
+          Event Type<br /> <b>{beautifyText(eventType)}</b>
         </div>
         {/* Details */}
         <Form.Field
@@ -529,7 +530,7 @@ function EditPublicEventForm(props: EditPublicEventFormProps) {
                 <Grid item container xs={6} alignItems="flex-end" direction="column">
                   <Grid item>
                     <Tooltip title="Select start date, Select end date if neccessary" placement="right">
-                      Event Dates [Info]
+                      <div>Event Dates [<b>Info</b>]</div>
                     </Tooltip>
                   </Grid>
                 </Grid>

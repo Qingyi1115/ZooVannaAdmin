@@ -321,7 +321,7 @@ function CreatePublicEventSessionForm() {
             </Button>
             {/* </NavLink> */}
             <span className="self-center text-title-xl font-bold">
-              Create Animal Activity
+              Create Public Event Session
             </span>
             <Button disabled className="invisible">
               Back
