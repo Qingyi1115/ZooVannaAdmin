@@ -19,6 +19,7 @@ import { NavLink, useParams } from "react-router-dom";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import Facility from "../../../../models/Facility";
 import { Tag } from "primereact/tag";
+import beautifyText from "../../../../hooks/beautifyText";
 
 export function compareDates(d1: Date, d2: Date): number {
   let date1 = d1.getTime();
@@ -56,7 +57,8 @@ function AllFacilityCrowdLevelDataTable() {
     facilityDetailJson: facilityDetailJson,
     isSheltered: false,
     hubProcessors: [],
-    imageUrl: ""
+    imageUrl: "",
+    inHouse: {} as any,
   };
 
   const [facilityList, setFacilityList] = useState<facility[]>([]);
@@ -80,7 +82,7 @@ function AllFacilityCrowdLevelDataTable() {
 
         setFacilityList(res["facilitiesData"].map(data => {
           const facility = data["facility"]
-          facility.crowdLevel = data.crowdLevel
+          facility.crowdLevel = beautifyText(data.crowdLevel)
           return facility;
         }));
       });
@@ -134,9 +136,9 @@ function AllFacilityCrowdLevelDataTable() {
 
   const statusBodyTemplate = (rowData: any) => {
     return <Tag value={rowData.crowdLevel}
-      severity={rowData.crowdLevel == "LOW" ? "success" :
-        rowData.crowdLevel == "MEDIUM" ? "warning" :
-          rowData.crowdLevel == "HIGH" ? "danger" : "info"} />;
+      severity={rowData.crowdLevel == "Low" ? "success" :
+        rowData.crowdLevel == "Medium" ? "warning" :
+          rowData.crowdLevel == "High" ? "danger" : "info"} />;
   };
 
   const deleteFacilityDialogFooter = (
