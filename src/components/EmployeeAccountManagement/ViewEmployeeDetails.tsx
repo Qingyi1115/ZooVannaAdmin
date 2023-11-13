@@ -10,7 +10,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 
 interface EmployeeInfoDetailsProps {
@@ -84,7 +84,9 @@ function ViewEmployeeDetails(props: EmployeeInfoDetailsProps) {
                 Birthday
               </TableCell>
               <TableCell>
-                {curEmployee.employeeBirthDate?.toLocaleString()}
+                {curEmployee.employeeBirthDate
+                  ? new Date(curEmployee.employeeBirthDate).toDateString()
+                  : ""}
               </TableCell>
             </TableRow>
 

@@ -12,7 +12,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { Column } from "primereact/column";
 import { DropdownChangeEvent } from "primereact/dropdown";
 import { useNavigate } from "react-router-dom";
-import { AcquisitionMethod, AnimalGrowthStage, AnimalSex, KeeperType, Specialization } from "../../../enums/Enumurated";
+import {
+  AcquisitionMethod,
+  AnimalGrowthStage,
+  AnimalSex,
+  KeeperType,
+  Specialization,
+} from "../../../enums/Enumurated";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import Animal from "../../../models/Animal";
 import AnimalFeedingLog from "../../../models/AnimalFeedingLog";
@@ -26,7 +32,9 @@ interface AllAnimalFeedingLogsDatatableProps {
   animalCode: string;
 }
 
-function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps) {
+function AllAnimalFeedingLogsDatatable(
+  props: AllAnimalFeedingLogsDatatableProps
+) {
   const apiJson = useApiJson();
   const { speciesCode, animalCode } = props;
   const employee = useAuthContext().state.user?.employeeData;
@@ -94,7 +102,6 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   let emptyKeeper: Keeper = {
@@ -102,8 +109,8 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
     keeperType: KeeperType.SENIOR_KEEPER,
     specialization: Specialization.MAMMAL,
     isDisabled: false,
-    employee: emptyEmployee
-  }
+    employee: emptyEmployee,
+  };
 
   let emptyFeedingPlan: FeedingPlan = {
     feedingPlanId: -1,
@@ -126,12 +133,14 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
     extraRemarks: "",
     animals: [],
     keeper: emptyKeeper,
-    feedingPlan: emptyFeedingPlan
+    feedingPlan: emptyFeedingPlan,
   };
 
-
-  const [animalFeedingLogList, setAnimalFeedingLogList] = useState<AnimalFeedingLog[]>([]);
-  const [selectedAnimalFeedingLog, setSelectedAnimalFeedingLog] = useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
+  const [animalFeedingLogList, setAnimalFeedingLogList] = useState<
+    AnimalFeedingLog[]
+  >([]);
+  const [selectedAnimalFeedingLog, setSelectedAnimalFeedingLog] =
+    useState<AnimalFeedingLog>(emptyAnimalFeedingLog);
   const [deleteanimalFeedingLogDialog, setDeleteAnimalFeedingLogDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -141,12 +150,14 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
   const navigate = useNavigate();
   useEffect(() => {
     console.log(animalCode);
-    apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalFeedingLogsByAnimalCode/${animalCode}`)
-      .then(res => {
+    apiJson
+      .get(
+        `http://localhost:3000/api/animal/getAnimalFeedingLogsByAnimalCode/${animalCode}`
+      )
+      .then((res) => {
         setAnimalFeedingLogList(res.animalFeedingLogs as AnimalFeedingLog[]);
       })
-      .catch(e => console.log(e));
+      .catch((e) => console.log(e));
   }, []);
   console.log(animalFeedingLogList);
 
@@ -154,7 +165,9 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
     dt.current?.exportCSV();
   };
 
-  const confirmDeleteAnimalFeedingLog = (animalFeedingLog: AnimalFeedingLog) => {
+  const confirmDeleteAnimalFeedingLog = (
+    animalFeedingLog: AnimalFeedingLog
+  ) => {
     setSelectedAnimalFeedingLog(animalFeedingLog);
     setDeleteAnimalFeedingLogDialog(true);
   };
@@ -166,7 +179,8 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
   // delete animalFeedingLog stuff
   const deleteAnimalFeedingLog = async () => {
     let _animalFeedingLog = animalFeedingLogList.filter(
-      (val) => val.animalFeedingLogId !== selectedAnimalFeedingLog?.animalFeedingLogId
+      (val) =>
+        val.animalFeedingLogId !== selectedAnimalFeedingLog?.animalFeedingLogId
     );
 
     const deleteAnimalFeedingLog = async () => {
@@ -174,14 +188,15 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
         setDeleteAnimalFeedingLogDialog(false);
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/animal/deleteAnimalFeedingLogById/" +
-          selectedAnimalFeedingLog.animalFeedingLogId
+            selectedAnimalFeedingLog.animalFeedingLogId
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully deleted animal feeding log: " + selectedAnimalFeedingLog.animalFeedingLogId,
+            "Successfully deleted animal feeding log: " +
+            selectedAnimalFeedingLog.animalFeedingLogId,
         });
         setAnimalFeedingLogList(_animalFeedingLog);
         setSelectedAnimalFeedingLog(emptyAnimalFeedingLog);
@@ -191,7 +206,8 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while deleting animal feeding log: \n" + apiJson.error,
+            "An error has occurred while deleting animal feeding log: \n" +
+            apiJson.error,
         });
       }
     };
@@ -209,7 +225,6 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
         Yes
       </Button>
     </React.Fragment>
-
   );
   // end delete animalFeedingLog stuff
 
@@ -220,15 +235,21 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
           // variant={"outline"}
           className="mb-1 mr-1"
           onClick={() => {
-            navigate(`/animal/viewAnimalDetails/${animalCode}/feedinglogs`, { replace: true })
-            navigate(`/animal/viewAnimalFeedingLogDetails/${animalFeedingLog.animalFeedingLogId}`)
-          }}>
+            navigate(`/animal/viewAnimalDetails/${animalCode}/feedinglogs`, {
+              replace: true,
+            });
+            navigate(
+              `/animal/viewAnimalFeedingLogDetails/${animalFeedingLog.animalFeedingLogId}`
+            );
+          }}
+        >
           <HiEye className="mx-auto" />
         </Button>
 
-        {(animalFeedingLog.keeper.employee.employeeName == employee.employeeName
-          || (employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR")
-        ) &&
+        {(animalFeedingLog.keeper.employee.employeeName ==
+          employee.employeeName ||
+          employee.superAdmin ||
+          employee.planningStaff?.plannerType == "CURATOR") && (
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -236,7 +257,7 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
           >
             <HiTrash className="mx-auto" />
           </Button>
-        }
+        )}
       </React.Fragment>
     );
   };
@@ -246,18 +267,18 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
     label: string;
     value: string;
   }
-  const [sortKey, setSortKey] = useState<string>('');
+  const [sortKey, setSortKey] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<1 | 0 | -1 | undefined | null>(-1);
-  const [sortField, setSortField] = useState<string>('dateTime');
+  const [sortField, setSortField] = useState<string>("dateTime");
   const sortOptions: SortOption[] = [
-    { label: 'Latest log', value: '!dateTime' },
-    { label: 'Earliest log', value: 'dateTime' }
-  ]
+    { label: "Latest log", value: "!dateTime" },
+    { label: "Earliest log", value: "dateTime" },
+  ];
 
   const onSortChange = (event: DropdownChangeEvent) => {
     const value = event.value;
 
-    if (value.indexOf('!') === 0) {
+    if (value.indexOf("!") === 0) {
       setSortOrder(-1);
       setSortField(value.substring(1, value.length));
       setSortKey(value);
@@ -297,13 +318,17 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
             }}
           />
         </span>
-        {((employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
-          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") &&
-          <Button className="mr-2"
+        {(employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ||
+          employee.generalStaff?.generalStaffType == "ZOO_OPERATIONS") && (
+          <Button
+            className="mr-2"
             onClick={() => {
-              navigate(`/animal/viewAnimalDetails/${animalCode}/feedinglogs`, { replace: true })
-              navigate(`/animal/createAnimalFeedingLog/${speciesCode}`)
-            }}>
+              navigate(`/animal/viewAnimalDetails/${animalCode}/feedinglogs`, {
+                replace: true,
+              });
+              navigate(`/animal/createAnimalFeedingLog/${speciesCode}`);
+            }}
+          >
             <HiPlus className="mr-auto" />
             Add Animal Feeding Log
           </Button>
@@ -318,7 +343,6 @@ function AllAnimalFeedingLogsDatatable(props: AllAnimalFeedingLogsDatatableProps
       <div>
         <Toast ref={toast} />
         <div className="">
-
           <DataTable
             ref={dt}
             value={animalFeedingLogList}

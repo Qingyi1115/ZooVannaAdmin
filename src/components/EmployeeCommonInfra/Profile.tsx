@@ -32,7 +32,6 @@ function Profile() {
     employeeBirthDate: null,
     isAccountManager: false,
     dateOfResignation: null,
-    employeeProfileUrl: "",
   };
 
   const [curEmployee, setCurEmployee] = useState<Employee>(emptyEmployee);

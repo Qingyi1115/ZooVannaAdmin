@@ -20,7 +20,6 @@ const DropdownUser = () => {
     employeeBirthDate: null,
     isAccountManager: false,
     dateOfResignation: null,
-    employeeProfileUrl: "",
   };
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [curEmployee, setCurEmployee] = useState<Employee>(emptyEmployee);
@@ -31,14 +30,13 @@ const DropdownUser = () => {
         const responseJson = await apiJson.get(
           "http://localhost:3000/api/employee/getEmployee"
         );
-        setCurEmployee(responseJson["employee"])
+        setCurEmployee(responseJson["employee"]);
       } catch (error: any) {
         console.log(error);
       }
     };
     fetchEmployees();
   }, []);
-  
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
@@ -87,7 +85,9 @@ const DropdownUser = () => {
           <span className="block text-sm font-medium text-black dark:text-white">
             {curEmployee.employeeName}
           </span>
-          <span className="block text-xs">{curEmployee.isAccountManager ? "Admin" : "Employee"}</span>
+          <span className="block text-xs">
+            {curEmployee.isAccountManager ? "Admin" : "Employee"}
+          </span>
         </span>
 
         <span className="h-12 w-12 rounded-full">

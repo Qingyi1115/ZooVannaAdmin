@@ -441,6 +441,7 @@ function CreateNewEmployeeForm() {
             ["CUSTOMER_OPERATIONS", "Customer Operations"],
             ["MARKETING", "Marketing"],
             ["SALES", "Sales"],
+            ["NUTRITIONIST", "Nutritionist"],
           ]}
           value={roleType}
           setValue={setRoleType}

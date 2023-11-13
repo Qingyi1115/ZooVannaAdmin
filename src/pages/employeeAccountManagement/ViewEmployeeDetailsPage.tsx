@@ -28,7 +28,6 @@ function ViewEmployeeDetailsPage() {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
     keeper: null,
     generalStaff: null,
     planningStaff: null,

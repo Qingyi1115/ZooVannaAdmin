@@ -28,7 +28,6 @@ function UpdateProfile() {
     employeeBirthDate: null,
     isAccountManager: false,
     dateOfResignation: null,
-    employeeProfileUrl: "",
   };
 
   const { state, dispatch } = useAuthContext();

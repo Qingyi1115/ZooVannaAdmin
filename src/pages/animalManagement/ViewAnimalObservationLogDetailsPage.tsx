@@ -5,7 +5,16 @@ import AnimalObservationLog from "../../models/AnimalObservationLog";
 
 import { Button } from "@/components/ui/button";
 import ViewAnimalObservationLogDetails from "../../components/AnimalManagement/ViewAnimalDetailsPage/ViewAnimalObservationLogDetails";
-import { AcquisitionMethod, ActivityType, AnimalGrowthStage, AnimalSex, EventTimingType, KeeperType, RecurringPattern, Specialization } from "../../enums/Enumurated";
+import {
+  AcquisitionMethod,
+  ActivityType,
+  AnimalGrowthStage,
+  AnimalSex,
+  EventTimingType,
+  KeeperType,
+  RecurringPattern,
+  Specialization,
+} from "../../enums/Enumurated";
 import { Rating } from "../../enums/Rating";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Animal from "../../models/Animal";
@@ -14,11 +23,11 @@ import Employee from "../../models/Employee";
 import Keeper from "../../models/Keeper";
 import Species from "../../models/Species";
 
-
-
 function ViewAnimalObservationLogDetailsPage() {
   const apiJson = useApiJson();
-  const { animalObservationLogId } = useParams<{ animalObservationLogId: string }>();
+  const { animalObservationLogId } = useParams<{
+    animalObservationLogId: string;
+  }>();
   const [assignedStaffIds, setAssignedStaffIds] = useState<number[]>([]);
   const [allStaffs, setAllStaffs] = useState<Employee[]>([]);
   const [empList, setEmpList] = useState<Employee[]>([]);
@@ -88,7 +97,6 @@ function ViewAnimalObservationLogDetailsPage() {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   let emptyKeeper: Keeper = {
@@ -96,8 +104,8 @@ function ViewAnimalObservationLogDetailsPage() {
     keeperType: KeeperType.SENIOR_KEEPER,
     specialization: Specialization.MAMMAL,
     isDisabled: false,
-    employee: emptyEmployee
-  }
+    employee: emptyEmployee,
+  };
 
   let emptyAnimalActivity: AnimalActivity = {
     animalActivityId: -1,
@@ -112,7 +120,7 @@ function ViewAnimalObservationLogDetailsPage() {
     eventTimingType: EventTimingType.AFTERNOON,
     durationInMinutes: -1,
     animalActivityLogs: [],
-    requiredNumberOfKeeper: 0
+    requiredNumberOfKeeper: 0,
   };
 
   let emptyAnimalObservationLog: AnimalObservationLog = {
@@ -123,28 +131,37 @@ function ViewAnimalObservationLogDetailsPage() {
     details: "",
     animals: [],
     keeper: emptyKeeper,
-    animalActivity: emptyAnimalActivity
+    animalActivity: emptyAnimalActivity,
   };
 
-  const [curAnimalObservationLog, setCurAnimalObservationLog] = useState<AnimalObservationLog>(emptyAnimalObservationLog);
+  const [curAnimalObservationLog, setCurAnimalObservationLog] =
+    useState<AnimalObservationLog>(emptyAnimalObservationLog);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
-    apiJson.get(
-      `http://localhost:3000/api/animal/getAnimalObservationLogById/${animalObservationLogId}`)
-      .then(res => {
-        setCurAnimalObservationLog(res.animalObservationLog as AnimalObservationLog);
+    apiJson
+      .get(
+        `http://localhost:3000/api/animal/getAnimalObservationLogById/${animalObservationLogId}`
+      )
+      .then((res) => {
+        setCurAnimalObservationLog(
+          res.animalObservationLog as AnimalObservationLog
+        );
       })
-      .catch(e => console.log(e));
+      .catch((e) => console.log(e));
     console.log(curAnimalObservationLog);
   }, []);
-
 
   return (
     <div className="p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         <div className="flex justify-between">
-          <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
+          <Button
+            variant={"outline"}
+            type="button"
+            onClick={() => navigate(-1)}
+            className=""
+          >
             Back
           </Button>
           <span className="self-center text-title-xl font-bold">
@@ -159,27 +176,12 @@ function ViewAnimalObservationLogDetailsPage() {
         {/* <span className=" self-center text-title-xl font-bold">
           {curAnimalObservationLog.animalObservationLogId}
         </span> */}
-        <ViewAnimalObservationLogDetails curAnimalObservationLog={curAnimalObservationLog} />
-
+        <ViewAnimalObservationLogDetails
+          curAnimalObservationLog={curAnimalObservationLog}
+        />
       </div>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export default ViewAnimalObservationLogDetailsPage;

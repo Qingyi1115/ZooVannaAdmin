@@ -32,19 +32,25 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   const toast = useRef<Toast>(null);
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
-  const [selectedAssignedEmployees, setSelectedAssignedEmployees] = useState<number[]>([]);
-  const [selectedAvailableEmployees, setSelectedAvailableEmployees] = useState<number[]>([]);
+  const [selectedAssignedEmployees, setSelectedAssignedEmployees] = useState<
+    number[]
+  >([]);
+  const [selectedAvailableEmployees, setSelectedAvailableEmployees] = useState<
+    number[]
+  >([]);
   const dt = useRef<DataTable<Employee[]>>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const [employeeAssignmentDialog, setAssignmentDialog] = useState<boolean>(false);
-  const [employeeRemovalDialog, setEmployeeRemovalDialog] = useState<boolean>(false);
-  const [employeeBulkAssignmentDialog, setBulkAssignmentDialog] = useState<boolean>(false);
+  const [employeeAssignmentDialog, setAssignmentDialog] =
+    useState<boolean>(false);
+  const [employeeRemovalDialog, setEmployeeRemovalDialog] =
+    useState<boolean>(false);
+  const [employeeBulkAssignmentDialog, setBulkAssignmentDialog] =
+    useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
 
@@ -53,38 +59,51 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   useEffect(() => {
-    apiJson.post(
-      "http://localhost:3000/api/employee/getAllGeneralStaffs", { includes: ["maintainedFacilities", "operatedFacility", "sensors", "employee"] }
-    ).catch(e => console.log("err", e)).then(res => {
-      const assignedStaff: Employee[] = [];
-      const availableStaff: Employee[] = [];
-      for (const staff of res["generalStaffs"]) {
-        if (staff.generalStaffType == "ZOO_OPERATIONS") {
-          let emp = staff.employee;
-          staff.employee = undefined;
-          emp["generalStaff"] = staff
-          emp.currentlyAssigned = emp.generalStaff.operatedFacility?.facilityId == facilityId;
-          if (emp.currentlyAssigned) {
-            assignedStaff.push(emp);
-          }
-          else {
-            availableStaff.push(emp);
+    apiJson
+      .post("http://localhost:3000/api/employee/getAllGeneralStaffs", {
+        includes: [
+          "maintainedFacilities",
+          "operatedFacility",
+          "sensors",
+          "employee",
+        ],
+      })
+      .catch((e) => console.log("err", e))
+      .then((res) => {
+        const assignedStaff: Employee[] = [];
+        const availableStaff: Employee[] = [];
+        for (const staff of res["generalStaffs"]) {
+          if (staff.generalStaffType == "ZOO_OPERATIONS") {
+            let emp = staff.employee;
+            staff.employee = undefined;
+            emp["generalStaff"] = staff;
+            emp.currentlyAssigned =
+              emp.generalStaff.operatedFacility?.facilityId == facilityId;
+            if (emp.currentlyAssigned) {
+              assignedStaff.push(emp);
+            } else {
+              availableStaff.push(emp);
+            }
           }
         }
-      }
-      setAssignedEmployees(assignedStaff);
-      setAvailableEmployees(availableStaff);
-    });
+        setAssignedEmployees(assignedStaff);
+        setAvailableEmployees(availableStaff);
+      });
   }, [refreshSeed]);
 
   const assignEmployee = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
-      const responseJson = await apiJson.put(
-        `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] }).then(res => {
+      const responseJson = await apiJson
+        .put(
+          `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`,
+          { employeeIds: [selectedEmployee.employeeId] }
+        )
+        .then((res) => {
           setRefreshSeed([]);
-        }).catch(err => console.log("err", err));
+        })
+        .catch((err) => console.log("err", err));
 
       toastShadcn({
         // variant: "destructive",
@@ -101,18 +120,20 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while assigning operation staff: \n" + apiJson.error,
+          "An error has occurred while assigning operation staff: \n" +
+          apiJson.error,
       });
     }
-
-  }
+  };
 
   const removeOperationStaff = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
 
     try {
       const responseJson = await apiJson.del(
-        `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [selectedEmployee.employeeId,] });
+        `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`,
+        { employeeIds: [selectedEmployee.employeeId] }
+      );
       setRefreshSeed([]);
 
       toastShadcn({
@@ -130,10 +151,11 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while removing operation staff: \n" + apiJson.error,
+          "An error has occurred while removing operation staff: \n" +
+          apiJson.error,
       });
     }
-  }
+  };
 
   const showBulkAssignment = () => {
     setBulkAssignmentDialog(true);
@@ -159,8 +181,10 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
       </span>
       <Button
         onClick={showBulkAssignment}
-        disabled={availableEmployees.length == 0}>
-        <HiPlus />Assign Operation Staff
+        disabled={availableEmployees.length == 0}
+      >
+        <HiPlus />
+        Assign Operation Staff
       </Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
@@ -184,26 +208,36 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             variant={"outline"}
             className="mr-2"
             onClick={() => {
-              navigate(`/assetfacility/viewfacilitydetails/${facilityId}/manageOperations`, { replace: true });
-              navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
-            }}>
+              navigate(
+                `/assetfacility/viewfacilitydetails/${facilityId}/manageOperations`,
+                { replace: true }
+              );
+              navigate(
+                `/employeeAccount/viewEmployeeDetails/${employee.employeeId}`
+              );
+            }}
+          >
             <HiEye className="mx-auto" />
           </Button>
-          {employee.dateOfResignation ?
+          {employee.dateOfResignation ? (
             <span>Removed</span>
-            : <div>
+          ) : (
+            <div>
               {/* <Button
                 name="assignButton"
                 variant={"default"}
                 className="mr-2"
-                disabled={employee.generalStaff?.operatedFacility !== null || employee.currentlyAssigned}
+                disabled={
+                  employee.generalStaff?.operatedFacility !== null ||
+                  employee.currentlyAssigned
+                }
                 onClick={() => confirmAssignment(employee)}
               >
                 <HiPlus className="mx-auto" />
               </Button> */}
               {/* {employee.dateOfResignation ?
                 <span>Removed</span>
-                :
+              ) : (
                 <Button
                   variant={"destructive"}
                   className="mr-2"
@@ -214,8 +248,7 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
                 </Button>
               } */}
             </div>
-
-          }
+          )}
         </div>
       </React.Fragment>
     );
@@ -241,18 +274,20 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
   const hideEmployeeBulkAssignmentDialog = () => {
     setBulkAssignmentDialog(false);
-  }
+  };
 
   const onSelectedAssignedEmployeesOnClick = (e: CheckboxClickEvent) => {
     let _selectedAssignedEmployees = [...selectedAssignedEmployees];
     if (e.checked) {
       _selectedAssignedEmployees.push(e.value);
-    }
-    else {
-      _selectedAssignedEmployees.splice(_selectedAssignedEmployees.indexOf(e.value), 1);
+    } else {
+      _selectedAssignedEmployees.splice(
+        _selectedAssignedEmployees.indexOf(e.value),
+        1
+      );
     }
     setSelectedAssignedEmployees(_selectedAssignedEmployees);
-  }
+  };
 
   const assignedEmployeeCheckbox = (employee: any) => {
     return (
@@ -262,23 +297,23 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             name="toAssignEmployees"
             value={employee.employeeId}
             onChange={onSelectedAssignedEmployeesOnClick}
-            checked={selectedAssignedEmployees.includes(employee.employeeId)}>
-          </Checkbox>
+            checked={selectedAssignedEmployees.includes(employee.employeeId)}
+          ></Checkbox>
         </div>
       </React.Fragment>
     );
   };
 
   const onAllAssignedEmployeesOnClick = (e: CheckboxClickEvent) => {
-
     if (e.checked) {
-      setSelectedAssignedEmployees(assignedEmployees.map((employee: Employee) => employee.employeeId));
-    }
-    else {
+      setSelectedAssignedEmployees(
+        assignedEmployees.map((employee: Employee) => employee.employeeId)
+      );
+    } else {
       setSelectedAssignedEmployees([]);
     }
     console.log(selectedAssignedEmployees);
-  }
+  };
 
   const allAssignedEmployeesCheckbox = (employees: any) => {
     return (
@@ -287,8 +322,11 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           <Checkbox
             name="toAssignEmployees"
             onClick={onAllAssignedEmployeesOnClick}
-            checked={selectedAssignedEmployees.length > 0 && selectedAssignedEmployees.length == assignedEmployees.length}>
-          </Checkbox>
+            checked={
+              selectedAssignedEmployees.length > 0 &&
+              selectedAssignedEmployees.length == assignedEmployees.length
+            }
+          ></Checkbox>
         </div>
       </React.Fragment>
     );
@@ -298,12 +336,14 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
     let _selectedAvailableEmployees = [...selectedAvailableEmployees];
     if (e.checked) {
       _selectedAvailableEmployees.push(e.value);
-    }
-    else {
-      _selectedAvailableEmployees.splice(_selectedAvailableEmployees.indexOf(e.value), 1);
+    } else {
+      _selectedAvailableEmployees.splice(
+        _selectedAvailableEmployees.indexOf(e.value),
+        1
+      );
     }
     setSelectedAvailableEmployees(_selectedAvailableEmployees);
-  }
+  };
 
   const availableEmployeeCheckbox = (employee: any) => {
     return (
@@ -313,23 +353,23 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             name="toAssignEmployees"
             value={employee.employeeId}
             onChange={onSelectedAvailableEmployeesOnClick}
-            checked={selectedAvailableEmployees.includes(employee.employeeId)}>
-          </Checkbox>
+            checked={selectedAvailableEmployees.includes(employee.employeeId)}
+          ></Checkbox>
         </div>
       </React.Fragment>
     );
   };
 
   const onAllAvailableEmployeesOnClick = (e: CheckboxClickEvent) => {
-
     if (e.checked) {
-      setSelectedAvailableEmployees(availableEmployees.map((employee: Employee) => employee.employeeId));
-    }
-    else {
+      setSelectedAvailableEmployees(
+        availableEmployees.map((employee: Employee) => employee.employeeId)
+      );
+    } else {
       setSelectedAvailableEmployees([]);
     }
     console.log(selectedAvailableEmployees);
-  }
+  };
 
   const allAvailableEmployeesCheckbox = (employees: any) => {
     return (
@@ -338,8 +378,11 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           <Checkbox
             name="toAssignEmployees"
             onClick={onAllAvailableEmployeesOnClick}
-            checked={selectedAvailableEmployees.length > 0 && selectedAvailableEmployees.length == availableEmployees.length}>
-          </Checkbox>
+            checked={
+              selectedAvailableEmployees.length > 0 &&
+              selectedAvailableEmployees.length == availableEmployees.length
+            }
+          ></Checkbox>
         </div>
       </React.Fragment>
     );
@@ -347,21 +390,32 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
 
   const hideEmployeeAssignmentDialog = () => {
     setAssignmentDialog(false);
-  }
+  };
 
   const bulkAssignEmployees = async () => {
     selectedAvailableEmployees.forEach(async (employeeId) => {
       try {
-        const responseJson = await apiJson.put(
-          `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
+        const responseJson = await apiJson
+          .put(
+            `http://localhost:3000/api/assetFacility/assignOperationStaffToFacility/${facilityId}`,
+            { employeeIds: [employeeId] }
+          )
+          .then((res) => {
             setRefreshSeed([]);
-          }).catch(err => console.log("err", err));
+          })
+          .catch((err) => console.log("err", err));
 
         toastShadcn({
           // variant: "destructive",
           title: "Assignment Successful",
           description:
-            "Successfully assigned operation staff: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
+            "Successfully assigned operation staff: " +
+            availableEmployees
+              .filter((emp) =>
+                selectedAvailableEmployees.includes(emp.employeeId)
+              )
+              .map((employee) => " " + employee.employeeName)
+              .toString(),
         });
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
@@ -372,11 +426,12 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while assigning operation staff: \n" + apiJson.error,
+            "An error has occurred while assigning operation staff: \n" +
+            apiJson.error,
         });
       }
     });
-  }
+  };
 
   const employeeAssignmentDialogFooter = (
     <React.Fragment>
@@ -394,16 +449,22 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
   const bulkRemoveEmployees = async () => {
     selectedAssignedEmployees.forEach(async (employeeId) => {
       try {
-        const responseJson = await apiJson.del(
-          `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`, { employeeIds: [employeeId] }).then(res => {
+        const responseJson = await apiJson
+          .del(
+            `http://localhost:3000/api/assetFacility/removeOperationStaffFromFacility/${facilityId}`,
+            { employeeIds: [employeeId] }
+          )
+          .then((res) => {
             setRefreshSeed([]);
-          }).catch(err => console.log("err", err));
+          })
+          .catch((err) => console.log("err", err));
 
         toastShadcn({
           // variant: "destructive",
           title: "Removal Successful",
           description:
-            "Successfully removed operation staff: " + selectedAssignedEmployees.toString(),
+            "Successfully removed operation staff: " +
+            selectedAssignedEmployees.toString(),
         });
         setEmployeeRemovalDialog(false);
         setBulkAssignmentDialog(false);
@@ -414,15 +475,16 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while removing operation staff: \n" + apiJson.error,
+            "An error has occurred while removing operation staff: \n" +
+            apiJson.error,
         });
       }
     });
-  }
+  };
 
   const hideEmployeeRemovalDialog = () => {
     setEmployeeRemovalDialog(false);
-  }
+  };
 
   const employeeRemovalDialogFooter = (
     <React.Fragment>
@@ -442,7 +504,6 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
       <div>
         <Toast ref={toast} />
         <div className="">
-
           <DataTable
             ref={dt}
             value={assignedEmployees}
@@ -514,7 +575,8 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           <Button
             variant={"destructive"}
             onClick={confirmEmployeeRemoval}
-            disabled={selectedAssignedEmployees.length == 0}>
+            disabled={selectedAssignedEmployees.length == 0}
+          >
             <HiMinus />
             Remove Selected Staff
           </Button>
@@ -536,7 +598,15 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
             {selectedEmployee && (
               <span>
                 Are you sure you want to assign this facility to{" "}
-                <b>{availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()}?</b>
+                <b>
+                  {availableEmployees
+                    .filter((emp) =>
+                      selectedAvailableEmployees.includes(emp.employeeId)
+                    )
+                    .map((employee) => " " + employee.employeeName)
+                    .toString()}
+                  ?
+                </b>
               </span>
             )}
           </div>
@@ -571,10 +641,13 @@ function manageOperationStaff(props: ManageOperationStaffProps) {
           footer={
             <Button
               onClick={confirmAssignment}
-              disabled={selectedAvailableEmployees.length == 0}>
+              disabled={selectedAvailableEmployees.length == 0}
+            >
               Assign Selected Staff
-            </Button>}
-          onHide={hideEmployeeBulkAssignmentDialog}>
+            </Button>
+          }
+          onHide={hideEmployeeBulkAssignmentDialog}
+        >
           <div className="confirmation-content">
             <DataTable
               ref={dt}
