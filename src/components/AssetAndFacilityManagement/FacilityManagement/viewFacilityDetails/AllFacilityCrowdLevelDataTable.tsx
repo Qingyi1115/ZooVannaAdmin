@@ -78,8 +78,7 @@ function AllFacilityCrowdLevelDataTable() {
         console.log(e);
       })
       .then((res) => {
-        console.log("AllFacilityCrowdLevelDataTable", res)
-
+        console.log("AllFacilityCrowdLevelDataTable", res);
         setFacilityList(res["facilitiesData"].map(data => {
           const facility = data["facility"]
           facility.crowdLevel = beautifyText(data.crowdLevel)
@@ -159,11 +158,12 @@ function AllFacilityCrowdLevelDataTable() {
   );
   // end delete facility stuff
 
-  const actionBodyTemplate = (facility: Facility) => {
+  const actionBodyTemplate = (rowData: any) => {
+    console.log("rowData.crowdLevel", rowData.crowdLevel, rowData.crowdLevel != "No Data")
     return (
       <React.Fragment>
         <NavLink
-          to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
+          to={`/assetfacility/viewfacilitydetails/${rowData.facilityId}`}
         >
           <Button
             // variant={"outline"}
@@ -172,9 +172,9 @@ function AllFacilityCrowdLevelDataTable() {
           </Button>
         </NavLink>
         {(employee.superAdmin ||
-          employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+          employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (rowData.crowdLevel != "No Data") && (
             <NavLink
-              to={`/assetfacility/viewcamerafeeds/${facility.facilityId}`}
+              to={`/assetfacility/viewcamerafeeds/${rowData.facilityId}`}
             >
               <Button variant={"outline"} className="mb-1 mr-1">
                 <HiCamera className="mx-auto" />
