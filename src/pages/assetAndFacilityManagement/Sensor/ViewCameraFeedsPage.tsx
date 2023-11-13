@@ -33,7 +33,7 @@ function ViewCameraFeedsPage() {
             Back
           </Button>
         </div>
-        <hr authorizations="bg-stroke opacity-20" />
+        <hr className="bg-stroke opacity-20" />
         {authorizations && (
           <ViewCameraFeeds authorizations={authorizations} />
         )}
