@@ -1,19 +1,6 @@
 
 import AllFacilityDatatable from "../../../components/AssetAndFacilityManagement/FacilityManagement/viewFacilityDetails/AllFacilityDatatable";
 
-interface Product {
-  id: string;
-  code: string;
-  name: string;
-  description: string;
-  image: string;
-  price: number;
-  category: string;
-  quantity: number;
-  inventoryStatus: string;
-  rating: number;
-}
-
 function ViewAllFacilityPage() {
   return (
     <div className="p-10">
