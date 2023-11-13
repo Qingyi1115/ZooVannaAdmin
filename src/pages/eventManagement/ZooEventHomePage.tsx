@@ -14,13 +14,16 @@ import ZooEvent from "../../models/ZooEvent";
 
 import { HiCalendarDays, HiTableCells } from "react-icons/hi2";
 
+import * as Form from "@radix-ui/react-form";
+import { Dialog } from "primereact/dialog";
 import { Menu } from "primereact/menu";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import AllEventsDatatable from "../../components/EventManagement/ZooEventHomePage/AllZooEventsDatatable";
 import AllEventsFullCalendar from "../../components/EventManagement/ZooEventHomePage/AllZooEventsFullCalendar";
+import FormFieldInput from "../../components/FormFieldInput";
 import beautifyText from "../../hooks/beautifyText";
 import { useAuthContext } from "../../hooks/useAuthContext";
-
+import { useToast } from "../../shadcn/components/ui/use-toast";
 
 const YEAR_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 365
 interface eventGroup {
@@ -30,6 +33,8 @@ interface eventGroup {
 
 function ZooEventHomePage() {
   const apiJson = useApiJson();
+  const toastShadcn = useToast().toast;
+
   const [isDatatableView, setIsDatatableView] = useState<boolean>(true);
 
   const [calendarStartDate, setCalendarStartDate] = useState<Date>(new Date(Date.now() - YEAR_IN_MILLISECONDS));
@@ -240,6 +245,59 @@ function ZooEventHomePage() {
       }]
     },
   ];
+  
+  const [autoAssignDialog, setAutoAssignDialog] = useState<boolean>(false);
+  const [numberOfDays, setNumberOfDays] = useState<number>(14);
+  const [formError, setFormError] = useState<string | null>(null);
+ 
+  const showAutoAssignDialog = () => {
+    setAutoAssignDialog(true);
+  }
+  const hideAutoAssignDialog = () => {
+    setAutoAssignDialog(false);
+  }
+
+  function validateNumberOfDays(props: ValidityState) {
+    if (props != undefined) {
+      if (props.valueMissing) {
+        return (
+          <div className="font-medium text-danger">* Please enter a value</div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
+
+  async function handleSubmit(e: any) {
+    // Remember, your form must have enctype="multipart/form-data" for upload pictures
+    e.preventDefault();
+    const autoAssign = {
+      endDate: numberOfDays * 86400000 + Date.now(),
+    }
+
+    try {
+      const responseJson = await apiJson.post(
+        `http://localhost:3000/api/zooEvent/autoAssignKeeperToZooEvent/`,
+        autoAssign);
+      // success
+      toastShadcn({
+        description: "Successfully auto-assigned keepers to events!",
+      });
+      hideAutoAssignDialog();
+    } catch (error: any) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "An error has occurred while auto-assigning keepers: \n" +
+          error.message,
+      });
+    }
+    console.log(apiJson.result);
+
+    // handle success case or failurecase using apiJson
+  }
 
   return (
     <div className="p-10">
@@ -263,9 +321,9 @@ function ZooEventHomePage() {
             <span className=" self-center text-title-xl font-bold">
               All Events
             </span>
-            <Button className="mr-2 invisible" disabled aria-controls="popup_menu_right" aria-haspopup >
+            <Button className="mr-2" aria-controls="popup_menu_right" aria-haspopup onClick={showAutoAssignDialog} >
               <HiPlus className="mr-2" />
-              Add Event
+              Auto-Assign Event
             </Button>
           </div>
           <Separator />
@@ -383,6 +441,60 @@ function ZooEventHomePage() {
           />
         )}
       </div>
+      <Dialog
+            visible={autoAssignDialog}
+            style={{ width: "50rem" }}
+            breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header={"Auto-Assign Staff"}
+        footer={<Button
+              disabled={apiJson.loading || numberOfDays == 0 || numberOfDays == undefined}
+              className="h-12 w-2/3 self-center rounded-full text-lg"
+              onClick={handleSubmit}
+            >
+              {!apiJson.loading ? (
+                <div>Auto-Assign Keepers</div>
+              ) : (
+                <div>Loading</div>
+              )}
+            </Button>}
+            onHide={hideAutoAssignDialog}>
+            <div className="">
+              <Form.Root
+                className="flex w-full flex-col gap-6  bg-white p-20 text-black "
+                onSubmit={handleSubmit}
+                encType="multipart/form-data"
+              >
+                {/* Title */}
+                <FormFieldInput
+                  type="number"
+                  formFieldName="numberOfDays"
+                  label="Number of days from today"
+                  required={true}
+                  placeholder=""
+                  value={numberOfDays}
+                  setValue={setNumberOfDays}
+                  validateFunction={validateNumberOfDays}
+                  pattern={undefined}
+                />
+                {/* <Form.Submit asChild> */}
+                {/* <Button
+                  disabled={apiJson.loading}
+                  className="h-12 w-2/3 self-center rounded-full text-lg"
+                >
+                  {!apiJson.loading ? (
+                    <div>Auto-Assign Keepers</div>
+                  ) : (
+                    <div>Loading</div>
+                  )}
+                </Button> */}
+                {/* </Form.Submit> */}
+                {formError && (
+                  <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+                )}
+              </Form.Root>
+              
+            </div>
+          </Dialog>
     </div>
   );
 }
