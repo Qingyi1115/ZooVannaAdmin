@@ -48,6 +48,13 @@ function ViewCameraFeeds(props: Authorization) {
 
   }, [authorizations]);
 
+  const [refreshseed, setrefreshseed] = useState(0);
+
+  setInterval(() => {
+    setrefreshseed(refreshseed => refreshseed + 1);
+    console.log("refreshseed",refreshseed);
+  }, 5000);
+
   return (
     <div className="flex justify-between self-center gap-6">
       <div className="flex flex-row gap-6">
@@ -58,7 +65,7 @@ function ViewCameraFeeds(props: Authorization) {
               return (
                 <AccordionTab header="Camera 1" >
                   <div className="w-full h-full">
-                    <iframe className="w-full h-full" src={value.ipAddressName}></iframe>
+                    <iframe key={refreshseed} className="w-[50vw] h-[50vh]" src={value.ipAddressName}></iframe>
                     <div className="mb-1 block font-medium">{value.sensorName}</div>
                   </div>
                 </AccordionTab>

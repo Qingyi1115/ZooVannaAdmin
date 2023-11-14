@@ -45,9 +45,16 @@ function ViewCamera(props: Authorization) {
     fetchData();
   }, []);
 
+  const [refreshseed, setrefreshseed] = useState(0);
+
+  setInterval(() => {
+    setrefreshseed(refreshseed => refreshseed + 1);
+    console.log("refreshseed",refreshseed);
+  }, 5000);
+
   return (
     <div className="w-full h-full">
-      <iframe className="w-full h-full" src={url}></iframe>
+      <iframe key={refreshseed} className="w-[100vw] h-[100vh]" src={url}></iframe>
     </div>
 
     // <div className="w-[100vw] h-[100vh]">
