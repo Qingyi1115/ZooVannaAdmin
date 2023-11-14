@@ -107,7 +107,7 @@ function ViewPublicEventDetails() {
 
   const [curPublicEvent, setCurPublicEvent] =
     useState<PublicEvent | null>(null);
-  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
 
   const [involvedAnimalList, setInvolvedAnimalList] = useState<Animal[]>();
   const [involvedAnimalGlobalFiler, setInvolvedAnimalGlobalFilter] =
@@ -164,6 +164,32 @@ function ViewPublicEventDetails() {
   // remove animal stuff
   const [selectedAnimal, setSelectedAnimal] = useState<Animal>(emptyAnimal);
   const [removeAnimalDialog, setRemoveAnimalDialog] = useState<boolean>(false);
+  const [disableEventDialog, setdisableEventDialog] = useState<boolean>(false);
+
+  const toggleDisable = () => {
+    if (curPublicEvent?.isDisabled) {
+      apiJson.put(
+        `http://localhost:3000/api/zooEvent/enablePublicEventById/${publicEventId}`, {}
+      ).catch(err => console.log(err)
+      ).then(() => {
+        setRefreshSeed([]);
+        setdisableEventDialog(false);
+
+      });
+
+    } else {
+      apiJson.put(
+        `http://localhost:3000/api/zooEvent/disablePublicEventById/${publicEventId}`, {}
+      ).catch(err => console.log(err)
+      ).then(() => {
+        setRefreshSeed([]);
+        setdisableEventDialog(false);
+
+      });
+
+    }
+
+  }
   const confirmRemoveAnimal = (animal: Animal) => {
     setSelectedAnimal(animal);
     setRemoveAnimalDialog(true);
@@ -302,7 +328,7 @@ function ViewPublicEventDetails() {
               </Button>
               {/* </NavLink> */}
               <span className="self-center text-lg text-graydark">
-                Animal Activity Details
+                Public Event Details
               </span>
               <Button disabled className="invisible">
                 Back
@@ -345,6 +371,17 @@ function ViewPublicEventDetails() {
                   >
                     <Button className="my-3">View In House</Button>
                   </NavLink>
+                  {"   "}
+                  {
+                    curPublicEvent.isDisabled ?
+                      <Button className="my-3" onClick={() => {
+                        setdisableEventDialog(true);
+                      }}>Enable Public Event</Button> :
+                      <Button className="my-3" onClick={() => {
+                        setdisableEventDialog(true);
+                      }}>Disable Public Event</Button>
+                  }
+
                   <Table>
                     <TableBody>
                       <TableRow>
@@ -495,6 +532,48 @@ function ViewPublicEventDetails() {
                             activity? ?
                           </span>
                         )}
+                      </div>
+                    </Dialog>
+
+                    <Dialog
+                      visible={disableEventDialog}
+                      style={{ width: "32rem" }}
+                      breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+                      header="Confirm"
+                      modal
+                      footer={
+                        <React.Fragment>
+                          <Button onClick={() => {
+                            setdisableEventDialog(false);
+                          }}>
+                            <HiX className="mr-2" />
+                            No
+                          </Button>
+                          <Button variant={"destructive"} onClick={toggleDisable}>
+                            <HiCheck className="mr-2" />
+                            Yes
+                          </Button>
+                        </React.Fragment>
+                      }
+                      onHide={() => {
+                        setdisableEventDialog(false);
+                      }}
+                    >
+                      <div className="confirmation-content">
+                        <i
+                          className="pi pi-exclamation-triangle mr-3"
+                          style={{ fontSize: "2rem" }}
+                        />
+                        {curPublicEvent.isDisabled ?
+                          <span>
+                            Enable public Event?
+                          </span>
+                          :
+                          <span>
+                            Are you sure you want disable public Event and remove scheduled events? (Recurring session might be deleted!)
+                          </span>
+
+                        }
                       </div>
                     </Dialog>
                   </div>
