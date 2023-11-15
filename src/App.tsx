@@ -150,6 +150,7 @@ import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
 import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
 import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSessionDetailsPage";
 import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
+import ViewAllFacilityCrowdLevelPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilityCrowdLevelPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -748,7 +749,7 @@ function App() {
                 />
 
                 <Route
-                  path="/assetfacility/viewcamerafeeds/:sensorId"
+                  path="/assetfacility/viewcamerafeeds/:facilityId"
                   element={
                     user ? <ViewCameraFeedsPage /> : <Navigate to="/login" />
                   }
@@ -1221,6 +1222,13 @@ function App() {
                 path="/zooevent/createpubliceventsession/:publicEventId"
                 element={
                   user ? <CreatePublicEventSessionForm /> : <Navigate to="/login" />
+                }
+              />
+
+              <Route
+                path="/zooevent/allFacilityCrowdLevel"
+                element={
+                  user ? <ViewAllFacilityCrowdLevelPage /> : <Navigate to="/login" />
                 }
               />
 

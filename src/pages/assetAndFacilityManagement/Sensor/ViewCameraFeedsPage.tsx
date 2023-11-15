@@ -8,21 +8,14 @@ import useApiJson from "../../../hooks/useApiJson";
 function ViewCameraFeedsPage() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
-  const { sensorId } = useParams<{ sensorId: string }>();
-  const [authorization, setAuthorization] = useState<any>(undefined);
+  const { facilityId } = useParams<{ facilityId: string }>();
+  const [authorizations, setAuthorizations] = useState<any[]>([]);
 
   useEffect(() => {
     apiJson.get(
-      `http://localhost:3000/api/assetFacility/getAuthorizationForCamera/${sensorId}`).then(res => {
-        const newAuth = {
-          userId: res.userId,
-          hubId: res.hubId,
-          date: res.date,
-          ipAddressName: res.ipAddressName,
-          signature: res.signature,
-          sensorName: res.sensorName
-        }
-        setAuthorization(newAuth);
+      `http://localhost:3000/api/assetFacility/getAuthorizationForCameraByFacilityId/${facilityId}`).then(res => {
+        console.log("ViewCameraFeedsPage", res)
+        setAuthorizations(res.data);
       }).catch(e => console.log(e));
   }, []);
 
@@ -41,8 +34,8 @@ function ViewCameraFeedsPage() {
           </Button>
         </div>
         <hr className="bg-stroke opacity-20" />
-        {authorization && (
-          <ViewCameraFeeds authorization={authorization} />
+        {authorizations && (
+          <ViewCameraFeeds authorizations={authorizations} />
         )}
       </div>
     </div>
