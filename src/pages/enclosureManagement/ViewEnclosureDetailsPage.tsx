@@ -33,7 +33,7 @@ function ViewEnclosureDetailsPage() {
     const fetchEnclosure = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/enclosure/getEnclosuresById/${enclosureId}`
+          `http://localhost:3000/api/enclosure/getEnclosureById/${enclosureId}`
         );
         // setCurEnclosure(responseJson as Enclosure);
         dispatch({ type: "SET_ENCLOSURE", payload: responseJson as Enclosure });
