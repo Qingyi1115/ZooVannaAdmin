@@ -11,7 +11,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 import beautifyText from "../../hooks/beautifyText";
 
@@ -59,7 +59,7 @@ function ViewCustomerOrderDetailsEntry(props: CustomerOrderInfoDetailsProps) {
           const description = `${listing.description}`;
           console.log(description);
 
-          if (item.isRedeemed) {
+          if (item.isRedeemed > 0) {
             groupedItems[listingId] = {
               listingName, //
               description,
@@ -76,7 +76,7 @@ function ViewCustomerOrderDetailsEntry(props: CustomerOrderInfoDetailsProps) {
           }
         } else {
           groupedItems[listingId].numberOfOrderItems++;
-          if (item.isRedeemed) {
+          if (item.isRedeemed > 0) {
             groupedItems[listingId].numberRedeemed++;
           }
         }
@@ -116,7 +116,9 @@ function ViewCustomerOrderDetailsEntry(props: CustomerOrderInfoDetailsProps) {
               <TableCell className="w-1/3 font-bold" colSpan={2}>
                 Order Status
               </TableCell>
-              <TableCell>{beautifyText(curCustomerOrder.orderStatus)}</TableCell>
+              <TableCell>
+                {beautifyText(curCustomerOrder.orderStatus)}
+              </TableCell>
             </TableRow>
             {/* <TableRow>
               <TableCell className="w-1/3 font-bold" colSpan={2}>
