@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import * as Form from "@radix-ui/react-form";
 
@@ -9,52 +9,38 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-import {
-  EnclosureStatus
-} from "../../enums/Enumurated";
 import useApiJson from "../../hooks/useApiJson";
 
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
+import { EnclosureStatus } from "../../enums/Enumurated";
 import useApiFormData from "../../hooks/useApiFormData";
-import Facility from "../../models/Facility";
+import Enclosure from "../../models/Enclosure";
 import FormFieldSelect from "../FormFieldSelect";
 
+interface EditEnclosureFormProps {
+  curEnclosure: Enclosure;
+  refreshSeed: number;
+  setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
+}
 
-function CreateNewEnclosureForm() {
+function EditEnclosureForm(props: EditEnclosureFormProps) {
+
+  const { curEnclosure, refreshSeed, setRefreshSeed } = props;
+
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
   const apiJson = useApiJson();
   const apiFormData = useApiFormData();
-  const [curFacilityList, setCurFacilityList] = useState<any>(null);
-  const [selectedFacility, setSelectedFacility] = useState<Facility[]>([]);
-  const [name, setName] = useState<string>("");
-  const [remark, setRemark] = useState<string>("");
-  const [length, setLength] = useState<number>(0);
-  const [width, setWidth] = useState<number>(0);
-  const [height, setHeight] = useState<number>(0);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [name, setName] = useState<string>(curEnclosure.name);
+  const [remark, setRemark] = useState<string>(curEnclosure.remark?.toString() || "");
+  const [length, setLength] = useState<number>(curEnclosure.length);
+  const [width, setWidth] = useState<number>(curEnclosure.width);
+  const [height, setHeight] = useState<number>(curEnclosure.height);
   const [standOffBarrierDist, setStandOffBarrierDist] = useState<number>(0);
-  const [xCoordinate, setXCoordinate] = useState<number>(0);
-  const [yCoordinate, setYCoordinate] =
-    useState<number>(0);
+
   const [enclosureStatus, setEnclosureStatus] = useState<string | undefined>(
-    undefined
+    curEnclosure.enclosureStatus
   );
-
-
-
-  useEffect(() => {
-    apiJson
-      .post("http://localhost:3000/api/assetFacility/getAllFacility", {
-        includes: ["facilityDetail"],
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-      .then((res) => {
-        console.log("req", res)
-        setCurFacilityList(res["facilities"]);
-      });
-  }, []);
 
   // validate functions
   function validateImage(props: ValidityState) {
@@ -162,80 +148,6 @@ function CreateNewEnclosureForm() {
     return null;
   }
 
-  function validateXCoordinate(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter the x coordinate
-          </div>
-        );
-      }
-      if (props.typeMismatch) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter a valid number for x coordinate
-          </div>
-        );
-      }
-    }
-    return null;
-  }
-
-  function validateYCoordinate(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter the y coordinate
-          </div>
-        );
-      }
-      if (props.typeMismatch) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter a valid number for y coordinate
-          </div>
-        );
-      }
-    }
-    return null;
-  }
-
-  function validateStandoffBarrierDist(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter the standoff barrier distance
-          </div>
-        );
-      }
-      if (props.typeMismatch) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter a valid number for standoff barrier distance
-          </div>
-        );
-      }
-    }
-    return null;
-  }
-
-  function validateFacility(props: ValidityState) {
-    if (props != undefined) {
-      if (selectedFacility.length == 0) {
-        return (
-          <div className="font-medium text-danger">
-            * Please select a facility
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
-
   function validateEnclosureStatus(props: ValidityState) {
     if (props != undefined) {
       if (enclosureStatus == undefined) {
@@ -249,37 +161,30 @@ function CreateNewEnclosureForm() {
     }
     return null;
   }
+
+
   // Enclosure Image
-  // function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-  //   const file = event.target.files && event.target.files[0];
-  //   setImageFile(file);
-  // }
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+    setImageFile(file);
+  }
 
   // handle submit
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("imageUrl", selectedFacility[0].imageUrl);
     formData.append("name", name);
     formData.append("remark", remark);
     formData.append("length", length.toString());
     formData.append("width", width.toString());
     formData.append("height", height.toString());
-    formData.append("standOffBarrierDist", standOffBarrierDist.toString());
-    formData.append("xCoordinate", xCoordinate.toString());
-    formData.append("yCoordinate", yCoordinate.toString());
-    formData.append("facilityId", selectedFacility[0].facilityId.toString());
-    formData.append("facilityName", selectedFacility[0].facilityName);
-    formData.append("isSheltered", selectedFacility[0].isSheltered.toString());
-    formData.append("facilityDetail", selectedFacility[0].facilityDetail.toString());
-    formData.append("facilityDetailJson", selectedFacility[0].facilityDetailJson.toString());
     formData.append("enclosureStatus", enclosureStatus.toString());
-    console.log("facility", selectedFacility[0])
+    formData.append("standOffBarrierDist", standOffBarrierDist.toString());
 
     const createEnclosureApi = async () => {
       try {
-        const response = await apiFormData.post(
-          "http://localhost:3000/api/enclosure/createNewEnclosure",
+        const response = await apiFormData.put(
+          "http://localhost:3000/api/enclosure/updateEnclosure",
           formData
         );
         // success
@@ -319,40 +224,47 @@ function CreateNewEnclosureForm() {
               Back
             </Button>
             {/* </NavLink> */}
-            <span className="self-center text-title-xl font-bold">
-              Create Enclosure
+            <span className="self-center text-lg text-graydark">
+              Edit Enclosure
             </span>
             <Button disabled className="invisible">
               Back
             </Button>
           </div>
           <Separator />
+          <span className="mt-4 self-center text-title-xl font-bold">
+            {/* {curEnclosure.name} */}
+            "enclosure name"
+          </span>
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-col lg:gap-12">
-          {/* Facility */}
-          <Form.Field
-            name="facility"
+          {/* Enclosure Picture */}
+          {/* <Form.Field
+            name="zooEventImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
+            <span className="font-medium">Current Image</span>
+            <img
+              src={
+                "http://localhost:3000/"
+                // + curEnclosure.facility?.imageUrl
+              }
+              alt="Current enclosure image"
+              className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"
+            />
             <Form.Label className="font-medium">
-              Facility
+              Change Enclosure Image
             </Form.Label>
-            <MultiSelect
-              value={selectedFacility}
-              onChange={(e: MultiSelectChangeEvent) => setSelectedFacility(e.value)}
-              options={curFacilityList}
-              optionLabel="facilityName"
-              filter
-              display="chip"
-              selectionLimit={1}
-              placeholder="Select Facility"
-              // maxSelectedLabels={3}
-              className="w-full md:w-20rem" />
-            <Form.ValidityState>
-              {validateFacility}
-            </Form.ValidityState>
-          </Form.Field>
+            <Form.Control
+              type="file"
+              required
+              accept=".png, .jpg, .jpeg, .webp"
+              onChange={handleFileChange}
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+            />
+            <Form.ValidityState>{validateImage}</Form.ValidityState>
+          </Form.Field> */}
 
           <FormFieldInput
             label="Name"
@@ -419,28 +331,6 @@ function CreateNewEnclosureForm() {
             placeholder={""}
             pattern={undefined} />
 
-          <FormFieldInput
-            label="X Coordinate"
-            type="number"
-            value={xCoordinate}
-            setValue={setXCoordinate}
-            validateFunction={validateXCoordinate}
-            formFieldName={""}
-            required={true}
-            placeholder={""}
-            pattern={undefined} />
-
-          <FormFieldInput
-            label="Y Coordinate"
-            type="number"
-            value={yCoordinate}
-            setValue={setYCoordinate}
-            validateFunction={validateYCoordinate}
-            formFieldName={""}
-            required={true}
-            placeholder={""}
-            pattern={undefined} />
-
           {/* Enclosure Status */}
           <FormFieldSelect
             formFieldName="enclosureStatus"
@@ -475,4 +365,4 @@ function CreateNewEnclosureForm() {
 }
 
 
-export default CreateNewEnclosureForm;
+export default EditEnclosureForm;

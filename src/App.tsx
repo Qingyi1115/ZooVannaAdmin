@@ -144,13 +144,14 @@ import EditAnnouncementPage from "./pages/announcement/EditAnnouncementPage";
 import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsPage";
 import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
 import ViewAllFacilityCrowdLevelPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilityCrowdLevelPage";
+import CreateNewEnclosurePage from "./pages/enclosureManagement/CreateNewEnclosurePage";
+import EditEnclosurePage from "./pages/enclosureManagement/EditEnclosurePage";
 import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
 import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
 import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSessionDetailsPage";
 import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPage";
 import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
 import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
-import CreateNewEnclosurePage from "./pages/enclosureManagement/CreateNewEnclosurePage";
 
 function App() {
   const { state } = useAuthContext();
@@ -550,6 +551,12 @@ function App() {
                   path="/enclosure/createnewenclosure"
                   element={
                     user ? <CreateNewEnclosurePage /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/enclosure/editenclosure/:enclosureId"
+                  element={
+                    user ? <EditEnclosurePage /> : <Navigate to="/login" />
                   }
                 />
                 <Route element={<EnclosureContextLayout />}>
