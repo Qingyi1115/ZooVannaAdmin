@@ -228,7 +228,7 @@ function EditEnclosureForm(props: EditEnclosureFormProps) {
             </Button>
             {/* </NavLink> */}
             <span className="self-center text-lg text-graydark">
-              Edit Enclosure
+              Edit Enclosure Basic Information
             </span>
             <Button disabled className="invisible">
               Back

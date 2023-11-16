@@ -11,7 +11,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
 
-import EnrichmentItem from "../../../models/EnrichmentItem";
+import Plantation from "../../../models/Plantation";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxClickEvent } from "primereact/checkbox";
@@ -19,30 +19,31 @@ import {
   HiCheck,
   HiX
 } from "react-icons/hi";
+import { Biome } from "../../../enums/Enumurated";
 
 
-interface EnclosureEnrichmentItemDatatableProps {
+interface EnclosurePlantationDatatableProps {
   curEnclosure: Enclosure;
-  enrichmentItemList: EnrichmentItem[];
-  setEnrichmentItemList: any;
+  plantationList: Plantation[];
+  setPlantationList: any;
   refreshSeed: number;
   setRefreshSeed: any;
 }
-function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatableProps) {
+function EnclosurePlantationDatatable(props: EnclosurePlantationDatatableProps) {
   const apiJson = useApiJson();
 
   const {
     curEnclosure,
-    enrichmentItemList,
-    setEnrichmentItemList,
+    plantationList,
+    setPlantationList,
     refreshSeed,
     setRefreshSeed,
   } = props;
 
-  const emptyEnrichmentItem: EnrichmentItem = {
-    enrichmentItemId: -1,
-    enrichmentItemName: "",
-    enrichmentItemImageUrl: "",
+  const emptyPlantation: Plantation = {
+    plantationId: 0,
+    name: "",
+    biome: Biome.AQUATIC
   }
 
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -52,30 +53,30 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
   };
 
 
-  const [selectedEnrichmentItem, setSelectedEnrichmentItem] = useState<EnrichmentItem>(emptyEnrichmentItem);
-  const [removeEnrichmentItemDialog, setRemoveEnrichmentItemDialog] = useState<boolean>(false);
+  const [selectedPlantation, setSelectedPlantation] = useState<Plantation>(emptyPlantation);
+  const [removePlantationDialog, setRemovePlantationDialog] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const navigate = useNavigate();
 
   const [expandedRows, setExpandedRows] = useState<
-    DataTableExpandedRows | EnrichmentItem[]
+    DataTableExpandedRows | Plantation[]
   >([]);
 
-  // add enrichmentItem vars
-  const [enrichmentItemBulkAssignmentDialog, setEnrichmentItemBulkAssignmentDialog] =
+  // add plantation vars
+  const [plantationBulkAssignmentDialog, setPlantationBulkAssignmentDialog] =
     useState<boolean>(false);
-  const [availableEnrichmentItems, setAvailableEnrichmentItems] = useState<EnrichmentItem[]>([]);
-  const [selectedAvailableEnrichmentItems, setSelectedAvailableEnrichmentItems] = useState<
-    EnrichmentItem[]
+  const [availablePlantations, setAvailablePlantations] = useState<Plantation[]>([]);
+  const [selectedAvailablePlantations, setSelectedAvailablePlantations] = useState<
+    Plantation[]
   >([]);
-  const [enrichmentItemAssignmentDialog, setEnrichmentItemAssignmentDialog] =
+  const [plantationAssignmentDialog, setPlantationAssignmentDialog] =
     useState<boolean>(false);
   const [isCompatibleOnlyFilter, setIsCompatibleOnlyFilter] = useState<
     boolean | undefined
   >(false);
   //
 
-  const dt = useRef<DataTable<EnrichmentItem[]>>(null);
+  const dt = useRef<DataTable<Plantation[]>>(null);
 
   const toastShadcn = useToast().toast;
 
@@ -100,80 +101,80 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
     return formattedAge;
   }
 
-  // remove enrichmentItem stuff
-  const confirmRemoveEnrichmentItem = (enrichmentItem: EnrichmentItem) => {
-    setSelectedEnrichmentItem(enrichmentItem);
-    setRemoveEnrichmentItemDialog(true);
+  // remove plantation stuff
+  const confirmRemovePlantation = (plantation: Plantation) => {
+    setSelectedPlantation(plantation);
+    setRemovePlantationDialog(true);
   };
 
-  const hideRemoveEnrichmentItemDialog = () => {
-    setRemoveEnrichmentItemDialog(false);
+  const hideRemovePlantationDialog = () => {
+    setRemovePlantationDialog(false);
   };
 
-  const removeEnrichmentItem = async () => {
-    let _enrichmentItems = enrichmentItemList.filter(
-      (val) => val.enrichmentItemId !== selectedEnrichmentItem?.enrichmentItemId
+  const removePlantation = async () => {
+    let _plantations = plantationList.filter(
+      (val) => val.plantationId !== selectedPlantation?.plantationId
     );
 
-    const removeEnrichmentItemApiObj = {
+    const removePlantationApiObj = {
       enclosureId: curEnclosure.enclosureId,
-      enrichmentItemId: selectedEnrichmentItem.enrichmentItemId,
+      plantationId: selectedPlantation.plantationId,
     };
 
-    const removeEnrichmentItemApi = async () => {
-      console.log(selectedEnrichmentItem.enrichmentItemId);
+    const removePlantationApi = async () => {
+      console.log(selectedPlantation.plantationId);
       try {
         const responseJson = await apiJson.put(
-          "http://localhost:3000/api/enclosure/removeEnrichmentItemFromEnclosure/",
-          removeEnrichmentItemApiObj
+          "http://localhost:3000/api/enclosure/removePlantationFromEnclosure/",
+          removePlantationApiObj
         );
 
         toastShadcn({
           // variant: "destructive",
           title: "Deletion Successful",
           description:
-            "Successfully removed enrichment item: " +
-            selectedEnrichmentItem.enrichmentItemName +
+            "Successfully removed plantation: " +
+            selectedPlantation.name +
             "from the enclosure",
         });
-        setEnrichmentItemList(_enrichmentItems);
-        setRemoveEnrichmentItemDialog(false);
-        setSelectedEnrichmentItem(emptyEnrichmentItem);
+        setPlantationList(_plantations);
+        setRemovePlantationDialog(false);
+        setSelectedPlantation(emptyPlantation);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while removing enrichment item: \n" + apiJson.error,
+            "An error has occurred while removing plantation: \n" + apiJson.error,
         });
       }
     };
-    removeEnrichmentItemApi();
+    removePlantationApi();
   };
 
-  const removeEnrichmentItemDialogFooter = (
+  const removePlantationDialogFooter = (
     <React.Fragment>
-      <Button onClick={hideRemoveEnrichmentItemDialog}>
+      <Button onClick={hideRemovePlantationDialog}>
         <HiX className="mr-2" />
         No
       </Button>
-      <Button variant={"destructive"} onClick={removeEnrichmentItem}>
+      <Button variant={"destructive"} onClick={removePlantation}>
         <HiCheck className="mr-2" />
         Yes
       </Button>
     </React.Fragment>
   );
-  // end remove enrichmentItem stuff
+  // end remove plantation stuff
 
-  const actionBodyTemplate = (enrichmentItem: EnrichmentItem) => {
+  const actionBodyTemplate = (plantation: Plantation) => {
     return (
       <React.Fragment>
         <div className="mx-auto">
           <Button
             variant={"destructive"}
             className="mr-2"
-            onClick={() => confirmRemoveEnrichmentItem(enrichmentItem)}
+            onClick={() => confirmRemovePlantation(plantation)}
           >
             <HiX className="mx-auto" />
           </Button>
@@ -184,12 +185,11 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      {/* <h4 className="m-1">Manage Individuals/Groups </h4> */}
       <Button
-        onClick={() => setEnrichmentItemBulkAssignmentDialog(true)}
-        disabled={availableEnrichmentItems.length == 0}
+        onClick={() => setPlantationBulkAssignmentDialog(true)}
+        disabled={availablePlantations.length == 0}
       >
-        Add Enrichment Item To Enclosure
+        Add Plantation To Enclosure
       </Button>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
@@ -206,12 +206,12 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
   );
 
   // row group stuff
-  const calculateAnimalPerSpeciesTotal = (enrichmentItemName: string) => {
+  const calculateAnimalPerSpeciesTotal = (name: string) => {
     let total = 0;
 
-    if (enrichmentItemList) {
-      for (let enrichmentItem of enrichmentItemList) {
-        if (enrichmentItem.enrichmentItemName === enrichmentItemName) {
+    if (plantationList) {
+      for (let plantation of plantationList) {
+        if (plantation.name === name) {
           total++;
         }
       }
@@ -220,34 +220,34 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
     return total;
   };
 
-  // add enrichmentItem stuff
+  // add plantation stuff
 
   useEffect(() => {
-    const fetchAvailableEnrichmentItems = async () => {
+    const fetchAvailablePlantations = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/assetFacility/getAllEnrichmentItem`
+          `http://localhost:3000/api/enclosure/getAllPlantations`
         );
-        const allEnrichmentItemsList = responseJson as EnrichmentItem[];
+        const allPlantationsList = responseJson as Plantation[];
 
-        const availableEnrichmentItemsList = allEnrichmentItemsList.filter(
-          (enrichmentItem) =>
-            !enrichmentItemList.some(
-              (enrichmentItem) =>
-                enrichmentItem.enrichmentItemId === enrichmentItem.enrichmentItemId
+        const availablePlantationsList = allPlantationsList.filter(
+          (plantation) =>
+            !plantationList.some(
+              (plantation) =>
+                plantation.plantationId === plantation.plantationId
             )
         );
 
-        setAvailableEnrichmentItems(availableEnrichmentItemsList);
+        setAvailablePlantations(availablePlantationsList);
       } catch (error: any) {
         console.log(error);
       }
     };
-    fetchAvailableEnrichmentItems();
-  }, [enrichmentItemList, isCompatibleOnlyFilter]);
+    fetchAvailablePlantations();
+  }, [plantationList, isCompatibleOnlyFilter]);
 
-  const hideEnrichmentItemBulkAssignmentDialog = () => {
-    setEnrichmentItemBulkAssignmentDialog(false);
+  const hidePlantationBulkAssignmentDialog = () => {
+    setPlantationBulkAssignmentDialog(false);
   };
 
   const bulkAssignmentHeader = (
@@ -270,53 +270,53 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
     </div>
   );
 
-  const onSelectedAvailableEnrichmentItemsOnClick = (e: CheckboxClickEvent) => {
-    let _selectedAvailableEnrichmentItems = [...selectedAvailableEnrichmentItems];
+  const onSelectedAvailablePlantationsOnClick = (e: CheckboxClickEvent) => {
+    let _selectedAvailablePlantations = [...selectedAvailablePlantations];
     if (e.checked) {
-      _selectedAvailableEnrichmentItems.push(e.value);
+      _selectedAvailablePlantations.push(e.value);
     } else {
-      _selectedAvailableEnrichmentItems.splice(
-        _selectedAvailableEnrichmentItems.indexOf(e.value),
+      _selectedAvailablePlantations.splice(
+        _selectedAvailablePlantations.indexOf(e.value),
         1
       );
     }
-    setSelectedAvailableEnrichmentItems(_selectedAvailableEnrichmentItems);
+    setSelectedAvailablePlantations(_selectedAvailablePlantations);
   };
 
-  const availableEnrichmentItemCheckbox = (enrichmentItem: EnrichmentItem) => {
+  const availablePlantationCheckbox = (plantation: Plantation) => {
     return (
       <React.Fragment>
         <div className="mb-4 flex">
           <Checkbox
-            name="toAssignEnrichmentItems"
-            value={enrichmentItem}
-            onChange={onSelectedAvailableEnrichmentItemsOnClick}
-            checked={selectedAvailableEnrichmentItems.includes(enrichmentItem)}
+            name="toAssignPlantations"
+            value={plantation}
+            onChange={onSelectedAvailablePlantationsOnClick}
+            checked={selectedAvailablePlantations.includes(plantation)}
           ></Checkbox>
         </div>
       </React.Fragment>
     );
   };
 
-  const hideEnrichmentItemAssignmentDialog = () => {
-    setEnrichmentItemAssignmentDialog(false);
+  const hidePlantationAssignmentDialog = () => {
+    setPlantationAssignmentDialog(false);
   };
 
   const confirmAssignment = () => {
-    setEnrichmentItemAssignmentDialog(true);
+    setPlantationAssignmentDialog(true);
   };
 
-  const bulkAssignEnrichmentItems = async () => {
-    selectedAvailableEnrichmentItems.forEach(async (enrichmentItem) => {
+  const bulkAssignPlantations = async () => {
+    selectedAvailablePlantations.forEach(async (plantation) => {
       try {
-        const assignEnrichmentItemApiObj = {
+        const assignPlantationApiObj = {
           enclosureId: curEnclosure.enclosureId,
-          enrichmentItemId: enrichmentItem.enrichmentItemId,
+          plantationId: plantation.plantationId,
         };
         const responseJson = await apiJson
           .put(
-            `http://localhost:3000/api/enclosure/assignEnrichmentItemToEnclosure/`,
-            assignEnrichmentItemApiObj
+            `http://localhost:3000/api/enclosure/addPlantationToEnclosure/`,
+            assignPlantationApiObj
           )
           .then((res) => {
             setRefreshSeed([]);
@@ -325,43 +325,43 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
 
         toastShadcn({
           title: "Assignment Successful",
-          description: "Successfully assigned selected enrichment items ",
+          description: "Successfully assigned selected plantations ",
         });
-        setEnrichmentItemAssignmentDialog(false);
-        setEnrichmentItemBulkAssignmentDialog(false);
-        setSelectedAvailableEnrichmentItems([]);
+        setPlantationAssignmentDialog(false);
+        setPlantationBulkAssignmentDialog(false);
+        setSelectedAvailablePlantations([]);
       } catch (error: any) {
         // got error
         toastShadcn({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while assigning enrichment items: \n" +
+            "An error has occurred while assigning plantations: \n" +
             apiJson.error,
         });
       }
     });
   };
 
-  const enrichmentItemAssignmentDialogFooter = (
+  const plantationAssignmentDialogFooter = (
     <React.Fragment>
-      <Button variant={"destructive"} onClick={hideEnrichmentItemAssignmentDialog}>
+      <Button variant={"destructive"} onClick={hidePlantationAssignmentDialog}>
         <HiX />
         No
       </Button>
-      <Button onClick={bulkAssignEnrichmentItems}>
+      <Button onClick={bulkAssignPlantations}>
         <HiCheck />
         Yes
       </Button>
     </React.Fragment>
   );
 
-  const imageBodyTemplate = (rowData: EnrichmentItem) => {
+  const imageBodyTemplate = (rowData: Plantation) => {
     return (
-      (rowData.enrichmentItemImageUrl ?
+      (rowData.biome ?
         <img
-          src={"http://localhost:3000/" + rowData.enrichmentItemImageUrl}
-          alt={rowData.enrichmentItemName}
+          src={"http://localhost:3000/" + rowData.biome}
+          alt={rowData.name}
           className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
         /> : "-")
     );
@@ -371,14 +371,14 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
     <div>
       <DataTable
         ref={dt}
-        value={enrichmentItemList}
-        selection={selectedEnrichmentItem}
+        value={plantationList}
+        selection={selectedPlantation}
         onSelectionChange={(e) => {
           if (Array.isArray(e.value)) {
-            setSelectedEnrichmentItem(e.value);
+            setSelectedPlantation(e.value);
           }
         }}
-        dataKey="enrichmentItemId"
+        dataKey="plantationId"
         paginator
         // showGridlines
         rows={25}
@@ -386,134 +386,132 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
         selectionMode={"single"}
         rowsPerPageOptions={[10, 25, 50, 100]}
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} enrichment items"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} plantations"
         globalFilter={globalFilter}
         header={header}
-        sortField={"species.enrichmentItemName"}
+        sortField={"name"}
       >
         <Column
-          field="enrichmentItemImageUrl"
-          header="Image"
-          frozen
-          body={imageBodyTemplate}
-          style={{ minWidth: "6rem" }}
-        ></Column>
-        <Column
-          field="enrichmentItemId"
+          field="plantationId"
           header="ID"
           sortable
           style={{ minWidth: "4rem" }}
         ></Column>
         <Column
-          field="enrichmentItemName"
+          field="name"
           header="Name"
+          sortable
+          style={{ minWidth: "5rem" }}
+        ></Column>
+        <Column
+          field="biome"
+          header="Biome"
           sortable
           style={{ minWidth: "5rem" }}
         ></Column>
 
       </DataTable>{" "}
       <Dialog
-        visible={removeEnrichmentItemDialog}
+        visible={removePlantationDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={removeEnrichmentItemDialogFooter}
-        onHide={hideRemoveEnrichmentItemDialog}
+        footer={removePlantationDialogFooter}
+        onHide={hideRemovePlantationDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedEnrichmentItem && (
+          {selectedPlantation && (
             <span>
               Are you sure you want to remove{" "}
               <b>
-                {selectedEnrichmentItem.enrichmentItemName}
+                {selectedPlantation.name}
               </b>{" "}
               from the current enclosure? ?
             </span>
           )}
         </div>
       </Dialog>
-      {/* Dialogs to add enrichmentItem */}
+      {/* Dialogs to add plantation */}
       <Dialog
-        visible={enrichmentItemAssignmentDialog}
+        visible={plantationAssignmentDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header="Confirm"
         modal
-        footer={enrichmentItemAssignmentDialogFooter}
-        onHide={hideEnrichmentItemAssignmentDialog}
+        footer={plantationAssignmentDialogFooter}
+        onHide={hidePlantationAssignmentDialog}
       >
         <div className="confirmation-content">
           <i
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedEnrichmentItem && (
+          {selectedPlantation && (
             <span>
-              Are you sure you want to assign the selected enrichment items to the
+              Are you sure you want to assign the selected plantations to the
               current enclosure?
             </span>
           )}
         </div>
       </Dialog>
       <Dialog
-        visible={enrichmentItemBulkAssignmentDialog}
+        visible={plantationBulkAssignmentDialog}
         style={{ width: "50vw", height: "70vh" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header="Assign Enrichment Items"
+        header="Assign Plantations"
         footer={
           <Button
             onClick={confirmAssignment}
-            disabled={selectedAvailableEnrichmentItems.length == 0}
+            disabled={selectedAvailablePlantations.length == 0}
           >
-            Assign Selected Enrichment Items
+            Assign Selected Plantations
           </Button>
         }
-        onHide={hideEnrichmentItemBulkAssignmentDialog}
+        onHide={hidePlantationBulkAssignmentDialog}
       >
         <div className="confirmation-content">
           <DataTable
             ref={dt}
-            value={availableEnrichmentItems}
-            selection={selectedEnrichmentItem}
+            value={availablePlantations}
+            selection={selectedPlantation}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedEnrichmentItem(e.value);
+                setSelectedPlantation(e.value);
               }
             }}
-            dataKey="enrichmentItemId"
+            dataKey="plantationId"
             paginator
             rows={10}
             scrollable
             selectionMode={"single"}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} enrichment items"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} plantations"
             globalFilter={globalFilter}
             header={bulkAssignmentHeader}
           >
             <Column
-              body={availableEnrichmentItemCheckbox}
+              body={availablePlantationCheckbox}
             ></Column>
             <Column
-              field="enrichmentItemImageUrl"
-              header="Image"
-              frozen
-              body={imageBodyTemplate}
-              style={{ minWidth: "6rem" }}
-            ></Column>
-            <Column
-              field="enrichmentItemId"
+              field="plantationId"
               header="ID"
               sortable
               style={{ minWidth: "4rem" }}
             ></Column>
             <Column
-              field="enrichmentItemName"
+              field="name"
               header="Name"
+              sortable
+              style={{ minWidth: "12rem" }}
+            ></Column>
+            <Column
+              field="biome"
+              header="Biome"
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -531,4 +529,4 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
   );
 }
 
-export default EnclosureEnrichmentItemDatatable;
+export default EnclosurePlantationDatatable;

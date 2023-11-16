@@ -145,6 +145,7 @@ import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsP
 import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
 import ViewAllFacilityCrowdLevelPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilityCrowdLevelPage";
 import CreateNewEnclosurePage from "./pages/enclosureManagement/CreateNewEnclosurePage";
+import EditEnclosureEnvironmentPage from "./pages/enclosureManagement/EditEnclosureEnvironmentPage";
 import EditEnclosurePage from "./pages/enclosureManagement/EditEnclosurePage";
 import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
 import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
@@ -590,6 +591,12 @@ function App() {
                     path="/enclosure/editenclosurebasicinfo/:enclosureId"
                     element={
                       user ? <EditEnclosurePage /> : <Navigate to="/login" />
+                    }
+                  />
+                  <Route
+                    path="/enclosure/editenclosurenvironment/:enclosureId"
+                    element={
+                      user ? <EditEnclosureEnvironmentPage /> : <Navigate to="/login" />
                     }
                   />
                 </Route>

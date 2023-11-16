@@ -11,8 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EnclosureAnimalList from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureAnimalList";
 import EnclosureBasicInformation from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureBasicInformation";
 import EnclosureEnrichmentItemList from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureEnrichmentItemList";
-import EnclosureLayoutDesign from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureLayoutDesign";
 import EnclosureEnvironment from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureEnvironment";
+import EnclosureLayoutDesign from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureLayoutDesign";
 
 function ViewEnclosureDetailsPage() {
   const apiJson = useApiJson();
@@ -75,7 +75,7 @@ function ViewEnclosureDetailsPage() {
 
         <Tabs defaultValue={tab ? `${tab}` : "basicinfo"} className="w-full">
           <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <span className="invisible">_____</span>
+            <span className="invisible"></span>
             <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
             <TabsTrigger value="layoutdesign">Layout & Design</TabsTrigger>
             <TabsTrigger value="animalslist">Animals List</TabsTrigger>

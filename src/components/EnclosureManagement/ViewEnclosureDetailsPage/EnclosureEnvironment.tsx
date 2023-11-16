@@ -1,23 +1,16 @@
-import React, { useEffect, useState } from "react";
-import useApiJson from "../../../hooks/useApiJson";
-import Species from "../../../models/Species";
-
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
   TableCell,
   TableRow
 } from "@/components/ui/table";
-
-import { Dialog } from "primereact/dialog";
-
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { HiCheck, HiX } from "react-icons/hi";
-import { NavLink } from "react-router-dom"; 
-import Enclosure from "../../../models/Enclosure";
-import { EnclosureStatus } from "../../../enums/Enumurated";
+import { useNavigate } from "react-router-dom";
 import { TwoThumbSliderWithNumber } from "../../../components/SpeciesManagement/TwoThumbSliderWithNumber";
+import useApiJson from "../../../hooks/useApiJson";
+import Enclosure from "../../../models/Enclosure";
+import EnclosurePlantationList from "./EnclosurePlantationList";
 
 interface EnclosureEnvironmentProps {
   curEnclosure: Enclosure;
@@ -51,94 +44,29 @@ function EnclosureEnvironment(
   props: EnclosureEnvironmentProps
 ) {
   const { curEnclosure } = props;
+  const navigate = useNavigate();
   const apiJson = useApiJson();
-//   const [deleteEnclosureReqDialog, setDeleteEnclosureReqDialog] =
-//     useState<boolean>(false);
-
   const toastShadcn = useToast().toast;
 
-//   useEffect(() => {
-//     const fetchEnclosureTerrains = async () => {
-//       try {
-//         const responseJson = await apiJson.get(
-//           `http://localhost:3000/api/species/getEnclosureById/${enclosureId}`
-//         );
-//         setcurEnclosure(responseJson as EnclosureTerrain);
-//       } catch (error: any) {
-//         console.log(error);
-//       }
-//     };
-
-//     fetchEnclosureTerrains();
-//   }, []);
-
-  // Delete stuff
-//   const confirmDeleteEnclosureReq = () => {
-//     setDeleteEnclosureReqDialog(true);
-//   };
-
-//   const hideDeleteEnclosureReqDialog = () => {
-//     setDeleteEnclosureReqDialog(false);
-//   };
-
-//   // delete species stuff
-//   const deleteSpeciesEnclosureReq = async () => {
-//     const deleteSpeciesEnclosureReqApi = async () => {
-//       try {
-//         const responseJson = await apiJson.del(
-//           "http://localhost:3000/api/species/deleteEnclosureNeeds/" +
-//             curEnclosure?.EnclosureTerrainId
-//         );
-
-//         toastShadcn({
-//           // variant: "destructive",
-//           title: "Deletion Successful",
-//           description: "Successfully deleted species enclosure requirements",
-//         });
-//         setcurEnclosure(null);
-//         setDeleteEnclosureReqDialog(false);
-//       } catch (error: any) {
-//         // got error
-//         toastShadcn({
-//           variant: "destructive",
-//           title: "Uh oh! Something went wrong.",
-//           description:
-//             "An error has occurred while deleting species: \n" + apiJson.error,
-//         });
-//       }
-//     };
-//     deleteSpeciesEnclosureReqApi();
-//   };
-
-//   const deleteSpeciesDialogFooter = (
-//     <React.Fragment>
-//       <Button onClick={hideDeleteEnclosureReqDialog}>
-//         <HiX />
-//         No
-//       </Button>
-//       <Button variant={"destructive"} onClick={deleteSpeciesEnclosureReq}>
-//         <HiCheck />
-//         Yes
-//       </Button>
-//     </React.Fragment>
-//   );
-  // end delete stuff
 
   return (
     <div>
       {curEnclosure && (
-        <div className="">
+        <div >
+          <Button
+            onClick={() =>
+              navigate(
+                `/enclosure/editenclosurenvironment/${curEnclosure.enclosureId}`
+              )
+            }
+
+            className=""
+          >
+            Edit Enclosure Environment Details
+          </Button>
           <Table className="rounded-lg shadow-lg">
-            {/* <TableHeader className=" bg-whiten">
-            <TableRow>
-              <TableHead className="w-1/3 font-bold" colSpan={2}>
-                Attribute
-              </TableHead>
-              <TableHead>Value</TableHead>
-            </TableRow>
-          </TableHeader> */}
             <TableBody>
-              
+
               <TableRow>
                 <TableCell className="w-1/3 font-bold" colSpan={2}>
                   <span className="text-amber-600">Land Area</span> (m
@@ -347,6 +275,8 @@ function EnclosureEnvironment(
               </TableRow>
             </TableBody>
           </Table>
+          <br />
+          <EnclosurePlantationList curEnclosure={curEnclosure} />
         </div>
       )}
       {/* <Dialog
