@@ -9,7 +9,6 @@ import useApiFormData from "../../../hooks/useApiFormData";
 import useApiJson from "../../../hooks/useApiJson";
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
-import useApiFormData from "../../../hooks/useApiFormData";
 
 // Field validations
 function validateFacilityName(props: ValidityState) {

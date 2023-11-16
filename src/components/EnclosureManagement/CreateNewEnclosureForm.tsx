@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import * as Form from "@radix-ui/react-form";
 
@@ -14,9 +14,7 @@ import {
 } from "../../enums/Enumurated";
 import useApiJson from "../../hooks/useApiJson";
 
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import useApiFormData from "../../hooks/useApiFormData";
-import Facility from "../../models/Facility";
 import FormFieldSelect from "../FormFieldSelect";
 
 
@@ -25,36 +23,19 @@ function CreateNewEnclosureForm() {
   const toastShadcn = useToast().toast;
   const apiJson = useApiJson();
   const apiFormData = useApiFormData();
-  const [curFacilityList, setCurFacilityList] = useState<any>(null);
-  const [selectedFacility, setSelectedFacility] = useState<Facility[]>([]);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [name, setName] = useState<string>("");
   const [remark, setRemark] = useState<string>("");
   const [length, setLength] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
   const [standOffBarrierDist, setStandOffBarrierDist] = useState<number>(0);
-  const [xCoordinate, setXCoordinate] = useState<number>(0);
-  const [yCoordinate, setYCoordinate] =
-    useState<number>(0);
   const [enclosureStatus, setEnclosureStatus] = useState<string | undefined>(
     undefined
   );
+  const [isSheltered, setIsSheltered] = useState<string | undefined>(
+    undefined); // dropdown
 
-
-
-  useEffect(() => {
-    apiJson
-      .post("http://localhost:3000/api/assetFacility/getAllFacility", {
-        includes: ["facilityDetail"],
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-      .then((res) => {
-        console.log("req", res)
-        setCurFacilityList(res["facilities"]);
-      });
-  }, []);
 
   // validate functions
   function validateImage(props: ValidityState) {
@@ -202,40 +183,6 @@ function CreateNewEnclosureForm() {
     return null;
   }
 
-  function validateStandoffBarrierDist(props: ValidityState) {
-    if (props != undefined) {
-      if (props.valueMissing) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter the standoff barrier distance
-          </div>
-        );
-      }
-      if (props.typeMismatch) {
-        return (
-          <div className="font-medium text-danger">
-            * Please enter a valid number for standoff barrier distance
-          </div>
-        );
-      }
-    }
-    return null;
-  }
-
-  function validateFacility(props: ValidityState) {
-    if (props != undefined) {
-      if (selectedFacility.length == 0) {
-        return (
-          <div className="font-medium text-danger">
-            * Please select a facility
-          </div>
-        );
-      }
-      // add any other cases here
-    }
-    return null;
-  }
-
   function validateEnclosureStatus(props: ValidityState) {
     if (props != undefined) {
       if (enclosureStatus == undefined) {
@@ -249,40 +196,46 @@ function CreateNewEnclosureForm() {
     }
     return null;
   }
+
+  function validateIsSheltered(props: ValidityState) {
+    if (props != undefined) {
+      if (isSheltered == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please select an option!
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
   // Enclosure Image
-  // function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-  //   const file = event.target.files && event.target.files[0];
-  //   setImageFile(file);
-  // }
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+    setImageFile(file);
+  }
 
   // handle submit
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const newEnclosure = {
-      imageUrl: selectedFacility[0].imageUrl,
-      name: name,
-      remark: remark,
-      length: length,
-      width: width,
-      height: height,
-      standOffBarrierDist: standOffBarrierDist,
-      xCoordinate: xCoordinate,
-      yCoordinate: yCoordinate,
-      facilityId: selectedFacility[0].facilityId,
-      facilityName: selectedFacility[0].facilityName,
-      isSheltered: selectedFacility[0].isSheltered,
-      facilityDetail: selectedFacility[0].facilityDetail,
-      facilityDetailJson: selectedFacility[0].facilityDetailJson,
-      enclosureStatus: enclosureStatus,
-    }
-
-    console.log("facility", selectedFacility[0])
+    const formData = new FormData();
+    formData.append("file", imageFile || "");
+    formData.append("name", name);
+    formData.append("remark", remark);
+    formData.append("length", length.toString());
+    formData.append("width", width.toString());
+    formData.append("height", height.toString());
+    formData.append("standOffBarrierDist", standOffBarrierDist.toString());
+    formData.append("facilityName", name);
+    formData.append("isSheltered", isSheltered.toString());
+    formData.append("enclosureStatus", enclosureStatus.toString());
 
     const createEnclosureApi = async () => {
       try {
-        const response = await apiJson.post(
+        const response = await apiFormData.post(
           "http://localhost:3000/api/enclosure/createNewEnclosure",
-          newEnclosure
+          formData
         );
         // success
         toastShadcn({
@@ -332,28 +285,22 @@ function CreateNewEnclosureForm() {
         </div>
 
         <div className="flex flex-col justify-center gap-6 lg:flex-col lg:gap-12">
-          {/* Facility */}
+          {/* Enclosure Picture */}
           <Form.Field
-            name="facility"
+            name="zooEventImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <Form.Label className="font-medium">
-              Facility
+              Enclosure Image
             </Form.Label>
-            <MultiSelect
-              value={selectedFacility}
-              onChange={(e: MultiSelectChangeEvent) => setSelectedFacility(e.value)}
-              options={curFacilityList}
-              optionLabel="facilityName"
-              filter
-              display="chip"
-              selectionLimit={1}
-              placeholder="Select Facility"
-              // maxSelectedLabels={3}
-              className="w-full md:w-20rem" />
-            <Form.ValidityState>
-              {validateFacility}
-            </Form.ValidityState>
+            <Form.Control
+              type="file"
+              required
+              accept=".png, .jpg, .jpeg, .webp"
+              onChange={handleFileChange}
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
+            />
+            <Form.ValidityState>{validateImage}</Form.ValidityState>
           </Form.Field>
 
           <FormFieldInput
@@ -421,27 +368,20 @@ function CreateNewEnclosureForm() {
             placeholder={""}
             pattern={undefined} />
 
-          <FormFieldInput
-            label="X Coordinate"
-            type="number"
-            value={xCoordinate}
-            setValue={setXCoordinate}
-            validateFunction={validateXCoordinate}
-            formFieldName={""}
+          {/* Is Sheltered */}
+          <FormFieldSelect
+            formFieldName="hasAirCon"
+            label="Is sheltered?"
             required={true}
-            placeholder={""}
-            pattern={undefined} />
-
-          <FormFieldInput
-            label="Y Coordinate"
-            type="number"
-            value={yCoordinate}
-            setValue={setYCoordinate}
-            validateFunction={validateYCoordinate}
-            formFieldName={""}
-            required={true}
-            placeholder={""}
-            pattern={undefined} />
+            placeholder=""
+            valueLabelPair={[
+              ["true", "Yes"],
+              ["false", "No"]
+            ]}
+            value={isSheltered}
+            setValue={setIsSheltered}
+            validateFunction={validateIsSheltered}
+          />
 
           {/* Enclosure Status */}
           <FormFieldSelect
