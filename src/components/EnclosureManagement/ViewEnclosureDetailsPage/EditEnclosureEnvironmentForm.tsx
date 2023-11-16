@@ -8,7 +8,7 @@ import FormFieldInput from "../../FormFieldInput";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Enclosure from "../../../models/Enclosure";
 import { TwoThumbSliderWithNumber } from "../../SpeciesManagement/TwoThumbSliderWithNumber";
 interface EditEnclosureEnvironmentFormProps {
@@ -220,8 +220,7 @@ function EditEnclosureEnvironmentForm(
         });
 
         // clearForm();
-        const redirectUrl = `/species/viewspeciesdetails/${curEnclosure.enclosureId}/enclosureneed`;
-        navigate(redirectUrl);
+        navigate(-1);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -245,14 +244,14 @@ function EditEnclosureEnvironmentForm(
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            <NavLink
-              className="flex"
-              to={`/species/viewspeciesdetails/${enclosureId}/enclosureneed`}
+            <Button
+              onClick={() => navigate(-1)}
+              variant={"outline"}
+              type="button"
+              className=""
             >
-              <Button variant={"outline"} type="button" className="">
-                Back
-              </Button>
-            </NavLink>
+              Back
+            </Button>
             <span className="self-center text-lg text-graydark">
               Edit Enclosure Environment Details
             </span>
