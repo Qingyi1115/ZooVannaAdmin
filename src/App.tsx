@@ -553,12 +553,7 @@ function App() {
                     user ? <CreateNewEnclosurePage /> : <Navigate to="/login" />
                   }
                 />
-                <Route
-                  path="/enclosure/editenclosure/:enclosureId"
-                  element={
-                    user ? <EditEnclosurePage /> : <Navigate to="/login" />
-                  }
-                />
+
                 <Route element={<EnclosureContextLayout />}>
                   {/* These share a context containing currently selected enclosure */}
                   <Route
@@ -589,6 +584,12 @@ function App() {
                       ) : (
                         <Navigate to="/login" />
                       )
+                    }
+                  />
+                  <Route
+                    path="/enclosure/editenclosurebasicinfo/:enclosureId"
+                    element={
+                      user ? <EditEnclosurePage /> : <Navigate to="/login" />
                     }
                   />
                 </Route>

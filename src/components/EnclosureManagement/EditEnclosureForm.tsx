@@ -172,24 +172,27 @@ function EditEnclosureForm(props: EditEnclosureFormProps) {
   // handle submit
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("remark", remark);
-    formData.append("length", length.toString());
-    formData.append("width", width.toString());
-    formData.append("height", height.toString());
-    formData.append("enclosureStatus", enclosureStatus.toString());
-    formData.append("standOffBarrierDist", standOffBarrierDist.toString());
 
-    const createEnclosureApi = async () => {
+    const newEnclosure = {
+      enclosureId: curEnclosure.enclosureId,
+      name: name,
+      remark: remark,
+      length: length,
+      width: width,
+      height: height,
+      enclosureStatus: enclosureStatus,
+      standOffBarrierDist: standOffBarrierDist
+    }
+
+    const editEnclosureApi = async () => {
       try {
-        const response = await apiFormData.put(
+        const response = await apiJson.put(
           "http://localhost:3000/api/enclosure/updateEnclosure",
-          formData
+          newEnclosure
         );
         // success
         toastShadcn({
-          description: "Successfully created new enclosure",
+          description: "Successfully edited new enclosure",
         });
         navigate(-1);
       } catch (error: any) {
@@ -198,12 +201,12 @@ function EditEnclosureForm(props: EditEnclosureFormProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while creating new enclosure: \n" +
+            "An error has occurred while editing enclosure: \n" +
             error.message,
         });
       }
     };
-    createEnclosureApi();
+    editEnclosureApi();
   }
 
   return (
@@ -233,8 +236,7 @@ function EditEnclosureForm(props: EditEnclosureFormProps) {
           </div>
           <Separator />
           <span className="mt-4 self-center text-title-xl font-bold">
-            {/* {curEnclosure.name} */}
-            "enclosure name"
+            {curEnclosure.name}
           </span>
         </div>
 
@@ -248,7 +250,7 @@ function EditEnclosureForm(props: EditEnclosureFormProps) {
             <img
               src={
                 "http://localhost:3000/"
-                // + curEnclosure.facility?.imageUrl
+                + curEnclosure.facility?.imageUrl
               }
               alt="Current enclosure image"
               className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"

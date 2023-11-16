@@ -258,29 +258,31 @@ function CreateNewEnclosureForm() {
   // handle submit
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("imageUrl", selectedFacility[0].imageUrl);
-    formData.append("name", name);
-    formData.append("remark", remark);
-    formData.append("length", length.toString());
-    formData.append("width", width.toString());
-    formData.append("height", height.toString());
-    formData.append("standOffBarrierDist", standOffBarrierDist.toString());
-    formData.append("xCoordinate", xCoordinate.toString());
-    formData.append("yCoordinate", yCoordinate.toString());
-    formData.append("facilityId", selectedFacility[0].facilityId.toString());
-    formData.append("facilityName", selectedFacility[0].facilityName);
-    formData.append("isSheltered", selectedFacility[0].isSheltered.toString());
-    formData.append("facilityDetail", selectedFacility[0].facilityDetail.toString());
-    formData.append("facilityDetailJson", selectedFacility[0].facilityDetailJson.toString());
-    formData.append("enclosureStatus", enclosureStatus.toString());
+    const newEnclosure = {
+      imageUrl: selectedFacility[0].imageUrl,
+      name: name,
+      remark: remark,
+      length: length,
+      width: width,
+      height: height,
+      standOffBarrierDist: standOffBarrierDist,
+      xCoordinate: xCoordinate,
+      yCoordinate: yCoordinate,
+      facilityId: selectedFacility[0].facilityId,
+      facilityName: selectedFacility[0].facilityName,
+      isSheltered: selectedFacility[0].isSheltered,
+      facilityDetail: selectedFacility[0].facilityDetail,
+      facilityDetailJson: selectedFacility[0].facilityDetailJson,
+      enclosureStatus: enclosureStatus,
+    }
+
     console.log("facility", selectedFacility[0])
 
     const createEnclosureApi = async () => {
       try {
-        const response = await apiFormData.post(
+        const response = await apiJson.post(
           "http://localhost:3000/api/enclosure/createNewEnclosure",
-          formData
+          newEnclosure
         );
         // success
         toastShadcn({
