@@ -14,6 +14,7 @@ import EnclosureBasicInformation from "../../components/EnclosureManagement/View
 import EnclosureEnrichmentItemList from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureEnrichmentItemList";
 import EnclosureEnvironment from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureEnvironment";
 import EnclosureLayoutDesign from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureLayoutDesign";
+import EnclosureSafety from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureSafety";
 
 function ViewEnclosureDetailsPage() {
   const apiJson = useApiJson();
@@ -107,7 +108,7 @@ function ViewEnclosureDetailsPage() {
             )}
           </TabsContent>
           <TabsContent value="safety">
-            <div>test</div>
+            <EnclosureSafety curEnclosure={curEnclosure} />
           </TabsContent>
           <TabsContent value="enrichmentitems">
             {curEnclosure && (

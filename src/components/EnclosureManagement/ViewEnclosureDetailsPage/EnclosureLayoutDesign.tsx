@@ -8,12 +8,12 @@ import {
   TableCell,
   TableRow
 } from "@/components/ui/table";
-import { NavLink, useNavigate } from "react-router-dom";
+import { HiPencil } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import { TwoThumbSliderWithNumber } from "../../SpeciesManagement/TwoThumbSliderWithNumber";
 import EnclosurePlantationList from "./EnclosurePlantationList";
-import { HiPencil } from "react-icons/hi";
-import { useAuthContext } from "../../../hooks/useAuthContext";
 
 interface EnclosureLayoutDesignProps {
   curEnclosure: Enclosure;
@@ -35,16 +35,16 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
         View Design Diagram
       </Button>
       EnclosureLayoutDesign
-      
+
       {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <Button className="mr-2" onClick={() => {
-            navigate(`/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/layoutdesign`, { replace: true });
-            navigate(`/enclosure/editenclosurenvironment/${curEnclosure.enclosureId}`);
-            }}>
-              <HiPencil className="mx-auto" ></HiPencil>
-              Edit Terrain Details
-            </Button>
-        )}
+        <Button className="mr-2" onClick={() => {
+          navigate(`/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/layoutdesign`, { replace: true });
+          navigate(`/enclosure/editenclosureenvironment/${curEnclosure.enclosureId}`);
+        }}>
+          <HiPencil className="mx-auto" ></HiPencil>
+          Edit Terrain Details
+        </Button>
+      )}
 
       <Table className="rounded-lg shadow-lg">
         <TableBody>
@@ -92,14 +92,6 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
               </span>{" "}
               g.m
               <sup>-3</sup>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Receommended Stand-off Barrier Distance (m)
-            </TableCell>
-            <TableCell>
-              {curEnclosure.standOffBarrierDist}
             </TableCell>
           </TableRow>
           <TableRow>
