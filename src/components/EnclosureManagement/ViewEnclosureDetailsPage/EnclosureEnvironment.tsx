@@ -19,13 +19,24 @@ function EnclosureEnvironment(
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const [dataList, setDataList] = useState<any[]>([]);
+  const [count, setCount] = useState(0); 
+
+  useEffect(() => { 
+
+      //Implementing the setInterval method 
+      const interval = setInterval(() => { 
+        setCount(count + 1); 
+      }, 5000); 
+
+      //Clearing the interval 
+      return () => clearInterval(interval); 
+  }, [count]); 
 
   useEffect(()=>{
 
     apiJson.get(
       `http://localhost:3000/api/enclosure/getEnvironmentSensorsData/${curEnclosure.enclosureId}`
     ).then(res=>{
-      console.log("EnclosureEnvironment", res)
       const sensorData : any = [];
       for (const dat of res.environmentData) {
         sensorData.push({
@@ -39,10 +50,9 @@ function EnclosureEnvironment(
           name : dat.sensorName
         })
       }
-      console.log("aa",sensorData)
       setDataList(sensorData);
     }).catch(err=>console.log(err));
-  },[curEnclosure])
+  },[curEnclosure, count])
 
   return (
     <div>
@@ -51,7 +61,7 @@ function EnclosureEnvironment(
           <Button
             onClick={() =>
               navigate(
-                `/enclosure/editenclosurenvironment/${curEnclosure.enclosureId}`
+                `/assetfacility/viewhubdetails/${curEnclosure.enclosureId}`
               )
             }
 
@@ -64,7 +74,9 @@ function EnclosureEnvironment(
           {/* <EnclosurePlantationList curEnclosure={curEnclosure} /> */}
         </div>
       )}
-      {
+      {dataList.length == 0 ?
+      <div>No Sensor Readings</div>
+      :
         dataList.map(val => {
           return <EnclosureSensorCard
           unit={val.unit}
