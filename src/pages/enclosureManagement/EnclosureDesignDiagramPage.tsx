@@ -117,6 +117,12 @@ let reducer = (state, action) => {
   return state;
 };
 
+let blackList = [
+  "UPDATE_MOUSE_COORDS",
+  "UPDATE_ZOOM_SCALE",
+  "UPDATE_2D_CAMERA",
+];
+
 // Init store
 // let store = createStore(
 //   reducer,
@@ -140,15 +146,33 @@ let reducer = (state, action) => {
 //     }) :
 //     f => f
 // );
-let store = createStore(reducer, composeWithDevTools());
+let store = createStore(
+  reducer,
+  composeWithDevTools({
+    features: {
+      pause: true,
+      lock: true,
+      persist: true,
+      export: true,
+      import: "custom",
+      jump: true,
+      skip: true,
+      reorder: true,
+      dispatch: true,
+      test: true,
+    },
+    actionsBlacklist: blackList,
+    maxAge: 999999,
+  })
+);
 
 let plugins = [
   PlannerPlugins.Keyboard(),
   // PlannerPlugins.Autosave("react-planner_v0"),
-  // PlannerPlugins.ConsoleDebugger(),
+  PlannerPlugins.ConsoleDebugger(),
 ];
 
-// let toolbarButtons = [ToolbarScreenshotButton];
+let toolbarButtons = [ToolbarScreenshotButton];
 // end react planner stuff
 
 function EnclosureDesignDiagramPage() {
@@ -177,7 +201,18 @@ function EnclosureDesignDiagramPage() {
             const data = await response.json();
             console.log("fetching diagram");
             console.log(curEnclosure?.designDiagramJsonUrl);
-            loadDiagram(data);
+            let dataWithDimensions = {
+              ...data,
+              width:
+                data.width != curEnclosure.width * 100
+                  ? curEnclosure.width * 100
+                  : data.width,
+              height:
+                data.height != curEnclosure.length * 100
+                  ? curEnclosure.length * 100
+                  : data.height,
+            };
+            loadDiagram(dataWithDimensions);
           } else {
             console.error(
               "Failed to fetch enclosure data:",
@@ -223,7 +258,7 @@ function EnclosureDesignDiagramPage() {
   }
 
   function loadDiagram(sceneJson: any) {
-    console.log(sceneJson);
+    // console.log(sceneJson);
     store.dispatch({
       type: "LOAD_PROJECT",
       // sceneJSON: emptyMapJson,
@@ -392,6 +427,28 @@ function EnclosureDesignDiagramPage() {
             {curEnclosure?.name}
           </span>
         </div>
+        <Dialog
+          visible={resetDiagramDialog}
+          style={{ width: "32rem" }}
+          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+          header="Confirm"
+          modal
+          footer={resetDiagramDialogFooter}
+          onHide={hideResetDiagramDialog}
+        >
+          <div className="confirmation-content">
+            <i
+              className="pi pi-exclamation-triangle mr-3"
+              style={{ fontSize: "2rem" }}
+            />
+            <span>
+              Are you sure you want to reset the enclosure diagram?
+              <br />
+              This will remove all elements and designs already added to this
+              enclosure's diagram.
+            </span>
+          </div>
+        </Dialog>
 
         {/* Body */}
         <div>
@@ -424,35 +481,13 @@ function EnclosureDesignDiagramPage() {
                   width={size.width || 700}
                   height={size.height || 600}
                   plugins={plugins}
-                  // toolbarButtons={toolbarButtons}
+                  toolbarButtons={toolbarButtons}
                   stateExtractor={(state) => state.get("react-planner")}
                 />
               )}
             </SizeMe>
           </Provider>
         </div>
-        <Dialog
-          visible={resetDiagramDialog}
-          style={{ width: "32rem" }}
-          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-          header="Confirm"
-          modal
-          footer={resetDiagramDialogFooter}
-          onHide={hideResetDiagramDialog}
-        >
-          <div className="confirmation-content">
-            <i
-              className="pi pi-exclamation-triangle mr-3"
-              style={{ fontSize: "2rem" }}
-            />
-            <span>
-              Are you sure you want to reset the enclosure diagram?
-              <br />
-              This will remove all elements and designs already added to this
-              enclosure's diagram.
-            </span>
-          </div>
-        </Dialog>
       </div>
     </div>
   );

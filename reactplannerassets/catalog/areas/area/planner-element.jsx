@@ -14,8 +14,8 @@ let textures = {
   parquet: {
     name: "Water",
     uri: waterTexture,
-    lengthRepeatScale: 0.004,
-    heightRepeatScale: 0.004,
+    lengthRepeatScale: 0.01,
+    heightRepeatScale: 0.01,
   },
   grass: {
     name: "Land",
