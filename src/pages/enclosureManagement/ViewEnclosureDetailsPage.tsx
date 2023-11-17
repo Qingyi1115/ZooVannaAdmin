@@ -117,7 +117,7 @@ function ViewEnclosureDetailsPage() {
           </TabsContent>
           <TabsContent value="keepers">
             {curEnclosure && (
-              <AllEnclosureEmployeesDatatable curEnclosure={curEnclosure} />
+              <AllEnclosureEmployeesDatatable curEnclosure={curEnclosure} setRefreshSeed={setRefreshSeed} />
             )}
           </TabsContent>
           {/* <TabsContent value="medical">

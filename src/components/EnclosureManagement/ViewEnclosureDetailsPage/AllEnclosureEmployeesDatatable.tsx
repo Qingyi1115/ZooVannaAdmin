@@ -17,12 +17,13 @@ import Keeper from "../../../models/Keeper";
 
 interface AllEnclosureEmployeesDatatableProps {
   curEnclosure: Enclosure;
+  setRefreshSeed: Function;
 }
 
 function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatableProps) {
   const apiJson = useApiJson();
 
-  const { curEnclosure } = props;
+  const { curEnclosure, setRefreshSeed } = props;
   const enclosureId = curEnclosure.enclosureId;
 
   let employee: Employee = {
@@ -53,7 +54,6 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
 
   const [assignedEmployees, setAssignedEmployees] = useState<Employee[]>([]);
   const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
-  const [refreshSeed, setRefreshSeed] = useState<any>(0);
   const [currentEnclosure, setCurrentEnclosure] = useState<Enclosure>();
 
   useEffect(() => {
@@ -65,11 +65,11 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
 
         console.log("ViewAllEnclosureKeepers", curEnclosure, allEmp)
         setCurrentEnclosure(curEnclosure);
-        const assignedStaff = [];
-        const availableStaff = [];
+        const assignedStaff: any[] = [];
+        const availableStaff: any[] = [];
 
         for (const keeper of curEnclosure.keepers) {
-          let emp = { ...keeper.employee };
+          let emp = { ...keeper.employee } as any;
           emp["keeper"] = { ...keeper, employee: undefined };
           emp.currentlyAssigned = true;
           assignedStaff.push(emp);
@@ -82,7 +82,8 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
             availableStaff.push(emp);
           }
         }
-        console.log("availableEmployees", availableStaff)
+        console.log("availableEmployees", availableStaff);
+        console.log("aa", assignedStaff)
         setAssignedEmployees(assignedStaff);
         setAvailableEmployees(availableStaff);
 
@@ -440,48 +441,35 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
   }
 
   const bulkAssignEmployees = async () => {
-    selectedAvailableEmployees.forEach(async (employeeId) => {
-      try {
+    const values = {
+      employeeIds: selectedAvailableEmployees,
+      enclosureId: enclosureId
+    };
+    console.log("values", values);
+    const responseJson = await apiJson.put(
+      `http://localhost:3000/api/enclosure/assignKeepersToEnclosure`,
+      values).then(res => {
+        toastShadcn({
+          // variant: "destructive",
+          title: "Assignment Successful",
+          description:
+            "Successfully assigned this enclosure to: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
+        });
 
-        const values = {
-          employeeIds: [employeeId],
-          enclosureId: enclosureId
-        };
-        const responseJson = await apiJson.put(
-          `http://localhost:3000/api/enclosure/assignKeepersToEnclosure`,
-          values).then(res => {
-            toastShadcn({
-              // variant: "destructive",
-              title: "Assignment Successful",
-              description:
-                "Successfully assigned this event to: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
-            });
-
-            setRefreshSeed([]);
-          }).catch(err => {
-            console.log("err", err),
-
-              toastShadcn({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description:
-                  "An error has occurred while assigning keeper: \n" + apiJson.error,
-              });
-          }
-          );
+        setRefreshSeed([]);
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
         setSelectedAvailableEmployees([]);
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while assigning keepers: \n" + apiJson.error,
-        });
-      }
-    });
+      }).catch(err => {
+        console.log("err", err),
+
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while assigning keeper: \n" + apiJson.error,
+          });
+      });
   }
 
   const employeeAssignmentDialogFooter = (
@@ -601,7 +589,7 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
             <Column
               field="keeperType"
               header="Keeper Type"
-              body={(keeper: Keeper) => beautifyText(keeper.keeperType)}
+              body={(emp: Employee) => beautifyText(emp.keeper?.keeperType)}
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -726,7 +714,7 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
               <Column
                 field="keeperType"
                 header="Keeper Type"
-                body={(keeper: Keeper) => beautifyText(keeper.keeperType)}
+                body={(emp: Employee) => beautifyText(emp.keeper?.keeperType)}
                 sortable
                 style={{ minWidth: "12rem" }}
               ></Column>
