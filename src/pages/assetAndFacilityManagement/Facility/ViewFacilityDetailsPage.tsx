@@ -25,23 +25,6 @@ function ViewFacilityDetailsPage() {
   const employee = useAuthContext().state.user?.employeeData;
   const navigate = useNavigate();
   const location = useLocation();
-  // let emptyThirdParty: ThirdParty = {
-  //   ownership: "",
-  //   ownerContact: "",
-  //   maxAccommodationSize: 0,
-  //   hasAirCon: false,
-  //   facilityType: FacilityType.AED
-  // };
-
-  // let emptyInHouse: InHouse = {
-  //   isPaid: false,
-  //   lastMaintained: new Date(),
-  //   maxAccommodationSize: 0,
-  //   hasAirCon: false,
-  //   facilityType: FacilityType.AED,
-  //   facilityLogs: []
-  // };
-
 
   let emptyFacility: Facility = {
     facilityId: -1,
@@ -128,10 +111,8 @@ function ViewFacilityDetailsPage() {
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
             {curFacility.facilityDetail == "inHouse" && (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
             {curFacility.facilityDetail == "inHouse" && (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
-            {
-              curFacility.facilityDetail != "enclosure" && <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
-            }
-
+            {curFacility.facilityDetail != "enclosure" && <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>}
+            
           </TabsList>
           <TabsContent value="facilityDetails">
             <div className="relative flex flex-col">
@@ -156,12 +137,10 @@ function ViewFacilityDetailsPage() {
               <ManageOperationStaffPage />
             </TabsContent>
           )}
-          {
-            curFacility.facilityDetail != "enclosure" &&
+          {curFacility.facilityDetail != "enclosure" &&
             (<TabsContent value="customerReport">
-              <AllCustomerReportsDatatableByFacility curFacility={curFacility} />
-            </TabsContent>)
-          }
+            <AllCustomerReportsDatatableByFacility curFacility={curFacility} />
+            </TabsContent>)}
         </Tabs>
       </div>
     </div>

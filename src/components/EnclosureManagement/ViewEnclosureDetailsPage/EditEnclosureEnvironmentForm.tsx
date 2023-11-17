@@ -369,10 +369,11 @@ function EditEnclosureEnvironmentForm(
                   plantationCoveragePercent, plantationCoveragePercent,
                 ]}
                 onValueChange={(value) => {
-                  // console.log(
-                  //   "value[0]: " + value[0] + ", value[1]: " + value[1]
-                  // );
-                  setPlantationCoveragePercent(value[0]);
+                  if (plantationCoveragePercent != value[0]) {
+                    setPlantationCoveragePercent(value[0]);
+                  } else {
+                    setPlantationCoveragePercent(value[1]);
+                  }
                 }}
                 min={0}
                 max={100}
@@ -408,7 +409,11 @@ function EditEnclosureEnvironmentForm(
               <TwoThumbSliderWithNumber
                 value={[longGrassPercent, longGrassPercent]}
                 onValueChange={(value) => {
-                  setLongGrassPercent(value[0]);
+                  if (longGrassPercent != value[0]) {
+                    setLongGrassPercent(value[0]);
+                  } else {
+                    setLongGrassPercent(value[1]);
+                  }
                 }}
                 min={0}
                 max={100}
@@ -439,7 +444,11 @@ function EditEnclosureEnvironmentForm(
               <TwoThumbSliderWithNumber
                 value={[shortGrassPercent, shortGrassPercent]}
                 onValueChange={(value) => {
-                  setShortGrassPercent(value[0]);
+                  if (shortGrassPercent != value[0]) {
+                    setShortGrassPercent(value[0]);
+                  } else {
+                    setShortGrassPercent(value[1]);
+                  }
                 }}
                 min={0}
                 max={100}
@@ -470,7 +479,11 @@ function EditEnclosureEnvironmentForm(
               <TwoThumbSliderWithNumber
                 value={[soilPercent, soilPercent]}
                 onValueChange={(value) => {
-                  setSoilPercent(value[0]);
+                  if (soilPercent != value[0]) {
+                    setSoilPercent(value[0]);
+                  } else {
+                    setSoilPercent(value[1]);
+                  }
                 }}
                 min={0}
                 max={100}
@@ -501,7 +514,11 @@ function EditEnclosureEnvironmentForm(
               <TwoThumbSliderWithNumber
                 value={[rockPercent, rockPercent]}
                 onValueChange={(value) => {
-                  setRockPercent(value[0]);
+                  if (rockPercent != value[0]) {
+                    setRockPercent(value[0]);
+                  } else {
+                    setRockPercent(value[1]);
+                  }
                 }}
                 min={0}
                 max={100}
@@ -532,7 +549,11 @@ function EditEnclosureEnvironmentForm(
               <TwoThumbSliderWithNumber
                 value={[sandPercent, sandPercent]}
                 onValueChange={(value) => {
-                  setSandPercent(value[0]);
+                  if (sandPercent != value[0]) {
+                    setSandPercent(value[0]);
+                  } else {
+                    setSandPercent(value[1]);
+                  }
                 }}
                 min={0}
                 max={100}
@@ -563,7 +584,11 @@ function EditEnclosureEnvironmentForm(
               <TwoThumbSliderWithNumber
                 value={[snowPercent, snowPercent]}
                 onValueChange={(value) => {
-                  setSnowPercent(value[0]);
+                  if (snowPercent != value[0]) {
+                    setSnowPercent(value[0]);
+                  } else {
+                    setSnowPercent(value[1]);
+                  }
                 }}
                 min={0}
                 max={100}
