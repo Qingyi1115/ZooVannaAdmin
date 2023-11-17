@@ -155,11 +155,25 @@ function AddNewLocationForm() {
           "http://localhost:3000/api/assetFacility/getAllFacility",
           { includes: ["facilityDetail"] }
         );
+
+        const responseJson2 = await apiJson.get(
+          "http://localhost:3000/api/enclosure/getAllEnclosures"
+        ).then(res => {
+          return res.map(enclosure => {
+            return {
+              ...enclosure.facility,
+              facilityDetail: "enclosure",
+              facilityDetailJson: { ...enclosure, facility: undefined },
+            };
+          });
+        });
+
         const facilityListWithoutLocation = (
           responseJson.facilities as Facility[]
-        ).filter((facility) => {
-          return facility.xCoordinate == null || facility.yCoordinate == null;
-        });
+        ).concat(responseJson2)
+          .filter((facility) => {
+            return facility.xCoordinate == null || facility.yCoordinate == null;
+          });
         setFacilityList(facilityListWithoutLocation);
       } catch (error: any) {
         console.log(error);

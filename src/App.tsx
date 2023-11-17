@@ -147,6 +147,7 @@ import ViewAllFacilityCrowdLevelPage from "./pages/assetAndFacilityManagement/Fa
 import CreateNewEnclosurePage from "./pages/enclosureManagement/CreateNewEnclosurePage";
 import EditEnclosureEnvironmentPage from "./pages/enclosureManagement/EditEnclosureEnvironmentPage";
 import EditEnclosurePage from "./pages/enclosureManagement/EditEnclosurePage";
+import EditEnclosureSafetyPage from "./pages/enclosureManagement/EditEnclosureSafetyPage";
 import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
 import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
 import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSessionDetailsPage";
@@ -594,9 +595,15 @@ function App() {
                     }
                   />
                   <Route
-                    path="/enclosure/editenclosurenvironment/:enclosureId"
+                    path="/enclosure/editenclosureenvironment/:enclosureId"
                     element={
                       user ? <EditEnclosureEnvironmentPage /> : <Navigate to="/login" />
+                    }
+                  />
+                  <Route
+                    path="/enclosure/editenclosuresafety/:enclosureId"
+                    element={
+                      user ? <EditEnclosureSafetyPage /> : <Navigate to="/login" />
                     }
                   />
                 </Route>

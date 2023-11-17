@@ -37,7 +37,6 @@ function EnclosurePlantationList(props: EnclosurePlantationListProps) {
 
   return (
     <div>
-      {/* <Button className="mb-4">Add Plantation</Button> */}
       <EnclosurePlantationDatatable
         curEnclosure={curEnclosure}
         plantationList={plantationList}

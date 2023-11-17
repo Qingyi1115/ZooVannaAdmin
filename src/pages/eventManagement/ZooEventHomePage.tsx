@@ -245,11 +245,11 @@ function ZooEventHomePage() {
       }]
     },
   ];
-  
+
   const [autoAssignDialog, setAutoAssignDialog] = useState<boolean>(false);
   const [numberOfDays, setNumberOfDays] = useState<number>(14);
   const [formError, setFormError] = useState<string | null>(null);
- 
+
   const showAutoAssignDialog = () => {
     setAutoAssignDialog(true);
   }
@@ -442,42 +442,42 @@ function ZooEventHomePage() {
         )}
       </div>
       <Dialog
-            visible={autoAssignDialog}
-            style={{ width: "50rem" }}
-            breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        visible={autoAssignDialog}
+        style={{ width: "50rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
         header={"Auto-Assign Staff"}
         footer={<Button
-              disabled={apiJson.loading || numberOfDays == 0 || numberOfDays == undefined}
-              className="h-12 w-2/3 self-center rounded-full text-lg"
-              onClick={handleSubmit}
-            >
-              {!apiJson.loading ? (
-                <div>Auto-Assign Keepers</div>
-              ) : (
-                <div>Loading</div>
-              )}
-            </Button>}
-            onHide={hideAutoAssignDialog}>
-            <div className="">
-              <Form.Root
-                className="flex w-full flex-col gap-6  bg-white p-20 text-black "
-                onSubmit={handleSubmit}
-                encType="multipart/form-data"
-              >
-                {/* Title */}
-                <FormFieldInput
-                  type="number"
-                  formFieldName="numberOfDays"
-                  label="Number of days from today"
-                  required={true}
-                  placeholder=""
-                  value={numberOfDays}
-                  setValue={setNumberOfDays}
-                  validateFunction={validateNumberOfDays}
-                  pattern={undefined}
-                />
-                {/* <Form.Submit asChild> */}
-                {/* <Button
+          disabled={apiJson.loading || numberOfDays == 0 || numberOfDays == undefined}
+          className="h-12 w-2/3 self-center rounded-full text-lg"
+          onClick={handleSubmit}
+        >
+          {!apiJson.loading ? (
+            <div>Auto-Assign Keepers</div>
+          ) : (
+            <div>Loading</div>
+          )}
+        </Button>}
+        onHide={hideAutoAssignDialog}>
+        <div className="">
+          <Form.Root
+            className="flex w-full flex-col gap-6  bg-white p-20 text-black "
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+          >
+            {/* Title */}
+            <FormFieldInput
+              type="number"
+              formFieldName="numberOfDays"
+              label="Number of days from today"
+              required={true}
+              placeholder=""
+              value={numberOfDays}
+              setValue={setNumberOfDays}
+              validateFunction={validateNumberOfDays}
+              pattern={undefined}
+            />
+            {/* <Form.Submit asChild> */}
+            {/* <Button
                   disabled={apiJson.loading}
                   className="h-12 w-2/3 self-center rounded-full text-lg"
                 >
@@ -487,14 +487,14 @@ function ZooEventHomePage() {
                     <div>Loading</div>
                   )}
                 </Button> */}
-                {/* </Form.Submit> */}
-                {formError && (
-                  <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
-                )}
-              </Form.Root>
-              
-            </div>
-          </Dialog>
+            {/* </Form.Submit> */}
+            {formError && (
+              <div className="m-2 border-danger bg-red-100 p-2">{formError}</div>
+            )}
+          </Form.Root>
+
+        </div>
+      </Dialog>
     </div>
   );
 }

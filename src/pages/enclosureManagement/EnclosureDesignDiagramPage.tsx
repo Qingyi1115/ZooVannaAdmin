@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import Enclosure from "../../models/Enclosure";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Table,
@@ -17,16 +13,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useEnclosureContext } from "../../hooks/useEnclosureContext";
 
 // react planner stuff
-import { createRoot } from "react-dom/client";
-import { SizeMe } from "react-sizeme";
-import Immutable, { Map } from "immutable";
-import immutableDevtools from "immutable-devtools";
-import { createStore } from "redux";
+import { Map } from "immutable";
 import { Provider } from "react-redux";
+import { SizeMe } from "react-sizeme";
+import { createStore } from "redux";
 
 import MyCatalog from "../../../reactplannerassets/catalog/mycatalog";
 import ToolbarScreenshotButton from "../../../reactplannerassets/ui/toolbar-screenshot-button";
@@ -37,15 +32,16 @@ import areapolygon from "area-polygon";
 
 import {
   Models as PlannerModels,
+  Plugins as PlannerPlugins,
   reducer as PlannerReducer,
   ReactPlannerWrapper,
-  Plugins as PlannerPlugins,
 } from "../../../reactplanner-src/index";
 
 // end react planner import
 
 import { Dialog } from "primereact/dialog";
 import { HiCheck, HiX } from "react-icons/hi";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 // test data
 const emptyDiagramJson = {
@@ -189,7 +185,7 @@ function EnclosureDesignDiagramPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
-
+  const employee = useAuthContext().state.user?.employeeData;
   const { state, dispatch } = useEnclosureContext();
 
   // const { enclosureId } = useParams<{ enclosureId: string }>();
@@ -676,131 +672,23 @@ function EnclosureDesignDiagramPage() {
             {curEnclosure?.name}
           </span>
         </div>
-        <Dialog
-          visible={resetDiagramDialog}
-          style={{ width: "32rem" }}
-          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-          header="Confirm"
-          modal
-          footer={resetDiagramDialogFooter}
-          onHide={hideResetDiagramDialog}
-        >
-          <div className="confirmation-content">
-            <i
-              className="pi pi-exclamation-triangle mr-3"
-              style={{ fontSize: "2rem" }}
-            />
-            <span>
-              Are you sure you want to reset the enclosure diagram?
-              <br />
-              This will remove all elements and designs already added to this
-              enclosure's diagram.
-            </span>
-          </div>
-        </Dialog>
 
         {/* Body */}
-
-        {/* <div>
-            <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
-          </div> */}
-
-        <div className="flex justify-between">
-          <div className="flex flex-col gap-2">
+        {(employee.superAdmin ||
+          employee.planningStaff?.plannerType == "CURATOR") && (
+          <div className="flex gap-6">
             <div>
-              <Button className="w-full" onClick={handleSave}>
-                Save Diagram
-              </Button>
+              <Button onClick={handleSave}>Save Diagram</Button>
             </div>
             <div>
-              <Button
-                className="w-full"
-                variant={"destructive"}
-                onClick={confirmRemoveAnimal}
-              >
+              <Button variant={"destructive"} onClick={confirmRemoveAnimal}>
                 Delete (Reset) Diagram
               </Button>
             </div>
           </div>
-          <div className="flex w-1/3 gap-2">
-            <Table className="w-full">
-              <TableHeader className="bg-whiten">
-                {/* <TableRow>
-                  <TableHead
-                    colSpan={3}
-                    className="text-center text-lg font-bold"
-                  >
-                    Area
-                  </TableHead>
-                </TableRow> */}
-                <TableRow>
-                  <TableHead className="font-bold">Area</TableHead>
-                  <TableHead>Current</TableHead>
-                  <TableHead>Recommended</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-bold">
-                    Land (in m<sup>2</sup>)
-                  </TableCell>
-                  <TableCell>{curTotalLandArea}</TableCell>
-                  <TableCell>bla</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-bold">
-                    Water (in m<sup>2</sup>)
-                  </TableCell>
-                  <TableCell>{curTotalWaterArea}</TableCell>
-                  <TableCell>bla</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <div className="flex flex-col gap-2">
-              <div>
-                <Button className="w-full" onClick={updateTotalLandWaterArea}>
-                  Re-calculate Areas
-                </Button>
-              </div>
-              <div>
-                <Button onClick={makeSelectedAreaLand}>
-                  Make Selected Area as Land
-                </Button>
-              </div>
-              <div>
-                <Button onClick={makeSelectedAreaWater}>
-                  Make Selected Area as Water
-                </Button>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-1/3 gap-2">
-            <Table className="w-full">
-              <TableHeader className="bg-whiten">
-                <TableRow>
-                  <TableHead className="font-bold"></TableHead>
-                  <TableHead>Current</TableHead>
-                  <TableHead>Recommended</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-bold">
-                    Plantation Coverage (in %)
-                  </TableCell>
-                  <TableCell>blo</TableCell>
-                  <TableCell>bla</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <div className="flex flex-col gap-2">
-              <div>
-                <Button className="w-full">
-                  Re-calculate Plantation Coverage
-                </Button>
-              </div>
-            </div>
-          </div>
+        )}
+        <div>
+          <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
         </div>
 
         <div>
@@ -810,8 +698,8 @@ function EnclosureDesignDiagramPage() {
                 <ReactPlannerWrapper
                   store={store}
                   catalog={MyCatalog}
-                  width={size.width || 700}
-                  height={size.height || 800}
+                  width={size.width || 600}
+                  height={size.height || 600}
                   plugins={plugins}
                   toolbarButtons={toolbarButtons}
                   stateExtractor={(state) => state.get("react-planner")}
@@ -821,6 +709,28 @@ function EnclosureDesignDiagramPage() {
           </Provider>
         </div>
       </div>
+      <Dialog
+        visible={resetDiagramDialog}
+        style={{ width: "32rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header="Confirm"
+        modal
+        footer={resetDiagramDialogFooter}
+        onHide={hideResetDiagramDialog}
+      >
+        <div className="confirmation-content">
+          <i
+            className="pi pi-exclamation-triangle mr-3"
+            style={{ fontSize: "2rem" }}
+          />
+          <span>
+            Are you sure you want to reset the enclosure diagram?
+            <br />
+            This will remove all elements and designs already added to this
+            enclosure's diagram.
+          </span>
+        </div>
+      </Dialog>
     </div>
   );
 }

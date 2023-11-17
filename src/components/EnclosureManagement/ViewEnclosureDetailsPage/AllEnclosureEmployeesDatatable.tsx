@@ -11,19 +11,22 @@ import { HiCheck, HiEye, HiMinus, HiPlus, HiX } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import beautifyText from "../../../hooks/beautifyText";
 import useApiJson from "../../../hooks/useApiJson";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import Employee from "../../../models/Employee";
-import Keeper from "../../../models/Keeper";
+import Enclosure from "../../../models/Enclosure";
 
-interface AllEventEmployeesDatatableProps {
-  zooEventId: number;
+interface AllEnclosureEmployeesDatatableProps {
+  curEnclosure: Enclosure;
+  setRefreshSeed: Function;
 }
 
-function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
+function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatableProps) {
   const apiJson = useApiJson();
 
-  const { zooEventId } = props;
+  const { curEnclosure, setRefreshSeed } = props;
+  const enclosureId = curEnclosure.enclosureId;
 
-  let employee: Employee = {
+  let emptyEmployee: Employee = {
     employeeId: -1,
     employeeName: "",
     employeeEmail: "",
@@ -38,7 +41,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
 
   const toast = useRef<Toast>(null);
 
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee>(emptyEmployee);
   const [selectedAssignedEmployees, setSelectedAssignedEmployees] = useState<number[]>([]);
   const [selectedAvailableEmployees, setSelectedAvailableEmployees] = useState<number[]>([]);
   const dt = useRef<DataTable<Employee[]>>(null);
@@ -48,66 +51,104 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
   const [employeeBulkAssignmentDialog, setBulkAssignmentDialog] = useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
-
+  const employee = useAuthContext().state.user?.employeeData;
   const [assignedEmployees, setAssignedEmployees] = useState<Employee[]>([]);
   const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
-  const [refreshSeed, setRefreshSeed] = useState<any>(0);
+  const [currentEnclosure, setCurrentEnclosure] = useState<Enclosure>();
 
   useEffect(() => {
-    apiJson.get(
-      `http://localhost:3000/api/zooEvent/getKeepersForZooEvent/${zooEventId}`).catch(e => console.log(e)).then(res => {
-        // const allStaffs: Employee[] = []
-        // for (const staff of res["generalStaffs"]) {
-        //   // console.log(staff);
-        //   if (staff.generalStaffType == "ZOO_MAINTENANCE") {
-        //     let emp = staff.employee;
-        //     staff.employee = undefined;
-        //     emp["generalStaff"] = staff
-        //     const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
-        //     console.log(maintainedFacility);
-        //     emp.currentlyAssigned = (maintainedFacility !== undefined);
-        //     allStaffs.push(emp)
-        //   }
-
-        // }
-        console.log("AddEventKeepers", res);
-        setAvailableEmployees(res["availiableKeepers"].map(keeper => {
-          const emp = keeper.employee
-          keeper.employee = undefined
-          emp.keeper = keeper;
-          emp.keeperType = keeper.keeperType;
-          emp.currentlyAssigned = false;
-          return emp;
-        })
-          // .concat(res["currentKeepers"].map(keeper => {
-          //   const emp = keeper.employee
-          //   keeper.employee = undefined
-          //   emp.keeper = keeper;
-          //   emp.keeperType = keeper.keeperType;
-          //   emp.currentlyAssigned = true;
-          //   return emp;
-          // }))
+    const wrapper = async () => {
+      try {
+        const allEmp = await apiJson.get(
+          `http://localhost:3000/api/employee/getAllKeepers`
         );
 
-        setAssignedEmployees(res["currentKeepers"].map(keeper => {
-          const emp = keeper.employee
-          keeper.employee = undefined
-          emp.keeper = keeper;
-          emp.keeperType = keeper.keeperType;
-          emp.currentlyAssigned = false;
-          return emp;
-        })
-          // .concat(res["availableKeepers"].map(keeper => {
-          //   const emp = keeper.employee
-          //   keeper.employee = undefined
-          //   emp.keeper = keeper;
-          //   emp.keeperType = keeper.keeperType;
-          //   emp.currentlyAssigned = true;
-          //   return emp;
-          // }))
-        );
-      });
-  }, [refreshSeed]);
+        console.log("ViewAllEnclosureKeepers", curEnclosure, allEmp)
+        setCurrentEnclosure(curEnclosure);
+        const assignedStaff: any[] = [];
+        const availableStaff: any[] = [];
+
+        for (const keeper of curEnclosure.keepers) {
+          let emp = { ...keeper.employee } as any;
+          emp["keeper"] = { ...keeper, employee: undefined };
+          emp.currentlyAssigned = true;
+          assignedStaff.push(emp);
+        }
+        for (const keeper of allEmp.keepers) {
+          if (!assignedStaff.find(emp => emp.employeeId == keeper.employeeId)) {
+            let emp = { ...keeper.employee };
+            emp["keeper"] = { ...keeper, employee: undefined };
+            keeper.currentlyAssigned = false;
+            availableStaff.push(emp);
+          }
+        }
+        console.log("availableEmployees", availableStaff);
+        console.log("aa", assignedStaff)
+        setAssignedEmployees(assignedStaff);
+        setAvailableEmployees(availableStaff);
+
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    wrapper();
+  }, [curEnclosure]);
+
+  // useEffect(() => {
+  //   apiJson.get(
+  //     `http://localhost:3000/api/zooEvent/getKeepersForZooEvent/${enclosureId}`).catch(e => console.log(e)).then(res => {
+  //       // const allStaffs: Employee[] = []
+  //       // for (const staff of res["generalStaffs"]) {
+  //       //   // console.log(staff);
+  //       //   if (staff.generalStaffType == "ZOO_MAINTENANCE") {
+  //       //     let emp = staff.employee;
+  //       //     staff.employee = undefined;
+  //       //     emp["generalStaff"] = staff
+  //       //     const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
+  //       //     console.log(maintainedFacility);
+  //       //     emp.currentlyAssigned = (maintainedFacility !== undefined);
+  //       //     allStaffs.push(emp)
+  //       //   }
+
+  //       // }
+  //       console.log("AddEventKeepers", res);
+  //       setAvailableEmployees(res["availiableKeepers"].map(keeper => {
+  //         const emp = keeper.employee
+  //         keeper.employee = undefined
+  //         emp.keeper = keeper;
+  //         emp.keeperType = keeper.keeperType;
+  //         emp.currentlyAssigned = false;
+  //         return emp;
+  //       })
+  //         // .concat(res["currentKeepers"].map(keeper => {
+  //         //   const emp = keeper.employee
+  //         //   keeper.employee = undefined
+  //         //   emp.keeper = keeper;
+  //         //   emp.keeperType = keeper.keeperType;
+  //         //   emp.currentlyAssigned = true;
+  //         //   return emp;
+  //         // }))
+  //       );
+
+  //       setAssignedEmployees(res["currentKeepers"].map(keeper => {
+  //         const emp = keeper.employee
+  //         keeper.employee = undefined
+  //         emp.keeper = keeper;
+  //         emp.keeperType = keeper.keeperType;
+  //         emp.currentlyAssigned = false;
+  //         return emp;
+  //       })
+  //         // .concat(res["availableKeepers"].map(keeper => {
+  //         //   const emp = keeper.employee
+  //         //   keeper.employee = undefined
+  //         //   emp.keeper = keeper;
+  //         //   emp.keeperType = keeper.keeperType;
+  //         //   emp.currentlyAssigned = true;
+  //         //   return emp;
+  //         // }))
+  //       );
+  //     });
+  // }, [refreshSeed]);
 
   const assignKeeper = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
@@ -115,10 +156,10 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
     try {
       const values = {
         employeeIds: [selectedEmployee.employeeId,],
-        zooEventIds: [zooEventId,]
+        enclosureId: enclosureId
       };
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/zooEvent/assignZooEventKeeper`,
+        `http://localhost:3000/api/enclosure/assignKeepersToEnclosure`,
         values).then(res => {
           toastShadcn({
             // variant: "destructive",
@@ -161,10 +202,10 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/zooEvent/removeKeeperfromZooEvent`,
+        `http://localhost:3000/api/enclosure/removeKeepersFromEnclosure`,
         {
           employeeIds: [selectedEmployee.employeeId,],
-          zooEventIds: [zooEventId]
+          enclosureId: [enclosureId]
         });
       setRefreshSeed([]);
       toastShadcn({
@@ -210,12 +251,15 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
           }}
         />
       </span>
-      <Button
-        onClick={showBulkAssignment}
-        disabled={availableEmployees.length == 0}
-      >
-        <HiPlus />Assign Keepers
-      </Button>
+      {(employee.superAdmin ||
+        employee.planningStaff?.plannerType == "CURATOR") && (
+          <Button
+            onClick={showBulkAssignment}
+            disabled={availableEmployees.length == 0}
+          >
+            <HiPlus />Assign Keepers
+          </Button>
+        )}
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
@@ -238,7 +282,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
           <Button
             variant={"outline"}
             className="mr-2" onClick={() => {
-              navigate(`/zooevent/viewzooeventdetails/${zooEventId}/assignedEmployees`, { replace: true });
+              navigate(`/zooevent/viewzooeventdetails/${enclosureId}/assignedEmployees`, { replace: true });
               navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
             }}>
             <HiEye className="mx-auto" />
@@ -400,48 +444,35 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
   }
 
   const bulkAssignEmployees = async () => {
-    selectedAvailableEmployees.forEach(async (employeeId) => {
-      try {
+    const values = {
+      employeeIds: selectedAvailableEmployees,
+      enclosureId: enclosureId
+    };
+    console.log("values", values);
+    const responseJson = await apiJson.put(
+      `http://localhost:3000/api/enclosure/assignKeepersToEnclosure`,
+      values).then(res => {
+        toastShadcn({
+          // variant: "destructive",
+          title: "Assignment Successful",
+          description:
+            "Successfully assigned this enclosure to: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
+        });
 
-        const values = {
-          employeeIds: [employeeId],
-          zooEventIds: [zooEventId,]
-        };
-        const responseJson = await apiJson.put(
-          `http://localhost:3000/api/zooEvent/assignZooEventKeeper`,
-          values).then(res => {
-            toastShadcn({
-              // variant: "destructive",
-              title: "Assignment Successful",
-              description:
-                "Successfully assigned this event to: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
-            });
-
-            setRefreshSeed([]);
-          }).catch(err => {
-            console.log("err", err),
-
-              toastShadcn({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description:
-                  "An error has occurred while assigning keeper: \n" + apiJson.error,
-              });
-          }
-          );
+        setRefreshSeed([]);
         setAssignmentDialog(false);
         setBulkAssignmentDialog(false);
         setSelectedAvailableEmployees([]);
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while assigning keepers: \n" + apiJson.error,
-        });
-      }
-    });
+      }).catch(err => {
+        console.log("err", err),
+
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while assigning keeper: \n" + apiJson.error,
+          });
+      });
   }
 
   const employeeAssignmentDialogFooter = (
@@ -461,10 +492,10 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
     selectedAssignedEmployees.forEach(async (employeeId) => {
       try {
         const responseJson = await apiJson.put(
-          `http://localhost:3000/api/zooEvent/removeKeeperfromZooEvent`,
+          `http://localhost:3000/api/enclosure/removeKeepersFromEnclosure`,
           {
             employeeIds: [employeeId,],
-            zooEventIds: [zooEventId]
+            enclosureId: [enclosureId]
           });
         setRefreshSeed([]);
         toastShadcn({
@@ -516,7 +547,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
           {/* <Button
             variant={"outline"}
             className="mr-2" onClick={()=>{ 
-              navigate(`/assetzooEvent/viewzooEventdetails/${zooEventId}/manageMaintenance`, { replace: true });
+              navigate(`/assetzooEvent/viewzooEventdetails/${enclosureId}/manageMaintenance`, { replace: true });
               navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
             }}>
             <HiPlus className="mx-auto" />
@@ -543,10 +574,13 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
             globalFilter={globalFilter}
             header={header}
           >
-            <Column
-              body={assignedEmployeeCheckbox}
-              header={allAssignedEmployeesCheckbox}
-            ></Column>
+            {(employee.superAdmin ||
+              employee.planningStaff?.plannerType == "CURATOR") && (
+                <Column
+                  body={assignedEmployeeCheckbox}
+                  header={allAssignedEmployeesCheckbox}
+                ></Column>
+              )}
             <Column
               field="employeeId"
               header="ID"
@@ -561,7 +595,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
             <Column
               field="keeperType"
               header="Keeper Type"
-              body={(keeper: Keeper) => beautifyText(keeper.keeperType)}
+              body={(emp: Employee) => beautifyText(emp.keeper?.keeperType)}
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
@@ -585,12 +619,15 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
               exportable={false}
             ></Column>
           </DataTable>
-          <Button
-            variant={"destructive"}
-            onClick={confirmEmployeeRemoval}
-            disabled={selectedAssignedEmployees.length == 0}>
-            <HiMinus />Remove Selected Keepers
-          </Button>
+          {(employee.superAdmin ||
+            employee.planningStaff?.plannerType == "CURATOR") && (
+              <Button
+                variant={"destructive"}
+                onClick={confirmEmployeeRemoval}
+                disabled={selectedAssignedEmployees.length == 0}>
+                <HiMinus />Remove Selected Keepers
+              </Button>
+            )}
         </div>
         <Dialog
           visible={employeeAssignmentDialog}
@@ -686,7 +723,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
               <Column
                 field="keeperType"
                 header="Keeper Type"
-                body={(keeper: Keeper) => beautifyText(keeper.keeperType)}
+                body={(emp: Employee) => beautifyText(emp.keeper?.keeperType)}
                 sortable
                 style={{ minWidth: "12rem" }}
               ></Column>
@@ -723,4 +760,4 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
   );
 }
 
-export default AllEventEmployeesDatatable;
+export default AllEnclosureEmployeesDatatable;

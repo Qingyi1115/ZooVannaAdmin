@@ -17,10 +17,10 @@ import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxClickEvent } from "primereact/checkbox";
 import {
   HiCheck,
-  HiTrash,
   HiX
 } from "react-icons/hi";
 import { Biome } from "../../../enums/Enumurated";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 
 interface EnclosurePlantationDatatableProps {
@@ -80,6 +80,7 @@ function EnclosurePlantationDatatable(props: EnclosurePlantationDatatableProps) 
   const dt = useRef<DataTable<Plantation[]>>(null);
 
   const toastShadcn = useToast().toast;
+  const employee = useAuthContext().state.user?.employeeData;
 
   function calculateAge(dateOfBirth: Date): string {
     const dob = dateOfBirth;
@@ -177,7 +178,7 @@ function EnclosurePlantationDatatable(props: EnclosurePlantationDatatableProps) 
             className="mr-2"
             onClick={() => confirmRemovePlantation(plantation)}
           >
-            <HiTrash className="mx-auto" />
+            <HiX className="mx-auto" />
           </Button>
         </div>
       </React.Fragment>
@@ -186,12 +187,15 @@ function EnclosurePlantationDatatable(props: EnclosurePlantationDatatableProps) 
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <Button
-        onClick={() => setPlantationBulkAssignmentDialog(true)}
-        disabled={availablePlantations.length == 0}
-      >
-        Add Plantation To Enclosure
-      </Button>
+      {(employee.superAdmin ||
+        employee.planningStaff?.plannerType == "CURATOR") && (
+          <Button
+            onClick={() => setPlantationBulkAssignmentDialog(true)}
+            disabled={availablePlantations.length == 0}
+          >
+            Add Plantation To Enclosure
+          </Button>
+        )}
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -230,10 +234,10 @@ function EnclosurePlantationDatatable(props: EnclosurePlantationDatatableProps) 
           `http://localhost:3000/api/enclosure/getAllPlantations`
         );
         const allPlantationsList = responseJson as Plantation[];
-        console.log("get all plantations ",allPlantationsList, plantationList)
+        console.log("get all plantations ", allPlantationsList, plantationList)
 
         const availablePlantationsList = allPlantationsList.filter(
-          (plantation1) =>{
+          (plantation1) => {
             return !plantationList.some(
               (plantation2) =>
                 plantation1.plantationId === plantation2.plantationId
@@ -323,7 +327,7 @@ function EnclosurePlantationDatatable(props: EnclosurePlantationDatatableProps) 
           )
           .then((res) => {
             setRefreshSeed([]);
-            
+
             toastShadcn({
               title: "Assignment Successful",
               description: "Successfully assigned selected plantations ",
@@ -413,13 +417,16 @@ function EnclosurePlantationDatatable(props: EnclosurePlantationDatatableProps) 
           sortable
           style={{ minWidth: "5rem" }}
         ></Column>
-        <Column
-          body={actionBodyTemplate}
-          header="Actions"
-          frozen
-          alignFrozen="right"
-          exportable={false}
-        ></Column>
+        {(employee.superAdmin ||
+          employee.planningStaff?.plannerType == "CURATOR") && (
+            <Column
+              body={actionBodyTemplate}
+              header="Actions"
+              frozen
+              alignFrozen="right"
+              exportable={false}
+            ></Column>
+          )}
 
       </DataTable>{" "}
       <Dialog
@@ -506,7 +513,7 @@ function EnclosurePlantationDatatable(props: EnclosurePlantationDatatableProps) 
             header={bulkAssignmentHeader}
           >
             <Column
-            body={availablePlantationCheckbox}
+              body={availablePlantationCheckbox}
             ></Column>
             <Column
               field="plantationId"

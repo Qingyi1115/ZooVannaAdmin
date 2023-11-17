@@ -3,7 +3,7 @@ import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
@@ -14,12 +14,13 @@ import Animal from "../../models/Animal";
 
 import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalActivityLogsDatatable";
 import AllAnimalFeedingLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalFeedingLogsDatatable";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 function ViewAnimalDetailsPage() {
   const apiJson = useApiJson();
   const location = useLocation();
   const navigate = useNavigate();
-
+  const employee = useAuthContext().state.user?.employeeData;
   const { animalCode } = useParams<{ animalCode: string }>();
   const { tab } = useParams<{ tab: string }>();
 
@@ -93,7 +94,7 @@ function ViewAnimalDetailsPage() {
             <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
               <span className="invisible">_____</span>
               <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
-              <TabsTrigger value="weight">Weight</TabsTrigger>
+              {(employee.superAdmin || employee.keeper || employee.planningStaff?.plannerType == "CURATOR") && <TabsTrigger value="weight">Weight</TabsTrigger>}
               <TabsTrigger value="feeding">Feeding</TabsTrigger>
               <TabsTrigger value="trainingenrichmentactivity">
                 Activities
