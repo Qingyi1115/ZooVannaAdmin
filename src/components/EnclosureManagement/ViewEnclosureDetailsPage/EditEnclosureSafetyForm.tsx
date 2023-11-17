@@ -65,7 +65,13 @@ function EditEnclosureSafetyForm(
     e.preventDefault();
     const newEnclosureRequirements = {
       enclosureId,
-      standOffBarrierDist
+      standOffBarrierDist,
+      name: curEnclosure.name,
+      remark: curEnclosure.remark,
+      length: curEnclosure.length,
+      width: curEnclosure.width,
+      height: curEnclosure.height,
+      enclosureStatus: curEnclosure.enclosureStatus,
     };
 
     console.log("new enclosure req obj:", newEnclosureRequirements);
@@ -73,7 +79,7 @@ function EditEnclosureSafetyForm(
     const updateEnclosureEnclosureRequirements = async () => {
       try {
         const response = await apiJson.put(
-          "http://localhost:3000/api/enclosure/updateEnclosureSafety",
+          "http://localhost:3000/api/enclosure/updateEnclosure",
           newEnclosureRequirements
         );
         // success

@@ -28,7 +28,7 @@ function EnclosureSafety(props: EnclosureSafetyProps) {
 
       {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <Button className="mr-2" onClick={() => {
-          navigate(`/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/layoutdesign`, { replace: true });
+          navigate(`/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/safety`, { replace: true });
           navigate(`/enclosure/editenclosuresafety/${curEnclosure.enclosureId}`);
         }}>
           <HiPencil className="mx-auto" ></HiPencil>
