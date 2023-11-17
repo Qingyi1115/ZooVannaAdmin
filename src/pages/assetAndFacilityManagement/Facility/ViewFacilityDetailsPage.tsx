@@ -48,7 +48,7 @@ function ViewFacilityDetailsPage() {
     facilityName: "",
     xCoordinate: 0,
     yCoordinate: 0,
-    facilityDetail: "",
+    facilityDetail: "enclosure",
     facilityDetailJson: undefined,
     isSheltered: false,
     hubProcessors: [],
