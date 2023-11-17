@@ -16,8 +16,6 @@ import { useAuthContext } from "../../../hooks/useAuthContext";
 import Employee from "../../../models/Employee";
 import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
 
-
-
 function ViewFacilityDetailsPage() {
   const apiJson = useApiJson();
   const { facilityId } = useParams<{ facilityId: string }>();
@@ -71,6 +69,7 @@ function ViewFacilityDetailsPage() {
           `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
           { includes: ["hubProcessors"] }
         );
+        console.log("ViewFacilityDetailsPage ",responseJson)
         for (const processor of responseJson.facility.hubProcessors) {
           if (processor.lastDataUpdate) {
             processor.lastDataUpdateString = new Date(processor.lastDataUpdate).toLocaleString();
@@ -123,7 +122,10 @@ function ViewFacilityDetailsPage() {
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
             {curFacility.facilityDetail == "inHouse" && (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
             {curFacility.facilityDetail == "inHouse" && (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
-            <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
+            {
+              curFacility.facilityDetail != "enclosure" && <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
+            }
+            
           </TabsList>
           <TabsContent value="facilityDetails">
             <div className="relative flex flex-col">
@@ -148,9 +150,12 @@ function ViewFacilityDetailsPage() {
               <ManageOperationStaffPage />
             </TabsContent>
           )}
-          <TabsContent value="customerReport">
+          {
+            curFacility.facilityDetail != "enclosure" &&
+            (<TabsContent value="customerReport">
             <AllCustomerReportsDatatableByFacility curFacility={curFacility} />
-          </TabsContent>
+            </TabsContent>)
+          }
         </Tabs>
       </div>
     </div>

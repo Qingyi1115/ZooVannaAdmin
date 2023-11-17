@@ -59,17 +59,17 @@ function EnclosureEnvironment(
     <div>
       {curEnclosure && (
         <div >
-          <Button
-            onClick={() =>
-              navigate(
-                `/assetfacility/viewhubdetails/${curEnclosure.enclosureId}`
-              )
-            }
-
-            className=""
-          >
-            Manage Hub and Sensor Details
-          </Button>
+      <Button
+        onClick={() =>
+          navigate(
+            `/assetfacility/viewfacilitydetails/${curEnclosure.facility?.facilityId}/hubs`
+          )
+        }
+        type="button"
+        className=""
+      >
+        Manage Hub and Sensor Details
+      </Button>
 
         </div>
       )}

@@ -51,16 +51,16 @@ function EnclosureBasicInformation(props: EnclosureBasicInformationProps) {
 
   return (
     <div>
-      <Button
-        onClick={() =>
-          navigate(
-            `/enclosure/editenclosurebasicinfo/${curEnclosure.enclosureId}`
-          )
-        }
-        type="button"
-        className=""
-      >
-        Edit Basic Information
+    <Button
+      onClick={() =>
+        navigate(
+          `/enclosure/editenclosurebasicinfo/${curEnclosure.enclosureId}`
+        )
+      }
+      type="button"
+      className=""
+    >
+      Edit Basic Information
       </Button>
       <br />
       <Table>
