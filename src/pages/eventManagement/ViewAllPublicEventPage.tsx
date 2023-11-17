@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 import { useNavigate, useParams } from "react-router-dom";
+import AllPublicEventsDatatable from "../../components/EventManagement/AllPublicEventsDatatable";
 import useApiJson from "../../hooks/useApiJson";
 import FeedingPlan from "../../models/FeedingPlan";
 import PublicEvent from "../../models/PublicEvent";
-import AllPublicEventsDatatable from "../../components/EventManagement/AllPublicEventsDatatable";
 
 function ViewAllPublicEventPage() {
   const apiJson = useApiJson();
@@ -51,7 +51,7 @@ function ViewAllPublicEventPage() {
               Back
             </Button>
             {/* </NavLink> */}
-            <span className="self-center text-lg text-graydark">
+            <span className="self-center text-title-xl font-bold">
               Public Events
             </span>
             <Button disabled className="invisible">
