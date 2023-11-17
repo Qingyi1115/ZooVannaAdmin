@@ -19,7 +19,13 @@ let catalog = new Catalog();
 // import * as Areas from "./areas/**/planner-element.jsx";
 // import * as Lines from "./lines/**/planner-element.jsx";
 // import * as Holes from "./holes/**/planner-element.jsx";
-// import * as Items from "./items/**/planner-element.jsx";
+
+// Import Items!
+import WoodenLog from "./items/woodenLog/planner-element";
+catalog.registerElement(WoodenLog);
+import Cube from "./items/cube/planner-element";
+catalog.registerElement(Cube);
+//
 
 for (let x in Areas) catalog.registerElement(Areas[x]);
 for (let x in Lines) catalog.registerElement(Lines[x]);
