@@ -46,12 +46,9 @@ function EditEnclosureEnvironmentForm(
   const [acceptableHumidityMax, setAcceptableHumidityMax] = useState<number | null | undefined>(
     curEnclosure.acceptableHumidityMax
   );
-  // const [
-  //   recommendedStandOffBarrierDistMetres,
-  //   setRecommendedStandOffBarrierDistMetres,
-  // ] = useState<number | undefined>(
-  //   curEnclosure.recommendedStandOffBarrierDistMetres
-  // );
+  const [
+    standOffBarrierDist,
+    setStandOffBarrierDist,] = useState<number | null>(curEnclosure.standOffBarrierDist);
   const [plantationCoveragePercent, setPlantationCoveragePercent] =
     useState<number | null | undefined>(curEnclosure.plantationCoveragePercent);
   const [longGrassPercent, setLongGrassPercent] = useState<number | null | undefined>(
@@ -160,25 +157,25 @@ function EditEnclosureEnvironmentForm(
     return null;
   }
 
-  // function validateStandOffBarrierDist(props: ValidityState) {
-  //   if (props != undefined) {
-  //     if (recommendedStandOffBarrierDistMetres == undefined) {
-  //       return (
-  //         <div className="font-medium text-danger">
-  //           * Please enter a recommended stand-off barrier distance
-  //         </div>
-  //       );
-  //     } else if (recommendedStandOffBarrierDistMetres <= 0) {
-  //       return (
-  //         <div className="font-medium text-danger">
-  //           * Stand-off barrier distance must be greater than 0
-  //         </div>
-  //       );
-  //     }
-  //     // add any other cases here
-  //   }
-  //   return null;
-  // }
+  function validateStandOffBarrierDist(props: ValidityState) {
+    if (props != undefined) {
+      if (standOffBarrierDist == undefined) {
+        return (
+          <div className="font-medium text-danger">
+            * Please enter a stand-off barrier distance
+          </div>
+        );
+      } else if (standOffBarrierDist <= 0) {
+        return (
+          <div className="font-medium text-danger">
+            * Stand-off barrier distance must be greater than 0
+          </div>
+        );
+      }
+      // add any other cases here
+    }
+    return null;
+  }
 
 
   ///////
@@ -203,6 +200,7 @@ function EditEnclosureEnvironmentForm(
       sandPercent,
       snowPercent,
       soilPercent,
+      standOffBarrierDist
     };
 
     console.log("new enclosure req obj:", newEnclosureRequirements);
@@ -344,17 +342,17 @@ function EditEnclosureEnvironmentForm(
           />
         </div>
         {/* Recommended Stand-off Barrier Distance */}
-        {/* <FormFieldInput
+        <FormFieldInput
           type="number"
-          formFieldName="recommendedStandOffBarrierDistMetres"
-          label={`Recommended Stand-off Barrier Distance (m)`}
+          formFieldName="standOffBarrierDist"
+          label={`Stand-off Barrier Distance (m)`}
           required={true}
           placeholder="e.g., 12"
           pattern={undefined}
-          value={recommendedStandOffBarrierDistMetres}
-          setValue={setRecommendedStandOffBarrierDistMetres}
+          value={standOffBarrierDist}
+          setValue={setStandOffBarrierDist}
           validateFunction={validateStandOffBarrierDist}
-        /> */}
+        />
         {/* Plantation Coverage Range */}
         <Form.Field
           name="educationalDescription"

@@ -112,14 +112,14 @@ function EnclosureEnvironment(
                   <sup>-3</sup>
                 </TableCell>
               </TableRow>
-              {/* <TableRow>
+              <TableRow>
                 <TableCell className="w-1/3 font-bold" colSpan={2}>
                   Receommended Stand-off Barrier Distance (m)
                 </TableCell>
                 <TableCell>
-                  {curEnclosure.recommendedStandOffBarrierDistMetres}
+                  {curEnclosure.standOffBarrierDist}
                 </TableCell>
-              </TableRow> */}
+              </TableRow>
               <TableRow>
                 <TableCell className="w-1/3 font-bold" colSpan={2}>
                   Plantation Coverage (%)
