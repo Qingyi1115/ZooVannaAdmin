@@ -31,6 +31,7 @@ import { HiMapPin } from "react-icons/hi2";
 import { FacilityType } from "../../../enums/FacilityType";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
+import beautifyText from "../../../hooks/beautifyText";
 // import geolocation from "geolocation";
 
 let emptyFacility: FacilityWithSelected = {
@@ -90,9 +91,28 @@ function MapLandingPage() {
           "http://localhost:3000/api/assetFacility/getAllFacility",
           { includes: ["facilityDetail"] }
         );
+
+        const responseJson2 = await apiJson.get(
+          "http://localhost:3000/api/enclosure/getAllEnclosures"
+        ).then(res => {
+          return res.map(enclosure => {
+            return {
+              ...enclosure.facility,
+              facilityDetail: "enclosure",
+              facilityDetailJson: { ...enclosure, facility: undefined },
+            };
+          });
+        });
+
+        console.log(responseJson2, responseJson.facilities)
+
+
         const facilityListWithLocation = (
           responseJson.facilities as FacilityWithSelected[]
         )
+          .concat(
+            responseJson2 as FacilityWithSelected[]
+          )
           .filter((facility) => {
             // console.log(facility);
             return !(
@@ -397,8 +417,8 @@ function MapLandingPage() {
                       Type:{" "}
                       {
                         FacilityType[
-                          selectedFacility.facilityDetailJson
-                            .facilityType as keyof typeof FacilityType
+                        selectedFacility.facilityDetailJson
+                          .facilityType as keyof typeof FacilityType
                         ]
                       }
                     </div>
@@ -508,9 +528,9 @@ function MapLandingPage() {
                 field="facilityDetail"
                 header="Owner Type"
                 body={(facility) => {
-                  return facility.facilityDetail == "thirdParty"
-                    ? "Third-party"
-                    : "In-house";
+                  return facility.facilityDetail == "thirdParty" ? "Third-party" :
+                    facility.facilityDetail == "inHouse" ? "In-House" :
+                      beautifyText(facility.facilityDetail);
                 }}
                 sortable
                 style={{ minWidth: "12rem" }}
