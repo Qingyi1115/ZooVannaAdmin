@@ -36,12 +36,12 @@ interface Enclosure {
 
   // FK
   // declare terrainDistribution?: TerrainDistribution;
-  animals?: Animal[];
-  barrierType?: BarrierType;
-  plantation?: Plantation;
-  zooEvents?: ZooEvent[];
-  facility?: Facility;
-  Keeper?: Keeper[];
+  animals: Animal[];
+  barrierType: BarrierType;
+  plantation: Plantation;
+  zooEvents: ZooEvent[];
+  facility: Facility;
+  keepers: Keeper[];
 }
 
 export default Enclosure;

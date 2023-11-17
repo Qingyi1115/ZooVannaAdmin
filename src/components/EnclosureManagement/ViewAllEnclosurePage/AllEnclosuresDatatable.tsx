@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import {
   EnclosureStatus
 } from "../../../enums/Enumurated";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import Enclosure from "../../../models/Enclosure";
 
 let emptyEnclosure: Enclosure = {
@@ -43,7 +44,7 @@ let emptyEnclosure: Enclosure = {
   //   plantation: null,
   zooEvents: [],
   //   facility: null,
-  Keeper: [],
+  keepers: [],
   standOffBarrierDist: null,
   designDiagramJsonUrl: null
 };
@@ -68,6 +69,7 @@ function AllEnclosuresDatatable() {
   const dt = useRef<DataTable<Enclosure[]>>(null);
 
   const toastShadcn = useToast().toast;
+  const employee = useAuthContext().state.user?.employeeData;
 
   useEffect(() => {
     const fetchEnclosures = async () => {
@@ -157,13 +159,15 @@ function AllEnclosuresDatatable() {
           >
             <HiEye className="mr-auto" />
           </Button>
-          <Button
-            variant={"destructive"}
-            className="mr-2"
-            onClick={() => confirmDeleteEnclosure(enclosure)}
-          >
-            <HiTrash className="mx-auto" />
-          </Button>
+          {(employee.superAdmin ||
+            employee.planningStaff?.plannerType == "CURATOR") && (
+              <Button
+                variant={"destructive"}
+                className="mr-2"
+                onClick={() => confirmDeleteEnclosure(enclosure)}
+              >
+                <HiTrash className="mx-auto" />
+              </Button>)}
         </div>
       </React.Fragment>
     );

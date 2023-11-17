@@ -46,7 +46,7 @@ function ViewSensorDetails(props: SensorDetailsProps) {
           </Button>
         }
 
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || employee.planningStaff?.plannerType == "CURATOR") && (
           <Button className="mr-2" onClick={() => {
             navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
             navigate(`/assetfacility/editsensor/${curSensor.sensorId}`);

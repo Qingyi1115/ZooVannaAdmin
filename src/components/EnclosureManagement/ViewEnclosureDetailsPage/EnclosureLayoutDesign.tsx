@@ -8,8 +8,10 @@ import {
   TableCell,
   TableRow
 } from "@/components/ui/table";
+import { HiPencil } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import { TwoThumbSliderWithNumber } from "../../SpeciesManagement/TwoThumbSliderWithNumber";
 import EnclosurePlantationList from "./EnclosurePlantationList";
 
@@ -21,6 +23,7 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
 
   const apiJson = useApiJson();
   const navigate = useNavigate();
+  const employee = useAuthContext().state.user?.employeeData;
 
   return (
     <div>
@@ -33,6 +36,15 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
       </Button>
       EnclosureLayoutDesign
 
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        <Button className="mr-2" onClick={() => {
+          navigate(`/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/layoutdesign`, { replace: true });
+          navigate(`/enclosure/editenclosureenvironment/${curEnclosure.enclosureId}`);
+        }}>
+          <HiPencil className="mx-auto" ></HiPencil>
+          Edit Terrain Details
+        </Button>
+      )}
 
       <Table className="rounded-lg shadow-lg">
         <TableBody>
@@ -80,14 +92,6 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
               </span>{" "}
               g.m
               <sup>-3</sup>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Receommended Stand-off Barrier Distance (m)
-            </TableCell>
-            <TableCell>
-              {curEnclosure.standOffBarrierDist}
             </TableCell>
           </TableRow>
           <TableRow>
