@@ -116,7 +116,7 @@ function ViewFacilityDetailsPage() {
           className="w-full"
         >
           <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <TabsTrigger value="facilityDetails">Details</TabsTrigger>
+            {curFacility.facilityDetail != "enclosure" && <TabsTrigger value="facilityDetails">Details</TabsTrigger>}
 
             <TabsTrigger value="hubs">Hubs</TabsTrigger>
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
