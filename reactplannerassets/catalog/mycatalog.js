@@ -35,6 +35,8 @@ import Wall from "./lines/wall/planner-element.jsx";
 catalog.registerElement(Wall);
 import WaterOutline from "./lines/waterOutline/planner-element.jsx";
 catalog.registerElement(WaterOutline);
+import EnclosureBarrier from "./lines/enclosureBarrier/planner-element.jsx";
+catalog.registerElement(EnclosureBarrier);
 
 // for (let x in Lines) catalog.registerElement(Lines[x]);
 // for (let x in Holes) catalog.registerElement(Holes[x]);

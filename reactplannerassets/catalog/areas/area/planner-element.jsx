@@ -7,40 +7,19 @@ let info = {
   image: "",
 };
 
-import parquetTexture from "./textures/parquet.jpg";
-import tile1Texture from "./textures/tile1.jpg";
-import ceramicTileTexture from "./textures/ceramic-tile.jpg";
-import strandPorcelaneTexture from "./textures/strand-porcelain.jpg";
-import grassTexture from "./textures/grass.jpg";
+import landTexture from "./textures/landTexture.jpg";
+import waterTexture from "./textures/waterTexture.jpg";
 
 let textures = {
   parquet: {
-    name: "Parquet",
-    uri: parquetTexture,
+    name: "Water",
+    uri: waterTexture,
     lengthRepeatScale: 0.004,
     heightRepeatScale: 0.004,
   },
-  tile1: {
-    name: "Tile1",
-    uri: tile1Texture,
-    lengthRepeatScale: 0.01,
-    heightRepeatScale: 0.01,
-  },
-  ceramic: {
-    name: "Ceramic Tile",
-    uri: ceramicTileTexture,
-    lengthRepeatScale: 0.02,
-    heightRepeatScale: 0.02,
-  },
-  strand_porcelain: {
-    name: "Strand Porcelain Tile",
-    uri: strandPorcelaneTexture,
-    lengthRepeatScale: 0.02,
-    heightRepeatScale: 0.02,
-  },
   grass: {
-    name: "Grass",
-    uri: grassTexture,
+    name: "Land",
+    uri: landTexture,
     lengthRepeatScale: 0.01,
     heightRepeatScale: 0.01,
   },

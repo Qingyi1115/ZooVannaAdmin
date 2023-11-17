@@ -75,11 +75,11 @@ const Toolbar = ({
     //     <FaFile />
     //   </ToolbarButton>
     // },
-    {
-      index: 1,
-      condition: allowProjectFileSupport,
-      dom: <ToolbarSaveButton state={state} />,
-    },
+    // {
+    //   index: 1,
+    //   condition: allowProjectFileSupport,
+    //   dom: <ToolbarSaveButton state={state} />,
+    // },
     // {
     //   index: 2,
     //   condition: allowProjectFileSupport,

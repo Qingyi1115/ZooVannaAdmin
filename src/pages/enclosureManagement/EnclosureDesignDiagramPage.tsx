@@ -148,7 +148,7 @@ let plugins = [
   // PlannerPlugins.ConsoleDebugger(),
 ];
 
-let toolbarButtons = [ToolbarScreenshotButton];
+// let toolbarButtons = [ToolbarScreenshotButton];
 // end react planner stuff
 
 function EnclosureDesignDiagramPage() {
@@ -244,6 +244,7 @@ function EnclosureDesignDiagramPage() {
   const resetDiagram = async () => {
     loadDiagram(emptyDiagramJson);
     await handleSave();
+    setResetDiagramDialog(false);
   };
 
   const resetDiagramDialogFooter = (
@@ -265,12 +266,14 @@ function EnclosureDesignDiagramPage() {
     });
   }
 
+  // calculate area stuff
+
   function calculateSelectedAreaSize() {
-    console.log("ahahhaha");
+    console.log("Scene:");
     console.log(
       JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
     );
-    console.log("egegegege");
+    console.log("Scene > selected layer:");
     console.log(
       JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
         .selectedLayer
@@ -318,6 +321,13 @@ function EnclosureDesignDiagramPage() {
     // );
   }
 
+  const [curTotalLandArea, setCurTotalLandArea] = useState<number>(0);
+  const [curTotalWaterArea, setCurTotalWaterArea] = useState<number>(0);
+
+  function updateTotalLandWaterArea() {}
+
+  // calculate area stuff
+
   async function handleSave() {
     console.log(
       JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
@@ -354,7 +364,7 @@ function EnclosureDesignDiagramPage() {
   }
 
   return (
-    <div className="p-10">
+    <div className="overflow-y-scroll  p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         {/* header */}
         <div className="flex flex-col">
@@ -384,18 +394,24 @@ function EnclosureDesignDiagramPage() {
         </div>
 
         {/* Body */}
-        <div className="flex gap-6">
-          <div>
-            <Button onClick={handleSave}>Save Diagram</Button>
-          </div>
-          <div>
-            <Button variant={"destructive"} onClick={confirmRemoveAnimal}>
-              Delete (Reset) Diagram
-            </Button>
-          </div>
-        </div>
         <div>
-          <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
+          <div className="flex gap-6">
+            <div>
+              <Button onClick={handleSave}>Save Diagram</Button>
+            </div>
+            <div>
+              <Button variant={"destructive"} onClick={confirmRemoveAnimal}>
+                Delete (Reset) Diagram
+              </Button>
+            </div>
+          </div>
+          <div>
+            <div>Cur Land Area Total: {curTotalLandArea}</div>
+            <div>Cur Water Area Total: {curTotalWaterArea}</div>
+          </div>
+          <div>
+            <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
+          </div>
         </div>
 
         <div>
@@ -405,39 +421,39 @@ function EnclosureDesignDiagramPage() {
                 <ReactPlannerWrapper
                   store={store}
                   catalog={MyCatalog}
-                  width={size.width || 600}
+                  width={size.width || 700}
                   height={size.height || 600}
                   plugins={plugins}
-                  toolbarButtons={toolbarButtons}
+                  // toolbarButtons={toolbarButtons}
                   stateExtractor={(state) => state.get("react-planner")}
                 />
               )}
             </SizeMe>
           </Provider>
         </div>
+        <Dialog
+          visible={resetDiagramDialog}
+          style={{ width: "32rem" }}
+          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+          header="Confirm"
+          modal
+          footer={resetDiagramDialogFooter}
+          onHide={hideResetDiagramDialog}
+        >
+          <div className="confirmation-content">
+            <i
+              className="pi pi-exclamation-triangle mr-3"
+              style={{ fontSize: "2rem" }}
+            />
+            <span>
+              Are you sure you want to reset the enclosure diagram?
+              <br />
+              This will remove all elements and designs already added to this
+              enclosure's diagram.
+            </span>
+          </div>
+        </Dialog>
       </div>
-      <Dialog
-        visible={resetDiagramDialog}
-        style={{ width: "32rem" }}
-        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header="Confirm"
-        modal
-        footer={resetDiagramDialogFooter}
-        onHide={hideResetDiagramDialog}
-      >
-        <div className="confirmation-content">
-          <i
-            className="pi pi-exclamation-triangle mr-3"
-            style={{ fontSize: "2rem" }}
-          />
-          <span>
-            Are you sure you want to reset the enclosure diagram?
-            <br />
-            This will remove all elements and designs already added to this
-            enclosure's diagram.
-          </span>
-        </div>
-      </Dialog>
     </div>
   );
 }
