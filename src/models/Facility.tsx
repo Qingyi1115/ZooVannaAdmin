@@ -1,5 +1,7 @@
+import Enclosure from "./Enclosure";
 import HubProcessor from "./HubProcessor";
 import InHouse from "./InHouse";
+import ThirdParty from "./ThirdParty";
 
 interface Facility {
   facilityId: number;
@@ -12,7 +14,9 @@ interface Facility {
   facilityDetail: string;
   facilityDetailJson: any;
   hubProcessors: HubProcessor[];
-  inHouse: InHouse;
+  inHouse?: InHouse;
+  thirdParty?: ThirdParty;
+  enclosure?: Enclosure
 }
 
 export default Facility;
