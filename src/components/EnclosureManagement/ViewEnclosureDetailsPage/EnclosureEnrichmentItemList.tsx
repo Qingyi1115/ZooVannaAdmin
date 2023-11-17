@@ -15,17 +15,19 @@ function EnclosureEnrichmentItemList(props: EnclosureEnrichmentItemListProps) {
 
   const apiJson = useApiJson();
 
-  const [enrichmentItemList, setEnrichmentItemList] = useState<EnrichmentItem[]>([]);
+  const [enrichmentItemList, setEnrichmentItemList] = useState<EnrichmentItem[]>(undefined as any);
   const [refreshSeed, setRefreshSeed] = useState<number>(0);
 
   useEffect(() => {
     const fetchEnrichmentItems = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/enclosure/getenrichmentitemsofenclosure/${curEnclosure.enclosureId}`
+          `http://localhost:3000/api/enclosure/getEnclosureById/${curEnclosure.enclosureId}`
         );
 
-        setEnrichmentItemList(responseJson.enrichmentItemList as EnrichmentItem[]);
+        console.log("EnclosureEnrichmentItemList", responseJson, responseJson.enrichmentItems);
+
+        setEnrichmentItemList(responseJson.enrichmentItems as EnrichmentItem[]);
       } catch (error: any) {
         console.log(error);
       }
@@ -36,13 +38,17 @@ function EnclosureEnrichmentItemList(props: EnclosureEnrichmentItemListProps) {
   return (
     <div>
       {/* <Button className="mb-4">Add EnrichmentItem</Button> */}
-      <EnclosureEnrichmentItemDatatable
-        curEnclosure={curEnclosure}
-        enrichmentItemList={enrichmentItemList}
-        setEnrichmentItemList={setEnrichmentItemList}
-        refreshSeed={refreshSeed}
-        setRefreshSeed={setRefreshSeed}
-      />
+      {
+        enrichmentItemList && (
+          <EnclosureEnrichmentItemDatatable
+            curEnclosure={curEnclosure}
+            enrichmentItemList={enrichmentItemList}
+            setEnrichmentItemList={setEnrichmentItemList}
+            refreshSeed={refreshSeed}
+            setRefreshSeed={setRefreshSeed}
+          />
+        )
+      }
     </div>
   );
 }

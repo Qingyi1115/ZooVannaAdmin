@@ -231,10 +231,10 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
         const allEnrichmentItemsList = responseJson as EnrichmentItem[];
 
         const availableEnrichmentItemsList = allEnrichmentItemsList.filter(
-          (enrichmentItem) =>
+          (enrichmentItem1) =>
             !enrichmentItemList.some(
-              (enrichmentItem) =>
-                enrichmentItem.enrichmentItemId === enrichmentItem.enrichmentItemId
+              (enrichmentItem2) =>
+                enrichmentItem1.enrichmentItemId === enrichmentItem2.enrichmentItemId
             )
         );
 
@@ -308,38 +308,37 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
 
   const bulkAssignEnrichmentItems = async () => {
     selectedAvailableEnrichmentItems.forEach(async (enrichmentItem) => {
-      try {
-        const assignEnrichmentItemApiObj = {
-          enclosureId: curEnclosure.enclosureId,
-          enrichmentItemId: enrichmentItem.enrichmentItemId,
-        };
-        const responseJson = await apiJson
-          .put(
-            `http://localhost:3000/api/enclosure/assignEnrichmentItemToEnclosure/`,
-            assignEnrichmentItemApiObj
-          )
-          .then((res) => {
-            setRefreshSeed([]);
-          })
-          .catch((err) => console.log("err", err));
+      const assignEnrichmentItemApiObj = {
+        enclosureId: curEnclosure.enclosureId,
+        enrichmentItemId: enrichmentItem.enrichmentItemId,
+      };
+      const responseJson = await apiJson
+        .put(
+          `http://localhost:3000/api/enclosure/addEnrichmentItemToEnclosure/`,
+          assignEnrichmentItemApiObj
+        )
+        .then((res) => {
+          setRefreshSeed([]);
 
-        toastShadcn({
-          title: "Assignment Successful",
-          description: "Successfully assigned selected enrichment items ",
+          toastShadcn({
+            title: "Assignment Successful",
+            description: "Successfully assigned selected enrichment items ",
+          });
+          setEnrichmentItemAssignmentDialog(false);
+          setEnrichmentItemBulkAssignmentDialog(false);
+          setSelectedAvailableEnrichmentItems([]);
+        })
+        .catch((err) => {
+
+          toastShadcn({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description:
+              "An error has occurred while assigning enrichment items: \n" +
+              apiJson.error,
+          });
         });
-        setEnrichmentItemAssignmentDialog(false);
-        setEnrichmentItemBulkAssignmentDialog(false);
-        setSelectedAvailableEnrichmentItems([]);
-      } catch (error: any) {
-        // got error
-        toastShadcn({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "An error has occurred while assigning enrichment items: \n" +
-            apiJson.error,
-        });
-      }
+
     });
   };
 
