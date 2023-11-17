@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import beautifyText from "../../../hooks/beautifyText";
 import useApiJson from "../../../hooks/useApiJson";
 import Enclosure from "../../../models/Enclosure";
-import { useEffect, useState } from "react";
 import EnclosureSensorCard from "./EnclosureSensorCard";
-import beautifyText from "../../../hooks/beautifyText";
 
 interface EnclosureEnvironmentProps {
   curEnclosure: Enclosure;
@@ -20,13 +20,13 @@ function EnclosureEnvironment(
   const toastShadcn = useToast().toast;
   const [dataList, setDataList] = useState<any[]>([]);
 
-  useEffect(()=>{
+  useEffect(() => {
 
     apiJson.get(
       `http://localhost:3000/api/enclosure/getEnvironmentSensorsData/${curEnclosure.enclosureId}`
-    ).then(res=>{
+    ).then(res => {
       console.log("EnclosureEnvironment", res)
-      const sensorData : any = [];
+      const sensorData: any = [];
       for (const dat of res.environmentData) {
         sensorData.push({
           values: dat.sensorReadings.map(val => val.value),
@@ -34,15 +34,15 @@ function EnclosureEnvironment(
           unit: dat.sensorType == "TEMPERATURE" ? "°C" :
             dat.sensorType == "LIGHT" ? "lx" :
               dat.sensorType == "CAMERA" ? "approx. pax" :
-              dat.sensorType == "HUMIDITY" ? "RH":"",
+                dat.sensorType == "HUMIDITY" ? "RH" : "",
           type: beautifyText(dat.sensorType),
-          name : dat.sensorName
+          name: dat.sensorName
         })
       }
-      console.log("aa",sensorData)
+      console.log("aa", sensorData)
       setDataList(sensorData);
-    }).catch(err=>console.log(err));
-  },[curEnclosure])
+    }).catch(err => console.log(err));
+  }, [curEnclosure])
 
   return (
     <div>
@@ -59,17 +59,15 @@ function EnclosureEnvironment(
           >
             Manage Hub and Sensor Details
           </Button>
-          <br />
 
-          {/* <EnclosurePlantationList curEnclosure={curEnclosure} /> */}
         </div>
       )}
       {
         dataList.map(val => {
           return <EnclosureSensorCard
-          unit={val.unit}
-          type={val.type}
-          labels={val.labels}
+            unit={val.unit}
+            type={val.type}
+            labels={val.labels}
             values={val.values}
             name={val.name}
           ></EnclosureSensorCard>
