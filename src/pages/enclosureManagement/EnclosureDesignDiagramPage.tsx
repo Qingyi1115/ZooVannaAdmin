@@ -287,7 +287,13 @@ function EnclosureDesignDiagramPage() {
   };
 
   const resetDiagram = async () => {
-    loadDiagram(emptyDiagramJson);
+    // let tempDiagramJson = emptyDiagramJson
+    let emptyDiagramJsonWithDimensions = {
+      ...emptyDiagramJson,
+      width: curEnclosure.width * 100,
+      height: curEnclosure.length * 100,
+    };
+    loadDiagram(emptyDiagramJsonWithDimensions);
     await handleSave();
     setResetDiagramDialog(false);
   };
@@ -522,6 +528,16 @@ function EnclosureDesignDiagramPage() {
     setCurTotalWaterArea(tempTotalWaterArea);
   }
 
+  function clickFitToView() {
+    const fitToViewerButton = document.querySelector(
+      'button[name="fit-to-viewer"]'
+    ) as HTMLButtonElement;
+    if (fitToViewerButton) {
+      fitToViewerButton.click();
+    }
+    // click button to fit to view to canvas for design diagram
+  }
+
   function makeSelectedAreaLand() {
     const curSelectedLayerName = JSON.parse(JSON.stringify(store.getState()))[
       "react-planner"
@@ -552,6 +568,8 @@ function EnclosureDesignDiagramPage() {
       type: "LOAD_PROJECT",
       sceneJSON: tempScene,
     });
+
+    clickFitToView();
 
     updateTotalLandWaterArea();
   }
@@ -586,6 +604,8 @@ function EnclosureDesignDiagramPage() {
       type: "LOAD_PROJECT",
       sceneJSON: tempScene,
     });
+
+    clickFitToView();
 
     updateTotalLandWaterArea();
   }
@@ -685,7 +705,7 @@ function EnclosureDesignDiagramPage() {
             <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
           </div> */}
 
-        <div className="flex gap-20">
+        <div className="flex justify-between">
           <div className="flex flex-col gap-2">
             <div>
               <Button className="w-full" onClick={handleSave}>
@@ -705,16 +725,16 @@ function EnclosureDesignDiagramPage() {
           <div className="flex w-1/3 gap-2">
             <Table className="w-full">
               <TableHeader className="bg-whiten">
-                <TableRow>
+                {/* <TableRow>
                   <TableHead
                     colSpan={3}
                     className="text-center text-lg font-bold"
                   >
                     Area
                   </TableHead>
-                </TableRow>
+                </TableRow> */}
                 <TableRow>
-                  <TableHead></TableHead>
+                  <TableHead className="font-bold">Area</TableHead>
                   <TableHead>Current</TableHead>
                   <TableHead>Recommended</TableHead>
                 </TableRow>
@@ -754,6 +774,33 @@ function EnclosureDesignDiagramPage() {
               </div>
             </div>
           </div>
+          <div className="flex w-1/3 gap-2">
+            <Table className="w-full">
+              <TableHeader className="bg-whiten">
+                <TableRow>
+                  <TableHead className="font-bold"></TableHead>
+                  <TableHead>Current</TableHead>
+                  <TableHead>Recommended</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-bold">
+                    Plantation Coverage (in %)
+                  </TableCell>
+                  <TableCell>blo</TableCell>
+                  <TableCell>bla</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <div className="flex flex-col gap-2">
+              <div>
+                <Button className="w-full">
+                  Re-calculate Plantation Coverage
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -764,7 +811,7 @@ function EnclosureDesignDiagramPage() {
                   store={store}
                   catalog={MyCatalog}
                   width={size.width || 700}
-                  height={size.height || 900}
+                  height={size.height || 800}
                   plugins={plugins}
                   toolbarButtons={toolbarButtons}
                   stateExtractor={(state) => state.get("react-planner")}
