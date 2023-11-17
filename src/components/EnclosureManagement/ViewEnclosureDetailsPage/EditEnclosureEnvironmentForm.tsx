@@ -208,7 +208,7 @@ function EditEnclosureEnvironmentForm(
     const updateEnclosureEnclosureRequirements = async () => {
       try {
         const response = await apiJson.put(
-          "http://localhost:3000/api/enclosure/updateEnclosureEnvironment",
+          "http://localhost:3000/api/enclosure/updateEnclosureTerrainDistribution",
           newEnclosureRequirements
         );
         // success
@@ -284,7 +284,7 @@ function EditEnclosureEnvironmentForm(
             required={true}
             placeholder="e.g., 8"
             pattern={undefined}
-            value={waterArea}
+            value={waterArea || 0}
             setValue={setWaterArea}
             validateFunction={validateWaterArea}
           />
@@ -298,7 +298,7 @@ function EditEnclosureEnvironmentForm(
             required={true}
             placeholder="e.g., 8"
             pattern={undefined}
-            value={acceptableTempMin}
+            value={acceptableTempMin || 0}
             setValue={setAcceptableTempMin}
             validateFunction={validateMinTemperature}
           />
@@ -310,7 +310,7 @@ function EditEnclosureEnvironmentForm(
             required={true}
             placeholder="e.g., 8"
             pattern={undefined}
-            value={acceptableTempMax}
+            value={acceptableTempMax || 0}
             setValue={setAcceptableTempMax}
             validateFunction={validateMaxTemperature}
           />
@@ -324,7 +324,7 @@ function EditEnclosureEnvironmentForm(
             required={true}
             placeholder="e.g., 8"
             pattern={undefined}
-            value={acceptableHumidityMin}
+            value={acceptableHumidityMin || 0}
             setValue={setAcceptableHumidityMin}
             validateFunction={validateMinHumidity}
           />
@@ -336,7 +336,7 @@ function EditEnclosureEnvironmentForm(
             required={true}
             placeholder="e.g., 8"
             pattern={undefined}
-            value={acceptableHumidityMax}
+            value={acceptableHumidityMax || 0}
             setValue={setAcceptableHumidityMax}
             validateFunction={validateMaxHumidity}
           />
@@ -349,7 +349,7 @@ function EditEnclosureEnvironmentForm(
           required={true}
           placeholder="e.g., 12"
           pattern={undefined}
-          value={standOffBarrierDist}
+          value={standOffBarrierDist || 0}
           setValue={setStandOffBarrierDist}
           validateFunction={validateStandOffBarrierDist}
         />
