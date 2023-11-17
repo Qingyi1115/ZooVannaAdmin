@@ -12,16 +12,18 @@ import { useNavigate } from "react-router-dom";
 import beautifyText from "../../../hooks/beautifyText";
 import useApiJson from "../../../hooks/useApiJson";
 import Employee from "../../../models/Employee";
+import Enclosure from "../../../models/Enclosure";
 import Keeper from "../../../models/Keeper";
 
-interface AllEventEmployeesDatatableProps {
-  zooEventId: number;
+interface AllEnclosureEmployeesDatatableProps {
+  curEnclosure: Enclosure;
 }
 
-function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
+function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatableProps) {
   const apiJson = useApiJson();
 
-  const { zooEventId } = props;
+  const { curEnclosure } = props;
+  const enclosureId = curEnclosure.enclosureId;
 
   let employee: Employee = {
     employeeId: -1,
@@ -52,62 +54,100 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
   const [assignedEmployees, setAssignedEmployees] = useState<Employee[]>([]);
   const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
   const [refreshSeed, setRefreshSeed] = useState<any>(0);
+  const [currentEnclosure, setCurrentEnclosure] = useState<Enclosure>();
 
   useEffect(() => {
-    apiJson.get(
-      `http://localhost:3000/api/zooEvent/getKeepersForZooEvent/${zooEventId}`).catch(e => console.log(e)).then(res => {
-        // const allStaffs: Employee[] = []
-        // for (const staff of res["generalStaffs"]) {
-        //   // console.log(staff);
-        //   if (staff.generalStaffType == "ZOO_MAINTENANCE") {
-        //     let emp = staff.employee;
-        //     staff.employee = undefined;
-        //     emp["generalStaff"] = staff
-        //     const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
-        //     console.log(maintainedFacility);
-        //     emp.currentlyAssigned = (maintainedFacility !== undefined);
-        //     allStaffs.push(emp)
-        //   }
-
-        // }
-        console.log("AddEventKeepers", res);
-        setAvailableEmployees(res["availiableKeepers"].map(keeper => {
-          const emp = keeper.employee
-          keeper.employee = undefined
-          emp.keeper = keeper;
-          emp.keeperType = keeper.keeperType;
-          emp.currentlyAssigned = false;
-          return emp;
-        })
-          // .concat(res["currentKeepers"].map(keeper => {
-          //   const emp = keeper.employee
-          //   keeper.employee = undefined
-          //   emp.keeper = keeper;
-          //   emp.keeperType = keeper.keeperType;
-          //   emp.currentlyAssigned = true;
-          //   return emp;
-          // }))
+    const wrapper = async () => {
+      try {
+        const allEmp = await apiJson.get(
+          `http://localhost:3000/api/employee/getAllKeepers`
         );
 
-        setAssignedEmployees(res["currentKeepers"].map(keeper => {
-          const emp = keeper.employee
-          keeper.employee = undefined
-          emp.keeper = keeper;
-          emp.keeperType = keeper.keeperType;
-          emp.currentlyAssigned = false;
-          return emp;
-        })
-          // .concat(res["availableKeepers"].map(keeper => {
-          //   const emp = keeper.employee
-          //   keeper.employee = undefined
-          //   emp.keeper = keeper;
-          //   emp.keeperType = keeper.keeperType;
-          //   emp.currentlyAssigned = true;
-          //   return emp;
-          // }))
-        );
-      });
-  }, [refreshSeed]);
+        console.log("ViewAllEnclosureKeepers", curEnclosure, allEmp)
+        setCurrentEnclosure(curEnclosure);
+        const assignedStaff = [];
+        const availableStaff = [];
+
+        for (const keeper of curEnclosure.keepers) {
+          let emp = { ...keeper.employee };
+          emp["keeper"] = { ...keeper, employee: undefined };
+          emp.currentlyAssigned = true;
+          assignedStaff.push(emp);
+        }
+        for (const keeper of allEmp.keepers) {
+          if (!assignedStaff.find(emp => emp.employeeId == keeper.employeeId)) {
+            let emp = { ...keeper.employee };
+            emp["keeper"] = { ...keeper, employee: undefined };
+            keeper.currentlyAssigned = false;
+            availableStaff.push(emp);
+          }
+        }
+        console.log("availableEmployees", availableStaff)
+        setAssignedEmployees(assignedStaff);
+        setAvailableEmployees(availableStaff);
+
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    wrapper();
+  }, [curEnclosure]);
+
+  // useEffect(() => {
+  //   apiJson.get(
+  //     `http://localhost:3000/api/zooEvent/getKeepersForZooEvent/${enclosureId}`).catch(e => console.log(e)).then(res => {
+  //       // const allStaffs: Employee[] = []
+  //       // for (const staff of res["generalStaffs"]) {
+  //       //   // console.log(staff);
+  //       //   if (staff.generalStaffType == "ZOO_MAINTENANCE") {
+  //       //     let emp = staff.employee;
+  //       //     staff.employee = undefined;
+  //       //     emp["generalStaff"] = staff
+  //       //     const maintainedFacility: Facility = emp.generalStaff.maintainedFacilities.find((facility: Facility) => facility.facilityId == facilityId);
+  //       //     console.log(maintainedFacility);
+  //       //     emp.currentlyAssigned = (maintainedFacility !== undefined);
+  //       //     allStaffs.push(emp)
+  //       //   }
+
+  //       // }
+  //       console.log("AddEventKeepers", res);
+  //       setAvailableEmployees(res["availiableKeepers"].map(keeper => {
+  //         const emp = keeper.employee
+  //         keeper.employee = undefined
+  //         emp.keeper = keeper;
+  //         emp.keeperType = keeper.keeperType;
+  //         emp.currentlyAssigned = false;
+  //         return emp;
+  //       })
+  //         // .concat(res["currentKeepers"].map(keeper => {
+  //         //   const emp = keeper.employee
+  //         //   keeper.employee = undefined
+  //         //   emp.keeper = keeper;
+  //         //   emp.keeperType = keeper.keeperType;
+  //         //   emp.currentlyAssigned = true;
+  //         //   return emp;
+  //         // }))
+  //       );
+
+  //       setAssignedEmployees(res["currentKeepers"].map(keeper => {
+  //         const emp = keeper.employee
+  //         keeper.employee = undefined
+  //         emp.keeper = keeper;
+  //         emp.keeperType = keeper.keeperType;
+  //         emp.currentlyAssigned = false;
+  //         return emp;
+  //       })
+  //         // .concat(res["availableKeepers"].map(keeper => {
+  //         //   const emp = keeper.employee
+  //         //   keeper.employee = undefined
+  //         //   emp.keeper = keeper;
+  //         //   emp.keeperType = keeper.keeperType;
+  //         //   emp.currentlyAssigned = true;
+  //         //   return emp;
+  //         // }))
+  //       );
+  //     });
+  // }, [refreshSeed]);
 
   const assignKeeper = async () => {
     const selectedEmployeeName = selectedEmployee.employeeName;
@@ -115,10 +155,10 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
     try {
       const values = {
         employeeIds: [selectedEmployee.employeeId,],
-        zooEventIds: [zooEventId,]
+        enclosureId: enclosureId
       };
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/zooEvent/assignZooEventKeeper`,
+        `http://localhost:3000/api/enclosure/assignKeepersToEnclosure`,
         values).then(res => {
           toastShadcn({
             // variant: "destructive",
@@ -161,10 +201,10 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
 
     try {
       const responseJson = await apiJson.put(
-        `http://localhost:3000/api/zooEvent/removeKeeperfromZooEvent`,
+        `http://localhost:3000/api/enclosure/removeKeepersFromEnclosure`,
         {
           employeeIds: [selectedEmployee.employeeId,],
-          zooEventIds: [zooEventId]
+          enclosureId: [enclosureId]
         });
       setRefreshSeed([]);
       toastShadcn({
@@ -238,7 +278,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
           <Button
             variant={"outline"}
             className="mr-2" onClick={() => {
-              navigate(`/zooevent/viewzooeventdetails/${zooEventId}/assignedEmployees`, { replace: true });
+              navigate(`/zooevent/viewzooeventdetails/${enclosureId}/assignedEmployees`, { replace: true });
               navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
             }}>
             <HiEye className="mx-auto" />
@@ -405,10 +445,10 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
 
         const values = {
           employeeIds: [employeeId],
-          zooEventIds: [zooEventId,]
+          enclosureId: enclosureId
         };
         const responseJson = await apiJson.put(
-          `http://localhost:3000/api/zooEvent/assignZooEventKeeper`,
+          `http://localhost:3000/api/enclosure/assignKeepersToEnclosure`,
           values).then(res => {
             toastShadcn({
               // variant: "destructive",
@@ -461,10 +501,10 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
     selectedAssignedEmployees.forEach(async (employeeId) => {
       try {
         const responseJson = await apiJson.put(
-          `http://localhost:3000/api/zooEvent/removeKeeperfromZooEvent`,
+          `http://localhost:3000/api/enclosure/removeKeepersFromEnclosure`,
           {
             employeeIds: [employeeId,],
-            zooEventIds: [zooEventId]
+            enclosureId: [enclosureId]
           });
         setRefreshSeed([]);
         toastShadcn({
@@ -516,7 +556,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
           {/* <Button
             variant={"outline"}
             className="mr-2" onClick={()=>{ 
-              navigate(`/assetzooEvent/viewzooEventdetails/${zooEventId}/manageMaintenance`, { replace: true });
+              navigate(`/assetzooEvent/viewzooEventdetails/${enclosureId}/manageMaintenance`, { replace: true });
               navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
             }}>
             <HiPlus className="mx-auto" />
@@ -723,4 +763,4 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
   );
 }
 
-export default AllEventEmployeesDatatable;
+export default AllEnclosureEmployeesDatatable;

@@ -41,7 +41,7 @@ interface Enclosure {
   plantation?: Plantation;
   zooEvents?: ZooEvent[];
   facility?: Facility;
-  Keeper?: Keeper[];
+  keepers?: Keeper[];
 }
 
 export default Enclosure;

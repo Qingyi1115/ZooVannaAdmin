@@ -43,7 +43,7 @@ let emptyEnclosure: Enclosure = {
   //   plantation: null,
   zooEvents: [],
   //   facility: null,
-  Keeper: [],
+  keepers: [],
   standOffBarrierDist: null,
   designDiagramJsonUrl: null
 };
