@@ -7,7 +7,6 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import { PrimeReactProvider } from "primereact/api";
 // import "@fullcalendar/daygrid/main.css";
 
-import EnclosureContextProvider from "./context/EnclosureContext";
 
 import MainLayout from "./components/MainLayout";
 import HomePage from "./pages/HomePage";
@@ -58,10 +57,10 @@ import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAn
 import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDetailsPage";
 
 // Enclosure manage pages
-import ViewAllEnclosuresPage from "./pages/enclosureManagement/ViewAllEnclosuresPage";
-import ViewEnclosureDetailsPage from "./pages/enclosureManagement/ViewEnclosureDetailsPage";
 import EnclosureContextLayout from "./components/EnclosureManagement/EnclosureContextLayout";
 import EnclosureDesignDiagramPage from "./pages/enclosureManagement/EnclosureDesignDiagramPage";
+import ViewAllEnclosuresPage from "./pages/enclosureManagement/ViewAllEnclosuresPage";
+import ViewEnclosureDetailsPage from "./pages/enclosureManagement/ViewEnclosureDetailsPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -144,13 +143,16 @@ import CreateNewAnnouncementPage from "./pages/announcement/CreateNewAnnouncemen
 import EditAnnouncementPage from "./pages/announcement/EditAnnouncementPage";
 import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsPage";
 import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
-import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPage";
-import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
-import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
-import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
-import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSessionDetailsPage";
-import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
 import ViewAllFacilityCrowdLevelPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilityCrowdLevelPage";
+import CreateNewEnclosurePage from "./pages/enclosureManagement/CreateNewEnclosurePage";
+import EditEnclosureEnvironmentPage from "./pages/enclosureManagement/EditEnclosureEnvironmentPage";
+import EditEnclosurePage from "./pages/enclosureManagement/EditEnclosurePage";
+import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
+import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
+import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSessionDetailsPage";
+import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPage";
+import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
+import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
 
 function App() {
   const { state } = useAuthContext();
@@ -546,6 +548,12 @@ function App() {
                     user ? <ViewAllEnclosuresPage /> : <Navigate to="/login" />
                   }
                 />
+                <Route
+                  path="/enclosure/createnewenclosure"
+                  element={
+                    user ? <CreateNewEnclosurePage /> : <Navigate to="/login" />
+                  }
+                />
 
                 <Route element={<EnclosureContextLayout />}>
                   {/* These share a context containing currently selected enclosure */}
@@ -577,6 +585,18 @@ function App() {
                       ) : (
                         <Navigate to="/login" />
                       )
+                    }
+                  />
+                  <Route
+                    path="/enclosure/editenclosurebasicinfo/:enclosureId"
+                    element={
+                      user ? <EditEnclosurePage /> : <Navigate to="/login" />
+                    }
+                  />
+                  <Route
+                    path="/enclosure/editenclosurenvironment/:enclosureId"
+                    element={
+                      user ? <EditEnclosureEnvironmentPage /> : <Navigate to="/login" />
                     }
                   />
                 </Route>

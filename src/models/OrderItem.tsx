@@ -1,8 +1,7 @@
-
 interface OrderItem {
   orderItemId: number;
   verificationCode: string;
-  isRedeemed: boolean;
+  isRedeemed: number;
   timeRedeemed?: Date | null;
 
   listingId: number;
