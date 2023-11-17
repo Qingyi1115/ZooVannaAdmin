@@ -141,7 +141,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
             </Button>
 
         )} */}
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || employee.planningStaff?.plannerType == "CURATOR") && (
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -168,7 +168,7 @@ function AllHubDatatable(props: AllHubDatatableProps) {
           }}
         />
       </span>
-      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || employee.planningStaff?.plannerType == "CURATOR") && (
 
         <Button className="mr-2" onClick={() => {
           navigate(`/assetfacility/viewfacilitydetails/${curFacility.facilityId}/hubs`, { replace: true });

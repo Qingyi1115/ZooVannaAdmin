@@ -26,7 +26,7 @@ function EnclosureSafety(props: EnclosureSafetyProps) {
   return (
     <div>
 
-      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && (
         <Button className="mr-2" onClick={() => {
           navigate(`/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/safety`, { replace: true });
           navigate(`/enclosure/editenclosuresafety/${curEnclosure.enclosureId}`);

@@ -11,9 +11,9 @@ import { HiCheck, HiEye, HiMinus, HiPlus, HiX } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import beautifyText from "../../../hooks/beautifyText";
 import useApiJson from "../../../hooks/useApiJson";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import Employee from "../../../models/Employee";
 import Enclosure from "../../../models/Enclosure";
-import Keeper from "../../../models/Keeper";
 
 interface AllEnclosureEmployeesDatatableProps {
   curEnclosure: Enclosure;
@@ -26,7 +26,7 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
   const { curEnclosure, setRefreshSeed } = props;
   const enclosureId = curEnclosure.enclosureId;
 
-  let employee: Employee = {
+  let emptyEmployee: Employee = {
     employeeId: -1,
     employeeName: "",
     employeeEmail: "",
@@ -41,7 +41,7 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
 
   const toast = useRef<Toast>(null);
 
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee>(employee);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee>(emptyEmployee);
   const [selectedAssignedEmployees, setSelectedAssignedEmployees] = useState<number[]>([]);
   const [selectedAvailableEmployees, setSelectedAvailableEmployees] = useState<number[]>([]);
   const dt = useRef<DataTable<Employee[]>>(null);
@@ -51,7 +51,7 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
   const [employeeBulkAssignmentDialog, setBulkAssignmentDialog] = useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
-
+  const employee = useAuthContext().state.user?.employeeData;
   const [assignedEmployees, setAssignedEmployees] = useState<Employee[]>([]);
   const [availableEmployees, setAvailableEmployees] = useState<Employee[]>([]);
   const [currentEnclosure, setCurrentEnclosure] = useState<Enclosure>();
@@ -251,12 +251,15 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
           }}
         />
       </span>
-      <Button
-        onClick={showBulkAssignment}
-        disabled={availableEmployees.length == 0}
-      >
-        <HiPlus />Assign Keepers
-      </Button>
+      {(employee.superAdmin ||
+        employee.planningStaff?.plannerType == "CURATOR") && (
+          <Button
+            onClick={showBulkAssignment}
+            disabled={availableEmployees.length == 0}
+          >
+            <HiPlus />Assign Keepers
+          </Button>
+        )}
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
   );
@@ -571,10 +574,13 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
             globalFilter={globalFilter}
             header={header}
           >
-            <Column
-              body={assignedEmployeeCheckbox}
-              header={allAssignedEmployeesCheckbox}
-            ></Column>
+            {(employee.superAdmin ||
+              employee.planningStaff?.plannerType == "CURATOR") && (
+                <Column
+                  body={assignedEmployeeCheckbox}
+                  header={allAssignedEmployeesCheckbox}
+                ></Column>
+              )}
             <Column
               field="employeeId"
               header="ID"
@@ -613,12 +619,15 @@ function AllEnclosureEmployeesDatatable(props: AllEnclosureEmployeesDatatablePro
               exportable={false}
             ></Column>
           </DataTable>
-          <Button
-            variant={"destructive"}
-            onClick={confirmEmployeeRemoval}
-            disabled={selectedAssignedEmployees.length == 0}>
-            <HiMinus />Remove Selected Keepers
-          </Button>
+          {(employee.superAdmin ||
+            employee.planningStaff?.plannerType == "CURATOR") && (
+              <Button
+                variant={"destructive"}
+                onClick={confirmEmployeeRemoval}
+                disabled={selectedAssignedEmployees.length == 0}>
+                <HiMinus />Remove Selected Keepers
+              </Button>
+            )}
         </div>
         <Dialog
           visible={employeeAssignmentDialog}

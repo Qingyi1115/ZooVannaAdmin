@@ -1,23 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import Enclosure from "../../models/Enclosure";
 import { useToast } from "@/components/ui/use-toast";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useEnclosureContext } from "../../hooks/useEnclosureContext";
 
 // react planner stuff
-import { createRoot } from "react-dom/client";
-import { SizeMe } from "react-sizeme";
-import Immutable, { Map } from "immutable";
-import immutableDevtools from "immutable-devtools";
-import { createStore } from "redux";
+import { Map } from "immutable";
 import { Provider } from "react-redux";
+import { SizeMe } from "react-sizeme";
+import { createStore } from "redux";
 
 import MyCatalog from "../../../reactplannerassets/catalog/mycatalog";
 import ToolbarScreenshotButton from "../../../reactplannerassets/ui/toolbar-screenshot-button";
@@ -28,15 +23,16 @@ import areapolygon from "area-polygon";
 
 import {
   Models as PlannerModels,
+  Plugins as PlannerPlugins,
   reducer as PlannerReducer,
   ReactPlannerWrapper,
-  Plugins as PlannerPlugins,
 } from "../../../reactplanner-src/index";
 
 // end react planner import
 
 import { Dialog } from "primereact/dialog";
 import { HiCheck, HiX } from "react-icons/hi";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 // test data
 const emptyDiagramJson = {
@@ -156,7 +152,7 @@ function EnclosureDesignDiagramPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
-
+  const employee = useAuthContext().state.user?.employeeData;
   const { state, dispatch } = useEnclosureContext();
 
   // const { enclosureId } = useParams<{ enclosureId: string }>();
@@ -384,16 +380,19 @@ function EnclosureDesignDiagramPage() {
         </div>
 
         {/* Body */}
-        <div className="flex gap-6">
-          <div>
-            <Button onClick={handleSave}>Save Diagram</Button>
-          </div>
-          <div>
-            <Button variant={"destructive"} onClick={confirmRemoveAnimal}>
-              Delete (Reset) Diagram
-            </Button>
-          </div>
-        </div>
+        {(employee.superAdmin ||
+          employee.planningStaff?.plannerType == "CURATOR") && (
+            <div className="flex gap-6">
+              <div>
+                <Button onClick={handleSave}>Save Diagram</Button>
+              </div>
+              <div>
+                <Button variant={"destructive"} onClick={confirmRemoveAnimal}>
+                  Delete (Reset) Diagram
+                </Button>
+              </div>
+            </div>
+          )}
         <div>
           <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
         </div>

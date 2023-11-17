@@ -139,7 +139,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
             </Button>
         )} */}
 
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || employee.planningStaff?.plannerType == "CURATOR") && (
           <Button
             variant={"destructive"}
             className="mr-2"
@@ -175,7 +175,7 @@ function AllSensorDatatable(props: AllSensorDatatableProps) {
           }}
         />
       </span>
-      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || employee.planningStaff?.plannerType == "CURATOR") && (
         <Button className="mr-2" onClick={() => {
           navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/sensors`, { replace: true });
           navigate(`/assetfacility/createsensor/${curHub.hubProcessorId}`);

@@ -19,6 +19,7 @@ import {
   HiCheck,
   HiX
 } from "react-icons/hi";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 
 interface EnclosureEnrichmentItemDatatableProps {
@@ -78,7 +79,7 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
   const dt = useRef<DataTable<EnrichmentItem[]>>(null);
 
   const toastShadcn = useToast().toast;
-
+  const employee = useAuthContext().state.user?.employeeData;
   function calculateAge(dateOfBirth: Date): string {
     const dob = dateOfBirth;
     const todayDate = new Date();
@@ -185,12 +186,15 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       {/* <h4 className="m-1">Manage Individuals/Groups </h4> */}
-      <Button
-        onClick={() => setEnrichmentItemBulkAssignmentDialog(true)}
-        disabled={availableEnrichmentItems.length == 0}
-      >
-        Add Enrichment Item To Enclosure
-      </Button>
+      {(employee.superAdmin ||
+        employee.planningStaff?.plannerType == "CURATOR") && (
+          <Button
+            onClick={() => setEnrichmentItemBulkAssignmentDialog(true)}
+            disabled={availableEnrichmentItems.length == 0}
+          >
+            Add Enrichment Item To Enclosure
+          </Button>
+        )}
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -409,13 +413,16 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
           sortable
           style={{ minWidth: "5rem" }}
         ></Column>
-        <Column
-          body={actionBodyTemplate}
-          header="Actions"
-          frozen
-          alignFrozen="right"
-          exportable={false}
-        ></Column>
+        {(employee.superAdmin ||
+          employee.planningStaff?.plannerType == "CURATOR") && (
+            <Column
+              body={actionBodyTemplate}
+              header="Actions"
+              frozen
+              alignFrozen="right"
+              exportable={false}
+            ></Column>
+          )}
       </DataTable>{" "}
       <Dialog
         visible={removeEnrichmentItemDialog}
