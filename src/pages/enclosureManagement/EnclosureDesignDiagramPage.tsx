@@ -33,10 +33,30 @@ import {
   Plugins as PlannerPlugins,
 } from "../../../reactplanner-src/index";
 
+// end react planner import
+
+import { Dialog } from "primereact/dialog";
+import { HiCheck, HiX } from "react-icons/hi";
+
 // test data
 const emptyDiagramJson = {
   unit: "cm",
-  layers: {},
+  layers: {
+    "layer-1": {
+      id: "layer-1",
+      altitude: 0,
+      order: 0,
+      opacity: 1,
+      name: "default",
+      visible: true,
+      vertices: {},
+      lines: {},
+      holes: {},
+      areas: {},
+      items: {},
+      selected: { vertices: [], lines: [], holes: [], areas: [], items: [] },
+    },
+  },
   grids: {
     h1: {
       id: "h1",
@@ -55,7 +75,7 @@ const emptyDiagramJson = {
       },
     },
   },
-  selectedLayer: null,
+  selectedLayer: "layer-1",
   groups: {},
   width: 3000,
   height: 2000,
@@ -211,6 +231,34 @@ function EnclosureDesignDiagramPage() {
     });
   }
 
+  // start from scratch stuff
+  const [resetDiagramDialog, setResetDiagramDialog] = useState<boolean>(false);
+  const confirmRemoveAnimal = () => {
+    setResetDiagramDialog(true);
+  };
+
+  const hideResetDiagramDialog = () => {
+    setResetDiagramDialog(false);
+  };
+
+  const resetDiagram = async () => {
+    loadDiagram(emptyDiagramJson);
+    await handleSave();
+  };
+
+  const resetDiagramDialogFooter = (
+    <React.Fragment>
+      <Button onClick={hideResetDiagramDialog}>
+        <HiX className="mr-2" />
+        No
+      </Button>
+      <Button variant={"destructive"} onClick={resetDiagram}>
+        <HiCheck className="mr-2" />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
+  // end new project stuff
   function newProject() {
     store.dispatch({
       type: "NEW_PROJECT",
@@ -336,22 +384,20 @@ function EnclosureDesignDiagramPage() {
         </div>
 
         {/* Body */}
-        {/* <Button>View Design Diagram</Button> */}
-        <div>
-          <Button onClick={handleSave}>Test Handle Save</Button>
+        <div className="flex gap-6">
+          <div>
+            <Button onClick={handleSave}>Save Diagram</Button>
+          </div>
+          <div>
+            <Button variant={"destructive"} onClick={confirmRemoveAnimal}>
+              Delete (Reset) Diagram
+            </Button>
+          </div>
         </div>
         <div>
           <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
         </div>
 
-        {/* <div>
-          <Button onClick={newProject}>New Project</Button>
-        </div> */}
-        <div>
-          <Button onClick={() => loadDiagram(emptyDiagramJson)}>
-            Test Handle Load Empty Diagram
-          </Button>
-        </div>
         <div>
           <Provider store={store}>
             <SizeMe>
@@ -370,6 +416,28 @@ function EnclosureDesignDiagramPage() {
           </Provider>
         </div>
       </div>
+      <Dialog
+        visible={resetDiagramDialog}
+        style={{ width: "32rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header="Confirm"
+        modal
+        footer={resetDiagramDialogFooter}
+        onHide={hideResetDiagramDialog}
+      >
+        <div className="confirmation-content">
+          <i
+            className="pi pi-exclamation-triangle mr-3"
+            style={{ fontSize: "2rem" }}
+          />
+          <span>
+            Are you sure you want to reset the enclosure diagram?
+            <br />
+            This will remove all elements and designs already added to this
+            enclosure's diagram.
+          </span>
+        </div>
+      </Dialog>
     </div>
   );
 }
