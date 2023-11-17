@@ -16,8 +16,6 @@ import { useAuthContext } from "../../../hooks/useAuthContext";
 import Employee from "../../../models/Employee";
 import ManageOperationStaffPage from "../MaintenanceOperations/ManageOperationStaffPage";
 
-
-
 function ViewFacilityDetailsPage() {
   const apiJson = useApiJson();
   const { facilityId } = useParams<{ facilityId: string }>();
@@ -50,11 +48,12 @@ function ViewFacilityDetailsPage() {
     facilityName: "",
     xCoordinate: 0,
     yCoordinate: 0,
-    facilityDetail: "",
+    facilityDetail: "enclosure",
     facilityDetailJson: undefined,
     isSheltered: false,
     hubProcessors: [],
-    showOnMap: false
+    showOnMap: false,
+    imageUrl: ""
   };
 
   const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
@@ -71,6 +70,7 @@ function ViewFacilityDetailsPage() {
           `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
           { includes: ["hubProcessors"] }
         );
+        console.log("ViewFacilityDetailsPage ", responseJson)
         for (const processor of responseJson.facility.hubProcessors) {
           if (processor.lastDataUpdate) {
             processor.lastDataUpdateString = new Date(processor.lastDataUpdate).toLocaleString();
@@ -99,9 +99,14 @@ function ViewFacilityDetailsPage() {
           <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
-          <span className="self-center text-lg text-graydark">
-            View Facility Details
-          </span>
+          {curFacility.facilityDetail != "enclosure" ?
+            <span className="self-center text-lg text-graydark">
+              View Facility Details
+            </span>
+            :
+            <span className="self-center text-lg text-graydark">
+              Enclosure Details
+            </span>}
           <Button disabled className="invisible">
             Back
           </Button>
@@ -117,13 +122,16 @@ function ViewFacilityDetailsPage() {
           className="w-full"
         >
           <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <TabsTrigger value="facilityDetails">Details</TabsTrigger>
+            {curFacility.facilityDetail != "enclosure" && <TabsTrigger value="facilityDetails">Details</TabsTrigger>}
 
             <TabsTrigger value="hubs">Hubs</TabsTrigger>
             {curFacility.facilityDetail == "inHouse" && <TabsTrigger value="facilityLog">Facility Logs</TabsTrigger>}
             {curFacility.facilityDetail == "inHouse" && (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <TabsTrigger value="manageMaintenance">Maintenance Staff</TabsTrigger>}
             {curFacility.facilityDetail == "inHouse" && (employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && <TabsTrigger value="manageOperations">Operations Staff</TabsTrigger>}
-            <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
+            {
+              curFacility.facilityDetail != "enclosure" && <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
+            }
+
           </TabsList>
           <TabsContent value="facilityDetails">
             <div className="relative flex flex-col">
@@ -148,9 +156,12 @@ function ViewFacilityDetailsPage() {
               <ManageOperationStaffPage />
             </TabsContent>
           )}
-          <TabsContent value="customerReport">
-            <AllCustomerReportsDatatableByFacility curFacility={curFacility} />
-          </TabsContent>
+          {
+            curFacility.facilityDetail != "enclosure" &&
+            (<TabsContent value="customerReport">
+              <AllCustomerReportsDatatableByFacility curFacility={curFacility} />
+            </TabsContent>)
+          }
         </Tabs>
       </div>
     </div>

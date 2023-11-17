@@ -12,6 +12,7 @@ import { HiPencil } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
 import Facility from "src/models/Facility";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import beautifyText from "../../../../hooks/beautifyText";
 
 interface FacilityDetailsProps {
   curFacility: Facility;
@@ -97,7 +98,10 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               Owner Type
             </TableCell>
-            <TableCell>{curFacility.facilityDetail == "inHouse" ? "In-house" : "Third-party"}</TableCell>
+            <TableCell>
+              {curFacility.facilityDetail == "inHouse" ? "In-house" :
+                curFacility.facilityDetail == "thirdParty" ? "Third-party" :
+              beautifyText(curFacility.facilityDetail)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
