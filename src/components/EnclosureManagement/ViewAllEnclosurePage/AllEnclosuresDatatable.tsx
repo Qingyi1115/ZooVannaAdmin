@@ -1,35 +1,19 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { classNames } from "primereact/utils";
-import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 // import { Toast } from "primereact/toast";
-import { FileUpload } from "primereact/fileupload";
-import { Rating } from "primereact/rating";
-import { Toolbar } from "primereact/toolbar";
-import { InputTextarea } from "primereact/inputtextarea";
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { Tag } from "primereact/tag";
 
-import Species from "../../../models/Species";
+import { HiCheck, HiEye, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../../hooks/useApiJson";
-import { ColumnGroup } from "primereact/columngroup";
-import { Row } from "primereact/row";
-import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 
 import { Button } from "@/components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import Animal from "../../../models/Animal";
+import { useNavigate } from "react-router-dom";
 import {
-  AcquisitionMethod,
-  AnimalGrowthStage,
-  AnimalSex,
-  EnclosureStatus,
+  EnclosureStatus
 } from "../../../enums/Enumurated";
 import Enclosure from "../../../models/Enclosure";
 
@@ -116,7 +100,7 @@ function AllEnclosuresDatatable() {
       try {
         const responseJson = await apiJson.del(
           "http://localhost:3000/api/enclosure/deleteEnclosure/" +
-            selectedEnclosure.enclosureId
+          selectedEnclosure.enclosureId
         );
 
         toastShadcn({
@@ -183,6 +167,17 @@ function AllEnclosuresDatatable() {
     );
   };
 
+  const imageBodyTemplate = (rowData: Enclosure) => {
+    return (
+      (rowData.facility ?
+        <img
+          src={"http://localhost:3000/" + rowData.facility.imageUrl}
+          alt={rowData.name}
+          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+        /> : "-")
+    );
+  };
+
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h4 className="m-1">Manage Enclosures</h4>
@@ -223,16 +218,16 @@ function AllEnclosuresDatatable() {
         globalFilter={globalFilter}
         header={header}
       >
-        {/* <Column
-    field="imageUrl"
-    header="Image"
-    frozen
-    body={imageBodyTemplate}
-    style={{ minWidth: "6rem" }}
-  ></Column> */}
         <Column
-          field="animalCode"
-          header="Code"
+          field="imageUrl"
+          header="Image"
+          frozen
+          body={imageBodyTemplate}
+          style={{ minWidth: "6rem" }}
+        ></Column>
+        <Column
+          field="enclosureId"
+          header="ID"
           sortable
           style={{ minWidth: "4rem" }}
         ></Column>
