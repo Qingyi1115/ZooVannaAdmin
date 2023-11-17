@@ -44,6 +44,8 @@ let emptyEnclosure: Enclosure = {
   zooEvents: [],
   //   facility: null,
   Keeper: [],
+  standOffBarrierDist: null,
+  designDiagramJsonUrl: null
 };
 
 function AllEnclosuresDatatable() {
