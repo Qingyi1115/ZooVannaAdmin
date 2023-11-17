@@ -409,7 +409,13 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
           sortable
           style={{ minWidth: "5rem" }}
         ></Column>
-
+        <Column
+          body={actionBodyTemplate}
+          header="Actions"
+          frozen
+          alignFrozen="right"
+          exportable={false}
+        ></Column>
       </DataTable>{" "}
       <Dialog
         visible={removeEnrichmentItemDialog}
@@ -516,13 +522,6 @@ function EnclosureEnrichmentItemDatatable(props: EnclosureEnrichmentItemDatatabl
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
-            {/* <Column
-              body={availableActionBodyTemplate}
-              header="Actions"
-              frozen
-              alignFrozen="right"
-              exportable={false}
-            ></Column> */}
           </DataTable>
         </div>
       </Dialog>
