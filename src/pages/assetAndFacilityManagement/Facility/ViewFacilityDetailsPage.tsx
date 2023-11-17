@@ -52,7 +52,8 @@ function ViewFacilityDetailsPage() {
     facilityDetailJson: undefined,
     isSheltered: false,
     hubProcessors: [],
-    showOnMap: false
+    showOnMap: false,
+    imageUrl: ""
   };
 
   const [curFacility, setCurFacility] = useState<Facility>(emptyFacility);
@@ -69,7 +70,7 @@ function ViewFacilityDetailsPage() {
           `http://localhost:3000/api/assetFacility/getFacility/${facilityId}`,
           { includes: ["hubProcessors"] }
         );
-        console.log("ViewFacilityDetailsPage ",responseJson)
+        console.log("ViewFacilityDetailsPage ", responseJson)
         for (const processor of responseJson.facility.hubProcessors) {
           if (processor.lastDataUpdate) {
             processor.lastDataUpdateString = new Date(processor.lastDataUpdate).toLocaleString();
@@ -98,9 +99,14 @@ function ViewFacilityDetailsPage() {
           <Button variant={"outline"} type="button" onClick={() => navigate(-1)} className="">
             Back
           </Button>
-          <span className="self-center text-lg text-graydark">
-            View Facility Details
-          </span>
+          {curFacility.facilityDetail != "enclosure" ?
+            <span className="self-center text-lg text-graydark">
+              View Facility Details
+            </span>
+            :
+            <span className="self-center text-lg text-graydark">
+              Enclosure Details
+            </span>}
           <Button disabled className="invisible">
             Back
           </Button>
@@ -125,7 +131,7 @@ function ViewFacilityDetailsPage() {
             {
               curFacility.facilityDetail != "enclosure" && <TabsTrigger value="customerReport">Customer Reports</TabsTrigger>
             }
-            
+
           </TabsList>
           <TabsContent value="facilityDetails">
             <div className="relative flex flex-col">
@@ -153,7 +159,7 @@ function ViewFacilityDetailsPage() {
           {
             curFacility.facilityDetail != "enclosure" &&
             (<TabsContent value="customerReport">
-            <AllCustomerReportsDatatableByFacility curFacility={curFacility} />
+              <AllCustomerReportsDatatableByFacility curFacility={curFacility} />
             </TabsContent>)
           }
         </Tabs>
