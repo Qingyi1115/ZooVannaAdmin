@@ -111,13 +111,25 @@ const EnclosureSensorCard: React.FC<LineChartProps> = ({
         <div className="flex h-full flex-col items-center justify-center rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
           <h2 className="pb-3 text-center text-xl font-semibold">
             {type}
-          </h2>
-          <h1 className="pb-4 text-center text-6xl font-semibold">
-            {Math.round(sum * 100) / 100}<span className="text-s">{" " + unit}</span> 
-          </h1>
-          <p className="text-s pb-3 text-center">
-            from {startDateFormatted} to {endDateFormatted}
-          </p>
+              </h2>
+              {
+                sum ? (
+                  <div>
+                    <h1 className="pb-4 text-center text-6xl font-semibold">
+                      {Math.round(sum * 100) / 100}<span className="text-s">{" " + unit}</span> 
+                    </h1>
+                    
+                    <p className="text-s pb-3 text-center">
+                      from {startDateFormatted} to {endDateFormatted}
+                    </p>
+                  </div>
+                ): (
+                    
+                  <h1 className="pb-4 text-center text-6xl font-semibold">
+                    No Data! 
+                  </h1>
+                )
+            }
         </div>
       </div>
       {/* <h2 className="pb-3 text-xl font-semibold">Revenue</h2> */}
