@@ -22,10 +22,12 @@ function EnclosurePlantationList(props: EnclosurePlantationListProps) {
     const fetchPlantations = async () => {
       try {
         const responseJson = await apiJson.get(
-          `http://localhost:3000/api/enclosure/getplantationsofenclosure/${curEnclosure.enclosureId}`
+          `http://localhost:3000/api/enclosure/getEnclosureById/${curEnclosure.enclosureId}`
         );
 
-        setPlantationList(responseJson.plantationList as Plantation[]);
+        console.log("EnclosurePlantationList", responseJson)
+
+        setPlantationList(responseJson.plantations as Plantation[]);
       } catch (error: any) {
         console.log(error);
       }
