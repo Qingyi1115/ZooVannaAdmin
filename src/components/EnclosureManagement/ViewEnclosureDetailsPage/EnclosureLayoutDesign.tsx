@@ -9,6 +9,7 @@ import useApiJson from "../../../hooks/useApiJson";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import { TwoThumbSliderWithNumber } from "../../SpeciesManagement/TwoThumbSliderWithNumber";
 import EnclosurePlantationList from "./EnclosurePlantationList";
+import { Separator } from "@/components/ui/separator";
 
 interface EnclosureLayoutDesignProps {
   curEnclosure: Enclosure;
@@ -22,14 +23,17 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
 
   return (
     <div>
-      <Button
-        onClick={() =>
-          navigate(`/enclosure/viewenclosuredetails/enclosuredesigndiagram/`)
-        }
-      >
-        View Design Diagram
-      </Button>
-      EnclosureLayoutDesign
+      <div className="flex justify-center">
+        <Button
+          onClick={() =>
+            navigate(`/enclosure/viewenclosuredetails/enclosuredesigndiagram/`)
+          }
+          className="w-1/2 text-lg"
+        >
+          View Design Diagram
+        </Button>
+      </div>
+      <Separator className="my-4" />
       {(employee.superAdmin ||
         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
         <Button
