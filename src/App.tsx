@@ -1271,7 +1271,7 @@ function App() {
               />
 
               <Route
-                path="/zooevent/allFacilityCrowdLevel"
+                path="/assetfacility/allFacilityCrowdLevel"
                 element={
                   user ? (
                     <ViewAllFacilityCrowdLevelPage />

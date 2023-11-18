@@ -11,8 +11,8 @@ import {
 import { HiPencil } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
 import Facility from "src/models/Facility";
-import { useAuthContext } from "../../../../hooks/useAuthContext";
 import beautifyText from "../../../../hooks/beautifyText";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 interface FacilityDetailsProps {
   curFacility: Facility;
@@ -90,7 +90,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
           </TableRow> */}
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Shelter available
+              Shelter Available
             </TableCell>
             <TableCell>{String(curFacility.isSheltered) == "false" ? "No" : "Yes"}</TableCell>
           </TableRow>
@@ -101,7 +101,7 @@ function ViewFacilityDetails(props: FacilityDetailsProps) {
             <TableCell>
               {curFacility.facilityDetail == "inHouse" ? "In-house" :
                 curFacility.facilityDetail == "thirdParty" ? "Third-party" :
-              beautifyText(curFacility.facilityDetail)}</TableCell>
+                  beautifyText(curFacility.facilityDetail)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

@@ -485,7 +485,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 "ZOO_MAINTENANCE") && (
                                   <li>
                                     <NavLink
-                                      to="/zooevent/allFacilityCrowdLevel"
+                                      to="/assetfacility/allFacilityCrowdLevel"
                                       className={({ isActive }) =>
                                         "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
                                         (isActive && "!text-white")
