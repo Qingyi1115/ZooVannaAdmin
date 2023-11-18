@@ -13,8 +13,12 @@ import BigTree from "./items/bigTree/planner-element";
 catalog.registerElement(BigTree);
 import WoodenLog from "./items/woodenLog/planner-element";
 catalog.registerElement(WoodenLog);
-import Cube from "./items/cube/planner-element";
-catalog.registerElement(Cube);
+import SmallBoulder from "./items/smallBoulder/planner-element";
+catalog.registerElement(SmallBoulder);
+import BigBoulder from "./items/bigBoulder/planner-element";
+catalog.registerElement(BigBoulder);
+// import Cube from "./items/cube/planner-element";
+// catalog.registerElement(Cube);
 //
 
 // import * as Lines from "./lines/wall/planner-element.jsx";
