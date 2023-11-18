@@ -25,7 +25,13 @@ function ViewAllEnclosuresPage() {
             {(employee.superAdmin ||
               employee.planningStaff?.plannerType == "CURATOR") ? (
               <Button
-                onClick={() => navigate("/enclosure/createnewenclosure/")}
+                onClick={() => {
+                  navigate(
+                    `/enclosure/viewallenclosures`,
+                    { replace: true }
+                  );
+                  navigate("/enclosure/createnewenclosure/");
+                }}
                 type="button"
               >
                 <HiPlus className="mr-auto" />
