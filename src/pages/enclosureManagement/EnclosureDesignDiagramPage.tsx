@@ -1069,9 +1069,12 @@ function EnclosureDesignDiagramPage() {
                     )}
                   </TableCell>
                   <TableCell className="text-center hover:bg-muted/50">
-                    {enclosureTerrainDistributionRecommendation?.minLandAreaRequired.toFixed(
-                      2
-                    )}
+                    {enclosureTerrainDistributionRecommendation?.minLandAreaRequired >
+                    0
+                      ? enclosureTerrainDistributionRecommendation?.minLandAreaRequired.toFixed(
+                          2
+                        )
+                      : "Not available"}
                   </TableCell>
                 </TableRow>
                 <TableRow className="hover:bg-transparent">
@@ -1087,9 +1090,12 @@ function EnclosureDesignDiagramPage() {
                     )}
                   </TableCell>
                   <TableCell className="text-center hover:bg-muted/50">
-                    {enclosureTerrainDistributionRecommendation?.minWaterAreaRequired.toFixed(
-                      2
-                    )}
+                    {enclosureTerrainDistributionRecommendation?.minWaterAreaRequired >
+                    0
+                      ? enclosureTerrainDistributionRecommendation?.minWaterAreaRequired.toFixed(
+                          2
+                        )
+                      : "Not available"}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -1122,8 +1128,8 @@ function EnclosureDesignDiagramPage() {
                   </TableCell>
                   <TableCell className="text-center">
                     {enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin ==
-                    "No suitable range, please review species allocation."
-                      ? enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin
+                    Number.MIN_SAFE_INTEGER
+                      ? "Not available"
                       : enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin.toFixed(
                           2
                         )}
@@ -1137,8 +1143,8 @@ function EnclosureDesignDiagramPage() {
                   </TableCell>
                   <TableCell className="text-center">
                     {enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax ==
-                    "No suitable range, please review species allocation."
-                      ? enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax
+                    Number.MAX_SAFE_INTEGER
+                      ? "Not available"
                       : enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax.toFixed(
                           2
                         )}

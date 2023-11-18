@@ -60,7 +60,8 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
               <sup>2</sup>)
             </TableCell>
             <TableCell>
-              {curEnclosure.landArea || "Please set enclosure Diagram"}
+              {curEnclosure.landArea?.toFixed(2) ||
+                "Please set enclosure Diagram"}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -69,7 +70,8 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
               <sup>2</sup>)
             </TableCell>
             <TableCell>
-              {curEnclosure.waterArea || "Please set enclosure Diagram"}
+              {curEnclosure.waterArea?.toFixed(2) ||
+                "Please set enclosure Diagram"}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -77,19 +79,27 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
               Plantation Coverage (%)
             </TableCell>
             <TableCell>
-              <TwoThumbSliderWithNumber
-                value={[
-                  curEnclosure.plantationCoveragePercent
-                    ? +Number(curEnclosure.plantationCoveragePercent).toFixed(1)
-                    : 0,
-                  curEnclosure.plantationCoveragePercent
-                    ? +Number(curEnclosure.plantationCoveragePercent).toFixed(1)
-                    : 0,
-                ]}
-                min={0}
-                max={100}
-                minStepsBetweenThumbs={1}
-              />
+              {curEnclosure.plantationCoveragePercent ? (
+                <TwoThumbSliderWithNumber
+                  value={[
+                    curEnclosure.plantationCoveragePercent
+                      ? +Number(curEnclosure.plantationCoveragePercent).toFixed(
+                          1
+                        )
+                      : 0,
+                    curEnclosure.plantationCoveragePercent
+                      ? +Number(curEnclosure.plantationCoveragePercent).toFixed(
+                          1
+                        )
+                      : 0,
+                  ]}
+                  min={0}
+                  max={100}
+                  minStepsBetweenThumbs={1}
+                />
+              ) : (
+                <div>Please set enclosure diagram</div>
+              )}
             </TableCell>
           </TableRow>
           <TableRow>
