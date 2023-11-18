@@ -152,6 +152,7 @@ import CreateNewEnclosurePage from "./pages/enclosureManagement/CreateNewEnclosu
 import EditEnclosureEnvironmentPage from "./pages/enclosureManagement/EditEnclosureEnvironmentPage";
 import EditEnclosurePage from "./pages/enclosureManagement/EditEnclosurePage";
 import EditEnclosureSafetyPage from "./pages/enclosureManagement/EditEnclosureSafetyPage";
+import EditEnclosureTerrainPage from "./pages/enclosureManagement/EditEnclosureTerrainPage";
 import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
 import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
 import EditPublicEventSessionPage from "./pages/eventManagement/EditPublicEventSessionPage";
@@ -597,6 +598,16 @@ function App() {
                     path="/enclosure/editenclosurebasicinfo/:enclosureId"
                     element={
                       user ? <EditEnclosurePage /> : <Navigate to="/login" />
+                    }
+                  />
+                  <Route
+                    path="/enclosure/editenclosureterrain/:enclosureId"
+                    element={
+                      user ? (
+                        <EditEnclosureTerrainPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
                     }
                   />
                   <Route

@@ -2,6 +2,7 @@ import Enclosure from "../../../models/Enclosure";
 
 import { Button } from "@/components/ui/button";
 
+import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { HiPencil } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +10,6 @@ import useApiJson from "../../../hooks/useApiJson";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import { TwoThumbSliderWithNumber } from "../../SpeciesManagement/TwoThumbSliderWithNumber";
 import EnclosurePlantationList from "./EnclosurePlantationList";
-import { Separator } from "@/components/ui/separator";
 
 interface EnclosureLayoutDesignProps {
   curEnclosure: Enclosure;
@@ -44,7 +44,7 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
               { replace: true }
             );
             navigate(
-              `/enclosure/editenclosureenvironment/${curEnclosure.enclosureId}`
+              `/enclosure/editenclosureterrain/${curEnclosure.enclosureId}`
             );
           }}
         >
@@ -70,45 +70,6 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
             </TableCell>
             <TableCell>
               {curEnclosure.waterArea || "Please set enclosure Diagram"}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Acceptable Temperature Range (&deg;C)
-            </TableCell>
-            <TableCell>
-              {curEnclosure.acceptableTempMin &&
-              curEnclosure.acceptableTempMax ? (
-                <>
-                  <span>{curEnclosure.acceptableTempMin} &deg;C — </span>
-                  <span>{curEnclosure.acceptableTempMax} &deg;C</span>
-                </>
-              ) : (
-                <span>Range not set</span>
-              )}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Humidity Range (g.m<sup>-3</sup>)
-            </TableCell>
-            <TableCell>
-              {curEnclosure.acceptableHumidityMin &&
-              curEnclosure.acceptableHumidityMax ? (
-                <>
-                  <span className="font-bold">
-                    {curEnclosure.acceptableHumidityMin}
-                  </span>{" "}
-                  g.m<sup>-3</sup> —{" "}
-                  <span className="font-bold">
-                    {curEnclosure.acceptableHumidityMax}
-                  </span>{" "}
-                  g.m
-                  <sup>-3</sup>
-                </>
-              ) : (
-                <span>Range not set</span>
-              )}
             </TableCell>
           </TableRow>
           <TableRow>

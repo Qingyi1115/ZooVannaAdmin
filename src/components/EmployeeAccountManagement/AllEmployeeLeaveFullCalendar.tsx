@@ -190,34 +190,12 @@ function AllZooEventsFullCalendar(props: AllZooEventsFullCalendarProps) {
             {/* Legend */}
             <div className="mb-1 flex items-center gap-4 rounded border border-strokedark/20 px-4 text-sm">
               {/* <span>Legend: </span> */}
-              <div className="flex items-center gap-2 text-[#0f3360]">
-                <div className="h-5 w-5 rounded bg-[#0f3360]" />
-                <span className="font-bold">Observation</span>
-              </div>
-              <div className="flex items-center gap-2 text-[#6c0063]">
-                <div className="h-5 w-5 rounded bg-[#6c0063]" />
-                <span className="font-bold">Training</span>
-              </div>
-              <div className="flex items-center gap-2 text-[#976405]">
-                <div className="h-5 w-5 rounded bg-[#976405]" />
-                <span className="font-bold">Enrichment</span>
-              </div>
-              <div className="flex items-center gap-2 text-[#087E8B]">
-                <div className="h-5 w-5 rounded bg-[#087E8B]" />
-                <span className="font-bold">Customer Feeding</span>
-              </div>
-              <div className="flex items-center gap-2 text-[#CC5A71]">
-                <div className="h-5 w-5 rounded bg-[#CC5A71]" />
-                <span className="font-bold">Employee Feeding</span>
-              </div>
+
               <div className="flex items-center gap-2 text-[#494249]">
                 <div className="h-5 w-5 rounded bg-[#494249]" />
                 <span className="font-bold">Employee Absence</span>
               </div>
-              <div className="flex items-center gap-2 text-[#494249]">
-                <div className="h-5 w-5 rounded bg-[#99a008]" />
-                <span className="font-bold">Public Events</span>
-              </div>
+
             </div>
             <div className="mb-2 flex justify-end gap-2">
               {/* Month selection control */}
