@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import * as Form from "@radix-ui/react-form";
 
@@ -11,6 +11,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import Enclosure from "../../../models/Enclosure";
 import { TwoThumbSliderWithNumber } from "../../SpeciesManagement/TwoThumbSliderWithNumber";
+import { Label } from "@/components/ui/label";
+import { TwoThumbSliderWithReco } from "../TwoThumbSliderWithReco";
 interface EditEnclosureEnvironmentFormProps {
   curEnclosure: Enclosure;
 }
@@ -34,48 +36,96 @@ function EditEnclosureEnvironmentForm(
   const [waterArea, setWaterArea] = useState<number | null | undefined>(
     curEnclosure.waterArea
   );
-  const [acceptableTempMin, setAcceptableTempMin] = useState<number | null | undefined>(
-    curEnclosure.acceptableTempMin
+  const [acceptableTempMin, setAcceptableTempMin] = useState<
+    number | null | undefined
+  >(curEnclosure.acceptableTempMin);
+  const [acceptableTempMax, setAcceptableTempMax] = useState<
+    number | null | undefined
+  >(curEnclosure.acceptableTempMax);
+  const [acceptableHumidityMin, setAcceptableHumidityMin] = useState<
+    number | null | undefined
+  >(curEnclosure.acceptableHumidityMin);
+  const [acceptableHumidityMax, setAcceptableHumidityMax] = useState<
+    number | null | undefined
+  >(curEnclosure.acceptableHumidityMax);
+  const [standOffBarrierDist, setStandOffBarrierDist] = useState<number | null>(
+    curEnclosure.standOffBarrierDist
   );
-  const [acceptableTempMax, setAcceptableTempMax] = useState<number | null | undefined>(
-    curEnclosure.acceptableTempMax
+  const [plantationCoveragePercent, setPlantationCoveragePercent] = useState<
+    number | null | undefined
+  >(curEnclosure.plantationCoveragePercent);
+  const [longGrassPercent, setLongGrassPercent] = useState<number>(
+    curEnclosure.longGrassPercent ? curEnclosure.longGrassPercent : 0
   );
-  const [acceptableHumidityMin, setAcceptableHumidityMin] = useState<number | null | undefined>(
-    curEnclosure.acceptableHumidityMin
+  const [shortGrassPercent, setShortGrassPercent] = useState<number>(
+    curEnclosure.shortGrassPercent ? curEnclosure.shortGrassPercent : 0
   );
-  const [acceptableHumidityMax, setAcceptableHumidityMax] = useState<number | null | undefined>(
-    curEnclosure.acceptableHumidityMax
+  const [rockPercent, setRockPercent] = useState<number>(
+    curEnclosure.rockPercent ? curEnclosure.rockPercent : 0
   );
+  const [sandPercent, setSandPercent] = useState<number>(
+    curEnclosure.sandPercent ? curEnclosure.sandPercent : 0
+  );
+  const [snowPercent, setSnowPercent] = useState<number>(
+    curEnclosure.snowPercent ? curEnclosure.snowPercent : 0
+  );
+  const [soilPercent, setSoilPercent] = useState<number>(
+    curEnclosure.soilPercent ? curEnclosure.soilPercent : 0
+  );
+
+  /////
+  // fetch recommendation
+  type Recommends = {
+    minLandAreaRequired: number;
+    minWaterAreaRequired: number;
+    acceptableTempMin: number;
+    acceptableTempMax: number;
+    acceptableHumidityMin: number;
+    acceptableHumidityMax: number;
+    plantationCoveragePercentMin: number;
+    plantationCoveragePercentMax: number;
+    longGrassPercentMin: number;
+    longGrassPercentMax: number;
+    shortGrassPercentMin: number;
+    shortGrassPercentMax: number;
+    rockPercentMin: number;
+    rockPercentMax: number;
+    sandPercentMin: number;
+    sandPercentMax: number;
+    snowPercentMin: number;
+    snowPercentMax: number;
+    soilPercentMin: number;
+    soilPercentMax: number;
+  };
   const [
-    standOffBarrierDist,
-    setStandOffBarrierDist,] = useState<number | null>(curEnclosure.standOffBarrierDist);
-  const [plantationCoveragePercent, setPlantationCoveragePercent] =
-    useState<number | null | undefined>(curEnclosure.plantationCoveragePercent);
-  const [longGrassPercent, setLongGrassPercent] = useState<number | null | undefined>(
-    curEnclosure.longGrassPercent
-  );
-  const [shortGrassPercent, setShortGrassPercent] = useState<number | null | undefined>(
-    curEnclosure.shortGrassPercent
-  );
-  const [rockPercent, setRockPercent] = useState<number | null | undefined>(
-    curEnclosure.rockPercent
-  );
-  const [sandPercent, setSandPercent] = useState<number | null | undefined>(
-    curEnclosure.sandPercent
-  );
-  const [snowPercent, setSnowPercent] = useState<number | null | undefined>(
-    curEnclosure.snowPercent
-  );
-  const [soilPercent, setSoilPercent] = useState<number | null | undefined>(
-    curEnclosure.soilPercent
-  );
+    enclosureTerrainDistributionRecommendation,
+    setEnclosureTerrainDistributionRecommendation,
+  ] = useState<Recommends>();
+  useEffect(() => {
+    const fetchEnclosureTerrainStuffReco = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/enclosure/getEnclosureTerrainDistributionRecommendation/${curEnclosure.enclosureId}`
+        );
+        // console.log("test");
+        // console.log(responseJson);
+        setEnclosureTerrainDistributionRecommendation(
+          responseJson.enclosureTerrainDistributionReco as Recommends
+        );
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchEnclosureTerrainStuffReco();
+  }, [curEnclosure]);
+  /////
 
   ///////
   // validate functions
   ////////
   function validateLandArea(props: ValidityState) {
     // if (props != undefined) {
-    if (landArea <= 0) {
+    if (landArea != undefined && landArea != null && landArea <= 0) {
       return (
         <div className="font-medium text-danger">
           * Minimum land area required must be greater than 0
@@ -89,7 +139,7 @@ function EditEnclosureEnvironmentForm(
 
   function validateWaterArea(props: ValidityState) {
     // if (props != undefined) {
-    if (landArea < 0) {
+    if (waterArea != undefined && waterArea != null && waterArea <= 0) {
       return (
         <div className="font-medium text-danger">
           * Minimum water area required must be equal to or greater than 0
@@ -177,7 +227,6 @@ function EditEnclosureEnvironmentForm(
     return null;
   }
 
-
   ///////
   // validate functions end
   ////////
@@ -200,7 +249,7 @@ function EditEnclosureEnvironmentForm(
       sandPercent,
       snowPercent,
       soilPercent,
-      standOffBarrierDist
+      standOffBarrierDist,
     };
 
     console.log("new enclosure req obj:", newEnclosureRequirements);
@@ -263,86 +312,148 @@ function EditEnclosureEnvironmentForm(
           </span>
         </div>
         <Separator className="opacity-20" />
+
+        {/* <div className="flex flex-col gap-6 lg:flex-row lg:gap-12">
+          <div className="flex w-full items-center">
+            <Label className="text-lg">
+              Recommended Min Temperature:{" "}
+              {enclosureTerrainDistributionRecommendation?.acceptableTempMin}
+            </Label>
+          </div>
+          <div className="flex w-full">
+            <Label className="text-lg">
+              Recommended Max Temperature:{" "}
+              {enclosureTerrainDistributionRecommendation?.acceptableTempMax}
+            </Label>
+          </div>
+        </div> */}
+        <div className="text-lg font-bold">Acceptable Condition Ranges</div>
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Min Land Area Required */}
-          <FormFieldInput
-            type="number"
-            formFieldName="landArea"
-            label={`Minimum Land Area Required (m\u00B2)`}
-            required={true}
-            placeholder="e.g., 8"
-            pattern={undefined}
-            value={landArea}
-            setValue={setLandArea}
-            validateFunction={validateLandArea}
-          />
-          {/* Min Water Area Required */}
-          <FormFieldInput
-            type="number"
-            formFieldName="waterArea"
-            label={`Minimum Water Area Required (m\u00B2)`}
-            required={true}
-            placeholder="e.g., 8"
-            pattern={undefined}
-            value={waterArea || 0}
-            setValue={setWaterArea}
-            validateFunction={validateWaterArea}
-          />
-        </div>
-        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {/* Min Land Area Required */}
-          <FormFieldInput
-            type="number"
-            formFieldName="acceptableTempMin"
-            label={`Minimum acceptable temperate (°C)`}
-            required={true}
-            placeholder="e.g., 8"
-            pattern={undefined}
-            value={acceptableTempMin || 0}
-            setValue={setAcceptableTempMin}
-            validateFunction={validateMinTemperature}
-          />
-          {/* Min Water Area Required */}
-          <FormFieldInput
-            type="number"
-            formFieldName="acceptableTempMax"
-            label={`Maximum acceptable temperate (°C)`}
-            required={true}
-            placeholder="e.g., 8"
-            pattern={undefined}
-            value={acceptableTempMax || 0}
-            setValue={setAcceptableTempMax}
-            validateFunction={validateMaxTemperature}
-          />
+          {/* Min Acceptable Temperature */}
+          <div className="w-full">
+            <div className="italic">
+              Recommended:{" "}
+              <span className="font-bold text-emerald-700">
+                {enclosureTerrainDistributionRecommendation?.acceptableTempMin !=
+                Number.MIN_SAFE_INTEGER ? (
+                  <span>
+                    {
+                      enclosureTerrainDistributionRecommendation?.acceptableTempMin
+                    }
+                    °C
+                  </span>
+                ) : (
+                  <span>Not available</span>
+                )}
+              </span>
+            </div>
+            <FormFieldInput
+              type="number"
+              formFieldName="acceptableTempMin"
+              label={`Minimum Acceptable Temperate (°C)`}
+              required={true}
+              placeholder="e.g., 8"
+              pattern={undefined}
+              value={acceptableTempMin || 0}
+              setValue={setAcceptableTempMin}
+              validateFunction={validateMinTemperature}
+            />
+          </div>
+          {/* Max Acceptable Temperature */}
+          <div className="w-full">
+            <div className="italic">
+              Recommended:{" "}
+              <span className="font-bold text-emerald-700">
+                {enclosureTerrainDistributionRecommendation?.acceptableTempMax !=
+                Number.MAX_SAFE_INTEGER ? (
+                  <span>
+                    {
+                      enclosureTerrainDistributionRecommendation?.acceptableTempMax
+                    }
+                    °C
+                  </span>
+                ) : (
+                  <span>Not available</span>
+                )}
+              </span>
+            </div>
+            <FormFieldInput
+              type="number"
+              formFieldName="acceptableTempMax"
+              label={`Maximum Acceptable Temperate (°C)`}
+              required={true}
+              placeholder="e.g., 8"
+              pattern={undefined}
+              value={acceptableTempMax || 0}
+              setValue={setAcceptableTempMax}
+              validateFunction={validateMaxTemperature}
+            />
+          </div>
         </div>
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
           {/* Min Acceptable Humidity */}
-          <FormFieldInput
-            type="number"
-            formFieldName="acceptableHumidityMin"
-            label={`Minimum acceptable humidity (g.m⁻³)`}
-            required={true}
-            placeholder="e.g., 8"
-            pattern={undefined}
-            value={acceptableHumidityMin || 0}
-            setValue={setAcceptableHumidityMin}
-            validateFunction={validateMinHumidity}
-          />
+          <div className="w-full">
+            <div className="italic">
+              Recommended:{" "}
+              <span className="font-bold text-emerald-700">
+                {enclosureTerrainDistributionRecommendation?.acceptableHumidityMin !=
+                Number.MIN_SAFE_INTEGER ? (
+                  <span>
+                    {
+                      enclosureTerrainDistributionRecommendation?.acceptableHumidityMin
+                    }
+                    g.m⁻³
+                  </span>
+                ) : (
+                  <span>Not available</span>
+                )}
+              </span>
+            </div>
+            <FormFieldInput
+              type="number"
+              formFieldName="acceptableHumidityMin"
+              label={`Minimum Acceptable Humidity (g.m⁻³)`}
+              required={true}
+              placeholder="e.g., 8"
+              pattern={undefined}
+              value={acceptableHumidityMin || 0}
+              setValue={setAcceptableHumidityMin}
+              validateFunction={validateMinHumidity}
+            />
+          </div>
           {/* Max Acceptable Humidity */}
-          <FormFieldInput
-            type="number"
-            formFieldName="acceptableTempMax"
-            label={`Maximum acceptable humidity (g.m⁻³)`}
-            required={true}
-            placeholder="e.g., 8"
-            pattern={undefined}
-            value={acceptableHumidityMax || 0}
-            setValue={setAcceptableHumidityMax}
-            validateFunction={validateMaxHumidity}
-          />
+          <div className="w-full">
+            <div className="italic">
+              Recommended:{" "}
+              <span className="font-bold text-emerald-700">
+                {enclosureTerrainDistributionRecommendation?.acceptableHumidityMax !=
+                Number.MAX_SAFE_INTEGER ? (
+                  <span>
+                    {
+                      enclosureTerrainDistributionRecommendation?.acceptableHumidityMax
+                    }
+                    g.m⁻³
+                  </span>
+                ) : (
+                  <span>Not available</span>
+                )}
+              </span>
+            </div>
+            <FormFieldInput
+              type="number"
+              formFieldName="acceptableTempMax"
+              label={`Maximum Acceptable Humidity (g.m⁻³)`}
+              required={true}
+              placeholder="e.g., 8"
+              pattern={undefined}
+              value={acceptableHumidityMax || 0}
+              setValue={setAcceptableHumidityMax}
+              validateFunction={validateMaxHumidity}
+            />
+          </div>
         </div>
         {/* Recommended Stand-off Barrier Distance */}
-        <FormFieldInput
+        {/* <FormFieldInput
           type="number"
           formFieldName="standOffBarrierDist"
           label={`Stand-off Barrier Distance (m)`}
@@ -352,42 +463,10 @@ function EditEnclosureEnvironmentForm(
           value={standOffBarrierDist || 0}
           setValue={setStandOffBarrierDist}
           validateFunction={validateStandOffBarrierDist}
-        />
-        {/* Plantation Coverage Range */}
-        <Form.Field
-          name="educationalDescription"
-          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-        >
-          <Form.Label className="font-medium">
-            Plantation Coverage Range (%)
-          </Form.Label>
-          <div className="h-14 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
-            <div className="flex h-full items-center justify-center gap-2">
-              <span>0%</span>
-              <TwoThumbSliderWithNumber
-                value={[
-                  plantationCoveragePercent, plantationCoveragePercent,
-                ]}
-                onValueChange={(value) => {
-                  if (plantationCoveragePercent != value[0]) {
-                    setPlantationCoveragePercent(value[0]);
-                  } else {
-                    setPlantationCoveragePercent(value[1]);
-                  }
-                }}
-                min={0}
-                max={100}
-                step={1}
-                minStepsBetweenThumbs={0}
-              />
-              <span>100%</span>
-            </div>
-          </div>
-          {/* <Form.ValidityState> */}
-          {/* {validatePlantationCoverageRange} */}
-          {/* </Form.ValidityState> */}
-        </Form.Field>
+        /> */}
+
         <br />
+        <div className="text-lg font-bold">Terrain Distribution</div>
 
         {/* Long Grass Coverage Range */}
         <Form.Field
@@ -403,8 +482,35 @@ function EditEnclosureEnvironmentForm(
               <span>Long Grass (%)</span>
             </div>
           </Form.Label>
-          <div className="h-14 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
-            <div className="flex h-full items-center justify-center gap-2">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+            {enclosureTerrainDistributionRecommendation &&
+            enclosureTerrainDistributionRecommendation.longGrassPercentMin !=
+              Number.MIN_SAFE_INTEGER ? (
+              <div className="flex h-1/2 items-center justify-center gap-2">
+                <span>0%</span>
+                <TwoThumbSliderWithReco
+                  value={[
+                    enclosureTerrainDistributionRecommendation.longGrassPercentMin,
+                    enclosureTerrainDistributionRecommendation.longGrassPercentMax,
+                  ]}
+                  onValueChange={(value) => {
+                    if (longGrassPercent != value[0]) {
+                      setLongGrassPercent(value[0]);
+                    } else {
+                      setLongGrassPercent(value[1]);
+                    }
+                  }}
+                  min={0}
+                  max={100}
+                  step={1}
+                  minStepsBetweenThumbs={0}
+                />
+                <span>100%</span>
+              </div>
+            ) : (
+              <div>No recommedation available</div>
+            )}
+            <div className="flex h-1/2 items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
                 value={[longGrassPercent, longGrassPercent]}
@@ -438,7 +544,34 @@ function EditEnclosureEnvironmentForm(
               <span>Short Grass (%)</span>
             </div>
           </Form.Label>
-          <div className="h-14 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+            {enclosureTerrainDistributionRecommendation &&
+            enclosureTerrainDistributionRecommendation.shortGrassPercentMin !=
+              Number.MIN_SAFE_INTEGER ? (
+              <div className="flex h-1/2 items-center justify-center gap-2">
+                <span>0%</span>
+                <TwoThumbSliderWithReco
+                  value={[
+                    enclosureTerrainDistributionRecommendation.shortGrassPercentMin,
+                    enclosureTerrainDistributionRecommendation.shortGrassPercentMax,
+                  ]}
+                  onValueChange={(value) => {
+                    if (longGrassPercent != value[0]) {
+                      setLongGrassPercent(value[0]);
+                    } else {
+                      setLongGrassPercent(value[1]);
+                    }
+                  }}
+                  min={0}
+                  max={100}
+                  step={1}
+                  minStepsBetweenThumbs={0}
+                />
+                <span>100%</span>
+              </div>
+            ) : (
+              <div>No recommedation available</div>
+            )}
             <div className="flex h-full items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
@@ -473,7 +606,34 @@ function EditEnclosureEnvironmentForm(
               <span>Soil (%)</span>
             </div>
           </Form.Label>
-          <div className="h-14 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+            {enclosureTerrainDistributionRecommendation &&
+            enclosureTerrainDistributionRecommendation.soilPercentMin !=
+              Number.MIN_SAFE_INTEGER ? (
+              <div className="flex h-1/2 items-center justify-center gap-2">
+                <span>0%</span>
+                <TwoThumbSliderWithReco
+                  value={[
+                    enclosureTerrainDistributionRecommendation.soilPercentMin,
+                    enclosureTerrainDistributionRecommendation.soilPercentMax,
+                  ]}
+                  onValueChange={(value) => {
+                    if (longGrassPercent != value[0]) {
+                      setLongGrassPercent(value[0]);
+                    } else {
+                      setLongGrassPercent(value[1]);
+                    }
+                  }}
+                  min={0}
+                  max={100}
+                  step={1}
+                  minStepsBetweenThumbs={0}
+                />
+                <span>100%</span>
+              </div>
+            ) : (
+              <div>No recommedation available</div>
+            )}
             <div className="flex h-full items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
@@ -508,7 +668,34 @@ function EditEnclosureEnvironmentForm(
               <span>Rock (%)</span>
             </div>
           </Form.Label>
-          <div className="h-14 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+            {enclosureTerrainDistributionRecommendation &&
+            enclosureTerrainDistributionRecommendation.rockPercentMin !=
+              Number.MIN_SAFE_INTEGER ? (
+              <div className="flex h-1/2 items-center justify-center gap-2">
+                <span>0%</span>
+                <TwoThumbSliderWithReco
+                  value={[
+                    enclosureTerrainDistributionRecommendation.rockPercentMin,
+                    enclosureTerrainDistributionRecommendation.rockPercentMax,
+                  ]}
+                  onValueChange={(value) => {
+                    if (longGrassPercent != value[0]) {
+                      setLongGrassPercent(value[0]);
+                    } else {
+                      setLongGrassPercent(value[1]);
+                    }
+                  }}
+                  min={0}
+                  max={100}
+                  step={1}
+                  minStepsBetweenThumbs={0}
+                />
+                <span>100%</span>
+              </div>
+            ) : (
+              <div>No recommedation available</div>
+            )}
             <div className="flex h-full items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
@@ -543,7 +730,34 @@ function EditEnclosureEnvironmentForm(
               <span>Sand (%)</span>
             </div>
           </Form.Label>
-          <div className="h-14 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+            {enclosureTerrainDistributionRecommendation &&
+            enclosureTerrainDistributionRecommendation.sandPercentMin !=
+              Number.MIN_SAFE_INTEGER ? (
+              <div className="flex h-1/2 items-center justify-center gap-2">
+                <span>0%</span>
+                <TwoThumbSliderWithReco
+                  value={[
+                    enclosureTerrainDistributionRecommendation.sandPercentMin,
+                    enclosureTerrainDistributionRecommendation.sandPercentMax,
+                  ]}
+                  onValueChange={(value) => {
+                    if (longGrassPercent != value[0]) {
+                      setLongGrassPercent(value[0]);
+                    } else {
+                      setLongGrassPercent(value[1]);
+                    }
+                  }}
+                  min={0}
+                  max={100}
+                  step={1}
+                  minStepsBetweenThumbs={0}
+                />
+                <span>100%</span>
+              </div>
+            ) : (
+              <div>No recommedation available</div>
+            )}
             <div className="flex h-full items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
@@ -578,7 +792,34 @@ function EditEnclosureEnvironmentForm(
               <span>Snow (%)</span>
             </div>
           </Form.Label>
-          <div className="h-14 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+            {enclosureTerrainDistributionRecommendation &&
+            enclosureTerrainDistributionRecommendation.snowPercentMin !=
+              Number.MIN_SAFE_INTEGER ? (
+              <div className="flex h-1/2 items-center justify-center gap-2">
+                <span>0%</span>
+                <TwoThumbSliderWithReco
+                  value={[
+                    enclosureTerrainDistributionRecommendation.snowPercentMin,
+                    enclosureTerrainDistributionRecommendation.snowPercentMax,
+                  ]}
+                  onValueChange={(value) => {
+                    if (longGrassPercent != value[0]) {
+                      setLongGrassPercent(value[0]);
+                    } else {
+                      setLongGrassPercent(value[1]);
+                    }
+                  }}
+                  min={0}
+                  max={100}
+                  step={1}
+                  minStepsBetweenThumbs={0}
+                />
+                <span>100%</span>
+              </div>
+            ) : (
+              <div>No recommedation available</div>
+            )}
             <div className="flex h-full items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
