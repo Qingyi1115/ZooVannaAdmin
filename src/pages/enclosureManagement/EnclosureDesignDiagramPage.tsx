@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import useApiJson from "../../hooks/useApiJson";
+import { useSelector } from "react-redux";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -108,6 +109,8 @@ let AppState = Map({
   "react-planner": new PlannerModels.State(),
 });
 
+// const functionToBeCalledRef = useRef<(() => void) | null>(null);
+
 // Define reducer
 let reducer = (state, action) => {
   state = state || AppState;
@@ -122,6 +125,11 @@ let reducer = (state, action) => {
 
   // console.log("insider reducer");
   // console.log(action);
+  // if (action && action.type == "END_DRAWING_ITEM") {
+  //   console.log("aaaaaa");
+  //   functionToBeCalledRef.current?.();
+  // }
+
   state = state.update("react-planner", (plannerState) =>
     PlannerReducer(plannerState, action)
   );
@@ -180,7 +188,7 @@ let store = createStore(
 let plugins = [
   PlannerPlugins.Keyboard(),
   // PlannerPlugins.Autosave("react-planner_v0"),
-  // PlannerPlugins.ConsoleDebugger(),
+  PlannerPlugins.ConsoleDebugger(),
 ];
 
 let toolbarButtons = [ToolbarScreenshotButton];
@@ -226,6 +234,7 @@ function EnclosureDesignDiagramPage() {
             loadDiagram(dataWithDimensions);
             clickFitToView();
             updateTotalLandWaterArea();
+            calculateTotalPlantationCoverage();
           } else {
             console.error(
               "Failed to fetch enclosure data:",
@@ -619,11 +628,16 @@ function EnclosureDesignDiagramPage() {
   const [totalPlantationCoveragePercent, setTotalPlantationCoveragePercent] =
     useState<number>(0);
 
-  const calculateCircleArea = (radius: number): number => {
-    const pi = Math.PI;
-    const area = pi * Math.pow(radius, 2);
-    return area;
-  };
+  // functionToBeCalledRef.current = () => {
+  //   console.log("uwoh");
+  //   calculateTotalPlantationCoverage();
+  // };
+
+  // const storeState = useSelector((state) => state["react-planner"]);
+  useEffect(() => {
+    // console.log()
+    calculateTotalPlantationCoverage();
+  }, [curTotalLandArea]);
 
   interface PlantationCircle {
     radius: number;
@@ -808,13 +822,16 @@ function EnclosureDesignDiagramPage() {
       JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
     );
 
+    updateTotalLandWaterArea();
+    calculateTotalPlantationCoverage();
+
     const updateDesignDiagramObj = {
       designDiagramJson: JSON.stringify(
         JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
       ),
       landArea: curTotalLandArea,
       waterArea: curTotalWaterArea,
-      plantationCoveragePercent: 0,
+      plantationCoveragePercent: totalPlantationCoveragePercent,
     };
 
     const updateDesignDiagramApi = async () => {
