@@ -132,6 +132,9 @@ import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrde
 import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrderDetailsPage";
 import SalesChartPage from "./pages/sales/SalesChartPage";
 
+//customer preference page
+import CustomerPreferenceChartPage from "./pages/customerPreference/CustomerPreferenceChart";
+
 //Event management page
 import CreateLeaveEventPage from "./pages/eventManagement/CreateLeaveEventPage";
 import CreatePublicZooEventPage from "./pages/eventManagement/CreatePublicZooEventPage";
@@ -1047,6 +1050,17 @@ function App() {
                 />
 
                 <Route
+                  path="/customerpreference/viewpreference"
+                  element={
+                    user ? (
+                      <CustomerPreferenceChartPage />
+                    ) : (
+                      <Navigate to="login" />
+                    )
+                  }
+                />
+
+                <Route
                   path="/promotion/editpromotion/:promotionId"
                   element={
                     user ? <EditPromotionPage /> : <Navigate to="/login" />
@@ -1221,24 +1235,31 @@ function App() {
               <Route
                 path="/zooevent/createpubliceventsession/:publicEventId"
                 element={
-                  user ? <CreatePublicEventSessionForm /> : <Navigate to="/login" />
+                  user ? (
+                    <CreatePublicEventSessionForm />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
                 }
               />
 
               <Route
                 path="/zooevent/allFacilityCrowdLevel"
                 element={
-                  user ? <ViewAllFacilityCrowdLevelPage /> : <Navigate to="/login" />
+                  user ? (
+                    <ViewAllFacilityCrowdLevelPage />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
                 }
               />
-
 
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </MainLayout>
         </BrowserRouter>
       </div>
-    </PrimeReactProvider >
+    </PrimeReactProvider>
   );
 }
 
