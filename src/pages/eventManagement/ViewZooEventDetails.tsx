@@ -136,7 +136,7 @@ function ViewZooEventDetails() {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/zooEvent/getZooEventById/${zooEventId}`
         );
-        console.log("responseJson", responseJson)
+        console.log("updateZooEventFromRes", responseJson)
         updateZooEventFromRes(responseJson["zooEvent"]);
       } catch (error: any) {
         console.log(error);
@@ -678,6 +678,19 @@ function ViewZooEventDetails() {
                         </Button>)
                       }
 
+                      {(curZooEvent.publicEventSession) &&
+                        <div className="flex justify-start gap-6" >
+                          <Button
+                            onClick={() => {
+                              navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
+                              navigate(`/zooevent/viewpubliceventdetails/${curZooEvent.publicEventSession?.publicEvent.publicEventId}`);
+                            }}
+                            className="my-3">
+                            View Public Event Details
+                          </Button>
+                        </div>
+                      }
+
                       {(curZooEvent.eventType == EventType.EMPLOYEE_FEEDING ||
                         curZooEvent.eventType == EventType.CUSTOMER_FEEDING) &&
                         curZooEvent.feedingPlanSessionDetail?.feedingPlan
@@ -792,6 +805,20 @@ function ViewZooEventDetails() {
                               "No keepers assigned to this event!"}
                           </TableCell>
                         </TableRow>
+                        {
+                          curZooEvent.enclosure && (
+
+                            <TableRow>
+                              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                                Enclosure
+                              </TableCell>
+                              <TableCell>
+                                {curZooEvent.enclosure?.name}
+                              </TableCell>
+                            </TableRow>
+                          )
+                        }
+
                       </TableBody>
                     </Table>
                   </div>
