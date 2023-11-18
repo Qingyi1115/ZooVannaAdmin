@@ -146,6 +146,7 @@ import EditAnnouncementPage from "./pages/announcement/EditAnnouncementPage";
 import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsPage";
 import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
 import ViewAllFacilityCrowdLevelPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilityCrowdLevelPage";
+import EmployeeLeaveHomePage from "./pages/employeeAccountManagement/EmployeeLeaveHomePage";
 import CreateEnclosureBarriersPage from "./pages/enclosureManagement/CreateEnclosureBarriersPage";
 import CreateNewEnclosurePage from "./pages/enclosureManagement/CreateNewEnclosurePage";
 import EditEnclosureEnvironmentPage from "./pages/enclosureManagement/EditEnclosureEnvironmentPage";
@@ -999,6 +1000,17 @@ function App() {
                 <Route
                   path="employeeAccount/setPassword/:token"
                   element={<ResetPasswordPage />}
+                />
+
+                <Route
+                  path="/employeeAccount/allemployeeabsence"
+                  element={
+                    user ? (
+                      <EmployeeLeaveHomePage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
                 />
                 {/* <Route
                   path="/employeeAccount/editemployee"
