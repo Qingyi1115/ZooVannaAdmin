@@ -3,6 +3,7 @@ import {
   AnimalGrowthStage,
   AnimalSex,
 } from "../enums/Enumurated";
+import Enclosure from "./Enclosure";
 import Species from "./Species";
 
 interface Animal {
@@ -33,7 +34,7 @@ interface Animal {
   species: Species;
   parents?: Animal[];
   children?: Animal[];
-  //  enclosure?: Enclosure;
+  enclosure?: Enclosure;
   //  animalLog?: AnimalLog;
   events?: Event[];
 }

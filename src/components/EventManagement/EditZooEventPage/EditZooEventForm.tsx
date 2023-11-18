@@ -2,7 +2,6 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Form from "@radix-ui/react-form";
 import React, { useState } from "react";
 
-
 import useApiFormData from "../../../hooks/useApiFormData";
 import useApiJson from "../../../hooks/useApiJson";
 
@@ -15,12 +14,9 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { useNavigate } from "react-router-dom";
 
-import {
-  EventTimingType
-} from "../../../enums/Enumurated";
+import { EventTimingType } from "../../../enums/Enumurated";
 
 import { Calendar } from "primereact/calendar";
-
 
 import { CheckIcon } from "lucide-react";
 import { Nullable } from "primereact/ts-helpers";
@@ -36,7 +32,6 @@ interface EditZooEventFormProps {
 function EditZooEventForm(props: EditZooEventFormProps) {
   const { curZooEvent, refreshSeed, setRefreshSeed } = props;
 
-
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
@@ -47,22 +42,24 @@ function EditZooEventForm(props: EditZooEventFormProps) {
   );
   const [updateFuture, setUpdateFuture] = useState<boolean>(false);
   const [eventName, setEventName] = useState<string>(curZooEvent.eventName);
-  const [eventDescription, setEventDescription] = useState<string>(curZooEvent.eventDescription);
+  const [eventDescription, setEventDescription] = useState<string>(
+    curZooEvent.eventDescription
+  );
   const [eventStartDateTime, setEventStartDateTime] = useState<Nullable<Date>>(
     new Date(curZooEvent.eventStartDateTime)
   );
   const [eventEndDateTime, setEventEndDateTime] = useState<Nullable<Date>>(
     curZooEvent.eventEndDateTime
   );
-  const [eventNotificationDate, setEventNotificationDate] = useState<Nullable<Date>>(
-    curZooEvent.eventNotificationDate
-  );
+  const [eventNotificationDate, setEventNotificationDate] = useState<
+    Nullable<Date>
+  >(curZooEvent.eventNotificationDate);
   const [eventTiming, setEventTiming] = useState<string | undefined>(
     curZooEvent.eventTiming?.toString()
   );
-  const [eventDurationHrs, setEventDurationHrs] = useState<
-    number | undefined
-  >(curZooEvent.eventDurationHrs);
+  const [eventDurationHrs, setEventDurationHrs] = useState<number | undefined>(
+    curZooEvent.eventDurationHrs
+  );
   const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
     number | undefined
   >(curZooEvent.requiredNumberOfKeeper);
@@ -90,7 +87,9 @@ function EditZooEventForm(props: EditZooEventFormProps) {
     if (props != undefined) {
       if (props.valueMissing) {
         return (
-          <div className="font-medium text-danger">* Please enter an event name!</div>
+          <div className="font-medium text-danger">
+            * Please enter an event name!
+          </div>
         );
       }
       // add any other cases here
@@ -206,10 +205,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
     };
 
     try {
-
-
       if (updateFuture) {
-
         // Update future with image
         if (imageFile) {
           const formData = new FormData();
@@ -271,7 +267,6 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           });
         }
       } else {
-
         // Update single with image
         if (imageFile) {
           const formData = new FormData();
@@ -308,43 +303,42 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           eventTiming: eventTiming,
           eventStartDateTime: eventStartDateTime,
           eventDurationHrs: eventDurationHrs,
-          requiredNumberOfKeeper: requiredNumberOfKeeper
+          requiredNumberOfKeeper: requiredNumberOfKeeper,
         };
         console.log(zooEventDetails);
-        apiJson.put(
-          `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
-          { zooEventDetails: zooEventDetails }
-        ).then(res => {
-          // success
-          toastShadcn({
-            description: "Successfully updated event",
+        apiJson
+          .put(
+            `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
+            { zooEventDetails: zooEventDetails }
+          )
+          .then((res) => {
+            // success
+            toastShadcn({
+              description: "Successfully updated event",
+            });
+            navigate(-1);
+          })
+          .catch((error) => {
+            // got error
+            toastShadcn({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description:
+                "An error has occurred while updating event: \n" +
+                error.message,
+            });
           });
-          navigate(-1);
-        }).catch(error => {
-          // got error
-          toastShadcn({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description:
-              "An error has occurred while updating event: \n" +
-              error.message,
-          });
-        });
       }
-
-
     } catch (error: any) {
       // got error
       toastShadcn({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while updating event: \n" +
-          error.message,
+          "An error has occurred while updating event: \n" + error.message,
       });
     }
-  };
-
+  }
 
   return (
     <div>
@@ -377,17 +371,14 @@ function EditZooEventForm(props: EditZooEventFormProps) {
         </div>
 
         {/* Zoo Event Picture */}
-        {curZooEvent.eventIsPublic &&
+        {curZooEvent.eventIsPublic && (
           <Form.Field
             name="zooEventImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
             <span className="font-medium">Current Image</span>
             <img
-              src={
-                "http://localhost:3000/" +
-                curZooEvent.imageUrl
-              }
+              src={"http://localhost:3000/" + curZooEvent.imageUrl}
               alt="Current zoo event image"
               className="my-4 aspect-square w-1/5 rounded-full border object-cover shadow-4"
             />
@@ -402,7 +393,8 @@ function EditZooEventForm(props: EditZooEventFormProps) {
               onChange={handleFileChange}
               className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter"
             />
-          </Form.Field>}
+          </Form.Field>
+        )}
 
         <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
           {/* Event Name */}
@@ -417,12 +409,12 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             setValue={setEventName}
             validateFunction={validateEventName}
           />
-
         </div>
 
         {/* Event Type */}
         <div className="mb-1 block font-medium">
-          Event Type<br /> <b>{beautifyText(eventType)}</b>
+          Event Type
+          <br /> <b>{beautifyText(eventType)}</b>
         </div>
 
         {/* Event Description */}
@@ -441,7 +433,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             <textarea
               rows={3}
               placeholder="Add an event description..."
-            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+              // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
           <Form.ValidityState>{validateEventDescription}</Form.ValidityState>
@@ -501,7 +493,9 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             id="dateField"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <Form.Label className="font-medium">{curZooEvent.eventIsPublic ? "Start Date" : "Date"}</Form.Label>
+            <Form.Label className="font-medium">
+              {curZooEvent.eventIsPublic ? "Start Date" : "Date"}
+            </Form.Label>
             <Form.Control
               className="hidden"
               type="text"
@@ -520,7 +514,8 @@ function EditZooEventForm(props: EditZooEventFormProps) {
 
                     const element = document.getElementById("dateField");
                     if (element) {
-                      const isDataInvalid = element.getAttribute("data-invalid");
+                      const isDataInvalid =
+                        element.getAttribute("data-invalid");
                       if (isDataInvalid == "true") {
                         element.setAttribute("data-valid", "true");
                         element.removeAttribute("data-invalid");
@@ -542,7 +537,8 @@ function EditZooEventForm(props: EditZooEventFormProps) {
 
                     const element = document.getElementById("dateField");
                     if (element) {
-                      const isDataInvalid = element.getAttribute("data-invalid");
+                      const isDataInvalid =
+                        element.getAttribute("data-invalid");
                       if (isDataInvalid == "true") {
                         element.setAttribute("data-valid", "true");
                         element.removeAttribute("data-invalid");
@@ -562,7 +558,9 @@ function EditZooEventForm(props: EditZooEventFormProps) {
               id="dateField"
               className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
             >
-              <Form.Label className="font-medium">Event Notification Date</Form.Label>
+              <Form.Label className="font-medium">
+                Event Notification Date
+              </Form.Label>
               <Form.Control
                 className="hidden"
                 type="text"
@@ -580,7 +578,8 @@ function EditZooEventForm(props: EditZooEventFormProps) {
 
                     const element = document.getElementById("dateField");
                     if (element) {
-                      const isDataInvalid = element.getAttribute("data-invalid");
+                      const isDataInvalid =
+                        element.getAttribute("data-invalid");
                       if (isDataInvalid == "true") {
                         element.setAttribute("data-valid", "true");
                         element.removeAttribute("data-invalid");
@@ -600,7 +599,9 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           id="updateFutureField"
           className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
-          <Form.Label className="font-medium">Update this and future events?</Form.Label>
+          <Form.Label className="font-medium">
+            Update this and future events?
+          </Form.Label>
           <Form.Control
             className="hidden"
             type="text"
@@ -611,7 +612,9 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           <Checkbox.Root
             className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow outline-none focus:shadow-[0_0_0_2px_black]"
             id="c1"
-            onCheckedChange={(event: boolean) => { setUpdateFuture(event) }}
+            onCheckedChange={(event: boolean) => {
+              setUpdateFuture(event);
+            }}
           >
             <Checkbox.Indicator>
               <CheckIcon />

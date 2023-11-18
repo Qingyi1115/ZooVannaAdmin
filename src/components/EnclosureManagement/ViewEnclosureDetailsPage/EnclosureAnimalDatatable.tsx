@@ -622,7 +622,7 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while assigning maintenance staff: \n" +
+            "An error has occurred while assigning animals: \n" +
             apiJson.error,
         });
       }
@@ -855,7 +855,7 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
                 {selectedAnimal.houseName} the{" "}
                 {selectedAnimal.species?.commonName}
               </b>{" "}
-              from the current enclosure? ?
+              from the current enclosure?
             </span>
           )}
         </div>

@@ -151,7 +151,7 @@ function AnimalBasicInformation(props: AnimalBasicInformationProps) {
             <SpeciesCard curSpecies={curAnimal.species} />
           </div>
           <div className="w-full">
-            <EnclosureCard />
+            <EnclosureCard curAnimal={curAnimal} />
           </div>
         </div>
         <div className="flex h-full w-3/5 flex-col">

@@ -88,7 +88,7 @@ function SalesChartPage() {
         </div>
       </div>
 
-      <div className="flex gap-2 pt-2">
+      <div className="flex gap-2 ">
         <div className="w-1/2" id="barChartContainer">
           <div className="h-full rounded-lg border border-stroke bg-white p-10 text-black shadow-default">
             <BarChart
