@@ -210,7 +210,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
         {/* Long Grass Coverage Range */}
         <Form.Field
           name="longGrassRange"
-          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          className="mb-4 flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
           <Form.Label className="font-medium">
             <div className="flex items-center gap-2 pl-1">
@@ -221,7 +221,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
               <span>Long Grass (%)</span>
             </div>
           </Form.Label>
-          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-strokedark/30 bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
             enclosureTerrainDistributionRecommendation.longGrassPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
@@ -232,13 +232,6 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
                     enclosureTerrainDistributionRecommendation.longGrassPercentMin,
                     enclosureTerrainDistributionRecommendation.longGrassPercentMax,
                   ]}
-                  onValueChange={(value) => {
-                    if (longGrassPercent != value[0]) {
-                      setLongGrassPercent(value[0]);
-                    } else {
-                      setLongGrassPercent(value[1]);
-                    }
-                  }}
                   min={0}
                   max={100}
                   step={1}
@@ -272,7 +265,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
         {/* Short Grass Coverage Range */}
         <Form.Field
           name="shortGrassRange"
-          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          className="mb-4 flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
           <Form.Label className="font-medium">
             <div className="flex items-center gap-2 pl-1">
@@ -283,7 +276,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
               <span>Short Grass (%)</span>
             </div>
           </Form.Label>
-          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-strokedark/30 bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
             enclosureTerrainDistributionRecommendation.shortGrassPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
@@ -294,13 +287,6 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
                     enclosureTerrainDistributionRecommendation.shortGrassPercentMin,
                     enclosureTerrainDistributionRecommendation.shortGrassPercentMax,
                   ]}
-                  onValueChange={(value) => {
-                    if (longGrassPercent != value[0]) {
-                      setLongGrassPercent(value[0]);
-                    } else {
-                      setLongGrassPercent(value[1]);
-                    }
-                  }}
                   min={0}
                   max={100}
                   step={1}
@@ -311,7 +297,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
             ) : (
               <div>No recommedation available</div>
             )}
-            <div className="flex h-full items-center justify-center gap-2">
+            <div className="flex h-1/2 items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
                 value={[shortGrassPercent, shortGrassPercent]}
@@ -334,7 +320,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
         {/* Soil Coverage Range */}
         <Form.Field
           name="soilRange"
-          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          className="mb-4 flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
           <Form.Label className="font-medium">
             <div className="flex items-center gap-2 pl-1">
@@ -345,7 +331,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
               <span>Soil (%)</span>
             </div>
           </Form.Label>
-          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-strokedark/30 bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
             enclosureTerrainDistributionRecommendation.soilPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
@@ -356,13 +342,6 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
                     enclosureTerrainDistributionRecommendation.soilPercentMin,
                     enclosureTerrainDistributionRecommendation.soilPercentMax,
                   ]}
-                  onValueChange={(value) => {
-                    if (longGrassPercent != value[0]) {
-                      setLongGrassPercent(value[0]);
-                    } else {
-                      setLongGrassPercent(value[1]);
-                    }
-                  }}
                   min={0}
                   max={100}
                   step={1}
@@ -373,7 +352,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
             ) : (
               <div>No recommedation available</div>
             )}
-            <div className="flex h-full items-center justify-center gap-2">
+            <div className="flex h-1/2 items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
                 value={[soilPercent, soilPercent]}
@@ -396,7 +375,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
         {/* Rock Coverage Range */}
         <Form.Field
           name="rockRange"
-          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          className="mb-4 flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
           <Form.Label className="font-medium">
             <div className="flex items-center gap-2 pl-1">
@@ -407,7 +386,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
               <span>Rock (%)</span>
             </div>
           </Form.Label>
-          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-strokedark/30 bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
             enclosureTerrainDistributionRecommendation.rockPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
@@ -418,13 +397,6 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
                     enclosureTerrainDistributionRecommendation.rockPercentMin,
                     enclosureTerrainDistributionRecommendation.rockPercentMax,
                   ]}
-                  onValueChange={(value) => {
-                    if (longGrassPercent != value[0]) {
-                      setLongGrassPercent(value[0]);
-                    } else {
-                      setLongGrassPercent(value[1]);
-                    }
-                  }}
                   min={0}
                   max={100}
                   step={1}
@@ -435,7 +407,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
             ) : (
               <div>No recommedation available</div>
             )}
-            <div className="flex h-full items-center justify-center gap-2">
+            <div className="flex h-1/2 items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
                 value={[rockPercent, rockPercent]}
@@ -458,7 +430,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
         {/* Rock Coverage Range */}
         <Form.Field
           name="sandRange"
-          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          className="mb-4 flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
           <Form.Label className="font-medium">
             <div className="flex items-center gap-2 pl-1">
@@ -469,7 +441,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
               <span>Sand (%)</span>
             </div>
           </Form.Label>
-          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-strokedark/30 bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
             enclosureTerrainDistributionRecommendation.sandPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
@@ -497,7 +469,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
             ) : (
               <div>No recommendation available</div>
             )}
-            <div className="flex h-full items-center justify-center gap-2">
+            <div className="flex h-1/2 items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
                 value={[sandPercent, sandPercent]}
@@ -520,7 +492,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
         {/* Snow Coverage Range */}
         <Form.Field
           name="snowRange"
-          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+          className="mb-4 flex w-full flex-col gap-1 data-[invalid]:text-danger"
         >
           <Form.Label className="font-medium">
             <div className="flex items-center gap-2 pl-1">
@@ -531,7 +503,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
               <span>Snow (%)</span>
             </div>
           </Form.Label>
-          <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
+          <div className="h-28 w-full rounded-lg border-[1.5px] border-strokedark/30 bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
             enclosureTerrainDistributionRecommendation.snowPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
@@ -559,7 +531,7 @@ function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
             ) : (
               <div>No recommedation available</div>
             )}
-            <div className="flex h-full items-center justify-center gap-2">
+            <div className="flex h-1/2 items-center justify-center gap-2">
               <span>0%</span>
               <TwoThumbSliderWithNumber
                 value={[snowPercent, snowPercent]}

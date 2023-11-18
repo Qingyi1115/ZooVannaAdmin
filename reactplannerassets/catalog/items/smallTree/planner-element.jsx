@@ -127,7 +127,7 @@ export default {
       label: "radius",
       type: "length-measure",
       defaultValue: {
-        length: 250,
+        length: 150,
         unit: "cm",
       },
     },

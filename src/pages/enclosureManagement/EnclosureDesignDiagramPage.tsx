@@ -1026,14 +1026,17 @@ function EnclosureDesignDiagramPage() {
                 </Button>
               </div>
               <div>
-                <Button onClick={makeSelectedAreaLand} className="bg-[#6aa84f]">
+                <Button
+                  onClick={makeSelectedAreaLand}
+                  className="bg-[#6aa84f] hover:bg-[#6aa84f95]"
+                >
                   Mark Land Area
                 </Button>
               </div>
               <div>
                 <Button
                   onClick={makeSelectedAreaWater}
-                  className="bg-[#2986cc]"
+                  className="bg-[#2986cc] hover:bg-[#2986cc95]"
                 >
                   Mark Water Area
                 </Button>
@@ -1105,7 +1108,7 @@ function EnclosureDesignDiagramPage() {
             <div className="flex gap-2">
               <div>
                 <Button
-                  className="w-full bg-[#008227]"
+                  className="w-full bg-[#008227] hover:bg-[#00822795]"
                   onClick={calculateTotalPlantationCoverage}
                 >
                   Re-calculate Plantation Coverage
