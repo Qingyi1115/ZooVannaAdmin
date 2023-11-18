@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
-import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPencil, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
@@ -129,7 +129,17 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
               navigate(`/zooevent/viewpubliceventsessiondetails/${publicEventSession.publicEventSessionId}`)
             }}>
             <HiEye className="mx-auto" />
-          </Button> <Button
+          </Button>
+          <Button
+            // variant={"outline"}
+            className="mb-1 mr-1"
+            onClick={() => {
+              navigate(`/zooevent/viewpubliceventdetails/${publicEventId}/publicEventSessions`, { replace: true })
+              navigate(`/zooevent/editpubliceventsession/${publicEventSession.publicEventSessionId}`)
+            }}>
+            <HiPencil className="mx-auto" />
+          </Button>
+          <Button
             variant={"destructive"}
             className="mr-2"
             onClick={() => confirmDeleteAnimalActivityLog(publicEventSession)}

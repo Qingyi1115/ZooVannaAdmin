@@ -28,7 +28,7 @@ import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 
 import { useToast } from "@/components/ui/use-toast";
-import { HiCheck, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 
 import { Dialog } from "primereact/dialog";
@@ -228,6 +228,15 @@ function ViewPublicEventSessionDetails(prop: ViewPublicEventSessionDetailsProps)
       {curPublicEventSession && (
         <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
           <div className="mb-10">
+          <Button
+            // variant={"outline"}
+            className="mb-1 mr-1"
+            onClick={() => {
+              navigate(`/zooevent/editpubliceventsession/${publicEventSession.publicEventSessionId}`)
+            }}>
+              <HiPencil className="mx-auto" />
+              Edit Session details
+          </Button>
             <Table>
               <TableBody>
                 <TableRow>

@@ -79,7 +79,9 @@ function AllFacilityCrowdLevelDataTable() {
       })
       .then((res) => {
         console.log("AllFacilityCrowdLevelDataTable", res);
-        setFacilityList(res["facilitiesData"].map(data => {
+        setFacilityList(res["facilitiesData"].filter(data => {
+          return data.crowdLevel != "NO_DATA"; 
+        }).map(data => {
           const facility = data["facility"]
           facility.crowdLevel = beautifyText(data.crowdLevel)
           return facility;
