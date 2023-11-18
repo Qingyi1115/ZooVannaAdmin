@@ -99,7 +99,7 @@ function EnclosureEnvironment(props: EnclosureEnvironmentProps) {
                 );
               }}
             >
-              <HiPencil className="mx-auto"></HiPencil>
+              <HiPencil className="mr-2"></HiPencil>
               Edit Environment Details
             </Button>
           )}
