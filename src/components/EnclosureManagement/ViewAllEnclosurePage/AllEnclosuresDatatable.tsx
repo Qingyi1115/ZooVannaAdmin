@@ -46,7 +46,7 @@ let emptyEnclosure: Enclosure = {
   //   facility: null,
   keepers: [],
   standOffBarrierDist: null,
-  designDiagramJsonUrl: null
+  designDiagramJsonUrl: null,
 };
 
 function AllEnclosuresDatatable() {
