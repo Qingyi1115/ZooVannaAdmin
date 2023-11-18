@@ -36,22 +36,22 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
       <Separator className="my-4" />
       {(employee.superAdmin ||
         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-          <Button
-            className="mr-2"
-            onClick={() => {
-              navigate(
-                `/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/layoutdesign`,
-                { replace: true }
-              );
-              navigate(
-                `/enclosure/editenclosureterrain/${curEnclosure.enclosureId}`
-              );
-            }}
-          >
-            <HiPencil className="mx-auto"></HiPencil>
-            Edit Terrain Details
-          </Button>
-        )}
+        <Button
+          className="mr-2"
+          onClick={() => {
+            navigate(
+              `/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/layoutdesign`,
+              { replace: true }
+            );
+            navigate(
+              `/enclosure/editenclosureterrain/${curEnclosure.enclosureId}`
+            );
+          }}
+        >
+          <HiPencil className="mr-2"></HiPencil>
+          Edit Requirements
+        </Button>
+      )}
       <Table className="rounded-lg shadow-lg">
         <TableBody>
           <TableRow>
@@ -79,8 +79,12 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
             <TableCell>
               <TwoThumbSliderWithNumber
                 value={[
-                  curEnclosure.plantationCoveragePercent || 0,
-                  curEnclosure.plantationCoveragePercent || 0,
+                  curEnclosure.plantationCoveragePercent
+                    ? +Number(curEnclosure.plantationCoveragePercent).toFixed(1)
+                    : 0,
+                  curEnclosure.plantationCoveragePercent
+                    ? +Number(curEnclosure.plantationCoveragePercent).toFixed(1)
+                    : 0,
                 ]}
                 min={0}
                 max={100}

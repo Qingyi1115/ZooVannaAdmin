@@ -7,16 +7,19 @@ import beautifyText from "../../../hooks/beautifyText";
 import useApiJson from "../../../hooks/useApiJson";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import Enclosure from "../../../models/Enclosure";
-import { Table, TableBody, TableCell, TableRow } from "../../../shadcn/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "../../../shadcn/components/ui/table";
 import EnclosureSensorCard from "./EnclosureSensorCard";
 
 interface EnclosureEnvironmentProps {
   curEnclosure: Enclosure;
 }
 
-function EnclosureEnvironment(
-  props: EnclosureEnvironmentProps
-) {
+function EnclosureEnvironment(props: EnclosureEnvironmentProps) {
   const { curEnclosure } = props;
   const navigate = useNavigate();
   const apiJson = useApiJson();
@@ -25,38 +28,47 @@ function EnclosureEnvironment(
   const [count, setCount] = useState(0);
   const employee = useAuthContext().state.user?.employeeData;
   useEffect(() => {
-
-    //Implementing the setInterval method 
+    //Implementing the setInterval method
     const interval = setInterval(() => {
       setCount(count + 1);
     }, 5000);
 
-    //Clearing the interval 
+    //Clearing the interval
     return () => clearInterval(interval);
   }, [count]);
 
   useEffect(() => {
-
-    apiJson.get(
-      `http://localhost:3000/api/enclosure/getEnvironmentSensorsData/${curEnclosure.enclosureId}`
-    ).then(res => {
-      console.log("EnclosureEnvironment", res)
-      const sensorData: any = [];
-      for (const dat of res.environmentData) {
-        sensorData.push({
-          values: dat.sensorReadings.map(val => val.value),
-          labels: dat.sensorReadings.map(val => new Date(val.readingDate).toLocaleTimeString().substring(0, 5)),
-          unit: dat.sensorType == "TEMPERATURE" ? "°C" :
-            dat.sensorType == "LIGHT" ? "lx" :
-              dat.sensorType == "CAMERA" ? "approx. pax" :
-                dat.sensorType == "HUMIDITY" ? "RH" : "",
-          type: beautifyText(dat.sensorType),
-          name: dat.sensorName
-        })
-      }
-      setDataList(sensorData);
-    }).catch(err => console.log(err));
-  }, [curEnclosure, count])
+    apiJson
+      .get(
+        `http://localhost:3000/api/enclosure/getEnvironmentSensorsData/${curEnclosure.enclosureId}`
+      )
+      .then((res) => {
+        console.log("EnclosureEnvironment", res);
+        const sensorData: any = [];
+        for (const dat of res.environmentData) {
+          sensorData.push({
+            values: dat.sensorReadings.map((val) => val.value),
+            labels: dat.sensorReadings.map((val) =>
+              new Date(val.readingDate).toLocaleTimeString().substring(0, 5)
+            ),
+            unit:
+              dat.sensorType == "TEMPERATURE"
+                ? "°C"
+                : dat.sensorType == "LIGHT"
+                ? "lx"
+                : dat.sensorType == "CAMERA"
+                ? "approx. pax"
+                : dat.sensorType == "HUMIDITY"
+                ? "RH"
+                : "",
+            type: beautifyText(dat.sensorType),
+            name: dat.sensorName,
+          });
+        }
+        setDataList(sensorData);
+      })
+      .catch((err) => console.log(err));
+  }, [curEnclosure, count]);
 
   return (
     <div>
@@ -75,22 +87,22 @@ function EnclosureEnvironment(
           </Button>
           {(employee.superAdmin ||
             employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-              <Button
-                className="mr-2"
-                onClick={() => {
-                  navigate(
-                    `/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/environment`,
-                    { replace: true }
-                  );
-                  navigate(
-                    `/enclosure/editenclosureenvironment/${curEnclosure.enclosureId}`
-                  );
-                }}
-              >
-                <HiPencil className="mx-auto"></HiPencil>
-                Edit Environment Details
-              </Button>
-            )}
+            <Button
+              className="mr-2"
+              onClick={() => {
+                navigate(
+                  `/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/environment`,
+                  { replace: true }
+                );
+                navigate(
+                  `/enclosure/editenclosureenvironment/${curEnclosure.enclosureId}`
+                );
+              }}
+            >
+              <HiPencil className="mr-2"></HiPencil>
+              Edit Environment Details
+            </Button>
+          )}
         </div>
       )}
       <br />
@@ -99,52 +111,58 @@ function EnclosureEnvironment(
         <TableBody>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Temperature Range (&deg;C)
+              Acceptable Temperature Range (&deg;C)
             </TableCell>
             <TableCell>
-              <span className="font-bold">
-                {curEnclosure.acceptableTempMin}
-              </span>{" "}
-              &deg;C —{" "}
-              <span className="font-bold">
-                {curEnclosure.acceptableTempMax}
-              </span>{" "}
-              &deg;C
+              {curEnclosure.acceptableTempMin &&
+              curEnclosure.acceptableTempMax ? (
+                <>
+                  <span>{curEnclosure.acceptableTempMin} &deg;C — </span>
+                  <span>{curEnclosure.acceptableTempMax} &deg;C</span>
+                </>
+              ) : (
+                <span>Range not set</span>
+              )}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Humidity Range (g.m<sup>-3</sup>)
+              Acceptable Humidity Range (g.m<sup>-3</sup>)
             </TableCell>
             <TableCell>
-              <span className="font-bold">
-                {curEnclosure.acceptableHumidityMin}
-              </span>{" "}
-              g.m<sup>-3</sup> —{" "}
-              <span className="font-bold">
-                {curEnclosure.acceptableHumidityMax}
-              </span>{" "}
-              g.m
-              <sup>-3</sup>
+              {curEnclosure.acceptableHumidityMin &&
+              curEnclosure.acceptableHumidityMax ? (
+                <>
+                  <span>
+                    {curEnclosure.acceptableHumidityMin} g.m<sup>-3</sup> —{" "}
+                  </span>
+                  <span>
+                    {curEnclosure.acceptableHumidityMax} g.m<sup>-3</sup>
+                  </span>
+                </>
+              ) : (
+                <span>Range not set</span>
+              )}
             </TableCell>
           </TableRow>
         </TableBody>
       </Table>
       <br />
-      {dataList.length == 0 ?
+      {dataList.length == 0 ? (
         <div>No Sensor Readings</div>
-        :
-        dataList.map(val => {
-          return <EnclosureSensorCard
-            unit={val.unit}
-            type={val.type}
-            labels={val.labels}
-            values={val.values}
-            name={val.name}
-          ></EnclosureSensorCard>
+      ) : (
+        dataList.map((val) => {
+          return (
+            <EnclosureSensorCard
+              unit={val.unit}
+              type={val.type}
+              labels={val.labels}
+              values={val.values}
+              name={val.name}
+            ></EnclosureSensorCard>
+          );
         })
-      }
-
+      )}
     </div>
   );
 }

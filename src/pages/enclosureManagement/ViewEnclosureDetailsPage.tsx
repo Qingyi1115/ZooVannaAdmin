@@ -81,9 +81,9 @@ function ViewEnclosureDetailsPage() {
             <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
             <TabsTrigger value="layoutdesign">Layout & Design</TabsTrigger>
             <TabsTrigger value="animalslist">Animals List</TabsTrigger>
-            <TabsTrigger value="environment">Environment</TabsTrigger>
-            <TabsTrigger value="safety">Safety</TabsTrigger>
+            {/* <TabsTrigger value="safety">Safety</TabsTrigger> */}
             <TabsTrigger value="enrichmentitems">Enrichment Items</TabsTrigger>
+            <TabsTrigger value="environment">Environment</TabsTrigger>
             <TabsTrigger value="keepers">Keepers</TabsTrigger>
             {/* <TabsTrigger value="medical">Medical</TabsTrigger> */}
           </TabsList>
@@ -102,17 +102,17 @@ function ViewEnclosureDetailsPage() {
               <EnclosureAnimalList curEnclosure={curEnclosure} />
             )}
           </TabsContent>
-          <TabsContent value="environment">
-            {curEnclosure && (
-              <EnclosureEnvironment curEnclosure={curEnclosure} />
-            )}
-          </TabsContent>
-          <TabsContent value="safety">
+          {/* <TabsContent value="safety">
             {curEnclosure && <EnclosureSafety curEnclosure={curEnclosure} />}
-          </TabsContent>
+          </TabsContent> */}
           <TabsContent value="enrichmentitems">
             {curEnclosure && (
               <EnclosureEnrichmentItemList curEnclosure={curEnclosure} />
+            )}
+          </TabsContent>
+          <TabsContent value="environment">
+            {curEnclosure && (
+              <EnclosureEnvironment curEnclosure={curEnclosure} />
             )}
           </TabsContent>
           <TabsContent value="keepers">
