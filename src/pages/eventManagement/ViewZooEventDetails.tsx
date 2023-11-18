@@ -643,9 +643,9 @@ function ViewZooEventDetails() {
                 <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
                   <TabsTrigger value="details">Basic Information</TabsTrigger>
 
-                  <TabsTrigger value="involvedAnimals">Involved Animals</TabsTrigger>
-                  {curZooEvent.animalActivity != null && <TabsTrigger value="involvedItems">Involved Items</TabsTrigger>}
-                  {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && <TabsTrigger value="assignedEmployees">Assigned Employees</TabsTrigger>}
+                  {curZooEvent.eventType != "EMPLOYEE_ABSENCE" && <TabsTrigger value="involvedAnimals">Involved Animals</TabsTrigger>}
+                  {(curZooEvent.animalActivity != null && curZooEvent.eventType != "EMPLOYEE_ABSENCE") && <TabsTrigger value="involvedItems">Involved Items</TabsTrigger>}
+                  {((employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && curZooEvent.eventType != "EMPLOYEE_ABSENCE") && <TabsTrigger value="assignedEmployees">Assigned Employees</TabsTrigger>}
                 </TabsList>
 
                 <TabsContent value="details">
@@ -660,7 +660,7 @@ function ViewZooEventDetails() {
                           className="my-3">Edit Basic Information
                         </Button>}
 
-                      {curZooEvent.animalActivity ?
+                      {curZooEvent.eventType != "EMPLOYEE_ABSENCE" && (curZooEvent.animalActivity ?
                         <Button
                           onClick={() => {
                             navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
@@ -675,7 +675,7 @@ function ViewZooEventDetails() {
                           }}
                           className="my-3">
                           Make Event Public
-                        </Button>)
+                        </Button>))
                       }
 
                       {(curZooEvent.publicEventSession) &&
@@ -767,7 +767,7 @@ function ViewZooEventDetails() {
                           )
                         }
 
-                        {!curZooEvent.eventIsPublic && (
+                        {(!curZooEvent.eventIsPublic && curZooEvent.eventType != "EMPLOYEE_ABSENCE") && (
                           <TableRow>
                             <TableCell className="w-1/3 font-bold" colSpan={2}>
                               Session Timing
@@ -775,13 +775,13 @@ function ViewZooEventDetails() {
                             <TableCell>{beautifyText(curZooEvent.eventTiming)}</TableCell>
                           </TableRow>
                         )}
-                        <TableRow>
+                        {curZooEvent.eventType != "EMPLOYEE_ABSENCE" && <TableRow>
                           <TableCell className="w-1/3 font-bold" colSpan={2}>
                             Duration (Hours)
                           </TableCell>
                           <TableCell>{curZooEvent.eventDurationHrs}</TableCell>
-                        </TableRow>
-                        {curZooEvent.eventNotificationDate && <TableRow>
+                        </TableRow>}
+                        {(curZooEvent.eventType != "EMPLOYEE_ABSENCE" && curZooEvent.eventNotificationDate) && <TableRow>
                           <TableCell className="w-1/3 font-bold" colSpan={2}>
                             Notification Date
                           </TableCell>
@@ -795,7 +795,7 @@ function ViewZooEventDetails() {
                           </TableCell>
                           <TableCell>{curZooEvent.eventDescription}</TableCell>
                         </TableRow>
-                        <TableRow>
+                        {curZooEvent.eventType != "EMPLOYEE_ABSENCE" && <TableRow>
                           <TableCell className="w-1/3 font-bold" colSpan={2}>
                             Keepers
                           </TableCell>
@@ -804,7 +804,7 @@ function ViewZooEventDetails() {
                               curZooEvent.keepers?.map((keeper: Keeper) => keeper.employee.employeeName).join(", ") :
                               "No keepers assigned to this event!"}
                           </TableCell>
-                        </TableRow>
+                        </TableRow>}
                         {
                           curZooEvent.enclosure && (
 
@@ -817,6 +817,17 @@ function ViewZooEventDetails() {
                               </TableCell>
                             </TableRow>
                           )
+                        }
+                        {
+                          curZooEvent.eventType == EventType.EMPLOYEE_ABSENCE && (
+                            <TableRow>
+                              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                                Employee
+                              </TableCell>
+                              <TableCell>
+                                {curZooEvent.employee.employeeName}
+                              </TableCell>
+                            </TableRow>)
                         }
 
                       </TableBody>

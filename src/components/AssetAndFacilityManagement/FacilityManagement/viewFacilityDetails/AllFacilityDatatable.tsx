@@ -7,7 +7,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 
-import { HiCamera, HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
+import { HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
 import { MdOutlineAssignmentInd } from "react-icons/md";
 import facility from "src/models/Facility";
 import useApiJson from "../../../../hooks/useApiJson";
@@ -187,7 +187,7 @@ function AllFacilityDatatable() {
             </Button>
 
           )}
-        {(employee.superAdmin ||
+        {/* {(employee.superAdmin ||
           employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")
           && (
 
@@ -201,7 +201,7 @@ function AllFacilityDatatable() {
               }}>
               <HiCamera className="mx-auto" />
             </Button>
-          )}
+          )} */}
         {/* {(employee.superAdmin ||
           employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <NavLink
@@ -384,7 +384,7 @@ function AllFacilityDatatable() {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "15rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>
         </div>

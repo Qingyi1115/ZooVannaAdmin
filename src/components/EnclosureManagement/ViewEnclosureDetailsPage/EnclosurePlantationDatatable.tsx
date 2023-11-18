@@ -505,6 +505,7 @@ function EnclosurePlantationDatatable(props: EnclosurePlantationDatatableProps) 
             dataKey="plantationId"
             paginator
             rows={10}
+            rowsPerPageOptions={[10, 25, 50, 100]}
             scrollable
             selectionMode={"single"}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
