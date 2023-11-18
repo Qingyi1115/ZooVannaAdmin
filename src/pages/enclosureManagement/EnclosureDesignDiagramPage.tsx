@@ -279,6 +279,29 @@ function EnclosureDesignDiagramPage() {
     );
   }
 
+  // fetch recommendation
+  const [
+    enclosureTerrainDistributionRecommendation,
+    setEnclosureTerrainDistributionRecommendation,
+  ] = useState<any>();
+  useEffect(() => {
+    const fetchEnclosureTerrainStuffReco = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/enclosure/getEnclosureTerrainDistributionRecommendation/${curEnclosure.enclosureId}`
+        );
+        // console.log("test");
+        // console.log(responseJson);
+        setEnclosureTerrainDistributionRecommendation(
+          responseJson.enclosureTerrainDistributionReco
+        );
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchEnclosureTerrainStuffReco();
+  }, [curEnclosure]);
+
   function loadDiagram(sceneJson: any) {
     // console.log(sceneJson);
     store.dispatch({
@@ -430,12 +453,12 @@ function EnclosureDesignDiagramPage() {
 
     Object.values(curScene.layers).forEach((layer: any) => {
       Object.values(layer.areas).forEach((area: any) => {
-        console.log(
-          "In loop, area: " +
-            area.id +
-            ", patternColor: " +
-            area.properties.patternColor
-        );
+        // console.log(
+        //   "In loop, area: " +
+        //     area.id +
+        //     ", patternColor: " +
+        //     area.properties.patternColor
+        // );
         if (area.properties.patternColor == "#6aa84f") {
           // LAND
           let curAreaArea = calculateAreaAreaByIdInMetresSquare(
@@ -462,7 +485,7 @@ function EnclosureDesignDiagramPage() {
             );
             curAreaArea = curAreaArea - areaOfCurHole;
           }
-          console.log("curAreaArea outside: " + curAreaArea);
+          // console.log("curAreaArea outside: " + curAreaArea);
           tempTotalLandArea += curAreaArea;
         } else if (area.properties.patternColor == "#2986cc") {
           // WATER
@@ -660,7 +683,7 @@ function EnclosureDesignDiagramPage() {
     for (let i = 0; i < circles.length; i++) {
       const circle = circles[i];
       const circleArea = calculateCircleCoveredArea(circle);
-      console.log("circle id: " + i + "circle area: " + circleArea);
+      // console.log("circle id: " + i + "circle area: " + circleArea);
       totalCoveredArea += circleArea;
       let isCurCircleCompletelyInAnother = false;
       // check if cur circle is inside another circle completely,
@@ -707,7 +730,7 @@ function EnclosureDesignDiagramPage() {
               nextCircle,
               distanceBetweenCenters
             );
-            console.log("in heree lmao, overlappingArea: " + overlappingArea);
+            // console.log("in heree lmao, overlappingArea: " + overlappingArea);
             totalCoveredArea -= overlappingArea; // Subtract overlapping area to avoid duplication
           }
         }
@@ -801,13 +824,13 @@ function EnclosureDesignDiagramPage() {
       });
     });
 
-    console.log(plantationCirclesList);
+    // console.log(plantationCirclesList);
 
     tempTotalPlantationAreaSquareM =
       calculateTotalCoveredArea(plantationCirclesList) / 10000; // divide by 1000 to convert from square cm to square m
-    console.log(
-      "heree, tempTotalPlantationAreaSquareM: " + tempTotalPlantationAreaSquareM
-    );
+    // console.log(
+    //   "heree, tempTotalPlantationAreaSquareM: " + tempTotalPlantationAreaSquareM
+    // );
     if (curTotalLandArea != 0) {
       let tempTotalPlantationCoverage =
         (tempTotalPlantationAreaSquareM / curTotalLandArea) * 100;
@@ -857,6 +880,68 @@ function EnclosureDesignDiagramPage() {
     };
     updateDesignDiagramApi();
   }
+
+  const areaValueFormat = (area: number, reco: number) => {
+    if (area >= reco) {
+      return (
+        <React.Fragment>
+          <span className="font-bold text-emerald-800">{area.toFixed(2)}</span>
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          <span className="animate-pulse font-bold text-red-800">
+            {area.toFixed(2)}
+          </span>
+        </React.Fragment>
+      );
+    }
+  };
+
+  const plantationCoverageValueFormat = (
+    plantationCoverage: number,
+    recoMin: any,
+    recoMax: any
+  ) => {
+    // if (typeof value === "string")
+
+    if (
+      recoMin == "No suitable range, please review species allocation." ||
+      recoMax == "No suitable range, please review species allocation."
+    ) {
+      return (
+        <React.Fragment>
+          <span className="font-bold">{plantationCoverage.toFixed(2)}</span>
+        </React.Fragment>
+      );
+    }
+
+    if (
+      plantationCoverage < Number(recoMin) ||
+      plantationCoverage > Number(recoMax)
+    ) {
+      return (
+        <React.Fragment>
+          <span className="animate-pulse font-bold text-red-800">
+            {plantationCoverage > 100
+              ? (100).toFixed(2)
+              : plantationCoverage.toFixed(2)}
+          </span>
+        </React.Fragment>
+      );
+    } else if (plantationCoverage >= recoMin && plantationCoverage <= recoMax) {
+      return (
+        <React.Fragment>
+          <span className="font-bold text-emerald-800">
+            {plantationCoverage > 100
+              ? (100).toFixed(2)
+              : plantationCoverage.toFixed(2)}
+          </span>
+        </React.Fragment>
+      );
+    }
+  };
 
   return (
     <div className="overflow-y-scroll  p-10">
@@ -912,11 +997,11 @@ function EnclosureDesignDiagramPage() {
 
         {/* Body */}
 
-        <div>
+        {/* <div>
           <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
-        </div>
+        </div> */}
 
-        <div className="flex w-full gap-6">
+        <div className="flex w-full gap-10">
           <div className="flex flex-col gap-2">
             <div className="min-w-max">
               <Button className="w-full" onClick={handleSave}>
@@ -933,7 +1018,20 @@ function EnclosureDesignDiagramPage() {
               </Button>
             </div>
           </div>
-          <div className="flex w-full gap-2">
+          <div className="flex w-5/6 flex-col items-start gap-2">
+            <div className="flex gap-2 p-0">
+              <div>
+                <Button className="" onClick={updateTotalLandWaterArea}>
+                  Re-calculate Areas
+                </Button>
+              </div>
+              <div>
+                <Button onClick={makeSelectedAreaLand}>Mark Land Area</Button>
+              </div>
+              <div>
+                <Button onClick={makeSelectedAreaWater}>Mark Water Area</Button>
+              </div>
+            </div>
             <Table className="w-full">
               <TableHeader className="bg-whiten">
                 {/* <TableRow>
@@ -946,67 +1044,52 @@ function EnclosureDesignDiagramPage() {
                 </TableRow> */}
                 <TableRow>
                   <TableHead className="font-bold">Area</TableHead>
-                  <TableHead>Current</TableHead>
-                  <TableHead>Recommended</TableHead>
+                  <TableHead className="text-center">Current</TableHead>
+                  <TableHead className="text-center">Recommended Min</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
+                <TableRow className="hover:bg-transparent">
                   <TableCell className="font-bold">
-                    Land (in m<sup>2</sup>)
+                    Land (m<sup>2</sup>)
                   </TableCell>
-                  <TableCell>{curTotalLandArea.toFixed(2)}</TableCell>
-                  <TableCell>bla</TableCell>
+                  <TableCell className="text-center hover:bg-muted/50">
+                    {areaValueFormat(
+                      curTotalLandArea,
+                      Number(
+                        enclosureTerrainDistributionRecommendation?.minLandAreaRequired
+                      )
+                    )}
+                  </TableCell>
+                  <TableCell className="text-center hover:bg-muted/50">
+                    {enclosureTerrainDistributionRecommendation?.minLandAreaRequired.toFixed(
+                      2
+                    )}
+                  </TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow className="hover:bg-transparent">
                   <TableCell className="font-bold">
-                    Water (in m<sup>2</sup>)
+                    Water (m<sup>2</sup>)
                   </TableCell>
-                  <TableCell>{curTotalWaterArea.toFixed(2)}</TableCell>
-                  <TableCell>bla</TableCell>
+                  <TableCell className="text-center hover:bg-muted/50">
+                    {areaValueFormat(
+                      curTotalWaterArea,
+                      Number(
+                        enclosureTerrainDistributionRecommendation?.minWaterAreaRequired
+                      )
+                    )}
+                  </TableCell>
+                  <TableCell className="text-center hover:bg-muted/50">
+                    {enclosureTerrainDistributionRecommendation?.minWaterAreaRequired.toFixed(
+                      2
+                    )}
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
-            <div className="flex flex-col gap-2">
-              <div>
-                <Button className="w-full" onClick={updateTotalLandWaterArea}>
-                  Re-calculate Areas
-                </Button>
-              </div>
-              <div>
-                <Button onClick={makeSelectedAreaLand}>
-                  Make Selected Area as Land
-                </Button>
-              </div>
-              <div>
-                <Button onClick={makeSelectedAreaWater}>
-                  Make Selected Area as Water
-                </Button>
-              </div>
-            </div>
           </div>
-          <div className="flex w-full gap-2">
-            <Table className="w-full">
-              <TableHeader className="bg-whiten">
-                <TableRow>
-                  <TableHead className="font-bold"></TableHead>
-                  <TableHead>Current</TableHead>
-                  <TableHead>Recommended</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-bold">
-                    Plantation Coverage (in %)
-                  </TableCell>
-                  <TableCell>
-                    {totalPlantationCoveragePercent.toFixed(2)}
-                  </TableCell>
-                  <TableCell>bla</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <div className="flex flex-col gap-2">
+          <div className="flex w-full flex-col gap-2">
+            <div className="flex gap-2">
               <div>
                 <Button
                   className="w-full"
@@ -1016,6 +1099,46 @@ function EnclosureDesignDiagramPage() {
                 </Button>
               </div>
             </div>
+            <Table className="w-full">
+              <TableHeader className="bg-whiten">
+                <TableRow>
+                  <TableHead className="font-bold"></TableHead>
+                  <TableHead className="text-center">Recommended Min</TableHead>
+                  <TableHead className="text-center">Current</TableHead>
+                  <TableHead className="text-center">Recommended Max</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-bold">
+                    Plantation Coverage (%)
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin ==
+                    "No suitable range, please review species allocation."
+                      ? enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin
+                      : enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin.toFixed(
+                          2
+                        )}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {plantationCoverageValueFormat(
+                      totalPlantationCoveragePercent,
+                      enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin,
+                      enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax
+                    )}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax ==
+                    "No suitable range, please review species allocation."
+                      ? enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax
+                      : enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax.toFixed(
+                          2
+                        )}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
         </div>
 
