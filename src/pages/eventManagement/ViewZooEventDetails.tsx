@@ -818,6 +818,17 @@ function ViewZooEventDetails() {
                             </TableRow>
                           )
                         }
+                        {
+                          curZooEvent.eventType == EventType.EMPLOYEE_ABSENCE && (
+                            <TableRow>
+                              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                                Employee
+                              </TableCell>
+                              <TableCell>
+                                {curZooEvent.employee.employeeName}
+                              </TableCell>
+                            </TableRow>)
+                        }
 
                       </TableBody>
                     </Table>
