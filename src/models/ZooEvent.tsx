@@ -1,6 +1,7 @@
 import { EventTimingType, EventType } from "../enums/Enumurated";
 import Animal from "./Animal";
 import AnimalActivity from "./AnimalActivity";
+import Employee from "./Employee";
 import Enclosure from "./Enclosure";
 import FeedingPlanSessionDetail from "./FeedingPlanSessionDetail";
 import InHouse from "./InHouse";
@@ -31,6 +32,7 @@ interface ZooEvent {
   enclosure?: Enclosure;
   animals?: Animal[];
   inHouse?: InHouse;
+  employee?: Employee;
   // animalClinic?: AnimalClinic;
   animalActivity?: AnimalActivity;
   feedingPlanSessionDetail?: FeedingPlanSessionDetail;

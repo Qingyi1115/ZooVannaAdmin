@@ -433,194 +433,196 @@ function EditZooEventForm(props: EditZooEventFormProps) {
             <textarea
               rows={3}
               placeholder="Add an event description..."
-              // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
+            // className="bg-blackA5 shadow-blackA9 selection:color-white selection:bg-blackA9 box-border inline-flex w-full resize-none appearance-none items-center justify-center rounded-[4px] p-[10px] text-[15px] leading-none text-white shadow-[0_0_0_1px] outline-none hover:shadow-[0_0_0_1px_black] focus:shadow-[0_0_0_2px_black]"
             />
           </Form.Control>
           <Form.ValidityState>{validateEventDescription}</Form.ValidityState>
         </Form.Field>
-        <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
-          {!curZooEvent.eventIsPublic && (
-            <FormFieldSelect
-              formFieldName="eventTiming"
-              label="Timing"
-              required={true}
-              placeholder="Select an event timing..."
-              valueLabelPair={Object.keys(EventTimingType).map(
-                (eventTimingTypeKey) => [
-                  EventTimingType[
-                    eventTimingTypeKey as keyof typeof EventTimingType
-                  ].toString(),
-                  EventTimingType[
-                    eventTimingTypeKey as keyof typeof EventTimingType
-                  ].toString(),
-                ]
-              )}
-              value={eventTiming}
-              setValue={setEventTiming}
-              validateFunction={validateEventTiming}
-            />
-          )}
-
-          {/* Duration in minutes */}
-          <FormFieldInput
-            type="number"
-            formFieldName="eventDurationHrs"
-            label={`Duration (minutes)`}
-            required={true}
-            pattern={undefined}
-            placeholder="e.g., 8"
-            value={eventDurationHrs}
-            setValue={setEventDurationHrs}
-            validateFunction={validateEventDurationHrs}
-          />
-
-          {/* Number of keepers required */}
-          <FormFieldInput
-            type="number"
-            formFieldName="durationInMinutes"
-            label={`Number of keepers required`}
-            required={true}
-            pattern={undefined}
-            placeholder="e.g., 2"
-            value={requiredNumberOfKeeper}
-            setValue={setRequiredNumberOfKeeper}
-            validateFunction={validateRequiredNumberOfKeeper}
-          />
-
-          {/* Start Date */}
-          <Form.Field
-            name="dateOfMeasure"
-            id="dateField"
-            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-          >
-            <Form.Label className="font-medium">
-              {curZooEvent.eventIsPublic ? "Start Date" : "Date"}
-            </Form.Label>
-            <Form.Control
-              className="hidden"
-              type="text"
-              value={eventStartDateTime?.toString()}
-              required={true}
-              onChange={() => null}
-            ></Form.Control>
-
+        {curZooEvent.eventType != "EMPLOYEE_ABSENCE" &&
+          <div className="flex flex-col justify-center gap-6 lg:flex-row lg:gap-12">
             {!curZooEvent.eventIsPublic && (
-              <Calendar
-                value={eventStartDateTime}
-                className="w-fit"
-                onChange={(e: any) => {
-                  if (e && e.value !== undefined) {
-                    setEventStartDateTime(e.value);
-
-                    const element = document.getElementById("dateField");
-                    if (element) {
-                      const isDataInvalid =
-                        element.getAttribute("data-invalid");
-                      if (isDataInvalid == "true") {
-                        element.setAttribute("data-valid", "true");
-                        element.removeAttribute("data-invalid");
-                      }
-                    }
-                  }
-                }}
+              <FormFieldSelect
+                formFieldName="eventTiming"
+                label="Timing"
+                required={true}
+                placeholder="Select an event timing..."
+                valueLabelPair={Object.keys(EventTimingType).map(
+                  (eventTimingTypeKey) => [
+                    EventTimingType[
+                      eventTimingTypeKey as keyof typeof EventTimingType
+                    ].toString(),
+                    EventTimingType[
+                      eventTimingTypeKey as keyof typeof EventTimingType
+                    ].toString(),
+                  ]
+                )}
+                value={eventTiming}
+                setValue={setEventTiming}
+                validateFunction={validateEventTiming}
               />
             )}
 
-            {curZooEvent.eventIsPublic && (
-              <Calendar
-                showTime
-                value={eventStartDateTime}
-                className="w-fit"
-                onChange={(e: any) => {
-                  if (e && e.value !== undefined) {
-                    setEventStartDateTime(e.value);
+            {/* Duration in minutes */}
+            <FormFieldInput
+              type="number"
+              formFieldName="eventDurationHrs"
+              label={`Duration (minutes)`}
+              required={true}
+              pattern={undefined}
+              placeholder="e.g., 8"
+              value={eventDurationHrs}
+              setValue={setEventDurationHrs}
+              validateFunction={validateEventDurationHrs}
+            />
 
-                    const element = document.getElementById("dateField");
-                    if (element) {
-                      const isDataInvalid =
-                        element.getAttribute("data-invalid");
-                      if (isDataInvalid == "true") {
-                        element.setAttribute("data-valid", "true");
-                        element.removeAttribute("data-invalid");
-                      }
-                    }
-                  }
-                }}
-              />
-            )}
-            <Form.ValidityState>{validateDate}</Form.ValidityState>
-          </Form.Field>
+            {/* Number of keepers required */}
+            <FormFieldInput
+              type="number"
+              formFieldName="durationInMinutes"
+              label={`Number of keepers required`}
+              required={true}
+              pattern={undefined}
+              placeholder="e.g., 2"
+              value={requiredNumberOfKeeper}
+              setValue={setRequiredNumberOfKeeper}
+              validateFunction={validateRequiredNumberOfKeeper}
+            />
 
-          {/* Event Notification Date */}
-          {curZooEvent.eventIsPublic && (
+            {/* Start Date */}
             <Form.Field
-              name="eventNotificationDate"
+              name="dateOfMeasure"
               id="dateField"
               className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
             >
               <Form.Label className="font-medium">
-                Event Notification Date
+                {curZooEvent.eventIsPublic ? "Start Date" : "Date"}
               </Form.Label>
               <Form.Control
                 className="hidden"
                 type="text"
-                value={eventNotificationDate?.toString()}
+                value={eventStartDateTime?.toString()}
                 required={true}
                 onChange={() => null}
               ></Form.Control>
 
-              <Calendar
-                value={eventNotificationDate}
-                className="w-fit"
-                onChange={(e: any) => {
-                  if (e && e.value !== undefined) {
-                    setEventStartDateTime(e.value);
+              {!curZooEvent.eventIsPublic && (
+                <Calendar
+                  value={eventStartDateTime}
+                  className="w-fit"
+                  onChange={(e: any) => {
+                    if (e && e.value !== undefined) {
+                      setEventStartDateTime(e.value);
 
-                    const element = document.getElementById("dateField");
-                    if (element) {
-                      const isDataInvalid =
-                        element.getAttribute("data-invalid");
-                      if (isDataInvalid == "true") {
-                        element.setAttribute("data-valid", "true");
-                        element.removeAttribute("data-invalid");
+                      const element = document.getElementById("dateField");
+                      if (element) {
+                        const isDataInvalid =
+                          element.getAttribute("data-invalid");
+                        if (isDataInvalid == "true") {
+                          element.setAttribute("data-valid", "true");
+                          element.removeAttribute("data-invalid");
+                        }
                       }
                     }
-                  }
-                }}
-              />
+                  }}
+                />
+              )}
+
+              {curZooEvent.eventIsPublic && (
+                <Calendar
+                  showTime
+                  value={eventStartDateTime}
+                  className="w-fit"
+                  onChange={(e: any) => {
+                    if (e && e.value !== undefined) {
+                      setEventStartDateTime(e.value);
+
+                      const element = document.getElementById("dateField");
+                      if (element) {
+                        const isDataInvalid =
+                          element.getAttribute("data-invalid");
+                        if (isDataInvalid == "true") {
+                          element.setAttribute("data-valid", "true");
+                          element.removeAttribute("data-invalid");
+                        }
+                      }
+                    }
+                  }}
+                />
+              )}
               <Form.ValidityState>{validateDate}</Form.ValidityState>
             </Form.Field>
-          )}
-        </div>
+
+            {/* Event Notification Date */}
+            {curZooEvent.eventIsPublic && (
+              <Form.Field
+                name="eventNotificationDate"
+                id="dateField"
+                className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
+              >
+                <Form.Label className="font-medium">
+                  Event Notification Date
+                </Form.Label>
+                <Form.Control
+                  className="hidden"
+                  type="text"
+                  value={eventNotificationDate?.toString()}
+                  required={true}
+                  onChange={() => null}
+                ></Form.Control>
+
+                <Calendar
+                  value={eventNotificationDate}
+                  className="w-fit"
+                  onChange={(e: any) => {
+                    if (e && e.value !== undefined) {
+                      setEventStartDateTime(e.value);
+
+                      const element = document.getElementById("dateField");
+                      if (element) {
+                        const isDataInvalid =
+                          element.getAttribute("data-invalid");
+                        if (isDataInvalid == "true") {
+                          element.setAttribute("data-valid", "true");
+                          element.removeAttribute("data-invalid");
+                        }
+                      }
+                    }
+                  }}
+                />
+                <Form.ValidityState>{validateDate}</Form.ValidityState>
+              </Form.Field>
+            )}
+          </div>}
 
         {/* Update Future*/}
-        <Form.Field
-          name="updateFuture"
-          id="updateFutureField"
-          className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
-        >
-          <Form.Label className="font-medium">
-            Update this and future events?
-          </Form.Label>
-          <Form.Control
-            className="hidden"
-            type="text"
-            value={updateFuture?.toString()}
-            required={true}
-            onChange={() => null}
-          ></Form.Control>
-          <Checkbox.Root
-            className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow outline-none focus:shadow-[0_0_0_2px_black]"
-            id="c1"
-            onCheckedChange={(event: boolean) => {
-              setUpdateFuture(event);
-            }}
+        {curZooEvent.eventType != "EMPLOYEE_ABSENCE" &&
+          <Form.Field
+            name="updateFuture"
+            id="updateFutureField"
+            className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <Checkbox.Indicator>
-              <CheckIcon />
-            </Checkbox.Indicator>
-          </Checkbox.Root>
-        </Form.Field>
+            <Form.Label className="font-medium">
+              Update this and future events?
+            </Form.Label>
+            <Form.Control
+              className="hidden"
+              type="text"
+              value={updateFuture?.toString()}
+              required={true}
+              onChange={() => null}
+            ></Form.Control>
+            <Checkbox.Root
+              className="flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow outline-none focus:shadow-[0_0_0_2px_black]"
+              id="c1"
+              onCheckedChange={(event: boolean) => {
+                setUpdateFuture(event);
+              }}
+            >
+              <Checkbox.Indicator>
+                <CheckIcon />
+              </Checkbox.Indicator>
+            </Checkbox.Root>
+          </Form.Field>}
 
         <Form.Submit asChild>
           <Button

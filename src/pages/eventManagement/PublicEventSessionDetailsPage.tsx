@@ -9,7 +9,7 @@ import { Toggle } from "@/components/ui/toggle";
 import useApiJson from "../../hooks/useApiJson";
 
 
-import { HiCalendarDays, HiTableCells } from "react-icons/hi2";
+import { HiCalendarDays, HiPencil, HiTableCells } from "react-icons/hi2";
 import AllEventsFullCalendar from "../../components/EventManagement/ZooEventHomePage/AllZooEventsFullCalendar";
 
 import ViewPublicEventSessionDetails from "../../components/EventManagement/PublicEventSessionDetails";

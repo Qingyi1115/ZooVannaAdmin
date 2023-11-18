@@ -15,7 +15,8 @@ import useApiJson from "../../../../hooks/useApiJson";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useParams } from "react-router-dom";
+import { Tag } from "primereact/tag";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import Facility from "../../../../models/Facility";
 
@@ -61,6 +62,7 @@ function AllFacilityDatatable() {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<facility[]>>(null);
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   useEffect(() => {
     apiJson
@@ -79,6 +81,22 @@ function AllFacilityDatatable() {
         }));
       });
   }, []);
+
+  // useEffect(() => {
+  //   apiJson
+  //     .get("http://localhost:3000/api/assetFacility/getCrowdLevelOfAllFacility")
+  //     .catch((e) => {
+  //       console.log(e);
+  //     })
+  //     .then((res) => {
+  //       console.log("AllFacilityCrowdLevelDataTable", res);
+  //       setFacilityList(res["facilitiesData"].map(data => {
+  //         const facility = data["facility"]
+  //         facility.crowdLevel = beautifyText(data.crowdLevel)
+  //         return facility;
+  //       }));
+  //     });
+  // }, []);
 
   //
   const exportCSV = () => {
@@ -147,27 +165,43 @@ function AllFacilityDatatable() {
   const actionBodyTemplate = (facility: Facility) => {
     return (
       <React.Fragment>
-        <NavLink
-          to={`/assetfacility/viewfacilitydetails/${facility.facilityId}`}
-          state={{ prev: `/assetfacility/viewallfacilities` }}
-        >
-          <Button
-            // variant={"outline"}
-            className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
-          </Button>
-        </NavLink>
+        <Button
+          // variant={"outline"}
+          className="mb-1 mr-1"
+          onClick={() => {
+            navigate(`/assetfacility/viewallfacilities`, { replace: true });
+            navigate(`/assetfacility/viewfacilitydetails/${facility.facilityId}`);
+          }}>
+          <HiEye className="mx-auto" />
+        </Button>
         {(employee.superAdmin ||
           employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-            <NavLink
-              to={`/assetfacility/viewfacilitydetails/${facility.facilityId}/manageOperations`}
-              state={{ prev: `/assetfacility/viewallfacilities` }}
-            >
-              <Button variant={"outline"} className="mb-1 mr-1">
-                <MdOutlineAssignmentInd className="mx-auto" />
-              </Button>
-            </NavLink>
+            <Button
+              variant={"outline"}
+              className="mb-1 mr-1"
+              onClick={() => {
+                navigate(`/assetfacility/viewallfacilities`, { replace: true });
+                navigate(`/assetfacility/viewfacilitydetails/${facility.facilityId}/manageOperations`);
+              }}>
+              <MdOutlineAssignmentInd className="mx-auto" />
+            </Button>
+
           )}
+        {/* {(employee.superAdmin ||
+          employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")
+          && (
+
+            <Button
+              variant={"outline"}
+              disabled={facility.crowdLevel == "No Data"}
+              className="mb-1 mr-1"
+              onClick={() => {
+                navigate(`/assetfacility/allFacilityCrowdLevel`, { replace: true });
+                navigate(`/assetfacility/viewcamerafeeds/${facility.facilityId}`);
+              }}>
+              <HiCamera className="mx-auto" />
+            </Button>
+          )} */}
         {/* {(employee.superAdmin ||
           employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
             <NavLink
@@ -199,6 +233,13 @@ function AllFacilityDatatable() {
         )} */}
       </React.Fragment>
     );
+  };
+
+  const statusBodyTemplate = (rowData: any) => {
+    return <Tag value={rowData.crowdLevel}
+      severity={rowData.crowdLevel == "Low" ? "success" :
+        rowData.crowdLevel == "Medium" ? "warning" :
+          rowData.crowdLevel == "High" ? "danger" : "info"} />;
   };
 
   const header = (
@@ -310,7 +351,7 @@ function AllFacilityDatatable() {
             ></Column>
             <Column
               field="isSheltered"
-              header="Shelter available"
+              header="Shelter Available"
               body={(facility) => {
                 return facility.isSheltered ? "Yes" : "No"
               }}
@@ -318,6 +359,13 @@ function AllFacilityDatatable() {
               style={{ minWidth: "12rem" }
               }
             ></Column>
+            {/* <Column
+              field="None"
+              header="Crowd Level"
+              body={statusBodyTemplate}
+              sortable
+              style={{ minWidth: "13rem" }}
+            ></Column> */}
             <Column
               field="opStaffStr"
               header="Operation Staff"
@@ -336,7 +384,7 @@ function AllFacilityDatatable() {
               frozen
               alignFrozen="right"
               exportable={false}
-              style={{ minWidth: "15rem" }}
+              style={{ minWidth: "12rem" }}
             ></Column>
           </DataTable>
         </div>

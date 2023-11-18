@@ -174,7 +174,8 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
         <div className="mb-4 flex">
           <Button
             variant={"outline"}
-            className="mr-2" onClick={() => {
+            className="mr-2"
+            onClick={() => {
               navigate(`/zooevent/viewpubliceventdetails/${publicEvent.publicEventId}/publicEventSessions`, { replace: true });
               navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
             }}>

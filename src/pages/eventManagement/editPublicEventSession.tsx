@@ -16,11 +16,11 @@ import FormFieldInput from "../../components/FormFieldInput";
 import FormFieldSelect from "../../components/FormFieldSelect";
 import { DayOfWeek, RecurringPattern } from "../../enums/Enumurated";
 
-function CreatePublicEventSessionForm() {
+function EditPublicEventSessionForm() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
-  const { publicEventId } = useParams<{ publicEventId: string }>();
+  const { publicEventSessionId } = useParams<{ publicEventSessionId: string }>();
 
   const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
     undefined
@@ -276,15 +276,15 @@ function CreatePublicEventSessionForm() {
       oneDate: oneDate.getTime()
     };
 
-    const createPublicEventSessionApi = async () => {
+    const editPublicEventSessionApi = async () => {
       try {
-        const response = await apiJson.post(
-          `http://localhost:3000/api/zooEvent/createPublicEventSession/${publicEventId}`,
+        const response = await apiJson.put(
+          `http://localhost:3000/api/zooEvent/updatePublicEventSessionById/${publicEventSessionId}`,
           newPublicEventSession
         );
         // success
         toastShadcn({
-          description: "Successfully created a new Session",
+          description: "Successfully edited session!",
         });
         navigate(-1);
       } catch (error: any) {
@@ -293,12 +293,12 @@ function CreatePublicEventSessionForm() {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while creating new Session: \n" +
+            "An error has occurred while Editing Session: \n" +
             error.message,
         });
       }
     };
-    createPublicEventSessionApi();
+    editPublicEventSessionApi();
   }
 
   return (
@@ -310,6 +310,7 @@ function CreatePublicEventSessionForm() {
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
+            {/* <NavLink className="flex" to={`/animal/viewallanimals`}> */}
             <Button
               onClick={() => navigate(-1)}
               variant={"outline"}
@@ -320,7 +321,7 @@ function CreatePublicEventSessionForm() {
             </Button>
             {/* </NavLink> */}
             <span className="self-center text-title-xl font-bold">
-              Create Public Event Session
+              Edit Public Event Session
             </span>
             <Button disabled className="invisible">
               Back
@@ -542,4 +543,4 @@ function CreatePublicEventSessionForm() {
   );
 }
 
-export default CreatePublicEventSessionForm;
+export default EditPublicEventSessionForm;

@@ -7,19 +7,18 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 
-import { HiCamera, HiCheck, HiEye, HiPlus, HiTrash, HiX } from "react-icons/hi";
-import { MdOutlineAssignmentInd } from "react-icons/md";
+import { HiCamera, HiCheck, HiEye, HiPlus, HiX } from "react-icons/hi";
 import facility from "src/models/Facility";
 import useApiJson from "../../../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { NavLink, useParams } from "react-router-dom";
+import { Tag } from "primereact/tag";
+import { useNavigate, useParams } from "react-router-dom";
+import beautifyText from "../../../../hooks/beautifyText";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import Facility from "../../../../models/Facility";
-import { Tag } from "primereact/tag";
-import beautifyText from "../../../../hooks/beautifyText";
 
 export function compareDates(d1: Date, d2: Date): number {
   let date1 = d1.getTime();
@@ -70,6 +69,7 @@ function AllFacilityCrowdLevelDataTable() {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<facility[]>>(null);
   const toastShadcn = useToast().toast;
+  const navigate = useNavigate();
 
   useEffect(() => {
     apiJson
@@ -79,7 +79,9 @@ function AllFacilityCrowdLevelDataTable() {
       })
       .then((res) => {
         console.log("AllFacilityCrowdLevelDataTable", res);
-        setFacilityList(res["facilitiesData"].map(data => {
+        setFacilityList(res["facilitiesData"].filter(data => {
+          return data.crowdLevel != "NO_DATA"; 
+        }).map(data => {
           const facility = data["facility"]
           facility.crowdLevel = beautifyText(data.crowdLevel)
           return facility;
@@ -162,24 +164,30 @@ function AllFacilityCrowdLevelDataTable() {
     console.log("rowData.crowdLevel", rowData.crowdLevel, rowData.crowdLevel != "No Data")
     return (
       <React.Fragment>
-        <NavLink
-          to={`/assetfacility/viewfacilitydetails/${rowData.facilityId}`}
-        >
-          <Button
-            // variant={"outline"}
-            className="mb-1 mr-1">
-            <HiEye className="mx-auto" />
-          </Button>
-        </NavLink>
+
+        <Button
+          // variant={"outline"}
+          className="mb-1 mr-1"
+          onClick={() => {
+            navigate(`/assetfacility/allFacilityCrowdLevel`, { replace: true });
+            navigate(`/assetfacility/viewfacilitydetails/${rowData.facilityId}`);
+          }}>
+          <HiEye className="mx-auto" />
+        </Button>
         {(employee.superAdmin ||
-          employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (rowData.crowdLevel != "No Data") && (
-            <NavLink
-              to={`/assetfacility/viewcamerafeeds/${rowData.facilityId}`}
-            >
-              <Button variant={"outline"} className="mb-1 mr-1">
-                <HiCamera className="mx-auto" />
-              </Button>
-            </NavLink>
+          employee.planningStaff?.plannerType == "OPERATIONS_MANAGER")
+          && (
+
+            <Button
+              variant={"outline"}
+              disabled={rowData.crowdLevel == "No Data"}
+              className="mb-1 mr-1"
+              onClick={() => {
+                navigate(`/assetfacility/allFacilityCrowdLevel`, { replace: true });
+                navigate(`/assetfacility/viewcamerafeeds/${rowData.facilityId}`);
+              }}>
+              <HiCamera className="mx-auto" />
+            </Button>
           )}
         {/* {(employee.superAdmin || employee.generalStaff?.generalStaffType == "ZOO_MAINTENANCE") && (
           <NavLink to={`/assetfacility/viewfacilitydetails/${facility.facilityId}/facilityLog`}
@@ -232,19 +240,21 @@ function AllFacilityCrowdLevelDataTable() {
             <div className="mb-4 flex justify-between">
               {employee.superAdmin ||
                 employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" ? (
-                <NavLink to={"/assetfacility/createfacility"}>
-                  <Button className="mr-2">
-                    <HiPlus className="mr-auto" />
-                    Add Facility
-                  </Button>
-                </NavLink>
+
+                <Button className="mr-2"
+                  disabled
+                  className="invisible">
+                  <HiPlus className="mr-auto" />
+                  Export to .csv
+                </Button>
+
               ) : (
                 <Button disabled className="invisible">
                   Export to .csv
                 </Button>
               )}
               <span className=" self-center text-title-xl font-bold">
-                All Facilities
+                Facility Crowd Levels
               </span>
               <Button onClick={exportCSV}>Export to .csv</Button>
             </div>
@@ -302,7 +312,7 @@ function AllFacilityCrowdLevelDataTable() {
             ></Column>
             <Column
               field="isSheltered"
-              header="Shelter available"
+              header="Shelter Available"
               body={(facility) => {
                 return facility.isSheltered ? "Yes" : "No"
               }}
@@ -312,7 +322,7 @@ function AllFacilityCrowdLevelDataTable() {
             ></Column>
             <Column
               field="None"
-              header="Crowd level"
+              header="Crowd Level"
               body={statusBodyTemplate}
               sortable
               style={{ minWidth: "13rem" }}

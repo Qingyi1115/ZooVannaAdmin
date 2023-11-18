@@ -29,9 +29,9 @@ import {
 } from "react-icons/hi";
 import { HiMapPin } from "react-icons/hi2";
 import { FacilityType } from "../../../enums/FacilityType";
+import beautifyText from "../../../hooks/beautifyText";
 import useApiJson from "../../../hooks/useApiJson";
 import Facility from "../../../models/Facility";
-import beautifyText from "../../../hooks/beautifyText";
 // import geolocation from "geolocation";
 
 let emptyFacility: FacilityWithSelected = {
@@ -537,7 +537,7 @@ function MapLandingPage() {
               ></Column>
               <Column
                 field="isSheltered"
-                header="Shelter available"
+                header="Shelter Available"
                 body={(facility) => {
                   return facility.isSheltered ? "Yes" : "No";
                 }}
@@ -670,7 +670,7 @@ function MapLandingPage() {
                 ></Column>
                 <Column
                   field="isSheltered"
-                  header="Shelter available"
+                  header="Shelter Available"
                   sortable
                   style={{ minWidth: "12rem" }}
                 ></Column>

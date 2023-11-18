@@ -157,6 +157,7 @@ import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPa
 import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
 import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
 import CreateEnclosureBarriersPage from "./pages/enclosureManagement/CreateEnclosureBarriersPage";
+import EditPublicEventSessionForm from "./pages/eventManagement/editPublicEventSession";
 
 function App() {
   const { state } = useAuthContext();
@@ -1289,7 +1290,18 @@ function App() {
               />
 
               <Route
-                path="/zooevent/allFacilityCrowdLevel"
+                path="/zooevent/editpubliceventsession/:publicEventSessionId"
+                element={
+                  user ? (
+                    <EditPublicEventSessionForm />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+
+              <Route
+                path="/assetfacility/allFacilityCrowdLevel"
                 element={
                   user ? (
                     <ViewAllFacilityCrowdLevelPage />

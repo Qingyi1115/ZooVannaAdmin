@@ -197,9 +197,12 @@ enum EventType {
   CUSTOMER_FEEDING = "CUSTOMER_FEEDING",
   TALK = "TALK",
   EMPLOYEE_FEEDING = "EMPLOYEE_FEEDING",
+  TRAINING = "TRAINING",
   ENRICHMENT = "ENRICHMENT",
   OBSERVATION = "OBSERVATION",
   ANIMAL_CHECKUP = "ANIMAL_CHECKUP",
+  ADMISSION = "ADMISSION",
+  EMPLOYEE_ABSENCE = "EMPLOYEE_ABSENCE",
 }
 
 enum EventTimingType {
@@ -314,6 +317,6 @@ export {
   PresentationMethod,
   RecurringPattern,
   RepeatPattern,
-  Specialization,
   BarrierType,
+  Specialization,
 };
