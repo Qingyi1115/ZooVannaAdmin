@@ -146,18 +146,18 @@ import EditAnnouncementPage from "./pages/announcement/EditAnnouncementPage";
 import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsPage";
 import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
 import ViewAllFacilityCrowdLevelPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilityCrowdLevelPage";
+import CreateEnclosureBarriersPage from "./pages/enclosureManagement/CreateEnclosureBarriersPage";
 import CreateNewEnclosurePage from "./pages/enclosureManagement/CreateNewEnclosurePage";
 import EditEnclosureEnvironmentPage from "./pages/enclosureManagement/EditEnclosureEnvironmentPage";
 import EditEnclosurePage from "./pages/enclosureManagement/EditEnclosurePage";
 import EditEnclosureSafetyPage from "./pages/enclosureManagement/EditEnclosureSafetyPage";
 import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
 import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
+import EditPublicEventSessionPage from "./pages/eventManagement/EditPublicEventSessionPage";
 import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSessionDetailsPage";
 import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPage";
 import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
 import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
-import CreateEnclosureBarriersPage from "./pages/enclosureManagement/CreateEnclosureBarriersPage";
-import EditPublicEventSessionForm from "./pages/eventManagement/editPublicEventSession";
 
 function App() {
   const { state } = useAuthContext();
@@ -1293,7 +1293,7 @@ function App() {
                 path="/zooevent/editpubliceventsession/:publicEventSessionId"
                 element={
                   user ? (
-                    <EditPublicEventSessionForm />
+                    <EditPublicEventSessionPage />
                   ) : (
                     <Navigate to="/login" />
                   )
