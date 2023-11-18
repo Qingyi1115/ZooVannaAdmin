@@ -1,8 +1,4 @@
-
-import {
-  Card,
-  CardContent
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import { Column } from "primereact/column";
@@ -12,16 +8,33 @@ import { InputText } from "primereact/inputtext";
 import React, { useEffect, useRef, useState } from "react";
 import { HiCheck, HiEye, HiPlus, HiX } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-import { EnclosureStatus } from "../../../enums/Enumurated";
+import { Biome, EnclosureStatus } from "../../../enums/Enumurated";
 import useApiJson from "../../../hooks/useApiJson";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import Animal from "../../../models/Animal";
 import Enclosure from "../../../models/Enclosure";
 import { useToast } from "../../../shadcn/components/ui/use-toast";
+import Plantation from "../../../models/Plantation";
+import Facility from "../../../models/Facility";
 
-interface EnclosureCardProps {
-  curAnimal: Animal;
-}
+let emptyPlantation: Plantation = {
+  plantationId: -1,
+  name: "",
+  biome: Biome.AQUATIC,
+};
+
+let emptyFacility: Facility = {
+  facilityId: -1,
+  facilityName: "",
+  showOnMap: false,
+  xCoordinate: 0,
+  yCoordinate: 0,
+  facilityDetail: "",
+  facilityDetailJson: {},
+  isSheltered: false,
+  hubProcessors: [],
+  imageUrl: "",
+};
 
 let emptyEnclosure: Enclosure = {
   enclosureId: -1,
@@ -52,22 +65,38 @@ let emptyEnclosure: Enclosure = {
   keepers: [],
   standOffBarrierDist: null,
   designDiagramJsonUrl: null,
+  barrierType: null,
+  plantation: emptyPlantation,
+  facility: emptyFacility,
 };
+
+interface EnclosureCardProps {
+  curAnimal: Animal;
+  refreshSeed: number;
+  setRefreshSeed: any;
+}
 
 function EnclosureCard(props: EnclosureCardProps) {
   const apiJson = useApiJson();
-  const { curAnimal } = props;
-  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+  const { curAnimal, refreshSeed, setRefreshSeed } = props;
+  // const [refreshSeed, setRefreshSeed] = useState<number>(0);
   const navigate = useNavigate();
   const employee = useAuthContext().state.user?.employeeData;
-  const [curEnclosure, setCurEnclosure] = useState<Enclosure>(curAnimal.enclosure ?? emptyEnclosure);
-  const [openAddEnclosureDialog, setOpenAddEnclosureDialog] = useState<boolean>(false);
-  const [removeEnclosureDialog, setRemoveEnclosureDialog] = useState<boolean>(false);
+  const [curEnclosure, setCurEnclosure] = useState<Enclosure>(
+    curAnimal.enclosure ?? emptyEnclosure
+  );
+  const [openAddEnclosureDialog, setOpenAddEnclosureDialog] =
+    useState<boolean>(false);
+  const [removeEnclosureDialog, setRemoveEnclosureDialog] =
+    useState<boolean>(false);
   const toastShadcn = useToast().toast;
   const [allEnclosureList, setAllEnclosureList] = useState<Enclosure[]>([]);
-  const [selectedEnclosure, setSelectedEnclosure] = useState<Enclosure>(emptyEnclosure);
+  const [selectedEnclosure, setSelectedEnclosure] =
+    useState<Enclosure>(emptyEnclosure);
   const [globalFilter, setGlobalFilter] = useState<string>("");
-  const [addEnclosureError, setAddEnclosureError] = useState<string | null>(null);
+  const [addEnclosureError, setAddEnclosureError] = useState<string | null>(
+    null
+  );
   const dt = useRef<DataTable<Enclosure[]>>(null);
   useEffect(() => {
     const fetchEnclosures = async () => {
@@ -83,15 +112,15 @@ function EnclosureCard(props: EnclosureCardProps) {
     fetchEnclosures();
   }, [refreshSeed]);
 
-
   const imageBodyTemplate = (rowData: Enclosure) => {
-    return (
-      (rowData.facility ?
-        <img
-          src={"http://localhost:3000/" + rowData.facility.imageUrl}
-          alt={rowData.name}
-          className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
-        /> : "-")
+    return rowData.facility ? (
+      <img
+        src={"http://localhost:3000/" + rowData.facility.imageUrl}
+        alt={rowData.name}
+        className="aspect-square w-16 rounded-full border border-white object-cover shadow-4"
+      />
+    ) : (
+      "-"
     );
   };
 
@@ -126,22 +155,30 @@ function EnclosureCard(props: EnclosureCardProps) {
           animalCode: curAnimal.animalCode,
         };
         console.log("assignAnimalApiObj", assignAnimalApiObj);
-        const responseJson = await apiJson
-          .put(
-            `http://localhost:3000/api/enclosure/assignAnimalToEnclosure/`,
-            assignAnimalApiObj
-          )
-          .then((res) => {
-            setRefreshSeed(refreshSeed + 1);
-          })
-          .catch((err) => console.log("err", err));
+        const responseJson = await apiJson.put(
+          `http://localhost:3000/api/enclosure/assignAnimalToEnclosure/`,
+          assignAnimalApiObj
+        );
+        // .then((res) => {
+        // setCurEnclosure(selectedEnclosure);
+        // setSelectedEnclosure(emptyEnclosure);
+        // setRefreshSeed(refreshSeed + 1);
+        // })
+        // .catch((err) => console.log("err", err));
         // success
 
         toastShadcn({
-          description: "Successfully assigned " + curAnimal.houseName + " the " + curAnimal.species?.commonName + " to " + selectedEnclosure.name,
+          description:
+            "Successfully assigned " +
+            curAnimal.houseName +
+            " the " +
+            curAnimal.species?.commonName +
+            " to " +
+            selectedEnclosure.name,
         });
         setOpenAddEnclosureDialog(false);
         setSelectedEnclosure(emptyEnclosure);
+        setCurEnclosure(selectedEnclosure);
         setRefreshSeed(refreshSeed + 1);
       } catch (error: any) {
         // got error
@@ -182,7 +219,6 @@ function EnclosureCard(props: EnclosureCardProps) {
         );
 
         toastShadcn({
-          // variant: "destructive",
           title: "Deletion Successful",
           description:
             "Successfully removed animal: " +
@@ -193,6 +229,7 @@ function EnclosureCard(props: EnclosureCardProps) {
         });
         setRemoveEnclosureDialog(false);
         setSelectedEnclosure(emptyEnclosure);
+        setCurEnclosure(emptyEnclosure);
         setRefreshSeed(refreshSeed + 1);
       } catch (error: any) {
         // got error
@@ -200,7 +237,8 @@ function EnclosureCard(props: EnclosureCardProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while removing enclosure: \n" + apiJson.error,
+            "An error has occurred while removing enclosure: \n" +
+            apiJson.error,
         });
       }
     };
@@ -221,11 +259,113 @@ function EnclosureCard(props: EnclosureCardProps) {
   );
   // end remove enclosure stuff
 
+  // add enclosure stuff
+  interface AnimalCompatibilities {
+    enclosureId: number;
+    compatible: boolean;
+  }
+  const [isCurAnimalCompatibleList, setIsCurAnimalCompatibleList] = useState<
+    AnimalCompatibilities[]
+  >(
+    allEnclosureList.map((enclosure) => ({
+      enclosureId: enclosure.enclosureId,
+      compatible: false,
+    }))
+  );
+
+  useEffect(() => {
+    // Update curEnclosureBarrierList when enclosureWallList changes
+    setIsCurAnimalCompatibleList(
+      allEnclosureList?.map((enclosure) => ({
+        enclosureId: enclosure.enclosureId,
+        compatible: false,
+      }))
+    );
+  }, [allEnclosureList]);
+
+  useEffect(() => {
+    let tempCurAnimalCompatibilityList = [...isCurAnimalCompatibleList];
+
+    allEnclosureList.forEach(async (enclosure) => {
+      const responseJson = await apiJson.get(
+        `http://localhost:3000/api/enclosure/getSpeciesCompatibilityInEnclosure/${enclosure.enclosureId}/${curAnimal.species.speciesCode}`
+      );
+      const isSpeciesCompatibleWithEnclosure =
+        responseJson.isCompatible as boolean;
+      // console.log(
+      //   "heree, enclosure id: " +
+      //     enclosure.enclosureId +
+      //     ", compatible: " +
+      //     isSpeciesCompatibleWithEnclosure
+      // );
+      // Find the index of the item with matching enclosureId
+      const index = tempCurAnimalCompatibilityList.findIndex(
+        (item) => item.enclosureId === enclosure.enclosureId
+      );
+      // If found, update the compatible field
+      if (index !== -1) {
+        tempCurAnimalCompatibilityList[index].compatible =
+          isSpeciesCompatibleWithEnclosure;
+      }
+    });
+  }, [isCurAnimalCompatibleList]);
+
   const addEnclosuresHeader = (
     <React.Fragment>
       <div className="flex justify-center text-2xl">Add Enclosure</div>
     </React.Fragment>
   );
+  const addEnclosuresFooter = (
+    <React.Fragment>
+      <div className="mt-6 flex flex-col items-center">
+        <Button
+          disabled={
+            selectedEnclosure == null || selectedEnclosure == emptyEnclosure
+          }
+          onClick={handleAddEnclosure}
+        >
+          {selectedEnclosure == null || selectedEnclosure == emptyEnclosure
+            ? "Add"
+            : "Add " + selectedEnclosure.name}
+        </Button>
+        <div className="mt-2 font-medium">
+          Note: you can still assign an animal to an INCOMPATIBLE enclosure
+        </div>
+      </div>
+      <div>
+        {addEnclosureError && (
+          <div className="mt-2 flex justify-center font-bold text-danger">
+            {addEnclosureError}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
+  );
+
+  const animalCompatibilityFormat = (enclosure: Enclosure) => {
+    let isCurAnimalCompatible = false;
+    const index = isCurAnimalCompatibleList.findIndex(
+      (item) => item.enclosureId === enclosure.enclosureId
+    );
+    // If found, update the compatible field
+    if (index !== -1) {
+      isCurAnimalCompatible = isCurAnimalCompatibleList[index].compatible;
+    }
+
+    return (
+      <React.Fragment>
+        {isCurAnimalCompatible ? (
+          <span className="flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] px-2 text-base font-bold text-emerald-900">
+            COMPATIBLE
+          </span>
+        ) : (
+          <span className="flex items-center justify-center rounded bg-red-100 p-[0.1rem] px-2 text-base font-bold text-red-900">
+            INCOMPATIBLE
+          </span>
+        )}
+      </React.Fragment>
+    );
+  };
 
   const addEnclosureBody = (
     <React.Fragment>
@@ -234,8 +374,9 @@ function EnclosureCard(props: EnclosureCardProps) {
         onHide={() => setOpenAddEnclosureDialog(false)}
         style={{ width: "64rem", height: "48rem" }}
         header={addEnclosuresHeader}
+        footer={addEnclosuresFooter}
       >
-        <div className="flex flex-col items-center">
+        <div className="mt-2 flex flex-col items-center">
           <InputText
             type="search"
             placeholder="Search..."
@@ -246,6 +387,11 @@ function EnclosureCard(props: EnclosureCardProps) {
             className="mb-2 h-min w-60"
           />
         </div>
+        {/* {isCurAnimalCompatibleList.map((compatible) => (
+          <div>
+            id: {compatible.enclosureId} - {compatible.compatible.toString()}
+          </div>
+        ))} */}
         <DataTable
           ref={dt}
           value={allEnclosureList}
@@ -262,7 +408,7 @@ function EnclosureCard(props: EnclosureCardProps) {
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} enclosures"
           globalFilter={globalFilter}
-          header={addEnclosuresHeader}
+          // header={addEnclosuresHeader}
         >
           <Column
             field="imageUrl"
@@ -271,12 +417,12 @@ function EnclosureCard(props: EnclosureCardProps) {
             body={imageBodyTemplate}
             style={{ minWidth: "6rem" }}
           ></Column>
-          <Column
+          {/* <Column
             field="enclosureId"
             header="ID"
             sortable
             style={{ minWidth: "4rem" }}
-          ></Column>
+          ></Column> */}
           <Column
             field="name"
             header="Name"
@@ -289,31 +435,15 @@ function EnclosureCard(props: EnclosureCardProps) {
             sortable
             style={{ minWidth: "6rem" }}
           ></Column>
-          {/* hidden columns so they still appear in exported excel sheet */}
           <Column
             field="enclosureStatus"
-            header="Status"
+            header="Compatibility Recommendation"
+            body={animalCompatibilityFormat}
             sortable
-            style={{ minWidth: "6rem", display: "none" }}
+            style={{ minWidth: "6rem" }}
           ></Column>
           {/*  */}
         </DataTable>
-        <div className="mt-6 flex justify-center">
-          <Button
-            disabled={selectedEnclosure == null || selectedEnclosure == emptyEnclosure}
-            onClick={handleAddEnclosure}
-          >
-            {(selectedEnclosure == null || selectedEnclosure == emptyEnclosure) ?
-              "Add" : "Add " + selectedEnclosure.name}
-          </Button>
-        </div>
-        <div>
-          {addEnclosureError && (
-            <div className="mt-2 flex justify-center font-bold text-danger">
-              {addEnclosureError}
-            </div>
-          )}
-        </div>
       </Dialog>
       <Dialog
         visible={removeEnclosureDialog}
@@ -333,15 +463,14 @@ function EnclosureCard(props: EnclosureCardProps) {
             <span>
               Are you sure you want to remove{" "}
               <b>
-                {curAnimal.houseName} the{" "}
-                {curAnimal.species?.commonName}
+                {curAnimal.houseName} the {curAnimal.species?.commonName}
               </b>{" "}
               from {curEnclosure.name}?
             </span>
           )}
         </div>
       </Dialog>
-    </React.Fragment >
+    </React.Fragment>
   );
 
   return (
@@ -349,56 +478,73 @@ function EnclosureCard(props: EnclosureCardProps) {
       <CardContent className="h-full px-4 pb-4 pt-3">
         <div className="mb-2 text-sm font-bold text-slate-700">Enclosure</div>
         <div className="flex items-center gap-4">
-          <img
-            alt={""}
-            src={curEnclosure.enclosureId != -1 ?
-              ("http://localhost:3000/" + curEnclosure.facility.imageUrl)
-              : "../../../../src/assets/enclosureIconPlaceholder.jpg"}
-            className="aspect-square w-20 rounded-full border border-white object-cover shadow-4"
-          />
-          <div>
-            {curEnclosure.name}
-          </div>
+          {curEnclosure.enclosureId != -1 ? (
+            <img
+              alt={""}
+              src={
+                curEnclosure.enclosureId != -1
+                  ? "http://localhost:3000/" + curEnclosure.facility.imageUrl
+                  : "../../../../src/assets/enclosureIconPlaceholder.jpg"
+              }
+              className="aspect-square w-20 rounded-full border border-white object-cover shadow-4"
+            />
+          ) : (
+            <div className="h-20 w-20"></div>
+          )}
+          {curEnclosure.enclosureId != -1 ? (
+            <div>{curEnclosure.name}</div>
+          ) : (
+            <div>No enclosure assigned</div>
+          )}
           <div className="ml-auto flex items-center">
-            {curEnclosure.enclosureId != -1 ?
+            {curEnclosure.enclosureId != -1 ? (
               <div>
-                <Button className="mr-2"
+                <Button
+                  className="mr-2"
                   onClick={() => {
-                    navigate(`/animal/viewanimaldetails/${curAnimal.animalCode}`, { replace: true })
-                    navigate(`/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}`)
-                  }}>
+                    navigate(
+                      `/animal/viewanimaldetails/${curAnimal.animalCode}`,
+                      { replace: true }
+                    );
+                    navigate(
+                      `/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}`
+                    );
+                  }}
+                >
                   <HiEye className="mx-auto" />
                 </Button>
                 {(employee.superAdmin ||
                   employee.keeper ||
                   employee.planningStaff?.plannerType == "CURATOR") && (
-                    <Button
-                      variant={"destructive"}
-                      onClick={() => {
-                        setRemoveEnclosureDialog(true);
-                      }}
-                    >
-                      <HiX />
-                    </Button>)}
-              </div>
-              :
-              ((employee.superAdmin ||
-                employee.keeper ||
-                employee.planningStaff?.plannerType == "CURATOR") && (
                   <Button
+                    variant={"destructive"}
                     onClick={() => {
-                      setOpenAddEnclosureDialog(true);
+                      setRemoveEnclosureDialog(true);
                     }}
                   >
-                    <HiPlus />
+                    <HiX />
                   </Button>
-                ))
-            }
+                )}
+              </div>
+            ) : (
+              (employee.superAdmin ||
+                employee.keeper ||
+                employee.planningStaff?.plannerType == "CURATOR") && (
+                <Button
+                  onClick={() => {
+                    setOpenAddEnclosureDialog(true);
+                  }}
+                >
+                  Assign An Enclosure
+                  <HiPlus className="ml-4" />
+                </Button>
+              )
+            )}
             {addEnclosureBody}
           </div>
         </div>
       </CardContent>
-    </Card >
+    </Card>
   );
 }
 
