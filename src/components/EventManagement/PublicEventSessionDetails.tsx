@@ -4,46 +4,28 @@
 
 
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import Animal from "../../models/Animal";
-import AnimalActivity from "../../models/AnimalActivity";
 import EnrichmentItem from "../../models/EnrichmentItem";
-import Species from "../../models/Species";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
   TableCell,
   TableRow
 } from "@/components/ui/table";
-import { NavLink } from "react-router-dom";
 
-import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
-import { InputText } from "primereact/inputtext";
 
 import { useToast } from "@/components/ui/use-toast";
 import { HiCheck, HiPencil, HiTrash, HiX } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 
 import { Dialog } from "primereact/dialog";
-import AllAnimalActivityLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalActivityLogsDatatable";
-import AllAnimalObservationLogsDatatable from "../../components/AnimalManagement/ViewAnimalDetailsPage/AllAnimalObservationLogsDatatable";
-import {
-  AcquisitionMethod,
-  ActivityType,
-  AnimalGrowthStage,
-  AnimalSex,
-} from "../../enums/Enumurated";
 import beautifyText from "../../hooks/beautifyText";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import AllPublicEventSessionDatatable from "../../components/EventManagement/AllPublicEventSessionsDatatable";
-import PublicEvent from "../../models/PublicEvent";
 import PublicEventSession from "../../models/PublicEventSession";
 
 interface ViewPublicEventSessionDetailsProps {
@@ -228,15 +210,15 @@ function ViewPublicEventSessionDetails(prop: ViewPublicEventSessionDetailsProps)
       {curPublicEventSession && (
         <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
           <div className="mb-10">
-          <Button
-            // variant={"outline"}
-            className="mb-1 mr-1"
-            onClick={() => {
-              navigate(`/zooevent/editpubliceventsession/${publicEventSession.publicEventSessionId}`)
-            }}>
+            <Button
+              // variant={"outline"}
+              className="mb-1 mr-1"
+              onClick={() => {
+                navigate(`/zooevent/editpubliceventsession/${publicEventSession.publicEventSessionId}`)
+              }}>
               <HiPencil className="mx-auto" />
-              Edit Session details
-          </Button>
+              Edit Session Details
+            </Button>
             <Table>
               <TableBody>
                 <TableRow>
@@ -267,7 +249,7 @@ function ViewPublicEventSessionDetails(prop: ViewPublicEventSessionDetailsProps)
                 </TableRow>
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
-                    Duration in minutes
+                    Duration in Minutes
                   </TableCell>
                   <TableCell>
                     {curPublicEventSession.durationInMinutes}
