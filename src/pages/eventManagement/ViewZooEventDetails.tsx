@@ -99,6 +99,8 @@ let emptyItem: EnrichmentItem = {
   enrichmentItemName: "",
 };
 
+const HOURS_IN_MILLISECOND = 1000 * 60 * 60;
+
 function ViewZooEventDetails() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
@@ -108,8 +110,8 @@ function ViewZooEventDetails() {
   const { tab } = useParams<{ tab: string }>();
 
   const [curZooEvent, setCurZooEvent] =
-    useState<ZooEvent | null>(null);
-  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+    useState<ZooEvent>({} as ZooEvent);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
   const employee = useAuthContext().state.user?.employeeData;
   const [involvedAnimalList, setInvolvedAnimalList] = useState<Animal[]>();
   const [involvedAnimalGlobalFiler, setInvolvedAnimalGlobalFilter] =
@@ -361,7 +363,6 @@ function ViewZooEventDetails() {
   const [eventNotificationDate, setEventNotificationDate] = useState<Nullable<Date>>();
   const [eventStartDateTime, setEventStartDateTime] = useState<Nullable<Date>>();
   const [eventEndDateTime, setEventEndDateTime] = useState<Nullable<Date>>();
-  const [imageUrl, setImageUrl] = useState<string | null>();
   const [imageFile, setImageFile] = useState<File | null>();
   const [formError, setFormError] = useState<string | null>(null);
   const [updateFuture, setUpdateFuture] = useState<boolean>(false);
@@ -392,9 +393,9 @@ function ViewZooEventDetails() {
         eventTiming: curZooEvent?.eventTiming,
 
         eventNotificationDate: eventNotificationDate?.getTime(),
-        eventEndDateTime: curZooEvent?.eventEndDateTime?.getTime(),
+        eventEndDateTime: eventStartDateTime?.getTime() + curZooEvent?.eventDurationHrs * HOURS_IN_MILLISECOND,
       };
-      console.log(data);
+      console.log("updateFuture", data);
       apiJson.put(
         `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
         data
@@ -421,12 +422,11 @@ function ViewZooEventDetails() {
         zooEventId: curZooEvent?.zooEventId,
         eventIsPublic: true,
         eventNotificationDate: eventNotificationDate?.getTime(),
-        eventEndDateTime: eventEndDateTime?.getTime(),
+        eventStartDateTime: eventStartDateTime?.getTime(),
+        eventEndDateTime: eventStartDateTime?.getTime() + curZooEvent?.eventDurationHrs * HOURS_IN_MILLISECOND,
         eventType: curZooEvent?.eventType == "EMPLOYEE_FEEDING" ? "CUSTOMER_FEEDING" : curZooEvent?.eventType,
-        imageUrl
-
       };
-      console.log(zooEventDetails);
+      console.log("once update", zooEventDetails);
       apiJson.put(
         `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
         { zooEventDetails: zooEventDetails }

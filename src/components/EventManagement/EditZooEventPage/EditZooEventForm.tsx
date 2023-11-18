@@ -1,6 +1,6 @@
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Form from "@radix-ui/react-form";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import useApiFormData from "../../../hooks/useApiFormData";
 import useApiJson from "../../../hooks/useApiJson";
@@ -29,6 +29,8 @@ interface EditZooEventFormProps {
   setRefreshSeed: React.Dispatch<React.SetStateAction<number>>;
 }
 
+const HOURS_IN_MILLISECONDS = 1000 * 60 * 60;
+
 function EditZooEventForm(props: EditZooEventFormProps) {
   const { curZooEvent, refreshSeed, setRefreshSeed } = props;
 
@@ -36,7 +38,10 @@ function EditZooEventForm(props: EditZooEventFormProps) {
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
 
-  const zooEventId = curZooEvent.zooEventId;
+  const [zooEventId, setZooEventId] = useState<number>(
+    curZooEvent.zooEventId
+  );
+
   const [eventType, setEventType] = useState<string | undefined>(
     curZooEvent.eventType
   );
@@ -47,9 +52,6 @@ function EditZooEventForm(props: EditZooEventFormProps) {
   );
   const [eventStartDateTime, setEventStartDateTime] = useState<Nullable<Date>>(
     new Date(curZooEvent.eventStartDateTime)
-  );
-  const [eventEndDateTime, setEventEndDateTime] = useState<Nullable<Date>>(
-    curZooEvent.eventEndDateTime
   );
   const [eventNotificationDate, setEventNotificationDate] = useState<
     Nullable<Date>
@@ -62,7 +64,20 @@ function EditZooEventForm(props: EditZooEventFormProps) {
   );
   const [requiredNumberOfKeeper, setRequiredNumberOfKeeper] = useState<
     number | undefined
-  >(curZooEvent.requiredNumberOfKeeper);
+    >(curZooEvent.requiredNumberOfKeeper);
+  
+  useEffect(() => {
+    setZooEventId(curZooEvent.zooEventId);
+    setEventType(curZooEvent.eventType);
+    setEventName(curZooEvent.eventName);
+    setEventDescription(curZooEvent.eventName);
+    setEventStartDateTime(new Date(curZooEvent.eventStartDateTime));
+    setEventNotificationDate(new Date(curZooEvent.eventNotificationDate));
+    setEventTiming(curZooEvent.eventTiming?.toString());
+    setEventDurationHrs(curZooEvent.eventDurationHrs);
+    setRequiredNumberOfKeeper(curZooEvent.requiredNumberOfKeeper);
+
+  },[curZooEvent])
 
   // Zoo event image
   const apiFormData = useApiFormData();
@@ -211,25 +226,24 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           const formData = new FormData();
           formData.append("file", imageFile || "");
 
-          // try {
-          //   const response = await apiFormData.put(
-          //     `http://localhost:3000/api/zooEvent/updateZooEventIncludeFutureImage/${curZooEvent?.zooEventId}`,
-          //     formData
-          //   );
-          //   // success
-          //   toastShadcn({
-          //     description: "Successfully updated event",
-          //   });
-          //   navigate(-1);
-          // } catch (error: any) {
-          //   toastShadcn({
-          //     variant: "destructive",
-          //     title: "Uh oh! Something went wrong.",
-          //     description:
-          //       "An error has occurred while editing zoo event details: \n" +
-          //       error.message,
-          //   });
-          // }
+          try {
+            const response = await apiFormData.put(
+              `http://localhost:3000/api/zooEvent/updateZooEventIncludeFutureImage/${curZooEvent?.zooEventId}`,
+              formData
+            );
+            // success
+            toastShadcn({
+              description: "Successfully updated event image!",
+            });
+          } catch (error: any) {
+            toastShadcn({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description:
+                "An error has occurred while editing zoo event image: \n" +
+                error.message,
+            });
+          }
         }
 
         const data = {
@@ -244,7 +258,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           eventTiming: eventTiming,
 
           eventNotificationDate: curZooEvent.eventNotificationDate,
-          eventEndDateTime: curZooEvent?.eventEndDateTime,
+          eventEndDateTime: dateInMilliseconds + eventDurationHrs * HOURS_IN_MILLISECONDS,
         };
 
         try {
@@ -465,7 +479,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
           <FormFieldInput
             type="number"
             formFieldName="eventDurationHrs"
-            label={`Duration (minutes)`}
+            label={`Duration (Hours)`}
             required={true}
             pattern={undefined}
             placeholder="e.g., 8"
@@ -574,7 +588,7 @@ function EditZooEventForm(props: EditZooEventFormProps) {
                 className="w-fit"
                 onChange={(e: any) => {
                   if (e && e.value !== undefined) {
-                    setEventStartDateTime(e.value);
+                    setEventNotificationDate(e.value);
 
                     const element = document.getElementById("dateField");
                     if (element) {
