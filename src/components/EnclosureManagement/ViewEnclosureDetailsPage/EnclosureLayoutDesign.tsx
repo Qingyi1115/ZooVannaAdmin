@@ -2,12 +2,7 @@ import Enclosure from "../../../models/Enclosure";
 
 import { Button } from "@/components/ui/button";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { HiPencil } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import useApiJson from "../../../hooks/useApiJson";
@@ -29,39 +24,49 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
     <div>
       <Button
         onClick={() =>
-          navigate("/enclosure/viewenclosuredetails/enclosuredesigndiagram")
+          navigate(`/enclosure/viewenclosuredetails/enclosuredesigndiagram/`)
         }
       >
         View Design Diagram
       </Button>
       EnclosureLayoutDesign
-
-      {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <Button className="mr-2" onClick={() => {
-          navigate(`/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/layoutdesign`, { replace: true });
-          navigate(`/enclosure/editenclosureenvironment/${curEnclosure.enclosureId}`);
-        }}>
-          <HiPencil className="mx-auto" ></HiPencil>
+      {(employee.superAdmin ||
+        employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        <Button
+          className="mr-2"
+          onClick={() => {
+            navigate(
+              `/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/layoutdesign`,
+              { replace: true }
+            );
+            navigate(
+              `/enclosure/editenclosureenvironment/${curEnclosure.enclosureId}`
+            );
+          }}
+        >
+          <HiPencil className="mx-auto"></HiPencil>
           Edit Terrain Details
         </Button>
       )}
-
       <Table className="rounded-lg shadow-lg">
         <TableBody>
-
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               <span className="text-amber-600">Land Area</span> (m
               <sup>2</sup>)
             </TableCell>
-            <TableCell>{curEnclosure.landArea || "Please set enclosure Diagram"}</TableCell>
+            <TableCell>
+              {curEnclosure.landArea || "Please set enclosure Diagram"}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
               <span className="text-blue-600">Water Area</span> (m
               <sup>2</sup>)
             </TableCell>
-            <TableCell>{curEnclosure.waterArea || "Please set enclosure Diagram"}</TableCell>
+            <TableCell>
+              {curEnclosure.waterArea || "Please set enclosure Diagram"}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>

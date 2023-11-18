@@ -23,6 +23,20 @@ enum GeneralStaffType {
   ZOO_OPERATIONS = "ZOO_OPERATIONS",
 }
 
+enum BarrierType {
+  CONCRETE = "CONCRETE",
+  GLASS = "GLASS",
+  ONE_WAY_GLASS = "ONE_WAY_GLASS",
+  WOOD_LOGS = "WOOD_LOGS",
+  STEEL_MESH = "STEEL_MESH",
+  BRICK = "BRICK",
+  GABION = "GABION",
+  CORRUGATED = "CORRUGATED",
+  CHAIN_LINK = "CHAIN_LINK",
+  ELECTRIC = "ELECTRIC",
+  HEDGE = "HEDGE",
+}
+
 enum Specialization {
   MAMMAL = "MAMMAL",
   BIRD = "BIRD",
@@ -301,4 +315,5 @@ export {
   RecurringPattern,
   RepeatPattern,
   Specialization,
+  BarrierType,
 };

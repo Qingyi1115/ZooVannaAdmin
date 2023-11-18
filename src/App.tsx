@@ -7,7 +7,6 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import { PrimeReactProvider } from "primereact/api";
 // import "@fullcalendar/daygrid/main.css";
 
-
 import MainLayout from "./components/MainLayout";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -157,6 +156,7 @@ import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSe
 import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPage";
 import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
 import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
+import CreateEnclosureBarriersPage from "./pages/enclosureManagement/CreateEnclosureBarriersPage";
 
 function App() {
   const { state } = useAuthContext();
@@ -582,7 +582,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/enclosure/viewenclosuredetails/enclosuredesigndiagram"
+                    path="/enclosure/viewenclosuredetails/enclosuredesigndiagram/"
                     element={
                       user ? (
                         <EnclosureDesignDiagramPage />
@@ -600,13 +600,31 @@ function App() {
                   <Route
                     path="/enclosure/editenclosureenvironment/:enclosureId"
                     element={
-                      user ? <EditEnclosureEnvironmentPage /> : <Navigate to="/login" />
+                      user ? (
+                        <EditEnclosureEnvironmentPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
                     }
                   />
                   <Route
                     path="/enclosure/editenclosuresafety/:enclosureId"
                     element={
-                      user ? <EditEnclosureSafetyPage /> : <Navigate to="/login" />
+                      user ? (
+                        <EditEnclosureSafetyPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/enclosure/createEnclosureBarriers/:enclosureId"
+                    element={
+                      user ? (
+                        <CreateEnclosureBarriersPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
                     }
                   />
                 </Route>
