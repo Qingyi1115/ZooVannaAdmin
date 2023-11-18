@@ -2,21 +2,17 @@ import React, { useState } from "react";
 
 import * as Form from "@radix-ui/react-form";
 
-
 import FormFieldInput from "../FormFieldInput";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-import {
-  EnclosureStatus
-} from "../../enums/Enumurated";
+import { EnclosureStatus } from "../../enums/Enumurated";
 import useApiJson from "../../hooks/useApiJson";
 
 import useApiFormData from "../../hooks/useApiFormData";
 import FormFieldSelect from "../FormFieldSelect";
-
 
 function CreateNewEnclosureForm() {
   const navigate = useNavigate();
@@ -33,9 +29,7 @@ function CreateNewEnclosureForm() {
   const [enclosureStatus, setEnclosureStatus] = useState<string | undefined>(
     undefined
   );
-  const [isSheltered, setIsSheltered] = useState<string | undefined>(
-    undefined); // dropdown
-
+  const [isSheltered, setIsSheltered] = useState<string | undefined>(undefined); // dropdown
 
   // validate functions
   function validateImage(props: ValidityState) {
@@ -261,7 +255,7 @@ function CreateNewEnclosureForm() {
       <Form.Root
         className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-default dark:border-strokedark"
         onSubmit={handleSubmit}
-      // encType="multipart/form-data"
+        // encType="multipart/form-data"
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
@@ -290,9 +284,7 @@ function CreateNewEnclosureForm() {
             name="zooEventImage"
             className="flex w-full flex-col gap-1 data-[invalid]:text-danger"
           >
-            <Form.Label className="font-medium">
-              Enclosure Image
-            </Form.Label>
+            <Form.Label className="font-medium">Enclosure Image</Form.Label>
             <Form.Control
               type="file"
               required
@@ -312,7 +304,8 @@ function CreateNewEnclosureForm() {
             formFieldName={""}
             required={true}
             placeholder={""}
-            pattern={undefined} />
+            pattern={undefined}
+          />
 
           <FormFieldInput
             label="Remark"
@@ -323,7 +316,8 @@ function CreateNewEnclosureForm() {
             formFieldName={""}
             required={true}
             placeholder={""}
-            pattern={undefined} />
+            pattern={undefined}
+          />
 
           <FormFieldInput
             label="Length"
@@ -331,9 +325,11 @@ function CreateNewEnclosureForm() {
             value={length}
             setValue={setLength}
             validateFunction={validateLength}
-            formFieldName={""} required={true}
+            formFieldName={""}
+            required={true}
             placeholder={""}
-            pattern={undefined} />
+            pattern={undefined}
+          />
 
           <FormFieldInput
             label="Width"
@@ -344,7 +340,8 @@ function CreateNewEnclosureForm() {
             formFieldName={""}
             required={true}
             placeholder={""}
-            pattern={undefined} />
+            pattern={undefined}
+          />
 
           <FormFieldInput
             label="Height"
@@ -355,9 +352,10 @@ function CreateNewEnclosureForm() {
             formFieldName={""}
             required={true}
             placeholder={""}
-            pattern={undefined} />
+            pattern={undefined}
+          />
 
-          <FormFieldInput
+          {/* <FormFieldInput
             label="Stand Off Barrier Distance"
             type="number"
             value={standOffBarrierDist}
@@ -366,7 +364,7 @@ function CreateNewEnclosureForm() {
             formFieldName={""}
             required={true}
             placeholder={""}
-            pattern={undefined} />
+            pattern={undefined} /> */}
 
           {/* Is Sheltered */}
           <FormFieldSelect
@@ -376,7 +374,7 @@ function CreateNewEnclosureForm() {
             placeholder=""
             valueLabelPair={[
               ["true", "Yes"],
-              ["false", "No"]
+              ["false", "No"],
             ]}
             value={isSheltered}
             setValue={setIsSheltered}
@@ -389,19 +387,20 @@ function CreateNewEnclosureForm() {
             label="Enclosure Status"
             required={true}
             placeholder="Select an enclosure status..."
-            valueLabelPair={Object.keys(EnclosureStatus).map((activiTypeKey) => [
-              EnclosureStatus[
-                activiTypeKey as keyof typeof EnclosureStatus
-              ].toString(),
-              EnclosureStatus[
-                activiTypeKey as keyof typeof EnclosureStatus
-              ].toString(),
-            ])}
+            valueLabelPair={Object.keys(EnclosureStatus).map(
+              (activiTypeKey) => [
+                EnclosureStatus[
+                  activiTypeKey as keyof typeof EnclosureStatus
+                ].toString(),
+                EnclosureStatus[
+                  activiTypeKey as keyof typeof EnclosureStatus
+                ].toString(),
+              ]
+            )}
             value={enclosureStatus}
             setValue={setEnclosureStatus}
             validateFunction={validateEnclosureStatus}
           />
-
         </div>
         <Form.Submit asChild>
           <Button
@@ -415,6 +414,5 @@ function CreateNewEnclosureForm() {
     </div>
   );
 }
-
 
 export default CreateNewEnclosureForm;

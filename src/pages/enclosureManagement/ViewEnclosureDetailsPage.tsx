@@ -71,6 +71,11 @@ function ViewEnclosureDetailsPage() {
           <span className="mt-4 self-center text-title-xl font-bold">
             {curEnclosure?.name}
           </span>
+          <img
+            src={"http://localhost:3000/" + curEnclosure?.facility.imageUrl}
+            alt="Current species image"
+            className="my-4 aspect-square w-1/5 self-center rounded-full border object-cover shadow-4"
+          />
         </div>
 
         {/* Body */}

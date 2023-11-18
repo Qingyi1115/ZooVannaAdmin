@@ -15,9 +15,7 @@ interface EditEnclosureTerrainFormProps {
   curEnclosure: Enclosure;
 }
 
-function EditEnclosureTerrainForm(
-  props: EditEnclosureTerrainFormProps
-) {
+function EditEnclosureTerrainForm(props: EditEnclosureTerrainFormProps) {
   const apiJson = useApiJson();
   const toastShadcn = useToast().toast;
   const navigate = useNavigate();
@@ -103,6 +101,25 @@ function EditEnclosureTerrainForm(
   // validate functions end
   ////////
 
+  interface RecommendationValidationResult {
+    isValid: boolean;
+    isMinTooHigh: boolean;
+    isMaxTooLow: boolean;
+    totalMin: number;
+    totalMax: number;
+  }
+  function areRecommendationRangesValid(): any {
+    const total =
+      longGrassPercent +
+      shortGrassPercent +
+      rockPercent +
+      sandPercent +
+      snowPercent +
+      soilPercent;
+
+    return { isValid: total <= 100, total: total };
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     // Remember, your form must have enctype="multipart/form-data" for upload pictures
     e.preventDefault();
@@ -117,6 +134,17 @@ function EditEnclosureTerrainForm(
     };
 
     console.log("new enclosure req obj:", newEnclosureRequirements);
+
+    const isTerrainDistributionValid: any = areRecommendationRangesValid();
+
+    if (!isTerrainDistributionValid.isValid) {
+      toastShadcn({
+        variant: "destructive",
+        title: "Invalid Terrain Distribution",
+        description: `Your terrain distribution is not valid. Total terrain dsitribution percentages should be equal to or smaller than 100%. (Current: ${isTerrainDistributionValid.total}%)`,
+      });
+      return;
+    }
 
     const updateEnclosureEnclosureRequirements = async () => {
       try {
@@ -176,8 +204,6 @@ function EditEnclosureTerrainForm(
           </span>
         </div>
 
-
-
         <br />
         <div className="text-lg font-bold">Terrain Distribution</div>
 
@@ -197,7 +223,7 @@ function EditEnclosureTerrainForm(
           </Form.Label>
           <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
-              enclosureTerrainDistributionRecommendation.longGrassPercentMin !=
+            enclosureTerrainDistributionRecommendation.longGrassPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
               <div className="flex h-1/2 items-center justify-center gap-2">
                 <span>0%</span>
@@ -259,7 +285,7 @@ function EditEnclosureTerrainForm(
           </Form.Label>
           <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
-              enclosureTerrainDistributionRecommendation.shortGrassPercentMin !=
+            enclosureTerrainDistributionRecommendation.shortGrassPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
               <div className="flex h-1/2 items-center justify-center gap-2">
                 <span>0%</span>
@@ -321,7 +347,7 @@ function EditEnclosureTerrainForm(
           </Form.Label>
           <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
-              enclosureTerrainDistributionRecommendation.soilPercentMin !=
+            enclosureTerrainDistributionRecommendation.soilPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
               <div className="flex h-1/2 items-center justify-center gap-2">
                 <span>0%</span>
@@ -383,7 +409,7 @@ function EditEnclosureTerrainForm(
           </Form.Label>
           <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
-              enclosureTerrainDistributionRecommendation.rockPercentMin !=
+            enclosureTerrainDistributionRecommendation.rockPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
               <div className="flex h-1/2 items-center justify-center gap-2">
                 <span>0%</span>
@@ -445,7 +471,7 @@ function EditEnclosureTerrainForm(
           </Form.Label>
           <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
-              enclosureTerrainDistributionRecommendation.sandPercentMin !=
+            enclosureTerrainDistributionRecommendation.sandPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
               <div className="flex h-1/2 items-center justify-center gap-2">
                 <span>0%</span>
@@ -507,7 +533,7 @@ function EditEnclosureTerrainForm(
           </Form.Label>
           <div className="h-28 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition hover:bg-whiten focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter">
             {enclosureTerrainDistributionRecommendation &&
-              enclosureTerrainDistributionRecommendation.snowPercentMin !=
+            enclosureTerrainDistributionRecommendation.snowPercentMin !=
               Number.MIN_SAFE_INTEGER ? (
               <div className="flex h-1/2 items-center justify-center gap-2">
                 <span>0%</span>
@@ -561,7 +587,6 @@ function EditEnclosureTerrainForm(
             {!apiJson.loading ? <div>Submit</div> : <div>Loading</div>}
           </Button>
         </Form.Submit>
-
       </Form.Root>
     </div>
   );
