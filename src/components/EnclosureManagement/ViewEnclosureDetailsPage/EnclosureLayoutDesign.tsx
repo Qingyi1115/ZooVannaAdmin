@@ -2,6 +2,7 @@ import Enclosure from "../../../models/Enclosure";
 
 import { Button } from "@/components/ui/button";
 
+import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { HiPencil } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +10,6 @@ import useApiJson from "../../../hooks/useApiJson";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import { TwoThumbSliderWithNumber } from "../../SpeciesManagement/TwoThumbSliderWithNumber";
 import EnclosurePlantationList from "./EnclosurePlantationList";
-import { Separator } from "@/components/ui/separator";
 
 interface EnclosureLayoutDesignProps {
   curEnclosure: Enclosure;
@@ -36,22 +36,22 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
       <Separator className="my-4" />
       {(employee.superAdmin ||
         employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
-        <Button
-          className="mr-2"
-          onClick={() => {
-            navigate(
-              `/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/layoutdesign`,
-              { replace: true }
-            );
-            navigate(
-              `/enclosure/editenclosureenvironment/${curEnclosure.enclosureId}`
-            );
-          }}
-        >
-          <HiPencil className="mx-auto"></HiPencil>
-          Edit Terrain Details
-        </Button>
-      )}
+          <Button
+            className="mr-2"
+            onClick={() => {
+              navigate(
+                `/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}/layoutdesign`,
+                { replace: true }
+              );
+              navigate(
+                `/enclosure/editenclosureterrain/${curEnclosure.enclosureId}`
+              );
+            }}
+          >
+            <HiPencil className="mx-auto"></HiPencil>
+            Edit Terrain Details
+          </Button>
+        )}
       <Table className="rounded-lg shadow-lg">
         <TableBody>
           <TableRow>
@@ -70,37 +70,6 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
             </TableCell>
             <TableCell>
               {curEnclosure.waterArea || "Please set enclosure Diagram"}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Temperature Range (&deg;C)
-            </TableCell>
-            <TableCell>
-              <span className="font-bold">
-                {curEnclosure.acceptableTempMin}
-              </span>{" "}
-              &deg;C —{" "}
-              <span className="font-bold">
-                {curEnclosure.acceptableTempMax}
-              </span>{" "}
-              &deg;C
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Humidity Range (g.m<sup>-3</sup>)
-            </TableCell>
-            <TableCell>
-              <span className="font-bold">
-                {curEnclosure.acceptableHumidityMin}
-              </span>{" "}
-              g.m<sup>-3</sup> —{" "}
-              <span className="font-bold">
-                {curEnclosure.acceptableHumidityMax}
-              </span>{" "}
-              g.m
-              <sup>-3</sup>
             </TableCell>
           </TableRow>
           <TableRow>
