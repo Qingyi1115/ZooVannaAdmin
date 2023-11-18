@@ -1,18 +1,15 @@
 import React from "react";
 import Enclosure from "../../../models/Enclosure";
 
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import { NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 interface EnclosureBasicInformationProps {
   curEnclosure: Enclosure;
@@ -20,6 +17,7 @@ interface EnclosureBasicInformationProps {
 
 function EnclosureBasicInformation(props: EnclosureBasicInformationProps) {
   const { curEnclosure } = props;
+  const employee = useAuthContext().state.user?.employeeData;
 
   const navigate = useNavigate();
 
@@ -31,15 +29,14 @@ function EnclosureBasicInformation(props: EnclosureBasicInformationProps) {
           <div
             // key={index}
             className={` flex w-max items-center justify-center rounded px-1 text-sm font-bold
-                ${
-                  status === "ACTIVE"
-                    ? " bg-emerald-100  text-emerald-900"
-                    : status === "CLOSED"
-                    ? "bg-red-100 p-[0.1rem] text-red-900"
-                    : status === "CONSTRUCTING"
+                ${status === "ACTIVE"
+                ? " bg-emerald-100  text-emerald-900"
+                : status === "CLOSED"
+                  ? "bg-red-100 p-[0.1rem] text-red-900"
+                  : status === "CONSTRUCTING"
                     ? " bg-blue-100 p-[0.1rem]  text-blue-900"
                     : "bg-gray-100 text-black"
-                }`}
+              }`}
           >
             {status}
           </div>
@@ -51,17 +48,20 @@ function EnclosureBasicInformation(props: EnclosureBasicInformationProps) {
 
   return (
     <div>
-      <Button
-        onClick={() =>
-          navigate(
-            `/enclosure/editenclosurebasicinfo/${curEnclosure.enclosureId}`
-          )
-        }
-        type="button"
-        className=""
-      >
-        Edit Basic Information
-      </Button>
+      {(employee.superAdmin ||
+        employee.planningStaff?.plannerType == "CURATOR") && (
+          <Button
+            onClick={() =>
+              navigate(
+                `/enclosure/editenclosurebasicinfo/${curEnclosure.enclosureId}`
+              )
+            }
+            type="button"
+            className=""
+          >
+            Edit Basic Information
+          </Button>
+        )}
       <br />
       <Table>
         {/* <TableHeader className=" bg-whiten">

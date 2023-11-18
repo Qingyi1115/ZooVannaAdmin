@@ -21,6 +21,7 @@ import Animal from "../../../models/Animal";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import beautifyText from "../../../hooks/beautifyText";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import OneParentCard from "./OneParentCard";
 interface AnimalParentsCardProps {
   curAnimal: Animal;
@@ -34,7 +35,7 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
   const toastShadcn = useToast().toast;
 
   const { curAnimal, setCurAnimal, refreshSeed, setRefreshSeed } = props;
-
+  const employee = useAuthContext().state.user?.employeeData;
   const [animalParent1Code, setAnimalParent1Code] = useState<string>("");
   const [animalParent2Code, setAnimalParent2Code] = useState<string>("");
   const [animalParent1, setAnimalParent1] = useState<Animal | null>(null);
@@ -262,14 +263,17 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
           {!animalParent1 && (
             <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-lg">
               <div>There is no known parent</div>
-              <Button
-                onClick={() => {
-                  setOpenAddParentDialog(true);
-                  setGlobalFilter(curAnimal.species.commonName);
-                }}
-              >
-                <HiPlus />
-              </Button>
+              {(employee.superAdmin ||
+                employee.keeper ||
+                employee.planningStaff?.plannerType == "CURATOR") && (
+                  <Button
+                    onClick={() => {
+                      setOpenAddParentDialog(true);
+                      setGlobalFilter(curAnimal.species.commonName);
+                    }}
+                  >
+                    <HiPlus />
+                  </Button>)}
             </div>
           )}
           <div className="flex w-full gap-4">
@@ -419,14 +423,17 @@ function AnimalParentsCard(props: AnimalParentsCardProps) {
                   {animalParent1 && (
                     <div className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-md border border-strokedark/20 p-4 transition-all">
                       <div>There is no known second parent</div>
-                      <Button
-                        onClick={() => {
-                          setOpenAddParentDialog(true);
-                          setGlobalFilter(curAnimal.species.commonName);
-                        }}
-                      >
-                        <HiPlus />
-                      </Button>
+                      {(employee.superAdmin ||
+                        employee.keeper ||
+                        employee.planningStaff?.plannerType == "CURATOR") && (
+                          <Button
+                            onClick={() => {
+                              setOpenAddParentDialog(true);
+                              setGlobalFilter(curAnimal.species.commonName);
+                            }}
+                          >
+                            <HiPlus />
+                          </Button>)}
                     </div>
                   )}
                 </div>

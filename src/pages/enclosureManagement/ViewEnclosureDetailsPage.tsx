@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import useApiJson from "../../hooks/useApiJson";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import Enclosure from "../../models/Enclosure";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEnclosureContext } from "../../hooks/useEnclosureContext";
+import Enclosure from "../../models/Enclosure";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import EnclosureBasicInformation from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureBasicInformation";
+import AllEnclosureEmployeesDatatable from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/AllEnclosureEmployeesDatatable";
 import EnclosureAnimalList from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureAnimalList";
+import EnclosureBasicInformation from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureBasicInformation";
+import EnclosureEnrichmentItemList from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureEnrichmentItemList";
+import EnclosureEnvironment from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureEnvironment";
 import EnclosureLayoutDesign from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureLayoutDesign";
+import EnclosureSafety from "../../components/EnclosureManagement/ViewEnclosureDetailsPage/EnclosureSafety";
 
 function ViewEnclosureDetailsPage() {
   const apiJson = useApiJson();
@@ -75,12 +77,14 @@ function ViewEnclosureDetailsPage() {
 
         <Tabs defaultValue={tab ? `${tab}` : "basicinfo"} className="w-full">
           <TabsList className="no-scrollbar mb-4 w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
-            <span className="invisible">_____</span>
+            <span className="invisible"></span>
             <TabsTrigger value="basicinfo">Basic Information</TabsTrigger>
             <TabsTrigger value="layoutdesign">Layout & Design</TabsTrigger>
             <TabsTrigger value="animalslist">Animals List</TabsTrigger>
             <TabsTrigger value="environment">Environment</TabsTrigger>
             <TabsTrigger value="safety">Safety</TabsTrigger>
+            <TabsTrigger value="enrichmentitems">Enrichment Items</TabsTrigger>
+            <TabsTrigger value="keepers">Keepers</TabsTrigger>
             {/* <TabsTrigger value="medical">Medical</TabsTrigger> */}
           </TabsList>
           <TabsContent value="basicinfo">
@@ -99,10 +103,22 @@ function ViewEnclosureDetailsPage() {
             )}
           </TabsContent>
           <TabsContent value="environment">
-            <div>test</div>
+            {curEnclosure && (
+              <EnclosureEnvironment curEnclosure={curEnclosure} />
+            )}
           </TabsContent>
           <TabsContent value="safety">
-            <div>test</div>
+            <EnclosureSafety curEnclosure={curEnclosure} />
+          </TabsContent>
+          <TabsContent value="enrichmentitems">
+            {curEnclosure && (
+              <EnclosureEnrichmentItemList curEnclosure={curEnclosure} />
+            )}
+          </TabsContent>
+          <TabsContent value="keepers">
+            {curEnclosure && (
+              <AllEnclosureEmployeesDatatable curEnclosure={curEnclosure} setRefreshSeed={setRefreshSeed} />
+            )}
           </TabsContent>
           {/* <TabsContent value="medical">
               Medical Logs and whatever else here

@@ -8,6 +8,15 @@ import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Enclosure from "../../models/Enclosure";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 import { useEnclosureContext } from "../../hooks/useEnclosureContext";
 
@@ -33,10 +42,30 @@ import {
   Plugins as PlannerPlugins,
 } from "../../../reactplanner-src/index";
 
+// end react planner import
+
+import { Dialog } from "primereact/dialog";
+import { HiCheck, HiX } from "react-icons/hi";
+
 // test data
 const emptyDiagramJson = {
   unit: "cm",
-  layers: {},
+  layers: {
+    "layer-1": {
+      id: "layer-1",
+      altitude: 0,
+      order: 0,
+      opacity: 1,
+      name: "default",
+      visible: true,
+      vertices: {},
+      lines: {},
+      holes: {},
+      areas: {},
+      items: {},
+      selected: { vertices: [], lines: [], holes: [], areas: [], items: [] },
+    },
+  },
   grids: {
     h1: {
       id: "h1",
@@ -55,7 +84,7 @@ const emptyDiagramJson = {
       },
     },
   },
-  selectedLayer: null,
+  selectedLayer: "layer-1",
   groups: {},
   width: 3000,
   height: 2000,
@@ -97,6 +126,12 @@ let reducer = (state, action) => {
   return state;
 };
 
+let blackList = [
+  "UPDATE_MOUSE_COORDS",
+  "UPDATE_ZOOM_SCALE",
+  "UPDATE_2D_CAMERA",
+];
+
 // Init store
 // let store = createStore(
 //   reducer,
@@ -120,7 +155,25 @@ let reducer = (state, action) => {
 //     }) :
 //     f => f
 // );
-let store = createStore(reducer, composeWithDevTools());
+let store = createStore(
+  reducer,
+  composeWithDevTools({
+    features: {
+      pause: true,
+      lock: true,
+      persist: true,
+      export: true,
+      import: "custom",
+      jump: true,
+      skip: true,
+      reorder: true,
+      dispatch: true,
+      test: true,
+    },
+    actionsBlacklist: blackList,
+    maxAge: 999999,
+  })
+);
 
 let plugins = [
   PlannerPlugins.Keyboard(),
@@ -157,7 +210,19 @@ function EnclosureDesignDiagramPage() {
             const data = await response.json();
             console.log("fetching diagram");
             console.log(curEnclosure?.designDiagramJsonUrl);
-            loadDiagram(data);
+            let dataWithDimensions = {
+              ...data,
+              width:
+                data.width != curEnclosure.width * 100
+                  ? curEnclosure.width * 100
+                  : data.width,
+              height:
+                data.height != curEnclosure.length * 100
+                  ? curEnclosure.length * 100
+                  : data.height,
+            };
+            loadDiagram(dataWithDimensions);
+            updateTotalLandWaterArea();
           } else {
             console.error(
               "Failed to fetch enclosure data:",
@@ -203,7 +268,7 @@ function EnclosureDesignDiagramPage() {
   }
 
   function loadDiagram(sceneJson: any) {
-    console.log(sceneJson);
+    // console.log(sceneJson);
     store.dispatch({
       type: "LOAD_PROJECT",
       // sceneJSON: emptyMapJson,
@@ -211,18 +276,57 @@ function EnclosureDesignDiagramPage() {
     });
   }
 
+  // start from scratch stuff
+  const [resetDiagramDialog, setResetDiagramDialog] = useState<boolean>(false);
+  const confirmRemoveAnimal = () => {
+    setResetDiagramDialog(true);
+  };
+
+  const hideResetDiagramDialog = () => {
+    setResetDiagramDialog(false);
+  };
+
+  const resetDiagram = async () => {
+    // let tempDiagramJson = emptyDiagramJson
+    let emptyDiagramJsonWithDimensions = {
+      ...emptyDiagramJson,
+      width: curEnclosure.width * 100,
+      height: curEnclosure.length * 100,
+    };
+    loadDiagram(emptyDiagramJsonWithDimensions);
+    await handleSave();
+    setResetDiagramDialog(false);
+  };
+
+  const resetDiagramDialogFooter = (
+    <React.Fragment>
+      <Button onClick={hideResetDiagramDialog}>
+        <HiX className="mr-2" />
+        No
+      </Button>
+      <Button variant={"destructive"} onClick={resetDiagram}>
+        <HiCheck className="mr-2" />
+        Yes
+      </Button>
+    </React.Fragment>
+  );
+  // end new project stuff
   function newProject() {
     store.dispatch({
       type: "NEW_PROJECT",
     });
   }
 
+  // calculate area stuff
+
+  // useEffect to fetch area recommendation
+
   function calculateSelectedAreaSize() {
-    console.log("ahahhaha");
+    console.log("Scene:");
     console.log(
       JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
     );
-    console.log("egegegege");
+    console.log("Scene > selected layer:");
     console.log(
       JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
         .selectedLayer
@@ -270,6 +374,244 @@ function EnclosureDesignDiagramPage() {
     // );
   }
 
+  function calculateAreaAreaByIdInMetresSquare(
+    layerName: string,
+    areaId: string
+  ): number {
+    const curScene = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene;
+    const curLayer = curScene.layers[layerName];
+    const curArea = curLayer.areas[areaId];
+
+    var polygon = curArea.vertices.map(function (vertexID) {
+      var _layer$vertices$get = curLayer.vertices[vertexID],
+        x = _layer$vertices$get.x,
+        y = _layer$vertices$get.y;
+      return [x, y];
+    });
+
+    var areaSize = areapolygon(polygon, false);
+
+    // convert from square cm to square metre before returning!
+    return areaSize / 10000;
+  }
+
+  const [curTotalLandArea, setCurTotalLandArea] = useState<number>(0);
+  const [curTotalWaterArea, setCurTotalWaterArea] = useState<number>(0);
+
+  function updateTotalLandWaterArea() {
+    let tempTotalLandArea = 0;
+    let tempTotalWaterArea = 0;
+
+    const curScene = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene;
+
+    // loop through all layers (we try to keep to 1 layer still hahahahahah)
+    // for each layer, loop through all areas
+    ////// for each area, check area.properties.patternColor
+    ///////// if patternColor == "#6aa84f"
+    //////////// area is "LAND" --> calculate area and add to total land
+    ///////// if patternColor == "#2986cc"
+    //////////// area is "WATER" --> calculate area and add to total water
+
+    Object.values(curScene.layers).forEach((layer: any) => {
+      Object.values(layer.areas).forEach((area: any) => {
+        console.log(
+          "In loop, area: " +
+            area.id +
+            ", patternColor: " +
+            area.properties.patternColor
+        );
+        if (area.properties.patternColor == "#6aa84f") {
+          // LAND
+          let curAreaArea = calculateAreaAreaByIdInMetresSquare(
+            layer.id,
+            area.id
+          );
+          // check for holes
+          // nvm, as long as there is a hole, minus the area, because the area will be added later separately anyway
+          for (let areaId of area.holes) {
+            // if (layer.areas[areaId].properties.patternColor == "#2986cc") {
+            //   console.log("HERE, curArea LAND but hole is WATER");
+            //   // curArea is LAND but hole is WATER
+            //   let areaOfCurHole = calculateAreaAreaByIdInMetresSquare(
+            //     layer.id,
+            //     areaId
+            //   );
+            //   console.log("curAreaArea in hole here: " + curAreaArea);
+            //   console.log("areaOfCurHole: " + areaOfCurHole);
+            //   curAreaArea = curAreaArea - areaOfCurHole;
+            // }
+            let areaOfCurHole = calculateAreaAreaByIdInMetresSquare(
+              layer.id,
+              areaId
+            );
+            curAreaArea = curAreaArea - areaOfCurHole;
+          }
+          console.log("curAreaArea outside: " + curAreaArea);
+          tempTotalLandArea += curAreaArea;
+        } else if (area.properties.patternColor == "#2986cc") {
+          // WATER
+          let curAreaArea = calculateAreaAreaByIdInMetresSquare(
+            layer.id,
+            area.id
+          );
+          for (let areaId of area.holes) {
+            let areaOfCurHole = calculateAreaAreaByIdInMetresSquare(
+              layer.id,
+              areaId
+            );
+            curAreaArea = curAreaArea - areaOfCurHole;
+          }
+          tempTotalWaterArea += curAreaArea;
+        }
+
+        // now, minus holes of a different type
+        // for (let areaId of area.holes) {
+        //   if (
+        //     area.properties.patternColor == "#6aa84f" &&
+        //     layer.areas[areaId].properties.patternColor == "#2986cc"
+        //   ) {
+        //     console.log("HERE, curArea LAND but hole is WATER");
+        //     // curArea is LAND but hole is WATER
+        //     let areaOfCurHole = calculateAreaAreaByIdInMetresSquare(
+        //       layer.id,
+        //       areaId
+        //     );
+        //     tempTotalLandArea = tempTotalLandArea - areaOfCurHole;
+        //     console.log("tempTotalLandArea: " + tempTotalLandArea);
+        //     console.log("areaOfCurHole: " + areaOfCurHole);
+        //     console.log("math: " + (tempTotalLandArea - areaOfCurHole));
+        //   } else if (
+        //     area.properties.patternColor == "#2986cc" &&
+        //     layer.areas[areaId].properties.patternColor == "#6aa84f"
+        //   ) {
+        //     console.log("HERE INSTEAD, curArea WATER but hole is LAND");
+        //     // curArea is WATER but hole is LAND
+        //     let areaOfCurHole = calculateAreaAreaByIdInMetresSquare(
+        //       layer.id,
+        //       areaId
+        //     );
+        //     tempTotalWaterArea -= areaOfCurHole;
+        //   }
+        // }
+      });
+    });
+
+    // for (let layer of curScene.layers) {
+    //   for (let area of layer.areas) {
+    //     console.log(
+    //       "In loop, area: " +
+    //         area.id +
+    //         ", patternColor: " +
+    //         area.properties.patternColor
+    //     );
+    //     if (area.properties.patternColor == "#6aa84f") {
+    //       // LAND
+    //       tempTotalLandArea += calculateAreaAreaByIdInMetresSquare(
+    //         layer.id,
+    //         area.id
+    //       );
+    //     } else if (area.properties.patternColor == "#2986cc") {
+    //       // LAND
+    //       tempTotalWaterArea += calculateAreaAreaByIdInMetresSquare(
+    //         layer.id,
+    //         area.id
+    //       );
+    //     }
+    //   }
+    // }
+
+    setCurTotalLandArea(tempTotalLandArea);
+    setCurTotalWaterArea(tempTotalWaterArea);
+  }
+
+  function clickFitToView() {
+    const fitToViewerButton = document.querySelector(
+      'button[name="fit-to-viewer"]'
+    ) as HTMLButtonElement;
+    if (fitToViewerButton) {
+      fitToViewerButton.click();
+    }
+    // click button to fit to view to canvas for design diagram
+  }
+
+  function makeSelectedAreaLand() {
+    const curSelectedLayerName = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene.selectedLayer;
+    const curSelectedLayer = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene.layers[curSelectedLayerName];
+    const selectedAreaId = Object.keys(curSelectedLayer.areas).find(
+      (areaId) => curSelectedLayer.areas[areaId].selected === true
+    );
+    if (selectedAreaId == undefined) {
+      return;
+    }
+
+    const selectedArea = curSelectedLayer.areas[selectedAreaId];
+    const tempScene = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene;
+
+    let tempSelectedArea = { ...selectedArea };
+    tempSelectedArea.properties.texture = "Land";
+    tempSelectedArea.properties.patternColor = "#6aa84f";
+
+    tempScene.layers[curSelectedLayerName].areas[selectedAreaId] =
+      tempSelectedArea;
+
+    store.dispatch({
+      type: "LOAD_PROJECT",
+      sceneJSON: tempScene,
+    });
+
+    clickFitToView();
+
+    updateTotalLandWaterArea();
+  }
+
+  function makeSelectedAreaWater() {
+    const curSelectedLayerName = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene.selectedLayer;
+    const curSelectedLayer = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene.layers[curSelectedLayerName];
+    const selectedAreaId = Object.keys(curSelectedLayer.areas).find(
+      (areaId) => curSelectedLayer.areas[areaId].selected === true
+    );
+    if (selectedAreaId == undefined) {
+      return;
+    }
+
+    const selectedArea = curSelectedLayer.areas[selectedAreaId];
+    const tempScene = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene;
+
+    let tempSelectedArea = { ...selectedArea };
+    tempSelectedArea.properties.texture = "Water";
+    tempSelectedArea.properties.patternColor = "#2986cc";
+
+    tempScene.layers[curSelectedLayerName].areas[selectedAreaId] =
+      tempSelectedArea;
+
+    store.dispatch({
+      type: "LOAD_PROJECT",
+      sceneJSON: tempScene,
+    });
+
+    clickFitToView();
+
+    updateTotalLandWaterArea();
+  }
+
+  // calculate area stuff
+
   async function handleSave() {
     console.log(
       JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
@@ -306,7 +648,7 @@ function EnclosureDesignDiagramPage() {
   }
 
   return (
-    <div className="p-10">
+    <div className="overflow-y-scroll  p-10">
       <div className="flex w-full flex-col gap-6 rounded-lg border border-stroke bg-white p-20 text-black shadow-lg">
         {/* header */}
         <div className="flex flex-col">
@@ -334,24 +676,133 @@ function EnclosureDesignDiagramPage() {
             {curEnclosure?.name}
           </span>
         </div>
+        <Dialog
+          visible={resetDiagramDialog}
+          style={{ width: "32rem" }}
+          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+          header="Confirm"
+          modal
+          footer={resetDiagramDialogFooter}
+          onHide={hideResetDiagramDialog}
+        >
+          <div className="confirmation-content">
+            <i
+              className="pi pi-exclamation-triangle mr-3"
+              style={{ fontSize: "2rem" }}
+            />
+            <span>
+              Are you sure you want to reset the enclosure diagram?
+              <br />
+              This will remove all elements and designs already added to this
+              enclosure's diagram.
+            </span>
+          </div>
+        </Dialog>
 
         {/* Body */}
-        {/* <Button>View Design Diagram</Button> */}
-        <div>
-          <Button onClick={handleSave}>Test Handle Save</Button>
-        </div>
-        <div>
-          <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
-        </div>
 
         {/* <div>
-          <Button onClick={newProject}>New Project</Button>
-        </div> */}
-        <div>
-          <Button onClick={() => loadDiagram(emptyDiagramJson)}>
-            Test Handle Load Empty Diagram
-          </Button>
+            <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
+          </div> */}
+
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-2">
+            <div>
+              <Button className="w-full" onClick={handleSave}>
+                Save Diagram
+              </Button>
+            </div>
+            <div>
+              <Button
+                className="w-full"
+                variant={"destructive"}
+                onClick={confirmRemoveAnimal}
+              >
+                Delete (Reset) Diagram
+              </Button>
+            </div>
+          </div>
+          <div className="flex w-1/3 gap-2">
+            <Table className="w-full">
+              <TableHeader className="bg-whiten">
+                {/* <TableRow>
+                  <TableHead
+                    colSpan={3}
+                    className="text-center text-lg font-bold"
+                  >
+                    Area
+                  </TableHead>
+                </TableRow> */}
+                <TableRow>
+                  <TableHead className="font-bold">Area</TableHead>
+                  <TableHead>Current</TableHead>
+                  <TableHead>Recommended</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-bold">
+                    Land (in m<sup>2</sup>)
+                  </TableCell>
+                  <TableCell>{curTotalLandArea}</TableCell>
+                  <TableCell>bla</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-bold">
+                    Water (in m<sup>2</sup>)
+                  </TableCell>
+                  <TableCell>{curTotalWaterArea}</TableCell>
+                  <TableCell>bla</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <div className="flex flex-col gap-2">
+              <div>
+                <Button className="w-full" onClick={updateTotalLandWaterArea}>
+                  Re-calculate Areas
+                </Button>
+              </div>
+              <div>
+                <Button onClick={makeSelectedAreaLand}>
+                  Make Selected Area as Land
+                </Button>
+              </div>
+              <div>
+                <Button onClick={makeSelectedAreaWater}>
+                  Make Selected Area as Water
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div className="flex w-1/3 gap-2">
+            <Table className="w-full">
+              <TableHeader className="bg-whiten">
+                <TableRow>
+                  <TableHead className="font-bold"></TableHead>
+                  <TableHead>Current</TableHead>
+                  <TableHead>Recommended</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-bold">
+                    Plantation Coverage (in %)
+                  </TableCell>
+                  <TableCell>blo</TableCell>
+                  <TableCell>bla</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <div className="flex flex-col gap-2">
+              <div>
+                <Button className="w-full">
+                  Re-calculate Plantation Coverage
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
+
         <div>
           <Provider store={store}>
             <SizeMe>
@@ -359,8 +810,8 @@ function EnclosureDesignDiagramPage() {
                 <ReactPlannerWrapper
                   store={store}
                   catalog={MyCatalog}
-                  width={size.width || 600}
-                  height={size.height || 600}
+                  width={size.width || 700}
+                  height={size.height || 800}
                   plugins={plugins}
                   toolbarButtons={toolbarButtons}
                   stateExtractor={(state) => state.get("react-planner")}

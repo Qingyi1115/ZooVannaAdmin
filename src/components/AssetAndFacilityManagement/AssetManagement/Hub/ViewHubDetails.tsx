@@ -29,7 +29,7 @@ function ViewHubDetails(props: HubDetailsProps) {
   return (
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || employee.planningStaff?.plannerType == "CURATOR") && (
           <div>
             <Button className="mr-2" onClick={() => {
               navigate(`/assetfacility/viewhubdetails/${curHub.hubProcessorId}/hubDetails`, { replace: true });

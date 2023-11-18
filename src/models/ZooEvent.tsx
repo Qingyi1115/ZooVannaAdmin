@@ -1,10 +1,12 @@
 import { EventTimingType, EventType } from "../enums/Enumurated";
 import Animal from "./Animal";
 import AnimalActivity from "./AnimalActivity";
+import Enclosure from "./Enclosure";
 import FeedingPlanSessionDetail from "./FeedingPlanSessionDetail";
 import InHouse from "./InHouse";
 import Keeper from "./Keeper";
 import PlanningStaff from "./PlanningStaff";
+import PublicEventSession from "./PublicEventSession";
 
 interface ZooEvent {
   zooEventId: number;
@@ -26,12 +28,13 @@ interface ZooEvent {
 
   planningStaff?: PlanningStaff;
   keepers?: Keeper[]; // work
-  // enclosure?: Enclosure;
+  enclosure?: Enclosure;
   animals?: Animal[];
   inHouse?: InHouse;
   // animalClinic?: AnimalClinic;
   animalActivity?: AnimalActivity;
   feedingPlanSessionDetail?: FeedingPlanSessionDetail;
+  publicEventSession?: PublicEventSession;
 }
 
 export default ZooEvent;

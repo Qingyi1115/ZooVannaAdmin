@@ -30,14 +30,23 @@ function ViewSensorDetails(props: SensorDetailsProps) {
     <div className="flex flex-col">
       <div className="my-4 flex justify-start gap-6">
 
-        <Button className="mr-2" onClick={() => {
-          navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
-          navigate(`/assetfacility/viewfacilitydetails/${curSensor.hubProcessor?.facility.facilityId}`);
-        }}>
-          Facility Details
-        </Button>
+        {curSensor.hubProcessor?.facility.enclosure ?
+          <Button className="mr-2" onClick={() => {
+            navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
+            navigate(`/enclosure/viewenclosuredetails/${curSensor.hubProcessor?.facility.enclosure?.enclosureId}/environment`);
+          }}>
+            Enclosure Details
+          </Button>
+          :
+          <Button className="mr-2" onClick={() => {
+            navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
+            navigate(`/assetfacility/viewfacilitydetails/${curSensor.hubProcessor?.facility.facilityId}`);
+          }}>
+            Facility Details
+          </Button>
+        }
 
-        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER") && (
+        {(employee.superAdmin || employee.planningStaff?.plannerType == "OPERATIONS_MANAGER" || employee.planningStaff?.plannerType == "CURATOR") && (
           <Button className="mr-2" onClick={() => {
             navigate(`/assetfacility/viewsensordetails/${curSensor.sensorId}/sensorDetails`, { replace: true });
             navigate(`/assetfacility/editsensor/${curSensor.sensorId}`);

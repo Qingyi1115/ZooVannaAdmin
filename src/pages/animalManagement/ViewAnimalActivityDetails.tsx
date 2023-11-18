@@ -393,12 +393,12 @@ function ViewAnimalActivityDetails() {
                 <div className="mb-10">
                   {(employee.superAdmin ||
                     employee.planningStaff?.plannerType == "CURATOR") && (
-                    <NavLink
-                      to={`/animal/editanimalactivity/${curAnimalActivity.animalActivityId}`}
-                    >
-                      <Button className="my-3">Edit Basic Information</Button>
-                    </NavLink>
-                  )}
+                      <NavLink
+                        to={`/animal/editanimalactivity/${curAnimalActivity.animalActivityId}`}
+                      >
+                        <Button className="my-3">Edit Basic Information</Button>
+                      </NavLink>
+                    )}
                   <Table>
                     <TableBody>
                       <TableRow>
@@ -414,6 +414,12 @@ function ViewAnimalActivityDetails() {
                           Title
                         </TableCell>
                         <TableCell>{curAnimalActivity.title}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="w-1/3 font-bold" colSpan={2}>
+                          Required number of keepers
+                        </TableCell>
+                        <TableCell>{curAnimalActivity.requiredNumberOfKeeper}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell className="w-1/3 font-bold" colSpan={2}>
@@ -513,18 +519,18 @@ function ViewAnimalActivityDetails() {
                       />
                       {(employee.superAdmin ||
                         employee.planningStaff?.plannerType == "CURATOR") && (
-                        <Button
-                          onClick={() =>
-                            navigate(
-                              `/animal/assignanimalstoactivity/${curAnimalActivity.animalActivityId}`
-                            )
-                          }
-                          type="button"
-                          className="h-12 w-60"
-                        >
-                          Assign Animal(s)
-                        </Button>
-                      )}
+                          <Button
+                            onClick={() =>
+                              navigate(
+                                `/animal/assignanimalstoactivity/${curAnimalActivity.animalActivityId}`
+                              )
+                            }
+                            type="button"
+                            className="h-12 w-60"
+                          >
+                            Assign Animal(s)
+                          </Button>
+                        )}
                     </div>
                     <DataTable
                       value={involvedAnimalList}
@@ -559,13 +565,13 @@ function ViewAnimalActivityDetails() {
                       ></Column>
                       {(employee.superAdmin ||
                         employee.planningStaff?.plannerType == "CURATOR") && (
-                        <Column
-                          body={animalActionBodyTemplate}
-                          header="Actions"
-                          exportable={false}
-                          style={{ minWidth: "3rem" }}
-                        ></Column>
-                      )}
+                          <Column
+                            body={animalActionBodyTemplate}
+                            header="Actions"
+                            exportable={false}
+                            style={{ minWidth: "3rem" }}
+                          ></Column>
+                        )}
                     </DataTable>
                     <Dialog
                       visible={removeAnimalDialog}
@@ -607,18 +613,18 @@ function ViewAnimalActivityDetails() {
                       />
                       {(employee.superAdmin ||
                         employee.planningStaff?.plannerType == "CURATOR") && (
-                        <Button
-                          onClick={() =>
-                            navigate(
-                              `/animal/assignitemstoactivity/${curAnimalActivity.animalActivityId}`
-                            )
-                          }
-                          type="button"
-                          className="h-12 w-60"
-                        >
-                          Assign Item(s)
-                        </Button>
-                      )}
+                          <Button
+                            onClick={() =>
+                              navigate(
+                                `/animal/assignitemstoactivity/${curAnimalActivity.animalActivityId}`
+                              )
+                            }
+                            type="button"
+                            className="h-12 w-60"
+                          >
+                            Assign Item(s)
+                          </Button>
+                        )}
                     </div>
                     <DataTable
                       value={involvedItemList}
@@ -658,13 +664,13 @@ function ViewAnimalActivityDetails() {
                       ></Column>
                       {(employee.superAdmin ||
                         employee.planningStaff?.plannerType == "CURATOR") && (
-                        <Column
-                          body={itemActionBodyTemplate}
-                          header="Actions"
-                          exportable={false}
-                          style={{ minWidth: "3rem" }}
-                        ></Column>
-                      )}
+                          <Column
+                            body={itemActionBodyTemplate}
+                            header="Actions"
+                            exportable={false}
+                            style={{ minWidth: "3rem" }}
+                          ></Column>
+                        )}
                     </DataTable>
                     <Dialog
                       visible={removeItemDialog}
