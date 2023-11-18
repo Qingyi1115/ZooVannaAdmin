@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import useApiJson from "../../hooks/useApiJson";
+import { useSelector } from "react-redux";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -46,6 +47,8 @@ import {
 
 import { Dialog } from "primereact/dialog";
 import { HiCheck, HiX } from "react-icons/hi";
+import { fitToViewer } from "react-svg-pan-zoom";
+import { breadcrumbsClasses } from "@mui/material";
 
 // test data
 const emptyDiagramJson = {
@@ -106,6 +109,8 @@ let AppState = Map({
   "react-planner": new PlannerModels.State(),
 });
 
+// const functionToBeCalledRef = useRef<(() => void) | null>(null);
+
 // Define reducer
 let reducer = (state, action) => {
   state = state || AppState;
@@ -120,6 +125,11 @@ let reducer = (state, action) => {
 
   // console.log("insider reducer");
   // console.log(action);
+  // if (action && action.type == "END_DRAWING_ITEM") {
+  //   console.log("aaaaaa");
+  //   functionToBeCalledRef.current?.();
+  // }
+
   state = state.update("react-planner", (plannerState) =>
     PlannerReducer(plannerState, action)
   );
@@ -178,7 +188,7 @@ let store = createStore(
 let plugins = [
   PlannerPlugins.Keyboard(),
   // PlannerPlugins.Autosave("react-planner_v0"),
-  // PlannerPlugins.ConsoleDebugger(),
+  PlannerPlugins.ConsoleDebugger(),
 ];
 
 let toolbarButtons = [ToolbarScreenshotButton];
@@ -222,7 +232,9 @@ function EnclosureDesignDiagramPage() {
                   : data.height,
             };
             loadDiagram(dataWithDimensions);
+            clickFitToView();
             updateTotalLandWaterArea();
+            calculateTotalPlantationCoverage();
           } else {
             console.error(
               "Failed to fetch enclosure data:",
@@ -266,6 +278,29 @@ function EnclosureDesignDiagramPage() {
       </div>
     );
   }
+
+  // fetch recommendation
+  const [
+    enclosureTerrainDistributionRecommendation,
+    setEnclosureTerrainDistributionRecommendation,
+  ] = useState<any>();
+  useEffect(() => {
+    const fetchEnclosureTerrainStuffReco = async () => {
+      try {
+        const responseJson = await apiJson.get(
+          `http://localhost:3000/api/enclosure/getEnclosureTerrainDistributionRecommendation/${curEnclosure.enclosureId}`
+        );
+        // console.log("test");
+        // console.log(responseJson);
+        setEnclosureTerrainDistributionRecommendation(
+          responseJson.enclosureTerrainDistributionReco
+        );
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    fetchEnclosureTerrainStuffReco();
+  }, [curEnclosure]);
 
   function loadDiagram(sceneJson: any) {
     // console.log(sceneJson);
@@ -418,12 +453,12 @@ function EnclosureDesignDiagramPage() {
 
     Object.values(curScene.layers).forEach((layer: any) => {
       Object.values(layer.areas).forEach((area: any) => {
-        console.log(
-          "In loop, area: " +
-            area.id +
-            ", patternColor: " +
-            area.properties.patternColor
-        );
+        // console.log(
+        //   "In loop, area: " +
+        //     area.id +
+        //     ", patternColor: " +
+        //     area.properties.patternColor
+        // );
         if (area.properties.patternColor == "#6aa84f") {
           // LAND
           let curAreaArea = calculateAreaAreaByIdInMetresSquare(
@@ -450,7 +485,7 @@ function EnclosureDesignDiagramPage() {
             );
             curAreaArea = curAreaArea - areaOfCurHole;
           }
-          console.log("curAreaArea outside: " + curAreaArea);
+          // console.log("curAreaArea outside: " + curAreaArea);
           tempTotalLandArea += curAreaArea;
         } else if (area.properties.patternColor == "#2986cc") {
           // WATER
@@ -610,17 +645,216 @@ function EnclosureDesignDiagramPage() {
     updateTotalLandWaterArea();
   }
 
-  // calculate area stuff
+  // end calculate area stuff
+
+  // calculate plantation coverage stuff
+  const [totalPlantationCoveragePercent, setTotalPlantationCoveragePercent] =
+    useState<number>(0);
+
+  // functionToBeCalledRef.current = () => {
+  //   console.log("uwoh");
+  //   calculateTotalPlantationCoverage();
+  // };
+
+  // const storeState = useSelector((state) => state["react-planner"]);
+  useEffect(() => {
+    // console.log()
+    calculateTotalPlantationCoverage();
+  }, [curTotalLandArea]);
+
+  interface PlantationCircle {
+    radius: number;
+    x: number;
+    y: number;
+  }
+
+  const calculateCircleCoveredArea = (circle: PlantationCircle): number => {
+    const { radius } = circle;
+    return Math.pow(radius, 2) * Math.PI;
+  };
+
+  const calculateTotalCoveredArea = (circles: PlantationCircle[]): number => {
+    let totalCoveredArea = 0;
+
+    // loop through all circles (trees)
+    // for each circle
+    ////
+
+    for (let i = 0; i < circles.length; i++) {
+      const circle = circles[i];
+      const circleArea = calculateCircleCoveredArea(circle);
+      // console.log("circle id: " + i + "circle area: " + circleArea);
+      totalCoveredArea += circleArea;
+      let isCurCircleCompletelyInAnother = false;
+      // check if cur circle is inside another circle completely,
+      // if it is, get rid of cur circle and don't process further
+      for (let k = 0; k < circles.length; k++) {
+        if (k != i) {
+          const anotherCircle = circles[k];
+          const distanceBetweenCentersHere = Math.sqrt(
+            Math.pow(circle.x - anotherCircle.x, 2) +
+              Math.pow(circle.y - anotherCircle.y, 2)
+          );
+          if (
+            distanceBetweenCentersHere +
+              Math.min(circle.radius, anotherCircle.radius) <=
+            Math.max(circle.radius, anotherCircle.radius)
+          ) {
+            // check if curCircle is completely inside anotherCircle
+            // if yes, ignore this and undo the area adding
+            if (
+              Math.min(Math.min(circle.radius, anotherCircle.radius)) ==
+              circle.radius
+            ) {
+              totalCoveredArea -= circleArea;
+              isCurCircleCompletelyInAnother = true;
+              break;
+            }
+          }
+        }
+      }
+
+      if (!isCurCircleCompletelyInAnother) {
+        for (let j = i + 1; j < circles.length; j++) {
+          const nextCircle = circles[j];
+          const distanceBetweenCenters = Math.sqrt(
+            Math.pow(circle.x - nextCircle.x, 2) +
+              Math.pow(circle.y - nextCircle.y, 2)
+          );
+
+          // Check if circles intersect
+          if (distanceBetweenCenters < circle.radius + nextCircle.radius) {
+            // Circles intersect, calculate the overlapping area using circular segments
+            const overlappingArea = calculateOverlappingArea(
+              circle,
+              nextCircle,
+              distanceBetweenCenters
+            );
+            // console.log("in heree lmao, overlappingArea: " + overlappingArea);
+            totalCoveredArea -= overlappingArea; // Subtract overlapping area to avoid duplication
+          }
+        }
+      }
+    }
+
+    // console.log("totalCoveredArea: " + totalCoveredArea);
+
+    return totalCoveredArea;
+  };
+
+  const calculateOverlappingArea = (
+    circle1: PlantationCircle,
+    circle2: PlantationCircle,
+    distance: number
+  ): number => {
+    // const { radius: r1 } = circle1;
+    // const { radius: r2 } = circle2;
+
+    // // Ensure valid range for acos
+    // const cosArg1 =
+    //   (r1 * r1 + distance * distance - r2 * r2) / (2 * r1 * distance);
+    // const cosArg2 =
+    //   (r2 * r2 + distance * distance - r1 * r1) / (2 * r2 * distance);
+
+    // const theta1 = Math.acos(Math.max(-1, Math.min(1, cosArg1)));
+    // const theta2 = Math.acos(Math.max(-1, Math.min(1, cosArg2)));
+
+    // console.log("theta1: " + theta1);
+    // console.log("theta2: " + theta2);
+
+    // const area1 = 0.5 * Math.pow(r1, 2) * (theta1 - Math.sin(theta1));
+    // const area2 = 0.5 * Math.pow(r2, 2) * (theta2 - Math.sin(theta2));
+
+    // console.log("area1: " + area1);
+    // console.log("area2: " + area2);
+
+    // return area1 + area2;
+
+    const { radius: r1 } = circle1;
+    const { radius: r2 } = circle2;
+
+    // Check if one circle is completely inside the other
+    if (distance + Math.min(r1, r2) <= Math.max(r1, r2)) {
+      // One circle is completely inside the other, no overlap
+      // return Math.PI * Math.pow(Math.min(r1, r2), 2);
+      return 0;
+    }
+
+    // Calculate angles and areas of circular segments
+    const theta1 = Math.acos(
+      (Math.pow(r1, 2) + Math.pow(distance, 2) - Math.pow(r2, 2)) /
+        (2 * r1 * distance)
+    );
+    const theta2 = Math.acos(
+      (Math.pow(r2, 2) + Math.pow(distance, 2) - Math.pow(r1, 2)) /
+        (2 * r2 * distance)
+    );
+
+    const area1 = 0.5 * Math.pow(r1, 2) * (theta1 - Math.sin(theta1));
+    const area2 = 0.5 * Math.pow(r2, 2) * (theta2 - Math.sin(theta2));
+
+    return area1 + area2;
+  };
+
+  function calculateTotalPlantationCoverage() {
+    let tempTotalPlantationAreaSquareM = 0;
+
+    const curScene = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene;
+
+    let plantationCirclesList: PlantationCircle[] = [];
+
+    Object.values(curScene.layers).forEach((layer: any) => {
+      Object.values(layer.items).forEach((item: any) => {
+        if (item.type == "big tree" || item.type == "small tree") {
+          // AREA OF A CIRCLE in SQUARE CM
+          // let areaCurTreeInSquareCm = calculateCircleArea(
+          //   item.properties.radius.length
+          // );
+          // let areaCurTreeInSquareM = areaCurTreeInSquareCm / 10000;
+
+          // tempTotalPlantationAreaSquareM += areaCurTreeInSquareM;
+          plantationCirclesList.push({
+            radius: item.properties.radius.length,
+            x: item.x,
+            y: item.y,
+          });
+        }
+      });
+    });
+
+    // console.log(plantationCirclesList);
+
+    tempTotalPlantationAreaSquareM =
+      calculateTotalCoveredArea(plantationCirclesList) / 10000; // divide by 1000 to convert from square cm to square m
+    // console.log(
+    //   "heree, tempTotalPlantationAreaSquareM: " + tempTotalPlantationAreaSquareM
+    // );
+    if (curTotalLandArea != 0) {
+      let tempTotalPlantationCoverage =
+        (tempTotalPlantationAreaSquareM / curTotalLandArea) * 100;
+      setTotalPlantationCoveragePercent(tempTotalPlantationCoverage);
+    }
+  }
+
+  // end
 
   async function handleSave() {
     console.log(
       JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
     );
 
+    updateTotalLandWaterArea();
+    calculateTotalPlantationCoverage();
+
     const updateDesignDiagramObj = {
       designDiagramJson: JSON.stringify(
         JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
       ),
+      landArea: curTotalLandArea,
+      waterArea: curTotalWaterArea,
+      plantationCoveragePercent: totalPlantationCoveragePercent,
     };
 
     const updateDesignDiagramApi = async () => {
@@ -646,6 +880,68 @@ function EnclosureDesignDiagramPage() {
     };
     updateDesignDiagramApi();
   }
+
+  const areaValueFormat = (area: number, reco: number) => {
+    if (area >= reco) {
+      return (
+        <React.Fragment>
+          <span className="font-bold text-emerald-800">{area.toFixed(2)}</span>
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          <span className="animate-pulse font-bold text-red-800">
+            {area.toFixed(2)}
+          </span>
+        </React.Fragment>
+      );
+    }
+  };
+
+  const plantationCoverageValueFormat = (
+    plantationCoverage: number,
+    recoMin: any,
+    recoMax: any
+  ) => {
+    // if (typeof value === "string")
+
+    if (
+      recoMin == "No suitable range, please review species allocation." ||
+      recoMax == "No suitable range, please review species allocation."
+    ) {
+      return (
+        <React.Fragment>
+          <span className="font-bold">{plantationCoverage.toFixed(2)}</span>
+        </React.Fragment>
+      );
+    }
+
+    if (
+      plantationCoverage < Number(recoMin) ||
+      plantationCoverage > Number(recoMax)
+    ) {
+      return (
+        <React.Fragment>
+          <span className="animate-pulse font-bold text-red-800">
+            {plantationCoverage > 100
+              ? (100).toFixed(2)
+              : plantationCoverage.toFixed(2)}
+          </span>
+        </React.Fragment>
+      );
+    } else if (plantationCoverage >= recoMin && plantationCoverage <= recoMax) {
+      return (
+        <React.Fragment>
+          <span className="font-bold text-emerald-800">
+            {plantationCoverage > 100
+              ? (100).toFixed(2)
+              : plantationCoverage.toFixed(2)}
+          </span>
+        </React.Fragment>
+      );
+    }
+  };
 
   return (
     <div className="overflow-y-scroll  p-10">
@@ -702,17 +998,17 @@ function EnclosureDesignDiagramPage() {
         {/* Body */}
 
         {/* <div>
-            <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
-          </div> */}
+          <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
+        </div> */}
 
-        <div className="flex justify-between">
+        <div className="flex w-full gap-10">
           <div className="flex flex-col gap-2">
-            <div>
+            <div className="min-w-max">
               <Button className="w-full" onClick={handleSave}>
                 Save Diagram
               </Button>
             </div>
-            <div>
+            <div className="min-w-max">
               <Button
                 className="w-full"
                 variant={"destructive"}
@@ -722,7 +1018,20 @@ function EnclosureDesignDiagramPage() {
               </Button>
             </div>
           </div>
-          <div className="flex w-1/3 gap-2">
+          <div className="flex w-5/6 flex-col items-start gap-2">
+            <div className="flex gap-2 p-0">
+              <div>
+                <Button className="" onClick={updateTotalLandWaterArea}>
+                  Re-calculate Areas
+                </Button>
+              </div>
+              <div>
+                <Button onClick={makeSelectedAreaLand}>Mark Land Area</Button>
+              </div>
+              <div>
+                <Button onClick={makeSelectedAreaWater}>Mark Water Area</Button>
+              </div>
+            </div>
             <Table className="w-full">
               <TableHeader className="bg-whiten">
                 {/* <TableRow>
@@ -735,71 +1044,101 @@ function EnclosureDesignDiagramPage() {
                 </TableRow> */}
                 <TableRow>
                   <TableHead className="font-bold">Area</TableHead>
-                  <TableHead>Current</TableHead>
-                  <TableHead>Recommended</TableHead>
+                  <TableHead className="text-center">Current</TableHead>
+                  <TableHead className="text-center">Recommended Min</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
+                <TableRow className="hover:bg-transparent">
                   <TableCell className="font-bold">
-                    Land (in m<sup>2</sup>)
+                    Land (m<sup>2</sup>)
                   </TableCell>
-                  <TableCell>{curTotalLandArea}</TableCell>
-                  <TableCell>bla</TableCell>
+                  <TableCell className="text-center hover:bg-muted/50">
+                    {areaValueFormat(
+                      curTotalLandArea,
+                      Number(
+                        enclosureTerrainDistributionRecommendation?.minLandAreaRequired
+                      )
+                    )}
+                  </TableCell>
+                  <TableCell className="text-center hover:bg-muted/50">
+                    {enclosureTerrainDistributionRecommendation?.minLandAreaRequired.toFixed(
+                      2
+                    )}
+                  </TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow className="hover:bg-transparent">
                   <TableCell className="font-bold">
-                    Water (in m<sup>2</sup>)
+                    Water (m<sup>2</sup>)
                   </TableCell>
-                  <TableCell>{curTotalWaterArea}</TableCell>
-                  <TableCell>bla</TableCell>
+                  <TableCell className="text-center hover:bg-muted/50">
+                    {areaValueFormat(
+                      curTotalWaterArea,
+                      Number(
+                        enclosureTerrainDistributionRecommendation?.minWaterAreaRequired
+                      )
+                    )}
+                  </TableCell>
+                  <TableCell className="text-center hover:bg-muted/50">
+                    {enclosureTerrainDistributionRecommendation?.minWaterAreaRequired.toFixed(
+                      2
+                    )}
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
-            <div className="flex flex-col gap-2">
-              <div>
-                <Button className="w-full" onClick={updateTotalLandWaterArea}>
-                  Re-calculate Areas
-                </Button>
-              </div>
-              <div>
-                <Button onClick={makeSelectedAreaLand}>
-                  Make Selected Area as Land
-                </Button>
-              </div>
-              <div>
-                <Button onClick={makeSelectedAreaWater}>
-                  Make Selected Area as Water
-                </Button>
-              </div>
-            </div>
           </div>
-          <div className="flex w-1/3 gap-2">
-            <Table className="w-full">
-              <TableHeader className="bg-whiten">
-                <TableRow>
-                  <TableHead className="font-bold"></TableHead>
-                  <TableHead>Current</TableHead>
-                  <TableHead>Recommended</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-bold">
-                    Plantation Coverage (in %)
-                  </TableCell>
-                  <TableCell>blo</TableCell>
-                  <TableCell>bla</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <div className="flex flex-col gap-2">
+          <div className="flex w-full flex-col gap-2">
+            <div className="flex gap-2">
               <div>
-                <Button className="w-full">
+                <Button
+                  className="w-full"
+                  onClick={calculateTotalPlantationCoverage}
+                >
                   Re-calculate Plantation Coverage
                 </Button>
               </div>
             </div>
+            <Table className="w-full">
+              <TableHeader className="bg-whiten">
+                <TableRow>
+                  <TableHead className="font-bold"></TableHead>
+                  <TableHead className="text-center">Recommended Min</TableHead>
+                  <TableHead className="text-center">Current</TableHead>
+                  <TableHead className="text-center">Recommended Max</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-bold">
+                    Plantation Coverage (%)
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin ==
+                    "No suitable range, please review species allocation."
+                      ? enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin
+                      : enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin.toFixed(
+                          2
+                        )}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {plantationCoverageValueFormat(
+                      totalPlantationCoveragePercent,
+                      enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMin,
+                      enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax
+                    )}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax ==
+                    "No suitable range, please review species allocation."
+                      ? enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax
+                      : enclosureTerrainDistributionRecommendation?.plantationCoveragePercentMax.toFixed(
+                          2
+                        )}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
         </div>
 
@@ -811,7 +1150,7 @@ function EnclosureDesignDiagramPage() {
                   store={store}
                   catalog={MyCatalog}
                   width={size.width || 700}
-                  height={size.height || 800}
+                  height={size.height || 600}
                   plugins={plugins}
                   toolbarButtons={toolbarButtons}
                   stateExtractor={(state) => state.get("react-planner")}
@@ -820,6 +1159,7 @@ function EnclosureDesignDiagramPage() {
             </SizeMe>
           </Provider>
         </div>
+        <div>Terrain distribution percentages, calculate area for each</div>
       </div>
     </div>
   );
