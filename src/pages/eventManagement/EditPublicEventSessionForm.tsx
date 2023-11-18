@@ -11,29 +11,33 @@ import { Calendar } from "primereact/calendar";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 
-import { Nullable } from "primereact/ts-helpers";
 import FormFieldInput from "../../components/FormFieldInput";
 import FormFieldSelect from "../../components/FormFieldSelect";
 import { DayOfWeek, RecurringPattern } from "../../enums/Enumurated";
+import PublicEventSession from "../../models/PublicEventSession";
 
-function EditPublicEventSessionForm() {
+interface EditPublicEventSessionFormProps {
+  curPublicEventSession: PublicEventSession;
+}
+function EditPublicEventSessionForm(props: EditPublicEventSessionFormProps) {
   const apiJson = useApiJson();
   const navigate = useNavigate();
   const toastShadcn = useToast().toast;
   const { publicEventSessionId } = useParams<{ publicEventSessionId: string }>();
+  const { curPublicEventSession } = props;
 
   const [recurringPattern, setRecurringPattern] = useState<string | undefined>(
-    undefined
+    curPublicEventSession?.recurringPattern
   );
   const [timeSelect, setTimeSelect] = useState<Date>(new Date());
   const [oneDate, setOneDate] = useState<Date>(new Date());
   const [durationInMinutes, setDurationInMinutes] = useState<
     number | undefined
-  >(undefined);
-  const [dayOfWeek, setDayOfWeek] = useState<string | undefined>(undefined);
-  const [dayOfMonth, setDayOfMonth] = useState<string | undefined>(undefined);
+  >(curPublicEventSession?.durationInMinutes);
+  const [dayOfWeek, setDayOfWeek] = useState<string | undefined>(curPublicEventSession?.dayOfWeek);
+  const [dayOfMonth, setDayOfMonth] = useState<string | undefined>(curPublicEventSession?.dayOfMonth);
 
-  const [daysInAdvanceNotification, setDaysInAdvanceNotification] = useState<number | undefined>(undefined);
+  const [daysInAdvanceNotification, setDaysInAdvanceNotification] = useState<number | undefined>(curPublicEventSession?.daysInAdvanceNotification);
 
   // validate functions
   function validateIdentifierType(props: ValidityState) {
