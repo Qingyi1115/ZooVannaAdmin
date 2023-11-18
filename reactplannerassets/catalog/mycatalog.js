@@ -6,6 +6,11 @@ catalog.registerElement(Wall);
 import WaterOutline from "./lines/waterOutline/planner-element.jsx";
 catalog.registerElement(WaterOutline);
 
+import Gate from "./holes/gate/planner-element";
+catalog.registerElement(Gate);
+import DoorDouble from "./holes/door-double/planner-element";
+catalog.registerElement(DoorDouble);
+
 // Import Items!
 import SmallTree from "./items/smallTree/planner-element";
 catalog.registerElement(SmallTree);
