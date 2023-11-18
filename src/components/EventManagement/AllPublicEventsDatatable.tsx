@@ -14,11 +14,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import PublicEvent from "../../models/PublicEvent";
 import useApiJson from "../../hooks/useApiJson";
-import FeedingPlan from "../../models/FeedingPlan";
 
 
 interface AllAnimalFeedingPlansDatatableProps {
   allPublicEvent: PublicEvent[];
+  setRefreshSeed: Function;
 }
 
 function AllAnimalFeedingPlansDatatable(
@@ -34,16 +34,16 @@ function AllAnimalFeedingPlansDatatable(
     day: "2-digit",
   };
 
-  const { allPublicEvent } = props;
+  const { allPublicEvent, setRefreshSeed } = props;
 
-  const [selectedFeedingPlan, setSelectedFeedingPlan] =
-    useState<FeedingPlan>();
+  const [selectedPublicEvent, setSelectedPublicEvent] =
+    useState<PublicEvent>();
 
   const [deleteFeedingPlanDialog, setDeleteFeedingPlanDialog] =
     useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
 
-  const dt = useRef<DataTable<FeedingPlan[]>>(null);
+  const dt = useRef<DataTable<PublicEvent[]>>(null);
 
   //
   const exportCSV = () => {
@@ -51,8 +51,8 @@ function AllAnimalFeedingPlansDatatable(
   };
 
   // delete Public Event stuff
-  const confirmDeleteFeedingPlan = (feedingPlan: FeedingPlan) => {
-    setSelectedFeedingPlan(feedingPlan);
+  const confirmDeleteFeedingPlan = (publicEvent: PublicEvent) => {
+    setSelectedPublicEvent(publicEvent);
     setDeleteFeedingPlanDialog(true);
   };
 
@@ -61,15 +61,12 @@ function AllAnimalFeedingPlansDatatable(
   };
   //
   const deleteFeedingPlan = async () => {
-    let _feedingPlanList = selectedFeedingPlan.filter(
-      (val) => val.feedingPlanId !== selectedFeedingPlan?.feedingPlanId
-    );
 
     const deleteFeedingPlanApi = async () => {
       try {
         const responseJson = await apiJson.del(
-          "http://localhost:3000/api/animal/deleteFeedingPlanById/" +
-          selectedFeedingPlan.feedingPlanId
+          "http://localhost:3000/api/zooEvent/deletePublicEventById/" +
+          selectedPublicEvent.publicEventId
         );
 
         toastShadcn({
@@ -77,9 +74,9 @@ function AllAnimalFeedingPlansDatatable(
           title: "Deletion Successful",
           description: "Successfully deleted Public Event!",
         });
-        setSelectedFeedingPlan(_feedingPlanList);
         setDeleteFeedingPlanDialog(false);
-        setSelectedFeedingPlan(emptyFeedingPlan);
+        setSelectedPublicEvent({});
+        setRefreshSeed([]);
       } catch (error: any) {
         // got error
         toastShadcn({
@@ -126,7 +123,7 @@ function AllAnimalFeedingPlansDatatable(
           <Button
             variant={"destructive"}
             className="mr-2"
-            onClick={() => confirmDeleteFeedingPlan(feedingPlan)}
+            onClick={() => confirmDeleteFeedingPlan(publicEvent)}
           >
             <HiTrash className="mx-auto" />
           </Button>
@@ -176,10 +173,10 @@ function AllAnimalFeedingPlansDatatable(
           <DataTable
             ref={dt}
             value={allPublicEvent}
-            selection={selectedFeedingPlan}
+            selection={selectedPublicEvent}
             onSelectionChange={(e) => {
               if (Array.isArray(e.value)) {
-                setSelectedFeedingPlan(e.value);
+                setSelectedPublicEvent(e.value);
               }
             }}
             dataKey="feedingPlanId"
@@ -212,8 +209,8 @@ function AllAnimalFeedingPlansDatatable(
               }}
             ></Column>
             <Column
-              body={(feedingPlan) => {
-                return new Date(feedingPlan.startDate).toLocaleDateString(
+              body={(PublicEvent) => {
+                return new Date(PublicEvent.startDate).toLocaleDateString(
                   "en-SG",
                   dateOptions
                 );
@@ -224,9 +221,9 @@ function AllAnimalFeedingPlansDatatable(
               style={{ minWidth: "8rem" }}
             ></Column>
             <Column
-              body={(feedingPlan) => {
+              body={(PublicEvent) => {
 
-                return feedingPlan.endDate ? new Date(feedingPlan.endDate).toLocaleDateString(
+                return PublicEvent.endDate ? new Date(PublicEvent.endDate).toLocaleDateString(
                   "en-SG",
                   dateOptions
                 ) : "Forever";
@@ -261,10 +258,10 @@ function AllAnimalFeedingPlansDatatable(
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {selectedFeedingPlan && (
+          {selectedPublicEvent && (
             <span>
               Are you sure you want to delete the selected Public Event (ID{" "}
-              {selectedFeedingPlan.feedingPlanId})?
+              {selectedPublicEvent.publicEventId})?
             </span>
           )}
         </div>

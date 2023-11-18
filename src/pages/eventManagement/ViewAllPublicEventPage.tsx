@@ -14,6 +14,7 @@ function ViewAllPublicEventPage() {
 
   const { speciesCode } = useParams<{ speciesCode: string }>();
   const [allPublicEvent, setAllPublicEvent] = useState<PublicEvent[]>([]);
+  const [refreshSeed, setRefreshSeed] = useState<any[]>([]);
 
   useEffect(() => {
     apiJson.get(
@@ -24,7 +25,7 @@ function ViewAllPublicEventPage() {
     })
       .catch(err => console.log(err));
 
-  }, []);
+  }, [refreshSeed]);
 
   // feeding plans datatable
   const [feedingPlansList, setFeedingPlansList] = useState<FeedingPlan[]>([]);
@@ -70,6 +71,7 @@ function ViewAllPublicEventPage() {
         <div>
           <AllPublicEventsDatatable
             allPublicEvent={allPublicEvent}
+            setRefreshSeed={setRefreshSeed}
           />
         </div>
       </div>
