@@ -81,7 +81,11 @@ function ZooEventHomePage() {
       const allEventGroup: any[] = [];
       const allTitleGroups: any[] = [];
 
-      const a = responseJson["zooEvents"].map((ze: ZooEvent) => {
+      const a = responseJson["zooEvents"]
+      .filter((zooEvent: ZooEvent) => {
+        return zooEvent.eventType != "EMPLOYEE_ABSENCE"
+      })
+      .map((ze: ZooEvent) => {
         return { ...ze, eventType: beautifyText(ze.eventType) }
       });
 
