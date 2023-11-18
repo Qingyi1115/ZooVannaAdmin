@@ -118,8 +118,12 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
             <TableCell>
               <TwoThumbSliderWithNumber
                 value={[
-                  curEnclosure.plantationCoveragePercent || 0,
-                  curEnclosure.plantationCoveragePercent || 0,
+                  curEnclosure.plantationCoveragePercent
+                    ? +Number(curEnclosure.plantationCoveragePercent).toFixed(1)
+                    : 0,
+                  curEnclosure.plantationCoveragePercent
+                    ? +Number(curEnclosure.plantationCoveragePercent).toFixed(1)
+                    : 0,
                 ]}
                 min={0}
                 max={100}

@@ -1026,10 +1026,17 @@ function EnclosureDesignDiagramPage() {
                 </Button>
               </div>
               <div>
-                <Button onClick={makeSelectedAreaLand}>Mark Land Area</Button>
+                <Button onClick={makeSelectedAreaLand} className="bg-[#6aa84f]">
+                  Mark Land Area
+                </Button>
               </div>
               <div>
-                <Button onClick={makeSelectedAreaWater}>Mark Water Area</Button>
+                <Button
+                  onClick={makeSelectedAreaWater}
+                  className="bg-[#2986cc]"
+                >
+                  Mark Water Area
+                </Button>
               </div>
             </div>
             <Table className="w-full">
@@ -1092,7 +1099,7 @@ function EnclosureDesignDiagramPage() {
             <div className="flex gap-2">
               <div>
                 <Button
-                  className="w-full"
+                  className="w-full bg-[#008227]"
                   onClick={calculateTotalPlantationCoverage}
                 >
                   Re-calculate Plantation Coverage
@@ -1159,7 +1166,111 @@ function EnclosureDesignDiagramPage() {
             </SizeMe>
           </Provider>
         </div>
-        <div>Terrain distribution percentages, calculate area for each</div>
+        <div>
+          {curEnclosure && (
+            <Table className="w-full">
+              <TableHeader className="bg-whiten">
+                <TableRow>
+                  <TableHead className="text-center"></TableHead>
+                  <TableHead className="text-center">Short Grass</TableHead>
+                  <TableHead className="text-center">Long Grass</TableHead>
+                  <TableHead className="text-center">Soil</TableHead>
+                  <TableHead className="text-center">Rock</TableHead>
+                  <TableHead className="text-center">Sand</TableHead>
+                  <TableHead className="text-center">Snow</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-bold">Percentage (%)</TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.shortGrassPercent
+                      ? curEnclosure.shortGrassPercent.toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.longGrassPercent
+                      ? curEnclosure.longGrassPercent.toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.soilPercent
+                      ? curEnclosure.soilPercent.toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.rockPercent
+                      ? curEnclosure.rockPercent.toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.sandPercent
+                      ? curEnclosure.sandPercent.toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.snowPercent
+                      ? curEnclosure.snowPercent.toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-bold">
+                    Area (m<sup>2</sup>)
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.shortGrassPercent
+                      ? (
+                          (curEnclosure.shortGrassPercent / 100) *
+                          curTotalLandArea
+                        ).toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.longGrassPercent
+                      ? (
+                          (curEnclosure.longGrassPercent / 100) *
+                          curTotalLandArea
+                        ).toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.soilPercent
+                      ? (
+                          (curEnclosure.soilPercent / 100) *
+                          curTotalLandArea
+                        ).toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.rockPercent
+                      ? (
+                          (curEnclosure.rockPercent / 100) *
+                          curTotalLandArea
+                        ).toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.sandPercent
+                      ? (
+                          (curEnclosure.sandPercent / 100) *
+                          curTotalLandArea
+                        ).toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {curEnclosure.snowPercent
+                      ? (
+                          (curEnclosure.snowPercent / 100) *
+                          curTotalLandArea
+                        ).toFixed(2)
+                      : "NA"}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          )}
+        </div>
       </div>
     </div>
   );
