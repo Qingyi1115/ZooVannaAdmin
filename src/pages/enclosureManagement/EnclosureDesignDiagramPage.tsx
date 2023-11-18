@@ -46,6 +46,7 @@ import {
 
 import { Dialog } from "primereact/dialog";
 import { HiCheck, HiX } from "react-icons/hi";
+import { fitToViewer } from "react-svg-pan-zoom";
 
 // test data
 const emptyDiagramJson = {
@@ -222,6 +223,7 @@ function EnclosureDesignDiagramPage() {
                   : data.height,
             };
             loadDiagram(dataWithDimensions);
+            clickFitToView();
             updateTotalLandWaterArea();
           } else {
             console.error(
@@ -621,6 +623,9 @@ function EnclosureDesignDiagramPage() {
       designDiagramJson: JSON.stringify(
         JSON.parse(JSON.stringify(store.getState()))["react-planner"].scene
       ),
+      landArea: curTotalLandArea,
+      waterArea: curTotalWaterArea,
+      plantationCoveragePercent: 0,
     };
 
     const updateDesignDiagramApi = async () => {
@@ -705,14 +710,14 @@ function EnclosureDesignDiagramPage() {
             <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
           </div> */}
 
-        <div className="flex justify-between">
+        <div className="flex w-full gap-6">
           <div className="flex flex-col gap-2">
-            <div>
+            <div className="min-w-max">
               <Button className="w-full" onClick={handleSave}>
                 Save Diagram
               </Button>
             </div>
-            <div>
+            <div className="min-w-max">
               <Button
                 className="w-full"
                 variant={"destructive"}
@@ -722,7 +727,7 @@ function EnclosureDesignDiagramPage() {
               </Button>
             </div>
           </div>
-          <div className="flex w-1/3 gap-2">
+          <div className="flex w-full gap-2">
             <Table className="w-full">
               <TableHeader className="bg-whiten">
                 {/* <TableRow>
@@ -744,14 +749,14 @@ function EnclosureDesignDiagramPage() {
                   <TableCell className="font-bold">
                     Land (in m<sup>2</sup>)
                   </TableCell>
-                  <TableCell>{curTotalLandArea}</TableCell>
+                  <TableCell>{curTotalLandArea.toFixed(2)}</TableCell>
                   <TableCell>bla</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-bold">
                     Water (in m<sup>2</sup>)
                   </TableCell>
-                  <TableCell>{curTotalWaterArea}</TableCell>
+                  <TableCell>{curTotalWaterArea.toFixed(2)}</TableCell>
                   <TableCell>bla</TableCell>
                 </TableRow>
               </TableBody>
@@ -774,7 +779,7 @@ function EnclosureDesignDiagramPage() {
               </div>
             </div>
           </div>
-          <div className="flex w-1/3 gap-2">
+          <div className="flex w-full gap-2">
             <Table className="w-full">
               <TableHeader className="bg-whiten">
                 <TableRow>
@@ -811,7 +816,7 @@ function EnclosureDesignDiagramPage() {
                   store={store}
                   catalog={MyCatalog}
                   width={size.width || 700}
-                  height={size.height || 800}
+                  height={size.height || 600}
                   plugins={plugins}
                   toolbarButtons={toolbarButtons}
                   stateExtractor={(state) => state.get("react-planner")}

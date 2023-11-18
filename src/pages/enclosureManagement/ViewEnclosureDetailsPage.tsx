@@ -108,7 +108,7 @@ function ViewEnclosureDetailsPage() {
             )}
           </TabsContent>
           <TabsContent value="safety">
-            <EnclosureSafety curEnclosure={curEnclosure} />
+            {curEnclosure && <EnclosureSafety curEnclosure={curEnclosure} />}
           </TabsContent>
           <TabsContent value="enrichmentitems">
             {curEnclosure && (
@@ -117,7 +117,10 @@ function ViewEnclosureDetailsPage() {
           </TabsContent>
           <TabsContent value="keepers">
             {curEnclosure && (
-              <AllEnclosureEmployeesDatatable curEnclosure={curEnclosure} setRefreshSeed={setRefreshSeed} />
+              <AllEnclosureEmployeesDatatable
+                curEnclosure={curEnclosure}
+                setRefreshSeed={setRefreshSeed}
+              />
             )}
           </TabsContent>
           {/* <TabsContent value="medical">
