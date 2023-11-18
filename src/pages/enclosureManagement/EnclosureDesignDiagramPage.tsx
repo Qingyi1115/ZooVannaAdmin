@@ -47,6 +47,7 @@ import {
 import { Dialog } from "primereact/dialog";
 import { HiCheck, HiX } from "react-icons/hi";
 import { fitToViewer } from "react-svg-pan-zoom";
+import { breadcrumbsClasses } from "@mui/material";
 
 // test data
 const emptyDiagramJson = {
@@ -612,7 +613,195 @@ function EnclosureDesignDiagramPage() {
     updateTotalLandWaterArea();
   }
 
-  // calculate area stuff
+  // end calculate area stuff
+
+  // calculate plantation coverage stuff
+  const [totalPlantationCoveragePercent, setTotalPlantationCoveragePercent] =
+    useState<number>(0);
+
+  const calculateCircleArea = (radius: number): number => {
+    const pi = Math.PI;
+    const area = pi * Math.pow(radius, 2);
+    return area;
+  };
+
+  interface PlantationCircle {
+    radius: number;
+    x: number;
+    y: number;
+  }
+
+  const calculateCircleCoveredArea = (circle: PlantationCircle): number => {
+    const { radius } = circle;
+    return Math.pow(radius, 2) * Math.PI;
+  };
+
+  const calculateTotalCoveredArea = (circles: PlantationCircle[]): number => {
+    let totalCoveredArea = 0;
+
+    // loop through all circles (trees)
+    // for each circle
+    ////
+
+    for (let i = 0; i < circles.length; i++) {
+      const circle = circles[i];
+      const circleArea = calculateCircleCoveredArea(circle);
+      console.log("circle id: " + i + "circle area: " + circleArea);
+      totalCoveredArea += circleArea;
+      let isCurCircleCompletelyInAnother = false;
+      // check if cur circle is inside another circle completely,
+      // if it is, get rid of cur circle and don't process further
+      for (let k = 0; k < circles.length; k++) {
+        if (k != i) {
+          const anotherCircle = circles[k];
+          const distanceBetweenCentersHere = Math.sqrt(
+            Math.pow(circle.x - anotherCircle.x, 2) +
+              Math.pow(circle.y - anotherCircle.y, 2)
+          );
+          if (
+            distanceBetweenCentersHere +
+              Math.min(circle.radius, anotherCircle.radius) <=
+            Math.max(circle.radius, anotherCircle.radius)
+          ) {
+            // check if curCircle is completely inside anotherCircle
+            // if yes, ignore this and undo the area adding
+            if (
+              Math.min(Math.min(circle.radius, anotherCircle.radius)) ==
+              circle.radius
+            ) {
+              totalCoveredArea -= circleArea;
+              isCurCircleCompletelyInAnother = true;
+              break;
+            }
+          }
+        }
+      }
+
+      if (!isCurCircleCompletelyInAnother) {
+        for (let j = i + 1; j < circles.length; j++) {
+          const nextCircle = circles[j];
+          const distanceBetweenCenters = Math.sqrt(
+            Math.pow(circle.x - nextCircle.x, 2) +
+              Math.pow(circle.y - nextCircle.y, 2)
+          );
+
+          // Check if circles intersect
+          if (distanceBetweenCenters < circle.radius + nextCircle.radius) {
+            // Circles intersect, calculate the overlapping area using circular segments
+            const overlappingArea = calculateOverlappingArea(
+              circle,
+              nextCircle,
+              distanceBetweenCenters
+            );
+            console.log("in heree lmao, overlappingArea: " + overlappingArea);
+            totalCoveredArea -= overlappingArea; // Subtract overlapping area to avoid duplication
+          }
+        }
+      }
+    }
+
+    // console.log("totalCoveredArea: " + totalCoveredArea);
+
+    return totalCoveredArea;
+  };
+
+  const calculateOverlappingArea = (
+    circle1: PlantationCircle,
+    circle2: PlantationCircle,
+    distance: number
+  ): number => {
+    // const { radius: r1 } = circle1;
+    // const { radius: r2 } = circle2;
+
+    // // Ensure valid range for acos
+    // const cosArg1 =
+    //   (r1 * r1 + distance * distance - r2 * r2) / (2 * r1 * distance);
+    // const cosArg2 =
+    //   (r2 * r2 + distance * distance - r1 * r1) / (2 * r2 * distance);
+
+    // const theta1 = Math.acos(Math.max(-1, Math.min(1, cosArg1)));
+    // const theta2 = Math.acos(Math.max(-1, Math.min(1, cosArg2)));
+
+    // console.log("theta1: " + theta1);
+    // console.log("theta2: " + theta2);
+
+    // const area1 = 0.5 * Math.pow(r1, 2) * (theta1 - Math.sin(theta1));
+    // const area2 = 0.5 * Math.pow(r2, 2) * (theta2 - Math.sin(theta2));
+
+    // console.log("area1: " + area1);
+    // console.log("area2: " + area2);
+
+    // return area1 + area2;
+
+    const { radius: r1 } = circle1;
+    const { radius: r2 } = circle2;
+
+    // Check if one circle is completely inside the other
+    if (distance + Math.min(r1, r2) <= Math.max(r1, r2)) {
+      // One circle is completely inside the other, no overlap
+      // return Math.PI * Math.pow(Math.min(r1, r2), 2);
+      return 0;
+    }
+
+    // Calculate angles and areas of circular segments
+    const theta1 = Math.acos(
+      (Math.pow(r1, 2) + Math.pow(distance, 2) - Math.pow(r2, 2)) /
+        (2 * r1 * distance)
+    );
+    const theta2 = Math.acos(
+      (Math.pow(r2, 2) + Math.pow(distance, 2) - Math.pow(r1, 2)) /
+        (2 * r2 * distance)
+    );
+
+    const area1 = 0.5 * Math.pow(r1, 2) * (theta1 - Math.sin(theta1));
+    const area2 = 0.5 * Math.pow(r2, 2) * (theta2 - Math.sin(theta2));
+
+    return area1 + area2;
+  };
+
+  function calculateTotalPlantationCoverage() {
+    let tempTotalPlantationAreaSquareM = 0;
+
+    const curScene = JSON.parse(JSON.stringify(store.getState()))[
+      "react-planner"
+    ].scene;
+
+    let plantationCirclesList: PlantationCircle[] = [];
+
+    Object.values(curScene.layers).forEach((layer: any) => {
+      Object.values(layer.items).forEach((item: any) => {
+        if (item.type == "big tree" || item.type == "small tree") {
+          // AREA OF A CIRCLE in SQUARE CM
+          // let areaCurTreeInSquareCm = calculateCircleArea(
+          //   item.properties.radius.length
+          // );
+          // let areaCurTreeInSquareM = areaCurTreeInSquareCm / 10000;
+
+          // tempTotalPlantationAreaSquareM += areaCurTreeInSquareM;
+          plantationCirclesList.push({
+            radius: item.properties.radius.length,
+            x: item.x,
+            y: item.y,
+          });
+        }
+      });
+    });
+
+    console.log(plantationCirclesList);
+
+    tempTotalPlantationAreaSquareM =
+      calculateTotalCoveredArea(plantationCirclesList) / 10000; // divide by 1000 to convert from square cm to square m
+    console.log(
+      "heree, tempTotalPlantationAreaSquareM: " + tempTotalPlantationAreaSquareM
+    );
+    if (curTotalLandArea != 0) {
+      let tempTotalPlantationCoverage =
+        (tempTotalPlantationAreaSquareM / curTotalLandArea) * 100;
+      setTotalPlantationCoveragePercent(tempTotalPlantationCoverage);
+    }
+  }
+
+  // end
 
   async function handleSave() {
     console.log(
@@ -706,9 +895,9 @@ function EnclosureDesignDiagramPage() {
 
         {/* Body */}
 
-        {/* <div>
-            <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
-          </div> */}
+        <div>
+          <Button onClick={calculateSelectedAreaSize}>Cur Area Size</Button>
+        </div>
 
         <div className="flex w-full gap-6">
           <div className="flex flex-col gap-2">
@@ -793,14 +982,19 @@ function EnclosureDesignDiagramPage() {
                   <TableCell className="font-bold">
                     Plantation Coverage (in %)
                   </TableCell>
-                  <TableCell>blo</TableCell>
+                  <TableCell>
+                    {totalPlantationCoveragePercent.toFixed(2)}
+                  </TableCell>
                   <TableCell>bla</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
             <div className="flex flex-col gap-2">
               <div>
-                <Button className="w-full">
+                <Button
+                  className="w-full"
+                  onClick={calculateTotalPlantationCoverage}
+                >
                   Re-calculate Plantation Coverage
                 </Button>
               </div>
@@ -825,6 +1019,7 @@ function EnclosureDesignDiagramPage() {
             </SizeMe>
           </Provider>
         </div>
+        <div>Terrain distribution percentages, calculate area for each</div>
       </div>
     </div>
   );
