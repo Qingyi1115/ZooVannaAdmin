@@ -977,7 +977,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                     (isActive && "!text-white")
                                   }
                                 >
-                                  View All Events
+                                  View All Event Sessions
                                 </NavLink>
                               </li>
                               <li>
@@ -988,7 +988,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                     (isActive && "!text-white")
                                   }
                                 >
-                                  Public Events
+                                  View All Public Events
                                 </NavLink>
                               </li>
                             </ul>

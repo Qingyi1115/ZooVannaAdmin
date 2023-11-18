@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { HiPlus } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 // import FullCalendar from "@fullcalendar/react";
 // import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
@@ -13,11 +12,11 @@ import useApiJson from "../../hooks/useApiJson";
 import { HiCalendarDays, HiTableCells } from "react-icons/hi2";
 import AllEventsFullCalendar from "../../components/EventManagement/ZooEventHomePage/AllZooEventsFullCalendar";
 
+import ViewPublicEventSessionDetails from "../../components/EventManagement/PublicEventSessionDetails";
+import beautifyText from "../../hooks/beautifyText";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import PublicEventSession from "../../models/PublicEventSession";
 import ZooEvent from "../../models/ZooEvent";
-import ViewPublicEventSessionDetails from "../../components/EventManagement/PublicEventSessionDetails";
-import beautifyText from "../../hooks/beautifyText";
 
 function PublicEventSessionHomePage() {
   const apiJson = useApiJson();
@@ -60,11 +59,10 @@ function PublicEventSessionHomePage() {
             >
               Back
             </Button>
-            <Button className="invisible">I love animals</Button>
             <span className=" self-center text-title-xl font-bold">
               All Scheduled Events
             </span>
-            <Button className="invisible">I love animals</Button>
+            <Button className="invisible">Back</Button>
           </div>
           <Separator />
         </div>

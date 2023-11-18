@@ -369,7 +369,7 @@ function ViewPublicEventDetails() {
                   <NavLink
                     to={`/assetfacility/viewfacilitydetails/${curPublicEvent.inHouseId}`}
                   >
-                    <Button className="my-3">View In House</Button>
+                    <Button className="my-3">View Facility</Button>
                   </NavLink>
                   {"   "}
                   {

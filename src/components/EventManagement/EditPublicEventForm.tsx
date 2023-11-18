@@ -6,7 +6,6 @@ import useApiFormData from "../../hooks/useApiFormData";
 import useApiJson from "../../hooks/useApiJson";
 
 import FormFieldInput from "../FormFieldInput";
-import FormFieldSelect from "../FormFieldSelect";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -14,11 +13,6 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { useNavigate } from "react-router-dom";
 
-import {
-  DayOfWeek,
-  EventTimingType,
-  RecurringPattern
-} from "../../enums/Enumurated";
 
 import { Calendar } from "primereact/calendar";
 
@@ -458,18 +452,7 @@ function EditPublicEventForm(props: EditPublicEventFormProps) {
             />
           </Form.Field>
 
-          {/* Title */}
-          <FormFieldInput
-            type="text"
-            formFieldName="title"
-            label="Title"
-            required={true}
-            placeholder="e.g., Chase yoga ball, mud bath..."
-            pattern={undefined}
-            value={title}
-            setValue={setTitle}
-            validateFunction={validateTitle}
-          />
+
 
 
           {/* <FormFieldSelect
@@ -490,6 +473,18 @@ function EditPublicEventForm(props: EditPublicEventFormProps) {
             validateFunction={validateIdentifierType}
           /> */}
         </div>
+        {/* Title */}
+        <FormFieldInput
+          type="text"
+          formFieldName="title"
+          label="Title"
+          required={true}
+          placeholder="e.g., Chase yoga ball, mud bath..."
+          pattern={undefined}
+          value={title}
+          setValue={setTitle}
+          validateFunction={validateTitle}
+        />
         {/* Activity Type */}
         <div className="mb-1 block font-medium">
           Event Type<br /> <b>{beautifyText(eventType)}</b>
