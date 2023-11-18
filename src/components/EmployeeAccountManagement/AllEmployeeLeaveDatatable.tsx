@@ -20,7 +20,6 @@ import {
   EventType
 } from "../../enums/Enumurated";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import Keeper from "../../models/Keeper";
 import ZooEvent from "../../models/ZooEvent";
 
 let emptyZooEvent: ZooEvent = {
@@ -250,18 +249,29 @@ function AllZooEventsDatatable(
             // globalFilterFields={['eventIsPublic', 'eventType.valueOf()']}
             header={header}
           >
-            <Column
-              field="imageUrl"
-              header="Image"
-              frozen
-              body={imageBodyTemplate}
-              style={{ minWidth: "6rem" }}
-            ></Column>
+
             <Column
               field="zooEventId"
               header="ID"
               sortable
               style={{ minWidth: "4rem" }}
+            ></Column>
+            <Column
+              body={(zooEvent) => {
+                return new Date(zooEvent.eventStartDateTime).toLocaleDateString(
+                  "en-SG",
+                  dateOptions
+                );
+              }}
+              header="Date"
+              sortable
+              style={{ minWidth: "8rem" }}
+            ></Column>
+            <Column
+              field="employee.employeeName"
+              header="Employee"
+              sortable
+              style={{ minWidth: "8rem" }}
             ></Column>
             <Column
               field="eventName"
@@ -275,50 +285,7 @@ function AllZooEventsDatatable(
               sortable
               style={{ minWidth: "12rem" }}
             ></Column>
-            <Column
-              field="eventIsPublic"
-              header="Is Public?"
-              dataType="boolean"
-              sortable
-              body={(zooEvent) => {
-                return zooEvent.eventIsPublic ? "Yes" : "No"
-              }
-              }
-              bodyClassName={"text-center"}
-              filter
-              filterElement={eventIsPublicFilterTemplate}
-              style={{ minWidth: "4rem" }}
-            ></Column>
-            <Column
-              field="eventType"
-              header="Type"
-              sortable
-              // filter
-              // showFilterMatchModes={false}
-              // filterElement={eventTypeFilterTemplate}
-              style={{ minWidth: "10rem" }}
-            ></Column>
-            <Column
-              body={(zooEvent) => {
-                return new Date(zooEvent.eventStartDateTime).toLocaleDateString(
-                  "en-SG",
-                  dateOptions
-                );
-              }}
-              header="Event Date"
-              sortable
-              style={{ minWidth: "8rem" }}
-            ></Column>
-            <Column
-              body={(zooEvent) => {
-                return (zooEvent.keepers != undefined && zooEvent.keepers?.length > 0) ?
-                  zooEvent.keepers?.map((keeper: Keeper) => keeper.employee.employeeName).join(", ") :
-                  "-"
-              }}
-              header="Keepers"
-              sortable
-              style={{ minWidth: "8rem" }}
-            ></Column>
+
             <Column
               body={actionBodyTemplate}
               header="Actions"

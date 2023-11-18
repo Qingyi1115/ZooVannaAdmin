@@ -15,7 +15,6 @@ import ZooEvent from "../../models/ZooEvent";
 import { HiCalendarDays, HiTableCells } from "react-icons/hi2";
 
 import { Menu } from "primereact/menu";
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 
 import AllEmployeeLeaveDatatable from "../../components/EmployeeAccountManagement/AllEmployeeLeaveDatatable";
 import AllEmployeeLeaveFullCalendar from "../../components/EmployeeAccountManagement/AllEmployeeLeaveFullCalendar";
@@ -358,37 +357,7 @@ function EmployeeLeaveHomePage() {
                 setRefresh([])
               }
             }} />
-          <div className="flex gap-8 p-4 items-center">
-            <div className="whitespace-no-wrap min-w-max text-lg">
-              Event Type
-            </div>
-            <MultiSelect
-              id={"eventGroupFilter"}
-              value={selEventGroupList}
-              onChange={(e: MultiSelectChangeEvent) => setSelEventGroupList(e.value)}
-              options={eventGroupList}
-              optionLabel=""
-              filter
-              display="chip"
-              placeholder="Filter Type"
-              className="w-full md:w-20rem overflow-hidden" />
-          </div>
 
-          <div className="flex gap-8 p-4 items-center">
-            <div className="whitespace-no-wrap min-w-max text-lg">
-              Title
-            </div>
-            <MultiSelect
-              id={"eventTitleFilter"}
-              value={selTitleGroupList}
-              onChange={(e: MultiSelectChangeEvent) => setSelTitleGroupList(e.value)}
-              options={titleGroupList}
-              optionLabel=""
-              filter
-              display="chip"
-              placeholder="Filter Title"
-              className="w-full md:w-20rem overflow-hidden" />
-          </div>
         </div>
 
         {isDatatableView ? (
