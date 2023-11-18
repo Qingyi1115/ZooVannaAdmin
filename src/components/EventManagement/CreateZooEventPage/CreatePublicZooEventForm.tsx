@@ -404,7 +404,7 @@ function CreatePublicZooEventForm() {
           >
             <Form.Label className="font-medium">
               <Box sx={{ width: 500 }}>
-                <Grid item container xs={6} alignItems="flex-end" direction="column">
+                <Grid item container xs={6} alignItems="flex-start" direction="column">
                   <Grid item>
                     <Tooltip title="Select start date, Select end date if neccessary" placement="right">
                       Event Dates [Info]
