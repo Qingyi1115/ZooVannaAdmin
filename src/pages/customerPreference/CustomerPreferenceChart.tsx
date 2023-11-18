@@ -154,7 +154,7 @@ function CustomerPreferenceChartPage() {
           <div className="items-centre flex justify-center p-4 pt-8">
             <div className="w-full">
               <Card className="relative w-full">
-                <CardContent className=" relative h-40 w-full overflow-hidden rounded-md bg-white p-2">
+                <CardContent className=" relative h-50 w-full overflow-hidden rounded-md bg-white p-2">
                   <img
                     src={`http://localhost:3000/${species[0].imageUrl}`}
                     alt="Card Image"
@@ -172,7 +172,7 @@ function CustomerPreferenceChartPage() {
 
             <div className="ml-5 w-full">
               <Card className="relative w-full">
-                <CardContent className=" relative h-40 w-full overflow-hidden rounded-md bg-white p-2">
+                <CardContent className=" relative h-50 w-full overflow-hidden rounded-md bg-white p-2">
                   <img
                     src={`http://localhost:3000/${species[1].imageUrl}`}
                     alt="Card Image"
@@ -189,7 +189,7 @@ function CustomerPreferenceChartPage() {
             </div>
             <div className="ml-5 w-full">
               <Card className="relative w-full">
-                <CardContent className=" relative h-40 w-full overflow-hidden rounded-md bg-white p-2">
+                <CardContent className=" relative h-50 w-full overflow-hidden rounded-md bg-white p-2">
                   <img
                     src={`http://localhost:3000/${species[2].imageUrl}`}
                     alt="Card Image"
