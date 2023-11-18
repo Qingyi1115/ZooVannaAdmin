@@ -48,8 +48,8 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
             );
           }}
         >
-          <HiPencil className="mx-auto"></HiPencil>
-          Edit Terrain Details
+          <HiPencil className="mr-2"></HiPencil>
+          Edit Requirements
         </Button>
       )}
       <Table className="rounded-lg shadow-lg">
@@ -74,17 +74,18 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
           </TableRow>
           <TableRow>
             <TableCell className="w-1/3 font-bold" colSpan={2}>
-              Temperature Range (&deg;C)
+              Acceptable Temperature Range (&deg;C)
             </TableCell>
             <TableCell>
-              <span className="font-bold">
-                {curEnclosure.acceptableTempMin}
-              </span>{" "}
-              &deg;C —{" "}
-              <span className="font-bold">
-                {curEnclosure.acceptableTempMax}
-              </span>{" "}
-              &deg;C
+              {curEnclosure.acceptableTempMin &&
+              curEnclosure.acceptableTempMax ? (
+                <>
+                  <span>{curEnclosure.acceptableTempMin} &deg;C — </span>
+                  <span>{curEnclosure.acceptableTempMax} &deg;C</span>
+                </>
+              ) : (
+                <span>Range not set</span>
+              )}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -92,15 +93,22 @@ function EnclosureLayoutDesign(props: EnclosureLayoutDesignProps) {
               Humidity Range (g.m<sup>-3</sup>)
             </TableCell>
             <TableCell>
-              <span className="font-bold">
-                {curEnclosure.acceptableHumidityMin}
-              </span>{" "}
-              g.m<sup>-3</sup> —{" "}
-              <span className="font-bold">
-                {curEnclosure.acceptableHumidityMax}
-              </span>{" "}
-              g.m
-              <sup>-3</sup>
+              {curEnclosure.acceptableHumidityMin &&
+              curEnclosure.acceptableHumidityMax ? (
+                <>
+                  <span className="font-bold">
+                    {curEnclosure.acceptableHumidityMin}
+                  </span>{" "}
+                  g.m<sup>-3</sup> —{" "}
+                  <span className="font-bold">
+                    {curEnclosure.acceptableHumidityMax}
+                  </span>{" "}
+                  g.m
+                  <sup>-3</sup>
+                </>
+              ) : (
+                <span>Range not set</span>
+              )}
             </TableCell>
           </TableRow>
           <TableRow>
