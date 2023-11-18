@@ -1,10 +1,10 @@
-import Keeper from "./Keeper";
-import ZooEvent from "./ZooEvent";
-import Animal from "./Animal";
-import Facility from "./Facility";
 import { EnclosureStatus } from "../enums/Enumurated";
-import Plantation from "./Plantation";
+import Animal from "./Animal";
 import BarrierType from "./BarrierType";
+import Facility from "./Facility";
+import Keeper from "./Keeper";
+import Plantation from "./Plantation";
+import ZooEvent from "./ZooEvent";
 
 interface Enclosure {
   enclosureId: number;
@@ -14,6 +14,7 @@ interface Enclosure {
   width: number;
   height: number;
   enclosureStatus: EnclosureStatus;
+  standOffBarrierDist: number | null;
   designDiagramJsonUrl: string | null;
 
   // Terrain Distribution
@@ -35,12 +36,12 @@ interface Enclosure {
 
   // FK
   // declare terrainDistribution?: TerrainDistribution;
-  animals?: Animal[];
-  barrierType?: BarrierType;
-  plantation?: Plantation;
-  zooEvents?: ZooEvent[];
-  facility?: Facility;
-  Keeper?: Keeper[];
+  animals: Animal[];
+  barrierType: BarrierType;
+  plantation: Plantation;
+  zooEvents: ZooEvent[];
+  facility: Facility;
+  keepers: Keeper[];
 }
 
 export default Enclosure;

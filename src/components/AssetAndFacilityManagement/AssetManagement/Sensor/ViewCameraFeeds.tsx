@@ -52,7 +52,7 @@ function ViewCameraFeeds(props: Authorization) {
 
   setInterval(() => {
     setrefreshseed(refreshseed => refreshseed + 1);
-    console.log("refreshseed",refreshseed);
+    console.log("refreshseed", refreshseed);
   }, 5000);
 
   return (
@@ -63,10 +63,10 @@ function ViewCameraFeeds(props: Authorization) {
             urls.map(value => {
 
               return (
-                <AccordionTab header="Camera 1" >
+                <AccordionTab header={value.sensorName} >
                   <div className="w-full h-full">
                     <iframe key={refreshseed} className="w-[50vw] h-[50vh]" src={value.ipAddressName}></iframe>
-                    <div className="mb-1 block font-medium">{value.sensorName}</div>
+                    {/* <div className="mb-1 block font-medium">{value.sensorName}</div> */}
                   </div>
                 </AccordionTab>
               )

@@ -99,6 +99,8 @@ let emptyItem: EnrichmentItem = {
   enrichmentItemName: "",
 };
 
+const HOURS_IN_MILLISECOND = 1000 * 60 * 60;
+
 function ViewZooEventDetails() {
   const apiJson = useApiJson();
   const navigate = useNavigate();
@@ -108,8 +110,8 @@ function ViewZooEventDetails() {
   const { tab } = useParams<{ tab: string }>();
 
   const [curZooEvent, setCurZooEvent] =
-    useState<ZooEvent | null>(null);
-  const [refreshSeed, setRefreshSeed] = useState<number>(0);
+    useState<ZooEvent>({} as ZooEvent);
+  const [refreshSeed, setRefreshSeed] = useState<any>(0);
   const employee = useAuthContext().state.user?.employeeData;
   const [involvedAnimalList, setInvolvedAnimalList] = useState<Animal[]>();
   const [involvedAnimalGlobalFiler, setInvolvedAnimalGlobalFilter] =
@@ -136,7 +138,7 @@ function ViewZooEventDetails() {
         const responseJson = await apiJson.get(
           `http://localhost:3000/api/zooEvent/getZooEventById/${zooEventId}`
         );
-        console.log("responseJson", responseJson)
+        console.log("updateZooEventFromRes", responseJson)
         updateZooEventFromRes(responseJson["zooEvent"]);
       } catch (error: any) {
         console.log(error);
@@ -361,7 +363,6 @@ function ViewZooEventDetails() {
   const [eventNotificationDate, setEventNotificationDate] = useState<Nullable<Date>>();
   const [eventStartDateTime, setEventStartDateTime] = useState<Nullable<Date>>();
   const [eventEndDateTime, setEventEndDateTime] = useState<Nullable<Date>>();
-  const [imageUrl, setImageUrl] = useState<string | null>();
   const [imageFile, setImageFile] = useState<File | null>();
   const [formError, setFormError] = useState<string | null>(null);
   const [updateFuture, setUpdateFuture] = useState<boolean>(false);
@@ -392,9 +393,9 @@ function ViewZooEventDetails() {
         eventTiming: curZooEvent?.eventTiming,
 
         eventNotificationDate: eventNotificationDate?.getTime(),
-        eventEndDateTime: curZooEvent?.eventEndDateTime?.getTime(),
+        eventEndDateTime: eventStartDateTime?.getTime() + curZooEvent?.eventDurationHrs * HOURS_IN_MILLISECOND,
       };
-      console.log(data);
+      console.log("updateFuture", data);
       apiJson.put(
         `http://localhost:3000/api/zooEvent/updateZooEventIncludeFuture/${curZooEvent?.zooEventId}`,
         data
@@ -421,12 +422,11 @@ function ViewZooEventDetails() {
         zooEventId: curZooEvent?.zooEventId,
         eventIsPublic: true,
         eventNotificationDate: eventNotificationDate?.getTime(),
-        eventEndDateTime: eventEndDateTime?.getTime(),
+        eventStartDateTime: eventStartDateTime?.getTime(),
+        eventEndDateTime: eventStartDateTime?.getTime() + curZooEvent?.eventDurationHrs * HOURS_IN_MILLISECOND,
         eventType: curZooEvent?.eventType == "EMPLOYEE_FEEDING" ? "CUSTOMER_FEEDING" : curZooEvent?.eventType,
-        imageUrl
-
       };
-      console.log(zooEventDetails);
+      console.log("once update", zooEventDetails);
       apiJson.put(
         `http://localhost:3000/api/zooEvent/updateZooEventSingle/${curZooEvent?.zooEventId}`,
         { zooEventDetails: zooEventDetails }
@@ -643,9 +643,9 @@ function ViewZooEventDetails() {
                 <TabsList className="no-scrollbar w-full justify-around overflow-x-auto px-4 text-xs xl:text-base">
                   <TabsTrigger value="details">Basic Information</TabsTrigger>
 
-                  <TabsTrigger value="involvedAnimals">Involved Animals</TabsTrigger>
-                  {curZooEvent.animalActivity != null && <TabsTrigger value="involvedItems">Involved Items</TabsTrigger>}
-                  {(employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && <TabsTrigger value="assignedEmployees">Assigned Employees</TabsTrigger>}
+                  {curZooEvent.eventType != "EMPLOYEE_ABSENCE" && <TabsTrigger value="involvedAnimals">Involved Animals</TabsTrigger>}
+                  {(curZooEvent.animalActivity != null && curZooEvent.eventType != "EMPLOYEE_ABSENCE") && <TabsTrigger value="involvedItems">Involved Items</TabsTrigger>}
+                  {((employee.superAdmin || employee.planningStaff?.plannerType == "CURATOR") && curZooEvent.eventType != "EMPLOYEE_ABSENCE") && <TabsTrigger value="assignedEmployees">Assigned Employees</TabsTrigger>}
                 </TabsList>
 
                 <TabsContent value="details">
@@ -660,7 +660,7 @@ function ViewZooEventDetails() {
                           className="my-3">Edit Basic Information
                         </Button>}
 
-                      {curZooEvent.animalActivity ?
+                      {curZooEvent.eventType != "EMPLOYEE_ABSENCE" && (curZooEvent.animalActivity ?
                         <Button
                           onClick={() => {
                             navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
@@ -675,7 +675,20 @@ function ViewZooEventDetails() {
                           }}
                           className="my-3">
                           Make Event Public
-                        </Button>)
+                        </Button>))
+                      }
+
+                      {(curZooEvent.publicEventSession) &&
+                        <div className="flex justify-start gap-6" >
+                          <Button
+                            onClick={() => {
+                              navigate(`/zooevent/viewzooeventdetails/${curZooEvent?.zooEventId}`, { replace: true });
+                              navigate(`/zooevent/viewpubliceventdetails/${curZooEvent.publicEventSession?.publicEvent.publicEventId}`);
+                            }}
+                            className="my-3">
+                            View Public Event Details
+                          </Button>
+                        </div>
                       }
 
                       {(curZooEvent.eventType == EventType.EMPLOYEE_FEEDING ||
@@ -754,7 +767,7 @@ function ViewZooEventDetails() {
                           )
                         }
 
-                        {!curZooEvent.eventIsPublic && (
+                        {(!curZooEvent.eventIsPublic && curZooEvent.eventType != "EMPLOYEE_ABSENCE") && (
                           <TableRow>
                             <TableCell className="w-1/3 font-bold" colSpan={2}>
                               Session Timing
@@ -762,13 +775,13 @@ function ViewZooEventDetails() {
                             <TableCell>{beautifyText(curZooEvent.eventTiming)}</TableCell>
                           </TableRow>
                         )}
-                        <TableRow>
+                        {curZooEvent.eventType != "EMPLOYEE_ABSENCE" && <TableRow>
                           <TableCell className="w-1/3 font-bold" colSpan={2}>
                             Duration (Hours)
                           </TableCell>
                           <TableCell>{curZooEvent.eventDurationHrs}</TableCell>
-                        </TableRow>
-                        {curZooEvent.eventNotificationDate && <TableRow>
+                        </TableRow>}
+                        {(curZooEvent.eventType != "EMPLOYEE_ABSENCE" && curZooEvent.eventNotificationDate) && <TableRow>
                           <TableCell className="w-1/3 font-bold" colSpan={2}>
                             Notification Date
                           </TableCell>
@@ -782,7 +795,7 @@ function ViewZooEventDetails() {
                           </TableCell>
                           <TableCell>{curZooEvent.eventDescription}</TableCell>
                         </TableRow>
-                        <TableRow>
+                        {curZooEvent.eventType != "EMPLOYEE_ABSENCE" && <TableRow>
                           <TableCell className="w-1/3 font-bold" colSpan={2}>
                             Keepers
                           </TableCell>
@@ -791,7 +804,32 @@ function ViewZooEventDetails() {
                               curZooEvent.keepers?.map((keeper: Keeper) => keeper.employee.employeeName).join(", ") :
                               "No keepers assigned to this event!"}
                           </TableCell>
-                        </TableRow>
+                        </TableRow>}
+                        {
+                          curZooEvent.enclosure && (
+
+                            <TableRow>
+                              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                                Enclosure
+                              </TableCell>
+                              <TableCell>
+                                {curZooEvent.enclosure?.name}
+                              </TableCell>
+                            </TableRow>
+                          )
+                        }
+                        {
+                          curZooEvent.eventType == EventType.EMPLOYEE_ABSENCE && (
+                            <TableRow>
+                              <TableCell className="w-1/3 font-bold" colSpan={2}>
+                                Employee
+                              </TableCell>
+                              <TableCell>
+                                {curZooEvent.employee.employeeName}
+                              </TableCell>
+                            </TableRow>)
+                        }
+
                       </TableBody>
                     </Table>
                   </div>

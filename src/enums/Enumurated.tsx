@@ -23,6 +23,20 @@ enum GeneralStaffType {
   ZOO_OPERATIONS = "ZOO_OPERATIONS",
 }
 
+enum BarrierType {
+  CONCRETE = "CONCRETE",
+  GLASS = "GLASS",
+  ONE_WAY_GLASS = "ONE_WAY_GLASS",
+  WOOD_LOGS = "WOOD_LOGS",
+  STEEL_MESH = "STEEL_MESH",
+  BRICK = "BRICK",
+  GABION = "GABION",
+  CORRUGATED = "CORRUGATED",
+  CHAIN_LINK = "CHAIN_LINK",
+  ELECTRIC = "ELECTRIC",
+  HEDGE = "HEDGE",
+}
+
 enum Specialization {
   MAMMAL = "MAMMAL",
   BIRD = "BIRD",
@@ -183,9 +197,12 @@ enum EventType {
   CUSTOMER_FEEDING = "CUSTOMER_FEEDING",
   TALK = "TALK",
   EMPLOYEE_FEEDING = "EMPLOYEE_FEEDING",
+  TRAINING = "TRAINING",
   ENRICHMENT = "ENRICHMENT",
   OBSERVATION = "OBSERVATION",
   ANIMAL_CHECKUP = "ANIMAL_CHECKUP",
+  ADMISSION = "ADMISSION",
+  EMPLOYEE_ABSENCE = "EMPLOYEE_ABSENCE",
 }
 
 enum EventTimingType {
@@ -300,5 +317,6 @@ export {
   PresentationMethod,
   RecurringPattern,
   RepeatPattern,
+  BarrierType,
   Specialization,
 };

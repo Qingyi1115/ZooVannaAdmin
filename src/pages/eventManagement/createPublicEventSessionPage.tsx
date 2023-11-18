@@ -284,7 +284,7 @@ function CreatePublicEventSessionForm() {
         );
         // success
         toastShadcn({
-          description: "Successfully created a new animal activity",
+          description: "Successfully created a new Session",
         });
         navigate(-1);
       } catch (error: any) {
@@ -293,7 +293,7 @@ function CreatePublicEventSessionForm() {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while creating new animal activity: \n" +
+            "An error has occurred while creating new Session: \n" +
             error.message,
         });
       }
@@ -310,7 +310,6 @@ function CreatePublicEventSessionForm() {
       >
         <div className="flex flex-col">
           <div className="mb-4 flex justify-between">
-            {/* <NavLink className="flex" to={`/animal/viewallanimals`}> */}
             <Button
               onClick={() => navigate(-1)}
               variant={"outline"}

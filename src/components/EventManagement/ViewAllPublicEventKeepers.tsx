@@ -11,7 +11,6 @@ import { HiCheck, HiEye, HiMinus, HiPlus, HiX } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import useApiJson from "../../hooks/useApiJson";
 import Employee from "../../models/Employee";
-import Facility from "../../models/Facility";
 import PublicEvent from "../../models/PublicEvent";
 
 interface ViewAllPublicEventKeepersProps {
@@ -150,9 +149,9 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
       </span>
       <Button
         onClick={showBulkAssignment}
-      // disabled={availableEmployees.length == 0}
+        disabled={availableEmployees.length == 0}
       >
-        <HiPlus />Assign Keeper
+        <HiPlus />Assign Keepers
       </Button>
       <Button onClick={exportCSV}>Export to .csv</Button>
     </div>
@@ -175,7 +174,8 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
         <div className="mb-4 flex">
           <Button
             variant={"outline"}
-            className="mr-2" onClick={() => {
+            className="mr-2"
+            onClick={() => {
               navigate(`/zooevent/viewpubliceventdetails/${publicEvent.publicEventId}/publicEventSessions`, { replace: true });
               navigate(`/employeeAccount/viewEmployeeDetails/${employee.employeeId}`);
             }}>
@@ -350,19 +350,20 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
         // variant: "destructive",
         title: "Assignment Successful",
         description:
-          "Successfully assigned maintenance staff: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId))
+          "Successfully assigned keepers: " + availableEmployees.filter(emp => selectedAvailableEmployees.includes(emp.employeeId))
             .map((employee) => " " + employee.employeeName).toString(),
       });
       setAssignmentDialog(false);
       setBulkAssignmentDialog(false);
       setSelectedAvailableEmployees([]);
+      setSelectedAssignedEmployees([]);
     } catch (error: any) {
       // got error
       toastShadcn({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while assigning maintenance staff: \n" + apiJson.error,
+          "An error has occurred while assigning keepers: \n" + apiJson.error,
       });
     }
   }
@@ -393,7 +394,7 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
         // variant: "destructive",
         title: "Removal Successful",
         description:
-          "Successfully removed maintenance staff: " + selectedAssignedEmployees.toString(),
+          "Successfully removed keepers: " + assignedEmployees.filter(emp => selectedAssignedEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString(),
       });
       setEmployeeRemovalDialog(false);
       setBulkAssignmentDialog(false);
@@ -404,7 +405,7 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description:
-          "An error has occurred while removing maintenance staff: \n" + apiJson.error,
+          "An error has occurred while removing keepers: \n" + apiJson.error,
       });
     }
   }
@@ -550,7 +551,7 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
             {selectedEmployee && (
               <span>
                 Are you sure you want to remove{" "}
-                <b>{selectedAssignedEmployees.toString()}</b>?
+                <b>{assignedEmployees.filter(emp => selectedAssignedEmployees.includes(emp.employeeId)).map((employee) => " " + employee.employeeName).toString()}?</b>
               </span>
             )}
           </div>
@@ -564,7 +565,7 @@ function ViewAllPublicEventKeepers(props: ViewAllPublicEventKeepersProps) {
             <Button
               onClick={confirmAssignment}
               disabled={selectedAvailableEmployees.length == 0}>
-              Assign Selected Keeper
+              Assign Selected Keepers
             </Button>}
           onHide={hideEmployeeBulkAssignmentDialog}>
           <div className="confirmation-content">

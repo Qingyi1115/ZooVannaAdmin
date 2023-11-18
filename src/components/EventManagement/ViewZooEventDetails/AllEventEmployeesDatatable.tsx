@@ -34,7 +34,6 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
     employeeBirthDate: new Date(),
     isAccountManager: false,
     dateOfResignation: new Date(),
-    employeeProfileUrl: "",
   };
 
   const toast = useRef<Toast>(null);
@@ -213,7 +212,7 @@ function AllEventEmployeesDatatable(props: AllEventEmployeesDatatableProps) {
       </span>
       <Button
         onClick={showBulkAssignment}
-      disabled={availableEmployees.length == 0}
+        disabled={availableEmployees.length == 0}
       >
         <HiPlus />Assign Keepers
       </Button>

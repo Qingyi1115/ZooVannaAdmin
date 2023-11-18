@@ -7,8 +7,6 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import { PrimeReactProvider } from "primereact/api";
 // import "@fullcalendar/daygrid/main.css";
 
-import EnclosureContextProvider from "./context/EnclosureContext";
-
 import MainLayout from "./components/MainLayout";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -58,10 +56,10 @@ import ViewAnimalObservationLogDetailsPage from "./pages/animalManagement/ViewAn
 import ViewPopulationDetailsPage from "./pages/animalManagement/ViewPopulationDetailsPage";
 
 // Enclosure manage pages
-import ViewAllEnclosuresPage from "./pages/enclosureManagement/ViewAllEnclosuresPage";
-import ViewEnclosureDetailsPage from "./pages/enclosureManagement/ViewEnclosureDetailsPage";
 import EnclosureContextLayout from "./components/EnclosureManagement/EnclosureContextLayout";
 import EnclosureDesignDiagramPage from "./pages/enclosureManagement/EnclosureDesignDiagramPage";
+import ViewAllEnclosuresPage from "./pages/enclosureManagement/ViewAllEnclosuresPage";
+import ViewEnclosureDetailsPage from "./pages/enclosureManagement/ViewEnclosureDetailsPage";
 
 //facility page
 import CreateNewFacilityPage from "./pages/assetAndFacilityManagement/Facility/CreateNewFacilityPage";
@@ -132,6 +130,9 @@ import ViewAllCustomerOrdersPage from "./pages/customerOrder/ViewAllCustomerOrde
 import ViewCustomerOrderDetailsPage from "./pages/customerOrder/ViewCustomerOrderDetailsPage";
 import SalesChartPage from "./pages/sales/SalesChartPage";
 
+//customer preference page
+import CustomerPreferenceChartPage from "./pages/customerPreference/CustomerPreferenceChart";
+
 //Event management page
 import CreateLeaveEventPage from "./pages/eventManagement/CreateLeaveEventPage";
 import CreatePublicZooEventPage from "./pages/eventManagement/CreatePublicZooEventPage";
@@ -144,13 +145,20 @@ import CreateNewAnnouncementPage from "./pages/announcement/CreateNewAnnouncemen
 import EditAnnouncementPage from "./pages/announcement/EditAnnouncementPage";
 import ViewAllAnnouncementsPage from "./pages/announcement/ViewAllAnnouncementsPage";
 import ViewAnnouncementDetailsPage from "./pages/announcement/ViewAnnouncementDetailsPage";
-import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPage";
-import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
-import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
-import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
-import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSessionDetailsPage";
-import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
 import ViewAllFacilityCrowdLevelPage from "./pages/assetAndFacilityManagement/Facility/ViewAllFacilityCrowdLevelPage";
+import EmployeeLeaveHomePage from "./pages/employeeAccountManagement/EmployeeLeaveHomePage";
+import CreateEnclosureBarriersPage from "./pages/enclosureManagement/CreateEnclosureBarriersPage";
+import CreateNewEnclosurePage from "./pages/enclosureManagement/CreateNewEnclosurePage";
+import EditEnclosureEnvironmentPage from "./pages/enclosureManagement/EditEnclosureEnvironmentPage";
+import EditEnclosurePage from "./pages/enclosureManagement/EditEnclosurePage";
+import EditEnclosureSafetyPage from "./pages/enclosureManagement/EditEnclosureSafetyPage";
+import AddAnimalToPublicEventPage from "./pages/eventManagement/AddAnimalToPublicEventPage";
+import EditPublicEventPage from "./pages/eventManagement/EditPublicEventPage";
+import EditPublicEventSessionPage from "./pages/eventManagement/EditPublicEventSessionPage";
+import PublicEventSessionDetailsPage from "./pages/eventManagement/PublicEventSessionDetailsPage";
+import ViewAllPublicEventPage from "./pages/eventManagement/ViewAllPublicEventPage";
+import CreatePublicEventSessionForm from "./pages/eventManagement/createPublicEventSessionPage";
+import ViewPublicEventDetails from "./pages/eventManagement/viewPublicEventDetails";
 
 function App() {
   const { state } = useAuthContext();
@@ -546,6 +554,12 @@ function App() {
                     user ? <ViewAllEnclosuresPage /> : <Navigate to="/login" />
                   }
                 />
+                <Route
+                  path="/enclosure/createnewenclosure"
+                  element={
+                    user ? <CreateNewEnclosurePage /> : <Navigate to="/login" />
+                  }
+                />
 
                 <Route element={<EnclosureContextLayout />}>
                   {/* These share a context containing currently selected enclosure */}
@@ -570,10 +584,46 @@ function App() {
                     }
                   />
                   <Route
-                    path="/enclosure/viewenclosuredetails/enclosuredesigndiagram"
+                    path="/enclosure/viewenclosuredetails/enclosuredesigndiagram/"
                     element={
                       user ? (
                         <EnclosureDesignDiagramPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/enclosure/editenclosurebasicinfo/:enclosureId"
+                    element={
+                      user ? <EditEnclosurePage /> : <Navigate to="/login" />
+                    }
+                  />
+                  <Route
+                    path="/enclosure/editenclosureenvironment/:enclosureId"
+                    element={
+                      user ? (
+                        <EditEnclosureEnvironmentPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/enclosure/editenclosuresafety/:enclosureId"
+                    element={
+                      user ? (
+                        <EditEnclosureSafetyPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/enclosure/createEnclosureBarriers/:enclosureId"
+                    element={
+                      user ? (
+                        <CreateEnclosureBarriersPage />
                       ) : (
                         <Navigate to="/login" />
                       )
@@ -951,6 +1001,17 @@ function App() {
                   path="employeeAccount/setPassword/:token"
                   element={<ResetPasswordPage />}
                 />
+
+                <Route
+                  path="/employeeAccount/allemployeeabsence"
+                  element={
+                    user ? (
+                      <EmployeeLeaveHomePage />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
                 {/* <Route
                   path="/employeeAccount/editemployee"
                   element={
@@ -1044,6 +1105,17 @@ function App() {
                 <Route
                   path="/sales/viewGraph/"
                   element={user ? <SalesChartPage /> : <Navigate to="/login" />}
+                />
+
+                <Route
+                  path="/customerpreference/viewpreference"
+                  element={
+                    user ? (
+                      <CustomerPreferenceChartPage />
+                    ) : (
+                      <Navigate to="login" />
+                    )
+                  }
                 />
 
                 <Route
@@ -1221,24 +1293,42 @@ function App() {
               <Route
                 path="/zooevent/createpubliceventsession/:publicEventId"
                 element={
-                  user ? <CreatePublicEventSessionForm /> : <Navigate to="/login" />
+                  user ? (
+                    <CreatePublicEventSessionForm />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
                 }
               />
 
               <Route
-                path="/zooevent/allFacilityCrowdLevel"
+                path="/zooevent/editpubliceventsession/:publicEventSessionId"
                 element={
-                  user ? <ViewAllFacilityCrowdLevelPage /> : <Navigate to="/login" />
+                  user ? (
+                    <EditPublicEventSessionPage />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
                 }
               />
 
+              <Route
+                path="/assetfacility/allFacilityCrowdLevel"
+                element={
+                  user ? (
+                    <ViewAllFacilityCrowdLevelPage />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
 
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </MainLayout>
         </BrowserRouter>
       </div>
-    </PrimeReactProvider >
+    </PrimeReactProvider>
   );
 }
 

@@ -10,14 +10,14 @@ import useApiJson from "../../../hooks/useApiJson";
 import FormFieldInput from "../../FormFieldInput";
 import FormFieldSelect from "../../FormFieldSelect";
 
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Tooltip from '@mui/material/Tooltip';
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import beautifyText from "../../../hooks/beautifyText";
 import Animal from "../../../models/Animal";
 import Employee from "../../../models/Employee";
 import Facility from "../../../models/Facility";
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Tooltip from '@mui/material/Tooltip';
 
 // Only local
 enum EventType {
@@ -404,7 +404,7 @@ function CreatePublicZooEventForm() {
           >
             <Form.Label className="font-medium">
               <Box sx={{ width: 500 }}>
-                <Grid item container xs={6} alignItems="flex-end" direction="column">
+                <Grid item container xs={6} alignItems="flex-start" direction="column">
                   <Grid item>
                     <Tooltip title="Select start date, Select end date if neccessary" placement="right">
                       Event Dates [Info]

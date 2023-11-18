@@ -420,7 +420,7 @@ function AllCustomerReportsDatatable() {
           {selectedCustomerReportLog && (
             <span>
               Are you sure you want to delete{" "}
-              <b>{selectedCustomerReportLog.customerReportLogId}</b>?
+              <b>{selectedCustomerReportLog.title}</b>?
             </span>
           )}
         </div>

@@ -1,35 +1,32 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Enclosure from "../../../models/Enclosure";
 
-import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
-import useApiJson from "../../../hooks/useApiJson";
-import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import useApiJson from "../../../hooks/useApiJson";
 
-import Species from "../../../models/Species";
 import Animal from "../../../models/Animal";
+import Species from "../../../models/Species";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox, CheckboxClickEvent } from "primereact/checkbox";
 import {
   HiCheck,
   HiEye,
-  HiOutlineXCircle,
-  HiPencil,
-  HiPlus,
-  HiTrash,
-  HiX,
+  HiX
 } from "react-icons/hi";
 import {
   AcquisitionMethod,
   AnimalGrowthStage,
   AnimalSex,
 } from "../../../enums/Enumurated";
-import { Checkbox, CheckboxClickEvent } from "primereact/checkbox";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 let emptySpecies: Species = {
   speciesId: -1,
@@ -181,7 +178,7 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
   //
 
   const dt = useRef<DataTable<Animal[]>>(null);
-
+  const employee = useAuthContext().state.user?.employeeData;
   const toastShadcn = useToast().toast;
 
   function calculateAge(dateOfBirth: Date): string {
@@ -286,13 +283,17 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
           >
             <HiEye className="mr-auto" />
           </Button>
-          <Button
-            variant={"destructive"}
-            className="mr-2"
-            onClick={() => confirmRemoveAnimal(animal)}
-          >
-            <HiX className="mx-auto" />
-          </Button>
+          {(employee.superAdmin ||
+            employee.planningStaff?.plannerType == "CURATOR" ||
+            employee.keeper) && (
+              <Button
+                variant={"destructive"}
+                className="mr-2"
+                onClick={() => confirmRemoveAnimal(animal)}
+              >
+                <HiX className="mx-auto" />
+              </Button>
+            )}
         </div>
       </React.Fragment>
     );
@@ -301,12 +302,16 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       {/* <h4 className="m-1">Manage Individuals/Groups </h4> */}
-      <Button
-        onClick={() => setAnimalBulkAssignmentDialog(true)}
-        disabled={availableAnimals.length == 0}
-      >
-        Add Animal To Enclosure
-      </Button>
+      {(employee.superAdmin ||
+        employee.planningStaff?.plannerType == "CURATOR" ||
+        employee.keeper) && (
+          <Button
+            onClick={() => setAnimalBulkAssignmentDialog(true)}
+            disabled={availableAnimals.length == 0}
+          >
+            Add Animal To Enclosure
+          </Button>
+        )}
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -410,7 +415,7 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
             </span>
             {speciesCompatibilityMap.get(animal.species.speciesCode) !=
               undefined &&
-            speciesCompatibilityMap.get(animal.species.speciesCode) == true ? (
+              speciesCompatibilityMap.get(animal.species.speciesCode) == true ? (
               <span className="flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] px-2 text-base font-bold text-emerald-900">
                 COMPATIBLE
               </span>
@@ -452,18 +457,18 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
                 status === "NORMAL"
                   ? "flex items-center justify-center rounded bg-emerald-100 p-[0.1rem] text-sm font-bold text-emerald-900"
                   : status === "PREGNANT"
-                  ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
-                  : status === "SICK"
-                  ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
-                  : status === "INJURED"
-                  ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
-                  : status === "OFFSITE"
-                  ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
-                  : status === "RELEASED"
-                  ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
-                  : status === "DECEASED"
-                  ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
-                  : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
+                    ? "flex items-center justify-center rounded bg-orange-100 p-[0.1rem] text-sm font-bold text-orange-900"
+                    : status === "SICK"
+                      ? "flex items-center justify-center rounded bg-yellow-100 p-[0.1rem] text-sm font-bold text-yellow-900"
+                      : status === "INJURED"
+                        ? "flex items-center justify-center rounded bg-red-100 p-[0.1rem] text-sm font-bold text-red-900"
+                        : status === "OFFSITE"
+                          ? "flex items-center justify-center rounded bg-blue-100 p-[0.1rem] text-sm font-bold text-blue-900"
+                          : status === "RELEASED"
+                            ? "flex items-center justify-center rounded bg-fuchsia-100 p-[0.1rem] text-sm font-bold text-fuchsia-900"
+                            : status === "DECEASED"
+                              ? "flex items-center justify-center rounded bg-slate-300 p-[0.1rem] text-sm font-bold text-slate-900"
+                              : "bg-gray-100 flex items-center justify-center rounded p-[0.1rem] text-sm font-bold text-black"
               }
             >
               {status}
@@ -617,7 +622,7 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
-            "An error has occurred while assigning maintenance staff: \n" +
+            "An error has occurred while assigning animals: \n" +
             apiJson.error,
         });
       }
@@ -850,7 +855,7 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
                 {selectedAnimal.houseName} the{" "}
                 {selectedAnimal.species?.commonName}
               </b>{" "}
-              from the current enclosure? ?
+              from the current enclosure?
             </span>
           )}
         </div>
@@ -923,7 +928,7 @@ function EnclosureAnimalDatatable(props: EnclosureAnimalDatatableProps) {
           >
             <Column
               body={availableAnimalCheckbox}
-              //   header={allAvailableAnimalsCheckbox}
+            //   header={allAvailableAnimalsCheckbox}
             ></Column>
             <Column
               field="animalCode"
