@@ -12,17 +12,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { Column } from "primereact/column";
 import { DropdownChangeEvent } from "primereact/dropdown";
 import { useNavigate } from "react-router-dom";
-import AnimalActivity from "src/models/AnimalActivity";
-import { AcquisitionMethod, ActivityType, AnimalGrowthStage, AnimalSex, EventTimingType, KeeperType, RecurringPattern, Specialization } from "../../enums/Enumurated";
-import { Rating } from "../../enums/Rating";
-import { Reaction } from "../../enums/Reaction";
 import beautifyText from "../../hooks/beautifyText";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import Animal from "../../models/Animal";
-import AnimalActivityLog from "../../models/AnimalActivityLog";
-import Employee from "../../models/Employee";
-import Keeper from "../../models/Keeper";
-import Species from "../../models/Species";
 import PublicEventSession from "../../models/PublicEventSession";
 
 interface AllPublicEventSessionDatatableProps {
@@ -247,7 +238,7 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
             selectionMode={"single"}
             rowsPerPageOptions={[5, 10, 25]}
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal activity logs"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} public event sessions"
             globalFilter={globalFilter}
             header={header}
           >
@@ -326,7 +317,7 @@ function AllPublicEventSessionDatatable(props: AllPublicEventSessionDatatablePro
             header={header}
             sortField={sortField}
             sortOrder={sortOrder}
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} animal activity logs"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} public event sessions"
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
             paginator
