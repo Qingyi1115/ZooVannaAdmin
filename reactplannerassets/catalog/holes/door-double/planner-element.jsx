@@ -125,7 +125,7 @@ function makeLock() {
   return lock;
 }
 
-import doubleDoorImage from "./door_double.png";
+import doubleDoorImage from "./double-door.jpg";
 
 export default {
   name: "double door",

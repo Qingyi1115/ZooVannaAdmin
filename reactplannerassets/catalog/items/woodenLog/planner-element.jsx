@@ -12,8 +12,8 @@ import React from "react";
 // const obj = require("./sofa.obj");
 // const img = require("./texture.jpg");
 
-const width = { length: 180, unit: "cm" };
-const depth = { length: 60, unit: "cm" };
+const width = { length: 500, unit: "cm" };
+const depth = { length: 120, unit: "cm" };
 const height = { length: 70, unit: "cm" };
 
 let cachedJSONSofa = null;
@@ -38,9 +38,9 @@ export default {
     let textRotation = Math.sin((angle * Math.PI) / 180) < 0 ? 180 : 0;
 
     let style = {
-      stroke: element.selected ? "#0096fd" : "#000",
+      stroke: element.selected ? "#5C4128" : "#5C4128",
       strokeWidth: "2px",
-      fill: "#84e1ce",
+      fill: "#89684C",
     };
     let arrow_style = {
       stroke: element.selected ? "#0096fd" : null,
