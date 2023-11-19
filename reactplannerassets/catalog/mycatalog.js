@@ -22,6 +22,9 @@ import SmallBoulder from "./items/smallBoulder/planner-element";
 catalog.registerElement(SmallBoulder);
 import BigBoulder from "./items/bigBoulder/planner-element";
 catalog.registerElement(BigBoulder);
+import TemperatureSensor from "./items/temperatureSensor/planner-element";
+catalog.registerElement(TemperatureSensor);
+
 // import Cube from "./items/cube/planner-element";
 // catalog.registerElement(Cube);
 //

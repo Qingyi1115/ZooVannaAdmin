@@ -328,9 +328,14 @@ function EnclosureDesignDiagramPage() {
       width: curEnclosure.width * 100,
       height: curEnclosure.length * 100,
     };
-    loadDiagram(emptyDiagramJsonWithDimensions);
+    // loadDiagram(emptyDiagramJsonWithDimensions);
+    toastShadcn({
+      description: "Successfully deleted design diagram!",
+    });
     await handleSave();
     setResetDiagramDialog(false);
+    const redirectUrl = `/enclosure/viewenclosuredetails/${curEnclosure.enclosureId}`;
+    navigate(redirectUrl);
   };
 
   const resetDiagramDialogFooter = (
