@@ -235,7 +235,8 @@ function ViewPublicEventSessionDetails(prop: ViewPublicEventSessionDetailsProps)
                   </TableCell>
                   <TableCell>{beautifyText(curPublicEventSession.recurringPattern)}</TableCell>
                 </TableRow>
-
+                {(curPublicEventSession.recurringPattern == "WEEKLY" ||
+                curPublicEventSession.recurringPattern == "MONTHLY") && (
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     Frequency
@@ -246,13 +247,21 @@ function ViewPublicEventSessionDetails(prop: ViewPublicEventSessionDetailsProps)
                       curPublicEventSession.dayOfMonth
                     }
                   </TableCell>
-                </TableRow>
+                </TableRow>)}
                 <TableRow>
                   <TableCell className="w-1/3 font-bold" colSpan={2}>
                     Duration in Minutes
                   </TableCell>
                   <TableCell>
                     {curPublicEventSession.durationInMinutes}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="w-1/3 font-bold" colSpan={2}>
+                    Time (24hr)
+                  </TableCell>
+                  <TableCell>
+                    {curPublicEventSession.time}
                   </TableCell>
                 </TableRow>
                 <TableRow>
